@@ -1,0 +1,92 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-23T19:47:03.893705Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.3,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let S be a numerical semigroup, let m be its least positive element, with m >= 2, and for each r in {1,2,...,m-1} let w_r be the least element of S congruent to r modulo m. Write w_r = r + m k_r with k_r > 0. We must prove that\n\ng(S)=|N0 \\ S| = \\sum_{r=1}^{m-1} k_r.\n\nWe first record two basic facts.\n\n1. For every r in {1,...,m-1}, the integer k_r is indeed positive.\nSince w_r \\equiv r (mod m), we can write w_r = r + m k_r for some integer k_r >= 0. If k_r = 0, then w_r = r with 1 <= r <= m-1, so r is a positive element of S smaller than m, contradicting that m is the least positive element of S. Hence k_r >= 1.\n\n2. For every r in {1,...,m-1}, the numbers\nr, r+m, r+2m, ..., r+(k_r-1)m\nare not in S, while every number of the form r+nm with n >= k_r does belong to S.\nIndeed, by definition w_r = r + m k_r is the least element of S in residue class r mod m. Therefore any smaller nonnegative integer with the same residue, namely r+nm for 0 <= n < k_r, cannot lie in S. On the other hand, if n >= k_r, then\nr+nm = w_r + (n-k_r)m.\nNow w_r is in S, and m is in S; since S is closed under addition, (n-k_r)m is in S and thus r+nm is in S.\n\nNow we count the gaps of S residue class by residue class modulo m.\n\nBecause m belongs to S, every multiple of m belongs to S. Hence among numbers congruent to 0 modulo m there are no gaps at all.\n\nFix r with 1 <= r <= m-1. Consider the nonnegative integers congruent to r modulo m. They are exactly the numbers r+nm with n >= 0. By fact 2, among these numbers precisely\nr, r+m, ..., r+(k_r-1)m\nfail to belong to S, and there are exactly k_r such numbers.\n\nThe complement N0 \\ S is the disjoint union of its parts in the m residue classes modulo m. The class 0 contributes 0 gaps, and for each r = 1,...,m-1 the class r contributes exactly k_r gaps. Therefore\n\n|N0 \\ S| = \\sum_{r=1}^{m-1} k_r.\n\nBy definition, |N0 \\ S| = g(S). Hence\n\ng(S) = k_1 + k_2 + ... + k_{m-1},\n\nas required.",
+  "latest_vetter_report_id": "rep_20260323195043_5ff3061b",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260323194655_acdb8178",
+  "parent_id": "thm_root_20260320180855_1d8d4f17",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Identifies the genus-g layer of numerical semigroups with the coordinate-sum-g layer of Kunz vectors.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let S be a subset of N0 = {0,1,2,...} such that 0 belongs to S, S is closed under addition, and N0 \\ S is finite; in other words, S is a numerical semigroup. Let m be the least positive element of S, and assume m >= 2. For each integer r with 1 <= r <= m-1, let w_r be the least element of S congruent to r modulo m, and write w_r = r + m k_r with k_r a positive integer. Define the genus of S to be g(S) = |N0 \\ S|, the number of nonnegative integers not in S. Then g(S) = k_1 + k_2 + ... + k_{m-1}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "S \u2286 N0",
+      "0 \u2208 S",
+      "S is closed under addition (\u2200 a,b \u2208 S, a+b \u2208 S)",
+      "N0 \\ S is finite (so g(S) is finite)",
+      "m := least positive element of S exists and satisfies m \u2265 2",
+      "For each r: r is an integer with 1 \u2264 r \u2264 m-1",
+      "w_r exists as the least element of S congruent to r mod m (so S contains at least one element in each nonzero residue class modulo m within N0)",
+      "k_r is a positive integer in the representation w_r = r + m k_r"
+    ],
+    "normalized_claim": "For any numerical semigroup S \u2286 N0 with multiplicity m := min(S\u2229Z_{>0}) satisfying m \u2265 2, and for each integer r with 1 \u2264 r \u2264 m\u22121 let w_r be the least element of S with w_r \u2261 r (mod m), write w_r = r + m k_r where k_r \u2208 Z_{>0}; then the genus g(S)=|N0\\S| satisfies g(S)=\u2211_{r=1}^{m-1} k_r.",
+    "quantifier_order": [
+      "\u2203 S \u2286 N0 with properties (0\u2208S, S+S \u2286 S, N0\\S finite)",
+      "Let m := min(S\u2229Z_{>0})",
+      "Assume m \u2265 2",
+      "\u2200 r \u2208 {1,...,m-1} \u2203! w_r (least element of S with w_r \u2261 r (mod m)) such that w_r = r + m k_r with k_r \u2208 Z_{>0}",
+      "Then define g(S)=|N0\\S| and claim g(S)=\u03a3_{r=1}^{m-1} k_r"
+    ],
+    "variables": [
+      {
+        "domain": "N0 = {0,1,2,...}",
+        "name": "S",
+        "role": "numerical semigroup: additive submonoid of N0 containing 0 with finite complement",
+        "type": "subset(N0)"
+      },
+      {
+        "domain": "positive integer",
+        "name": "m",
+        "role": "multiplicity; least positive element of S",
+        "type": "integer"
+      },
+      {
+        "domain": "{1,2,...,m-1}",
+        "name": "r",
+        "role": "residue class index modulo m",
+        "type": "integer"
+      },
+      {
+        "domain": "S (specifically the least element of S with w_r \u2261 r (mod m))",
+        "name": "w_r",
+        "role": "minimal representative in S for residue r modulo m",
+        "type": "integer"
+      },
+      {
+        "domain": "Z_{>0}",
+        "name": "k_r",
+        "role": "quotient parameter: w_r = r + m k_r",
+        "type": "positive integer"
+      },
+      {
+        "domain": "Z_{\u22650}",
+        "name": "g(S)",
+        "role": "genus: size of complement of S in N0",
+        "type": "nonnegative integer"
+      }
+    ],
+    "witness_dependencies": [
+      "m depends on S as the least positive element of S",
+      "w_r depends on both S and m: it is the least element of S with residue r modulo m",
+      "k_r is determined by w_r, r, and m via k_r = (w_r - r)/m",
+      "The set of indices {1,...,m-1} depends on m"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-23T19:47:03.893705Z"
+}

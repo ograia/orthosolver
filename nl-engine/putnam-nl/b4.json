@@ -1,0 +1,1627 @@
+{
+    "problem_id": "prob_20260312170058_e30a5c94",
+    "title": "Putnam B4 Test",
+    "verification_level": "nl_only",
+    "root_theorem": {
+      "theorem_id": "thm_root_20260312170058_375fd022",
+      "statement_nl": "For $n \\geq 2$, let $A = [a_{i,j}]_{i,j=1}^n$ be an $n$-by-$n$ matrix of nonnegative integers such that (a) $a_{i,j} = 0$ when $i+j\\leq n$; (b) $a_{i+1,j} \\in \\{a_{i,j}, a_{i,j}+1\\}$ when $1 \\leq i \\leq n-1$ and $1 \\leq j \\leq n$; and (c) $a_{i,j+1} \\in \\{a_{i,j}, a_{i,j}+1\\}$ when $1 \\leq i \\leq n$ and $1 \\leq j \\leq n-1$. Let $S$ be the sum of the entries of $A$, and let $N$ be the number of nonzero entries of $A$. Prove that \\[ S \\leq \\frac{(n+2)N}{3}. \\]",
+      "semantic_sketch": {
+        "variables": [
+          {
+            "name": "n",
+            "type": "integer",
+            "domain": "n >= 2",
+            "role": "size parameter"
+          },
+          {
+            "name": "A",
+            "type": "matrix",
+            "domain": "n x n matrix with entries in nonnegative integers",
+            "role": "primary object"
+          },
+          {
+            "name": "a_{i,j}",
+            "type": "integer",
+            "domain": "nonnegative integer for each 1 <= i,j <= n",
+            "role": "entry of A"
+          },
+          {
+            "name": "i",
+            "type": "integer",
+            "domain": "index with bounds depending on clause",
+            "role": "row index"
+          },
+          {
+            "name": "j",
+            "type": "integer",
+            "domain": "index with bounds depending on clause",
+            "role": "column index"
+          },
+          {
+            "name": "S",
+            "type": "integer",
+            "domain": "S = sum of all entries of A",
+            "role": "total entry sum"
+          },
+          {
+            "name": "N",
+            "type": "integer",
+            "domain": "N = number of pairs (i,j) with 1 <= i,j <= n and a_{i,j} != 0",
+            "role": "count of nonzero entries"
+          }
+        ],
+        "quantifier_order": [
+          "for all integers n >= 2",
+          "for all n x n matrices A with entries a_{i,j} in nonnegative integers",
+          "such that for all i,j with 1 <= i,j <= n, if i+j <= n then a_{i,j} = 0",
+          "and for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} is either a_{i,j} or a_{i,j}+1",
+          "and for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} is either a_{i,j} or a_{i,j}+1",
+          "define S and N from A",
+          "then S <= ((n+2)N)/3"
+        ],
+        "domain_restrictions": [
+          "n is an integer with n >= 2",
+          "A has exactly n rows and n columns",
+          "each a_{i,j} is a nonnegative integer",
+          "condition (a) applies to all index pairs with 1 <= i,j <= n and i+j <= n",
+          "condition (b) applies only where i+1 is within range: 1 <= i <= n-1 and 1 <= j <= n",
+          "condition (c) applies only where j+1 is within range: 1 <= i <= n and 1 <= j <= n-1",
+          "S = sum_{i=1}^n sum_{j=1}^n a_{i,j}",
+          "N = |{(i,j) : 1 <= i,j <= n and a_{i,j} != 0}|"
+        ],
+        "witness_dependencies": [
+          "there are no existential witnesses in the statement",
+          "S and N are uniquely determined by A and therefore depend on n only through A's size"
+        ],
+        "normalized_claim": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0}, if (i) a_{i,j} = 0 for every 1 <= i,j <= n with i+j <= n, (ii) for every 1 <= i <= n-1 and 1 <= j <= n one has a_{i+1,j} - a_{i,j} in {0,1}, and (iii) for every 1 <= i <= n and 1 <= j <= n-1 one has a_{i,j+1} - a_{i,j} in {0,1}, then with S = sum_{i=1}^n sum_{j=1}^n a_{i,j} and N = #{(i,j) in [1,n]^2 : a_{i,j} > 0}, the inequality 3S <= (n+2)N holds."
+      }
+    },
+    "selected_decomposition": {
+      "decomposition_id": "dec_20260312170758_4203a64b",
+      "strategy_summary": "Use the support E = {(i,j) : a_{i,j} > 0} as a southeast-closed Ferrers diagram. For each positive cell, bound its value simultaneously by three easier quantities: its horizontal positive rank in its row, its vertical positive rank in its column, and its distance from the zero anti-diagonal. Summing the pointwise inequality 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j} reduces the theorem to three explicit combinatorial summation formulas over the Ferrers diagram, whose total is exactly (n+2)N.",
+      "controller_status": "succeeded",
+      "llm_vetting_status": "accepted",
+      "assembly_plan": {
+        "assembly_plan_id": "asm_20260312170758_7830062c",
+        "steps": [
+          {
+            "step_id": "A1",
+            "uses_lemmas": [
+              "lem_20260312170758_b5b84c4c"
+            ],
+            "uses_prior_steps": [],
+            "derives": "Let E = {(i,j) : a_{i,j} > 0}. For each i, define l_i = #{j : a_{i,j} > 0}. Then E = {(i,j) : n-l_i+1 <= j <= n}, the sequence l_1,...,l_n is weakly increasing with l_i <= i, and N = sum_{i=1}^n l_i.",
+            "is_trivial": true,
+            "trivial_justification": "This is exactly the conclusion of L1."
+          },
+          {
+            "step_id": "A2",
+            "uses_lemmas": [
+              "lem_20260312170827_5dc3d763",
+              "lem_20260312170849_b0446061",
+              "lem_20260312170909_7b604f52"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "For each (i,j) in E, define x_{i,j} = #{k <= j : a_{i,k} > 0}, y_{i,j} = #{k <= i : a_{k,j} > 0}, and z_{i,j} = i+j-n. Then a_{i,j} <= x_{i,j}, a_{i,j} <= y_{i,j}, and a_{i,j} <= z_{i,j}, hence 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j}. Summing over (i,j) in E gives 3S <= X + Y + Z, where X = sum_{(i,j) in E} x_{i,j}, Y = sum_{(i,j) in E} y_{i,j}, and Z = sum_{(i,j) in E} z_{i,j}.",
+            "is_trivial": true,
+            "trivial_justification": "Each of the three inequalities is provided by L2, L3, and L4, and summing them over the positive support E gives the displayed bound because S = sum_{(i,j) in E} a_{i,j}."
+          },
+          {
+            "step_id": "A3",
+            "uses_lemmas": [
+              "lem_20260312170926_c31e6aa6"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "X = sum_{i=1}^n l_i(l_i+1)/2.",
+            "is_trivial": true,
+            "trivial_justification": "Apply L5 to the Ferrers shape E described in A1."
+          },
+          {
+            "step_id": "A4",
+            "uses_lemmas": [
+              "lem_20260312170947_3141be33",
+              "lem_20260312171011_aebaeb93"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "Y = sum_{i=1}^n (n+1-i)l_i.",
+            "is_trivial": true,
+            "trivial_justification": "By L6, Y equals sum_k mu_k(mu_k+1)/2 for the column heights mu_k of E; by L7 this equals sum_i (n+1-i)l_i."
+          },
+          {
+            "step_id": "A5",
+            "uses_lemmas": [
+              "lem_20260312171027_6043d2dd"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "Z = sum_{i=1}^n l_i(2i-l_i+1)/2.",
+            "is_trivial": true,
+            "trivial_justification": "Apply L8 to the same Ferrers shape E from A1."
+          },
+          {
+            "step_id": "A6",
+            "uses_lemmas": [],
+            "uses_prior_steps": [
+              "A1",
+              "A3",
+              "A4",
+              "A5"
+            ],
+            "derives": "X + Y + Z = sum_{i=1}^n [l_i(l_i+1)/2 + (n+1-i)l_i + l_i(2i-l_i+1)/2] = sum_{i=1}^n (n+2)l_i = (n+2)N.",
+            "is_trivial": true,
+            "trivial_justification": "This is immediate algebra, using N = sum_i l_i from A1."
+          },
+          {
+            "step_id": "A7",
+            "uses_lemmas": [],
+            "uses_prior_steps": [
+              "A2",
+              "A6"
+            ],
+            "derives": "From 3S <= X + Y + Z and X + Y + Z = (n+2)N, we get 3S <= (n+2)N, hence S <= ((n+2)N)/3.",
+            "is_trivial": true,
+            "trivial_justification": "Substitution followed by division by 3 yields exactly the root theorem."
+          }
+        ],
+        "proof_skeleton_nl": "Encode the positive support as a southeast-closed Ferrers diagram with row lengths l_i. For each positive cell, bound its value by three quantities: horizontal positive rank, vertical positive rank, and distance from the zero anti-diagonal. Summing these three bounds gives 3S <= X+Y+Z. The three pure combinatorial lemmas compute X, Y, and Z explicitly in terms of the l_i, and those expressions add up to (n+2)N.",
+        "is_trivially_composable": true
+      }
+    },
+    "lemmas": [
+      {
+        "lemma_id": "lem_20260312170758_b5b84c4c",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, define E = {(i,j) : 1 <= i,j <= n and a_{i,j} > 0}. Then E is southeast-closed in the sense that if (i,j) is in E and i <= i' <= n and j <= j' <= n, then (i',j') is in E. Also, for each row index i define l_i = # {j in {1,...,n} : a_{i,j} > 0}. Then 0 <= l_i <= i for every i, one has l_1 <= l_2 <= ... <= l_n, and E is exactly the set of pairs (i,j) with 1 <= i <= n and n-l_i+1 <= j <= n. Consequently, if N = #E, then N = sum_{i=1}^n l_i.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries a_{i,j} in Z_{>=0}",
+              "role": "input matrix satisfying structural conditions"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "indexed entries of A for 1 <= i,j <= n, each in Z_{>=0}",
+              "role": "matrix entry values"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "typically 1 <= i <= n; specialized ranges depend on clause",
+              "role": "row index / universally quantified local index"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "typically 1 <= j <= n; specialized ranges depend on clause",
+              "role": "column index / universally quantified local index"
+            },
+            {
+              "name": "i'",
+              "type": "integer",
+              "domain": "i <= i' <= n",
+              "role": "southeast row comparison index"
+            },
+            {
+              "name": "j'",
+              "type": "integer",
+              "domain": "j <= j' <= n",
+              "role": "southeast column comparison index"
+            },
+            {
+              "name": "E",
+              "type": "set of pairs of integers",
+              "domain": "E = {(i,j) : 1 <= i,j <= n and a_{i,j} > 0}",
+              "role": "support of positive entries of A"
+            },
+            {
+              "name": "l_i",
+              "type": "integer",
+              "domain": "for each i with 1 <= i <= n, l_i = # {j in {1,...,n} : a_{i,j} > 0}",
+              "role": "number of positive entries in row i"
+            },
+            {
+              "name": "N",
+              "type": "integer",
+              "domain": "N = #E",
+              "role": "cardinality of E"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 2",
+            "for every n x n matrix A over Z_{>=0}",
+            "assuming condition (i): for all i,j with 1 <= i,j <= n and i+j <= n, a_{i,j} = 0",
+            "assuming condition (ii): for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "assuming condition (iii): for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "define E from A",
+            "then for all (i,j) in E and all integers i',j' with i <= i' <= n and j <= j' <= n, (i',j') in E",
+            "for each i with 1 <= i <= n, define l_i from A",
+            "then for all i with 1 <= i <= n, 0 <= l_i <= i",
+            "and l_1 <= l_2 <= ... <= l_n",
+            "and for all integer pairs (i,j), (i,j) in E iff 1 <= i <= n and n-l_i+1 <= j <= n",
+            "defining N = #E, conclude N = sum_{i=1}^n l_i"
+          ],
+          "domain_restrictions": [
+            "n is an integer with n >= 2",
+            "A has exactly n rows and n columns",
+            "all entries a_{i,j} are nonnegative integers",
+            "condition (i) only constrains indices within 1 <= i,j <= n satisfying i+j <= n",
+            "condition (ii) only constrains indices with 1 <= i <= n-1 and 1 <= j <= n",
+            "condition (iii) only constrains indices with 1 <= i <= n and 1 <= j <= n-1",
+            "E contains only pairs (i,j) with 1 <= i,j <= n",
+            "l_i is defined only for row indices i in {1,...,n}",
+            "the formula characterizing E row-by-row uses the same l_i corresponding to the row index i",
+            "since l_i may be 0, the interval condition n-l_i+1 <= j <= n is intended to describe an empty set when n-l_i+1 > n"
+          ],
+          "witness_dependencies": [
+            "E depends only on A (and hence on n through the size of A)",
+            "each l_i depends on A and the chosen row index i",
+            "N depends on E, hence on A",
+            "there are no existential witnesses requiring independent choice; all objects E, l_i, N are explicitly defined from A",
+            "the variables i' and j' in the southeast-closure clause depend on the previously chosen (i,j)"
+          ],
+          "normalized_claim": "For every integer n >= 2 and every matrix A = (a_{i,j})_{1<=i,j<=n} with entries in Z_{>=0} satisfying: (1) a_{i,j}=0 for all 1<=i,j<=n with i+j<=n; (2) a_{i+1,j}-a_{i,j} is either 0 or 1 for all 1<=i<=n-1, 1<=j<=n; and (3) a_{i,j+1}-a_{i,j} is either 0 or 1 for all 1<=i<=n, 1<=j<=n-1; define E={(i,j):1<=i,j<=n and a_{i,j}>0}. Then E is southeast-closed: whenever (i,j) is in E and i<=i'<=n and j<=j'<=n, one has (i',j') in E. For each row i in {1,...,n}, let l_i be the number of columns j with a_{i,j}>0. Then for every i, 0<=l_i<=i; the sequence (l_i) is nondecreasing, i.e. l_1<=l_2<=...<=l_n; and E is exactly the union over rows i of the rightmost l_i positions in that row, equivalently (i,j) in E iff 1<=i<=n and n-l_i+1<=j<=n. Therefore, if N=|E|, then N equals the row-sum count sum_{i=1}^n l_i."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix n >= 2 and a matrix A = [a_{i,j}]_{i,j=1}^n satisfying the three stated conditions, and define E = {(i,j) : a_{i,j} > 0}. For each row i, let P_i := {j in {1,...,n} : a_{i,j} > 0}, so l_i = |P_i|.\n\nFirst we record the monotonicity forced by (ii) and (iii).\n\nIf 1 <= i <= n and j <= j' <= n, then\na_{i,j'} - a_{i,j} = sum_{t=j}^{j'-1} (a_{i,t+1} - a_{i,t}).\nEach summand belongs to {0,1} by (iii), hence is >= 0. Therefore a_{i,j'} >= a_{i,j}.\nSimilarly, if 1 <= j <= n and i <= i' <= n, then\na_{i',j} - a_{i,j} = sum_{s=i}^{i'-1} (a_{s+1,j} - a_{s,j}),\nwhose summands are all in {0,1} by (ii), so again a_{i',j} >= a_{i,j}.\n\nNow let (i,j) be in E, so a_{i,j} > 0, and suppose i <= i' <= n and j <= j' <= n. By the row monotonicity just proved, a_{i,j'} >= a_{i,j} > 0. Then by the column monotonicity, a_{i',j'} >= a_{i,j'} > 0. Hence (i',j') is in E. This proves that E is southeast-closed.\n\nNext we prove 0 <= l_i <= i for each i.\nThe lower bound l_i >= 0 is immediate because l_i is a cardinality. For the upper bound, if j <= n-i, then i+j <= n, so by condition (i) we have a_{i,j} = 0. Thus any positive entry in row i must lie in one of the columns n-i+1, n-i+2, ..., n, of which there are exactly i. Hence l_i <= i.\n\nWe now show l_1 <= l_2 <= ... <= l_n. Let 1 <= i <= n-1. If j is in P_i, then (i,j) is in E. By southeast-closure, taking i' = i+1 and j' = j, we get (i+1,j) in E, so j is in P_{i+1}. Therefore P_i subseteq P_{i+1}, and taking cardinalities gives l_i <= l_{i+1}. This holds for every i = 1,...,n-1, so the whole sequence is nondecreasing.\n\nNow fix a row i. Because E is southeast-closed, if j is in P_i and j <= j' <= n, then (i,j') is also in E; equivalently j' is in P_i. So P_i is a suffix of {1,...,n}.\n\nIf l_i = 0, then P_i is empty, and the interval condition n-l_i+1 <= j <= n becomes n+1 <= j <= n, which describes the empty set. Thus in this case P_i = {j : n-l_i+1 <= j <= n}.\n\nIf l_i > 0, let m_i be the smallest element of P_i. Since P_i is a suffix, we have P_i = {m_i, m_i+1, ..., n}. Therefore\nl_i = |P_i| = n - m_i + 1,\nso m_i = n - l_i + 1. Hence\nP_i = {n-l_i+1, n-l_i+2, ..., n} = {j : n-l_i+1 <= j <= n}.\n\nSo for every i,\nP_i = {j in {1,...,n} : n-l_i+1 <= j <= n}.\nEquivalently,\n(i,j) is in E if and only if 1 <= i <= n and n-l_i+1 <= j <= n.\nThis is exactly the claimed description of E.\n\nFinally, since E is the disjoint union of the row sets {(i,j) : j in P_i} for i = 1,...,n, we have\nN = |E| = sum_{i=1}^n |P_i| = sum_{i=1}^n l_i.\n\nAll required statements follow.",
+        "role_in_parent": "Introduces the Ferrers-diagram row lengths l_i and expresses N in terms of them."
+      },
+      {
+        "lemma_id": "lem_20260312170827_5dc3d763",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, if 1 <= i,j <= n and a_{i,j} > 0, and if x_{i,j} = # {k in {1,...,j} : a_{i,k} > 0}, then a_{i,j} <= x_{i,j}.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries in Z_{>=0}",
+              "role": "global object"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "entry of A, indexed by 1 <= i,j <= n, with a_{i,j} >= 0",
+              "role": "matrix entry"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "row index for conclusion"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "column index for conclusion"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "1 <= k <= j",
+              "role": "dummy index in counting definition of x_{i,j}"
+            },
+            {
+              "name": "x_{i,j}",
+              "type": "integer",
+              "domain": "cardinality of {k in {1,...,j} : a_{i,k} > 0}",
+              "role": "count of positive entries in row i among first j columns"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 2",
+            "for every n x n matrix A = [a_{i,j}] with entries in Z_{>=0}",
+            "assuming for all 1 <= i,j <= n, if i+j <= n then a_{i,j} = 0",
+            "assuming for all 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "assuming for all 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "for every i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "define x_{i,j} = #{k in {1,...,j} : a_{i,k} > 0}",
+            "then a_{i,j} <= x_{i,j}"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 2",
+            "A is indexed by rows and columns 1,...,n",
+            "all entries a_{i,j} are nonnegative integers",
+            "condition (i) applies exactly on the triangular region i+j <= n within 1 <= i,j <= n",
+            "condition (ii) applies only when i+1 is a valid row index, i.e. 1 <= i <= n-1, and 1 <= j <= n",
+            "condition (iii) applies only when j+1 is a valid column index, i.e. 1 <= j <= n-1, and 1 <= i <= n",
+            "the conclusion applies only to indices i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "x_{i,j} counts positive entries only among columns 1 through j in the fixed row i"
+          ],
+          "witness_dependencies": [
+            "there is no existential witness in the main claim",
+            "x_{i,j} is not existentially chosen; it is uniquely determined by n, A, i, and j",
+            "the dummy variable k is locally bound inside the definition of x_{i,j} and depends on j"
+          ],
+          "normalized_claim": "For every integer n >= 2 and every matrix A = (a_{i,j})_{1 <= i,j <= n} with entries in Z_{>=0}, if (1) for all i,j in {1,...,n}, i+j <= n implies a_{i,j} = 0, (2) for all i in {1,...,n-1} and j in {1,...,n}, a_{i+1,j} - a_{i,j} is either 0 or 1, and (3) for all i in {1,...,n} and j in {1,...,n-1}, a_{i,j+1} - a_{i,j} is either 0 or 1, then for every i,j in {1,...,n} with a_{i,j} > 0, letting x_{i,j} be the number of indices k with 1 <= k <= j and a_{i,k} > 0, one has a_{i,j} <= x_{i,j}."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix n, A, i, j satisfying the hypotheses, and assume a_{i,j}>0. Define\nT := {k in {1,...,j} : a_{i,k}>0}.\nThen j belongs to T, so T is nonempty. Let t := min T.\n\nFirst, the entries in row i are nondecreasing as the column index increases: for every k with 1<=k<=n-1, hypothesis (iii) says a_{i,k+1}-a_{i,k} is in {0,1}, hence a_{i,k+1}>=a_{i,k}. Therefore, since a_{i,t}>0, we have a_{i,k}>=a_{i,t}>0 for every k with t<=k<=j. By minimality of t, no index < t lies in T. Hence\nT = {t,t+1,...,j},\nso\nx_{i,j} = |T| = j-t+1.\n\nNext I claim that a_{i,t}=1.\n\nCase 1: t>1. Since t is the first positive index in row i up to column j, we have a_{i,t-1}=0. Applying hypothesis (iii) at (i,t-1),\na_{i,t}-a_{i,t-1} is in {0,1}.\nBecause a_{i,t-1}=0, this gives a_{i,t} in {0,1}. But a_{i,t}>0, so a_{i,t}=1.\n\nCase 2: t=1. Then a_{i,1}>0. If i<=n-1, then i+1<=n, so i+1<=n implies i+1? More directly, with j=1, we have i+1<=n exactly when i<=n-1, and then i+1? Using hypothesis (i), since i+1<=n means i+1? equivalently i+1<=n, we get i+1? The relevant condition is i+1? No: hypothesis (i) says a_{i,1}=0 whenever i+1<=n, i.e. whenever i<=n-1. That would contradict a_{i,1}>0. Thus i=n. Now hypothesis (i) gives a_{n-1,1}=0 because (n-1)+1=n. Applying hypothesis (ii) at (n-1,1),\na_{n,1}-a_{n-1,1} is in {0,1}.\nSince a_{n-1,1}=0, we get a_{n,1} in {0,1}. Because a_{n,1}=a_{i,t}>0, it follows that a_{i,t}=1.\n\nSo in all cases a_{i,t}=1.\n\nFinally, for each k=t,t+1,...,j-1, hypothesis (iii) gives a_{i,k+1}-a_{i,k} in {0,1}. Summing these differences,\na_{i,j} = a_{i,t} + sum_{k=t}^{j-1} (a_{i,k+1}-a_{i,k})\n<= 1 + (j-t)\n= j-t+1\n= x_{i,j}.\nThus a_{i,j}<=x_{i,j}, as required.",
+        "role_in_parent": "Supplies the first pointwise upper bound used in 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j}."
+      },
+      {
+        "lemma_id": "lem_20260312170849_b0446061",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, if 1 <= i,j <= n and a_{i,j} > 0, and if y_{i,j} = # {k in {1,...,i} : a_{k,j} > 0}, then a_{i,j} <= y_{i,j}.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries a_{i,j} in Z_{>=0}",
+              "role": "global object constrained by conditions (i)-(iii)"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "entry of A, indexed by 1 <= i,j <= n, with a_{i,j} >= 0",
+              "role": "matrix entry"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "row index in the conclusion"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "column index in the conclusion"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "1 <= k <= i",
+              "role": "dummy counting index in the definition of y_{i,j}"
+            },
+            {
+              "name": "y_{i,j}",
+              "type": "integer",
+              "domain": "cardinality of {k in {1,...,i} : a_{k,j} > 0}",
+              "role": "derived quantity depending on A, i, j"
+            }
+          ],
+          "quantifier_order": [
+            "for all integers n with n >= 2",
+            "for all n x n matrices A = [a_{i,j}] with entries in Z_{>=0}",
+            "assuming condition (i): for all i,j with 1 <= i,j <= n and i+j <= n, a_{i,j} = 0",
+            "assuming condition (ii): for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "assuming condition (iii): for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "for all indices i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "let y_{i,j} be the cardinality of {k in {1,...,i} : a_{k,j} > 0}",
+            "then a_{i,j} <= y_{i,j}"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 2",
+            "A is exactly an n x n matrix",
+            "all entries a_{i,j} are nonnegative integers",
+            "condition (i) applies only on the triangular region i+j <= n within 1 <= i,j <= n",
+            "condition (ii) applies only where i+1 is a valid row index, i.e. 1 <= i <= n-1, and 1 <= j <= n",
+            "condition (iii) applies only where j+1 is a valid column index, i.e. 1 <= i <= n and 1 <= j <= n-1",
+            "the conclusion applies only to indices i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "y_{i,j} is defined from the first i entries in column j, counting strictly positive entries"
+          ],
+          "witness_dependencies": [
+            "There is no existential witness in the main claim",
+            "y_{i,j} is not an independently quantified variable; it is uniquely determined by A, i, and j",
+            "The counting variable k is locally bound inside the definition of y_{i,j} and depends on i"
+          ],
+          "normalized_claim": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] of nonnegative integers satisfying: (1) a_{i,j} = 0 for all 1 <= i,j <= n with i+j <= n; (2) a_{i+1,j} - a_{i,j} is either 0 or 1 for all 1 <= i <= n-1 and 1 <= j <= n; and (3) a_{i,j+1} - a_{i,j} is either 0 or 1 for all 1 <= i <= n and 1 <= j <= n-1; for every pair of indices i,j with 1 <= i,j <= n, if a_{i,j} > 0 and y_{i,j} := |{k in {1,...,i} : a_{k,j} > 0}|, then a_{i,j} <= y_{i,j}."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix integers n >= 2 and a matrix A = [a_{i,j}] satisfying the three stated conditions. Let i,j be such that 1 <= i,j <= n and a_{i,j} > 0. Define\n\ny_{i,j} = #{k in {1,...,i} : a_{k,j} > 0}.\n\nWe must prove a_{i,j} <= y_{i,j}.\n\nLet\n\nr := min{k in {1,...,i} : a_{k,j} > 0}.\n\nThis minimum exists because a_{i,j} > 0.\n\nFirst note that condition (ii) implies the entries in each fixed column are nondecreasing downwards: for every t with 1 <= t <= n-1,\n\na_{t+1,j} - a_{t,j} in {0,1},\n\nso a_{t+1,j} >= a_{t,j}. Hence for every k with r <= k <= i we have a_{k,j} >= a_{r,j} > 0. By the minimality of r, for every k < r we have a_{k,j} = 0. Therefore the positive entries among a_{1,j},...,a_{i,j} are exactly those with indices r,r+1,...,i, and so\n\ny_{i,j} = i-r+1.\n\nIt remains to show a_{i,j} <= i-r+1.\n\nCase 1: r > 1.\n\nThen a_{r-1,j} = 0 by the definition of r. Applying condition (ii) at row r-1 gives\n\na_{r,j} in {a_{r-1,j}, a_{r-1,j}+1} = {0,1}.\n\nSince a_{r,j} > 0, it follows that a_{r,j} = 1.\n\nNow for each t = r,r+1,...,i-1, condition (ii) gives\n\na_{t+1,j} - a_{t,j} <= 1.\n\nSumming these inequalities from t=r to t=i-1, we obtain\n\na_{i,j} - a_{r,j} <= i-r.\n\nUsing a_{r,j} = 1, this yields\n\na_{i,j} <= 1 + (i-r) = i-r+1 = y_{i,j}.\n\nCase 2: r = 1.\n\nThen a_{1,j} > 0. By condition (i), if j <= n-1 then 1+j <= n, which would force a_{1,j} = 0, contradiction. Hence j = n.\n\nNow condition (i) gives a_{1,n-1} = 0 because 1 + (n-1) = n. Applying condition (iii) at (1,n-1), we get\n\na_{1,n} in {a_{1,n-1}, a_{1,n-1}+1} = {0,1}.\n\nSince a_{1,n} > 0, we conclude a_{1,n} = 1.\n\nApplying condition (ii) down column n, for each t = 1,2,...,i-1 we have\n\na_{t+1,n} - a_{t,n} <= 1.\n\nSumming from t=1 to t=i-1 gives\n\na_{i,n} - a_{1,n} <= i-1.\n\nUsing a_{1,n} = 1, we obtain\n\na_{i,n} <= 1 + (i-1) = i.\n\nSince r=1, all entries a_{1,n},...,a_{i,n} are positive, so y_{i,n} = i. Thus again\n\na_{i,j} = a_{i,n} <= i = y_{i,n}.\n\nIn both cases, a_{i,j} <= y_{i,j}. Since i,j were arbitrary subject to a_{i,j} > 0, the claim holds for every such pair.",
+        "role_in_parent": "Supplies the second pointwise upper bound used in 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j}."
+      },
+      {
+        "lemma_id": "lem_20260312170909_7b604f52",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, one has a_{i,j} <= max(0, i+j-n) for every 1 <= i,j <= n.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries in Z_{>=0}",
+              "role": "main quantified object"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "entry of A, indexed by 1 <= i,j <= n, with a_{i,j} >= 0",
+              "role": "matrix entry"
+            },
+            {
+              "name": "i",
+              "type": "integer index",
+              "domain": "varies over ranges specified in each condition/conclusion",
+              "role": "row index"
+            },
+            {
+              "name": "j",
+              "type": "integer index",
+              "domain": "varies over ranges specified in each condition/conclusion",
+              "role": "column index"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 2",
+            "for every n x n matrix A = [a_{i,j}] with entries in Z_{>=0}",
+            "if for all i,j with 1 <= i,j <= n and i+j <= n, a_{i,j} = 0",
+            "and for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "and for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "then for all i,j with 1 <= i,j <= n, a_{i,j} <= max(0, i+j-n)"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 2",
+            "A has exactly n rows and n columns",
+            "each entry a_{i,j} is a nonnegative integer",
+            "indices i,j are integer indices",
+            "condition (i) applies only when 1 <= i,j <= n and i+j <= n",
+            "condition (ii) applies only when 1 <= i <= n-1 and 1 <= j <= n so that i+1 is a valid row index",
+            "condition (iii) applies only when 1 <= i <= n and 1 <= j <= n-1 so that j+1 is a valid column index",
+            "the conclusion applies to all indices 1 <= i,j <= n"
+          ],
+          "witness_dependencies": [
+            "There are no existentially quantified witnesses in the statement",
+            "The bound in the conclusion depends on n, i, and j only",
+            "The matrix A is chosen after n, and the conclusion must hold uniformly for every valid index pair (i,j)"
+          ],
+          "normalized_claim": "For every integer n >= 2, every function a : {1,...,n} x {1,...,n} -> Z_{>=0} satisfying (1) a(i,j)=0 whenever i+j <= n, (2) a(i+1,j)-a(i,j) is either 0 or 1 for all 1 <= i <= n-1 and 1 <= j <= n, and (3) a(i,j+1)-a(i,j) is either 0 or 1 for all 1 <= i <= n and 1 <= j <= n-1, also satisfies for every 1 <= i,j <= n the inequality a(i,j) <= max(0, i+j-n)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "We prove the claim by strong induction on the integer t=i+j.\n\nFor each t with 2<=t<=2n, let Q(t) be the statement:\nfor every pair (i,j) with 1<=i,j<=n and i+j=t, one has a_{i,j}<=max(0,t-n).\n\nBase case: t<=n.\nIf i+j=t<=n, then hypothesis (i) gives a_{i,j}=0. Hence\na_{i,j}=0=max(0,t-n).\nSo Q(t) holds for every t<=n.\n\nInductive step: fix t with n<t<=2n, and assume Q(s) holds for every s<t. We must prove Q(t).\nTake any (i,j) with 1<=i,j<=n and i+j=t.\n\nBecause t>n>=2, we cannot have i=j=1, so at least one of i>1 or j>1 holds.\n\nCase 1: i>1.\nThen 1<=i-1<=n-1, so hypothesis (ii) applied to (i-1,j) yields\na_{i,j}-a_{i-1,j} in {0,1}.\nTherefore a_{i,j}<=a_{i-1,j}+1.\nNow (i-1)+j=t-1<t, so by the induction hypothesis Q(t-1),\na_{i-1,j}<=max(0,(t-1)-n).\nSince t>n and t is an integer, t>=n+1, hence (t-1)-n>=0. Thus\nmax(0,(t-1)-n)=t-1-n.\nSo\na_{i,j}<=a_{i-1,j}+1<= (t-1-n)+1=t-n=max(0,t-n).\n\nCase 2: i=1.\nThen j=t-1, and since t>n>=2 we have j>1. Hence 1<=j-1<=n-1, so hypothesis (iii) applied to (1,j-1) yields\na_{1,j}-a_{1,j-1} in {0,1}.\nTherefore a_{1,j}<=a_{1,j-1}+1.\nAlso 1+(j-1)=t-1<t, so by Q(t-1),\na_{1,j-1}<=max(0,(t-1)-n)=t-1-n,\nagain because t>n. Hence\na_{1,j}<=a_{1,j-1}+1<= (t-1-n)+1=t-n=max(0,t-n).\n\nIn both cases, every entry with i+j=t satisfies a_{i,j}<=max(0,t-n). Thus Q(t) holds.\n\nBy strong induction, Q(t) holds for all t from 2 to 2n. Therefore for every 1<=i,j<=n,\na_{i,j}<=max(0,i+j-n).\nThis is exactly the desired conclusion.",
+        "role_in_parent": "Supplies the third pointwise upper bound z_{i,j} = i+j-n on positive cells."
+      },
+      {
+        "lemma_id": "lem_20260312170926_c31e6aa6",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for every i, define E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}. For each (i,j) in E define x_{i,j} = # {k in {1,...,j} : (i,k) is in E}. Then sum_{(i,j) in E} x_{i,j} = sum_{i=1}^n l_i(l_i+1)/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "global size parameter"
+            },
+            {
+              "name": "l",
+              "type": "integer sequence",
+              "domain": "sequence (l_1,...,l_n) indexed by i=1,...,n",
+              "role": "input data determining the set E"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "row index"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "column index"
+            },
+            {
+              "name": "E",
+              "type": "set of integer pairs",
+              "domain": "subset of {1,...,n} x {1,...,n}",
+              "role": "derived set defined from n and l"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "1 <= k <= j",
+              "role": "counting variable in the definition of x_{i,j}"
+            },
+            {
+              "name": "x_{i,j}",
+              "type": "nonnegative integer",
+              "domain": "defined for each (i,j) in E",
+              "role": "cardinality of prior-or-equal entries in row i up to column j that lie in E"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n)",
+            "subject to 0 <= l_1 <= l_2 <= ... <= l_n",
+            "and for every i in {1,...,n}, l_i <= i",
+            "define E from n and l by E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}",
+            "for every (i,j) in E, define x_{i,j} = #{k in {1,...,j} : (i,k) in E}",
+            "then the stated equality of finite sums holds"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence is indexed only for i = 1,...,n",
+            "0 <= l_1 <= l_2 <= ... <= l_n",
+            "for each i in {1,...,n}, l_i <= i",
+            "E only contains pairs (i,j) with 1 <= i,j <= n",
+            "for fixed i, the condition n-l_i+1 <= j <= n gives exactly the last l_i columns when l_i >= 0",
+            "x_{i,j} is defined only when (i,j) belongs to E",
+            "the sums are finite: left side over all elements of E, right side over i=1,...,n"
+          ],
+          "witness_dependencies": [
+            "E depends on n and the full sequence (l_1,...,l_n)",
+            "membership of (i,j) in E depends on n, i, j, and l_i",
+            "x_{i,j} depends on n, l_i, i, and j through E",
+            "there are no existentially quantified witnesses in the claim"
+          ],
+          "normalized_claim": "For every integer n >= 1 and every integer sequence (l_1,...,l_n) such that 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for all i=1,...,n, let E = {(i,j) in {1,...,n} x {1,...,n} : j >= n-l_i+1}. For each (i,j) in E, let x_{i,j} be the number of integers k with 1 <= k <= j and (i,k) in E. Then sum over all (i,j) in E of x_{i,j} equals sum over i=1,...,n of l_i(l_i+1)/2."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix an integer n >= 1 and integers l_1,\\dots,l_n with 0 <= l_1 <= \\cdots <= l_n and l_i <= i for all i. Define\nE = { (i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n }.\nFor each (i,j) in E, define\nx_{i,j} = #{ k in {1,\\dots,j} : (i,k) in E }.\nWe must prove\n\\sum_{(i,j)\\in E} x_{i,j} = \\sum_{i=1}^n \\frac{l_i(l_i+1)}{2}.\n\nFor each fixed i in {1,\\dots,n}, let\nE_i = { j : (i,j) \\in E }.\nBy the definition of E,\nE_i = { j : n-l_i+1 <= j <= n }.\nHence E_i consists of exactly the last l_i columns of row i. In particular, if l_i=0 then E_i is empty, while if l_i>0 then\nE_i = { n-l_i+1, n-l_i+2, \\dots, n }.\nTherefore\n\\sum_{(i,j)\\in E} x_{i,j} = \\sum_{i=1}^n \\sum_{j\\in E_i} x_{i,j}.\nSo it is enough to compute the inner sum for each fixed i.\n\nFix i. Take any j \\in E_i. Since (i,k) \\in E exactly when k \\in E_i, we have\nx_{i,j} = #{ k in {1,\\dots,j} : k \\in E_i }.\nNow E_i = { n-l_i+1, \\dots, n }, so among the integers 1,\\dots,j, the members of E_i are precisely\nn-l_i+1, n-l_i+2, \\dots, j.\nThus\nx_{i,j} = j-(n-l_i+1)+1 = j-n+l_i.\n\nIt is convenient to reindex the elements of E_i. Write\nj = n-l_i+t,\nwhere t runs from 1 to l_i. Then the above formula gives\nx_{i,j} = (n-l_i+t)-n+l_i = t.\nHence, for this fixed i,\n\\sum_{j\\in E_i} x_{i,j} = \\sum_{t=1}^{l_i} t = \\frac{l_i(l_i+1)}{2}.\nThis also holds when l_i=0, since then both sides are 0.\n\nSumming over i=1,\\dots,n, we obtain\n\\sum_{(i,j)\\in E} x_{i,j}\n= \\sum_{i=1}^n \\sum_{j\\in E_i} x_{i,j}\n= \\sum_{i=1}^n \\frac{l_i(l_i+1)}{2}.\nThis is exactly the claimed identity.",
+        "role_in_parent": "Computes the total contribution of the horizontal rank bound."
+      },
+      {
+        "lemma_id": "lem_20260312170947_3141be33",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for every i, define E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}. For each k in {1,...,n} define mu_k = # {i in {1,...,n} : l_i >= k}. For each (i,j) in E define y_{i,j} = # {r in {1,...,i} : (r,j) is in E}. Then sum_{(i,j) in E} y_{i,j} = sum_{k=1}^n mu_k(mu_k+1)/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "primary parameter"
+            },
+            {
+              "name": "l",
+              "type": "integer sequence",
+              "domain": "length n sequence (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for all i in {1,...,n}",
+              "role": "input data"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "{1,...,n}",
+              "role": "row index / bound variable in definitions and sums"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "{1,...,n}",
+              "role": "column index / bound variable in definitions and sums"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "{1,...,n}",
+              "role": "index for mu_k"
+            },
+            {
+              "name": "r",
+              "type": "integer",
+              "domain": "{1,...,i}",
+              "role": "bound variable in the definition of y_{i,j}"
+            },
+            {
+              "name": "E",
+              "type": "set of integer pairs",
+              "domain": "E = { (i,j) in {1,...,n} x {1,...,n} : n - l_i + 1 <= j <= n }",
+              "role": "derived set determined by n and l"
+            },
+            {
+              "name": "mu_k",
+              "type": "integer",
+              "domain": "mu_k = #{ i in {1,...,n} : l_i >= k }",
+              "role": "derived counting function determined by n and l"
+            },
+            {
+              "name": "y_{i,j}",
+              "type": "integer",
+              "domain": "for (i,j) in E, y_{i,j} = #{ r in {1,...,i} : (r,j) in E }",
+              "role": "derived local count determined by n, l, E, i, j"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n) satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for all i in {1,...,n}",
+            "define E from n and l",
+            "for each k in {1,...,n}, define mu_k from n and l",
+            "for each (i,j) in E, define y_{i,j} from E and i",
+            "claim the stated equality of finite sums"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence length is exactly n",
+            "0 <= l_1 <= l_2 <= ... <= l_n",
+            "for every i in {1,...,n}, l_i <= i",
+            "in the definition of E, both i and j range over {1,...,n}",
+            "mu_k is defined only for k in {1,...,n}",
+            "y_{i,j} is defined only for pairs (i,j) belonging to E",
+            "the left-hand sum is over all pairs (i,j) in E",
+            "the right-hand sum is over k = 1,...,n"
+          ],
+          "witness_dependencies": [
+            "E depends on n and the whole sequence (l_1,...,l_n), with row i using l_i",
+            "mu_k depends on n, k, and the whole sequence (l_1,...,l_n)",
+            "y_{i,j} depends on n, the sequence l via E, and the specific pair (i,j)",
+            "there are no existential witnesses in the statement"
+          ],
+          "normalized_claim": "For every integer n >= 1 and every integer sequence (l_1,...,l_n) such that 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for each i = 1,...,n, let E = { (i,j) : 1 <= i <= n, 1 <= j <= n, and j >= n - l_i + 1 } (equivalently n - l_i + 1 <= j <= n). For each k = 1,...,n let mu_k be the number of indices i in {1,...,n} with l_i >= k. For each (i,j) in E let y_{i,j} be the number of r in {1,...,i} such that (r,j) is also in E. Then the identity holds: sum over all (i,j) in E of y_{i,j} equals sum from k=1 to n of mu_k(mu_k+1)/2."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix k in {1,...,n}, and let j_k := n-k+1. Then j_k is a column index in {1,...,n}, and as k runs from 1 to n, the numbers j_k run through all columns exactly once.\n\nFor any row index i, we have\n(i,j_k) in E\nif and only if n-l_i+1 <= j_k <= n.\nSince j_k = n-k+1, this is equivalent to\nn-l_i+1 <= n-k+1,\nthat is, l_i >= k.\nHence the set of rows whose cell in column j_k belongs to E is exactly\nI_k := { i in {1,...,n} : l_i >= k }.\nBy definition, |I_k| = mu_k.\n\nNow list the elements of I_k in increasing order:\nI_k = {i_1 < i_2 < ... < i_{mu_k}}\nif mu_k > 0. For each t = 1,...,mu_k, consider the cell (i_t,j_k). By definition,\ny_{i_t,j_k} = # { r in {1,...,i_t} : (r,j_k) is in E }.\nBut (r,j_k) is in E exactly when r is in I_k, so\n y_{i_t,j_k} = # { r <= i_t : r in I_k }.\nAmong the elements of I_k, exactly i_1,...,i_t are <= i_t. Therefore\n y_{i_t,j_k} = t.\nSo the total contribution from column j_k is\nsum over all i with (i,j_k) in E of y_{i,j_k}\n= sum_{t=1}^{mu_k} t\n= mu_k(mu_k+1)/2.\nIf mu_k = 0, then the column contributes 0, which is again mu_k(mu_k+1)/2.\n\nFinally, the columns j_k for k=1,...,n are precisely all columns of the n by n grid, so E is the disjoint union over k=1,...,n of the cells in column j_k. Therefore\nsum_{(i,j) in E} y_{i,j}\n= sum_{k=1}^n sum over all i with (i,j_k) in E of y_{i,j_k}\n= sum_{k=1}^n mu_k(mu_k+1)/2.\nThis is exactly the claimed identity.",
+        "role_in_parent": "Converts the vertical rank sum into a column-height expression."
+      },
+      {
+        "lemma_id": "lem_20260312171011_aebaeb93",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n <= n, define mu_k = # {i in {1,...,n} : l_i >= k} for 1 <= k <= n. Then sum_{k=1}^n mu_k(mu_k+1)/2 = sum_{i=1}^n (n+1-i)l_i.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "global size parameter"
+            },
+            {
+              "name": "l",
+              "type": "finite integer sequence",
+              "domain": "sequence (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n <= n",
+              "role": "input data"
+            },
+            {
+              "name": "i",
+              "type": "integer index",
+              "domain": "1 <= i <= n",
+              "role": "index for the sequence l_i and right-hand sum"
+            },
+            {
+              "name": "k",
+              "type": "integer index",
+              "domain": "1 <= k <= n",
+              "role": "index for the derived quantities mu_k and left-hand sum"
+            },
+            {
+              "name": "mu_k",
+              "type": "integer",
+              "domain": "for each k with 1 <= k <= n, mu_k = |{ i in {1,...,n} : l_i >= k }|",
+              "role": "derived count depending on n, l, and k"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n) such that 0 <= l_1 <= l_2 <= ... <= l_n <= n",
+            "for each integer k with 1 <= k <= n, define mu_k := |{ i in {1,...,n} : l_i >= k }|",
+            "the identity sum_{k=1}^n mu_k(mu_k+1)/2 = sum_{i=1}^n (n+1-i) l_i holds"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence length is exactly n",
+            "the sequence is weakly increasing: l_1 <= l_2 <= ... <= l_n",
+            "each l_i satisfies 0 <= l_i <= n",
+            "mu_k is defined only for integers k with 1 <= k <= n",
+            "the counted indices i range over the integer set {1,...,n}"
+          ],
+          "witness_dependencies": [
+            "there are no existential witnesses in the statement",
+            "mu_k is a derived quantity uniquely determined by n, the sequence (l_1,...,l_n), and the index k"
+          ],
+          "normalized_claim": "For all integers n >= 1 and all integer sequences (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n <= n, if for each integer k in {1,...,n} one defines mu_k = |{ i in {1,...,n} : l_i >= k }|, then the exact equality holds: sum_{k=1}^n [mu_k(mu_k+1)/2] = sum_{i=1}^n [(n+1-i)l_i]."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix an integer n >= 1 and integers 0 <= l_1 <= l_2 <= ... <= l_n <= n. For each k in {1,...,n}, let\nmu_k = #{ i in {1,...,n} : l_i >= k }.\nWe prove\nsum_{k=1}^n mu_k(mu_k+1)/2 = sum_{i=1}^n (n+1-i)l_i.\n\nBecause each l_i is a nonnegative integer, we may write\n(n+1-i)l_i = sum_{k=1}^{l_i} (n+1-i) = sum_{k=1}^n (n+1-i) * 1_{\\{l_i >= k\\}}.\nSumming over i gives\nsum_{i=1}^n (n+1-i)l_i\n= sum_{i=1}^n sum_{k=1}^n (n+1-i) * 1_{\\{l_i >= k\\}}.\nSince this is a finite double sum, we may interchange the order of summation:\nsum_{i=1}^n (n+1-i)l_i\n= sum_{k=1}^n sum_{i=1}^n (n+1-i) * 1_{\\{l_i >= k\\}}\n= sum_{k=1}^n sum_{i: l_i >= k} (n+1-i).\n\nNow fix k in {1,...,n}. Since l_1 <= l_2 <= ... <= l_n, the set of indices i with l_i >= k is a terminal segment of {1,...,n}. Its cardinality is mu_k, so necessarily\n{i : l_i >= k} = {n-mu_k+1, n-mu_k+2, ..., n}\n(with the understanding that this set is empty when mu_k = 0). Therefore\nsum_{i: l_i >= k} (n+1-i)\n= sum_{i=n-mu_k+1}^n (n+1-i).\nPutting r = n+1-i, as i runs from n-mu_k+1 to n, the value of r runs from mu_k down to 1. Hence\nsum_{i=n-mu_k+1}^n (n+1-i) = sum_{r=1}^{mu_k} r = mu_k(mu_k+1)/2.\nSo for every k,\nsum_{i: l_i >= k} (n+1-i) = mu_k(mu_k+1)/2.\nSubstituting into the previous expression yields\nsum_{i=1}^n (n+1-i)l_i = sum_{k=1}^n mu_k(mu_k+1)/2.\nThis is exactly the claimed identity.",
+        "role_in_parent": "Rewrites the column-height expression from L6 as a linear form in the row lengths l_i."
+      },
+      {
+        "lemma_id": "lem_20260312171027_6043d2dd",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for every i, define E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}. Then sum_{(i,j) in E} (i+j-n) = sum_{i=1}^n l_i(2i-l_i+1)/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "outer universally quantified size parameter"
+            },
+            {
+              "name": "l",
+              "type": "integer-valued finite sequence",
+              "domain": "sequence (l_1,...,l_n) indexed by i=1,...,n",
+              "role": "outer universally quantified data subject to monotonicity and upper-bound constraints"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "index for the sequence and for the right-hand sum"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "second coordinate in the set E and summation index on the left-hand side"
+            },
+            {
+              "name": "E",
+              "type": "set of ordered pairs of integers",
+              "domain": "subset of {1,...,n} x {1,...,n} defined from n and l",
+              "role": "derived set over which the left-hand sum is taken"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n)",
+            "subject to 0 <= l_1 <= l_2 <= ... <= l_n and for every i in {1,...,n}, l_i <= i",
+            "define E = { (i,j) in Z x Z : 1 <= i <= n, 1 <= j <= n, and n - l_i + 1 <= j <= n }",
+            "claim the equality of the two finite sums"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence is indexed only for i = 1,...,n",
+            "0 <= l_1 <= l_2 <= ... <= l_n",
+            "for every i in {1,...,n}, l_i <= i",
+            "in the definition of E, both coordinates satisfy 1 <= i,j <= n",
+            "for fixed i, the j-range is from n-l_i+1 to n; since l_i >= 0 this is a valid upper-tail interval, and if l_i = 0 there are no such j"
+          ],
+          "witness_dependencies": [
+            "E is not independently quantified; it is defined uniquely from n and the full sequence (l_1,...,l_n)",
+            "the lower bound n-l_i+1 for j depends on the specific index i through l_i",
+            "there are no existential witnesses in the statement"
+          ],
+          "normalized_claim": "For all integers n >= 1 and all integer sequences (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for each i=1,...,n, if E := { (i,j) : 1 <= i <= n, 1 <= j <= n, n-l_i+1 <= j <= n }, then sum over all (i,j) in E of (i + j - n) equals sum from i=1 to n of l_i(2i - l_i + 1)/2."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let\n\\[\nT:=\\sum_{(i,j)\\in E}(i+j-n).\n\\]\nFor each fixed row index \\(i\\in\\{1,\\dots,n\\}\\), the points of \\(E\\) in that row are exactly\n\\[\n(i,j)\\quad\\text{with}\\quad n-l_i+1\\le j\\le n.\n\\]\nHence, if we write\n\\[\nT_i:=\\sum_{j=n-l_i+1}^{n}(i+j-n),\n\\]\nwith the usual convention that this is the empty sum when \\(l_i=0\\), then the rows are disjoint and cover \\(E\\), so\n\\[\nT=\\sum_{i=1}^n T_i.\n\\]\nIt therefore suffices to compute each \\(T_i\\).\n\nFix \\(i\\). We consider two cases.\n\nIf \\(l_i=0\\), then there is no integer \\(j\\) with \\(n-l_i+1=n+1\\le j\\le n\\), so \\(T_i=0\\). Also\n\\[\n\\frac{l_i(2i-l_i+1)}2=\\frac{0(2i-0+1)}2=0.\n\\]\nThus in this case\n\\[\nT_i=\\frac{l_i(2i-l_i+1)}2.\n\\]\n\nNow assume \\(l_i\\ge 1\\). Then the allowed values of \\(j\\) are\n\\[\nj=n-l_i+1,\\,n-l_i+2,\\,\\dots,\\,n.\n\\]\nSet\n\\[\nj=n-l_i+t\\qquad (t=1,2,\\dots,l_i).\n\\]\nThis reindexes the sum bijectively, so\n\\[\nT_i=\\sum_{t=1}^{l_i}\\bigl(i+(n-l_i+t)-n\\bigr)\n=\\sum_{t=1}^{l_i}(i-l_i+t).\n\\]\nTherefore\n\\[\nT_i=\\sum_{t=1}^{l_i}(i-l_i)+\\sum_{t=1}^{l_i}t\n=l_i(i-l_i)+\\frac{l_i(l_i+1)}2.\n\\]\nSimplifying,\n\\[\nT_i=\\frac{2l_i(i-l_i)+l_i(l_i+1)}2\n=\\frac{2il_i-l_i^2+l_i}{2}\n=\\frac{l_i(2i-l_i+1)}2.\n\\]\nSo this formula also holds when \\(l_i\\ge 1\\).\n\nThus for every \\(i=1,\\dots,n\\),\n\\[\nT_i=\\frac{l_i(2i-l_i+1)}2.\n\\]\nSumming over \\(i\\), we obtain\n\\[\n\\sum_{(i,j)\\in E}(i+j-n)\n=T\n=\\sum_{i=1}^n T_i\n=\\sum_{i=1}^n \\frac{l_i(2i-l_i+1)}2.\n\\]\nThis is exactly the claimed identity.",
+        "role_in_parent": "Computes the total contribution of the anti-diagonal distance bound."
+      }
+    ],
+    "all_visible_lemmas_nl_accepted": true
+  }
+  
+  the goal was to get ai to prove the statement_nl. was this achieved with al the lemmas? is everything 100% rigorous? 
+  Final NL Output (JSON)
+  {
+    "problem_id": "prob_20260312170058_e30a5c94",
+    "title": "Putnam B4 Test",
+    "verification_level": "nl_only",
+    "root_theorem": {
+      "theorem_id": "thm_root_20260312170058_375fd022",
+      "statement_nl": "For $n \\geq 2$, let $A = [a_{i,j}]_{i,j=1}^n$ be an $n$-by-$n$ matrix of nonnegative integers such that (a) $a_{i,j} = 0$ when $i+j\\leq n$; (b) $a_{i+1,j} \\in \\{a_{i,j}, a_{i,j}+1\\}$ when $1 \\leq i \\leq n-1$ and $1 \\leq j \\leq n$; and (c) $a_{i,j+1} \\in \\{a_{i,j}, a_{i,j}+1\\}$ when $1 \\leq i \\leq n$ and $1 \\leq j \\leq n-1$. Let $S$ be the sum of the entries of $A$, and let $N$ be the number of nonzero entries of $A$. Prove that \\[ S \\leq \\frac{(n+2)N}{3}. \\]",
+      "semantic_sketch": {
+        "variables": [
+          {
+            "name": "n",
+            "type": "integer",
+            "domain": "n >= 2",
+            "role": "size parameter"
+          },
+          {
+            "name": "A",
+            "type": "matrix",
+            "domain": "n x n matrix with entries in nonnegative integers",
+            "role": "primary object"
+          },
+          {
+            "name": "a_{i,j}",
+            "type": "integer",
+            "domain": "nonnegative integer for each 1 <= i,j <= n",
+            "role": "entry of A"
+          },
+          {
+            "name": "i",
+            "type": "integer",
+            "domain": "index with bounds depending on clause",
+            "role": "row index"
+          },
+          {
+            "name": "j",
+            "type": "integer",
+            "domain": "index with bounds depending on clause",
+            "role": "column index"
+          },
+          {
+            "name": "S",
+            "type": "integer",
+            "domain": "S = sum of all entries of A",
+            "role": "total entry sum"
+          },
+          {
+            "name": "N",
+            "type": "integer",
+            "domain": "N = number of pairs (i,j) with 1 <= i,j <= n and a_{i,j} != 0",
+            "role": "count of nonzero entries"
+          }
+        ],
+        "quantifier_order": [
+          "for all integers n >= 2",
+          "for all n x n matrices A with entries a_{i,j} in nonnegative integers",
+          "such that for all i,j with 1 <= i,j <= n, if i+j <= n then a_{i,j} = 0",
+          "and for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} is either a_{i,j} or a_{i,j}+1",
+          "and for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} is either a_{i,j} or a_{i,j}+1",
+          "define S and N from A",
+          "then S <= ((n+2)N)/3"
+        ],
+        "domain_restrictions": [
+          "n is an integer with n >= 2",
+          "A has exactly n rows and n columns",
+          "each a_{i,j} is a nonnegative integer",
+          "condition (a) applies to all index pairs with 1 <= i,j <= n and i+j <= n",
+          "condition (b) applies only where i+1 is within range: 1 <= i <= n-1 and 1 <= j <= n",
+          "condition (c) applies only where j+1 is within range: 1 <= i <= n and 1 <= j <= n-1",
+          "S = sum_{i=1}^n sum_{j=1}^n a_{i,j}",
+          "N = |{(i,j) : 1 <= i,j <= n and a_{i,j} != 0}|"
+        ],
+        "witness_dependencies": [
+          "there are no existential witnesses in the statement",
+          "S and N are uniquely determined by A and therefore depend on n only through A's size"
+        ],
+        "normalized_claim": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0}, if (i) a_{i,j} = 0 for every 1 <= i,j <= n with i+j <= n, (ii) for every 1 <= i <= n-1 and 1 <= j <= n one has a_{i+1,j} - a_{i,j} in {0,1}, and (iii) for every 1 <= i <= n and 1 <= j <= n-1 one has a_{i,j+1} - a_{i,j} in {0,1}, then with S = sum_{i=1}^n sum_{j=1}^n a_{i,j} and N = #{(i,j) in [1,n]^2 : a_{i,j} > 0}, the inequality 3S <= (n+2)N holds."
+      }
+    },
+    "selected_decomposition": {
+      "decomposition_id": "dec_20260312170758_4203a64b",
+      "strategy_summary": "Use the support E = {(i,j) : a_{i,j} > 0} as a southeast-closed Ferrers diagram. For each positive cell, bound its value simultaneously by three easier quantities: its horizontal positive rank in its row, its vertical positive rank in its column, and its distance from the zero anti-diagonal. Summing the pointwise inequality 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j} reduces the theorem to three explicit combinatorial summation formulas over the Ferrers diagram, whose total is exactly (n+2)N.",
+      "controller_status": "succeeded",
+      "llm_vetting_status": "accepted",
+      "assembly_plan": {
+        "assembly_plan_id": "asm_20260312170758_7830062c",
+        "steps": [
+          {
+            "step_id": "A1",
+            "uses_lemmas": [
+              "lem_20260312170758_b5b84c4c"
+            ],
+            "uses_prior_steps": [],
+            "derives": "Let E = {(i,j) : a_{i,j} > 0}. For each i, define l_i = #{j : a_{i,j} > 0}. Then E = {(i,j) : n-l_i+1 <= j <= n}, the sequence l_1,...,l_n is weakly increasing with l_i <= i, and N = sum_{i=1}^n l_i.",
+            "is_trivial": true,
+            "trivial_justification": "This is exactly the conclusion of L1."
+          },
+          {
+            "step_id": "A2",
+            "uses_lemmas": [
+              "lem_20260312170827_5dc3d763",
+              "lem_20260312170849_b0446061",
+              "lem_20260312170909_7b604f52"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "For each (i,j) in E, define x_{i,j} = #{k <= j : a_{i,k} > 0}, y_{i,j} = #{k <= i : a_{k,j} > 0}, and z_{i,j} = i+j-n. Then a_{i,j} <= x_{i,j}, a_{i,j} <= y_{i,j}, and a_{i,j} <= z_{i,j}, hence 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j}. Summing over (i,j) in E gives 3S <= X + Y + Z, where X = sum_{(i,j) in E} x_{i,j}, Y = sum_{(i,j) in E} y_{i,j}, and Z = sum_{(i,j) in E} z_{i,j}.",
+            "is_trivial": true,
+            "trivial_justification": "Each of the three inequalities is provided by L2, L3, and L4, and summing them over the positive support E gives the displayed bound because S = sum_{(i,j) in E} a_{i,j}."
+          },
+          {
+            "step_id": "A3",
+            "uses_lemmas": [
+              "lem_20260312170926_c31e6aa6"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "X = sum_{i=1}^n l_i(l_i+1)/2.",
+            "is_trivial": true,
+            "trivial_justification": "Apply L5 to the Ferrers shape E described in A1."
+          },
+          {
+            "step_id": "A4",
+            "uses_lemmas": [
+              "lem_20260312170947_3141be33",
+              "lem_20260312171011_aebaeb93"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "Y = sum_{i=1}^n (n+1-i)l_i.",
+            "is_trivial": true,
+            "trivial_justification": "By L6, Y equals sum_k mu_k(mu_k+1)/2 for the column heights mu_k of E; by L7 this equals sum_i (n+1-i)l_i."
+          },
+          {
+            "step_id": "A5",
+            "uses_lemmas": [
+              "lem_20260312171027_6043d2dd"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "Z = sum_{i=1}^n l_i(2i-l_i+1)/2.",
+            "is_trivial": true,
+            "trivial_justification": "Apply L8 to the same Ferrers shape E from A1."
+          },
+          {
+            "step_id": "A6",
+            "uses_lemmas": [],
+            "uses_prior_steps": [
+              "A1",
+              "A3",
+              "A4",
+              "A5"
+            ],
+            "derives": "X + Y + Z = sum_{i=1}^n [l_i(l_i+1)/2 + (n+1-i)l_i + l_i(2i-l_i+1)/2] = sum_{i=1}^n (n+2)l_i = (n+2)N.",
+            "is_trivial": true,
+            "trivial_justification": "This is immediate algebra, using N = sum_i l_i from A1."
+          },
+          {
+            "step_id": "A7",
+            "uses_lemmas": [],
+            "uses_prior_steps": [
+              "A2",
+              "A6"
+            ],
+            "derives": "From 3S <= X + Y + Z and X + Y + Z = (n+2)N, we get 3S <= (n+2)N, hence S <= ((n+2)N)/3.",
+            "is_trivial": true,
+            "trivial_justification": "Substitution followed by division by 3 yields exactly the root theorem."
+          }
+        ],
+        "proof_skeleton_nl": "Encode the positive support as a southeast-closed Ferrers diagram with row lengths l_i. For each positive cell, bound its value by three quantities: horizontal positive rank, vertical positive rank, and distance from the zero anti-diagonal. Summing these three bounds gives 3S <= X+Y+Z. The three pure combinatorial lemmas compute X, Y, and Z explicitly in terms of the l_i, and those expressions add up to (n+2)N.",
+        "is_trivially_composable": true
+      }
+    },
+    "lemmas": [
+      {
+        "lemma_id": "lem_20260312170758_b5b84c4c",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, define E = {(i,j) : 1 <= i,j <= n and a_{i,j} > 0}. Then E is southeast-closed in the sense that if (i,j) is in E and i <= i' <= n and j <= j' <= n, then (i',j') is in E. Also, for each row index i define l_i = # {j in {1,...,n} : a_{i,j} > 0}. Then 0 <= l_i <= i for every i, one has l_1 <= l_2 <= ... <= l_n, and E is exactly the set of pairs (i,j) with 1 <= i <= n and n-l_i+1 <= j <= n. Consequently, if N = #E, then N = sum_{i=1}^n l_i.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries a_{i,j} in Z_{>=0}",
+              "role": "input matrix satisfying structural conditions"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "indexed entries of A for 1 <= i,j <= n, each in Z_{>=0}",
+              "role": "matrix entry values"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "typically 1 <= i <= n; specialized ranges depend on clause",
+              "role": "row index / universally quantified local index"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "typically 1 <= j <= n; specialized ranges depend on clause",
+              "role": "column index / universally quantified local index"
+            },
+            {
+              "name": "i'",
+              "type": "integer",
+              "domain": "i <= i' <= n",
+              "role": "southeast row comparison index"
+            },
+            {
+              "name": "j'",
+              "type": "integer",
+              "domain": "j <= j' <= n",
+              "role": "southeast column comparison index"
+            },
+            {
+              "name": "E",
+              "type": "set of pairs of integers",
+              "domain": "E = {(i,j) : 1 <= i,j <= n and a_{i,j} > 0}",
+              "role": "support of positive entries of A"
+            },
+            {
+              "name": "l_i",
+              "type": "integer",
+              "domain": "for each i with 1 <= i <= n, l_i = # {j in {1,...,n} : a_{i,j} > 0}",
+              "role": "number of positive entries in row i"
+            },
+            {
+              "name": "N",
+              "type": "integer",
+              "domain": "N = #E",
+              "role": "cardinality of E"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 2",
+            "for every n x n matrix A over Z_{>=0}",
+            "assuming condition (i): for all i,j with 1 <= i,j <= n and i+j <= n, a_{i,j} = 0",
+            "assuming condition (ii): for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "assuming condition (iii): for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "define E from A",
+            "then for all (i,j) in E and all integers i',j' with i <= i' <= n and j <= j' <= n, (i',j') in E",
+            "for each i with 1 <= i <= n, define l_i from A",
+            "then for all i with 1 <= i <= n, 0 <= l_i <= i",
+            "and l_1 <= l_2 <= ... <= l_n",
+            "and for all integer pairs (i,j), (i,j) in E iff 1 <= i <= n and n-l_i+1 <= j <= n",
+            "defining N = #E, conclude N = sum_{i=1}^n l_i"
+          ],
+          "domain_restrictions": [
+            "n is an integer with n >= 2",
+            "A has exactly n rows and n columns",
+            "all entries a_{i,j} are nonnegative integers",
+            "condition (i) only constrains indices within 1 <= i,j <= n satisfying i+j <= n",
+            "condition (ii) only constrains indices with 1 <= i <= n-1 and 1 <= j <= n",
+            "condition (iii) only constrains indices with 1 <= i <= n and 1 <= j <= n-1",
+            "E contains only pairs (i,j) with 1 <= i,j <= n",
+            "l_i is defined only for row indices i in {1,...,n}",
+            "the formula characterizing E row-by-row uses the same l_i corresponding to the row index i",
+            "since l_i may be 0, the interval condition n-l_i+1 <= j <= n is intended to describe an empty set when n-l_i+1 > n"
+          ],
+          "witness_dependencies": [
+            "E depends only on A (and hence on n through the size of A)",
+            "each l_i depends on A and the chosen row index i",
+            "N depends on E, hence on A",
+            "there are no existential witnesses requiring independent choice; all objects E, l_i, N are explicitly defined from A",
+            "the variables i' and j' in the southeast-closure clause depend on the previously chosen (i,j)"
+          ],
+          "normalized_claim": "For every integer n >= 2 and every matrix A = (a_{i,j})_{1<=i,j<=n} with entries in Z_{>=0} satisfying: (1) a_{i,j}=0 for all 1<=i,j<=n with i+j<=n; (2) a_{i+1,j}-a_{i,j} is either 0 or 1 for all 1<=i<=n-1, 1<=j<=n; and (3) a_{i,j+1}-a_{i,j} is either 0 or 1 for all 1<=i<=n, 1<=j<=n-1; define E={(i,j):1<=i,j<=n and a_{i,j}>0}. Then E is southeast-closed: whenever (i,j) is in E and i<=i'<=n and j<=j'<=n, one has (i',j') in E. For each row i in {1,...,n}, let l_i be the number of columns j with a_{i,j}>0. Then for every i, 0<=l_i<=i; the sequence (l_i) is nondecreasing, i.e. l_1<=l_2<=...<=l_n; and E is exactly the union over rows i of the rightmost l_i positions in that row, equivalently (i,j) in E iff 1<=i<=n and n-l_i+1<=j<=n. Therefore, if N=|E|, then N equals the row-sum count sum_{i=1}^n l_i."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix n >= 2 and a matrix A = [a_{i,j}]_{i,j=1}^n satisfying the three stated conditions, and define E = {(i,j) : a_{i,j} > 0}. For each row i, let P_i := {j in {1,...,n} : a_{i,j} > 0}, so l_i = |P_i|.\n\nFirst we record the monotonicity forced by (ii) and (iii).\n\nIf 1 <= i <= n and j <= j' <= n, then\na_{i,j'} - a_{i,j} = sum_{t=j}^{j'-1} (a_{i,t+1} - a_{i,t}).\nEach summand belongs to {0,1} by (iii), hence is >= 0. Therefore a_{i,j'} >= a_{i,j}.\nSimilarly, if 1 <= j <= n and i <= i' <= n, then\na_{i',j} - a_{i,j} = sum_{s=i}^{i'-1} (a_{s+1,j} - a_{s,j}),\nwhose summands are all in {0,1} by (ii), so again a_{i',j} >= a_{i,j}.\n\nNow let (i,j) be in E, so a_{i,j} > 0, and suppose i <= i' <= n and j <= j' <= n. By the row monotonicity just proved, a_{i,j'} >= a_{i,j} > 0. Then by the column monotonicity, a_{i',j'} >= a_{i,j'} > 0. Hence (i',j') is in E. This proves that E is southeast-closed.\n\nNext we prove 0 <= l_i <= i for each i.\nThe lower bound l_i >= 0 is immediate because l_i is a cardinality. For the upper bound, if j <= n-i, then i+j <= n, so by condition (i) we have a_{i,j} = 0. Thus any positive entry in row i must lie in one of the columns n-i+1, n-i+2, ..., n, of which there are exactly i. Hence l_i <= i.\n\nWe now show l_1 <= l_2 <= ... <= l_n. Let 1 <= i <= n-1. If j is in P_i, then (i,j) is in E. By southeast-closure, taking i' = i+1 and j' = j, we get (i+1,j) in E, so j is in P_{i+1}. Therefore P_i subseteq P_{i+1}, and taking cardinalities gives l_i <= l_{i+1}. This holds for every i = 1,...,n-1, so the whole sequence is nondecreasing.\n\nNow fix a row i. Because E is southeast-closed, if j is in P_i and j <= j' <= n, then (i,j') is also in E; equivalently j' is in P_i. So P_i is a suffix of {1,...,n}.\n\nIf l_i = 0, then P_i is empty, and the interval condition n-l_i+1 <= j <= n becomes n+1 <= j <= n, which describes the empty set. Thus in this case P_i = {j : n-l_i+1 <= j <= n}.\n\nIf l_i > 0, let m_i be the smallest element of P_i. Since P_i is a suffix, we have P_i = {m_i, m_i+1, ..., n}. Therefore\nl_i = |P_i| = n - m_i + 1,\nso m_i = n - l_i + 1. Hence\nP_i = {n-l_i+1, n-l_i+2, ..., n} = {j : n-l_i+1 <= j <= n}.\n\nSo for every i,\nP_i = {j in {1,...,n} : n-l_i+1 <= j <= n}.\nEquivalently,\n(i,j) is in E if and only if 1 <= i <= n and n-l_i+1 <= j <= n.\nThis is exactly the claimed description of E.\n\nFinally, since E is the disjoint union of the row sets {(i,j) : j in P_i} for i = 1,...,n, we have\nN = |E| = sum_{i=1}^n |P_i| = sum_{i=1}^n l_i.\n\nAll required statements follow.",
+        "role_in_parent": "Introduces the Ferrers-diagram row lengths l_i and expresses N in terms of them."
+      },
+      {
+        "lemma_id": "lem_20260312170827_5dc3d763",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, if 1 <= i,j <= n and a_{i,j} > 0, and if x_{i,j} = # {k in {1,...,j} : a_{i,k} > 0}, then a_{i,j} <= x_{i,j}.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries in Z_{>=0}",
+              "role": "global object"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "entry of A, indexed by 1 <= i,j <= n, with a_{i,j} >= 0",
+              "role": "matrix entry"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "row index for conclusion"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "column index for conclusion"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "1 <= k <= j",
+              "role": "dummy index in counting definition of x_{i,j}"
+            },
+            {
+              "name": "x_{i,j}",
+              "type": "integer",
+              "domain": "cardinality of {k in {1,...,j} : a_{i,k} > 0}",
+              "role": "count of positive entries in row i among first j columns"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 2",
+            "for every n x n matrix A = [a_{i,j}] with entries in Z_{>=0}",
+            "assuming for all 1 <= i,j <= n, if i+j <= n then a_{i,j} = 0",
+            "assuming for all 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "assuming for all 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "for every i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "define x_{i,j} = #{k in {1,...,j} : a_{i,k} > 0}",
+            "then a_{i,j} <= x_{i,j}"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 2",
+            "A is indexed by rows and columns 1,...,n",
+            "all entries a_{i,j} are nonnegative integers",
+            "condition (i) applies exactly on the triangular region i+j <= n within 1 <= i,j <= n",
+            "condition (ii) applies only when i+1 is a valid row index, i.e. 1 <= i <= n-1, and 1 <= j <= n",
+            "condition (iii) applies only when j+1 is a valid column index, i.e. 1 <= j <= n-1, and 1 <= i <= n",
+            "the conclusion applies only to indices i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "x_{i,j} counts positive entries only among columns 1 through j in the fixed row i"
+          ],
+          "witness_dependencies": [
+            "there is no existential witness in the main claim",
+            "x_{i,j} is not existentially chosen; it is uniquely determined by n, A, i, and j",
+            "the dummy variable k is locally bound inside the definition of x_{i,j} and depends on j"
+          ],
+          "normalized_claim": "For every integer n >= 2 and every matrix A = (a_{i,j})_{1 <= i,j <= n} with entries in Z_{>=0}, if (1) for all i,j in {1,...,n}, i+j <= n implies a_{i,j} = 0, (2) for all i in {1,...,n-1} and j in {1,...,n}, a_{i+1,j} - a_{i,j} is either 0 or 1, and (3) for all i in {1,...,n} and j in {1,...,n-1}, a_{i,j+1} - a_{i,j} is either 0 or 1, then for every i,j in {1,...,n} with a_{i,j} > 0, letting x_{i,j} be the number of indices k with 1 <= k <= j and a_{i,k} > 0, one has a_{i,j} <= x_{i,j}."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix n, A, i, j satisfying the hypotheses, and assume a_{i,j}>0. Define\nT := {k in {1,...,j} : a_{i,k}>0}.\nThen j belongs to T, so T is nonempty. Let t := min T.\n\nFirst, the entries in row i are nondecreasing as the column index increases: for every k with 1<=k<=n-1, hypothesis (iii) says a_{i,k+1}-a_{i,k} is in {0,1}, hence a_{i,k+1}>=a_{i,k}. Therefore, since a_{i,t}>0, we have a_{i,k}>=a_{i,t}>0 for every k with t<=k<=j. By minimality of t, no index < t lies in T. Hence\nT = {t,t+1,...,j},\nso\nx_{i,j} = |T| = j-t+1.\n\nNext I claim that a_{i,t}=1.\n\nCase 1: t>1. Since t is the first positive index in row i up to column j, we have a_{i,t-1}=0. Applying hypothesis (iii) at (i,t-1),\na_{i,t}-a_{i,t-1} is in {0,1}.\nBecause a_{i,t-1}=0, this gives a_{i,t} in {0,1}. But a_{i,t}>0, so a_{i,t}=1.\n\nCase 2: t=1. Then a_{i,1}>0. If i<=n-1, then i+1<=n, so i+1<=n implies i+1? More directly, with j=1, we have i+1<=n exactly when i<=n-1, and then i+1? Using hypothesis (i), since i+1<=n means i+1? equivalently i+1<=n, we get i+1? The relevant condition is i+1? No: hypothesis (i) says a_{i,1}=0 whenever i+1<=n, i.e. whenever i<=n-1. That would contradict a_{i,1}>0. Thus i=n. Now hypothesis (i) gives a_{n-1,1}=0 because (n-1)+1=n. Applying hypothesis (ii) at (n-1,1),\na_{n,1}-a_{n-1,1} is in {0,1}.\nSince a_{n-1,1}=0, we get a_{n,1} in {0,1}. Because a_{n,1}=a_{i,t}>0, it follows that a_{i,t}=1.\n\nSo in all cases a_{i,t}=1.\n\nFinally, for each k=t,t+1,...,j-1, hypothesis (iii) gives a_{i,k+1}-a_{i,k} in {0,1}. Summing these differences,\na_{i,j} = a_{i,t} + sum_{k=t}^{j-1} (a_{i,k+1}-a_{i,k})\n<= 1 + (j-t)\n= j-t+1\n= x_{i,j}.\nThus a_{i,j}<=x_{i,j}, as required.",
+        "role_in_parent": "Supplies the first pointwise upper bound used in 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j}."
+      },
+      {
+        "lemma_id": "lem_20260312170849_b0446061",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, if 1 <= i,j <= n and a_{i,j} > 0, and if y_{i,j} = # {k in {1,...,i} : a_{k,j} > 0}, then a_{i,j} <= y_{i,j}.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries a_{i,j} in Z_{>=0}",
+              "role": "global object constrained by conditions (i)-(iii)"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "entry of A, indexed by 1 <= i,j <= n, with a_{i,j} >= 0",
+              "role": "matrix entry"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "row index in the conclusion"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "column index in the conclusion"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "1 <= k <= i",
+              "role": "dummy counting index in the definition of y_{i,j}"
+            },
+            {
+              "name": "y_{i,j}",
+              "type": "integer",
+              "domain": "cardinality of {k in {1,...,i} : a_{k,j} > 0}",
+              "role": "derived quantity depending on A, i, j"
+            }
+          ],
+          "quantifier_order": [
+            "for all integers n with n >= 2",
+            "for all n x n matrices A = [a_{i,j}] with entries in Z_{>=0}",
+            "assuming condition (i): for all i,j with 1 <= i,j <= n and i+j <= n, a_{i,j} = 0",
+            "assuming condition (ii): for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "assuming condition (iii): for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "for all indices i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "let y_{i,j} be the cardinality of {k in {1,...,i} : a_{k,j} > 0}",
+            "then a_{i,j} <= y_{i,j}"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 2",
+            "A is exactly an n x n matrix",
+            "all entries a_{i,j} are nonnegative integers",
+            "condition (i) applies only on the triangular region i+j <= n within 1 <= i,j <= n",
+            "condition (ii) applies only where i+1 is a valid row index, i.e. 1 <= i <= n-1, and 1 <= j <= n",
+            "condition (iii) applies only where j+1 is a valid column index, i.e. 1 <= i <= n and 1 <= j <= n-1",
+            "the conclusion applies only to indices i,j with 1 <= i,j <= n and a_{i,j} > 0",
+            "y_{i,j} is defined from the first i entries in column j, counting strictly positive entries"
+          ],
+          "witness_dependencies": [
+            "There is no existential witness in the main claim",
+            "y_{i,j} is not an independently quantified variable; it is uniquely determined by A, i, and j",
+            "The counting variable k is locally bound inside the definition of y_{i,j} and depends on i"
+          ],
+          "normalized_claim": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] of nonnegative integers satisfying: (1) a_{i,j} = 0 for all 1 <= i,j <= n with i+j <= n; (2) a_{i+1,j} - a_{i,j} is either 0 or 1 for all 1 <= i <= n-1 and 1 <= j <= n; and (3) a_{i,j+1} - a_{i,j} is either 0 or 1 for all 1 <= i <= n and 1 <= j <= n-1; for every pair of indices i,j with 1 <= i,j <= n, if a_{i,j} > 0 and y_{i,j} := |{k in {1,...,i} : a_{k,j} > 0}|, then a_{i,j} <= y_{i,j}."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix integers n >= 2 and a matrix A = [a_{i,j}] satisfying the three stated conditions. Let i,j be such that 1 <= i,j <= n and a_{i,j} > 0. Define\n\ny_{i,j} = #{k in {1,...,i} : a_{k,j} > 0}.\n\nWe must prove a_{i,j} <= y_{i,j}.\n\nLet\n\nr := min{k in {1,...,i} : a_{k,j} > 0}.\n\nThis minimum exists because a_{i,j} > 0.\n\nFirst note that condition (ii) implies the entries in each fixed column are nondecreasing downwards: for every t with 1 <= t <= n-1,\n\na_{t+1,j} - a_{t,j} in {0,1},\n\nso a_{t+1,j} >= a_{t,j}. Hence for every k with r <= k <= i we have a_{k,j} >= a_{r,j} > 0. By the minimality of r, for every k < r we have a_{k,j} = 0. Therefore the positive entries among a_{1,j},...,a_{i,j} are exactly those with indices r,r+1,...,i, and so\n\ny_{i,j} = i-r+1.\n\nIt remains to show a_{i,j} <= i-r+1.\n\nCase 1: r > 1.\n\nThen a_{r-1,j} = 0 by the definition of r. Applying condition (ii) at row r-1 gives\n\na_{r,j} in {a_{r-1,j}, a_{r-1,j}+1} = {0,1}.\n\nSince a_{r,j} > 0, it follows that a_{r,j} = 1.\n\nNow for each t = r,r+1,...,i-1, condition (ii) gives\n\na_{t+1,j} - a_{t,j} <= 1.\n\nSumming these inequalities from t=r to t=i-1, we obtain\n\na_{i,j} - a_{r,j} <= i-r.\n\nUsing a_{r,j} = 1, this yields\n\na_{i,j} <= 1 + (i-r) = i-r+1 = y_{i,j}.\n\nCase 2: r = 1.\n\nThen a_{1,j} > 0. By condition (i), if j <= n-1 then 1+j <= n, which would force a_{1,j} = 0, contradiction. Hence j = n.\n\nNow condition (i) gives a_{1,n-1} = 0 because 1 + (n-1) = n. Applying condition (iii) at (1,n-1), we get\n\na_{1,n} in {a_{1,n-1}, a_{1,n-1}+1} = {0,1}.\n\nSince a_{1,n} > 0, we conclude a_{1,n} = 1.\n\nApplying condition (ii) down column n, for each t = 1,2,...,i-1 we have\n\na_{t+1,n} - a_{t,n} <= 1.\n\nSumming from t=1 to t=i-1 gives\n\na_{i,n} - a_{1,n} <= i-1.\n\nUsing a_{1,n} = 1, we obtain\n\na_{i,n} <= 1 + (i-1) = i.\n\nSince r=1, all entries a_{1,n},...,a_{i,n} are positive, so y_{i,n} = i. Thus again\n\na_{i,j} = a_{i,n} <= i = y_{i,n}.\n\nIn both cases, a_{i,j} <= y_{i,j}. Since i,j were arbitrary subject to a_{i,j} > 0, the claim holds for every such pair.",
+        "role_in_parent": "Supplies the second pointwise upper bound used in 3a_{i,j} <= x_{i,j} + y_{i,j} + z_{i,j}."
+      },
+      {
+        "lemma_id": "lem_20260312170909_7b604f52",
+        "statement_nl": "For every integer n >= 2 and every n x n matrix A = [a_{i,j}] with entries in Z_{>=0} such that (i) a_{i,j} = 0 whenever 1 <= i,j <= n and i+j <= n, (ii) a_{i+1,j} - a_{i,j} is in {0,1} whenever 1 <= i <= n-1 and 1 <= j <= n, and (iii) a_{i,j+1} - a_{i,j} is in {0,1} whenever 1 <= i <= n and 1 <= j <= n-1, one has a_{i,j} <= max(0, i+j-n) for every 1 <= i,j <= n.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 2",
+              "role": "global size parameter"
+            },
+            {
+              "name": "A",
+              "type": "matrix",
+              "domain": "n x n matrix with entries in Z_{>=0}",
+              "role": "main quantified object"
+            },
+            {
+              "name": "a_{i,j}",
+              "type": "integer",
+              "domain": "entry of A, indexed by 1 <= i,j <= n, with a_{i,j} >= 0",
+              "role": "matrix entry"
+            },
+            {
+              "name": "i",
+              "type": "integer index",
+              "domain": "varies over ranges specified in each condition/conclusion",
+              "role": "row index"
+            },
+            {
+              "name": "j",
+              "type": "integer index",
+              "domain": "varies over ranges specified in each condition/conclusion",
+              "role": "column index"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 2",
+            "for every n x n matrix A = [a_{i,j}] with entries in Z_{>=0}",
+            "if for all i,j with 1 <= i,j <= n and i+j <= n, a_{i,j} = 0",
+            "and for all i,j with 1 <= i <= n-1 and 1 <= j <= n, a_{i+1,j} - a_{i,j} in {0,1}",
+            "and for all i,j with 1 <= i <= n and 1 <= j <= n-1, a_{i,j+1} - a_{i,j} in {0,1}",
+            "then for all i,j with 1 <= i,j <= n, a_{i,j} <= max(0, i+j-n)"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 2",
+            "A has exactly n rows and n columns",
+            "each entry a_{i,j} is a nonnegative integer",
+            "indices i,j are integer indices",
+            "condition (i) applies only when 1 <= i,j <= n and i+j <= n",
+            "condition (ii) applies only when 1 <= i <= n-1 and 1 <= j <= n so that i+1 is a valid row index",
+            "condition (iii) applies only when 1 <= i <= n and 1 <= j <= n-1 so that j+1 is a valid column index",
+            "the conclusion applies to all indices 1 <= i,j <= n"
+          ],
+          "witness_dependencies": [
+            "There are no existentially quantified witnesses in the statement",
+            "The bound in the conclusion depends on n, i, and j only",
+            "The matrix A is chosen after n, and the conclusion must hold uniformly for every valid index pair (i,j)"
+          ],
+          "normalized_claim": "For every integer n >= 2, every function a : {1,...,n} x {1,...,n} -> Z_{>=0} satisfying (1) a(i,j)=0 whenever i+j <= n, (2) a(i+1,j)-a(i,j) is either 0 or 1 for all 1 <= i <= n-1 and 1 <= j <= n, and (3) a(i,j+1)-a(i,j) is either 0 or 1 for all 1 <= i <= n and 1 <= j <= n-1, also satisfies for every 1 <= i,j <= n the inequality a(i,j) <= max(0, i+j-n)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "We prove the claim by strong induction on the integer t=i+j.\n\nFor each t with 2<=t<=2n, let Q(t) be the statement:\nfor every pair (i,j) with 1<=i,j<=n and i+j=t, one has a_{i,j}<=max(0,t-n).\n\nBase case: t<=n.\nIf i+j=t<=n, then hypothesis (i) gives a_{i,j}=0. Hence\na_{i,j}=0=max(0,t-n).\nSo Q(t) holds for every t<=n.\n\nInductive step: fix t with n<t<=2n, and assume Q(s) holds for every s<t. We must prove Q(t).\nTake any (i,j) with 1<=i,j<=n and i+j=t.\n\nBecause t>n>=2, we cannot have i=j=1, so at least one of i>1 or j>1 holds.\n\nCase 1: i>1.\nThen 1<=i-1<=n-1, so hypothesis (ii) applied to (i-1,j) yields\na_{i,j}-a_{i-1,j} in {0,1}.\nTherefore a_{i,j}<=a_{i-1,j}+1.\nNow (i-1)+j=t-1<t, so by the induction hypothesis Q(t-1),\na_{i-1,j}<=max(0,(t-1)-n).\nSince t>n and t is an integer, t>=n+1, hence (t-1)-n>=0. Thus\nmax(0,(t-1)-n)=t-1-n.\nSo\na_{i,j}<=a_{i-1,j}+1<= (t-1-n)+1=t-n=max(0,t-n).\n\nCase 2: i=1.\nThen j=t-1, and since t>n>=2 we have j>1. Hence 1<=j-1<=n-1, so hypothesis (iii) applied to (1,j-1) yields\na_{1,j}-a_{1,j-1} in {0,1}.\nTherefore a_{1,j}<=a_{1,j-1}+1.\nAlso 1+(j-1)=t-1<t, so by Q(t-1),\na_{1,j-1}<=max(0,(t-1)-n)=t-1-n,\nagain because t>n. Hence\na_{1,j}<=a_{1,j-1}+1<= (t-1-n)+1=t-n=max(0,t-n).\n\nIn both cases, every entry with i+j=t satisfies a_{i,j}<=max(0,t-n). Thus Q(t) holds.\n\nBy strong induction, Q(t) holds for all t from 2 to 2n. Therefore for every 1<=i,j<=n,\na_{i,j}<=max(0,i+j-n).\nThis is exactly the desired conclusion.",
+        "role_in_parent": "Supplies the third pointwise upper bound z_{i,j} = i+j-n on positive cells."
+      },
+      {
+        "lemma_id": "lem_20260312170926_c31e6aa6",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for every i, define E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}. For each (i,j) in E define x_{i,j} = # {k in {1,...,j} : (i,k) is in E}. Then sum_{(i,j) in E} x_{i,j} = sum_{i=1}^n l_i(l_i+1)/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "global size parameter"
+            },
+            {
+              "name": "l",
+              "type": "integer sequence",
+              "domain": "sequence (l_1,...,l_n) indexed by i=1,...,n",
+              "role": "input data determining the set E"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "row index"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "column index"
+            },
+            {
+              "name": "E",
+              "type": "set of integer pairs",
+              "domain": "subset of {1,...,n} x {1,...,n}",
+              "role": "derived set defined from n and l"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "1 <= k <= j",
+              "role": "counting variable in the definition of x_{i,j}"
+            },
+            {
+              "name": "x_{i,j}",
+              "type": "nonnegative integer",
+              "domain": "defined for each (i,j) in E",
+              "role": "cardinality of prior-or-equal entries in row i up to column j that lie in E"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n)",
+            "subject to 0 <= l_1 <= l_2 <= ... <= l_n",
+            "and for every i in {1,...,n}, l_i <= i",
+            "define E from n and l by E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}",
+            "for every (i,j) in E, define x_{i,j} = #{k in {1,...,j} : (i,k) in E}",
+            "then the stated equality of finite sums holds"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence is indexed only for i = 1,...,n",
+            "0 <= l_1 <= l_2 <= ... <= l_n",
+            "for each i in {1,...,n}, l_i <= i",
+            "E only contains pairs (i,j) with 1 <= i,j <= n",
+            "for fixed i, the condition n-l_i+1 <= j <= n gives exactly the last l_i columns when l_i >= 0",
+            "x_{i,j} is defined only when (i,j) belongs to E",
+            "the sums are finite: left side over all elements of E, right side over i=1,...,n"
+          ],
+          "witness_dependencies": [
+            "E depends on n and the full sequence (l_1,...,l_n)",
+            "membership of (i,j) in E depends on n, i, j, and l_i",
+            "x_{i,j} depends on n, l_i, i, and j through E",
+            "there are no existentially quantified witnesses in the claim"
+          ],
+          "normalized_claim": "For every integer n >= 1 and every integer sequence (l_1,...,l_n) such that 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for all i=1,...,n, let E = {(i,j) in {1,...,n} x {1,...,n} : j >= n-l_i+1}. For each (i,j) in E, let x_{i,j} be the number of integers k with 1 <= k <= j and (i,k) in E. Then sum over all (i,j) in E of x_{i,j} equals sum over i=1,...,n of l_i(l_i+1)/2."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix an integer n >= 1 and integers l_1,\\dots,l_n with 0 <= l_1 <= \\cdots <= l_n and l_i <= i for all i. Define\nE = { (i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n }.\nFor each (i,j) in E, define\nx_{i,j} = #{ k in {1,\\dots,j} : (i,k) in E }.\nWe must prove\n\\sum_{(i,j)\\in E} x_{i,j} = \\sum_{i=1}^n \\frac{l_i(l_i+1)}{2}.\n\nFor each fixed i in {1,\\dots,n}, let\nE_i = { j : (i,j) \\in E }.\nBy the definition of E,\nE_i = { j : n-l_i+1 <= j <= n }.\nHence E_i consists of exactly the last l_i columns of row i. In particular, if l_i=0 then E_i is empty, while if l_i>0 then\nE_i = { n-l_i+1, n-l_i+2, \\dots, n }.\nTherefore\n\\sum_{(i,j)\\in E} x_{i,j} = \\sum_{i=1}^n \\sum_{j\\in E_i} x_{i,j}.\nSo it is enough to compute the inner sum for each fixed i.\n\nFix i. Take any j \\in E_i. Since (i,k) \\in E exactly when k \\in E_i, we have\nx_{i,j} = #{ k in {1,\\dots,j} : k \\in E_i }.\nNow E_i = { n-l_i+1, \\dots, n }, so among the integers 1,\\dots,j, the members of E_i are precisely\nn-l_i+1, n-l_i+2, \\dots, j.\nThus\nx_{i,j} = j-(n-l_i+1)+1 = j-n+l_i.\n\nIt is convenient to reindex the elements of E_i. Write\nj = n-l_i+t,\nwhere t runs from 1 to l_i. Then the above formula gives\nx_{i,j} = (n-l_i+t)-n+l_i = t.\nHence, for this fixed i,\n\\sum_{j\\in E_i} x_{i,j} = \\sum_{t=1}^{l_i} t = \\frac{l_i(l_i+1)}{2}.\nThis also holds when l_i=0, since then both sides are 0.\n\nSumming over i=1,\\dots,n, we obtain\n\\sum_{(i,j)\\in E} x_{i,j}\n= \\sum_{i=1}^n \\sum_{j\\in E_i} x_{i,j}\n= \\sum_{i=1}^n \\frac{l_i(l_i+1)}{2}.\nThis is exactly the claimed identity.",
+        "role_in_parent": "Computes the total contribution of the horizontal rank bound."
+      },
+      {
+        "lemma_id": "lem_20260312170947_3141be33",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for every i, define E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}. For each k in {1,...,n} define mu_k = # {i in {1,...,n} : l_i >= k}. For each (i,j) in E define y_{i,j} = # {r in {1,...,i} : (r,j) is in E}. Then sum_{(i,j) in E} y_{i,j} = sum_{k=1}^n mu_k(mu_k+1)/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "primary parameter"
+            },
+            {
+              "name": "l",
+              "type": "integer sequence",
+              "domain": "length n sequence (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for all i in {1,...,n}",
+              "role": "input data"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "{1,...,n}",
+              "role": "row index / bound variable in definitions and sums"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "{1,...,n}",
+              "role": "column index / bound variable in definitions and sums"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "{1,...,n}",
+              "role": "index for mu_k"
+            },
+            {
+              "name": "r",
+              "type": "integer",
+              "domain": "{1,...,i}",
+              "role": "bound variable in the definition of y_{i,j}"
+            },
+            {
+              "name": "E",
+              "type": "set of integer pairs",
+              "domain": "E = { (i,j) in {1,...,n} x {1,...,n} : n - l_i + 1 <= j <= n }",
+              "role": "derived set determined by n and l"
+            },
+            {
+              "name": "mu_k",
+              "type": "integer",
+              "domain": "mu_k = #{ i in {1,...,n} : l_i >= k }",
+              "role": "derived counting function determined by n and l"
+            },
+            {
+              "name": "y_{i,j}",
+              "type": "integer",
+              "domain": "for (i,j) in E, y_{i,j} = #{ r in {1,...,i} : (r,j) in E }",
+              "role": "derived local count determined by n, l, E, i, j"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n) satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for all i in {1,...,n}",
+            "define E from n and l",
+            "for each k in {1,...,n}, define mu_k from n and l",
+            "for each (i,j) in E, define y_{i,j} from E and i",
+            "claim the stated equality of finite sums"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence length is exactly n",
+            "0 <= l_1 <= l_2 <= ... <= l_n",
+            "for every i in {1,...,n}, l_i <= i",
+            "in the definition of E, both i and j range over {1,...,n}",
+            "mu_k is defined only for k in {1,...,n}",
+            "y_{i,j} is defined only for pairs (i,j) belonging to E",
+            "the left-hand sum is over all pairs (i,j) in E",
+            "the right-hand sum is over k = 1,...,n"
+          ],
+          "witness_dependencies": [
+            "E depends on n and the whole sequence (l_1,...,l_n), with row i using l_i",
+            "mu_k depends on n, k, and the whole sequence (l_1,...,l_n)",
+            "y_{i,j} depends on n, the sequence l via E, and the specific pair (i,j)",
+            "there are no existential witnesses in the statement"
+          ],
+          "normalized_claim": "For every integer n >= 1 and every integer sequence (l_1,...,l_n) such that 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for each i = 1,...,n, let E = { (i,j) : 1 <= i <= n, 1 <= j <= n, and j >= n - l_i + 1 } (equivalently n - l_i + 1 <= j <= n). For each k = 1,...,n let mu_k be the number of indices i in {1,...,n} with l_i >= k. For each (i,j) in E let y_{i,j} be the number of r in {1,...,i} such that (r,j) is also in E. Then the identity holds: sum over all (i,j) in E of y_{i,j} equals sum from k=1 to n of mu_k(mu_k+1)/2."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix k in {1,...,n}, and let j_k := n-k+1. Then j_k is a column index in {1,...,n}, and as k runs from 1 to n, the numbers j_k run through all columns exactly once.\n\nFor any row index i, we have\n(i,j_k) in E\nif and only if n-l_i+1 <= j_k <= n.\nSince j_k = n-k+1, this is equivalent to\nn-l_i+1 <= n-k+1,\nthat is, l_i >= k.\nHence the set of rows whose cell in column j_k belongs to E is exactly\nI_k := { i in {1,...,n} : l_i >= k }.\nBy definition, |I_k| = mu_k.\n\nNow list the elements of I_k in increasing order:\nI_k = {i_1 < i_2 < ... < i_{mu_k}}\nif mu_k > 0. For each t = 1,...,mu_k, consider the cell (i_t,j_k). By definition,\ny_{i_t,j_k} = # { r in {1,...,i_t} : (r,j_k) is in E }.\nBut (r,j_k) is in E exactly when r is in I_k, so\n y_{i_t,j_k} = # { r <= i_t : r in I_k }.\nAmong the elements of I_k, exactly i_1,...,i_t are <= i_t. Therefore\n y_{i_t,j_k} = t.\nSo the total contribution from column j_k is\nsum over all i with (i,j_k) in E of y_{i,j_k}\n= sum_{t=1}^{mu_k} t\n= mu_k(mu_k+1)/2.\nIf mu_k = 0, then the column contributes 0, which is again mu_k(mu_k+1)/2.\n\nFinally, the columns j_k for k=1,...,n are precisely all columns of the n by n grid, so E is the disjoint union over k=1,...,n of the cells in column j_k. Therefore\nsum_{(i,j) in E} y_{i,j}\n= sum_{k=1}^n sum over all i with (i,j_k) in E of y_{i,j_k}\n= sum_{k=1}^n mu_k(mu_k+1)/2.\nThis is exactly the claimed identity.",
+        "role_in_parent": "Converts the vertical rank sum into a column-height expression."
+      },
+      {
+        "lemma_id": "lem_20260312171011_aebaeb93",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n <= n, define mu_k = # {i in {1,...,n} : l_i >= k} for 1 <= k <= n. Then sum_{k=1}^n mu_k(mu_k+1)/2 = sum_{i=1}^n (n+1-i)l_i.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "global size parameter"
+            },
+            {
+              "name": "l",
+              "type": "finite integer sequence",
+              "domain": "sequence (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n <= n",
+              "role": "input data"
+            },
+            {
+              "name": "i",
+              "type": "integer index",
+              "domain": "1 <= i <= n",
+              "role": "index for the sequence l_i and right-hand sum"
+            },
+            {
+              "name": "k",
+              "type": "integer index",
+              "domain": "1 <= k <= n",
+              "role": "index for the derived quantities mu_k and left-hand sum"
+            },
+            {
+              "name": "mu_k",
+              "type": "integer",
+              "domain": "for each k with 1 <= k <= n, mu_k = |{ i in {1,...,n} : l_i >= k }|",
+              "role": "derived count depending on n, l, and k"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n) such that 0 <= l_1 <= l_2 <= ... <= l_n <= n",
+            "for each integer k with 1 <= k <= n, define mu_k := |{ i in {1,...,n} : l_i >= k }|",
+            "the identity sum_{k=1}^n mu_k(mu_k+1)/2 = sum_{i=1}^n (n+1-i) l_i holds"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence length is exactly n",
+            "the sequence is weakly increasing: l_1 <= l_2 <= ... <= l_n",
+            "each l_i satisfies 0 <= l_i <= n",
+            "mu_k is defined only for integers k with 1 <= k <= n",
+            "the counted indices i range over the integer set {1,...,n}"
+          ],
+          "witness_dependencies": [
+            "there are no existential witnesses in the statement",
+            "mu_k is a derived quantity uniquely determined by n, the sequence (l_1,...,l_n), and the index k"
+          ],
+          "normalized_claim": "For all integers n >= 1 and all integer sequences (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n <= n, if for each integer k in {1,...,n} one defines mu_k = |{ i in {1,...,n} : l_i >= k }|, then the exact equality holds: sum_{k=1}^n [mu_k(mu_k+1)/2] = sum_{i=1}^n [(n+1-i)l_i]."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix an integer n >= 1 and integers 0 <= l_1 <= l_2 <= ... <= l_n <= n. For each k in {1,...,n}, let\nmu_k = #{ i in {1,...,n} : l_i >= k }.\nWe prove\nsum_{k=1}^n mu_k(mu_k+1)/2 = sum_{i=1}^n (n+1-i)l_i.\n\nBecause each l_i is a nonnegative integer, we may write\n(n+1-i)l_i = sum_{k=1}^{l_i} (n+1-i) = sum_{k=1}^n (n+1-i) * 1_{\\{l_i >= k\\}}.\nSumming over i gives\nsum_{i=1}^n (n+1-i)l_i\n= sum_{i=1}^n sum_{k=1}^n (n+1-i) * 1_{\\{l_i >= k\\}}.\nSince this is a finite double sum, we may interchange the order of summation:\nsum_{i=1}^n (n+1-i)l_i\n= sum_{k=1}^n sum_{i=1}^n (n+1-i) * 1_{\\{l_i >= k\\}}\n= sum_{k=1}^n sum_{i: l_i >= k} (n+1-i).\n\nNow fix k in {1,...,n}. Since l_1 <= l_2 <= ... <= l_n, the set of indices i with l_i >= k is a terminal segment of {1,...,n}. Its cardinality is mu_k, so necessarily\n{i : l_i >= k} = {n-mu_k+1, n-mu_k+2, ..., n}\n(with the understanding that this set is empty when mu_k = 0). Therefore\nsum_{i: l_i >= k} (n+1-i)\n= sum_{i=n-mu_k+1}^n (n+1-i).\nPutting r = n+1-i, as i runs from n-mu_k+1 to n, the value of r runs from mu_k down to 1. Hence\nsum_{i=n-mu_k+1}^n (n+1-i) = sum_{r=1}^{mu_k} r = mu_k(mu_k+1)/2.\nSo for every k,\nsum_{i: l_i >= k} (n+1-i) = mu_k(mu_k+1)/2.\nSubstituting into the previous expression yields\nsum_{i=1}^n (n+1-i)l_i = sum_{k=1}^n mu_k(mu_k+1)/2.\nThis is exactly the claimed identity.",
+        "role_in_parent": "Rewrites the column-height expression from L6 as a linear form in the row lengths l_i."
+      },
+      {
+        "lemma_id": "lem_20260312171027_6043d2dd",
+        "statement_nl": "For every integer n >= 1 and every integers l_1,...,l_n satisfying 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for every i, define E = {(i,j) : 1 <= i,j <= n and n-l_i+1 <= j <= n}. Then sum_{(i,j) in E} (i+j-n) = sum_{i=1}^n l_i(2i-l_i+1)/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "n >= 1",
+              "role": "outer universally quantified size parameter"
+            },
+            {
+              "name": "l",
+              "type": "integer-valued finite sequence",
+              "domain": "sequence (l_1,...,l_n) indexed by i=1,...,n",
+              "role": "outer universally quantified data subject to monotonicity and upper-bound constraints"
+            },
+            {
+              "name": "i",
+              "type": "integer",
+              "domain": "1 <= i <= n",
+              "role": "index for the sequence and for the right-hand sum"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "1 <= j <= n",
+              "role": "second coordinate in the set E and summation index on the left-hand side"
+            },
+            {
+              "name": "E",
+              "type": "set of ordered pairs of integers",
+              "domain": "subset of {1,...,n} x {1,...,n} defined from n and l",
+              "role": "derived set over which the left-hand sum is taken"
+            }
+          ],
+          "quantifier_order": [
+            "for every integer n with n >= 1",
+            "for every integer sequence (l_1,...,l_n)",
+            "subject to 0 <= l_1 <= l_2 <= ... <= l_n and for every i in {1,...,n}, l_i <= i",
+            "define E = { (i,j) in Z x Z : 1 <= i <= n, 1 <= j <= n, and n - l_i + 1 <= j <= n }",
+            "claim the equality of the two finite sums"
+          ],
+          "domain_restrictions": [
+            "n is an integer and n >= 1",
+            "each l_i is an integer",
+            "the sequence is indexed only for i = 1,...,n",
+            "0 <= l_1 <= l_2 <= ... <= l_n",
+            "for every i in {1,...,n}, l_i <= i",
+            "in the definition of E, both coordinates satisfy 1 <= i,j <= n",
+            "for fixed i, the j-range is from n-l_i+1 to n; since l_i >= 0 this is a valid upper-tail interval, and if l_i = 0 there are no such j"
+          ],
+          "witness_dependencies": [
+            "E is not independently quantified; it is defined uniquely from n and the full sequence (l_1,...,l_n)",
+            "the lower bound n-l_i+1 for j depends on the specific index i through l_i",
+            "there are no existential witnesses in the statement"
+          ],
+          "normalized_claim": "For all integers n >= 1 and all integer sequences (l_1,...,l_n) with 0 <= l_1 <= l_2 <= ... <= l_n and l_i <= i for each i=1,...,n, if E := { (i,j) : 1 <= i <= n, 1 <= j <= n, n-l_i+1 <= j <= n }, then sum over all (i,j) in E of (i + j - n) equals sum from i=1 to n of l_i(2i - l_i + 1)/2."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let\n\\[\nT:=\\sum_{(i,j)\\in E}(i+j-n).\n\\]\nFor each fixed row index \\(i\\in\\{1,\\dots,n\\}\\), the points of \\(E\\) in that row are exactly\n\\[\n(i,j)\\quad\\text{with}\\quad n-l_i+1\\le j\\le n.\n\\]\nHence, if we write\n\\[\nT_i:=\\sum_{j=n-l_i+1}^{n}(i+j-n),\n\\]\nwith the usual convention that this is the empty sum when \\(l_i=0\\), then the rows are disjoint and cover \\(E\\), so\n\\[\nT=\\sum_{i=1}^n T_i.\n\\]\nIt therefore suffices to compute each \\(T_i\\).\n\nFix \\(i\\). We consider two cases.\n\nIf \\(l_i=0\\), then there is no integer \\(j\\) with \\(n-l_i+1=n+1\\le j\\le n\\), so \\(T_i=0\\). Also\n\\[\n\\frac{l_i(2i-l_i+1)}2=\\frac{0(2i-0+1)}2=0.\n\\]\nThus in this case\n\\[\nT_i=\\frac{l_i(2i-l_i+1)}2.\n\\]\n\nNow assume \\(l_i\\ge 1\\). Then the allowed values of \\(j\\) are\n\\[\nj=n-l_i+1,\\,n-l_i+2,\\,\\dots,\\,n.\n\\]\nSet\n\\[\nj=n-l_i+t\\qquad (t=1,2,\\dots,l_i).\n\\]\nThis reindexes the sum bijectively, so\n\\[\nT_i=\\sum_{t=1}^{l_i}\\bigl(i+(n-l_i+t)-n\\bigr)\n=\\sum_{t=1}^{l_i}(i-l_i+t).\n\\]\nTherefore\n\\[\nT_i=\\sum_{t=1}^{l_i}(i-l_i)+\\sum_{t=1}^{l_i}t\n=l_i(i-l_i)+\\frac{l_i(l_i+1)}2.\n\\]\nSimplifying,\n\\[\nT_i=\\frac{2l_i(i-l_i)+l_i(l_i+1)}2\n=\\frac{2il_i-l_i^2+l_i}{2}\n=\\frac{l_i(2i-l_i+1)}2.\n\\]\nSo this formula also holds when \\(l_i\\ge 1\\).\n\nThus for every \\(i=1,\\dots,n\\),\n\\[\nT_i=\\frac{l_i(2i-l_i+1)}2.\n\\]\nSumming over \\(i\\), we obtain\n\\[\n\\sum_{(i,j)\\in E}(i+j-n)\n=T\n=\\sum_{i=1}^n T_i\n=\\sum_{i=1}^n \\frac{l_i(2i-l_i+1)}2.\n\\]\nThis is exactly the claimed identity.",
+        "role_in_parent": "Computes the total contribution of the anti-diagonal distance bound."
+      }
+    ],
+    "all_visible_lemmas_nl_accepted": true
+  }

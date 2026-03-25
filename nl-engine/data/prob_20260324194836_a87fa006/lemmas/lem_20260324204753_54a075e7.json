@@ -1,0 +1,104 @@
+{
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260324205304_7baa652c",
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T20:48:01.408315Z",
+  "decomposition_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.07,
+  "kind": "lemma",
+  "last_dependency_check_id": "depchk_20260324205750_f9488e3e",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "We prove the two assertions in order.\n\nFirst, consider the weighted grading on S.\n\nIf d = 0, then by the convention in the statement we have S = Q. In this case the only nonzero homogeneous piece is degree 0: namely S_0 = Q and S_m = 0 for every m > 0. Hence each S_m is finite-dimensional over Q.\n\nNow assume d >= 1. For a = (a_1, ..., a_d) in Z_{>=0}^d, write x^a := x_1^{a_1} ... x_d^{a_d}. Since deg(x_i) = w_i, the monomial x^a is homogeneous of weighted degree\n\na_1 w_1 + ... + a_d w_d.\n\nTherefore, for any fixed m >= 0,\n\nS_m = span_Q { x^a : a in Z_{>=0}^d and a_1 w_1 + ... + a_d w_d = m }.\n\nLet\n\nA_m := { a in Z_{>=0}^d : a_1 w_1 + ... + a_d w_d = m }.\n\nWe claim that A_m is finite. Indeed, if a belongs to A_m, then for each i we have\n\n0 <= a_i w_i <= m.\n\nBecause w_i > 0, this implies\n\n0 <= a_i <= m / w_i,\n\nhence in particular\n\n0 <= a_i <= floor(m / w_i).\n\nSo each coordinate a_i has only finitely many possibilities, namely 0, 1, ..., floor(m / w_i). Thus\n\nA_m \\subseteq \\prod_{i=1}^d {0,1,...,floor(m / w_i)},\n\nand therefore A_m is finite. Consequently S_m is spanned by finitely many monomials.\n\nThese monomials are linearly independent over Q (distinct monomials in a polynomial ring are linearly independent), so they form a Q-basis of S_m. Hence\n\ndim_Q S_m = |A_m| < infinity.\n\nThis proves the first assertion: for every m >= 0, the homogeneous component S_m is finite-dimensional over Q.\n\nNow let I be a homogeneous ideal of S. Because I is homogeneous, the quotient S/I inherits the grading, and the degree-m component is the image of S_m under the quotient map pi : S -> S/I. More precisely, the restriction\n\npi|_{S_m} : S_m -> (S/I)_m\n\nis surjective, and its kernel is exactly I \\cap S_m. Therefore, by the first isomorphism theorem,\n\n(S/I)_m \\cong S_m / (I \\cap S_m).\n\nBut I \\cap S_m is a Q-subspace of the finite-dimensional Q-vector space S_m. A quotient of a finite-dimensional vector space by a subspace is again finite-dimensional. Hence (S/I)_m is finite-dimensional over Q for every m >= 0.\n\nSo both claims follow.",
+  "latest_vetter_report_id": "rep_20260324205750_07d9bce9",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324204753_54a075e7",
+  "minor_rejection_count": 0,
+  "parent_id": "thm_root_20260324194836_7ca60a42",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/lemmas/lem_20260324204753_54a075e7.json",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides the finite-dimensionality hypothesis needed to apply the Hilbert-series positivity lemma to the graded quotient ring produced by L4.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let d be a nonnegative integer and let w_1, ..., w_d be positive integers. Give S := Q[x_1, ..., x_d] the grading deg(x_i) = w_i; when d = 0 interpret S as Q. Then for every integer m >= 0 the homogeneous component S_m is finite-dimensional over Q. Consequently, if I is a homogeneous ideal of S, then for every integer m >= 0 the homogeneous component (S/I)_m is finite-dimensional over Q.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "d \u2208 {0,1,2,...}",
+      "For each i with 1<=i<=d: w_i \u2208 {1,2,3,...} (positive, nonzero weights)",
+      "m \u2208 {0,1,2,...} (only nonnegative grading degrees considered)",
+      "S = Q[x_1,...,x_d] when d>=1; S = Q when d=0 (so there are no variables and only degree 0 exists)",
+      "I is assumed homogeneous so that (S/I)_m is well-defined as the mth graded component of a graded quotient"
+    ],
+    "normalized_claim": "Given d\u22650 and weights w_1,...,w_d>0, define the weighted grading on S by deg(x_i)=w_i (and if d=0 set S:=Q with only degree 0). Then for every m\u22650, the homogeneous component S_m is a finite-dimensional Q-vector space. Moreover, for any homogeneous ideal I\u2286S and every m\u22650, the homogeneous component (S/I)_m is finite-dimensional over Q.",
+    "quantifier_order": [
+      "\u2203 implicit none",
+      "For all d (nonnegative integer), for all weights w_1,...,w_d (positive integers), for all m (integer, m>=0): ...",
+      "For all homogeneous ideals I of S, for all m (integer, m>=0): ..."
+    ],
+    "variables": [
+      {
+        "domain": "{0,1,2,...}",
+        "name": "d",
+        "role": "number of variables in the polynomial ring",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "{1,2,3,...}",
+        "name": "w_1,...,w_d",
+        "role": "weights defining the grading deg(x_i)=w_i",
+        "type": "positive integers"
+      },
+      {
+        "domain": "S = Q[x_1,...,x_d] for d>=1; S = Q for d=0",
+        "name": "S",
+        "role": "polynomial ring equipped with a weighted grading",
+        "type": "graded Q-algebra"
+      },
+      {
+        "domain": "formal variables over Q",
+        "name": "x_i",
+        "role": "generators of S whose degrees are specified by w_i",
+        "type": "indeterminates"
+      },
+      {
+        "domain": "{0,1,2,...}",
+        "name": "m",
+        "role": "grading index for homogeneous components",
+        "type": "integer"
+      },
+      {
+        "domain": "homogeneous ideal of S",
+        "name": "I",
+        "role": "used to form the quotient graded ring S/I",
+        "type": "ideal"
+      },
+      {
+        "domain": "mth graded piece of the quotient by a homogeneous ideal",
+        "name": "(S/I)_m",
+        "role": "object claimed to be finite-dimensional over Q",
+        "type": "Q-vector space"
+      },
+      {
+        "domain": "mth graded piece of S under the weighted grading",
+        "name": "S_m",
+        "role": "object claimed to be finite-dimensional over Q",
+        "type": "Q-vector space"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; the claim is purely universal: finite-dimensionality holds for each fixed m with the given d and weights.",
+      "In the second part, the ideal I is a universally quantified parameter (no witness dependence stated); finite-dimensionality is asserted for each m given that I is homogeneous."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T20:48:01.408316Z"
+}

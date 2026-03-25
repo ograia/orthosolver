@@ -1,0 +1,577 @@
+{
+    "problem_id": "prob_20260315033724_f67141d9",
+    "title": "Putnam A6",
+    "verification_level": "nl_only",
+    "root_theorem": {
+      "theorem_id": "thm_root_20260315033724_f92052eb",
+      "statement_nl": "Let $b_0 = 0$ and, for $n \\\\geq 0$, define $b_{n+1} = 2b_n^2 + b_n + 1$. For each $k \\\\geq 1$,\\nshow that $b_{2^{k+1}} - 2b_{2^k}$ is divisible by $2^{2k+2}$ but not by $2^{2k+3}$.",
+      "semantic_sketch": {
+        "variables": [
+          {
+            "name": "b",
+            "type": "sequence (function)",
+            "domain": "b: N0 -> Z, defined by b(0)=0 and recurrence b(n+1)=2*b(n)^2 + b(n) + 1 for all n>=0",
+            "role": "primary recursively defined integer sequence"
+          },
+          {
+            "name": "n",
+            "type": "integer index",
+            "domain": "n ∈ Z, n >= 0",
+            "role": "index variable appearing in the recurrence definition of b"
+          },
+          {
+            "name": "k",
+            "type": "integer parameter",
+            "domain": "k ∈ Z, k >= 1",
+            "role": "parameter over which the claim is quantified (for all k >= 1)"
+          },
+          {
+            "name": "Δ_k",
+            "type": "integer expression",
+            "domain": "Δ_k = b_{2^{k+1}} - 2*b_{2^k} ∈ Z (for each k>=1)",
+            "role": "difference whose 2-adic valuation is being asserted"
+          },
+          {
+            "name": "m_k",
+            "type": "integer witness",
+            "domain": "m_k ∈ Z defined (when claimed) by Δ_k / 2^{2k+2} (if divisible)",
+            "role": "witness showing exact divisibility: Δ_k = 2^{2k+2} * m_k"
+          }
+        ],
+        "quantifier_order": [
+          "Sequence b is defined first: b0 = 0 and for all n ∈ Z, n >= 0, b_{n+1} = 2 b_n^2 + b_n + 1 (unique sequence of integers)",
+          "For all k ∈ Z with k >= 1, the subsequent property holds (see normalized claim)",
+          "Implicit existential: there exists integer m_k (depending on k) such that Δ_k = 2^{2k+2} * m_k and m_k is odd"
+        ],
+        "domain_restrictions": [
+          "All divisibility statements are in the integers Z.",
+          "Indices 2^k and 2^{k+1} are integers (since k ∈ Z, k >= 1).",
+          "The recurrence defines integer values b_n for every n >= 0 (implicit from integer coefficients).",
+          "k runs over positive integers (k >= 1); n runs over nonnegative integers (n >= 0)."
+        ],
+        "witness_dependencies": [
+          "m_k is a function of k (and of the sequence b); explicitly m_k = (b_{2^{k+1}} - 2 b_{2^k}) / 2^{2k+2}.",
+          "Existence of integer m_k depends on the divisibility claim: first show 2^{2k+2} | Δ_k to define m_k.",
+          "The claim 'm_k is odd' is the content of the 'not divisible by 2^{2k+3}' part, so m_k's property (oddness) depends on k and b."
+        ],
+        "normalized_claim": "For the sequence b: N0 -> Z defined by b_0=0 and b_{n+1}=2 b_n^2 + b_n + 1 for all n>=0, for every integer k>=1 define Δ_k := b_{2^{k+1}} - 2 b_{2^k}. Then Δ_k is divisible by 2^{2k+2} but not by 2^{2k+3}. Equivalently, for each k>=1 there exists a unique integer m_k such that Δ_k = 2^{2k+2} * m_k, and m_k is odd (i.e. v2(Δ_k) = 2k+2)."
+      }
+    },
+    "selected_decomposition": {
+      "decomposition_id": "dec_20260315051602_df328973",
+      "strategy_summary": "Use the corrected local-expansion strategy for the dyadic iterates of f(x)=2x^2+x+1, but unlike the rejected attempts, every lemma is fully local: each lemma restates the recursive iterate family with the correct initialization G_0=f, avoids non-self-contained normalized quotients such as c_k or t_k, uses the correct chain-rule/Taylor framework only through explicitly defined local objects, and includes an explicit arithmetic-combination lemma so the final exact divisibility is derived rather than asserted.",
+      "controller_status": "succeeded",
+      "llm_vetting_status": "accepted",
+      "assembly_plan": {
+        "assembly_plan_id": "asm_20260315051602_36c06721",
+        "steps": [
+          {
+            "step_id": "A1",
+            "uses_lemmas": [
+              "lem_20260315051602_d9ab3a00",
+              "lem_20260315051628_04c5b961",
+              "lem_20260315051812_eca9365d"
+            ],
+            "uses_prior_steps": [],
+            "derives": "For each integer k>=1, if a_k:=b_{2^k}, then there exist integers d_k and m_k such that b_{2^{k+1}}-2b_{2^k}=a_k(d_k-1)+2a_k^2m_k.",
+            "is_trivial": true,
+            "trivial_justification": "By L1, a_k=G_k(0)=b_{2^k}. By L2, there exist d_k and H_k with G_k(x)=a_k+d_kx+2x^2H_k(x). Applying L5 to this expansion gives a_{k+1}-2a_k=a_k(d_k-1)+2a_k^2m_k; replacing a_k and a_{k+1} using L1 yields the displayed identity."
+          },
+          {
+            "step_id": "A2",
+            "uses_lemmas": [
+              "lem_20260315051701_131fbfcc",
+              "lem_20260315051727_f1150c1e"
+            ],
+            "uses_prior_steps": [],
+            "derives": "For each integer k>=1, in the identity from A1 there exist odd integers u_k and v_k such that a_k=2^{k+1}u_k and d_k-1=2^{k+1}v_k.",
+            "is_trivial": true,
+            "trivial_justification": "This is exactly the conjunction of L3 and L4."
+          },
+          {
+            "step_id": "A3",
+            "uses_lemmas": [
+              "lem_20260315051850_8c352334"
+            ],
+            "uses_prior_steps": [
+              "A1",
+              "A2"
+            ],
+            "derives": "For each integer k>=1, b_{2^{k+1}}-2b_{2^k} is divisible by 2^{2k+2} but not by 2^{2k+3}.",
+            "is_trivial": true,
+            "trivial_justification": "A1 puts b_{2^{k+1}}-2b_{2^k} in the form a_k(d_k-1)+2a_k^2m_k, and A2 gives a_k=2^{k+1}u_k and d_k-1=2^{k+1}v_k with u_k,v_k odd. Therefore L6 applies directly with R=b_{2^{k+1}}-2b_{2^k}."
+          }
+        ],
+        "proof_skeleton_nl": "Define the dyadic iterate polynomials G_k by G_0(x)=2x^2+x+1 and G_{k+1}=G_k∘G_k, so that G_k(0)=b_{2^k} by L1. By L2, each G_k has a local expansion G_k(x)=a_k+d_kx+2x^2H_k(x), where a_k=G_k(0). Evaluating at x=a_k and using G_{k+1}(0)=G_k(a_k), L5 yields b_{2^{k+1}}-2b_{2^k}=a_k(d_k-1)+2a_k^2m_k. By L3, a_k has exact factor 2^{k+1}; by L4, d_k-1 also has exact factor 2^{k+1}. The pure arithmetic lemma L6 then shows that the displayed difference has exact factor 2^{2k+2}, i.e. it is divisible by 2^{2k+2} and not by 2^{2k+3}.",
+        "is_trivially_composable": true
+      }
+    },
+    "lemmas": [
+      {
+        "lemma_id": "lem_20260315051602_d9ab3a00",
+        "statement_nl": "Let f(x)=2x^2+x+1 in Z[x]. For each integer j>=0 define polynomials G_j in Z[x] recursively by G_0(x)=f(x) and G_{j+1}(x)=G_j(G_j(x)). Let a_j:=G_j(0). Let the integer sequence b be defined by b_0=0 and b_{n+1}=2b_n^2+b_n+1 for all n>=0. Then for every integer j>=0 one has a_j=b_{2^j}.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "polynomial",
+              "domain": "Z[x]",
+              "role": "base polynomial, defined by f(x)=2x^2+x+1"
+            },
+            {
+              "name": "j",
+              "type": "integer index",
+              "domain": "Z with j >= 0 (i.e. j ∈ N)",
+              "role": "index for the family (G_j) and the sequence (a_j); universally quantified in the final claim"
+            },
+            {
+              "name": "G_j",
+              "type": "family of polynomials",
+              "domain": "for each j, G_j ∈ Z[x]",
+              "role": "recursively defined polynomials with G_0=f and G_{j+1}=G_j ∘ G_j"
+            },
+            {
+              "name": "a_j",
+              "type": "integer",
+              "domain": "Z (value of a polynomial in Z[x] at 0)",
+              "role": "defined by a_j := G_j(0)"
+            },
+            {
+              "name": "n",
+              "type": "integer index",
+              "domain": "Z with n >= 0 (i.e. n ∈ N)",
+              "role": "index for the sequence (b_n) and for the recurrence b_{n+1}=2b_n^2+b_n+1"
+            },
+            {
+              "name": "b_n",
+              "type": "integer sequence",
+              "domain": "for each n, b_n ∈ Z",
+              "role": "sequence defined by b_0=0 and b_{n+1}=2 b_n^2 + b_n + 1 for all n>=0"
+            }
+          ],
+          "quantifier_order": [
+            "Definitions: f fixed as specific element of Z[x]; define (G_j) for all j >= 0 and (b_n) for all n >= 0 by the given recurrences",
+            "Universal quantification in claim: for all j ∈ Z with j >= 0 (i.e. for all j ∈ N) ..."
+          ],
+          "domain_restrictions": [
+            "f ∈ Z[x] and specifically f(x) = 2x^2 + x + 1",
+            "Indices j,n range over nonnegative integers (N = {0,1,2,...})",
+            "For each j >= 0, G_j ∈ Z[x] (composition preserves integer coefficients)",
+            "For each j >= 0, a_j is the integer G_j(0)",
+            "For each n >= 0, b_n ∈ Z and b_{n+1} given by the recurrence"
+          ],
+          "witness_dependencies": [
+            "G_0 is the fixed polynomial f; for each j >= 0, G_{j+1} is defined deterministically from G_j by composition: G_{j+1} = G_j ∘ G_j (no existential choices)",
+            "a_j is determined by G_j via evaluation at 0: a_j = G_j(0); thus a_j ultimately depends on f and j through repeated composition",
+            "b_0 is fixed as 0; for each n >= 0, b_{n+1} is determined by b_n via the recurrence b_{n+1} = 2 b_n^2 + b_n + 1 (deterministic propagation)",
+            "The value b_{2^j} depends on the chain b_0, b_1, ..., b_{2^j} produced by iterating the recurrence 2^j times"
+          ],
+          "normalized_claim": "Let f ∈ Z[x] be f(x)=2x^2+x+1. Define (G_j)_{j∈N} ⊂ Z[x] by G_0 = f and for all j ∈ N, G_{j+1} = G_j ∘ G_j. Define a_j := G_j(0) for j ∈ N. Define (b_n)_{n∈N} ⊂ Z by b_0 = 0 and for all n ∈ N, b_{n+1} = 2 b_n^2 + b_n + 1. Then for all j ∈ N, a_j = b_{2^j}."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Define helper polynomials F_n in Z[x] by F_0(x)=x and F_{n+1}(x)=f(F_n(x)) for n>=0. Then F_n is the n-fold iterate of f.\n\nFirst claim: for all m,n>=0, F_m(F_n(x)) = F_{m+n}(x). Fix n and induct on m. If m=0, then F_0(F_n(x))=F_n(x)=F_{0+n}(x). If F_m(F_n(x))=F_{m+n}(x), then\nF_{m+1}(F_n(x))=f(F_m(F_n(x)))=f(F_{m+n}(x))=F_{m+n+1}(x)=F_{m+1+n}(x).\nSo the claim holds for all m,n>=0.\n\nSecond claim: G_j = F_{2^j} for all j>=0. We induct on j. For j=0, G_0(x)=f(x)=F_1(x)=F_{2^0}(x). If G_j=F_{2^j}, then\nG_{j+1}(x)=G_j(G_j(x))=F_{2^j}(F_{2^j}(x))=F_{2^j+2^j}(x)=F_{2^{j+1}}(x),\nusing the first claim. Hence G_j=F_{2^j} for every j>=0.\n\nThird claim: b_n = F_n(0) for all n>=0. We induct on n. For n=0, b_0=0=F_0(0). If b_n=F_n(0), then\nb_{n+1}=2b_n^2+b_n+1=f(b_n)=f(F_n(0))=F_{n+1}(0).\nSo b_n=F_n(0) for all n>=0.\n\nFinally, for any j>=0,\na_j=G_j(0)=F_{2^j}(0)=b_{2^j}.\nThus a_j=b_{2^j} for every integer j>=0, exactly as claimed.",
+        "role_in_parent": "Identifies the dyadic subsequence of b with evaluations of the recursively defined iterates G_j at 0, so the final theorem can be stated in terms of a_k:=G_k(0)."
+      },
+      {
+        "lemma_id": "lem_20260315051628_04c5b961",
+        "statement_nl": "Let f(x)=2x^2+x+1 in Z[x]. For each integer j>=0 define polynomials G_j in Z[x] by G_0(x)=f(x) and G_{j+1}(x)=G_j(G_j(x)). Then for every integer k>=0 there exist an integer d_k and a polynomial H_k(x) in Z[x] such that, with a_k:=G_k(0), one has the polynomial identity G_k(x)=a_k+d_k x+2x^2 H_k(x) in Z[x].",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "polynomial",
+              "domain": "Z[x]",
+              "role": "given base polynomial, f(x)=2x^2+x+1"
+            },
+            {
+              "name": "x",
+              "type": "indeterminate",
+              "domain": "formal variable of polynomials in Z[x]",
+              "role": "polynomial variable"
+            },
+            {
+              "name": "j",
+              "type": "integer index",
+              "domain": "Z_{>=0}",
+              "role": "index used to define sequence (G_j)_{j>=0}"
+            },
+            {
+              "name": "G_j",
+              "type": "sequence of polynomials",
+              "domain": "G_j ∈ Z[x] for each j ∈ Z_{>=0}",
+              "role": "recursively defined sequence with G_0=f and G_{j+1}=G_j ∘ G_j"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "Z_{>=0}",
+              "role": "index at which the claimed decomposition is asserted"
+            },
+            {
+              "name": "a_k",
+              "type": "integer",
+              "domain": "a_k := G_k(0) ∈ Z",
+              "role": "constant term of G_k, defined deterministically from G_k"
+            },
+            {
+              "name": "d_k",
+              "type": "integer (existential)",
+              "domain": "Z",
+              "role": "existential linear-coefficient witness in the claimed decomposition of G_k"
+            },
+            {
+              "name": "H_k",
+              "type": "polynomial (existential)",
+              "domain": "H_k ∈ Z[x]",
+              "role": "existential polynomial witness such that G_k(x)-a_k-d_k x = 2 x^2 H_k(x)"
+            }
+          ],
+          "quantifier_order": [
+            "forall j ∈ Z_{>=0}: define G_j ∈ Z[x] by G_0=f and G_{j+1}=G_j ∘ G_j",
+            "forall k ∈ Z_{>=0}: exists d_k ∈ Z, exists H_k ∈ Z[x] such that ... (see normalized claim)"
+          ],
+          "domain_restrictions": [
+            "f is the specific polynomial 2x^2 + x + 1 in Z[x]",
+            "for every j ≥ 0, G_j is a polynomial with integer coefficients (G_j ∈ Z[x])",
+            "G_0 = f and G_{j+1}(x) = G_j(G_j(x)) (composition in Z[x])",
+            "indices j,k range over nonnegative integers Z_{>=0}",
+            "a_k is defined by evaluation a_k := G_k(0) (hence a_k ∈ Z)",
+            "d_k is an integer (d_k ∈ Z) and H_k is a polynomial with integer coefficients (H_k ∈ Z[x])"
+          ],
+          "witness_dependencies": [
+            "d_k is allowed to depend on k and on G_k; canonical choice: d_k = coefficient of x in G_k (this choice is determined after G_k is known)",
+            "H_k is allowed to depend on k and on G_k (and on the chosen d_k); canonical choice: H_k(x) = (G_k(x) - a_k - d_k x) / (2 x^2), with the requirement that this quotient lies in Z[x]",
+            "a_k is uniquely determined by k via a_k = G_k(0)"
+          ],
+          "normalized_claim": "Given the recursively defined sequence (G_j)_{j>=0} in Z[x] with G_0(x)=2x^2+x+1 and G_{j+1}=G_j ∘ G_j, then for every k ∈ Z_{>=0} there exist integers d_k ∈ Z and a polynomial H_k ∈ Z[x] such that, writing a_k := G_k(0), the identity G_k(x) = a_k + d_k x + 2 x^2 H_k(x) holds in Z[x]. Equivalently, for each k the constant term of G_k equals a_k, the coefficient of x is some integer d_k, and every coefficient of x^n for n≥2 in G_k is even (so division by 2 x^2 yields H_k ∈ Z[x])."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "We prove the statement by induction on k.\n\nFor each k, recall that a_k:=G_k(0).\n\nBase case k=0:\nWe have\nG_0(x)=2x^2+x+1.\nAlso a_0=G_0(0)=1. Hence\nG_0(x)=a_0+1\\cdot x+2x^2\\cdot 1.\nSo the claim holds for k=0 with d_0=1 and H_0(x)=1.\n\nInductive step:\nAssume that for some k\\ge 0 there exist d_k\\in Z and H_k(x)\\in Z[x] such that\nG_k(x)=a_k+d_kx+2x^2H_k(x).\nWe must prove that the same kind of decomposition holds for G_{k+1}.\n\nBy definition,\nG_{k+1}(x)=G_k(G_k(x)).\nUsing the inductive decomposition of G_k(y) with y=G_k(x), we get\nG_{k+1}(x)=a_k+d_kG_k(x)+2G_k(x)^2H_k(G_k(x)).\nNow set\nS_k(x):=G_k(x)^2H_k(G_k(x)).\nSince G_k,H_k\\in Z[x], we have S_k\\in Z[x]. Therefore, writing\nS_k(x)=\\sum_{n=0}^m c_nx^n,\nwe may separate its constant and linear terms:\nS_k(x)=c_0+c_1x+x^2T_k(x),\nwhere\nT_k(x):=\\sum_{n=2}^m c_nx^{n-2}\\in Z[x].\nThus there exist integers s_0,s_1 and a polynomial T_k\\in Z[x] such that\nS_k(x)=s_0+s_1x+x^2T_k(x).\n\nSubstituting this into the formula for G_{k+1}, and also substituting the inductive formula for G_k(x), we obtain\nG_{k+1}(x)\n=a_k+d_k(a_k+d_kx+2x^2H_k(x))+2(s_0+s_1x+x^2T_k(x))\n=(a_k+d_ka_k+2s_0)+(d_k^2+2s_1)x+2x^2(d_kH_k(x)+T_k(x)).\n\nThe constant term of this polynomial is its value at x=0, namely G_{k+1}(0)=a_{k+1}. Hence\nG_{k+1}(x)=a_{k+1}+d_{k+1}x+2x^2H_{k+1}(x),\nwhere we may take\nd_{k+1}:=d_k^2+2s_1\\in Z,\nH_{k+1}(x):=d_kH_k(x)+T_k(x)\\in Z[x].\nThis is exactly the required form.\n\nTherefore, by induction, for every integer k\\ge 0 there exist d_k\\in Z and H_k(x)\\in Z[x] such that\nG_k(x)=a_k+d_kx+2x^2H_k(x),\nwith a_k=G_k(0). This proves the lemma.",
+        "role_in_parent": "Provides the explicit quadratic remainder form needed to evaluate G_k at x=a_k and separate the main term a_k(d_k-1) from a higher-order error term."
+      },
+      {
+        "lemma_id": "lem_20260315051701_131fbfcc",
+        "statement_nl": "Let f(x)=2x^2+x+1 in Z[x]. For each integer j>=0 define G_j in Z[x] by G_0(x)=f(x) and G_{j+1}(x)=G_j(G_j(x)), and set a_j:=G_j(0). Then for every integer k>=1 there exists an odd integer u_k such that a_k=2^{k+1}u_k.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "polynomial",
+              "domain": "Z[x]",
+              "role": "fixed parameter; f(x) := 2x^2 + x + 1"
+            },
+            {
+              "name": "j",
+              "type": "integer index",
+              "domain": "Z, j >= 0",
+              "role": "index for the recursively defined family (G_j, a_j)"
+            },
+            {
+              "name": "G_j",
+              "type": "family of polynomials",
+              "domain": "G_j ∈ Z[x] for each j >= 0",
+              "role": "recursively defined sequence with G_0 = f and G_{j+1} = G_j ∘ G_j"
+            },
+            {
+              "name": "a_j",
+              "type": "integer family",
+              "domain": "a_j := G_j(0) ∈ Z for each j >= 0",
+              "role": "integer sequence obtained by evaluating G_j at 0"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "Z, k >= 1",
+              "role": "universal index in the claim"
+            },
+            {
+              "name": "u_k",
+              "type": "integer (witness)",
+              "domain": "Z, required to be odd",
+              "role": "exists-for-each-k witness claimed to satisfy a_k = 2^{k+1} u_k"
+            }
+          ],
+          "quantifier_order": [
+            "f fixed (f(x)=2x^2+x+1) as an element of Z[x]",
+            "for all integers j >= 0: define G_j ∈ Z[x] by G_0 = f and G_{j+1} = G_j ∘ G_j",
+            "for all integers j >= 0: define a_j := G_j(0) ∈ Z",
+            "for all integers k >= 1: there exists u_k ∈ Z (odd) such that a_k = 2^{k+1} u_k"
+          ],
+          "domain_restrictions": [
+            "f has integer coefficients (f ∈ Z[x])",
+            "indices j are integers with j >= 0; k is integer with k >= 1",
+            "each G_j is a polynomial with integer coefficients (G_j ∈ Z[x]) by recursive composition",
+            "each a_j is an integer (evaluation at 0 of an integer-coefficient polynomial)",
+            "u_k is required to be an odd integer (i.e. u_k ∈ Z and 2 ∤ u_k)"
+          ],
+          "witness_dependencies": [
+            "u_k is an existential witness depending on k (u_k = u_k(k)), i.e. for each fixed k there may be a different odd u_k",
+            "u_k implicitly depends on the fixed polynomial f and on the values of G_j up to index k via a_k = G_k(0)",
+            "there is no claim of a single uniform u working for multiple k; existence is separate for each k"
+          ],
+          "normalized_claim": "For the fixed polynomial f(x)=2x^2+x+1 and G_j defined by G_0=f, G_{j+1}=G_j∘G_j, and a_j=G_j(0), the following holds: for every integer k >= 1 the integer a_k is divisible by 2^{k+1} and the quotient a_k / 2^{k+1} is an odd integer (equivalently v_2(a_k) = k+1)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let f^{(0)}(x)=x and, for m>=1, let f^{(m)} be the m-fold self-composition of f. First, G_j = f^{(2^j)} for every j>=0. Indeed, G_0=f=f^{(1)}, and if G_j=f^{(2^j)}, then G_{j+1}=G_j∘G_j=f^{(2^j)}∘f^{(2^j)}=f^{(2^{j+1})}. Hence a_j=f^{(2^j)}(0). Since f has integer coefficients and 0 is an integer, every f^{(t)}(0) is an integer. For each j>=0 let d_j:=G_j'(0). Because f'(x)=4x+1, repeated use of the chain rule gives d_j=(f^{(2^j)})'(0)=product over t=0,...,2^j-1 of f'(f^{(t)}(0)) = product over t=0,...,2^j-1 of (4f^{(t)}(0)+1). Every factor is congruent to 1 modulo 4, so d_j is congruent to 1 modulo 4 for all j>=0. Now prove the claim by induction on k>=1. Base case: a_1=G_1(0)=f(f(0))=f(1)=4=2^2*1, and 1 is odd. Inductive step: assume a_k=2^{k+1}u_k for some odd integer u_k, where k>=1. Write G_k(x)=q_0+q_1x+q_2x^2+... with q_i in Z. Then q_0=G_k(0)=a_k and q_1=G_k'(0)=d_k, so G_k(x)=a_k+d_k x + x^2 H_k(x) for some H_k in Z[x]. Evaluating at x=a_k yields a_{k+1}=G_{k+1}(0)=G_k(G_k(0))=G_k(a_k)=a_k+d_k a_k+a_k^2 H_k(a_k)=a_k(1+d_k)+a_k^2 H_k(a_k). Since d_k is congruent to 1 modulo 4, the integer r_k:=(1+d_k)/2 is odd. Substituting a_k=2^{k+1}u_k, we obtain a_{k+1}=2^{k+2}(u_k r_k)+2^{2k+2}u_k^2 H_k(a_k)=2^{k+2}(u_k r_k+2^k u_k^2 H_k(a_k)). Because k>=1, the second summand inside the parentheses is even, while u_k r_k is odd. Therefore the entire parenthesis is an odd integer. Define u_{k+1}:=u_k r_k+2^k u_k^2 H_k(a_k). Then u_{k+1} is odd and a_{k+1}=2^{k+2}u_{k+1}. This completes the induction. Hence for every integer k>=1 there exists an odd integer u_k such that a_k=2^{k+1}u_k.",
+        "role_in_parent": "Supplies the exact 2-adic size of a_k=b_{2^k}."
+      },
+      {
+        "lemma_id": "lem_20260315051727_f1150c1e",
+        "statement_nl": "Let f(x)=2x^2+x+1 in Z[x]. For each integer j>=0 define G_j in Z[x] by G_0(x)=f(x) and G_{j+1}(x)=G_j(G_j(x)). Assume that for every integer k>=0 an integer d_k is chosen so that there exists H_k(x) in Z[x] with G_k(x)=G_k(0)+d_k x+2x^2 H_k(x) in Z[x]. Then for every integer k>=1 there exists an odd integer v_k such that d_k-1=2^{k+1}v_k.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "x",
+              "type": "indeterminate",
+              "domain": "polynomial variable",
+              "role": "formal variable for polynomials in Z[x]"
+            },
+            {
+              "name": "f",
+              "type": "polynomial",
+              "domain": "Z[x]",
+              "role": "given base polynomial f(x)=2x^2+x+1"
+            },
+            {
+              "name": "j",
+              "type": "integer index",
+              "domain": "j ∈ Z, j ≥ 0",
+              "role": "index for recursively defined polynomials G_j"
+            },
+            {
+              "name": "G_j",
+              "type": "family of polynomials",
+              "domain": "G_j ∈ Z[x] for each j ≥ 0",
+              "role": "recursively defined by G_0 = f and G_{j+1} = G_j ∘ G_j"
+            },
+            {
+              "name": "k",
+              "type": "integer index",
+              "domain": "k ∈ Z, k ≥ 0 (or k ≥ 1 in conclusion)",
+              "role": "index for the d_k, H_k, and v_k data"
+            },
+            {
+              "name": "d_k",
+              "type": "integer",
+              "domain": "d_k ∈ Z (one chosen for each k ≥ 0, by hypothesis)",
+              "role": "coefficient of x in the assumed decomposition of G_k"
+            },
+            {
+              "name": "H_k",
+              "type": "polynomial",
+              "domain": "H_k ∈ Z[x] (exists for each k ≥ 0 together with d_k)",
+              "role": "polynomial witnessing the decomposition G_k(x) = G_k(0) + d_k x + 2 x^2 H_k(x)"
+            },
+            {
+              "name": "G_k(0)",
+              "type": "integer",
+              "domain": "constant term of G_k ∈ Z",
+              "role": "constant term in the decomposition"
+            },
+            {
+              "name": "v_k",
+              "type": "integer (odd)",
+              "domain": "v_k ∈ Z, v_k odd (conclusion asserts existence for k ≥ 1)",
+              "role": "witness showing d_k - 1 = 2^{k+1} v_k"
+            }
+          ],
+          "quantifier_order": [
+            "Deterministic definition: f is fixed as 2x^2+x+1 in Z[x].",
+            "Deterministic recursion: For each integer j ≥ 0 define G_j ∈ Z[x] by G_0 = f and G_{j+1} = G_j ∘ G_j.",
+            "Hypothesis (for all k ≥ 0): ∀k ≥ 0, ∃ d_k ∈ Z and ∃ H_k ∈ Z[x] such that G_k(x) = G_k(0) + d_k x + 2 x^2 H_k(x).",
+            "Conclusion: ∀k ≥ 1, ∃ v_k ∈ Z (odd) such that d_k - 1 = 2^{k+1} v_k."
+          ],
+          "domain_restrictions": [
+            "All polynomials live in Z[x] (integer coefficients).",
+            "Indices j, k are integers with j ≥ 0; hypothesis quantifies k ≥ 0; conclusion quantifies k ≥ 1.",
+            "d_k are integers (one chosen for each k under the hypothesis).",
+            "H_k are polynomials in Z[x] (may depend on k and on the chosen d_k).",
+            "v_k are integers required to be odd in the conclusion (odd permits negative odd integers)."
+          ],
+          "witness_dependencies": [
+            "Each d_k is allowed to depend on the index k (d_k = d_k(k)).",
+            "Each H_k may depend on k and on the chosen d_k (H_k = H_k(k, d_k)).",
+            "Each v_k (in the conclusion) may depend on k and on the previously chosen d_k; in fact v_k is determined by d_k via v_k = (d_k - 1) / 2^{k+1} once divisibility is established.",
+            "G_j are defined independently of the choices of d_k or H_k (they are produced solely from f by recursion)."
+          ],
+          "normalized_claim": "Let f ∈ Z[x] be f(x)=2x^2+x+1 and define G_0 = f, G_{j+1} = G_j ∘ G_j for j ≥ 0 (so each G_j ∈ Z[x]). Assume: for every integer k ≥ 0 there exist integers d_k ∈ Z and polynomials H_k ∈ Z[x] such that G_k(x) = G_k(0) + d_k x + 2 x^2 H_k(x). Then for every integer k ≥ 1 there exists an integer v_k which is odd such that d_k - 1 = 2^{k+1} v_k. Equivalently, for each k ≥ 1 one has 2^{k+1} | (d_k - 1) and (d_k - 1)/2^{k+1} is odd (so the 2-adic valuation v_2(d_k - 1) equals k+1)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let c_k := G_k(0). I will prove the stronger statement that for every k >= 1 there exist odd integers u_k and v_k such that\nc_k = 2^(k+1) u_k and d_k - 1 = 2^(k+1) v_k.\nThe desired conclusion is the second half of this stronger claim.\n\nBase case k = 1.\nWe have G_0(x) = f(x) = 1 + x + 2x^2, so\nG_1(x) = G_0(G_0(x)) = f(f(x)) = 4 + 5x + 12x^2 + 8x^3 + 8x^4.\nHence c_1 = G_1(0) = 4 = 2^2 * 1, and necessarily d_1 = 5, so\nd_1 - 1 = 4 = 2^2 * 1.\nThus the statement holds for k = 1 with u_1 = v_1 = 1, both odd.\n\nInduction step.\nAssume for some k >= 1 that\nc_k = 2^(k+1) u and d_k = 1 + 2^(k+1) v\nfor some odd integers u and v.\nWe must show that the same kind of statement holds for k+1.\n\nBy hypothesis, for this k there exists H_k(x) in Z[x] such that\nG_k(x) = c_k + d_k x + 2x^2 H_k(x).\nSince H_k has integer coefficients and c_k is an integer, H_k(c_k) is an integer.\nNow\nc_(k+1) = G_(k+1)(0) = G_k(G_k(0)) = G_k(c_k).\nSubstituting x = c_k into the displayed formula for G_k gives\nc_(k+1) = c_k + d_k c_k + 2 c_k^2 H_k(c_k).\nUsing c_k = 2^(k+1) u and d_k = 1 + 2^(k+1) v,\n\nc_(k+1)\n= 2^(k+1)u + (1 + 2^(k+1)v)2^(k+1)u + 2(2^(k+1)u)^2 H_k(c_k)\n= 2^(k+2) [ u + 2^k u v + 2^(k+1) u^2 H_k(c_k) ].\n\nThe bracket is odd: its first term u is odd, while the other two terms are even. Therefore there exists an odd integer u_(k+1) such that\nc_(k+1) = 2^(k+2) u_(k+1).\n\nNow we treat d_(k+1). Differentiating\nG_k(x) = c_k + d_k x + 2x^2 H_k(x)\nformally gives\nG_k'(x) = d_k + 4x H_k(x) + 2x^2 H_k'(x),\nwith H_k'(x) in Z[x]. In particular, H_k'(c_k) is an integer. Also, since d_k is the coefficient of x in G_k, we have d_k = G_k'(0).\nUsing G_(k+1) = G_k o G_k and the chain rule,\n\nd_(k+1) = G_(k+1)'(0) = G_k'(c_k) G_k'(0) = d_k [ d_k + 4c_k H_k(c_k) + 2c_k^2 H_k'(c_k) ].\n\nSubstitute c_k = 2^(k+1)u and d_k = 1 + 2^(k+1)v:\n\nd_(k+1) - 1\n= (1 + 2^(k+1)v)^2 - 1\n  + 4(2^(k+1)u)(1 + 2^(k+1)v) H_k(c_k)\n  + 2(2^(k+1)u)^2 (1 + 2^(k+1)v) H_k'(c_k)\n= 2^(k+2) [ v + 2^k v^2 + 2u(1 + 2^(k+1)v) H_k(c_k)\n            + 2^(k+1) u^2 (1 + 2^(k+1)v) H_k'(c_k) ].\n\nThe bracket is odd: the first term v is odd, and every other term is even. Hence there exists an odd integer v_(k+1) such that\nd_(k+1) - 1 = 2^(k+2) v_(k+1).\n\nSo the stronger statement holds for k+1. By induction, it holds for every k >= 1.\nTherefore, for every k >= 1 there exists an odd integer v_k such that\nd_k - 1 = 2^(k+1) v_k.\nThis is exactly the lemma.",
+        "role_in_parent": "Gives the exact 2-adic size of the linear term d_k-1 in the local expansion."
+      },
+      {
+        "lemma_id": "lem_20260315051812_eca9365d",
+        "statement_nl": "Let f(x)=2x^2+x+1 in Z[x]. For each integer j>=0 define G_j in Z[x] by G_0(x)=f(x) and G_{j+1}(x)=G_j(G_j(x)). Suppose k>=0 and suppose there exist an integer d_k and a polynomial H_k(x) in Z[x] such that, writing a_k:=G_k(0), one has G_k(x)=a_k+d_k x+2x^2 H_k(x) in Z[x]. Then there exists an integer m_k such that a_{k+1}-2a_k=a_k(d_k-1)+2a_k^2 m_k, where a_{k+1}:=G_{k+1}(0).",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "polynomial",
+              "domain": "Z[x]",
+              "role": "given polynomial parameter; f(x)=2x^2+x+1"
+            },
+            {
+              "name": "j",
+              "type": "integer index",
+              "domain": "Z, j >= 0",
+              "role": "index used to define sequence (family) of polynomials G_j"
+            },
+            {
+              "name": "G_j",
+              "type": "polynomial",
+              "domain": "Z[x] for each j >= 0",
+              "role": "recursively defined family: G_0=f, G_{j+1}=G_j ∘ G_j"
+            },
+            {
+              "name": "k",
+              "type": "integer (fixed)",
+              "domain": "Z, k >= 0",
+              "role": "a fixed index at which the hypothesis is assumed and conclusion asserted"
+            },
+            {
+              "name": "d_k",
+              "type": "integer",
+              "domain": "Z",
+              "role": "existential coefficient appearing in the linear term of G_k"
+            },
+            {
+              "name": "H_k",
+              "type": "polynomial",
+              "domain": "Z[x]",
+              "role": "existential polynomial giving the quadratic-and-higher part of G_k via 2x^2 H_k(x)"
+            },
+            {
+              "name": "a_k",
+              "type": "integer (defined)",
+              "domain": "Z",
+              "role": "constant term of G_k: a_k := G_k(0)"
+            },
+            {
+              "name": "a_{k+1}",
+              "type": "integer (defined)",
+              "domain": "Z",
+              "role": "constant term of G_{k+1}: a_{k+1} := G_{k+1}(0) = G_k(a_k)"
+            },
+            {
+              "name": "m_k",
+              "type": "integer (existential witness)",
+              "domain": "Z",
+              "role": "the integer whose existence is asserted to satisfy the displayed identity"
+            }
+          ],
+          "quantifier_order": [
+            "For all j ∈ Z with j ≥ 0: define G_j ∈ Z[x] by G_0 = f and G_{j+1} = G_j ∘ G_j (this yields G_j for every j ≥ 0)",
+            "Fix k ∈ Z with k ≥ 0",
+            "Assume there exist d_k ∈ Z and H_k ∈ Z[x] such that, writing a_k := G_k(0), the polynomial identity G_k(x) = a_k + d_k x + 2 x^2 H_k(x) holds in Z[x]",
+            "Then there exists m_k ∈ Z such that a_{k+1} - 2 a_k = a_k (d_k - 1) + 2 a_k^2 m_k, where a_{k+1} := G_{k+1}(0)"
+          ],
+          "domain_restrictions": [
+            "f is the specific polynomial 2x^2 + x + 1 and belongs to Z[x]",
+            "All G_j are polynomials with integer coefficients: G_j ∈ Z[x] for each j ≥ 0 (closure under composition holds because coefficients are integers)",
+            "Indices j,k range over nonnegative integers (Z, ≥ 0)",
+            "d_k is an integer and H_k is a polynomial with integer coefficients (Z[x]) as given by the hypothesis",
+            "a_k and a_{k+1} are integers because they are evaluations at 0 of polynomials in Z[x]",
+            "Equality of polynomials (G_k(x)=...) is polynomial identity over Z[x], i.e. coefficients equal"
+          ],
+          "witness_dependencies": [
+            "m_k is an existential witness that may depend on k and on the particular chosen d_k, H_k (equivalently on G_k and its coefficients) and on a_k",
+            "When a_k ≠ 0 one may express m_k explicitly by m_k = (a_{k+1} - 2 a_k - a_k (d_k - 1)) / (2 a_k^2); the statement asserts this rational value is actually an integer",
+            "When a_k = 0 the required identity reduces to a_{k+1} = 0 (which holds because a_{k+1} = G_k(a_k) = G_k(0) = a_k), so any integer m_k is a valid witness (no division needed)"
+          ],
+          "normalized_claim": "For all k ∈ Z, k ≥ 0, with G_j defined as above for all j, if there exist d_k ∈ Z and H_k ∈ Z[x] such that G_k(x) = a_k + d_k x + 2 x^2 H_k(x) in Z[x] (where a_k := G_k(0)), then there exists an integer m_k ∈ Z satisfying a_{k+1} - 2 a_k = a_k (d_k - 1) + 2 a_k^2 m_k, where a_{k+1} := G_{k+1}(0)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let m_k := H_k(a_k). Since H_k(x) has integer coefficients and a_k = G_k(0) is an integer, we have m_k \\in \\mathbb{Z}.\n\nNow, by definition of G_{k+1},\nG_{k+1}(0) = (G_k \\circ G_k)(0) = G_k(G_k(0)) = G_k(a_k).\nThus a_{k+1} = G_k(a_k).\n\nUsing the assumed identity\nG_k(x)=a_k+d_kx+2x^2H_k(x)\nin \\mathbb{Z}[x], and evaluating at x=a_k, we get\n\na_{k+1}=G_k(a_k)=a_k+d_k a_k+2a_k^2 H_k(a_k).\n\nSubtracting 2a_k from both sides gives\n\na_{k+1}-2a_k = a_k(d_k-1)+2a_k^2 H_k(a_k).\n\nSince m_k=H_k(a_k), this is exactly\n\na_{k+1}-2a_k = a_k(d_k-1)+2a_k^2 m_k.\n\nTherefore there exists an integer m_k satisfying the required identity.",
+        "role_in_parent": "Transforms the target difference into a main product plus a higher-order remainder."
+      },
+      {
+        "lemma_id": "lem_20260315051850_8c352334",
+        "statement_nl": "Let k be an integer with k>=1. Suppose a and d are integers for which there exist odd integers u and v satisfying a=2^{k+1}u and d-1=2^{k+1}v. Suppose also that an integer R satisfies R=a(d-1)+2a^2m for some integer m. Then there exists an odd integer w such that R=2^{2k+2}w. Equivalently, R is divisible by 2^{2k+2} but not by 2^{2k+3}.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "k ∈ Z, k ≥ 1",
+              "role": "parameter / universal quantifier"
+            },
+            {
+              "name": "a",
+              "type": "integer",
+              "domain": "a ∈ Z",
+              "role": "given integer (subject to divisibility hypothesis)"
+            },
+            {
+              "name": "d",
+              "type": "integer",
+              "domain": "d ∈ Z",
+              "role": "given integer (subject to divisibility hypothesis on d-1)"
+            },
+            {
+              "name": "u",
+              "type": "integer",
+              "domain": "u ∈ Z, u odd",
+              "role": "existential witness: satisfies a = 2^{k+1} u"
+            },
+            {
+              "name": "v",
+              "type": "integer",
+              "domain": "v ∈ Z, v odd",
+              "role": "existential witness: satisfies d-1 = 2^{k+1} v"
+            },
+            {
+              "name": "m",
+              "type": "integer",
+              "domain": "m ∈ Z",
+              "role": "arbitrary integer parameter (appears in definition of R)"
+            },
+            {
+              "name": "R",
+              "type": "integer",
+              "domain": "R ∈ Z, defined by R = a(d-1) + 2 a^2 m",
+              "role": "dependent integer (constructed from a,d,m)"
+            },
+            {
+              "name": "w",
+              "type": "integer",
+              "domain": "w ∈ Z, w odd",
+              "role": "existential witness to the divisibility claim: R = 2^{2k+2} w"
+            }
+          ],
+          "quantifier_order": [
+            "forall k ∈ Z with k ≥ 1",
+            "forall a ∈ Z",
+            "forall d ∈ Z",
+            "assume (exists u ∈ Z odd and exists v ∈ Z odd) such that a = 2^{k+1} u and d-1 = 2^{k+1} v",
+            "forall m ∈ Z",
+            "define R := a(d-1) + 2 a^2 m",
+            "there exists w ∈ Z odd such that R = 2^{2k+2} w"
+          ],
+          "domain_restrictions": [
+            "k is an integer with k ≥ 1",
+            "a, d, m, R are integers",
+            "u and v are odd integers satisfying a = 2^{k+1} u and d-1 = 2^{k+1} v (i.e. a and d-1 are multiples of 2^{k+1})",
+            "w is required to be an odd integer (equivalently v_2(R) = 2k+2)"
+          ],
+          "witness_dependencies": [
+            "u and v are existential witnesses whose existence is assumed and which depend on a, d, k via a = 2^{k+1} u and d-1 = 2^{k+1} v",
+            "R is defined from a, d, m (so R depends on a,d,m)",
+            "w can be taken as w = u*v + 2*u^2*m, hence w depends on u, v, m (and thus on a,d,k via u and v)",
+            "oddness of w follows from u and v being odd and 2*u^2*m being even, so no additional 2-factor remains"
+          ],
+          "normalized_claim": "For all integers k ≥ 1, for all integers a,d, if there exist odd integers u,v with a = 2^{k+1} u and d-1 = 2^{k+1} v, then for every integer m, letting R := a(d-1) + 2 a^2 m, there exists an odd integer w (namely w = u*v + 2 u^2 m) such that R = 2^{2k+2} w. Equivalently, v_2(R) = 2k+2 (i.e. R is divisible by 2^{2k+2} but not by 2^{2k+3})."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix an integer k>=1. Assume a,d are integers and that there exist odd integers u,v such that\n\na = 2^{k+1}u,  d-1 = 2^{k+1}v.\n\nAssume also that for some integer m,\n\nR = a(d-1) + 2a^2 m.\n\nSubstitute the given expressions for a and d-1 into R:\n\nR = (2^{k+1}u)(2^{k+1}v) + 2(2^{k+1}u)^2 m.\n\nCompute each term:\n\n(2^{k+1}u)(2^{k+1}v) = 2^{2k+2}uv,\n\nand\n\n2(2^{k+1}u)^2 m = 2 \\cdot 2^{2k+2}u^2 m = 2^{2k+3}u^2 m = 2^{2k+2}(2u^2 m).\n\nHence\n\nR = 2^{2k+2}uv + 2^{2k+2}(2u^2 m)\n  = 2^{2k+2}(uv + 2u^2 m).\n\nDefine\n\nw := uv + 2u^2 m.\n\nThen w is an integer, and the previous identity gives\n\nR = 2^{2k+2}w.\n\nIt remains to show that w is odd. Since u and v are odd, their product uv is odd. Also 2u^2 m is even because it is divisible by 2. Therefore\n\nw = (odd) + (even)\n\nis odd.\n\nSo there exists an odd integer w such that R = 2^{2k+2}w.\n\nThis proves the first formulation of the lemma.\n\nFor the stated equivalent formulation: because R = 2^{2k+2}w with w odd, R is divisible by 2^{2k+2}. It is not divisible by 2^{2k+3}, for otherwise we would have\n\nR = 2^{2k+3}t\n\nfor some integer t, and then dividing by 2^{2k+2} would give w = 2t, contradicting that w is odd. Therefore R is divisible by 2^{2k+2} but not by 2^{2k+3}.\n\nHence the lemma is proved.",
+        "role_in_parent": "Pure arithmetic lemma combining the exact divisibility of a_k and d_k-1 with the higher-order remainder term from L5."
+      }
+    ],
+    "all_visible_lemmas_nl_accepted": true
+  }

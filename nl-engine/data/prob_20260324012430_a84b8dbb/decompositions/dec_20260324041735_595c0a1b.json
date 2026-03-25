@@ -1,0 +1,33 @@
+{
+  "assembly_plan_id": "asm_20260324041735_3c98e90d",
+  "controller_status": "failed",
+  "created_at": "2026-03-24T04:21:35.926882Z",
+  "decomposition_id": "dec_20260324041735_595c0a1b",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.86,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "lem_20260324013805_2c445eb6",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "shared_context": [
+    {
+      "content": "For integers m >= 2 and h >= 0, K_{m,h} is the set of tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=h and, for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, while if i+j > m then x_i+x_j+1 >= x_{i+j-m}.",
+      "label": "K_definition"
+    },
+    {
+      "content": "For x in K_{m,g} and r in {1,...,m-1}, write x+e_r for the tuple obtained by increasing the r-th coordinate by 1 and leaving all other coordinates unchanged. The one-step increment graph G_{m,g} has left part K_{m,g}, right part K_{m,g+1}, and edges x~y exactly when y=x+e_r for some r.",
+      "label": "increment_graph"
+    },
+    {
+      "content": "Lexicographic order on tuples in Z^{m-1}: x <_lex y if, at the first coordinate where x and y differ, the tuple x has the smaller entry.",
+      "label": "lex_order"
+    }
+  ],
+  "strategy_summary": "Build the bipartite graph whose left vertices are tuples in K_{m,g}, whose right vertices are tuples in K_{m,g+1}, and whose edges correspond to increasing exactly one coordinate by 1. Prove Hall's condition for this graph by a lexicographic compression principle: among all left subsets of a fixed size, lexicographic initial segments have the smallest neighborhoods, and every such initial segment has at least as many neighbors as vertices. Hall's marriage theorem then gives the desired injection.",
+  "updated_at": "2026-03-24T04:21:35.926882Z"
+}

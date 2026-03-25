@@ -1,0 +1,150 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324060109_5a8f7d4a/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-24T06:07:16.160011Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T06:07:00.017773Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260324060109_5a8f7d4a",
+    "proof_nl": "Let\nF(t)=\\sum_{g=0}^{\\infty} a_g t^g \\in \\mathbb Z[[t]]\n\nand suppose there exists\nC(t)=\\sum_{g=0}^{\\infty} c_g t^g \\in \\mathbb Z[[t]]\nwith each c_g\\ge 0 such that\n\\[(1-t)F(t)=a_0+tC(t).\\]\nAll identities are in the ring of formal power series, so coefficients of equal series are equal termwise.\n\nFirst expand the left-hand side:\n\\[\n(1-t)F(t)=F(t)-tF(t)\n=\\sum_{g=0}^{\\infty} a_g t^g-\\sum_{g=0}^{\\infty} a_g t^{g+1}.\n\\]\nReindex the second sum:\n\\[\n\\sum_{g=0}^{\\infty} a_g t^{g+1}=\\sum_{g=1}^{\\infty} a_{g-1} t^g.\n\\]\nHence\n\\[\n(1-t)F(t)=a_0+\\sum_{g=1}^{\\infty}(a_g-a_{g-1})t^g.\n\\]\nOn the other hand,\n\\[\na_0+tC(t)=a_0+\\sum_{g=0}^{\\infty} c_g t^{g+1}=a_0+\\sum_{g=1}^{\\infty} c_{g-1} t^g.\n\\]\nSince these two formal power series are equal, their coefficients of t^g are equal for every g\\ge 1. Therefore\n\\[\na_g-a_{g-1}=c_{g-1}\\qquad (g\\ge 1).\n\\]\nNow replace g by g+1. For every integer g\\ge 0 we obtain\n\\[\na_{g+1}-a_g=c_g.\n\\]\nBecause each c_g\\in \\mathbb Z_{\\ge 0}, it follows that\n\\[\na_{g+1}-a_g\\ge 0,\n\\]\nso\n\\[\na_g\\le a_{g+1}\n\\qquad \\text{for every } g\\ge 0.\n\\]\nThis proves both assertions.",
+    "role_in_assembly": "Extracts coefficientwise monotonicity from the positive Hilbert-series identity.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "g is restricted to integers with g \u2265 0",
+        "F has integer coefficients: a_g \u2208 Z for all g \u2265 0",
+        "C has nonnegative integer coefficients: c_g \u2208 Z_{\u22650} for all g \u2265 0",
+        "All series identities are in the ring of formal power series (coefficientwise equality), not pointwise for numeric t"
+      ],
+      "normalized_claim": "Given F(t)=\u03a3_{g=0}^\u221e a_g t^g with a_g\u2208Z and given that there exists C(t)=\u03a3_{g=0}^\u221e c_g t^g with c_g\u2208Z_{\u22650} such that (1-t)F(t)=a_0+tC(t), then for every integer g\u22650 one has a_{g+1}=a_g+c_g. Consequently, for every integer g\u22650, a_g \u2264 a_{g+1}.",
+      "quantifier_order": [
+        "\u2203 C(t)=\u03a3_{g=0}^\u221e c_g t^g such that (\u2200 g \u2208 Z_{\u22650}, c_g \u2208 Z_{\u22650}) and (1-t)F(t)=a_0+tC(t)",
+        "\u2200 g \u2208 Z_{\u22650}: a_{g+1}-a_g=c_g"
+      ],
+      "variables": [
+        {
+          "domain": "t is an indeterminate in the ring of formal power series",
+          "name": "t",
+          "role": "indeterminate used to define formal series",
+          "type": "formal variable"
+        },
+        {
+          "domain": "F(t) \u2208 Z[[t]]",
+          "name": "F",
+          "role": "given series with coefficients a_g",
+          "type": "formal power series"
+        },
+        {
+          "domain": "a_g \u2208 Z for all g \u2208 Z_{\u22650}",
+          "name": "a_g",
+          "role": "coefficients of F",
+          "type": "integer coefficient indexed by g"
+        },
+        {
+          "domain": "C(t) \u2208 Z[[t]]",
+          "name": "C",
+          "role": "existentially quantified series with coefficients c_g",
+          "type": "formal power series"
+        },
+        {
+          "domain": "c_g \u2208 Z_{\u22650} for all g \u2208 Z_{\u22650}",
+          "name": "c_g",
+          "role": "coefficients of C and witnesses used in the conclusion",
+          "type": "integer coefficient indexed by g"
+        }
+      ],
+      "witness_dependencies": [
+        "The values c_g used in the conclusion are the coefficients of the existentially chosen witness series C(t), which may depend on the given series F(t) via the constraint (1-t)F(t)=a_0+tC(t)"
+      ]
+    },
+    "statement_nl": "Let F(t)=sum_{g=0}^infinity a_g t^g be a formal power series with integer coefficients. Suppose there exists another formal power series C(t)=sum_{g=0}^infinity c_g t^g with all c_g in Z_{>=0} such that (1-t) F(t) = a_0 + t C(t). Then for every integer g >= 0 one has a_{g+1} - a_g = c_g. In particular, a_g <= a_{g+1} for every g >= 0."
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "detailed_findings": [
+      {
+        "finding": "Coefficient extraction from the identity (1-t)F(t)=a_0+tC(t) is carried out correctly in the ring of formal power series.",
+        "location": "entire proof",
+        "severity": "low"
+      },
+      {
+        "finding": "The reindexing of the shifted series tF(t)=sum_{g=1}^infty a_{g-1} t^g is correct and the resulting coefficient formula is exact.",
+        "location": "middle of proof",
+        "severity": "low"
+      },
+      {
+        "finding": "The conclusion a_{g+1}-a_g=c_g and hence a_g <= a_{g+1} for all g >= 0 matches the stated lemma with no semantic drift.",
+        "location": "final steps",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "lemma_id": "lem_20260324060109_5a8f7d4a",
+    "proof_status": "complete",
+    "reason": "The proof correctly expands the formal power series identity, reindexes the shifted sum, equates coefficients in Z[[t]], and derives a_g - a_{g-1} = c_{g-1} for g >= 1, hence a_{g+1} - a_g = c_g for all g >= 0. Since c_g >= 0, monotonicity follows immediately. The argument is complete and matches the lemma's semantic sketch and its role in the root theorem.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed"
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260324060109_5a8f7d4a",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T06:07:16.160016Z",
+  "worker_job_id": "wrk_lem_20260324060109_5a8f7d4a_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

@@ -1,0 +1,65 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-17T03:08:34.096014Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let n be any element of N. Since g(m)=m^2 for every m in N, we have\n\ng(n+1)-g(n)=(n+1)^2-n^2=2n+1.\n\nAlso, because n^2 is again a natural number,\n\ng(g(n))=g(n^2)=(n^2)^2=n^4.\n\nNow n>=1, so n^4>0, and the real power is well-defined. Using the standard definition a^x=exp(x ln a) for a>0,\n\n(g(g(n)))^r=(n^4)^r=exp(r ln(n^4))=exp(4r ln n)=n^{4r}.\n\nSince r<=1/4, we have 4r<=1. Also n>=1 implies ln n>=0. Therefore\n\n4r ln n <= ln n.\n\nBecause the exponential function is increasing,\n\nn^{4r}=exp(4r ln n) <= exp(ln n)=n.\n\nFinally, n<=2n+1, hence\n\n(g(g(n)))^r = n^{4r} <= n <= 2n+1 = g(n+1)-g(n).\n\nSo g(n+1)-g(n) >= (g(g(n)))^r for this n. Since n was arbitrary, the inequality holds for every n in N.",
+  "latest_vetter_report_id": "rep_20260317033341_ad4cc16b",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260317030754_ed55ed64",
+  "parent_id": "thm_root_20260317025002_2660065c",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260317025002_5d137122",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Produces the explicit admissible witness, in particular for r=1/4.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let r be a real number with r \\le \\tfrac14, and define g : \\mathbb{N} \\to \\mathbb{N} by g(n)=n^2 for every n \\in \\mathbb{N}. Then for every n \\in \\mathbb{N}, one has g(n+1)-g(n) \\ge (g(g(n)))^r.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "r is a real number and r <= 1/4.",
+      "g is the specific function g(n) = n^2 for every n in N (so g(g(n)) = n^4).",
+      "n ranges over the natural numbers N. To avoid ambiguity in real exponentiation, one should require n >= 1 (so g(g(n)) > 0), unless a convention for 0^r is specified.",
+      "Interpretation of (g(g(n)))^r uses real exponentiation: a^r := exp(r * log(a)), which requires a > 0. Thus g(g(n)) must be positive for all n considered (i.e., n >= 1)."
+    ],
+    "normalized_claim": "For all real r with r <= 1/4, let g: N -> N be defined by g(n) = n^2. Then for all natural numbers n with n >= 1, (n+1)^2 - n^2 >= (g(g(n)))^r. Equivalently, for all r <= 1/4 and all n in N, n >= 1 implies 2n + 1 >= n^{4r}.",
+    "quantifier_order": [
+      "For all r in R with r <= 1/4 (parameter; standard 'Let r be' = arbitrary such r).",
+      "Define g : N -> N by g(n) = n^2 (definition independent of r).",
+      "For all n in N (subject to domain restrictions below), the inequality holds."
+    ],
+    "variables": [
+      {
+        "domain": "r \\in R with r \\le 1/4",
+        "name": "r",
+        "role": "parameter (quantified universally in standard reading 'Let r be...')",
+        "type": "real"
+      },
+      {
+        "domain": "\\mathbb{N} -> \\mathbb{N}",
+        "name": "g",
+        "role": "explicitly defined function, g(n) = n^2 for every n in \\mathbb{N}; no existential choice",
+        "type": "function"
+      },
+      {
+        "domain": "\\mathbb{N} (see ambiguities about whether 0 \\in \\mathbb{N})",
+        "name": "n",
+        "role": "universal quantifier ranging over naturals in the inequality",
+        "type": "natural number"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses in the claim; g is a fixed, explicit definition (does not depend on r or n).",
+      "The inequality is universal in n, so there is no hidden dependence of an existential on n."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-17T03:08:34.096015Z"
+}

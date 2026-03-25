@@ -1,0 +1,74 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-16T20:44:51.021896Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.66,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let p>5 be prime with p \u2261 7 (mod 8), and let I(k) be the least positive inverse of k modulo p.\n\nFirst note that I is an involution on {1,...,p-1}: if a\u00b7I(a) \u2261 1 (mod p), then I(a)\u00b7a \u2261 1 (mod p), so by uniqueness of the inverse in {1,...,p-1} we have I(I(a))=a.\n\nDefine\nT := { t in {1,...,p-2} : t + I(t) < p-2 }.\nI claim that |S|=|T|.\n\nIndeed, define Phi:{1,...,p-2} -> {1,...,p-2} by\nPhi(t)=I(t+1)-1.\nBecause I is a bijection of {1,...,p-1} and I(1)=1, Phi is a bijection from {1,...,p-2} onto itself.\n\nFix t in {1,...,p-2}, and set k=Phi(t)=I(t+1)-1. Then k+1=I(t+1), hence (using that I is an involution) I(k+1)=t+1.\nNow put y:=p-1-I(t). Since t<=p-2, we have I(t) != p-1, so y lies in {1,...,p-2}. Also, modulo p,\nk = I(t+1)-1 \u2261 (t+1)^(-1)-1 = -t(t+1)^(-1),\nand\ny = p-1-I(t) \u2261 -1-t^(-1) = -(t+1)t^(-1).\nTherefore\nk y \u2261 [-t(t+1)^(-1)]\u00b7[-(t+1)t^(-1)] \u2261 1 (mod p).\nBy uniqueness of the inverse, y=I(k). Thus\nI(k)=p-1-I(t).\nConsequently,\nk in S\niff I(k+1) < I(k)\niff t+1 < p-1-I(t)\niff t+I(t) < p-2.\nSince Phi is a bijection, this proves |S|=|T|.\n\nSo it remains to bound |T|.\n\nLet\nA := { u in {1,...,p-1} : u+I(u) < p }.\nFor every u in {1,...,p-1}, we have I(p-u)=p-I(u), hence\n(p-u)+I(p-u) = (p-u)+(p-I(u)) = 2p-(u+I(u)).\nThus, in the pair {u,p-u}, one element has sum < p exactly when the other has sum > p. To use this, we must rule out equality u+I(u)=p.\n\nIf u+I(u)=p, then multiplying by u gives\nu^2 + 1 \u2261 0 (mod p),\nso u^2 \u2261 -1 (mod p).\nBut p \u2261 7 (mod 8), hence p \u2261 3 (mod 4), so (p-1)/2 is odd. If u^2 \u2261 -1 (mod p), then by Fermat's little theorem,\n1 \u2261 u^(p-1) = (u^2)^((p-1)/2) \u2261 (-1)^((p-1)/2) = -1 (mod p),\na contradiction. So u+I(u) != p for every u.\n\nTherefore, among each pair {u,p-u}, exactly one element belongs to A. There are (p-1)/2 such pairs, so\n|A| = (p-1)/2.\nAlso p-1 is not in A, because (p-1)+I(p-1)=2p-2>p. Hence\n|{u in {1,...,p-2}: u+I(u)<p}| = (p-1)/2.\n\nNow T is obtained from this set by removing those u with u+I(u)=p-1 or u+I(u)=p-2.\n\n1) If u+I(u)=p-2, then multiplying by u gives\nu^2 + 2u + 1 \u2261 0 (mod p),\nso (u+1)^2 \u2261 0 (mod p). Hence u \u2261 -1 (mod p), i.e. u=p-1, impossible since u in {1,...,p-2}. So there are no such u.\n\n2) If u+I(u)=p-1, then multiplying by u gives\nu^2 + u + 1 \u2261 0 (mod p).\nThis is a quadratic congruence, so it has at most 2 solutions modulo p.\n\nTherefore\n|T| >= (p-1)/2 - 2 = (p-5)/2.\nSince p \u2261 7 (mod 8), write p=8m+7. Then\nfloor(p/4)=2m+1=(p-3)/4,\nand\n(p-5)/2 - (p-3)/4 = (p-7)/4 = 2m >= 0.\nSo\n|S| = |T| >= (p-5)/2 >= floor(p/4).\nThis is exactly the desired inequality.",
+  "latest_vetter_report_id": "rep_20260317005603_97ca235e",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260316204358_6b0d29a2",
+  "parent_id": "thm_root_20260316200002_2d33d280",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260316200002_e457403f",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Covers the final missing residue class modulo 8, completing the repaired case split.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 2,
+  "statement_lean": null,
+  "statement_nl": "Let p be a prime number with p > 5 and p \u2261 7 (mod 8). For each k in {1,2,...,p-1}, let I(k) be the unique integer in {1,2,...,p-1} such that k * I(k) \u2261 1 (mod p), and define S = { k in {1,2,...,p-2} : I(k+1) < I(k) }. Then |S| >= floor(p/4).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "p is a prime integer with p > 5 and p \u2261 7 (mod 8) (hence p is odd)",
+      "k ranges over integers 1 \u2264 k \u2264 p-1 when defining I(k); when forming S, k ranges over 1 \u2264 k \u2264 p-2 so that k+1 \u2264 p-1",
+      "I(k) is the unique representative in the integer set {1,...,p-1} satisfying k * I(k) \u2261 1 (mod p)",
+      "All comparisons I(k+1) < I(k) are ordinary integer comparisons between these chosen representatives",
+      "floor(p/4) denotes the integer floor of p/4; |S| denotes cardinality (a nonnegative integer)"
+    ],
+    "normalized_claim": "For every prime p > 5 with p \u2261 7 (mod 8), define I: {1,...,p-1} \u2192 {1,...,p-1} by letting I(k) be the unique integer in {1,...,p-1} with k\u00b7I(k) \u2261 1 (mod p). Let S = { k \u2208 {1,...,p-2} | I(k+1) < I(k) }. Then the cardinality of S satisfies |S| \u2265 floor(p/4).",
+    "quantifier_order": [
+      "for all p (integer prime) such that p > 5 and p \u2261 7 (mod 8)",
+      "define I by: for each k \u2208 {1,...,p-1} there exists a unique I(k) \u2208 {1,...,p-1} with k * I(k) \u2261 1 (mod p)",
+      "define S = { k \u2208 {1,...,p-2} | I(k+1) < I(k) }",
+      "claim: |S| \u2265 floor(p/4)"
+    ],
+    "variables": [
+      {
+        "domain": "primes p with p > 5 and p \u2261 7 (mod 8)",
+        "name": "p",
+        "role": "parameter (quantified: arbitrary prime satisfying the congruence and bound)",
+        "type": "integer (prime)"
+      },
+      {
+        "domain": "for definitions: k \u2208 {1,2,...,p-1}; for S: k \u2208 {1,2,...,p-2}",
+        "name": "k",
+        "role": "index variable ranging over residues modulo p (representatives 1..p-1) used to define inverses and S",
+        "type": "integer"
+      },
+      {
+        "domain": "I: {1,...,p-1} \u2192 {1,...,p-1}",
+        "name": "I",
+        "role": "maps k to its multiplicative inverse modulo p chosen as the unique representative in {1,...,p-1}",
+        "type": "function"
+      },
+      {
+        "domain": "subset of {1,2,...,p-2}",
+        "name": "S",
+        "role": "S = { k \u2208 {1,...,p-2} | I(k+1) < I(k) } whose cardinality is compared to floor(p/4)",
+        "type": "set of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "I(k) depends on both k and the modulus p (I = inverse modulo p, chosen in 1..p-1)",
+      "S depends on the entire function I (hence on p) since membership k \u2208 S is decided by values I(k), I(k+1)",
+      "The uniqueness existential for I(k) uses gcd(k,p)=1 which holds because p is prime and 1 \u2264 k \u2264 p-1"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-16T20:44:51.021897Z"
+}

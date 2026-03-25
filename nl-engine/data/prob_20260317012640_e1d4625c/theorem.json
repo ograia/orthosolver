@@ -1,0 +1,70 @@
+{
+  "active_decomposition_id": "dec_20260317023354_d7ade16f",
+  "artifact_ids": [],
+  "created_at": "2026-03-17T01:26:40.587532Z",
+  "final_decl_name": null,
+  "kind": "theorem",
+  "problem_id": "prob_20260317012640_e1d4625c",
+  "statement_lean": null,
+  "statement_nl": "Suppose that each point in the plane is colored either red or green, subject to the following condition: For every three noncollinear points $A,B,C$ of the same color, the center of the circle passing through $A,B$ and $C$ is also this color. Prove that all points of the plane are the same color.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "f is a total function from the Euclidean plane R^2 to the two-element set {red,green}",
+      "A,B,C,P,O are points of the Euclidean plane R^2",
+      "the hypothesis applies only to triples A,B,C that are noncollinear (hence distinct) so the circumcenter is uniquely defined in R^2",
+      "the circumcenter operation circ(A,B,C) is the unique intersection of perpendicular bisectors of AB and AC (uses Euclidean geometry)"
+    ],
+    "normalized_claim": "For every function f: R^2 -> {red,green}, if for all points A,B,C in R^2 that are noncollinear and satisfy f(A)=f(B)=f(C) we have f(circumcenter(A,B,C)) = f(A), then there exists a color c in {red,green} such that for every point P in R^2, f(P)=c. Equivalently: \u2200f [(\u2200A,B,C (noncollinear \u2227 f(A)=f(B)=f(C) \u21d2 f(circumcenter(A,B,C))=f(A))) \u21d2 (\u2203c \u2208 {red,green} \u2200P f(P)=c)].",
+    "quantifier_order": [
+      "forall f : R^2 -> {red,green} (consider any 2-coloring of the plane)",
+      "assume (hypothesis) forall A,B,C in R^2: if A,B,C are noncollinear and f(A)=f(B)=f(C) then f(circumcenter(A,B,C)) = f(A)",
+      "conclude: exists c in {red,green} such that forall P in R^2, f(P) = c"
+    ],
+    "variables": [
+      {
+        "domain": "R^2",
+        "name": "f",
+        "role": "coloring function f: R^2 -> {red,green}; assigns to each plane point one of the two colors",
+        "type": "function"
+      },
+      {
+        "domain": "R^2",
+        "name": "A",
+        "role": "one of three points used in the hypothesis; when quantified in hypothesis must be distinct from B,C and noncollinear with them",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "B",
+        "role": "see A",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "C",
+        "role": "see A",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "O",
+        "role": "the circumcenter of A,B,C (well-defined only when A,B,C are noncollinear); O is computed from A,B,C",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "P",
+        "role": "arbitrary point of the plane appearing in the conclusion 'all points of the plane are the same color'",
+        "type": "point"
+      }
+    ],
+    "witness_dependencies": [
+      "O (the circumcenter) is an explicit function of the triple (A,B,C); i.e. O = circumcenter(A,B,C)",
+      "the existential 'there exists a monochromatic color c' depends only on the coloring function f (i.e. c = f(P0) for some chosen point P0), not on particular triples A,B,C",
+      "no existential point witness is allowed to depend on future universal choices beyond those already in the hypothesis (hypothesis quantifiers over A,B,C are universal)"
+    ]
+  },
+  "status": "succeeded",
+  "theorem_id": "thm_root_20260317012640_4ba3e92b",
+  "updated_at": "2026-03-17T01:26:40.587533Z"
+}

@@ -1,0 +1,76 @@
+{
+  "assembly_plan_id": "asm_20260324013720_06cb4db4",
+  "created_at": "2026-03-24T01:42:05.015336Z",
+  "decomposition_id": "dec_20260324013720_c0b0f872",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_skeleton_nl": "Fix integers m >= 2 and g >= 0. Translate multiplicity-m numerical semigroups of genus g into Kunz-coordinate tuples with coordinate sum g; this gives N(m,g) = |K_{m,g}|. Do the same for genus g+1 to get N(m,g+1) = |K_{m,g+1}|. Next, prove separately that K_{m,g} and K_{m,g+1} are finite. Then invoke the core combinatorial lemma asserting the existence of an injective map J_{m,g} : K_{m,g} -> K_{m,g+1}. By the finite-set injection principle, this implies |K_{m,g}| <= |K_{m,g+1}|. Finally, substitute the two counting equalities to obtain N(m,g) <= N(m,g+1). This assembly explicitly fixes the earlier gap: finiteness is established before the cardinality comparison is made, and no use is made of the previously rejected false 'least admissible coordinate' injection.",
+  "root_node_id": "thm_root_20260324012430_9851dde8",
+  "steps": [
+    {
+      "derives": "For every integers m >= 2 and g >= 0, N(m,g) = |K_{m,g}|, where K_{m,g} is the set of positive integer tuples satisfying the multiplicity-m Kunz inequalities and having coordinate sum g.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the statement of L3.",
+      "uses_lemmas": [
+        "lem_20260324013747_af6fcf4d"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the set K_{m,g} is finite.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is exactly the statement of L4 with the given parameters m and g.",
+      "uses_lemmas": [
+        "lem_20260324013757_1de6e5cf"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the set K_{m,g+1} is finite.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "Apply L4 with the same m and with genus parameter replaced by g+1. Since g >= 0, we have g+1 >= 0, so the lemma applies.",
+      "uses_lemmas": [
+        "lem_20260324013757_1de6e5cf"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, there exists an injective function J_{m,g} : K_{m,g} -> K_{m,g+1}.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is exactly the statement of L5.",
+      "uses_lemmas": [
+        "lem_20260324013805_2c445eb6"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, |K_{m,g}| <= |K_{m,g+1}|.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "From A2, the set K_{m,g} is finite. From A3, the set K_{m,g+1} is finite. From A4, there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}. Applying L6 to A = K_{m,g}, B = K_{m,g+1}, and f = J_{m,g} yields |K_{m,g}| <= |K_{m,g+1}|.",
+      "uses_lemmas": [
+        "lem_20260324013813_247050aa"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m,g) of numerical semigroups with multiplicity m and genus g satisfies N(m,g) <= N(m,g+1).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Apply A1 with genus g to obtain N(m,g) = |K_{m,g}|. Apply A1 again with genus g+1 to obtain N(m,g+1) = |K_{m,g+1}|. From A5 we have |K_{m,g}| <= |K_{m,g+1}|. Substituting the two equalities into this inequality gives N(m,g) <= N(m,g+1), which is exactly the root theorem statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A5"
+      ]
+    }
+  ]
+}

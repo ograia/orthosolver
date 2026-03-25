@@ -1,0 +1,81 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-20T18:16:48.625106Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.22,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Use the standard definition of the Ap\u00e9ry set:\nAp(S,m) = {s in S : s - m not in S}.\nSince m = m(S), the element m belongs to S and is the smallest positive element of S.\n\nFirst consider the case m = 1. Then 1 is in S, and since S is closed under addition and contains 0, every nonnegative integer belongs to S. Hence S = Z_{>=0}. Therefore Ap(S,1) = {0}. There are no integers r with 1 <= r <= m-1, so this is exactly the asserted statement in the case m=1.\n\nNow assume m >= 2. Fix r with 1 <= r <= m-1, and consider\nT_r := {s in S : s \u2261 r (mod m)}.\nWe show T_r is nonempty. Because S is a numerical semigroup, Z_{>=0} \\ S is finite. Hence there exists N such that every integer n >= N lies in S. Choose t large enough that r + tm >= N. Then r + tm belongs to S and is congruent to r modulo m, so T_r is nonempty.\n\nSince T_r is a nonempty subset of Z_{>=0}, the well-ordering principle implies that T_r has a least element; call it w_r. This least element is unique, because two least elements of a totally ordered set must be equal. Thus for each r with 1 <= r <= m-1 there exists a unique least element w_r of S congruent to r modulo m.\n\nWe next prove that Ap(S,m) = {0,w_1,...,w_{m-1}}.\n\nFirst, 0 belongs to Ap(S,m), because 0 belongs to S and 0-m < 0, whereas S is contained in Z_{>=0}; hence 0-m is not in S.\n\nNow fix r in {1,...,m-1}. We have w_r in S by construction. If w_r - m were in S, then w_r - m would also be congruent to r modulo m and would satisfy w_r - m < w_r, contradicting the minimality of w_r in T_r. Therefore w_r - m is not in S, so w_r belongs to Ap(S,m). Hence\n{0,w_1,...,w_{m-1}} is a subset of Ap(S,m).\n\nFor the reverse inclusion, let a belong to Ap(S,m). Let r be the residue of a modulo m, chosen with 0 <= r <= m-1.\n\nIf r = 0, then a = qm for some integer q >= 0. Since m belongs to S and S is closed under addition, qm belongs to S for every q >= 0. If q >= 1, then a - m = (q-1)m belongs to S, contradicting a in Ap(S,m). Therefore q = 0, so a = 0.\n\nIf 1 <= r <= m-1, then a belongs to S and a \u2261 r (mod m). By minimality of w_r among elements of S congruent to r modulo m, we have w_r <= a. Since a - w_r is a nonnegative multiple of m, there exists q >= 0 such that a = w_r + qm. If q >= 1, then a - m = w_r + (q-1)m belongs to S, because w_r belongs to S, m belongs to S, and S is closed under addition. This contradicts a in Ap(S,m). Hence q = 0, so a = w_r.\n\nThus every element of Ap(S,m) is either 0 or one of the w_r, and therefore\nAp(S,m) = {0,w_1,...,w_{m-1}}.\n\nFinally, fix r with 1 <= r <= m-1. Since w_r \u2261 r (mod m), there exists an integer k_r such that w_r = r + mk_r. This integer is unique: if r + mk = r + mk', then m(k-k') = 0, so k = k'. It remains to show k_r is positive. Because w_r belongs to S, we have w_r >= 0, so k_r >= 0. If k_r = 0, then w_r = r, which is a positive element of S strictly smaller than m (since 1 <= r <= m-1), contradicting the fact that m = m(S) is the smallest positive element of S. Therefore k_r >= 1.\n\nSo for each r with 1 <= r <= m-1, there is a unique positive integer k_r such that w_r = r + mk_r.\n\nThis proves the lemma.",
+  "latest_vetter_report_id": "rep_20260320221241_5fbf4019",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260320181635_9b1a9819",
+  "parent_id": "thm_root_20260320180855_1d8d4f17",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Introduces Ap\u00e9ry representatives and the positive integer coordinates used to encode a numerical semigroup of multiplicity m.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let S be a numerical semigroup and let m be a positive integer with m = m(S). Then for each residue class r with 1 <= r <= m-1, there exists a unique least element w_r of S congruent to r modulo m, and Ap(S,m) = {0,w_1,...,w_{m-1}}. Moreover each w_r has the form w_r = r + m k_r for a unique positive integer k_r.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "S is a numerical semigroup (in particular, S \u2286 Z_{\u22650}, 0 \u2208 S, closed under addition, and cofinite in Z_{\u22650})",
+      "m is a positive integer satisfying m = m(S) (multiplicity of S, i.e., the smallest positive element of S)",
+      "r ranges only over integers with 1 \u2264 r \u2264 m-1 (nonzero residue classes modulo m excluding 0)",
+      "w_r is an element of S and is constrained by the congruence w_r \u2261 r (mod m)",
+      "k_r is constrained to be a positive integer (k_r \u2208 Z_{>0})"
+    ],
+    "normalized_claim": "Fix a numerical semigroup S and let m = m(S). For every integer r with 1 \u2264 r \u2264 m\u22121, there exists a unique element w_r \u2208 S such that (i) w_r \u2261 r (mod m) and (ii) w_r is the least (with respect to the usual order on Z) element of S among those congruent to r modulo m. Then the Ap\u00e9ry set satisfies Ap(S,m) = {0} \u222a {w_r : 1 \u2264 r \u2264 m\u22121}. Additionally, for each such r there is a unique positive integer k_r with w_r = r + m k_r.",
+    "quantifier_order": [
+      "\u2200 S (S is a numerical semigroup)",
+      "\u2200 m (m \u2208 Z_{>0} \u2227 m = m(S))",
+      "\u2200 r (1 \u2264 r \u2264 m-1)",
+      "\u2203! w_r (w_r \u2208 S \u2227 w_r \u2261 r (mod m) \u2227 \u2200 w \u2208 S ((w \u2261 r (mod m)) \u2192 w_r \u2264 w))",
+      "\u2203! k_r (k_r \u2208 Z_{>0} \u2227 w_r = r + m k_r)"
+    ],
+    "variables": [
+      {
+        "domain": "subset of Z_{\u22650} that is closed under addition, contains 0, and has finite complement in Z_{\u22650}",
+        "name": "S",
+        "role": "ambient object; determines the semigroup and its Ap\u00e9ry set",
+        "type": "numerical_semigroup"
+      },
+      {
+        "domain": "Z_{>0}",
+        "name": "m",
+        "role": "multiplicity parameter; assumed to equal m(S)",
+        "type": "positive_integer"
+      },
+      {
+        "domain": "{1,2,...,m-1}",
+        "name": "r",
+        "role": "residue-class representative modulo m",
+        "type": "integer"
+      },
+      {
+        "domain": "S \u2286 Z_{\u22650}",
+        "name": "w_r",
+        "role": "unique least element of S with w_r \u2261 r (mod m)",
+        "type": "integer"
+      },
+      {
+        "domain": "Z_{>0}",
+        "name": "k_r",
+        "role": "unique quotient such that w_r = r + m k_r",
+        "type": "positive_integer"
+      }
+    ],
+    "witness_dependencies": [
+      "w_r depends on S and r (and m, since congruence is modulo m)",
+      "k_r depends on S and r (and m) through the equation w_r = r + m k_r"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-20T18:16:48.625107Z"
+}

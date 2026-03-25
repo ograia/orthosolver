@@ -1,0 +1,89 @@
+{
+  "assembly_step_ids": [],
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T06:00:44.094763Z",
+  "decomposition_count": 0,
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix integers m and g with m >= 2 and g >= 0. We must prove that K_{m,g} is finite.\n\nBy definition, every element x = (x_1,\\dots,x_{m-1}) of K_{m,g} is a tuple of positive integers satisfying\nx_1 + \\cdots + x_{m-1} = g.\nThe additional inequalities involving pairs i,j are irrelevant for finiteness, because they only further restrict which such tuples are allowed. Thus it is enough to show that the set\nS := { (x_1,\\dots,x_{m-1}) \\in (\\mathbb Z_{>0})^{m-1} : x_1+\\cdots+x_{m-1}=g }\nis finite, since K_{m,g} \\subseteq S.\n\nNow let x \\in S. Because each x_k is a positive integer, in particular x_k >= 1 for every k=1,\\dots,m-1. Also, since all coordinates are positive and their sum is g, each coordinate satisfies x_k <= g. Indeed, if some x_k > g, then the sum of all coordinates would be > g, impossible. Therefore every x \\in S satisfies\nx_k \\in \\{1,2,\\dots,g\\} \\quad \\text{for each } k=1,\\dots,m-1.\n\nHence\nS \\subseteq \\{1,2,\\dots,g\\}^{m-1}.\nIf g >= 1, the set \\{1,2,\\dots,g\\}^{m-1} has exactly g^{m-1} elements, so it is finite. Therefore S is finite, and since K_{m,g} \\subseteq S, the set K_{m,g} is finite.\n\nIt remains only to note the case g=0. Since m >= 2, we have m-1 >= 1, so a tuple in (\\mathbb Z_{>0})^{m-1} has at least one positive coordinate. Therefore no such tuple can have coordinate sum 0. So S = \\varnothing, hence K_{m,0} = \\varnothing, which is finite.\n\nThus in all cases g >= 0, the set K_{m,g} is finite. This proves the lemma.",
+  "latest_vetter_report_id": "rep_20260324060712_c835a10c",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324060033_1dc694b8",
+  "minor_rejection_count": 0,
+  "parent_id": "lem_20260324013805_2c445eb6",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_bundle_artifact_id": "problems/prob_20260324012430_a84b8dbb/proof_bundles/lemmas/lem_20260324060033_1dc694b8.json",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides finiteness of the domain and codomain sets so that a cardinality inequality can be converted into an actual injection.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=g and such that for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, and if i+j > m then x_i+x_j+1 >= x_{i+j-m}. Then K_{m,g} is a finite set.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m \u2265 2",
+      "g is an integer with g \u2265 0",
+      "x is a tuple x=(x_1,...,x_{m-1}) with each x_k a positive integer (x_k \u2265 1)",
+      "sum constraint: x_1+...+x_{m-1}=g",
+      "indexing validity implied by conditions: when i+j<m, the term x_{i+j} refers to an index in {1,...,m-1}; when i+j>m, the term x_{i+j-m} refers to an index in {1,...,m-1} (in fact it ranges over indices \u2264 m-2)",
+      "inequality rules apply for all i,j \u2208 {1,...,m-1} subject to the strict comparisons i+j<m or i+j>m"
+    ],
+    "normalized_claim": "For every integer m \u2265 2 and every integer g \u2265 0, the set K_{m,g} (defined as all tuples x\u2208(Z_{>0})^{m-1} satisfying x_1+...+x_{m-1}=g and, for all i,j\u2208{1,...,m-1}, the inequalities (i+j<m \u21d2 x_i+x_j \u2265 x_{i+j}) and (i+j>m \u21d2 x_i+x_j+1 \u2265 x_{i+j-m})) is finite.",
+    "quantifier_order": [
+      "\u2200 m \u2208 Z (m \u2265 2)",
+      "\u2200 g \u2208 Z (g \u2265 0)",
+      "K_{m,g} := { x \u2208 (Z_{>0})^{m-1} : (x_1+...+x_{m-1}=g) \u2227 [\u2200 i,j \u2208 {1,...,m-1}, (i+j<m \u21d2 x_i+x_j \u2265 x_{i+j}) \u2227 (i+j>m \u21d2 x_i+x_j+1 \u2265 x_{i+j-m})] }",
+      "Claim: K_{m,g} is finite"
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "global parameter indexing the length of tuples and the inequality rule threshold",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "g",
+        "role": "global parameter fixing the sum x_1+...+x_{m-1}",
+        "type": "integer"
+      },
+      {
+        "domain": "(Z_{>0})^{m-1}",
+        "name": "x",
+        "role": "candidate element of K_{m,g}; x=(x_1,...,x_{m-1})",
+        "type": "tuple of integers"
+      },
+      {
+        "domain": "Z_{>0}",
+        "name": "x_i",
+        "role": "components of x, indexed by i \u2208 {1,...,m-1}",
+        "type": "integer"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "i",
+        "role": "index used in the universal inequality constraints",
+        "type": "integer index"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "j",
+        "role": "index used in the universal inequality constraints",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced in the statement; the finiteness claim concerns the set K_{m,g} as defined by universal constraints."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T06:00:44.094764Z"
+}

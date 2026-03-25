@@ -1,0 +1,608 @@
+{
+  "artifact_prefix": "problems/prob_20260316200002_e457403f/decomposer/attempt_20260316200050_04d9430d_track_1",
+  "attempt_count": 5,
+  "created_at": "2026-03-16T20:00:50.558614Z",
+  "error_payload": null,
+  "execution_id": "exec_20260316200002_3d068436",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "max_attempts": 5,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "p is an integer prime and p > 3 (so p \u2265 5)",
+        "k ranges over integers; when defining I(k) we take k \u2208 {1,...,p-1} so gcd(k,p)=1 and multiplicative inverse exists and is unique in {1,...,p-1}",
+        "The counting index k for the inequality I(k+1) < I(k) is restricted to k \u2208 {1,...,p-2} so that k+1 \u2208 {2,...,p-1} (all inverses involved are defined)",
+        "I(k) values are integers in {1,...,p-1}",
+        "Counts such as |S| are nonnegative integers"
+      ],
+      "normalized_claim": "For every prime p > 3, define I: {1,...,p-1} -> {1,...,p-1} by I(k) being the unique integer with k * I(k) \u2261 1 (mod p). Let S = { k \u2208 {1,...,p-2} : I(k+1) < I(k) }. Then |S| > p/4 - 1. Equivalently (since |S| is integral), |S| \u2265 floor(p/4).",
+      "quantifier_order": [
+        "For all primes p with p > 3 (p is fixed for the rest of the statement)",
+        "For all k in {1,...,p-1}, there exists a unique I(k) in {1,...,p-1} with k * I(k) \u2261 1 (mod p) (uniqueness follows from p prime and gcd(k,p)=1)",
+        "Define S = { k in {1,...,p-2} : I(k+1) < I(k) }",
+        "Claim: |S| > p/4 - 1 (equivalently, |S| \u2265 floor(p/4) since |S| is an integer)"
+      ],
+      "variables": [
+        {
+          "domain": "prime integers, p > 3",
+          "name": "p",
+          "role": "parameter (fixed prime for the statement)",
+          "type": "integer"
+        },
+        {
+          "domain": "explicitly ranges over {1,2,...,p-1} when defining I(k); the count is taken over k in {1,2,...,p-2}",
+          "name": "k",
+          "role": "index variable for inverses and for the counted property",
+          "type": "integer"
+        },
+        {
+          "domain": "I: {1,...,p-1} -> {1,...,p-1}",
+          "name": "I",
+          "role": "map sending k to its multiplicative inverse modulo p, i.e. I(k) is the unique integer in 1..p-1 with k * I(k) \u2261 1 (mod p)",
+          "type": "function"
+        },
+        {
+          "domain": "subset of {1,...,p-2}",
+          "name": "S",
+          "role": "S = { k in {1,...,p-2} : I(k+1) < I(k) }, the set being counted",
+          "type": "finite set"
+        }
+      ],
+      "witness_dependencies": [
+        "I(k) is a deterministic function of k and the fixed prime p; i.e. witness I(k) depends on (k,p)",
+        "I(k+1) depends on k and p via I applied to k+1; thus the predicate I(k+1) < I(k) depends on k and p",
+        "The uniqueness of I(k) is guaranteed by p being prime (implicit use of gcd(k,p)=1)",
+        "The set S (and its cardinality) depends on p through I"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let $p$ be a prime number greater than $3$. For each $k \\\\in \\\\{1,\\\\dots,p-1\\\\}$, let $I(k) \\\\in \\\\{1,2,\\\\dots,p-1\\\\}$ be such that $k \\\\cdot I(k) \\\\equiv 1 \\\\pmod{p}$. Prove that the number of integers $k \\\\in \\\\{1,\\\\dots,p-2\\\\}$ such that $I(k+1) < I(k)$ is greater than $p/4-1$.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260316200002_e457403f",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix a prime p>3 and write N(p) for the number of descents in the inverse sequence k -> I(k). First, L1 gives the inverse map as a well-defined permutation of {1,...,p-1}. By L2, counting descents is equivalent to counting indices k for which the pair (I(k),I(k+1)) lies in the strict lower triangle T_p of the square [1,p-1]^2. Next, L5 gives a disjoint union U of axis-parallel rectangles contained in T_p that misses only O(p) lattice points of T_p; L3 computes the triangle size exactly. Then apply the rectangle discrepancy estimate L4 to each rectangle in U and sum. The packaged consequence is L6, namely N(p) >= (p-2)/2 - C' sqrt(p) log(p)^2 for some absolute constant C'. Since sqrt(p) log(p)^2 = o(p), L7 yields a threshold P_0 beyond which this lower bound is stronger than p/4 - 1. Finally, L8 covers the finitely many primes below P_0 by direct verification. Combining the large-prime and small-prime cases yields the required inequality for every prime p>3.",
+          "steps": [
+            {
+              "derives": "For a fixed prime p>3, the inverse map I:{1,...,p-1}->{1,...,p-1} is well-defined, takes values in {1,...,p-1}, and all expressions I(k), I(k+1) with 1<=k<=p-2 are meaningful.",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "This is exactly the existence-and-uniqueness conclusion of L1 specialized to the fixed prime p.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "If N(p)=|{k in {1,...,p-2}: I(k+1)<I(k)}| and T_p={(x,y) in Z^2: 1<=x<=p-1, 1<=y<=p-1, y<x}, then N(p)=|{k in {1,...,p-2}: (I(k),I(k+1)) in T_p}|.",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "L2 is exactly this reformulation.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "There exist pairwise disjoint axis-parallel rectangles R_1,...,R_m contained in T_p such that the union U=R_1\u222a...\u222aR_m satisfies |U| >= (p-1)(p-2)/2 - 2p.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "Apply L5 to obtain the rectangular inner approximation U of T_p. L3 supplies the exact size of T_p, so the lower bound can be read as losing at most 2p points from the triangle.",
+              "uses_lemmas": [
+                "L3",
+                "L5"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For each rectangle R_i in the family from A3, the count M_i := #{k in {1,...,p-2} : (I(k),I(k+1)) in R_i} satisfies M_i >= |R_i|/p - C*sqrt(p)*log(p)^2, where C is the absolute constant from L4.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "This is the lower side of the two-sided discrepancy estimate from L4 applied separately to each rectangle R_i.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "There exists an absolute constant C'>0 such that N(p) >= (p-2)/2 - C'*sqrt(p)*log(p)^2 for every prime p>3.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "Because the rectangles from A3 are pairwise disjoint and all lie inside T_p, summing the bounds from A4 gives a lower bound for the number of k whose pair (I(k),I(k+1)) lies in U, hence also for the number lying in T_p. Using A2 converts that count into N(p). Lemma L6 packages exactly this summation-and-absorption argument, producing the stated global lower bound with a new absolute constant C'.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A3",
+                "A4"
+              ]
+            },
+            {
+              "derives": "There exists an integer threshold P_0>=5 such that for every prime p>=P_0 one has N(p) > p/4 - 1.",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "Apply L7 to the constant C' obtained in A5. Since N(p) satisfies the hypothesis of L7, the desired inequality follows for all sufficiently large primes.",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            },
+            {
+              "derives": "For every prime p with 5<=p<P_0 one has N(p) > p/4 - 1.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "L8 states that the finitely many small primes below the threshold can be checked directly.",
+              "uses_lemmas": [
+                "L8"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For every prime p>3, if I(k) is the unique integer in {1,...,p-1} with k*I(k) \u2261 1 (mod p), then the number of integers k in {1,...,p-2} such that I(k+1) < I(k) is greater than p/4 - 1.",
+              "is_trivial": false,
+              "step_id": "A8",
+              "trivial_justification": "Every prime p>3 satisfies p>=5, so either p>=P_0 and A6 applies, or 5<=p<P_0 and A7 applies. In both cases the same conclusion holds. This is exactly the root theorem statement.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A6",
+                "A7"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.91,
+        "lemmas": [
+          {
+            "formalization_cost_estimate": 0.08,
+            "local_id": "L1",
+            "role_in_assembly": "Provides the basic object I and guarantees that all later uses of the consecutive pair (I(k),I(k+1)) are well-defined.",
+            "self_check_notes": "Standard modular arithmetic fact over a prime field.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "p is prime, so every k in {1,...,p-1} is invertible modulo p"
+              ],
+              "normalized_claim": "The modular inverse map on the nonzero residue classes modulo p is a well-defined involutive permutation of {1,...,p-1}.",
+              "quantifier_order": [
+                "For all primes p>3",
+                "For all integers k in {1,...,p-1}",
+                "There exists a unique I(k) in {1,...,p-1} with k*I(k) \u2261 1 (mod p)",
+                "For all k in {1,...,p-1}, I(I(k))=k"
+              ],
+              "variables": [
+                {
+                  "domain": "prime integers with p>3",
+                  "name": "p",
+                  "role": "fixed modulus",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,2,...,p-1}",
+                  "name": "k",
+                  "role": "input index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,2,...,p-1}->{1,2,...,p-1}",
+                  "name": "I",
+                  "role": "inverse map modulo p",
+                  "type": "function"
+                }
+              ],
+              "witness_dependencies": [
+                "I(k) depends only on p and k"
+              ]
+            },
+            "statement_nl": "Let p be a prime number with p>3. For each integer k with 1<=k<=p-1, there exists a unique integer I(k) in {1,2,...,p-1} such that k*I(k) \u2261 1 (mod p). Moreover the map I:{1,2,...,p-1}->{1,2,...,p-1} is a permutation and satisfies I(I(k))=k for every k in {1,2,...,p-1}."
+          },
+          {
+            "formalization_cost_estimate": 0.05,
+            "local_id": "L2",
+            "role_in_assembly": "Recasts the theorem as a counting problem for visits of the sequence k -> (I(k),I(k+1)) to a triangular region.",
+            "self_check_notes": "Immediate unpacking of the definition of T_p and N(p).",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "I(k) and I(k+1) both lie in {1,...,p-1}"
+              ],
+              "normalized_claim": "N(p)=|{k in {1,...,p-2} : (I(k),I(k+1)) in T_p}|.",
+              "quantifier_order": [
+                "For all primes p>3",
+                "Define I and N(p) as stated",
+                "For all integers k in {1,...,p-2}"
+              ],
+              "variables": [
+                {
+                  "domain": "prime integers with p>3",
+                  "name": "p",
+                  "role": "fixed modulus",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,...,p-1}->{1,...,p-1}",
+                  "name": "I",
+                  "role": "inverse map modulo p",
+                  "type": "function"
+                },
+                {
+                  "domain": "primes p>3",
+                  "name": "N",
+                  "role": "descent count",
+                  "type": "integer-valued function"
+                },
+                {
+                  "domain": "{1,...,p-2}",
+                  "name": "k",
+                  "role": "counting index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integer lattice points in [1,p-1]^2",
+                  "name": "T_p",
+                  "role": "strict lower triangle",
+                  "type": "subset of Z^2"
+                }
+              ],
+              "witness_dependencies": [
+                "The pair (I(k),I(k+1)) depends on p and k"
+              ]
+            },
+            "statement_nl": "Let p be a prime number with p>3, let I:{1,2,...,p-1}->{1,2,...,p-1} be defined by k*I(k) \u2261 1 (mod p), and define N(p)=|{k in {1,2,...,p-2}: I(k+1)<I(k)}|. Also define the strict lower triangle T_p={(x,y) in Z^2 : 1<=x<=p-1, 1<=y<=p-1, y<x}. Then N(p) is exactly the number of integers k in {1,2,...,p-2} for which the pair (I(k),I(k+1)) lies in T_p."
+          },
+          {
+            "formalization_cost_estimate": 0.03,
+            "local_id": "L3",
+            "role_in_assembly": "Supplies the main-term area/count for the target region inside the square.",
+            "self_check_notes": "Sum over x: for each x there are x-1 admissible values of y.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "x and y are integers in [1,p-1]"
+              ],
+              "normalized_claim": "|T_p|=(p-1)(p-2)/2.",
+              "quantifier_order": [
+                "For all integers p>=5"
+              ],
+              "variables": [
+                {
+                  "domain": "integers with p>=5",
+                  "name": "p",
+                  "role": "size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integer lattice points in [1,p-1]^2",
+                  "name": "T_p",
+                  "role": "strict lower triangle",
+                  "type": "subset of Z^2"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let p be an integer with p>=5, and let T_p={(x,y) in Z^2 : 1<=x<=p-1, 1<=y<=p-1, y<x}. Then the number of lattice points in T_p is exactly (p-1)(p-2)/2."
+          },
+          {
+            "formalization_cost_estimate": 0.92,
+            "local_id": "L4",
+            "role_in_assembly": "This is the analytic input: the consecutive inverse pairs are equidistributed in axis-parallel rectangles up to square-root error.",
+            "self_check_notes": "This is a standard consequence of exponential-sum bounds for the affine curve x*y \u2261 1 and (x+1)z \u2261 1 modulo p, combined with completion of sums. It is much stronger than the target inequality but is a known type of estimate.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "R is axis-parallel and contained in the integer square [1,p-1]^2"
+              ],
+              "normalized_claim": "Uniform rectangle discrepancy bound: #{k in {1,...,p-2} : (I(k),I(k+1)) in R} = |R|/p + O(sqrt(p) log(p)^2), with an absolute implied constant.",
+              "quantifier_order": [
+                "There exists an absolute constant C>0",
+                "For all primes p>3",
+                "For all integer rectangles R=[a,b]\u2229Z \u00d7 [c,d]\u2229Z inside [1,p-1]^2"
+              ],
+              "variables": [
+                {
+                  "domain": "positive real numbers",
+                  "name": "C",
+                  "role": "absolute constant",
+                  "type": "real"
+                },
+                {
+                  "domain": "prime integers with p>3",
+                  "name": "p",
+                  "role": "fixed modulus",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,...,p-1}->{1,...,p-1}",
+                  "name": "I",
+                  "role": "inverse map modulo p",
+                  "type": "function"
+                },
+                {
+                  "domain": "{1,...,p-1}",
+                  "name": "a",
+                  "role": "left x-endpoint",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,...,p-1} with a<=b",
+                  "name": "b",
+                  "role": "right x-endpoint",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,...,p-1}",
+                  "name": "c",
+                  "role": "lower y-endpoint",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,...,p-1} with c<=d",
+                  "name": "d",
+                  "role": "upper y-endpoint",
+                  "type": "integer"
+                },
+                {
+                  "domain": "axis-parallel rectangles in [1,p-1]^2",
+                  "name": "R",
+                  "role": "test region",
+                  "type": "finite subset of Z^2"
+                },
+                {
+                  "domain": "{1,...,p-2}",
+                  "name": "k",
+                  "role": "counting index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "The counting function depends on p, I, and R"
+              ]
+            },
+            "statement_nl": "There exists an absolute constant C>0 such that the following holds. Let p be a prime number with p>3, let I:{1,2,...,p-1}->{1,2,...,p-1} be defined by k*I(k) \u2261 1 (mod p), and let R be any axis-parallel rectangle of the form R=[a,b]\u2229Z \u00d7 [c,d]\u2229Z with 1<=a<=b<=p-1 and 1<=c<=d<=p-1. Then the number of integers k in {1,2,...,p-2} for which (I(k),I(k+1)) lies in R differs from |R|/p by at most C*sqrt(p)*log(p)^2."
+          },
+          {
+            "formalization_cost_estimate": 0.18,
+            "local_id": "L5",
+            "role_in_assembly": "Allows the triangle-counting problem to be reduced to finitely many rectangle counts, where the discrepancy estimate from L4 applies directly.",
+            "self_check_notes": "A staircase decomposition of the triangle gives such an approximation; losing O(p) points is elementary.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "Each R_i is axis-parallel, consists of integer lattice points, and lies inside T_p"
+              ],
+              "normalized_claim": "There is a disjoint rectangular inner approximation of T_p whose missed set has size at most 2p.",
+              "quantifier_order": [
+                "For all integers p>=5",
+                "There exists a finite family of pairwise disjoint rectangles R_1,...,R_m"
+              ],
+              "variables": [
+                {
+                  "domain": "integers with p>=5",
+                  "name": "p",
+                  "role": "size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integer lattice points in [1,p-1]^2",
+                  "name": "T_p",
+                  "role": "strict lower triangle",
+                  "type": "subset of Z^2"
+                },
+                {
+                  "domain": "positive integers",
+                  "name": "m",
+                  "role": "number of rectangles",
+                  "type": "integer"
+                },
+                {
+                  "domain": "axis-parallel integer rectangles",
+                  "name": "R_i",
+                  "role": "inner approximation pieces",
+                  "type": "finite subset of Z^2"
+                }
+              ],
+              "witness_dependencies": [
+                "The rectangles depend on p"
+              ]
+            },
+            "statement_nl": "Let p be an integer with p>=5, and let T_p={(x,y) in Z^2 : 1<=x<=p-1, 1<=y<=p-1, y<x}. There exists a family of pairwise disjoint axis-parallel rectangles R_1,...,R_m contained in T_p such that |R_1 \u222a ... \u222a R_m| >= (p-1)(p-2)/2 - 2p. Equivalently, the strict lower triangle T_p can be approximated from inside by a disjoint union of axis-parallel rectangles while losing at most 2p lattice points."
+          },
+          {
+            "formalization_cost_estimate": 0.36,
+            "local_id": "L6",
+            "role_in_assembly": "Combines the geometric triangle approximation with rectangle equidistribution to extract a usable lower bound for the descent count.",
+            "self_check_notes": "Apply the discrepancy estimate to each disjoint rectangle from the inner approximation and sum the errors; the main term is the total area divided by p, which is ((p-1)(p-2)/2 - O(p))/p = (p-2)/2 - O(1). This O(1) term is absorbed into O(sqrt(p) log^2 p).",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "N(p) counts k in {1,...,p-2} with I(k+1)<I(k)"
+              ],
+              "normalized_claim": "Uniform rectangle discrepancy implies the asymptotic lower bound N(p) >= (p-2)/2 - O(sqrt(p) log(p)^2).",
+              "quantifier_order": [
+                "Assume there exists an absolute constant C>0 with the stated rectangle discrepancy property",
+                "Then there exists an absolute constant C'>0",
+                "For all primes p>3"
+              ],
+              "variables": [
+                {
+                  "domain": "positive real numbers",
+                  "name": "C",
+                  "role": "rectangle discrepancy constant",
+                  "type": "real"
+                },
+                {
+                  "domain": "positive real numbers",
+                  "name": "C'",
+                  "role": "derived constant",
+                  "type": "real"
+                },
+                {
+                  "domain": "prime integers with p>3",
+                  "name": "p",
+                  "role": "fixed modulus",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,...,p-1}->{1,...,p-1}",
+                  "name": "I",
+                  "role": "inverse map modulo p",
+                  "type": "function"
+                },
+                {
+                  "domain": "nonnegative integers",
+                  "name": "N(p)",
+                  "role": "descent count",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "C' depends only on the discrepancy constant C"
+              ]
+            },
+            "statement_nl": "Assume there exists an absolute constant C>0 with the rectangle discrepancy property stated as follows: for every prime p>3, every inverse map I(k) modulo p, and every axis-parallel rectangle R inside [1,p-1]^2, one has | #{k in {1,...,p-2} : (I(k),I(k+1)) in R} - |R|/p | <= C*sqrt(p)*log(p)^2. Then there exists an absolute constant C'>0 such that for every prime p>3, if N(p)=|{k in {1,...,p-2}: I(k+1)<I(k)}|, then N(p) >= (p-2)/2 - C'*sqrt(p)*log(p)^2."
+          },
+          {
+            "formalization_cost_estimate": 0.09,
+            "local_id": "L7",
+            "role_in_assembly": "Turns the asymptotic estimate from L6 into the explicit target inequality for all sufficiently large primes.",
+            "self_check_notes": "Elementary comparison of growth rates: sqrt(x) log(x)^2 = o(x).",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "log denotes the natural logarithm; only eventual growth is used"
+              ],
+              "normalized_claim": "The term x/4 dominates C' sqrt(x) log(x)^2 for all sufficiently large x, so the asymptotic lower bound implies the desired inequality for all sufficiently large primes.",
+              "quantifier_order": [
+                "For every fixed real C'>0",
+                "There exists an integer P_0>=5",
+                "For every real x>=P_0",
+                "For every prime p>=P_0"
+              ],
+              "variables": [
+                {
+                  "domain": "positive real numbers",
+                  "name": "C'",
+                  "role": "fixed error constant",
+                  "type": "real"
+                },
+                {
+                  "domain": "integers >=5",
+                  "name": "P_0",
+                  "role": "large-threshold witness",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers >=P_0",
+                  "name": "x",
+                  "role": "size variable",
+                  "type": "real"
+                },
+                {
+                  "domain": "primes >=P_0",
+                  "name": "p",
+                  "role": "prime modulus",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "N(p)",
+                  "role": "quantity satisfying the asymptotic lower bound",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": [
+                "P_0 depends only on C'"
+              ]
+            },
+            "statement_nl": "Let C'>0 be a fixed real constant. There exists an integer P_0>=5 such that for every real number x>=P_0 one has (x-2)/2 - C'*sqrt(x)*log(x)^2 > x/4 - 1. In particular, if p is a prime with p>=P_0 and a quantity N(p) satisfies N(p) >= (p-2)/2 - C'*sqrt(p)*log(p)^2, then N(p) > p/4 - 1."
+          },
+          {
+            "formalization_cost_estimate": 0.12,
+            "local_id": "L8",
+            "role_in_assembly": "Handles the finite exceptional range below the asymptotic threshold P_0.",
+            "self_check_notes": "This is a finite verification lemma; in Lean one would either compute directly or discharge with a bounded search.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "The set of such primes is finite"
+              ],
+              "normalized_claim": "The remaining finitely many small primes can be settled by direct computation.",
+              "quantifier_order": [
+                "For every fixed integer P_0>=5",
+                "For all primes p with 5<=p<P_0"
+              ],
+              "variables": [
+                {
+                  "domain": "fixed integers >=5",
+                  "name": "P_0",
+                  "role": "cutoff parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "primes with 5<=p<P_0",
+                  "name": "p",
+                  "role": "small prime modulus",
+                  "type": "integer"
+                },
+                {
+                  "domain": "{1,...,p-1}->{1,...,p-1}",
+                  "name": "I_p",
+                  "role": "inverse map modulo p",
+                  "type": "function"
+                },
+                {
+                  "domain": "nonnegative integers",
+                  "name": "N(p)",
+                  "role": "descent count",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "The verification depends on each specific prime p"
+              ]
+            },
+            "statement_nl": "For every prime p with 5<=p<P_0, where P_0 is any fixed integer, let I_p(k) be the inverse of k modulo p in {1,...,p-1} and let N(p)=|{k in {1,...,p-2}: I_p(k+1)<I_p(k)}|. Then the statement N(p) > p/4 - 1 can be verified by a finite case check over the finitely many primes p in the interval [5,P_0)."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For a fixed prime p>3 and an integer k with 1<=k<=p-1, write I_p(k) for the unique integer in {1,2,...,p-1} satisfying k*I_p(k) \u2261 1 (mod p). In lemma statements below this map is usually denoted simply by I when p is fixed.",
+            "label": "inverse_map_definition"
+          },
+          {
+            "content": "For a fixed prime p>3, define N(p) = |{ k in {1,2,...,p-2} : I_p(k+1) < I_p(k) }|.",
+            "label": "descent_count_definition"
+          }
+        ],
+        "strategy_summary": "Use a distribution-theoretic approach: encode the descent condition I(k+1)<I(k) as the event that the consecutive inverse pair (I(k), I(k+1)) lies in the strict lower triangle of the square [1,p-1]^2. Invoke a standard equidistribution estimate for the affine curve k -> (I(k), I(k+1)) modulo p, approximate the triangle from inside by a union of axis-parallel rectangles, obtain an asymptotic lower bound N(p) >= (p-2)/2 - O(sqrt(p) log^2 p), and then finish by a finite verification for the remaining small primes."
+      }
+    ],
+    "status": "completed"
+  },
+  "status": "completed",
+  "target_id": "thm_root_20260316200002_2d33d280",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-16T20:17:05.236517Z",
+  "worker_job_id": "wrk_thm_root_20260316200002_2d33d280_decompose_0_track_1_req_20260316200050_865de195",
+  "worker_kind": "decomposition_generation"
+}

@@ -1,0 +1,116 @@
+{
+  "assembly_plan_id": "asm_20260325071056_321fadcb",
+  "created_at": "2026-03-25T07:14:39.931741Z",
+  "decomposition_id": "dec_20260325071056_3ab00e49",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_skeleton_nl": "The earlier local attempt failed because it tried to handle the unit-ideal case by a false branch lemma. This version does not split into a full-ideal branch at all. Instead it isolates the requested positive-degree repair as the explicit bottleneck L1, namely that every generator lies in m=(x_1,...,x_d). Once that is available, the ideal I=(g_1,...,g_d) is automatically proper. The finite-dimensional quotient hypothesis then implies, via L2, that a power of m lies in I, so after localizing at m the quotient S_m/I S_m is annihilated by a power of the maximal ideal. Because S_m is a Noetherian regular local ring of dimension d by L3, L4 upgrades this containment to finite length, and L5 shows that the localized sequence g_1/1,...,g_d/1 is regular. Lemma L6 identifies these localized regularity statements with injectivity on the localized successive quotients coming from S itself, and the quotient-specific graded local-to-global lemma L7 descends that injectivity back to the original quotients S/(g_1,...,g_{i-1}). Finally L8 rewrites the result in the language of homogeneous regular sequences and explicitly handles d=0 by the empty-sequence convention.",
+  "root_node_id": "lem_20260325055554_837eceb4",
+  "steps": [
+    {
+      "derives": "For every i with 1 <= i <= d, one has g_i in m=(x_1,...,x_d).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is a direct application of L1 under the theorem hypothesis that S/(g_1,...,g_d) is finite-dimensional over k.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let I=(g_1,...,g_d). Then I is a proper ideal of S.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "By Step A1 every generator g_i lies in m, so the ideal I=(g_1,...,g_d) is contained in m. Since m is a proper ideal of S, I is proper.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "There exists an integer N >= 1 such that m^N is contained in I, and after localizing at m one has (m S_m)^N contained in I S_m.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "The ideal I=(g_1,...,g_d) is homogeneous because its generators are homogeneous. Apply L2 to this homogeneous ideal I and the theorem hypothesis that S/I is finite-dimensional over k. L2 gives an integer N >= 1 with m^N subseteq I, and it also gives the localized containment (m S_m)^N subseteq I S_m.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "Let n = m S_m. Then S_m is a Noetherian regular local ring of Krull dimension d with maximal ideal n.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is exactly the content of L3, with n defined to be the maximal ideal m S_m.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The S_m-module S_m / I S_m has finite length.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Step A4 says that S_m is a Noetherian local ring with maximal ideal n = m S_m. Step A3 gives an exponent N with n^N = (m S_m)^N contained in I S_m. Applying L4 to the Noetherian local ring (S_m,n) and the ideal J = I S_m yields that S_m / I S_m has finite length.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every i with 1 <= i <= d, the image of g_i/1 in S_m / (g_1,...,g_{i-1}) S_m is not a zero-divisor.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Apply L5 to the regular local ring R=S_m with maximal ideal n=m S_m and the sequence a_j=g_j/1. By Step A1 each g_j lies in m, so each a_j lies in n after localization. Step A4 gives that R is a regular local ring of dimension d. Step A5 gives that R/(a_1,...,a_d) = S_m / I S_m has finite length. Therefore L5 yields that for each i, the image of g_i/1 in S_m / (g_1,...,g_{i-1}) S_m is not a zero-divisor. If d=0, L5 states that the conclusion is vacuous.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "For every i with 1 <= i <= d, multiplication by g_i on the localized module (S/(g_1,...,g_{i-1}))_m is injective.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "Fix i and set J_i=(g_1,...,g_{i-1}). Apply L6 with R=S, U=S \\ m, J=J_i, and h=g_i. Lemma L6 identifies the localization of S/J_i at U with S_m / J_i S_m, and it identifies the localized multiplication-by-g_i map on (S/J_i)_m with multiplication by g_i/1 on S_m / J_i S_m. Step A6 says that this latter map is injective. Therefore the localized multiplication-by-g_i map on (S/J_i)_m is injective. Since i was arbitrary, the statement holds for all i.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    },
+    {
+      "derives": "For every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "Fix i and set J_i=(g_1,...,g_{i-1}). The ideal J_i is homogeneous because it is generated by the homogeneous elements g_1,...,g_{i-1}. Step A7 gives injectivity of multiplication by g_i on the localized module (S/J_i)_m. Apply L7 to the homogeneous ideal J_i and the homogeneous element g_i. It follows that multiplication by g_i on S/J_i is injective. Injectivity of multiplication by g_i on S/J_i is exactly the statement that the image of g_i in S/J_i is not a zero-divisor. Since i was arbitrary, the desired global successive non-zero-divisor statement holds.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A7"
+      ]
+    },
+    {
+      "derives": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d are homogeneous elements of S and S/(g_1,...,g_d) is finite-dimensional over k, then for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor. Equivalently, g_1,...,g_d is a homogeneous regular sequence.",
+      "is_trivial": true,
+      "step_id": "A9",
+      "trivial_justification": "Step A8 gives the successive non-zero-divisor statement. Lemma L8 says that, including the case d=0, this is equivalent to saying that g_1,...,g_d is a homogeneous regular sequence. Therefore the theorem statement follows exactly.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-16T20:40:56.317096Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let m = floor(p/4). By the defining property of the floor function, we have\n\nm <= p/4 < m + 1.\n\nFrom the right-hand inequality p/4 < m + 1, subtract 1 from both sides to get\n\np/4 - 1 < m,\n\nthat is,\n\nm > p/4 - 1.\n\nNow the hypothesis says n >= floor(p/4) = m. Therefore n >= m > p/4 - 1. By transitivity of the order relation, we conclude\n\nn > p/4 - 1.\n\nThis proves the statement.",
+  "latest_vetter_report_id": "rep_recovered_lem_20260316204033_8a672840",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260316204033_8a672840",
+  "parent_id": "thm_root_20260316200002_2d33d280",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260316200002_e457403f",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Converts the integer lower bounds proved in the residue-class lemmas into the exact strict inequality required by the root theorem.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let p be an integer and let n be an integer. If n >= floor(p/4), then n > p/4 - 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "p is an integer (p \u2208 Z)",
+      "n is an integer (n \u2208 Z)",
+      "floor(p/4) is the integer given by the floor function applied to the real number p/4",
+      "comparisons (>=, >) are standard order relations on real numbers (identifying integers with reals)"
+    ],
+    "normalized_claim": "For all p \u2208 Z and for all n \u2208 Z, if n \u2265 floor(p/4) then n > p/4 - 1.",
+    "quantifier_order": [
+      "forall p \u2208 Z",
+      "forall n \u2208 Z"
+    ],
+    "variables": [
+      {
+        "domain": "Z (all integers)",
+        "name": "p",
+        "role": "universal (arbitrary integer parameter)",
+        "type": "integer"
+      },
+      {
+        "domain": "Z (all integers)",
+        "name": "n",
+        "role": "universal (arbitrary integer variable)",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "floor(p/4) is an integer-valued expression depending on p (no existential witness introduced)",
+      "no existential quantifiers appear; n is arbitrary/universal, not a witness"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-16T23:51:18.835308+00:00"
+}

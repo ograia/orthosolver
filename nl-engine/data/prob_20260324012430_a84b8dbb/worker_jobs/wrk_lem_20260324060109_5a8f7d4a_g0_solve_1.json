@@ -1,0 +1,244 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324060109_5a8f7d4a/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-24T06:07:00.013234Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T06:06:45.272965Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lemma_id": "lem_20260324060109_5a8f7d4a",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "role_in_assembly": "Extracts coefficientwise monotonicity from the positive Hilbert-series identity.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "g is restricted to integers with g \u2265 0",
+        "F has integer coefficients: a_g \u2208 Z for all g \u2265 0",
+        "C has nonnegative integer coefficients: c_g \u2208 Z_{\u22650} for all g \u2265 0",
+        "All series identities are in the ring of formal power series (coefficientwise equality), not pointwise for numeric t"
+      ],
+      "normalized_claim": "Given F(t)=\u03a3_{g=0}^\u221e a_g t^g with a_g\u2208Z and given that there exists C(t)=\u03a3_{g=0}^\u221e c_g t^g with c_g\u2208Z_{\u22650} such that (1-t)F(t)=a_0+tC(t), then for every integer g\u22650 one has a_{g+1}=a_g+c_g. Consequently, for every integer g\u22650, a_g \u2264 a_{g+1}.",
+      "quantifier_order": [
+        "\u2203 C(t)=\u03a3_{g=0}^\u221e c_g t^g such that (\u2200 g \u2208 Z_{\u22650}, c_g \u2208 Z_{\u22650}) and (1-t)F(t)=a_0+tC(t)",
+        "\u2200 g \u2208 Z_{\u22650}: a_{g+1}-a_g=c_g"
+      ],
+      "variables": [
+        {
+          "domain": "t is an indeterminate in the ring of formal power series",
+          "name": "t",
+          "role": "indeterminate used to define formal series",
+          "type": "formal variable"
+        },
+        {
+          "domain": "F(t) \u2208 Z[[t]]",
+          "name": "F",
+          "role": "given series with coefficients a_g",
+          "type": "formal power series"
+        },
+        {
+          "domain": "a_g \u2208 Z for all g \u2208 Z_{\u22650}",
+          "name": "a_g",
+          "role": "coefficients of F",
+          "type": "integer coefficient indexed by g"
+        },
+        {
+          "domain": "C(t) \u2208 Z[[t]]",
+          "name": "C",
+          "role": "existentially quantified series with coefficients c_g",
+          "type": "formal power series"
+        },
+        {
+          "domain": "c_g \u2208 Z_{\u22650} for all g \u2208 Z_{\u22650}",
+          "name": "c_g",
+          "role": "coefficients of C and witnesses used in the conclusion",
+          "type": "integer coefficient indexed by g"
+        }
+      ],
+      "witness_dependencies": [
+        "The values c_g used in the conclusion are the coefficients of the existentially chosen witness series C(t), which may depend on the given series F(t) via the constraint (1-t)F(t)=a_0+tC(t)"
+      ]
+    },
+    "shared_context": [
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260324013805_2c445eb6",
+        "role_in_parent": "This is the new core combinatorial lemma replacing the rejected false reconstruction lemma based on the least-admissible-coordinate map.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2",
+            "g is an integer with g \u2265 0",
+            "x = (x_1,...,x_{m-1}) has all coordinates x_k \u2208 Z_{>0} (positive integers)",
+            "x satisfies the coordinate sum constraint: x_1 + ... + x_{m-1} = g",
+            "in the defining inequalities, i and j range over all ordered pairs with i,j \u2208 {1,...,m-1}",
+            "for i+j<m: inequality uses x_{i+j} (which lies in {1,...,m-1})",
+            "for i+j>m: inequality uses x_{i+j-m} (which lies in {1,...,m-1})",
+            "K_{m,g+1} is defined by the same conditions with x_1+...+x_{m-1}=g+1"
+          ],
+          "normalized_claim": "For every integer m \u2265 2 and every integer g \u2265 0, there exists a function J_{m,g} mapping each x \u2208 K_{m,g} (i.e., each positive integer (m\u22121)-tuple with sum g and satisfying the given conditional inequalities for all i,j\u2208{1,...,m\u22121}) into K_{m,g+1} (same constraints but sum g+1), such that for all x,y \u2208 K_{m,g}, x \u2260 y implies J_{m,g}(x) \u2260 J_{m,g}(y).",
+          "quantifier_order": [
+            "\u2200 m \u2208 Z (m \u2265 2)",
+            "\u2200 g \u2208 Z (g \u2265 0)",
+            "\u2203 J_{m,g} (J_{m,g}:K_{m,g}\u2192K_{m,g+1} and J_{m,g} is injective)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "global parameter controlling tuple length {1,...,m-1} and split in inequalities",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "global parameter fixing the required coordinate sum of elements of K_{m,g}",
+              "type": "integer"
+            },
+            {
+              "domain": "positive integers^{m-1}",
+              "name": "x",
+              "role": "arbitrary element of K_{m,g} with coordinates x_1,...,x_{m-1}",
+              "type": "tuple of integers"
+            },
+            {
+              "domain": "{1,...,m-1}",
+              "name": "i",
+              "role": "index used in defining the pairwise inequality constraints",
+              "type": "integer index"
+            },
+            {
+              "domain": "{1,...,m-1}",
+              "name": "j",
+              "role": "index used in defining the pairwise inequality constraints",
+              "type": "integer index"
+            },
+            {
+              "domain": "K_{m,g} -> K_{m,g+1}",
+              "name": "J_{m,g}",
+              "role": "witness for the existence of an injective mapping from K_{m,g} to K_{m,g+1}",
+              "type": "function"
+            }
+          ],
+          "witness_dependencies": [
+            "The function witness J_{m,g} is allowed to depend on the parameters (m,g).",
+            "The injectivity condition depends on the membership relation x,y \u2208 K_{m,g}."
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Define K_{m,g+1} analogously with coordinate sum g+1. Then there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324012430_9851dde8",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2",
+            "g is an integer with g \u2265 0",
+            "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+          ],
+          "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+          "quantifier_order": [
+            "\u2200 m \u2208 Z (m \u2265 2)",
+            "\u2200 g \u2208 Z (g \u2265 0)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "N0",
+              "name": "N(m,g)",
+              "role": "count of numerical semigroups with multiplicity m and genus g",
+              "type": "nonnegative integer (cardinality)"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+      }
+    ],
+    "statement_nl": "Let F(t)=sum_{g=0}^infinity a_g t^g be a formal power series with integer coefficients. Suppose there exists another formal power series C(t)=sum_{g=0}^infinity c_g t^g with all c_g in Z_{>=0} such that (1-t) F(t) = a_0 + t C(t). Then for every integer g >= 0 one has a_{g+1} - a_g = c_g. In particular, a_g <= a_{g+1} for every g >= 0.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "lemma_id": "lem_20260324060109_5a8f7d4a",
+    "proof_nl": "Let\nF(t)=\\sum_{g=0}^{\\infty} a_g t^g \\in \\mathbb Z[[t]]\n\nand suppose there exists\nC(t)=\\sum_{g=0}^{\\infty} c_g t^g \\in \\mathbb Z[[t]]\nwith each c_g\\ge 0 such that\n\\[(1-t)F(t)=a_0+tC(t).\\]\nAll identities are in the ring of formal power series, so coefficients of equal series are equal termwise.\n\nFirst expand the left-hand side:\n\\[\n(1-t)F(t)=F(t)-tF(t)\n=\\sum_{g=0}^{\\infty} a_g t^g-\\sum_{g=0}^{\\infty} a_g t^{g+1}.\n\\]\nReindex the second sum:\n\\[\n\\sum_{g=0}^{\\infty} a_g t^{g+1}=\\sum_{g=1}^{\\infty} a_{g-1} t^g.\n\\]\nHence\n\\[\n(1-t)F(t)=a_0+\\sum_{g=1}^{\\infty}(a_g-a_{g-1})t^g.\n\\]\nOn the other hand,\n\\[\na_0+tC(t)=a_0+\\sum_{g=0}^{\\infty} c_g t^{g+1}=a_0+\\sum_{g=1}^{\\infty} c_{g-1} t^g.\n\\]\nSince these two formal power series are equal, their coefficients of t^g are equal for every g\\ge 1. Therefore\n\\[\na_g-a_{g-1}=c_{g-1}\\qquad (g\\ge 1).\n\\]\nNow replace g by g+1. For every integer g\\ge 0 we obtain\n\\[\na_{g+1}-a_g=c_g.\n\\]\nBecause each c_g\\in \\mathbb Z_{\\ge 0}, it follows that\n\\[\na_{g+1}-a_g\\ge 0,\n\\]\nso\n\\[\na_g\\le a_{g+1}\n\\qquad \\text{for every } g\\ge 0.\n\\]\nThis proves both assertions.",
+    "proof_summary": "Expand (1-t)F(t) coefficientwise in Z[[t]], compare with a_0+tC(t), and equate coefficients of t^g. This gives a_g-a_{g-1}=c_{g-1} for g>=1, hence a_{g+1}-a_g=c_g for all g>=0. Since c_g>=0, the coefficients a_g are nondecreasing.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "In the formal power series ring, equality is coefficientwise.",
+        "Basic reindexing of formal power series sums."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260324060109_5a8f7d4a",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T06:07:00.013257Z",
+  "worker_job_id": "wrk_lem_20260324060109_5a8f7d4a_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

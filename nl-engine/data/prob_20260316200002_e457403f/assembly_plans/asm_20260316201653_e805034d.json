@@ -1,0 +1,80 @@
+{
+  "assembly_plan_id": "asm_20260316201653_e805034d",
+  "created_at": "2026-03-16T20:22:46.690200Z",
+  "decomposition_id": "dec_20260316201653_f8cf2995",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260316200002_e457403f",
+  "proof_skeleton_nl": "First use the inverse-existence lemma to justify that the map I is well-defined. Then split into cases on the prime p. The boundary case p = 5 is handled by direct computation. For primes p >= 7, apply the local obstruction lemma to each starting point a in {1,...,p-5}; this shows that the descent set S meets every 4-term interval {a,a+1,a+2,a+3} inside {1,...,p-2}. The corrected covering lemma, applied with N = p-2, yields |S| >= ceil((p-2)/4). Finally use the direct arithmetic inequality ceil((p-2)/4) > p/4 - 1 to conclude |S| > p/4 - 1. Combining the case p = 5 with the case p >= 7 yields exactly the root theorem.",
+  "root_node_id": "thm_root_20260316200002_2d33d280",
+  "steps": [
+    {
+      "derives": "For any prime p > 3, the function I : {1,...,p-1} -> {1,...,p-1} appearing in the theorem is well-defined, because each k in {1,...,p-1} has a unique inverse I(k) modulo p.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "Apply L1 with the given prime p and each k in {1,...,p-1}.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If p = 5 and S = { k in {1,2,3} : I(k+1) < I(k) }, then |S| = 1, hence |S| > 5/4 - 1.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is exactly the content of L2.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Assume now that p >= 7 is prime, and define S = { k in {1,...,p-2} : I(k+1) < I(k) }. Then for every integer a with 1 <= a <= p-5, the set S intersects {a,a+1,a+2,a+3}.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Fix a with 1 <= a <= p-5. By L3, at least one of I(a+1) < I(a), I(a+2) < I(a+1), I(a+3) < I(a+2), I(a+4) < I(a+3) holds. If the first holds then a \u2208 S; if the second holds then a+1 \u2208 S; if the third holds then a+2 \u2208 S; if the fourth holds then a+3 \u2208 S. Therefore S \u2229 {a,a+1,a+2,a+3} is nonempty.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Under the assumptions of A3, one has |S| >= ceil((p-2)/4).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Apply L4 with N := p-2 and T := S. Because p >= 7, we have N = p-2 >= 5, so the hypothesis N >= 4 of L4 is satisfied. Also S \u2286 {1,...,p-2} = {1,...,N-1}, and A3 shows that for every a with 1 <= a <= p-5 = N-3, the intersection S \u2229 {a,a+1,a+2,a+3} is nonempty. Hence L4 yields |S| >= ceil(N/4) = ceil((p-2)/4).",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Under the assumptions of A3, one has |S| > p/4 - 1.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "From A4, |S| >= ceil((p-2)/4). By L5, ceil((p-2)/4) > p/4 - 1. Therefore |S| > p/4 - 1 by transitivity of >= and >.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every prime p > 3, if for each k in {1,...,p-1} we let I(k) in {1,2,...,p-1} satisfy k * I(k) \u2261 1 (mod p), then the number of integers k in {1,...,p-2} such that I(k+1) < I(k) is greater than p/4 - 1.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Since p is a prime greater than 3, either p = 5 or p >= 7. In the case p = 5, A2 gives the desired inequality. In the case p >= 7, A5 gives the desired inequality. Thus the theorem holds for all primes p > 3.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A5"
+      ]
+    }
+  ]
+}

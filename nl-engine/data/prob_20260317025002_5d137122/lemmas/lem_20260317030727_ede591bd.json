@@ -1,0 +1,54 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-17T03:07:54.860657Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix a real number r with r \\le 1/4, and let n be any positive integer.\n\nSince r \\le 1/4, we have\n4r \\le 1.\n\nNow n \\ge 1. We compare n^{4r} with n.\n\nIf n=1, then n^{4r}=1=n, so certainly n^{4r} \\le n.\n\nIf n>1, then \\ln n>0. From 4r \\le 1 we get\n(4r)\\ln n \\le \\ln n.\nExponentiating both sides yields\nn^{4r}=e^{(4r)\\ln n} \\le e^{\\ln n}=n.\n\nThus in all cases,\nn^{4r} \\le n.\n\nAlso,\n2n+1-n = n+1 > 0,\nso n \\le 2n+1.\n\nCombining these inequalities gives\nn^{4r} \\le n \\le 2n+1.\nHence\n2n+1 \\ge n^{4r}.\n\nSince n was arbitrary, this holds for every positive integer n.",
+  "latest_vetter_report_id": "rep_20260317033341_ec8d840c",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260317030727_ede591bd",
+  "parent_id": "thm_root_20260317025002_2660065c",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260317025002_5d137122",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Elementary inequality needed to verify the quadratic witness for all exponents r <= 1/4.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let r be a real number with r \\le \\tfrac14. Then for every positive integer n, one has 2n+1 \\ge n^{4r}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "r is a real number and satisfies r \u2264 1/4",
+      "n is a positive integer (n \u2265 1)",
+      "Exponentiation n^{4r} is interpreted as real exponentiation of a positive base (base n > 0 guarantees well-definedness)"
+    ],
+    "normalized_claim": "\u2200 r \u2208 \u211d, if r \u2264 1/4 then \u2200 n \u2208 \u2115_{>0}, 2n + 1 \u2265 n^{4r}.",
+    "quantifier_order": [
+      "For all r \u2208 \u211d with r \u2264 1/4",
+      "For all n \u2208 \u2115_{>0}"
+    ],
+    "variables": [
+      {
+        "domain": "r \u2208 \u211d with r \u2264 1/4",
+        "name": "r",
+        "role": "parameter, universally quantified over reals satisfying domain restriction",
+        "type": "real number"
+      },
+      {
+        "domain": "n \u2208 \u2115_{>0} (positive integers, i.e. n \u2265 1)",
+        "name": "n",
+        "role": "universal variable ranging over positive integers",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-17T03:07:54.860658Z"
+}

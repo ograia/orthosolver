@@ -1,0 +1,337 @@
+{
+  "artifact_prefix": "problems/prob_20260324194836_a87fa006/lemmas/lem_20260325041540_97ee9220/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 1,
+  "controller_consumed_at": "2026-03-25T04:24:51.700904Z",
+  "controller_consumed_by_execution_id": "exec_20260325042029_f831fdea",
+  "created_at": "2026-03-25T04:24:18.712803Z",
+  "error_payload": null,
+  "execution_id": "exec_20260325042029_f831fdea",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Let n, k, l \u2208 Z with 0 \u2264 k, l \u2264 n. Define R(q) = [n choose k]_q / [n choose l]_q in the natural rational-function setting for Gaussian q-binomial coefficients. If R(q) lies in a polynomial ring in q (i.e., R(q) has only finitely many nonnegative powers of q with coefficients in the relevant coefficient ring), then when written as R(q) = \u03a3_i c_i q^i, every coefficient c_i satisfies c_i \u2265 0.",
+        "item_id": "pnode_20260324205304_f84a9410",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324194836_7ca60a42",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, l with 0 \u2264 k, l \u2264 n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then that polynomial has only nonnegative coefficients. "
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260324204708_474b5c77",
+        "role_in_parent": "This is the new core structural input: it replaces the prior cyclotomic-positivity bottleneck by a weighted complete-intersection realization theorem.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "A,B,d are integers with A >= B >= 0 and d >= 0",
+            "Empty product convention: if d=0 then \u220f_{i=1}^0 (...) = 1 so Q_{A,B,0}(q)=1",
+            "Assumption: the rational expression Q_{A,B,d}(q) is actually a polynomial, i.e., Q_{A,B,d}(q) \u2208 Q[q] (not just a rational function)",
+            "Graded ring S is Q[x_1,...,x_d] with weighted grading deg(x_i)=B+i for i=1..d",
+            "If d=0, interpret S as Q (no variables, hence no f_i witnesses needed)",
+            "Each f_i is homogeneous in S with weighted degree deg(f_i)=A+i",
+            "Regularity condition: in the successive quotient S/(f_1,...,f_{i-1}), the class of f_i is not a zero-divisor (equivalently: (f_1,...,f_d) is a homogeneous regular sequence in S)"
+          ],
+          "normalized_claim": "Let A,B,d \u2208 Z with A >= B >= 0 and d >= 0, and define Q_{A,B,d}(q)=\u220f_{i=1}^d (1-q^{A+i})/(1-q^{B+i}) with Q_{A,B,0}(q)=1. If Q_{A,B,d}(q) \u2208 Q[q], then in the weighted graded polynomial ring S=Q[x_1,...,x_d] (or S=Q if d=0) with deg(x_i)=B+i, there exist homogeneous elements f_1,...,f_d \u2208 S such that deg(f_i)=A+i for each i=1..d and for each i the class of f_i in S/(f_1,...,f_{i-1}) is not a zero-divisor (so f_1,...,f_d form a homogeneous regular sequence). Consequently, the graded data of S modulo this regular sequence yields the given expression Q_{A,B,d}(q) (as stated in the equivalence).",
+          "quantifier_order": [
+            "For all integers A, B, d with A >= B >= 0 and d >= 0",
+            "Assume Q_{A,B,d}(q) := \u220f_{i=1}^d (1-q^{A+i})/(1-q^{B+i}) belongs to Q[q] (q formal indeterminate)",
+            "There exist homogeneous polynomials f_1, ..., f_d in S such that for each i=1..d: deg(f_i)=A+i, and the image of f_i in S/(f_1,...,f_{i-1}) is not a zero-divisor"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "A",
+              "role": "parameter controlling numerator degrees; constrained by A >= B >= 0",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "B",
+              "role": "parameter controlling denominator degrees/variable weights; constrained by B <= A and B >= 0",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "d",
+              "role": "length of the product/regular sequence; constrained by d >= 0",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable over Q",
+              "name": "q",
+              "role": "variable of the polynomial/function Q_{A,B,d}(q)",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "Q(q)",
+              "name": "Q_{A,B,d}(q)",
+              "role": "given expression prod_{i=1}^d (1-q^(A+i))/(1-q^(B+i)) assumed to lie in Q[q]",
+              "type": "rational function / formal expression in q"
+            },
+            {
+              "domain": "Q[x_1,...,x_d] with weighted grading (or Q if d=0)",
+              "name": "S",
+              "role": "ambient weighted polynomial ring where the f_i live",
+              "type": "graded ring"
+            },
+            {
+              "domain": "set {x_1,...,x_d} in S",
+              "name": "x_i",
+              "role": "polynomial variables with deg(x_i)=B+i",
+              "type": "homogeneous generator"
+            },
+            {
+              "domain": "S",
+              "name": "f_i",
+              "role": "witnesses forming a homogeneous regular sequence; deg(f_i)=A+i",
+              "type": "homogeneous polynomial"
+            }
+          ],
+          "witness_dependencies": [
+            "The witnesses f_1,...,f_d depend on the parameters (A,B,d) via the choice of the ambient weighted ring S and the required degrees deg(f_i)=A+i",
+            "The regularity (non-zero-divisor) condition is imposed sequentially on the images of f_i in the quotients by the previously chosen f_1,...,f_{i-1}"
+          ]
+        },
+        "statement_nl": "For integers A, B, d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)), with the empty product equal to 1 when d = 0. Assume Q_{A,B,d}(q) belongs to Q[q]. Let S be the weighted polynomial ring Q[x_1, ..., x_d] graded by deg(x_i) = B+i; when d = 0 interpret S as Q. Then there exist homogeneous polynomials f_1, ..., f_d in S such that deg(f_i) = A+i for every i, and for each i the image of f_i in S/(f_1, ..., f_{i-1}) is not a zero-divisor. Equivalently, Q_{A,B,d}(q) is realized by a homogeneous regular sequence in a weighted polynomial ring with variable weights B+1, ..., B+d and relation degrees A+1, ..., A+d."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324194836_7ca60a42",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "0 \u2264 k \u2264 n",
+            "0 \u2264 l \u2264 n",
+            "implicitly: n \u2265 0 (follows from 0 \u2264 k,l \u2264 n)",
+            "R(q) must be well-defined as a formal expression: [n choose l]_q \u2260 0 and division is interpreted in the ambient field/ring where Gaussian coefficients live (typically Q(q) or a localization of Z[q])",
+            "the premise \u201cis a polynomial in q\u201d means R(q) has no negative powers of q (i.e., R(q) \u2208 coefficient_ring[q] for some coefficient ring)"
+          ],
+          "normalized_claim": "Let n, k, l \u2208 Z with 0 \u2264 k, l \u2264 n. Define R(q) = [n choose k]_q / [n choose l]_q in the natural rational-function setting for Gaussian q-binomial coefficients. If R(q) lies in a polynomial ring in q (i.e., R(q) has only finitely many nonnegative powers of q with coefficients in the relevant coefficient ring), then when written as R(q) = \u03a3_i c_i q^i, every coefficient c_i satisfies c_i \u2265 0.",
+          "quantifier_order": [
+            "for all integers n, k, l with 0 \u2264 k, l \u2264 n",
+            "if R(q) := [n choose k]_q / [n choose l]_q is a polynomial in q",
+            "then R(q) has only nonnegative coefficients"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "n",
+              "role": "top index of Gaussian q-binomial coefficients; constrained by 0 \u2264 k,l \u2264 n (so effectively n \u2265 0)",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "k",
+              "role": "middle index of first Gaussian q-binomial coefficient; constrained by 0 \u2264 k \u2264 n",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "l",
+              "role": "middle index of second Gaussian q-binomial coefficient; constrained by 0 \u2264 l \u2264 n",
+              "type": "integer"
+            },
+            {
+              "domain": "formal (typically over a coefficient ring such as Z or Q)",
+              "name": "q",
+              "role": "variable with respect to which the ratio is required to be a polynomial with nonnegative coefficients",
+              "type": "indeterminate (formal variable)"
+            },
+            {
+              "domain": "expression defined as ([n choose k]_q)/([n choose l]_q)",
+              "name": "R(q)",
+              "role": "the ratio whose membership in a polynomial ring and coefficient sign are being concluded",
+              "type": "polynomial/formal expression"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, l with 0 \u2264 k, l \u2264 n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then that polynomial has only nonnegative coefficients. "
+      }
+    ],
+    "attempt_number": 1,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260325041540_97ee9220",
+    "proof_nl": "Set N(q)=prod_{i=1}^d (1-q^(A+i)) and D(q)=prod_{i=1}^d (1-q^(B+i)), so the given rational function is N(q)/D(q).\n\nBecause N and D are polynomials with rational coefficients and D != 0, the condition N(q)/D(q) in Q[q] is equivalent to D dividing N in the rational-coefficient polynomial ring. We may test this after extending coefficients to the complex numbers: if D divides N over the rationals, then certainly D divides N over the complexes. Conversely, suppose N=D P with P a complex-coefficient polynomial. Divide N by D in the rational-coefficient polynomial ring: N=D Q0+R with Q0,R having rational coefficients and either R=0 or deg R < deg D. Then R=D(P-Q0). If R != 0, then deg R = deg D + deg(P-Q0) >= deg D, contradiction. Hence R=0, so D already divides N over the rationals.\n\nNow work over the complex numbers. For alpha in C and nonzero F, let nu_alpha(F) be the multiplicity of alpha as a root of F. Since every complex polynomial factors into linear factors, and nonzero constants are units, D divides N over the complexes if and only if nu_alpha(D) <= nu_alpha(N) for every complex number alpha.\n\nFix alpha in C. If alpha is not a root of unity, then alpha^m != 1 for every positive integer m, so nu_alpha(1-q^m)=0 for all m. If alpha has exact order n, then for every positive integer m,\nnu_alpha(1-q^m)=1 when n divides m, and 0 otherwise.\nIndeed, alpha is a root exactly when alpha^m=1, which is equivalent to n dividing m. In that case the root is simple, because the derivative of 1-q^m is -m q^(m-1), and at q=alpha this equals -m alpha^(m-1) != 0.\n\nTherefore, for alpha of exact order n, multiplicities add over products, so\nnu_alpha(D)=sum_{i=1}^d nu_alpha(1-q^(B+i)) = #{ i in {1,...,d} : n divides B+i } = mu_n(B,d),\nand similarly\nnu_alpha(N)=mu_n(A,d).\nIf alpha is not a root of unity, both multiplicities are 0.\n\nHence D divides N over the complexes if and only if for every root of unity alpha of exact order n we have mu_n(B,d) <= mu_n(A,d). Since for each positive integer n there exists a complex number of exact order n, for example exp(2 pi i / n), this is equivalent to requiring mu_n(B,d) <= mu_n(A,d) for every positive integer n.\n\nCombining this with the first paragraph, the rational function Q(q) belongs to Q[q] if and only if mu_n(B,d) <= mu_n(A,d) for every positive integer n. This is exactly the statement.",
+    "role_in_assembly": "Extracts a purely arithmetic form of the hypothesis Q_{A,B,d}(q) in Q[q].",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "0 \u2264 k \u2264 n",
+        "0 \u2264 l \u2264 n",
+        "implicitly: n \u2265 0 (follows from 0 \u2264 k,l \u2264 n)",
+        "R(q) must be well-defined as a formal expression: [n choose l]_q \u2260 0 and division is interpreted in the ambient field/ring where Gaussian coefficients live (typically Q(q) or a localization of Z[q])",
+        "the premise \u201cis a polynomial in q\u201d means R(q) has no negative powers of q (i.e., R(q) \u2208 coefficient_ring[q] for some coefficient ring)"
+      ],
+      "normalized_claim": "Let n, k, l \u2208 Z with 0 \u2264 k, l \u2264 n. Define R(q) = [n choose k]_q / [n choose l]_q in the natural rational-function setting for Gaussian q-binomial coefficients. If R(q) lies in a polynomial ring in q (i.e., R(q) has only finitely many nonnegative powers of q with coefficients in the relevant coefficient ring), then when written as R(q) = \u03a3_i c_i q^i, every coefficient c_i satisfies c_i \u2265 0.",
+      "quantifier_order": [
+        "for all integers n, k, l with 0 \u2264 k, l \u2264 n",
+        "if R(q) := [n choose k]_q / [n choose l]_q is a polynomial in q",
+        "then R(q) has only nonnegative coefficients"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "n",
+          "role": "top index of Gaussian q-binomial coefficients; constrained by 0 \u2264 k,l \u2264 n (so effectively n \u2265 0)",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "k",
+          "role": "middle index of first Gaussian q-binomial coefficient; constrained by 0 \u2264 k \u2264 n",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "l",
+          "role": "middle index of second Gaussian q-binomial coefficient; constrained by 0 \u2264 l \u2264 n",
+          "type": "integer"
+        },
+        {
+          "domain": "formal (typically over a coefficient ring such as Z or Q)",
+          "name": "q",
+          "role": "variable with respect to which the ratio is required to be a polynomial with nonnegative coefficients",
+          "type": "indeterminate (formal variable)"
+        },
+        {
+          "domain": "expression defined as ([n choose k]_q)/([n choose l]_q)",
+          "name": "R(q)",
+          "role": "the ratio whose membership in a polynomial ring and coefficient sign are being concluded",
+          "type": "polynomial/formal expression"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "A >= B >= 0",
+        "d >= 0",
+        "n is a positive integer",
+        "the product index i ranges over integers with 1 <= i <= d",
+        "when d = 0, the product is the empty product and is defined to be 1",
+        "mu_n(C,d) counts elements i in the set {1, ..., d} such that n divides C + i"
+      ],
+      "normalized_claim": "For fixed integers A and B and nonnegative integer d satisfying A >= B >= 0, define Q(q) as the product over i from 1 to d of (1 minus q to the power (A plus i)) divided by (1 minus q to the power (B plus i)), with the convention that when d = 0 the product equals 1. For each positive integer n and integer C define mu_n(C,d) as the number of i in {1, ..., d} such that n divides C plus i. Then Q(q) is a polynomial in q with rational coefficients (belongs to Q[q]) if and only if for every positive integer n, mu_n(B,d) is at most mu_n(A,d).",
+      "quantifier_order": [
+        "Let A, B, d be integers with constraints A >= B >= 0 and d >= 0.",
+        "Define Q(q) using the product from i = 1 to d, with the empty product equal to 1 when d = 0.",
+        "Define mu_n(C,d) for each positive integer n.",
+        "Claim: Q(q) is in Q[q] if and only if for every positive integer n, mu_n(B,d) is <= mu_n(A,d)."
+      ],
+      "variables": [
+        {
+          "domain": "all integers",
+          "name": "A",
+          "role": "fixed parameter lower index in exponents",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers",
+          "name": "B",
+          "role": "fixed parameter lower exponent in the denominator",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with d >= 0",
+          "name": "d",
+          "role": "upper limit of the product and argument to mu_n",
+          "type": "nonnegative integer"
+        },
+        {
+          "domain": "formal variable over the rationals",
+          "name": "q",
+          "role": "variable of the rational function Q(q)",
+          "type": "indeterminate"
+        },
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "divisibility modulus used in mu_n and ranged universally in the condition",
+          "type": "positive integer"
+        },
+        {
+          "domain": "integers with 1 <= i <= d",
+          "name": "i",
+          "role": "index for product factors and for counting divisibility occurrences in mu_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integer values plugged into mu_n, specifically C equals A or B in the final condition",
+          "name": "C",
+          "role": "generic parameter for the counting function mu_n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced; the condition uses only universal quantification over positive integers n.",
+        "The index i used inside mu_n and inside the product is local to those definitions.",
+        "The counting function mu_n(B,d) and mu_n(A,d) depend only on the fixed parameters A, B, and d and on the universally quantified n."
+      ]
+    },
+    "statement_nl": "Let A,B,d be integers with A >= B >= 0 and d >= 0, and define Q(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)), with the empty product equal to 1 if d=0. For each positive integer n define mu_n(C,d) := #{ i in {1,...,d} : n divides C+i }. Then Q(q) belongs to Q[q] if and only if mu_n(B,d) <= mu_n(A,d) for every positive integer n."
+  },
+  "problem_id": "prob_20260324194836_a87fa006",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.97,
+    "dependency_assessment": {
+      "forbidden_dependencies": false,
+      "notes": "Self-contained proof; no solver-declared citations used.",
+      "undeclared_citations": false,
+      "uses_only_declared_or_self_contained": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The reduction from Q(q) in Q[q] to divisibility D | N in Q[q], and the transfer of divisibility between Q and C, is mathematically sound.",
+        "location": "first two paragraphs",
+        "severity": "low"
+      },
+      {
+        "finding": "The root-multiplicity analysis is correct: 1-q^m has a simple root at alpha exactly when alpha is a root of unity with order dividing m, so the multiplicities in N and D are exactly the counting functions mu_n(A,d) and mu_n(B,d).",
+        "location": "middle and final paragraphs",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260325041540_97ee9220",
+    "proof_status": "complete",
+    "reason": "The proof gives a complete equivalence. It correctly reduces polynomiality of N/D to divisibility D | N in Q[q], justifies that divisibility over Q is equivalent to divisibility over C, and then characterizes divisibility over C by comparing root multiplicities at every complex number. The multiplicity of a factor 1-q^m at a complex number alpha is correctly shown to be 1 exactly when alpha is a root of unity whose order divides m, and 0 otherwise; summing these multiplicities over the product gives precisely mu_n(B,d) and mu_n(A,d). Since primitive n-th roots exist for every positive integer n, this yields the claimed iff criterion. No undeclared or forbidden dependencies are used.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260325041540_97ee9220",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-25T04:24:51.700910Z",
+  "worker_job_id": "wrk_lem_20260325041540_97ee9220_g1_vet_1",
+  "worker_kind": "lemma_vetter"
+}

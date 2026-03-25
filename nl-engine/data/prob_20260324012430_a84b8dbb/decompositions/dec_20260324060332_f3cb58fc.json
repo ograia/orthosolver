@@ -1,0 +1,333 @@
+{
+  "assembly_plan_id": "asm_20260324060332_bbdaccab",
+  "controller_status": "failed",
+  "created_at": "2026-03-24T06:06:44.807951Z",
+  "decomposition_id": "dec_20260324060332_f3cb58fc",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 2.26,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "lem_20260324013805_2c445eb6",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260324041735_595c0a1b",
+      "disguised_difficulty": [
+        "L3",
+        "L4"
+      ],
+      "drift_severity": "none",
+      "failure_mode": "rejected_fatal:failed",
+      "fixes_required": [
+        "Lemma L4 is false as stated; replace the lexicographic-initial-segment extremality claim with a correct compression/extremal lemma or change the ordering/compression notion. The counterexample is m=4, g=5, A={(2,1,2),(2,2,1),(3,1,1)}.",
+        "Because A3-A4 rely on L4, the Hall-reduction part of the proof must be rebuilt after repairing L4 or replacing it with a valid alternative."
+      ],
+      "full_candidate": {
+        "assembly_plan": {
+          "proof_skeleton_nl": "Construct the graph of all valid one-coordinate genus-raising moves. The difficult combinatorial part is to verify Hall's condition. This is reduced to lexicographic initial segments by a compression lemma, and then proved on those initial segments by a separate neighborhood lower bound. Hall's theorem then produces a matching from every x in K_{m,g} to a distinct y in K_{m,g+1}, which is exactly the required injection.",
+          "steps": [
+            {
+              "derives": "For the fixed integers m >= 2 and g >= 0, both K_{m,g} and K_{m,g+1} are finite. Therefore the one-step increment graph G_{m,g}, whose left vertices are K_{m,g}, whose right vertices are K_{m,g+1}, and whose edges are x~y exactly when y differs from x by increasing one coordinate by 1, is a finite bipartite graph.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Every x in K_{m,g} has at least one neighbor in G_{m,g}: choose an index r where x_r is minimal, then L2 gives x+e_r in K_{m,g+1}, so x is adjacent to x+e_r. This records the basic local extension property of the graph.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Let A be an arbitrary subset of K_{m,g}, and set n = |A|. Let I_n be the set of the n lexicographically smallest elements of K_{m,g}. By L4, the neighborhood of A in G_{m,g} satisfies |N(A)| >= |N(I_n)|. Thus, to prove Hall's inequality for A, it is enough to prove it for the corresponding initial segment I_n.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "By L3, the initial segment I_n has at least n neighbors in G_{m,g}, so |N(I_n)| >= n. Combining this with A3 gives |N(A)| >= |N(I_n)| >= n = |A|. Therefore the arbitrary subset A satisfies Hall's inequality.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "Because A was an arbitrary subset of K_{m,g}, the conclusion of A4 shows that every subset A of the left vertex set K_{m,g} satisfies |N(A)| >= |A|. Hence the bipartite graph G_{m,g} satisfies Hall's condition on its left side.",
+              "is_trivial": true,
+              "step_id": "A5",
+              "trivial_justification": "This is direct universal generalization from the arbitrary subset A considered in A4.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A4"
+              ]
+            },
+            {
+              "derives": "Applying Hall's theorem L5 to the finite bipartite graph G_{m,g} yields an injective function f:K_{m,g} -> K_{m,g+1} such that each x in K_{m,g} is adjacent to f(x) in G_{m,g}. In particular, f really has codomain K_{m,g+1} and is injective.",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A5"
+              ]
+            },
+            {
+              "derives": "Set J_{m,g} = f. Then J_{m,g} is an injective function from K_{m,g} to K_{m,g+1}. Therefore, for the given integers m >= 2 and g >= 0, there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}.",
+              "is_trivial": true,
+              "step_id": "A7",
+              "trivial_justification": "This is just renaming the injective map f obtained in A6.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A6"
+              ]
+            }
+          ]
+        },
+        "lemmas": [
+          {
+            "formalization_cost_estimate": 0.05,
+            "local_id": "L1",
+            "role_in_assembly": "Ensures the increment graph between K_{m,g} and K_{m,g+1} is finite, so Hall's theorem applies.",
+            "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=g and such that for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, and if i+j > m then x_i+x_j+1 >= x_{i+j-m}. Then K_{m,g} is a finite set."
+          },
+          {
+            "formalization_cost_estimate": 0.18,
+            "local_id": "L2",
+            "role_in_assembly": "Shows that every left vertex in the increment graph has at least one outgoing edge; this is the local extension property behind the graph construction.",
+            "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} and K_{m,g+1} as follows: K_{m,h} is the set of all tuples z=(z_1,...,z_{m-1}) of positive integers such that z_1+...+z_{m-1}=h and such that for all i,j in {1,...,m-1}, if i+j < m then z_i+z_j >= z_{i+j}, and if i+j > m then z_i+z_j+1 >= z_{i+j-m}. Suppose x=(x_1,...,x_{m-1}) belongs to K_{m,g}, and let r in {1,...,m-1} satisfy x_r <= x_k for every k in {1,...,m-1}. Define y=(y_1,...,y_{m-1}) by y_r=x_r+1 and y_k=x_k for k != r. Then y belongs to K_{m,g+1}."
+          },
+          {
+            "formalization_cost_estimate": 0.88,
+            "local_id": "L3",
+            "role_in_assembly": "Provides the key lower bound on neighborhoods for the special subsets that are expected to minimize neighborhood size.",
+            "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. For h equal to g or g+1, define K_{m,h} to be the set of all tuples z=(z_1,...,z_{m-1}) of positive integers such that z_1+...+z_{m-1}=h and such that for all i,j in {1,...,m-1}, if i+j < m then z_i+z_j >= z_{i+j}, and if i+j > m then z_i+z_j+1 >= z_{i+j-m}. Define a bipartite graph G_{m,g} with left vertex set K_{m,g} and right vertex set K_{m,g+1}; a left vertex x and a right vertex y are adjacent exactly when there exists r in {1,...,m-1} such that y_r=x_r+1 and y_k=x_k for all k != r. Order tuples in Z^{m-1} lexicographically: x <_lex y if at the first coordinate where x and y differ, the tuple x has the smaller entry. For each integer n with 0 <= n <= |K_{m,g}|, let I_n be the set consisting of the n lexicographically smallest elements of K_{m,g}. Then the neighborhood N_{G_{m,g}}(I_n) has cardinality at least n."
+          },
+          {
+            "formalization_cost_estimate": 0.92,
+            "local_id": "L4",
+            "role_in_assembly": "Reduces Hall's condition for arbitrary subsets to Hall's condition for lexicographic initial segments.",
+            "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. For h equal to g or g+1, define K_{m,h} to be the set of all tuples z=(z_1,...,z_{m-1}) of positive integers such that z_1+...+z_{m-1}=h and such that for all i,j in {1,...,m-1}, if i+j < m then z_i+z_j >= z_{i+j}, and if i+j > m then z_i+z_j+1 >= z_{i+j-m}. Define a bipartite graph G_{m,g} with left vertex set K_{m,g} and right vertex set K_{m,g+1}; a left vertex x and a right vertex y are adjacent exactly when there exists r in {1,...,m-1} such that y_r=x_r+1 and y_k=x_k for all k != r. Order tuples in Z^{m-1} lexicographically: x <_lex y if at the first coordinate where x and y differ, the tuple x has the smaller entry. Let A be any subset of K_{m,g}, let n=|A|, and let I_n be the set consisting of the n lexicographically smallest elements of K_{m,g}. Then |N_{G_{m,g}}(A)| >= |N_{G_{m,g}}(I_n)|."
+          },
+          {
+            "formalization_cost_estimate": 0.12,
+            "local_id": "L5",
+            "role_in_assembly": "Converts the neighborhood inequalities into an injective choice of distinct right neighbors, which is exactly the desired map.",
+            "statement_nl": "Let L and R be finite sets, and let G be a bipartite graph with left vertex set L and right vertex set R. For a subset A of L, let N_G(A) be the set of all vertices of R adjacent to at least one vertex of A. If every subset A of L satisfies |N_G(A)| >= |A|, then there exists an injective function f:L -> R such that each x in L is adjacent in G to f(x)."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For integers m >= 2 and h >= 0, K_{m,h} is the set of tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=h and, for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, while if i+j > m then x_i+x_j+1 >= x_{i+j-m}.",
+            "label": "K_definition"
+          },
+          {
+            "content": "For x in K_{m,g} and r in {1,...,m-1}, write x+e_r for the tuple obtained by increasing the r-th coordinate by 1 and leaving all other coordinates unchanged. The one-step increment graph G_{m,g} has left part K_{m,g}, right part K_{m,g+1}, and edges x~y exactly when y=x+e_r for some r.",
+            "label": "increment_graph"
+          },
+          {
+            "content": "Lexicographic order on tuples in Z^{m-1}: x <_lex y if, at the first coordinate where x and y differ, the tuple x has the smaller entry.",
+            "label": "lex_order"
+          }
+        ],
+        "strategy_summary": "Build the bipartite graph whose left vertices are tuples in K_{m,g}, whose right vertices are tuples in K_{m,g+1}, and whose edges correspond to increasing exactly one coordinate by 1. Prove Hall's condition for this graph by a lexicographic compression principle: among all left subsets of a fixed size, lexicographic initial segments have the smallest neighborhoods, and every such initial segment has at least as many neighbors as vertices. Hall's marriage theorem then gives the desired injection."
+      },
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [],
+      "strategy_summary": "Build the bipartite graph whose left vertices are tuples in K_{m,g}, whose right vertices are tuples in K_{m,g+1}, and whose edges correspond to increasing exactly one coordinate by 1. Prove Hall's condition for this graph by a lexicographic compression principle: among all left subsets of a fixed size, lexicographic initial segments have the smallest neighborhoods, and every such initial segment has at least as many neighbors as vertices. Hall's marriage theorem then gives the desired injection.",
+      "vet_summary": "Fatal: lemma L4 is false. For m=4 and g=5, the 3-element subset A={(2,1,2),(2,2,1),(3,1,1)} of K_{4,5} has only 5 neighbors in G_{4,5}, while the 3-element lexicographic initial segment I_3={(1,2,2),(2,1,2),(2,2,1)} has 6 neighbors, contradicting |N(A)| >= |N(I_3)|. Assuming the lemmas, the Hall-based assembly is otherwise logically complete; L2 is unused."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260324042135_12955923",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "failure_mode": "rejected_fatal:failed",
+      "fixes_required": [
+        "Replace or substantially weaken L5. The claimed same-chamber injection E_{m,sigma,g} -> E_{m,sigma,g+1} is false; a different lemma allowing cross-chamber movement or a genuinely global construction is needed.",
+        "Lemma L4 references K_{m,g} without defining it locally \u2014 must inline the positivity, sum, and conditional inequality clauses into Lemma L4.",
+        "Lemma L6 references K_{m,g} and K_{m,g+1} without defining them locally \u2014 must inline the definition (or define K_{m,h} parametrically) into Lemma L6."
+      ],
+      "full_candidate": {
+        "assembly_plan": {
+          "proof_skeleton_nl": "Encode each tuple by first sorting its coordinates with deterministic tie-breaking, then recording cumulative differences between consecutive sorted values. This partitions K_{m,g} into disjoint chambers indexed by permutations. Inside a fixed chamber, the genus and Kunz conditions are linear in the difference variables. A chamberwise injection from degree g to degree g+1 is then assumed/proved on those encoded chambers. Finally, decode chamberwise and take the disjoint union over all chambers to obtain the global injection on K_{m,g}.",
+          "steps": [
+            {
+              "derives": "For every positive tuple x in K_{m,g}, there is a unique sorting permutation sigma_x and a unique difference vector e(x) from which x can be reconstructed by cumulative sums. This gives the basic encoding data needed for the chamber decomposition.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The set K_{m,g} splits as a disjoint union of the chambers X_{m,sigma,g} indexed by permutations sigma of {1,...,m-1}. For each fixed sigma, the encoding x -> e(x) is a bijection from X_{m,sigma,g} onto the corresponding encoded set E_{m,sigma,g}. Thus the global problem decomposes into independent sigma-chambers.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "Inside any fixed chamber sigma, the total sum condition x_1+...+x_{m-1}=g becomes the weighted degree equation sum_{r=0}^{m-2}(m-1-r)e_r = g by L2, and the Kunz inequalities become a finite linear system in the variables e by L4. Therefore E_{m,sigma,g} and E_{m,sigma,g+1} are exactly the encoded degree-g and degree-(g+1) slices of the same chamberwise constraint system.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L2",
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For each permutation sigma, apply L5 to obtain an injective chamberwise map I_{m,sigma,g}:E_{m,sigma,g} -> E_{m,sigma,g+1}. This gives a genus-raising injection separately on every encoded chamber.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "Using the uniqueness of the sorting permutation and the family of chamberwise injections from A4, L6 constructs a global map J_{m,g}:K_{m,g} -> K_{m,g+1} by: encode x by its chamber label sigma_x and its difference vector e(x), apply the chamberwise map I_{m,sigma_x,g}, and decode back by cumulative sums. The same lemma shows that this piecewise-defined map is well-defined and injective.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2",
+                "A4"
+              ]
+            },
+            {
+              "derives": "Therefore, for the given integers m >= 2 and g >= 0, there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}.",
+              "is_trivial": true,
+              "step_id": "A6",
+              "trivial_justification": "A5 already constructs such a function and proves its injectivity.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            }
+          ]
+        },
+        "lemmas": [
+          {
+            "formalization_cost_estimate": 0.16,
+            "local_id": "L1",
+            "role_in_assembly": "Introduces the chamber decomposition parameter sigma_x and the cumulative-difference coordinates used in the chamberwise argument.",
+            "statement_nl": "Let m be an integer with m >= 2 and let x=(x_1,...,x_{m-1}) be a tuple of positive integers. There is a unique permutation sigma_x of {1,...,m-1} such that x_{sigma_x(1)} <= x_{sigma_x(2)} <= ... <= x_{sigma_x(m-1)} and, whenever x_{sigma_x(a)} = x_{sigma_x(b)} with a < b, one has sigma_x(a) < sigma_x(b). Define e_0 = x_{sigma_x(1)} and, for each r with 1 <= r <= m-2, define e_r = x_{sigma_x(r+1)} - x_{sigma_x(r)}. Then e_0 is a positive integer, each e_r is a nonnegative integer, and x is uniquely recovered from the data (sigma_x,e_0,...,e_{m-2}) by the formulas x_{sigma_x(k)} = e_0+e_1+...+e_{k-1} for 1 <= k <= m-1."
+          },
+          {
+            "formalization_cost_estimate": 0.08,
+            "local_id": "L2",
+            "role_in_assembly": "Translates the genus parameter g into a weighted degree condition on the difference variables.",
+            "statement_nl": "Let m be an integer with m >= 2, let sigma be a permutation of {1,...,m-1}, and let e=(e_0,...,e_{m-2}) be a vector such that e_0 is a positive integer and e_1,...,e_{m-2} are nonnegative integers. Define a tuple x=(x_1,...,x_{m-1}) by x_{sigma(k)} = e_0+e_1+...+e_{k-1} for 1 <= k <= m-1. Then x_1+...+x_{m-1} = sum_{r=0}^{m-2} (m-1-r)e_r."
+          },
+          {
+            "formalization_cost_estimate": 0.22,
+            "local_id": "L3",
+            "role_in_assembly": "Creates the disjoint chamber decomposition of K_{m,g} and identifies each chamber with its encoded difference-vector set.",
+            "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=g and such that for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, and if i+j > m then x_i+x_j+1 >= x_{i+j-m}. For a permutation sigma of {1,...,m-1}, define X_{m,sigma,g} to be the set of all x in K_{m,g} such that the unique permutation ordering the pairs (x_i,i) in nondecreasing lexicographic order is sigma. For x in X_{m,sigma,g}, define its difference vector e=(e_0,...,e_{m-2}) by e_0=x_{sigma(1)} and e_r=x_{sigma(r+1)}-x_{sigma(r)} for 1 <= r <= m-2. Let E_{m,sigma,g} be the set of all such difference vectors e obtained from elements of X_{m,sigma,g}. Then the map x -> e is a bijection from X_{m,sigma,g} onto E_{m,sigma,g}, and K_{m,g} is the disjoint union of the sets X_{m,sigma,g} over all permutations sigma of {1,...,m-1}."
+          },
+          {
+            "formalization_cost_estimate": 0.35,
+            "local_id": "L4",
+            "role_in_assembly": "Shows that each chamber is governed by linear constraints in the encoded variables, making the chamberwise injection problem a linear/combinatorial problem in e-space.",
+            "statement_nl": "Let m be an integer with m >= 2, let g be an integer with g >= 0, let sigma be a permutation of {1,...,m-1}, and let e=(e_0,...,e_{m-2}) be a vector such that e_0 is a positive integer and e_1,...,e_{m-2} are nonnegative integers. Define x=(x_1,...,x_{m-1}) by x_{sigma(k)} = e_0+e_1+...+e_{k-1} for 1 <= k <= m-1. Then the assertion that x belongs to K_{m,g} is equivalent to the conjunction of two conditions: first, the weighted-sum equation sum_{r=0}^{m-2} (m-1-r)e_r = g; second, the finite family of linear inequalities in the variables e obtained by replacing each x_t in the formulas x_i+x_j >= x_{i+j} for i+j < m and x_i+x_j+1 >= x_{i+j-m} for i+j > m by the corresponding partial-sum expression determined by sigma."
+          },
+          {
+            "formalization_cost_estimate": 0.9,
+            "local_id": "L5",
+            "role_in_assembly": "This is the main hard step: a chamberwise injection after the order-type sigma has been fixed.",
+            "statement_nl": "Let m be an integer with m >= 2, let g be an integer with g >= 0, and let sigma be a permutation of {1,...,m-1}. For a vector e=(e_0,...,e_{m-2}) with e_0 a positive integer and e_1,...,e_{m-2} nonnegative integers, define x=(x_1,...,x_{m-1}) by x_{sigma(k)} = e_0+e_1+...+e_{k-1} for 1 <= k <= m-1. Let E_{m,sigma,g} be the set of all such vectors e for which x_1+...+x_{m-1}=g, the tuple x satisfies the inequalities that define K_{m,g}, namely x_i+x_j >= x_{i+j} whenever i+j < m and x_i+x_j+1 >= x_{i+j-m} whenever i+j > m, and the unique permutation ordering the pairs (x_i,i) in nondecreasing lexicographic order is exactly sigma. Then there exists an injective function I_{m,sigma,g}:E_{m,sigma,g} -> E_{m,sigma,g+1}."
+          },
+          {
+            "formalization_cost_estimate": 0.18,
+            "local_id": "L6",
+            "role_in_assembly": "Performs the formal assembly: decode the chamberwise injections and take their disjoint union to obtain the global map on K_{m,g}.",
+            "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. For each permutation sigma of {1,...,m-1}, define E_{m,sigma,h} for h=g and h=g+1 as follows: a vector e=(e_0,...,e_{m-2}) with e_0 a positive integer and e_1,...,e_{m-2} nonnegative integers belongs to E_{m,sigma,h} when the tuple x determined by x_{sigma(k)} = e_0+e_1+...+e_{k-1} for 1 <= k <= m-1 has x_1+...+x_{m-1}=h, satisfies x_i+x_j >= x_{i+j} whenever i+j < m and x_i+x_j+1 >= x_{i+j-m} whenever i+j > m, and has the unique sorting permutation sigma, meaning that the pairs (x_i,i) are in nondecreasing lexicographic order exactly in the order sigma. Suppose that for every permutation sigma of {1,...,m-1} there exists an injective map I_{m,sigma,g}:E_{m,sigma,g} -> E_{m,sigma,g+1}. For x in K_{m,g}, let sigma_x be its unique sorting permutation, let e(x) be its difference vector defined by e_0=x_{sigma_x(1)} and e_r=x_{sigma_x(r+1)}-x_{sigma_x(r)} for 1 <= r <= m-2, let e'(x)=I_{m,sigma_x,g}(e(x)), and define J_{m,g}(x) to be the tuple y recovered from e'(x) by y_{sigma_x(k)} = e'_0(x)+e'_1(x)+...+e'_{k-1}(x) for 1 <= k <= m-1. Then J_{m,g} is a well-defined injective function from K_{m,g} to K_{m,g+1}."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For integers m >= 2 and h >= 0, K_{m,h} is the set of tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=h and, for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, while if i+j > m then x_i+x_j+1 >= x_{i+j-m}.",
+            "label": "K_definition"
+          },
+          {
+            "content": "For a positive tuple x=(x_1,...,x_{m-1}), let sigma_x be the unique permutation of {1,...,m-1} that orders the pairs (x_i,i) in nondecreasing lexicographic order. Define e_0 = x_{sigma_x(1)} and e_r = x_{sigma_x(r+1)} - x_{sigma_x(r)} for 1 <= r <= m-2. Then x_{sigma_x(k)} = e_0+...+e_{k-1}.",
+            "label": "sorted_difference_encoding"
+          }
+        ],
+        "strategy_summary": "Partition K_{m,g} into disjoint chambers according to the sorted order of the coordinates, with ties broken by the index. Inside a fixed chamber, encode a tuple by the cumulative differences between consecutive sorted coordinates. The Kunz inequalities then become a finite linear system in these difference variables. Prove a genus-raising injection separately inside each chamber, and then decode and assemble the chamberwise injections into a global injection."
+      },
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [
+        "L4: K_{m,g} is referenced but not locally defined; inline the full definition of K_{m,g} (positivity, sum g, and the two conditional inequality families).",
+        "L6: K_{m,g} and K_{m,g+1} are used as domain/codomain but not locally defined; inline the full definition, or define K_{m,h} for arbitrary h, in the lemma statement."
+      ],
+      "strategy_summary": "Partition K_{m,g} into disjoint chambers according to the sorted order of the coordinates, with ties broken by the index. Inside a fixed chamber, encode a tuple by the cumulative differences between consecutive sorted coordinates. The Kunz inequalities then become a finite linear system in these difference variables. Prove a genus-raising injection separately inside each chamber, and then decode and assemble the chamberwise injections into a global injection.",
+      "vet_summary": "L1-L4 and L6 are plausibly correct, and the assembly would yield the root theorem if all lemmas were true. However L5 is false: for m=4 and sigma=(1,2,3), the chamber E_{4,sigma,6} has two elements while E_{4,sigma,7} has only one, so no injective map E_{4,sigma,6} -> E_{4,sigma,7} can exist. There are also self-containment issues: L4 and L6 use K_{m,g} without defining it locally."
+    }
+  ],
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "shared_context": [
+    {
+      "content": "For integers m >= 2 and h >= 0, K_{m,h} is the set of tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=h and, for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, while if i+j > m then x_i+x_j+1 >= x_{i+j-m}.",
+      "label": "K_definition"
+    },
+    {
+      "content": "The increment graph G_{m,g} has left part K_{m,g}, right part K_{m,g+1}, and an edge x~y exactly when y is obtained from x by increasing exactly one coordinate by 1.",
+      "label": "increment_graph"
+    },
+    {
+      "content": "For 1 <= p < q <= m-1 and x in K_{m,g}, an admissible left-transfer sends one unit from coordinate q to coordinate p: y_p=x_p+1, y_q=x_q-1, and y_t=x_t otherwise, provided the resulting tuple y still lies in K_{m,g}. Such a transfer preserves total sum and strictly decreases the weight omega(x)=sum_{r=1}^{m-1} r x_r.",
+      "label": "admissible_transfer"
+    }
+  ],
+  "strategy_summary": "Unlike the rejected lexicographic-initial-segment Hall proof and the false chamberwise injection, this candidate keeps Hall's theorem but replaces lex order by a new admissible-transfer partial order intrinsic to K_{m,g}. The corrected hard steps are: first compress any subset to a lower ideal for this transfer order without enlarging its neighborhood, and then prove Hall's inequality for those lower ideals. This explicitly addresses the request to repair the false L4 by changing the compression notion, and it never uses same-chamber maps.",
+  "updated_at": "2026-03-24T06:06:44.807952Z"
+}

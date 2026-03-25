@@ -1,0 +1,81 @@
+{
+  "assembly_plan_id": "asm_20260320041206_2d4c7d73",
+  "created_at": "2026-03-20T04:15:26.176681Z",
+  "decomposition_id": "dec_20260320041206_23227eb5",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260320035508_76899425",
+  "proof_skeleton_nl": "Fix an arbitrary numerical semigroup S. By L1, S has a conductor c. By L2, the set L = {s in S : s < c} is finite, so |L| is defined. By L3, the minimal generators of S form a finite set, so e is defined. By L4, if g counts the gaps below the conductor, then c = |L| + g. By L5, substituting this identity shows that the desired inequality e * |L| >= c is equivalent to the genus-form inequality (e - 1) * |L| >= g. This is the maximal honest reduction obtainable from standard proved facts. Because the universal genus-form inequality is equivalent in strength to the open Wilf conjecture, the decomposition cannot validly conclude the exact root theorem without adding an unproved theorem-strength ingredient.",
+  "root_node_id": "thm_root_20260320035508_2bc588ab",
+  "steps": [
+    {
+      "derives": "For an arbitrary numerical semigroup S, there exists a unique conductor c.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the statement of L1 instantiated at S.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For that same S and its conductor c, the set L := { s in S : s < c } is finite, so |L| is well-defined.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "Apply L2 to S and the conductor c obtained in A1.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For the same S, the set of minimal generators is finite, and its cardinality e is a well-defined positive integer.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the statement of L3 instantiated at S.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If g := | { n in Z_{>=0} : n < c and n not in S } |, then c = |L| + g.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Apply L4 using the conductor c from A1 and the set L from A2.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "The target inequality e * |L| >= c is equivalent to the genus-form inequality (e - 1) * |L| >= g.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "L5 states precisely this equivalence for a numerical semigroup S once e, c, L, and g are instantiated as in A1-A4.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "The listed lemmas reduce the root theorem to the universal genus-form inequality (e - 1) * |L| >= g, but do not derive that inequality for all numerical semigroups.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "A5 shows that proving the root theorem in full generality is exactly equivalent to proving the genus-form inequality in full generality. The prior failures correctly identified that any additional universally quantified lemma asserting this bound would already be theorem-strength, since the root theorem is the open Wilf conjecture. Therefore no honest assembly from the current established lemmas reaches the exact root claim.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    }
+  ]
+}

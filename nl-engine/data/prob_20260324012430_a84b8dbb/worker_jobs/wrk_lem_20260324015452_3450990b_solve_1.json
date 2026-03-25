@@ -1,0 +1,244 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324015452_3450990b/solver_attempt_1",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-24T01:56:57.135051Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T01:56:37.311495Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lemma_id": "lem_20260324015452_3450990b",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "role_in_assembly": "Provides one side of the inverse relationship, namely Phi(Psi(x)) = x.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "x_r is a positive integer for each r \u2208 {1,...,m-1}",
+        "r ranges over the finite set {1,2,...,m-1}",
+        "S_x includes all integers of the form k*m with k \u2208 Z_{>=0} (so 0 is included in S_x)",
+        "For each r \u2208 {1,...,m-1}, S_x additionally includes all integers of the form q*m + r with q \u2208 Z_{>=0} and q \u2265 x_r",
+        "In the conclusion, q is required to be a positive integer (q \u2208 Z_{>0})"
+      ],
+      "normalized_claim": "For fixed m \u2265 2 and fixed tuple x=(x_1,...,x_{m-1}) with each x_r \u2208 Z_{>0}, define S_x := {k*m : k \u2208 Z_{>=0}} \u222a \u22c3_{r=1}^{m-1} {q*m + r : q \u2208 Z_{>=0}, q \u2265 x_r}. Then for every r \u2208 {1,...,m-1}: (i) x_r*m + r \u2208 S_x, and (ii) for all q \u2208 Z_{>0}, if q*m + r \u2208 S_x then q \u2265 x_r; hence the least positive integer q with q*m + r \u2208 S_x is exactly x_r.",
+      "quantifier_order": [
+        "Fix m \u2208 Z with m \u2265 2",
+        "Fix x_1,...,x_{m-1} \u2208 Z_{>0}",
+        "For each r \u2208 {1,...,m-1}",
+        "Let q be the least element of { q \u2208 Z_{>0} : q*m + r \u2208 S_x }"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "fixed parameter with constraint m >= 2",
+          "type": "integer"
+        },
+        {
+          "domain": "(Z_{>0})^{m-1}",
+          "name": "x",
+          "role": "fixed parameter vector x=(x_1,...,x_{m-1}) of positive integers",
+          "type": "tuple"
+        },
+        {
+          "domain": "{1,2,...,m-1}",
+          "name": "r",
+          "role": "residue class index",
+          "type": "integer"
+        },
+        {
+          "domain": "Z_{>0} (when minimized), and Z_{>=0} in the definition of S_x",
+          "name": "q",
+          "role": "multiplier used in the expression q*m + r; minimized in the claim",
+          "type": "integer"
+        },
+        {
+          "domain": "P(Z)",
+          "name": "S_x",
+          "role": "subset of integers defined in terms of m and x",
+          "type": "set"
+        }
+      ],
+      "witness_dependencies": [
+        "The minimizing q depends on the chosen r (the claim is per-r) and on the parameters (m,x) via the condition q \u2265 x_r in the definition of S_x",
+        "The value that q is asserted to equal, x_r, is the coordinate of the fixed tuple x corresponding to the same residue index r"
+      ]
+    },
+    "shared_context": [
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260324013747_af6fcf4d",
+        "role_in_parent": "Translates the original theorem into a cardinality inequality for the combinatorial sets K_{m,g}.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m \u2208 Z and m >= 2",
+            "g \u2208 Z and g >= 0",
+            "x = (x_1,...,x_{m-1}) with each x_k \u2208 Z_{>0} (positive integers)",
+            "indices i,j range over {1,...,m-1}",
+            "case split conditions: if i+j < m then inequality involves x_{i+j}; if i+j > m then inequality involves x_{i+j-m} (which is within {1,...,m-1})",
+            "sum constraint: x_1 + ... + x_{m-1} = g"
+          ],
+          "normalized_claim": "Fix integers m>=2 and g>=0. Let K_{m,g} be the set of tuples x=(x_1,...,x_{m-1}) with x_k>0 for all k and x_1+...+x_{m-1}=g, such that for every i,j\u2208{1,...,m-1}: (i+j<m \u21d2 x_i+x_j\u2265x_{i+j}) and (i+j>m \u21d2 x_i+x_j+1\u2265x_{i+j-m}). Then the number N(m,g) of numerical semigroups with multiplicity m and genus g equals the cardinality |K_{m,g}|.",
+          "quantifier_order": [
+            "For all integers m with m >= 2",
+            "For all integers g with g >= 0",
+            "K_{m,g} = { x : (x is a tuple (x_1,...,x_{m-1})) such that (x_1+...+x_{m-1}=g) and (for all i,j in {1,...,m-1}, the Kunz inequalities hold under the stated cases) }",
+            "Claim: N(m,g) = |K_{m,g}|"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z^{m-1} with coordinates restricted to positive integers",
+              "name": "x",
+              "role": "Kunz-coordinate tuple; used to define membership in K_{m,g}",
+              "type": "tuple of integers"
+            },
+            {
+              "domain": "Z_{>0}",
+              "name": "x_1,...,x_{m-1}",
+              "role": "coordinates of x; constrained by Kunz inequalities and by sum condition",
+              "type": "integer (coordinate variables)"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "i",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "j",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "Any inequalities are universal over i,j; no existential witnesses are introduced beyond choosing x as an element of K_{m,g}.",
+            "Membership witness for cardinality |K_{m,g}| is the tuple x, whose allowable set depends on the fixed parameters (m,g).",
+            "Inequalities for x depend on i and j but not on any additional choices."
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that x satisfies the Kunz inequalities for multiplicity m, namely: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Then N(m,g), the number of numerical semigroups of multiplicity m and genus g, is equal to the cardinality of K_{m,g}."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324012430_9851dde8",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2",
+            "g is an integer with g \u2265 0",
+            "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+          ],
+          "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+          "quantifier_order": [
+            "\u2200 m \u2208 Z (m \u2265 2)",
+            "\u2200 g \u2208 Z (g \u2265 0)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "N0",
+              "name": "N(m,g)",
+              "role": "count of numerical semigroups with multiplicity m and genus g",
+              "type": "nonnegative integer (cardinality)"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+      }
+    ],
+    "statement_nl": "Fix an integer m >= 2 and a tuple x=(x_1,...,x_{m-1}) of positive integers. Define S_x to be the set consisting of all nonnegative multiples of m and, for each r in {1,...,m-1}, all integers q m + r where q is a nonnegative integer and q >= x_r. Then for each r in {1,...,m-1}, the least positive integer q such that q m + r belongs to S_x is exactly x_r.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "lemma_id": "lem_20260324015452_3450990b",
+    "proof_nl": "Fix an integer m>=2 and a tuple x=(x_1,\u2026,x_{m-1}) with each x_r>0. Define\nS_x:=\\{km:k\\in \\mathbb Z_{\\ge 0}\\}\\cup \\bigcup_{t=1}^{m-1}\\{qm+t:q\\in \\mathbb Z_{\\ge 0},\\ q\\ge x_t\\}.\nWe must show that for each fixed r\\in\\{1,\\dots,m-1\\}, the least positive integer q such that qm+r\\in S_x is exactly x_r.\n\nSo fix r\\in\\{1,\\dots,m-1\\}. First, since x_r is a positive integer, it is in particular a nonnegative integer and satisfies x_r\\ge x_r. Therefore, by the defining clause of S_x corresponding to the same residue class r, the integer x_r m+r belongs to S_x. Hence the set\nA_r:=\\{q\\in \\mathbb Z_{>0}: qm+r\\in S_x\\}\nis nonempty, and x_r\\in A_r.\n\nIt remains to show that no positive integer q<x_r belongs to A_r. Let q\\in \\mathbb Z_{>0} and assume qm+r\\in S_x. By the definition of S_x, membership can occur in one of the following ways.\n\n1. It could be that qm+r is a nonnegative multiple of m, say qm+r=km for some k\\in \\mathbb Z_{\\ge 0}. Then r=(k-q)m. But 1\\le r\\le m-1, while the right-hand side is divisible by m. This is impossible.\n\n2. Otherwise, there exists some t\\in\\{1,\\dots,m-1\\} such that qm+r is in the t-th union component, so\nqm+r=q' m+t\nfor some q'\\in \\mathbb Z_{\\ge 0} with q'\\ge x_t.\nRearranging gives\n(q-q')m=t-r.\nNow t-r satisfies -(m-2)\\le t-r\\le m-2, and in particular |t-r|<m. Since the left-hand side is divisible by m, t-r must also be divisible by m. The only multiple of m with absolute value strictly less than m is 0, so t-r=0. Hence t=r. Then (q-q')m=0, so q=q'. Because q'\\ge x_r, we obtain q\\ge x_r.\n\nThus every positive integer q with qm+r\\in S_x satisfies q\\ge x_r. Combined with the earlier observation that x_r m+r\\in S_x, this shows that x_r is the smallest positive integer q for which qm+r\\in S_x.\n\nSince r was arbitrary, the conclusion holds for every r\\in\\{1,\\dots,m-1\\}. Therefore, for each such r, the least positive integer q with qm+r\\in S_x is exactly x_r.",
+    "proof_summary": "For fixed r, the element x_r m+r is in S_x by definition, so such a positive q exists. If qm+r lies in S_x, it cannot be a multiple of m because r\\neq 0 mod m. Hence it must equal q'm+t from one of the residue-class pieces of the union. Then (q-q')m=t-r. Since t,r\\in\\{1,\\dots,m-1\\}, we have |t-r|<m; the only multiple of m in that range is 0, so t=r and q=q'. The defining condition of that piece gives q'=q\\ge x_r. Therefore every admissible positive q is at least x_r, while q=x_r works, so the least such q is exactly x_r.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "If an integer is divisible by m and has absolute value less than m, then it is 0.",
+        "An integer congruent to r mod m with 1<=r<=m-1 cannot be a multiple of m."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null
+  },
+  "status": "completed",
+  "target_id": "lem_20260324015452_3450990b",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T01:56:57.135072Z",
+  "worker_job_id": "wrk_lem_20260324015452_3450990b_solve_1",
+  "worker_kind": "lemma_solver"
+}

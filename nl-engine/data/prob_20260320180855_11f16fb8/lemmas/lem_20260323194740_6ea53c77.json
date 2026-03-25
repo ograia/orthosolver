@@ -1,0 +1,86 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-23T19:47:48.650895Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.91,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260323194740_6ea53c77",
+  "parent_id": "thm_root_20260320180855_1d8d4f17",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_status": "proof_exhausted",
+  "role_in_parent": "Isolates the substantive monotonicity step in the coordinate model; this replaces the false effective-generator child-map from the rejected attempt.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 3,
+  "statement_lean": null,
+  "statement_nl": "Fix integers m and g with m >= 2 and g >= 0. Define K_{m,g} to be the set of all tuples k = (k_1, ..., k_{m-1}) of positive integers such that: for all integers i and j with 1 <= i <= j <= m-1, if i + j < m then k_i + k_j >= k_{i+j}, if i + j > m then k_i + k_j + 1 >= k_{i+j-m}, and also k_1 + ... + k_{m-1} = g. Define K_{m,g+1} analogously, with the same inequalities and with coordinate sum equal to g+1. Then there exists an injective function Phi_{m,g} : K_{m,g} -> K_{m,g+1}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m\u22652",
+      "g is an integer with g\u22650",
+      "K_{m,g} consists of tuples k=(k_1,...,k_{m-1}) where each k_t is a positive integer (k_t\u2208Z_{>0})",
+      "In the membership inequalities, i and j are integers with 1\u2264i\u2264j\u2264m\u22121",
+      "Case split for inequalities uses: if i+j<m then compare with index (i+j) in {2,...,m\u22121}; if i+j>m then compare with index (i+j\u2212m) in {1,...,m\u22122}",
+      "Sum constraint: k_1+...+k_{m-1}=g for K_{m,g}, and =g+1 for K_{m,g+1}"
+    ],
+    "normalized_claim": "For every fixed integers m\u22652 and g\u22650, there exists an injective map \u03a6_{m,g}:K_{m,g}\u2192K_{m,g+1}, where K_{m,g} is the set of all (m\u22121)-tuples k with positive integer entries summing to g and satisfying the stated pairwise inequalities for all integer indices i,j with 1\u2264i\u2264j\u2264m\u22121 (using the two index cases i+j<m and i+j>m). Equivalently: \u2200k\u2208K_{m,g}, \u03a6_{m,g}(k) is a valid element of K_{m,g+1}, and \u03a6_{m,g} is one-to-one on K_{m,g}.",
+    "quantifier_order": [
+      "Fix m\u2208Z with m\u22652; Fix g\u2208Z with g\u22650.",
+      "For the definition of K_{m,g}: element quantifier is implicit (k ranges over tuples), with internal universal quantification: \u2200 i,j\u2208Z (1\u2264i\u2264j\u2264m\u22121) satisfying case conditions (i+j<m or i+j>m) impose inequalities on k.",
+      "Existence claim: \u2203 an injective function \u03a6_{m,g} such that (i) \u2200k\u2208K_{m,g}, \u03a6_{m,g}(k)\u2208K_{m,g+1}, and (ii) \u2200k1,k2\u2208K_{m,g}, k1\u2260k2 \u21d2 \u03a6_{m,g}(k1)\u2260\u03a6_{m,g}(k2)."
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "fixed parameter; controls tuple length and inequality index split",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "g",
+        "role": "fixed parameter; sets the required coordinate sum for K_{m,g}",
+        "type": "integer"
+      },
+      {
+        "domain": "(Z_{>0})^{m-1}",
+        "name": "k",
+        "role": "element of K_{m,g}; k=(k_1,...,k_{m-1}) with positive coordinates",
+        "type": "tuple of integers"
+      },
+      {
+        "domain": "Z",
+        "name": "i",
+        "role": "quantified index in membership inequalities",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "j",
+        "role": "quantified index in membership inequalities",
+        "type": "integer"
+      },
+      {
+        "domain": "from K_{m,g} to K_{m,g+1}",
+        "name": "Phi_{m,g}",
+        "role": "witness of existence; depends on parameters m,g",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "\u03a6_{m,g} may depend on the fixed parameters (m,g) but not on the particular choice of k except through input to the function.",
+      "For injectivity, the distinctness requirement depends only on the inputs k\u2208K_{m,g}."
+    ]
+  },
+  "statement_status": "unvetted",
+  "updated_at": "2026-03-23T19:47:48.650896Z"
+}

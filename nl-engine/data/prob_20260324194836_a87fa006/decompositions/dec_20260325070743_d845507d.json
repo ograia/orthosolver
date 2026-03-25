@@ -1,0 +1,1179 @@
+{
+  "assembly_plan_id": "asm_20260325070743_807d439a",
+  "controller_status": "failed",
+  "created_at": "2026-03-25T07:10:56.624834Z",
+  "decomposition_id": "dec_20260325070743_d845507d",
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "none",
+  "failure_origin": "context_purity",
+  "failure_reason": "Rejected: decomposition context purity validation found a fatal issue.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.82,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "lem_20260325055554_837eceb4",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260325064653_70ac9e3a",
+      "disguised_difficulty": [],
+      "drift_severity": "minor",
+      "equivalence_risk": "none",
+      "failure_mode": "rejected_fatal:failed",
+      "failure_origin": "context_purity",
+      "fixes_required": [
+        "Lemma L1 must be removed or replaced, because it is false. To make the overall theorem true, strengthen the root hypotheses so the full-ideal branch cannot occur (for example require each g_i to have positive degree / lie in m, or require (g_1,...,g_d) to be proper or S/(g_1,...,g_d) \\neq 0).",
+        "Add a lemma or explicitly imported fact that S = k[x_1,...,x_d] is Noetherian before applying L5 in A6.",
+        "Clarify L6 or A8 to cover the d=0 case explicitly."
+      ],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Split into the two possibilities for the generated ideal I=(g_1,...,g_d). The full-ideal branch is isolated as an explicit bottleneck lemma. In the proper-ideal branch, finite-dimensionality forces I to be m-primary, so S/I has Krull dimension 0. Independently, the weighted polynomial ring has Krull dimension d and is Cohen-Macaulay. Therefore the general proper-ideal Cohen-Macaulay regularity theorem applies to g_1,...,g_d and gives the successive non-zero-divisor property. Finally, combine the two branches and translate that property into the phrase 'homogeneous regular sequence'.",
+          "steps": [
+            {
+              "derives": "Let I=(g_1,...,g_d). Then either I=S or I is a proper ideal of S.",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "Every ideal is either the whole ring or proper; this is the exhaustive case split used in the rest of the proof.",
+              "uses_lemmas": [],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "In the case I=S, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "This is a direct application of L1 to the sequence g_1,...,g_d.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "In the case I is proper, the quotient S/I has Krull dimension 0.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "Under the proper-ideal branch, the ideal I is homogeneous because the generators g_1,...,g_d are homogeneous. The root hypothesis gives that S/I is finite-dimensional over k. Applying L2 to this proper homogeneous ideal I yields m^N subseteq I for some N, hence sqrt(I)=m and therefore dim(S/I)=0.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "The ring S has Krull dimension d.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "This is exactly the content of L3.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The underlying commutative ring S is Cohen-Macaulay.",
+              "is_trivial": true,
+              "step_id": "A5",
+              "trivial_justification": "This is exactly the content of L4.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "In the case I is proper, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "Apply L5 with R=S and a_j=g_j. Step A5 gives that R is Cohen-Macaulay. Polynomial rings over fields are Noetherian, so the Noetherian hypothesis in L5 is satisfied. Step A4 gives dim R=d. In the proper-ideal branch, I=(g_1,...,g_d) is proper by assumption of the branch, and Step A3 gives dim(R/I)=0. Therefore all hypotheses of L5 hold, and L5 yields the desired successive non-zero-divisor statements.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A3",
+                "A4",
+                "A5"
+              ]
+            },
+            {
+              "derives": "Without any extra case assumption, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "By Step A1 there are only two possibilities. If I=S, Step A2 gives the desired conclusion. If I is proper, Step A6 gives the same conclusion. By disjunction elimination, the conclusion holds unconditionally.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A2",
+                "A6"
+              ]
+            },
+            {
+              "derives": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d are homogeneous elements of S and S/(g_1,...,g_d) is finite-dimensional over k, then for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor. Equivalently, g_1,...,g_d is a homogeneous regular sequence.",
+              "is_trivial": true,
+              "step_id": "A8",
+              "trivial_justification": "Step A7 gives the first sentence of the theorem. Since the g_i are homogeneous by hypothesis, L6 identifies that sentence exactly with the statement that g_1,...,g_d is a homogeneous regular sequence.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A7"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "S = k[x_1,...,x_d] with deg(x_i) = w_i for positive integers w_i; homogeneity always refers to this weighted grading.",
+            "kind": "definition",
+            "label": "Weighted polynomial ring"
+          },
+          {
+            "content": "m = (x_1,...,x_d) is the homogeneous maximal ideal of S.",
+            "kind": "notation",
+            "label": "Irrelevant maximal ideal"
+          },
+          {
+            "content": "A sequence g_1,...,g_d of homogeneous elements of a graded ring is called a homogeneous regular sequence if for every i with 1 <= i <= d, multiplication by the image of g_i on S/(g_1,...,g_{i-1}) is injective; equivalently, that image is not a zero-divisor there.",
+            "kind": "definition",
+            "label": "Homogeneous regular sequence"
+          },
+          {
+            "content": "Krull dimension, Cohen-Macaulayness, localization, and zero-divisors are taken in the underlying commutative ring; the grading is used only to specify which elements are homogeneous.",
+            "kind": "definition",
+            "label": "Underlying-ring convention"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": [
+            "The standard theorem normally assumes the generated ideal is proper, equivalently in this graded setting that no homogeneous generator is a nonzero constant. As written, the root statement appears to omit that hypothesis; for transparency, the candidates isolate the full-ideal branch as an explicit bottleneck rather than hiding it."
+          ]
+        },
+        "formalization_cost_estimate_total": 0.86,
+        "lemmas": [
+          {
+            "bottleneck_reason": "This isolates the branch where (g_1,...,g_d)=S. The usual system-of-parameters proof only handles proper ideals, so any proof of the theorem as stated must resolve this branch explicitly.",
+            "formalization_cost_estimate": 0.85,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L1",
+            "role_in_assembly": "Handles the exceptional full-ideal branch, which is not covered by the standard proper-ideal Cohen-Macaulay argument.",
+            "self_check_notes": "All notation is introduced locally; this lemma intentionally isolates the full-ideal case with no reference to other lemmas.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "each g_j is homogeneous",
+                "the generated ideal is the unit ideal"
+              ],
+              "normalized_claim": "For every i in {1,...,d}, the image of g_i in S/(g_1,...,g_{i-1}) is a non-zero-divisor.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, the weighted polynomial ring S, and homogeneous elements g_1,...,g_d such that (g_1,...,g_d)=S"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables and generators",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights of the grading",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "(g_1,...,g_d) in S",
+                  "name": "g",
+                  "role": "sequence under study",
+                  "type": "sequence of homogeneous elements"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, let S = k[x_1,...,x_d] graded by deg(x_i)=w_i, and let g_1,...,g_d be homogeneous elements of S. If the ideal generated by g_1,...,g_d is the whole ring S, then for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.3,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "role_in_assembly": "Converts finite-dimensionality of the final quotient into the dimension-zero statement needed for the Cohen-Macaulay regular-sequence theorem, in the proper-ideal branch.",
+            "self_check_notes": "Every symbol is defined in the statement; no hidden dependence on previous lemmas.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "all weights are positive",
+                "I is proper",
+                "I is homogeneous",
+                "S/I is finite-dimensional over k"
+              ],
+              "normalized_claim": "There exists N >= 1 with m^N subseteq I; hence sqrt(I)=m and dim(S/I)=0.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, the ring S, the ideal m=(x_1,...,x_d), and a proper homogeneous ideal I with S/I finite-dimensional over k"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "(x_1,...,x_d)",
+                  "name": "m",
+                  "role": "irrelevant maximal ideal",
+                  "type": "ideal of S"
+                },
+                {
+                  "domain": "proper ideals of S generated by homogeneous elements",
+                  "name": "I",
+                  "role": "ideal under study",
+                  "type": "proper homogeneous ideal"
+                }
+              ],
+              "witness_dependencies": [
+                "the exponent N depends on I and on the weights"
+              ]
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, let S = k[x_1,...,x_d] graded by deg(x_i)=w_i, let m=(x_1,...,x_d), and let I be a proper homogeneous ideal of S. If S/I is finite-dimensional as a k-vector space, then there exists an integer N >= 1 such that m^N is contained in I. Consequently sqrt(I)=m and the quotient ring S/I has Krull dimension 0.",
+            "strictly_easier_reason": "This lemma only turns vector-space finiteness into m-primary behavior of one ideal and does not assert any regularity of the generating sequence."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L3",
+            "role_in_assembly": "Supplies the ambient ring dimension needed to match the number d of generators.",
+            "self_check_notes": "The statement is self-contained and uses only standard notation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d is the number of indeterminates"
+              ],
+              "normalized_claim": "The Krull dimension of k[x_1,...,x_d] is d.",
+              "quantifier_order": [
+                "Given a field k and a nonnegative integer d"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "k[x_1,...,x_d]",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "polynomial ring"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field and let d be a nonnegative integer. The polynomial ring k[x_1,...,x_d] has Krull dimension d. In particular, the same underlying ring equipped with any positive weighted grading deg(x_i)=w_i still has Krull dimension d.",
+            "strictly_easier_reason": "This is a structural fact about polynomial rings, independent of the specific homogeneous elements g_i."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.45,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "role_in_assembly": "Identifies the ambient polynomial ring as Cohen-Macaulay.",
+            "self_check_notes": "No external notation is required beyond the locally defined weighted polynomial ring.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "weights are positive"
+              ],
+              "normalized_claim": "S is Cohen-Macaulay as an ungraded commutative ring.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, and the weighted polynomial ring S"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights of the grading",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] with weighted grading deg(x_i)=w_i. Then the underlying commutative ring S is Cohen-Macaulay; equivalently, for every prime ideal P of S, the local ring S_P has depth equal to its Krull dimension.",
+            "strictly_easier_reason": "This is a general structural property of polynomial rings and does not involve the particular quotient S/(g_1,...,g_d)."
+          },
+          {
+            "bottleneck_reason": "This is the substantive depth-theoretic step: in a Cohen-Macaulay ring, a proper d-tuple whose quotient has dimension 0 is regular.",
+            "formalization_cost_estimate": 0.6,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "role_in_assembly": "Main regular-sequence theorem in the proper-ideal branch.",
+            "self_check_notes": "The statement is self-contained and gives the regular-sequence conclusion explicitly as non-zero-divisor conditions.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "R is Noetherian",
+                "R is Cohen-Macaulay",
+                "dim R = d",
+                "I=(a_1,...,a_d) is proper",
+                "dim(R/I)=0"
+              ],
+              "normalized_claim": "For every i in {1,...,d}, the image of a_i in R/(a_1,...,a_{i-1}) is a non-zero-divisor.",
+              "quantifier_order": [
+                "Given a Noetherian Cohen-Macaulay ring R of Krull dimension d and elements a_1,...,a_d generating a proper ideal I with dim(R/I)=0"
+              ],
+              "variables": [
+                {
+                  "domain": "Noetherian Cohen-Macaulay rings",
+                  "name": "R",
+                  "role": "ambient ring",
+                  "type": "commutative ring"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "common value of dimension and sequence length",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(a_1,...,a_d) in R",
+                  "name": "a",
+                  "role": "candidate regular sequence",
+                  "type": "sequence of ring elements"
+                },
+                {
+                  "domain": "(a_1,...,a_d)",
+                  "name": "I",
+                  "role": "ideal generated by the sequence",
+                  "type": "ideal of R"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let R be a Noetherian Cohen-Macaulay commutative ring of Krull dimension d, where d is a nonnegative integer, and let a_1,...,a_d be elements of R generating a proper ideal I=(a_1,...,a_d). If the quotient ring R/I has Krull dimension 0, then for every i with 1 <= i <= d, the image of a_i in R/(a_1,...,a_{i-1}) is not a zero-divisor.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L6",
+            "role_in_assembly": "Translates the non-zero-divisor conclusion into the theorem's equivalent regular-sequence formulation.",
+            "self_check_notes": "The statement defines the terminology explicitly and does not rely on hidden conventions.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "each g_i is homogeneous"
+              ],
+              "normalized_claim": "The successive non-zero-divisor condition for g_1,...,g_d is equivalent to saying that g_1,...,g_d is a homogeneous regular sequence.",
+              "quantifier_order": [
+                "Given a positively graded commutative ring S and homogeneous elements g_1,...,g_d of S"
+              ],
+              "variables": [
+                {
+                  "domain": "positively graded commutative rings",
+                  "name": "S",
+                  "role": "ambient graded ring",
+                  "type": "graded commutative ring"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "length of the sequence",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(g_1,...,g_d) in S",
+                  "name": "g",
+                  "role": "sequence being characterized",
+                  "type": "sequence of homogeneous elements"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let S be a positively graded commutative ring, and let g_1,...,g_d be homogeneous elements of S. Then the condition that for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor is exactly the statement that g_1,...,g_d is a homogeneous regular sequence, under the convention that regularity means injectivity of each multiplication map on the successive quotients.",
+            "strictly_easier_reason": "This is only a definitional equivalence and contains no commutative-algebra content beyond unpacking terminology."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "S = k[x_1,...,x_d] with deg(x_i) = w_i for positive integers w_i; homogeneity always refers to this weighted grading.",
+            "kind": "definition",
+            "label": "Weighted polynomial ring"
+          },
+          {
+            "content": "m = (x_1,...,x_d) is the homogeneous maximal ideal of S.",
+            "kind": "notation",
+            "label": "Irrelevant maximal ideal"
+          },
+          {
+            "content": "A sequence g_1,...,g_d of homogeneous elements of a graded ring is called a homogeneous regular sequence if for every i with 1 <= i <= d, multiplication by the image of g_i on S/(g_1,...,g_{i-1}) is injective; equivalently, that image is not a zero-divisor there.",
+            "kind": "definition",
+            "label": "Homogeneous regular sequence"
+          },
+          {
+            "content": "Krull dimension, Cohen-Macaulayness, localization, and zero-divisors are taken in the underlying commutative ring; the grading is used only to specify which elements are homogeneous.",
+            "kind": "definition",
+            "label": "Underlying-ring convention"
+          }
+        ],
+        "strategy_summary": "Global Cohen-Macaulay strategy with an explicit case split: isolate the full-ideal branch as a bottleneck, and in the proper-ideal branch convert finite-dimensionality into a dimension-zero quotient, then use that the weighted polynomial ring is Cohen-Macaulay of dimension d so a proper d-tuple with zero-dimensional quotient is regular."
+      },
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [
+        "A6 needs a lemma or explicit imported fact that polynomial rings over fields are Noetherian in order to satisfy the hypotheses of L5."
+      ],
+      "rejection_reason": "Rejected: decomposition context purity validation found a fatal issue.",
+      "strategy_summary": "Global Cohen-Macaulay strategy with an explicit case split: isolate the full-ideal branch as a bottleneck, and in the proper-ideal branch convert finite-dimensionality into a dimension-zero quotient, then use that the weighted polynomial ring is Cohen-Macaulay of dimension d so a proper d-tuple with zero-dimensional quotient is regular.",
+      "vet_summary": "Fatal: L1 is false, so the full-ideal branch does not work; in fact the root theorem as stated is false. A concrete counterexample is S = k[x,y,z] with g_1 = x, g_2 = xy, g_3 = 1, where S/(g_1,g_2,g_3)=0 is finite-dimensional but g_2 maps to 0 in S/(g_1), hence is a zero-divisor there under the stated annihilator definition."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260325065134_10300b3f",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "medium",
+      "failure_mode": "rejected_fatal:failed",
+      "failure_origin": "context_purity",
+      "fixes_required": [
+        "The root theorem needs an added hypothesis excluding the unit-ideal pathology, e.g. require each g_i to have positive degree / lie in m, or require (g_1,...,g_d) to be proper. Without such a hypothesis the theorem is false.",
+        "Lemma L1 must be removed or radically weakened; it is false as stated.",
+        "After strengthening the theorem hypothesis to force the proper-ideal branch, the A1-A2 unit-ideal branch can be deleted and the remaining localization argument can be used."
+      ],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "First split off the branch where the generated ideal is the whole ring; that exceptional case is isolated as an explicit bottleneck. In the proper-ideal branch, finite-dimensionality implies the ideal is m-primary, so after localizing at m=(x_1,...,x_d) the quotient has finite length. Properness plus homogeneity also forces every generator to lie in m. The local ring S_m is regular local of dimension d, so the localized sequence g_1/1,...,g_d/1 is regular by the regular-local criterion. Localization-quotient compatibility then identifies the localized successive quotients, and a graded local-to-global injectivity lemma descends injectivity from each localized quotient back to the original graded quotient. Finally combine the two branches and rewrite the result as the statement that g_1,...,g_d is a homogeneous regular sequence.",
+          "steps": [
+            {
+              "derives": "Let I=(g_1,...,g_d). Then either I=S or I is a proper ideal of S.",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "This is the basic dichotomy between the unit ideal and a proper ideal.",
+              "uses_lemmas": [],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "In the case I=S, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "This is the direct content of L1.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "In the case I is proper, the localized quotient S_m / I S_m has finite length as an S_m-module.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "Under the proper-ideal branch, I is a proper homogeneous ideal because the generators g_1,...,g_d are homogeneous. The root hypothesis gives that S/I is finite-dimensional over k. Applying L2 yields m^N subseteq I for some N, and hence after localizing at m the quotient S_m/IS_m is a finite-length S_m-module.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "In the case I is proper, each generator g_i belongs to m, and therefore each localized element g_i/1 belongs to m S_m.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "Apply L3 to the proper homogeneous ideal I=(g_1,...,g_d). Since localization sends m into mS_m, each g_i/1 lies in the maximal ideal of S_m.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "The localization S_m is a regular local ring of Krull dimension d with maximal ideal m S_m.",
+              "is_trivial": true,
+              "step_id": "A5",
+              "trivial_justification": "This is exactly the assertion of L4.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "In the case I is proper, for every i with 1 <= i <= d, the image of g_i/1 in S_m / (g_1,...,g_{i-1}) S_m is not a zero-divisor.",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "Apply L5 to the regular local ring R=S_m from Step A5 and to the sequence a_j=g_j/1. Step A4 gives a_j in mS_m for every j, and Step A3 gives that R/(a_1,...,a_d)=S_m/IS_m has finite length. Therefore L5 yields that for each i, multiplication by g_i/1 is injective on S_m/(g_1,...,g_{i-1})S_m.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A3",
+                "A4",
+                "A5"
+              ]
+            },
+            {
+              "derives": "In the case I is proper, for every i with 1 <= i <= d, multiplication by g_i on the localized module (S/(g_1,...,g_{i-1}))_m is injective.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "Fix i and set I_{i-1}=(g_1,...,g_{i-1}). Lemma L6 with R=S, U the complement of m, h=g_i, and I=I_{i-1} identifies (S/I_{i-1})_m with S_m/I_{i-1}S_m and identifies the localized multiplication-by-g_i map with multiplication by g_i/1 on S_m/I_{i-1}S_m. Step A6 says the latter map is injective, so the former localized map is injective.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A6"
+              ]
+            },
+            {
+              "derives": "For every i with 1 <= i <= d, the quotient M_i := S/(g_1,...,g_{i-1}) is a finitely generated graded S-module, and g_i is a homogeneous element of S.",
+              "is_trivial": true,
+              "step_id": "A8",
+              "trivial_justification": "Each ideal (g_1,...,g_{i-1}) is homogeneous because its generators are homogeneous, so the quotient M_i inherits a grading. As a quotient of the Noetherian ring S, each M_i is finitely generated. Homogeneity of g_i is part of the theorem hypothesis.",
+              "uses_lemmas": [],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "In the case I is proper, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+              "is_trivial": false,
+              "step_id": "A9",
+              "trivial_justification": "Fix i and let M_i=S/(g_1,...,g_{i-1}). Step A8 gives that M_i is a finitely generated graded S-module and that g_i is homogeneous. Step A7 gives injectivity of multiplication by g_i on (M_i)_m. Applying L7 to M_i and g_i yields injectivity of multiplication by g_i on M_i itself. Since i was arbitrary, the non-zero-divisor statement holds for every i.",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": [
+                "A7",
+                "A8"
+              ]
+            },
+            {
+              "derives": "Without any extra case assumption, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+              "is_trivial": false,
+              "step_id": "A10",
+              "trivial_justification": "By Step A1 there are only two cases. If I=S, Step A2 gives the desired conclusion. If I is proper, Step A9 gives the same conclusion. Therefore the conclusion holds unconditionally.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A2",
+                "A9"
+              ]
+            },
+            {
+              "derives": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d are homogeneous elements of S and S/(g_1,...,g_d) is finite-dimensional over k, then for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor. Equivalently, g_1,...,g_d is a homogeneous regular sequence.",
+              "is_trivial": true,
+              "step_id": "A11",
+              "trivial_justification": "Step A10 gives the successive non-zero-divisor statement. Because the g_i are homogeneous, L8 identifies that statement exactly with the assertion that g_1,...,g_d is a homogeneous regular sequence.",
+              "uses_lemmas": [
+                "L8"
+              ],
+              "uses_prior_steps": [
+                "A10"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 1,
+        "context_items": [
+          {
+            "content": "S = k[x_1,...,x_d] with deg(x_i) = w_i for positive integers w_i; homogeneity always refers to this weighted grading.",
+            "kind": "definition",
+            "label": "Weighted polynomial ring"
+          },
+          {
+            "content": "m = (x_1,...,x_d) is the homogeneous maximal ideal of S.",
+            "kind": "notation",
+            "label": "Irrelevant maximal ideal"
+          },
+          {
+            "content": "S_m denotes the localization of S at the complement of m.",
+            "kind": "notation",
+            "label": "Localization at m"
+          },
+          {
+            "content": "A sequence g_1,...,g_d of homogeneous elements of a graded ring is called a homogeneous regular sequence if for every i with 1 <= i <= d, multiplication by the image of g_i on S/(g_1,...,g_{i-1}) is injective; equivalently, that image is not a zero-divisor there.",
+            "kind": "definition",
+            "label": "Homogeneous regular sequence"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": [
+            "The usual local proof applies to a proper homogeneous ideal generated by elements of the maximal ideal m. As written, the root statement appears to omit this proper-ideal/positive-degree hypothesis, so the candidate isolates the full-ideal branch as an explicit bottleneck instead of silently assuming it away."
+          ]
+        },
+        "formalization_cost_estimate_total": 0.89,
+        "lemmas": [
+          {
+            "bottleneck_reason": "This is the special branch not handled by the usual localization-at-m proof, which inherently treats a proper m-primary ideal.",
+            "formalization_cost_estimate": 0.85,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L1",
+            "role_in_assembly": "Separates off the full-ideal branch so that the local regular-ring argument can safely assume the generated ideal is proper.",
+            "self_check_notes": "The statement is fully local to the full-ideal branch and defines all notation explicitly.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "each g_j is homogeneous",
+                "the generated ideal is the unit ideal"
+              ],
+              "normalized_claim": "For every i in {1,...,d}, the image of g_i in S/(g_1,...,g_{i-1}) is a non-zero-divisor.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, the weighted polynomial ring S, and homogeneous elements g_1,...,g_d such that (g_1,...,g_d)=S"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables and generators",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "(g_1,...,g_d) in S",
+                  "name": "g",
+                  "role": "sequence under study",
+                  "type": "sequence of homogeneous elements"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, let S = k[x_1,...,x_d] graded by deg(x_i)=w_i, and let g_1,...,g_d be homogeneous elements of S. If the ideal generated by g_1,...,g_d is the whole ring S, then for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.35,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "role_in_assembly": "Turns the finite-dimensional hypothesis into the finite-length hypothesis needed in the regular local ring after localization.",
+            "self_check_notes": "All relevant objects, including m and I, are defined in the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "I is proper",
+                "I is homogeneous",
+                "S/I is finite-dimensional over k"
+              ],
+              "normalized_claim": "There exists N >= 1 with m^N subseteq I, and after localizing at m the quotient S_m/IS_m has finite length.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, the ring S, the ideal m=(x_1,...,x_d), and a proper homogeneous ideal I with S/I finite-dimensional over k"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "(x_1,...,x_d)",
+                  "name": "m",
+                  "role": "irrelevant maximal ideal",
+                  "type": "ideal of S"
+                },
+                {
+                  "domain": "proper ideals of S generated by homogeneous elements",
+                  "name": "I",
+                  "role": "ideal under study",
+                  "type": "proper homogeneous ideal"
+                }
+              ],
+              "witness_dependencies": [
+                "the exponent N depends on I and the weights"
+              ]
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, let S = k[x_1,...,x_d] graded by deg(x_i)=w_i, let m=(x_1,...,x_d), and let I be a proper homogeneous ideal of S. If S/I is finite-dimensional as a k-vector space, then there exists an integer N >= 1 such that m^N is contained in I. Consequently the localized quotient S_m / I S_m has finite length as an S_m-module.",
+            "strictly_easier_reason": "This lemma only identifies the final ideal as m-primary in the proper branch; it does not prove any successive non-zero-divisor statements."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "role_in_assembly": "Shows that in the proper branch all generators lie in the maximal ideal, which is the hypothesis needed for the regular local ring theorem.",
+            "self_check_notes": "The statement is standalone and uses only locally introduced notation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "each g_j is homogeneous",
+                "the ideal (g_1,...,g_r) is proper"
+              ],
+              "normalized_claim": "Each generator g_j belongs to m.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, the ring S, the ideal m=(x_1,...,x_d), a nonnegative integer r, and homogeneous elements g_1,...,g_r generating a proper ideal"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "(x_1,...,x_d)",
+                  "name": "m",
+                  "role": "homogeneous maximal ideal",
+                  "type": "ideal of S"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "r",
+                  "role": "length of the partial sequence",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(g_1,...,g_r) in S",
+                  "name": "g",
+                  "role": "generators of the proper homogeneous ideal",
+                  "type": "sequence of homogeneous elements"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, let S = k[x_1,...,x_d] graded by deg(x_i)=w_i, let m=(x_1,...,x_d), and let g_1,...,g_r be homogeneous elements of S for some nonnegative integer r. If the ideal (g_1,...,g_r) is proper, then every g_j lies in m.",
+            "strictly_easier_reason": "This is a simple grading observation: a homogeneous element outside m is a nonzero constant, hence would force the generated ideal to be the whole ring."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.3,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "role_in_assembly": "Identifies the localized ambient ring as the regular local ring to which the parameter-ideal theorem applies.",
+            "self_check_notes": "The localization and maximal ideal are defined in the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "all weights are positive"
+              ],
+              "normalized_claim": "The localized ring S_m is regular local of dimension d with maximal ideal mS_m.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, the weighted polynomial ring S, and m=(x_1,...,x_d)"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient ring before localization",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "(x_1,...,x_d)",
+                  "name": "m",
+                  "role": "prime at which we localize",
+                  "type": "maximal ideal of S"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, let S = k[x_1,...,x_d] with weighted grading deg(x_i)=w_i, and let m=(x_1,...,x_d). Then the localization S_m is a regular local ring of Krull dimension d, with maximal ideal m S_m.",
+            "strictly_easier_reason": "This is a structural fact about the polynomial ring localized at its homogeneous maximal ideal, independent of the specific sequence g_i."
+          },
+          {
+            "bottleneck_reason": "This is the main commutative-algebra frontier of the local strategy: it turns finite length in a regular local ring into the desired successive non-zero-divisor statements.",
+            "formalization_cost_estimate": 0.55,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "role_in_assembly": "Core local theorem: an m-primary d-tuple in a regular local ring is regular.",
+            "self_check_notes": "The lemma states the regularity conclusion explicitly and defines all local-ring data locally.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "R is regular local",
+                "dim R = d",
+                "each a_i lies in m",
+                "R/(a_1,...,a_d) has finite length"
+              ],
+              "normalized_claim": "For every i in {1,...,d}, the image of a_i in R/(a_1,...,a_{i-1}) is a non-zero-divisor.",
+              "quantifier_order": [
+                "Given a regular local ring (R,m) of dimension d and elements a_1,...,a_d in m such that R/(a_1,...,a_d) has finite length"
+              ],
+              "variables": [
+                {
+                  "domain": "regular local rings",
+                  "name": "R",
+                  "role": "ambient local ring",
+                  "type": "local ring"
+                },
+                {
+                  "domain": "the maximal ideal of the local ring R",
+                  "name": "m",
+                  "role": "distinguished maximal ideal",
+                  "type": "maximal ideal of R"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "dimension and sequence length",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(a_1,...,a_d) with each a_i in m",
+                  "name": "a",
+                  "role": "candidate regular sequence",
+                  "type": "sequence of ring elements"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let (R,m) be a regular local ring of Krull dimension d, where d is a nonnegative integer, and let a_1,...,a_d be elements of the maximal ideal m. If the quotient ring R/(a_1,...,a_d) has finite length as an R-module, then for every i with 1 <= i <= d, the image of a_i in R/(a_1,...,a_{i-1}) is not a zero-divisor.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.15,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L6",
+            "role_in_assembly": "Transfers the local regularity result in S_m back to the localized successive quotients of the original graded ring.",
+            "self_check_notes": "The statement defines U, I, and the maps explicitly, so it is independently understandable.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [],
+              "normalized_claim": "Localization commutes with the quotient R/I and with the multiplication-by-h endomorphism.",
+              "quantifier_order": [
+                "Given a commutative ring R, a multiplicative subset U, elements a_1,...,a_r,h in R, and I=(a_1,...,a_r)"
+              ],
+              "variables": [
+                {
+                  "domain": "all commutative rings",
+                  "name": "R",
+                  "role": "ambient ring",
+                  "type": "commutative ring"
+                },
+                {
+                  "domain": "multiplicative subsets of R",
+                  "name": "U",
+                  "role": "localization set",
+                  "type": "multiplicative subset"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "r",
+                  "role": "number of generators of I",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(a_1,...,a_r) in R",
+                  "name": "a",
+                  "role": "generators of I",
+                  "type": "sequence of ring elements"
+                },
+                {
+                  "domain": "elements of R",
+                  "name": "h",
+                  "role": "element whose multiplication map is localized",
+                  "type": "ring element"
+                },
+                {
+                  "domain": "(a_1,...,a_r)",
+                  "name": "I",
+                  "role": "quotient ideal",
+                  "type": "ideal of R"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let R be a commutative ring, let U be a multiplicative subset of R, let a_1,...,a_r and h be elements of R, and let I=(a_1,...,a_r). Then there is a natural isomorphism of U^{-1}R-modules U^{-1}(R/I) \u2245 U^{-1}R / I U^{-1}R, and under this isomorphism the localization of the multiplication-by-h map on R/I is exactly multiplication by h/1 on U^{-1}R / I U^{-1}R.",
+            "strictly_easier_reason": "This is a formal localization compatibility statement and contains no regular-sequence content by itself."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.45,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L7",
+            "role_in_assembly": "Descends injectivity from the localized module back to the global graded module.",
+            "self_check_notes": "All symbols are introduced in the statement; no reference to associated primes from another lemma is needed.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "M is finitely generated",
+                "M is graded",
+                "h is homogeneous"
+              ],
+              "normalized_claim": "Injectivity of multiplication by h after localizing at m implies injectivity of multiplication by h on M itself.",
+              "quantifier_order": [
+                "Given k, d, positive weights w, the graded polynomial ring S, the ideal m=(x_1,...,x_d), a finitely generated graded S-module M, and a homogeneous h in S such that multiplication by h on M_m is injective"
+              ],
+              "variables": [
+                {
+                  "domain": "any field",
+                  "name": "k",
+                  "role": "base field",
+                  "type": "field"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(w_1,...,w_d) with each w_j > 0",
+                  "name": "w",
+                  "role": "weights",
+                  "type": "sequence of positive integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d] with deg(x_j)=w_j",
+                  "name": "S",
+                  "role": "ambient graded ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "(x_1,...,x_d)",
+                  "name": "m",
+                  "role": "homogeneous maximal ideal",
+                  "type": "ideal of S"
+                },
+                {
+                  "domain": "finitely generated graded S-modules",
+                  "name": "M",
+                  "role": "module on which injectivity is tested",
+                  "type": "graded module"
+                },
+                {
+                  "domain": "homogeneous elements of S",
+                  "name": "h",
+                  "role": "endomorphism parameter",
+                  "type": "homogeneous ring element"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, let S = k[x_1,...,x_d] graded by deg(x_i)=w_i, let m=(x_1,...,x_d), let M be a finitely generated graded S-module, and let h be a homogeneous element of S. If multiplication by h on the localization M_m is injective, then multiplication by h on M is injective.",
+            "strictly_easier_reason": "This is a general local-to-global injectivity criterion for homogeneous maps on graded modules, separate from the regular-sequence theorem itself."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L8",
+            "role_in_assembly": "Converts the final injectivity conclusion into the theorem's equivalent regular-sequence language.",
+            "self_check_notes": "The definition is stated explicitly inside the lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "each g_i is homogeneous"
+              ],
+              "normalized_claim": "The successive non-zero-divisor condition for g_1,...,g_d is equivalent to saying that g_1,...,g_d is a homogeneous regular sequence.",
+              "quantifier_order": [
+                "Given a positively graded commutative ring S and homogeneous elements g_1,...,g_d of S"
+              ],
+              "variables": [
+                {
+                  "domain": "positively graded commutative rings",
+                  "name": "S",
+                  "role": "ambient graded ring",
+                  "type": "graded commutative ring"
+                },
+                {
+                  "domain": "0,1,2,...",
+                  "name": "d",
+                  "role": "length of the sequence",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "(g_1,...,g_d) in S",
+                  "name": "g",
+                  "role": "sequence being characterized",
+                  "type": "sequence of homogeneous elements"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let S be a positively graded commutative ring, and let g_1,...,g_d be homogeneous elements of S. Then the condition that for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor is exactly the statement that g_1,...,g_d is a homogeneous regular sequence, under the convention that regularity means injectivity of each multiplication map on the successive quotients.",
+            "strictly_easier_reason": "This only unpacks terminology and does not contribute new commutative-algebra content."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "S = k[x_1,...,x_d] with deg(x_i) = w_i for positive integers w_i; homogeneity always refers to this weighted grading.",
+            "kind": "definition",
+            "label": "Weighted polynomial ring"
+          },
+          {
+            "content": "m = (x_1,...,x_d) is the homogeneous maximal ideal of S.",
+            "kind": "notation",
+            "label": "Irrelevant maximal ideal"
+          },
+          {
+            "content": "S_m denotes the localization of S at the complement of m.",
+            "kind": "notation",
+            "label": "Localization at m"
+          },
+          {
+            "content": "A sequence g_1,...,g_d of homogeneous elements of a graded ring is called a homogeneous regular sequence if for every i with 1 <= i <= d, multiplication by the image of g_i on S/(g_1,...,g_{i-1}) is injective; equivalently, that image is not a zero-divisor there.",
+            "kind": "definition",
+            "label": "Homogeneous regular sequence"
+          }
+        ],
+        "strategy_summary": "Local regular-ring strategy: isolate the full-ideal branch as a bottleneck, and in the proper-ideal branch localize at the homogeneous maximal ideal m=(x_1,...,x_d). Finite-dimensionality makes the localized quotient finite length, S_m is regular local of dimension d, so the localized sequence is regular. Then descend injectivity from the localization back to the original graded quotients using a graded local-to-global injectivity lemma."
+      },
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [],
+      "rejection_reason": "Rejected: decomposition context purity validation found a fatal issue.",
+      "strategy_summary": "Local regular-ring strategy: isolate the full-ideal branch as a bottleneck, and in the proper-ideal branch localize at the homogeneous maximal ideal m=(x_1,...,x_d). Finite-dimensionality makes the localized quotient finite length, S_m is regular local of dimension d, so the localized sequence is regular. Then descend injectivity from the localization back to the original graded quotients using a graded local-to-global injectivity lemma.",
+      "vet_summary": "The decomposition fails because L1 is false, and in fact the root theorem is false as stated. A concrete counterexample is S = k[x_1,x_2] with g_1 = 0 and g_2 = 1: then S/(g_1,g_2)=0 is finite-dimensional, but g_1 is a zero-divisor on S. Apart from this fatal issue, the proper-ideal/localization branch is plausibly correct and the assembly is conditionally coherent."
+    }
+  ],
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/decompositions/dec_20260325070743_d845507d.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260324194836_a87fa006/decomposition_candidates/dec_20260325070743_d845507d/agent2_candidate.json",
+  "shared_context": [
+    {
+      "content": "For a field k, a nonnegative integer d, and positive integers w_1,...,w_d, write S = k[x_1,...,x_d] and grade it by deg(x_i)=w_i. Homogeneous always refers to this weighted grading.",
+      "kind": "definition",
+      "label": "Weighted polynomial ring"
+    },
+    {
+      "content": "A sequence g_1,...,g_d of homogeneous elements in a positively graded ring S is a homogeneous regular sequence if for each i with 1 <= i <= d, multiplication by the image of g_i on S/(g_1,...,g_{i-1}) is injective. For d=0 this means the empty sequence, which is regular by convention.",
+      "kind": "definition",
+      "label": "Homogeneous regular sequence"
+    },
+    {
+      "content": "Krull dimension, Cohen-Macaulayness, finite length, and zero-divisors are taken in the underlying commutative ring or module; the grading is used only to specify homogeneity.",
+      "kind": "definition",
+      "label": "Underlying-ring convention"
+    }
+  ],
+  "strategy_summary": "Unlike the rejected global case-split proof, this candidate removes the false unit-ideal branch entirely, replaces it by a single explicit bottleneck asserting that I=(g_1,...,g_d) is proper, uses the finite-length version of the Cohen-Macaulay criterion directly rather than an m-primary/dimension-zero detour, adds Noetherianity of S explicitly, and makes the d=0 convention explicit.",
+  "updated_at": "2026-03-25T07:14:40.416222Z"
+}

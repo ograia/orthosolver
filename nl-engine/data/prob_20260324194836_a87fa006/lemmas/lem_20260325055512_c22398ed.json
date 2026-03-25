@@ -1,0 +1,107 @@
+{
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260325060015_9f7f0014",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "created_at": "2026-03-25T05:55:21.347565Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.29,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-25T06:05:16.862545Z",
+  "last_dependency_check_id": "depchk_20260325060516_1adef00a",
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly establishes the equivalence by reducing polynomiality of Q(q)=N(q)/D(q) to divisibility D|N, then characterizing divisibility over C[q] via root multiplicities. For a primitive n-th root of unity, each factor q^m-1 contributes multiplicity exactly 1 iff n divides m, so the multiplicities of N and D at such roots are precisely mu_n(A,d) and mu_n(B,d). This gives both directions, including the converse for arbitrary roots of D by passing to their order. The empty-product case d=0 is also covered. No semantic drift or illegal dependency use is present.",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let N(q):=prod_{i=1}^d (q^(A+i)-1) and D(q):=prod_{i=1}^d (q^(B+i)-1), with the empty product equal to 1 if d=0. Since (1-q^(A+i))/(1-q^(B+i))=(q^(A+i)-1)/(q^(B+i)-1) for each i, we have Q(q)=N(q)/D(q).\n\nBecause each factor q^(B+i)-1 is monic, D is monic. Hence Q(q) belongs to Q[q] if and only if D divides N in Q[q]. Also, because D is monic, D divides N in Q[q] if and only if D divides N in C[q]: the forward implication is obvious; for the reverse one, if N=DP with P in C[q], divide N by D in Q[q] to get N=DS+R with S,R in Q[q] and either R=0 or deg R<deg D. Then R=D(P-S). If R were nonzero, deg R would be at least deg D, contradiction. So R=0 and N=DS with S in Q[q].\n\nFor a complex number alpha and a nonzero polynomial F, write m_alpha(F) for the multiplicity of alpha as a root of F, and set m_alpha(F)=0 when alpha is not a root. By factorization into linear factors over C, D divides N in C[q] if and only if m_alpha(D) <= m_alpha(N) for every alpha in C.\n\nNow fix a positive integer n and choose a primitive n-th root of unity zeta in C. For any integer m>=1, zeta is a root of q^m-1 exactly when n divides m. Moreover, when n divides m, that root is simple, because the derivative of q^m-1 is m q^(m-1), and m zeta^(m-1) != 0. Therefore m_zeta(q^m-1)=1 if n|m, and m_zeta(q^m-1)=0 otherwise.\n\nSumming over the factors in N and D gives m_zeta(N)=#{i in {1,...,d} : n divides A+i}=mu_n(A,d), and similarly m_zeta(D)=#{i in {1,...,d} : n divides B+i}=mu_n(B,d).\n\nSuppose first that Q(q) belongs to Q[q]. Then D divides N in Q[q], hence also in C[q]. So m_alpha(D) <= m_alpha(N) for every alpha in C. Applying this to a primitive n-th root zeta, and using the displayed formulas, gives mu_n(B,d) <= mu_n(A,d) for every positive integer n.\n\nConversely, assume mu_n(B,d) <= mu_n(A,d) for every positive integer n. Let alpha be any complex number. If alpha is not a root of D, then m_alpha(D)=0 <= m_alpha(N). If alpha is a root of D, then alpha^(B+i)=1 for some i, so alpha is a root of unity. Let n be the order of alpha. Then alpha is a primitive n-th root of unity, so by the formulas above m_alpha(D)=mu_n(B,d) <= mu_n(A,d)=m_alpha(N). Thus m_alpha(D) <= m_alpha(N) for every alpha in C. Hence D divides N in C[q], and therefore also in Q[q]. Consequently Q(q)=N(q)/D(q) belongs to Q[q].\n\nThus Q(q) is in Q[q] if and only if mu_n(B,d) <= mu_n(A,d) for every positive integer n, as claimed.",
+  "latest_vetter_report_id": "rep_20260325060516_5bb9226c",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260325055512_c22398ed",
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "lem_20260324204708_474b5c77",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/lemmas/lem_20260325055512_c22398ed.json",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Extracts a purely arithmetic consequence of the hypothesis that Q_{A,B,d}(q) is a polynomial.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let A,B,d be integers with A >= B >= 0 and d >= 0, and define Q(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)), with the empty product equal to 1 if d=0. For each positive integer n and each integer C, define mu_n(C,d) to be the number of indices i in {1,...,d} such that n divides C+i. Then Q(q) belongs to Q[q] if and only if mu_n(B,d) <= mu_n(A,d) for every positive integer n.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "A,B,d are integers with A >= B >= 0",
+      "d is an integer with d >= 0",
+      "n ranges over positive integers",
+      "C ranges over all integers in the definition of mu_n(C,d)",
+      "In mu_n(C,d), the counting index i ranges over the set {1, ..., d}",
+      "If d = 0 then the set {1,...,d} is empty and the product defining Q(q) is the empty product, taken to be 1"
+    ],
+    "normalized_claim": "For fixed integers A,B,d with A >= B >= 0 and d >= 0, define Q(q) as the product over i from 1 to d of (1 minus q to the power A plus i) divided by (1 minus q to the power B plus i), with the convention that when d = 0 this product equals 1. Then Q(q) is a polynomial in the indeterminate q with rational coefficients (that is, Q(q) belongs to Q[q]) if and only if for every positive integer n, the number of indices i in {1,...,d} satisfying n divides B plus i is at most the number of indices i in {1,...,d} satisfying n divides A plus i.",
+    "quantifier_order": [
+      "Fix integers A,B,d with A >= B >= 0 and d >= 0",
+      "Define Q(q) using a product over i from 1 to d, with empty product equal to 1 when d = 0",
+      "Define mu_n(C,d) for every positive integer n and every integer C as the count of i in {1,...,d} such that n divides C+i",
+      "Claim: Q(q) is in Q[q] if and only if for every positive integer n, mu_n(B,d) <= mu_n(A,d)"
+    ],
+    "variables": [
+      {
+        "domain": "all integers subject to A >= B and B >= 0",
+        "name": "A",
+        "role": "shift parameter in numerator exponents and as argument C = A inside mu_n",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers subject to B >= 0 and A >= B",
+        "name": "B",
+        "role": "shift parameter in denominator exponents and as argument C = B inside mu_n",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers subject to d >= 0",
+        "name": "d",
+        "role": "number of factors in the products and size parameter for mu_n(C,d)",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable",
+        "name": "q",
+        "role": "input to Q(q) whose expression is tested for being a polynomial with rational coefficients",
+        "type": "symbol / indeterminate"
+      },
+      {
+        "domain": "subset of integers with n > 0",
+        "name": "n",
+        "role": "divisibility modulus used in mu_n",
+        "type": "positive integer"
+      },
+      {
+        "domain": "all integers",
+        "name": "C",
+        "role": "general argument for mu_n(C,d); used specifically with C = A and C = B",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of integers with 1 <= i <= d",
+        "name": "i",
+        "role": "index for product factors and for counting divisibility occurrences",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "The quantity mu_n(C,d) depends on the chosen n, the chosen integer C, and the fixed parameter d",
+      "In the condition, the only C values used are C = B and C = A, both depending on the fixed parameters A and B"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-25T06:05:16.862545Z"
+}

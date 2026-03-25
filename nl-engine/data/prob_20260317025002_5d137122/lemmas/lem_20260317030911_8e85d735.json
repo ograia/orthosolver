@@ -1,0 +1,68 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-17T03:10:14.245760Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.24,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix n in N. First note that g(n) >= n: indeed, g(1),g(2),...,g(n) are n distinct positive integers in strictly increasing order, so the nth one must be at least n.\n\nWe prove the first displayed inequality. If g(n)=n, then g(g(n))=g(n), so\ng(g(n)) - g(n) = 0 = (g(n)-n)(g(g(n)))^r,\nand the claim is immediate.\n\nNow assume g(n)>n. Then, by telescoping,\ng(g(n)) - g(n) = sum_{k=n}^{g(n)-1} (g(k+1)-g(k)).\nBy the hypothesis of the lemma,\n>= sum_{k=n}^{g(n)-1} (g(g(k)))^r.\nFor each k with n <= k <= g(n)-1, we have k >= n, hence (since g is strictly increasing) g(k) >= g(n). Applying the monotonicity of g once more gives\ng(g(k)) >= g(g(n)).\nBecause r>0, the function x -> x^r is increasing on (0,infinity), so\n(g(g(k)))^r >= (g(g(n)))^r\nfor every such k. There are exactly g(n)-n integers k in the interval [n, g(n)-1], therefore\nsum_{k=n}^{g(n)-1} (g(g(k)))^r >= (g(n)-n)(g(g(n)))^r.\nCombining the last three displays yields\ng(g(n)) - g(n) >= (g(n)-n)(g(g(n)))^r,\nwhich is the first claimed inequality.\n\nFor the second displayed inequality, note that g(g(n)) is a positive integer, so (g(g(n)))^r>0. Also g(n) >= 1, hence from the first inequality,\ng(g(n)) = (g(g(n)) - g(n)) + g(n)\n>= (g(n)-n)(g(g(n)))^r + g(n)\n>= (g(n)-n)(g(g(n)))^r.\nDividing by the positive number (g(g(n)))^r gives\ng(g(n))^{1-r} >= g(n)-n.\nThus both displayed conclusions hold for every n in N.",
+  "latest_vetter_report_id": "rep_20260317033341_ff85280d",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260317030911_8e85d735",
+  "parent_id": "thm_root_20260317025002_2660065c",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260317025002_5d137122",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides the valid interval-counting estimate replacing the invalid monotone-difference argument from the rejected attempt.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let r be a real number with r > 0. Suppose g : \\mathbb{N} \\to \\mathbb{N} is strictly increasing and satisfies g(n+1)-g(n) \\ge (g(g(n)))^r for every n \\in \\mathbb{N}. Then for every n \\in \\mathbb{N}, one has\n\\[\ng(g(n)) - g(n) \\ge (g(n)-n)\\,(g(g(n)))^r.\n\\]\nEquivalently,\n\\[\ng(g(n))^{1-r} \\ge g(n)-n.\n\\]",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "r is a real number and r > 0",
+      "g is a function from the naturals N to N (codomain consists of natural numbers)",
+      "g is strictly increasing (so for all m>n, g(m) > g(n))",
+      "the hypothesis g(n+1)-g(n) >= (g(g(n)))^r is assumed for every n in N",
+      "exponentiation (g(g(n)))^r is taken with base in the image of g, which is a natural number (possible zero depending on convention for N)",
+      "the conclusion is asserted for every n in N"
+    ],
+    "normalized_claim": "For all real r>0 and for every strictly increasing function g : N -> N satisfying (for all k in N) g(k+1)-g(k) >= (g(g(k)))^r, one has (for all n in N) g(g(n)) - g(n) >= (g(n)-n) * (g(g(n)))^r. Consequently (by adding g(n) >= 0 and dividing by (g(g(n)))^r when defined and positive) one obtains the weaker inequality g(g(n))^{1-r} >= g(n)-n.",
+    "quantifier_order": [
+      "for all r in R with r > 0",
+      "for all functions g : N -> N that are strictly increasing and satisfy (for all k in N) g(k+1)-g(k) >= (g(g(k)))^r",
+      "for all n in N: claim holds"
+    ],
+    "variables": [
+      {
+        "domain": "r > 0",
+        "name": "r",
+        "role": "fixed positive real parameter",
+        "type": "real"
+      },
+      {
+        "domain": "g : \\mathbb{N} -> \\mathbb{N}",
+        "name": "g",
+        "role": "strictly increasing function satisfying hypothesis",
+        "type": "function"
+      },
+      {
+        "domain": "n \\in \\mathbb{N}",
+        "name": "n",
+        "role": "arbitrary natural-number argument (universally quantified in conclusion)",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witness is claimed; conclusions are universal in n.",
+      "To derive the displayed inequality for a fixed n one sums the assumed inequalities g(k+1)-g(k) >= (g(g(k)))^r over k = n, n+1, ..., g(n)-1. Thus the upper summation limit depends on g(n), which in turn depends on n.",
+      "For each summand with k >= n we use monotonicity: since k >= n, g(k) >= g(n), and because g is increasing, g(g(k)) >= g(g(n)). Hence each summand (g(g(k)))^r >= (g(g(n)))^r, producing a factor (g(n)-n)."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-17T03:10:14.245761Z"
+}

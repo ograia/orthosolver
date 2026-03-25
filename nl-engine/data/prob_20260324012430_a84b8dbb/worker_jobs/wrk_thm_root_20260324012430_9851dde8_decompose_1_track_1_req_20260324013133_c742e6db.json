@@ -1,0 +1,693 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/decomposer/attempt_20260324013133_f07f29b4_track_1",
+  "attempt_count": 2,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-24T01:31:33.703375Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [
+      {
+        "controller_status": "failed",
+        "decision": "fatal",
+        "decomposition_id": "dec_20260324012632_06b77862",
+        "disguised_difficulty": [],
+        "drift_severity": "none",
+        "failure_mode": "rejected_fatal:failed",
+        "fixes_required": [
+          "Replace L6: as stated it is false. A different injective construction, or a substantially revised reconstruction lemma, is needed.",
+          "Add a lemma or explicit argument that K_{m,g} and K_{m,g+1} are finite before applying L7 in A4.",
+          "Step A4 claims triviality but requires verifying finiteness of K_{m,g} and K_{m,g+1}; break this into smaller steps or state the finiteness argument explicitly.",
+          "Lemma L1 leaves 'closure conditions' undefined \u2014 must inline the precise condition into the statement."
+        ],
+        "full_candidate": {
+          "assembly_plan": {
+            "proof_skeleton_nl": "Fix integers m >= 2 and g >= 0. Encode numerical semigroups of multiplicity m by Kunz-coordinate tuples using the Ap\u00e9ry set. The Kunz inequalities characterize exactly which tuples arise, and the genus equals the sum of the coordinates. Therefore N(m,g) is the cardinality of the finite set K_{m,g} of Kunz vectors with coordinate sum g. Next, for each x in K_{m,g}, choose the least coordinate whose increment preserves the Kunz inequalities; existence of such a coordinate gives a well-defined map Phi from K_{m,g} to K_{m,g+1}. A separate reconstruction lemma shows that the least coadmissible coordinate of Phi(x) recovers the incremented coordinate, so Phi is injective. By the basic fact that an injection between finite sets implies a cardinality inequality, |K_{m,g}| <= |K_{m,g+1}|. Translating back through the Kunz correspondence gives N(m,g) <= N(m,g+1), which is exactly the theorem.",
+            "steps": [
+              {
+                "derives": "For every integer m >= 2 and every integer g >= 0, if K_{m,g} denotes the set of tuples x = (x_1,...,x_{m-1}) of positive integers satisfying the Kunz inequalities for multiplicity m and having coordinate sum g, then N(m,g) = |K_{m,g}|.",
+                "is_trivial": false,
+                "step_id": "A1",
+                "trivial_justification": "L1 gives the Ap\u00e9ry/Kunz encoding of numerical semigroups of multiplicity m by positive integer tuples. L2 identifies exactly which tuples encode numerical semigroups: namely those satisfying the Kunz inequalities. L3 states that the genus of the semigroup encoded by x is exactly x_1 + ... + x_{m-1}. Therefore the numerical semigroups counted by N(m,g) are in bijection with the tuples in K_{m,g}, so N(m,g) = |K_{m,g}|.",
+                "uses_lemmas": [
+                  "L1",
+                  "L2",
+                  "L3"
+                ],
+                "uses_prior_steps": []
+              },
+              {
+                "derives": "For every integers m >= 2 and g >= 0, the rule Phi(x) = x + e_{alpha(x)}, where alpha(x) is the least admissible index of x, defines a function Phi : K_{m,g} -> K_{m,g+1}.",
+                "is_trivial": false,
+                "step_id": "A2",
+                "trivial_justification": "By L4, every x in K_{m,g} has at least one admissible index, so alpha(x) is well-defined. By L5, the corresponding tuple Phi(x) belongs to K_{m,g+1}. Hence Phi is a well-defined function from K_{m,g} to K_{m,g+1}.",
+                "uses_lemmas": [
+                  "L4",
+                  "L5"
+                ],
+                "uses_prior_steps": []
+              },
+              {
+                "derives": "For every integers m >= 2 and g >= 0, the function Phi : K_{m,g} -> K_{m,g+1} is injective.",
+                "is_trivial": false,
+                "step_id": "A3",
+                "trivial_justification": "L6 proves a stronger statement on the full Kunz set K_m: for any x in K_m, the least coadmissible index of Phi(x) recovers the least admissible index of x, and therefore Phi(x) = Phi(x') implies x = x'. Since K_{m,g} is a subset of K_m and Phi maps K_{m,g} into K_{m,g+1}, the restriction of Phi to K_{m,g} is injective.",
+                "uses_lemmas": [
+                  "L6"
+                ],
+                "uses_prior_steps": [
+                  "A2"
+                ]
+              },
+              {
+                "derives": "For every integers m >= 2 and g >= 0, |K_{m,g}| <= |K_{m,g+1}|.",
+                "is_trivial": true,
+                "step_id": "A4",
+                "trivial_justification": "Apply the finite-set injection principle to the injective map Phi : K_{m,g} -> K_{m,g+1} obtained in A3.",
+                "uses_lemmas": [
+                  "L7"
+                ],
+                "uses_prior_steps": [
+                  "A3"
+                ]
+              },
+              {
+                "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m,g) of numerical semigroups having multiplicity m and genus g satisfies N(m,g) <= N(m,g+1).",
+                "is_trivial": false,
+                "step_id": "A5",
+                "trivial_justification": "By A1, N(m,g) = |K_{m,g}| and N(m,g+1) = |K_{m,g+1}|. By A4, |K_{m,g}| <= |K_{m,g+1}|. Substituting these equalities into the inequality yields exactly N(m,g) <= N(m,g+1).",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A1",
+                  "A4"
+                ]
+              }
+            ]
+          },
+          "lemmas": [
+            {
+              "formalization_cost_estimate": 0.45,
+              "local_id": "L1",
+              "role_in_assembly": "Introduces the Kunz-coordinate model for numerical semigroups of fixed multiplicity.",
+              "statement_nl": "Let m be an integer with m >= 2. Let S be a numerical semigroup whose multiplicity is m. For each residue i with 1 <= i <= m-1, let w_i be the least element of S congruent to i modulo m, and write w_i = m x_i + i. Then each x_i is a positive integer, and the tuple x = (x_1,...,x_{m-1}) determines S uniquely by the rule S = {0} union {q m + w_i : 1 <= i <= m-1, q in N0} union {q m : q in N0}. Conversely, every choice of positive integers x_1,...,x_{m-1} determines a unique set of this form once the closure conditions for a numerical semigroup are satisfied."
+            },
+            {
+              "formalization_cost_estimate": 0.55,
+              "local_id": "L2",
+              "role_in_assembly": "Characterizes which integer tuples correspond to numerical semigroups of multiplicity m.",
+              "statement_nl": "Let m be an integer with m >= 2, and let x = (x_1,...,x_{m-1}) be a tuple of positive integers. Define w_i = m x_i + i for 1 <= i <= m-1, and define S_x = {0} union {q m : q in N0} union {q m + w_i : q in N0 and 1 <= i <= m-1}. Then S_x is a numerical semigroup of multiplicity m if and only if the following Kunz inequalities hold for all i,j in {1,...,m-1}: if i + j < m, then x_i + x_j >= x_{i+j}; and if i + j > m, then x_i + x_j + 1 >= x_{i+j-m}."
+            },
+            {
+              "formalization_cost_estimate": 0.5,
+              "local_id": "L3",
+              "role_in_assembly": "Converts the original counting problem into a problem about counting Kunz vectors with fixed coordinate sum.",
+              "statement_nl": "Let m be an integer with m >= 2, and let x = (x_1,...,x_{m-1}) be a tuple of positive integers satisfying the Kunz inequalities: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}. Let S_x = {0} union {q m : q in N0} union {q m + (m x_i + i) : q in N0 and 1 <= i <= m-1}. Then the genus of S_x equals x_1 + x_2 + ... + x_{m-1}. Consequently, for every integer g >= 0, the number N(m,g) of numerical semigroups of multiplicity m and genus g equals the number of tuples x in (Z_{>0})^(m-1) satisfying the Kunz inequalities and x_1 + ... + x_{m-1} = g."
+            },
+            {
+              "formalization_cost_estimate": 0.8,
+              "local_id": "L4",
+              "role_in_assembly": "Provides existence of a one-step genus-raising move on every Kunz vector.",
+              "statement_nl": "Let m be an integer with m >= 2, and let x = (x_1,...,x_{m-1}) be a tuple of positive integers satisfying the Kunz inequalities: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}. Call an index r in {1,...,m-1} admissible for x if the tuple x + e_r, obtained by replacing x_r with x_r + 1 and leaving all other coordinates unchanged, also satisfies the same Kunz inequalities. Then at least one admissible index exists for every such tuple x."
+            },
+            {
+              "formalization_cost_estimate": 0.35,
+              "local_id": "L5",
+              "role_in_assembly": "Defines the canonical map between the level-g and level-(g+1) Kunz sets and proves it lands in the correct target set.",
+              "statement_nl": "Let m be an integer with m >= 2, and let K_{m,g} be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that x satisfies the Kunz inequalities for multiplicity m, namely: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. For x in K_{m,g}, define alpha(x) to be the smallest index r in {1,...,m-1} for which x + e_r also satisfies the Kunz inequalities, and define Phi(x) = x + e_{alpha(x)}. Then Phi(x) belongs to K_{m,g+1} for every x in K_{m,g}."
+            },
+            {
+              "formalization_cost_estimate": 0.85,
+              "local_id": "L6",
+              "role_in_assembly": "Establishes injectivity of the canonical genus-raising map on Kunz vectors.",
+              "statement_nl": "Let m be an integer with m >= 2, and let K_m be the set of all tuples y = (y_1,...,y_{m-1}) of positive integers satisfying the Kunz inequalities for multiplicity m: for all i,j in {1,...,m-1}, if i + j < m then y_i + y_j >= y_{i+j}, and if i + j > m then y_i + y_j + 1 >= y_{i+j-m}. For y in K_m, call an index s in {1,...,m-1} coadmissible for y if y_s > 1 and the tuple y - e_s also belongs to K_m. Let beta(y) be the smallest coadmissible index of y whenever such an index exists. For x in K_m, call an index r admissible for x if x + e_r belongs to K_m, let alpha(x) be the smallest admissible index, and define Phi(x) = x + e_{alpha(x)}. Then for every x in K_m, the tuple Phi(x) has at least one coadmissible index and in fact beta(Phi(x)) = alpha(x). Consequently, if x and x' are elements of K_m and Phi(x) = Phi(x'), then x = x'."
+            },
+            {
+              "formalization_cost_estimate": 0.05,
+              "local_id": "L7",
+              "role_in_assembly": "Converts the injective map on Kunz-vector sets into the desired inequality of counts.",
+              "statement_nl": "Let A and B be finite sets. If there exists an injective function f from A to B, then the cardinality of A is less than or equal to the cardinality of B."
+            }
+          ],
+          "shared_context": [
+            {
+              "content": "A numerical semigroup is a subset S of the nonnegative integers N0 such that 0 belongs to S, S is closed under addition, and N0 \\ S is finite. The multiplicity of S is the least positive element of S. The genus of S is the cardinality of N0 \\ S.",
+              "label": "Numerical semigroup"
+            },
+            {
+              "content": "If S is a numerical semigroup whose multiplicity is an integer m >= 2, then for each residue i with 1 <= i <= m-1 there is a unique least element w_i of S congruent to i modulo m. Writing w_i = m x_i + i defines positive integers x_1,...,x_{m-1}; these are the Kunz coordinates of S with respect to m.",
+              "label": "Ap\u00e9ry set with respect to multiplicity m"
+            }
+          ],
+          "strategy_summary": "Translate numerical semigroups of fixed multiplicity into Kunz-coordinate integer vectors, then prove the counting inequality by constructing a canonical injective map from Kunz vectors of genus g to Kunz vectors of genus g+1 by increasing one canonically chosen admissible coordinate."
+        },
+        "lean_assembly_status": "pending",
+        "llm_vetting_status": "rejected_fatal",
+        "missing_coverage": [
+          "No lemma explicitly proves that K_{m,g} and K_{m,g+1} are finite, which is required in A4 to apply L7.",
+          "L1: the converse direction refers to unspecified 'closure conditions'; the precise condition must be inlined (for example, closure under addition, or equivalently the Kunz inequalities)."
+        ],
+        "strategy_summary": "Translate numerical semigroups of fixed multiplicity into Kunz-coordinate integer vectors, then prove the counting inequality by constructing a canonical injective map from Kunz vectors of genus g to Kunz vectors of genus g+1 by increasing one canonically chosen admissible coordinate.",
+        "vet_summary": "Fatal flaw: the core injectivity lemma L6 is false. For m=3, x=(2,2) and x'=(3,1) are both valid Kunz vectors, but the least-admissible-index map gives Phi(x)=Phi(x')=(3,2), so A3 fails and the rest of the counting argument collapses. There is also a smaller assembly gap in A4 because finiteness of K_{m,g} is not established before applying the finite-set injection principle, and L1 has a self-containment issue because its converse refers to unspecified 'closure conditions'."
+      }
+    ],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "shared_context": [],
+    "theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix integers m >= 2 and g >= 0, and let SG(m,g) be the family of numerical semigroups with multiplicity m and genus g. First, use the Ap\u00e9ry-coordinate genus formula to know that SG(m,g) is finite, and similarly SG(m,g+1) is finite. Next define a canonical child map on SG(m,g) by deleting the element F(S)+m, where F(S) is the Frobenius number of S. The key semigroup-theoretic facts are that F(S)+m belongs to S, is a minimal generator of S, and deleting it produces a numerical semigroup of the same multiplicity and one larger genus; moreover the Frobenius number of the child is exactly the deleted element. Hence Psi(S)=S\\{F(S)+m} is a well-defined map SG(m,g)->SG(m,g+1). The identity F(Psi(S))=F(S)+m shows that the removed element can be recovered from the child, so S = Psi(S) \u222a {F(Psi(S))}; therefore Psi is injective. Since both source and target families are finite, the injection implies |SG(m,g)| <= |SG(m,g+1)|. Finally, by definition N(m,g)=|SG(m,g)| and N(m,g+1)=|SG(m,g+1)|, yielding N(m,g) <= N(m,g+1).",
+          "steps": [
+            {
+              "derives": "For fixed integers m >= 2 and g >= 0, N(m,g) = |SG(m,g)| and N(m,g+1) = |SG(m,g+1)|.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "Apply L8 twice: first with genus parameter g, and second with genus parameter g+1. This identifies each counting function value with the cardinality of the corresponding family of numerical semigroups.",
+              "uses_lemmas": [
+                "L8"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For fixed integers m >= 2 and g >= 0, both sets SG(m,g) and SG(m,g+1) are finite.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Apply L2 with the pair (m,g) to obtain finiteness of SG(m,g). Apply L2 again with the pair (m,g+1) to obtain finiteness of SG(m,g+1). Since g >= 0, also g+1 >= 0, so the lemma applies in the second case.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For fixed integers m >= 2 and g >= 0, the rule Psi(S) = S \\ {F(S)+m} defines a function Psi : SG(m,g) -> SG(m,g+1).",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "L5 states exactly that for every S in SG(m,g), the set Psi(S) is a numerical semigroup of multiplicity m and genus g+1. Therefore the assignment S \u21a6 Psi(S) lands in SG(m,g+1) for every source element S, so it is a well-defined function from SG(m,g) to SG(m,g+1).",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For fixed integers m >= 2 and g >= 0, the function Psi : SG(m,g) -> SG(m,g+1) is injective.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "L6 states that for every S in SG(m,g), one can reconstruct S from Psi(S) by the formula S = Psi(S) union {F(Psi(S))}. Hence if Psi(S) = Psi(S') for two elements S,S' of SG(m,g), then both reconstructions yield the same set, so S = S'. This is exactly injectivity of Psi.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "For fixed integers m >= 2 and g >= 0, |SG(m,g)| <= |SG(m,g+1)|.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "From A2, both SG(m,g) and SG(m,g+1) are finite. From A4, there exists an injective function Psi from SG(m,g) to SG(m,g+1). Applying L7 to these two finite sets and the injective map Psi yields the inequality |SG(m,g)| <= |SG(m,g+1)|.",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A4"
+              ]
+            },
+            {
+              "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m,g) of numerical semigroups with multiplicity m and genus g satisfies N(m,g) <= N(m,g+1).",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "By A1, N(m,g) equals |SG(m,g)| and N(m,g+1) equals |SG(m,g+1)|. By A5, |SG(m,g)| <= |SG(m,g+1)|. Substituting the equalities from A1 into the inequality from A5 gives exactly N(m,g) <= N(m,g+1).",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A5"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.32,
+        "lemmas": [
+          {
+            "formalization_cost_estimate": 0.45,
+            "local_id": "L1",
+            "role_in_assembly": "Provides the genus formula needed to bound the possible semigroups with fixed multiplicity and genus, yielding finiteness of SG(m,g).",
+            "self_check_notes": "All notation is defined locally; no unspecified closure condition appears.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "S is closed under addition",
+                "N0 \\ S is finite",
+                "m is the least positive element of S",
+                "for each i in {1,...,m-1}, w_i is the least element of S congruent to i mod m"
+              ],
+              "normalized_claim": "For every numerical semigroup S of multiplicity m, the Ap\u00e9ry coordinates x_1,...,x_{m-1} are positive integers and genus(S) = \u03a3_{i=1}^{m-1} x_i.",
+              "quantifier_order": [
+                "\u2200 m \u2208 Z (m \u2265 2)",
+                "\u2200 S \u2286 N0, if S is a numerical semigroup with multiplicity m, then ..."
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "fixed multiplicity parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "subsets of N0",
+                  "name": "S",
+                  "role": "numerical semigroup of multiplicity m",
+                  "type": "set of nonnegative integers"
+                },
+                {
+                  "domain": "N0",
+                  "name": "w_i",
+                  "role": "least element of S in residue class i mod m for 1<=i<=m-1",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "Z_{>0}",
+                  "name": "x_i",
+                  "role": "Ap\u00e9ry/Kunz coordinate defined by w_i = m x_i + i",
+                  "type": "positive integer"
+                }
+              ],
+              "witness_dependencies": [
+                "w_i depends on S and i",
+                "x_i depends on w_i and m"
+              ]
+            },
+            "statement_nl": "Let m be an integer with m >= 2, and let S be a numerical semigroup of multiplicity m. For each residue i with 1 <= i <= m-1, let w_i be the least element of S congruent to i modulo m, and write w_i = m x_i + i. Then each x_i is a positive integer, and the genus of S is x_1 + x_2 + ... + x_{m-1}."
+          },
+          {
+            "formalization_cost_estimate": 0.4,
+            "local_id": "L2",
+            "role_in_assembly": "Supplies the missing finiteness needed before using any injective-cardinality argument on SG(m,g) and SG(m,g+1).",
+            "self_check_notes": "A proof can use L1: the Ap\u00e9ry coordinates are positive integers summing to g, so only finitely many tuples occur.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "SG(m,g) = {S \u2286 N0 : S is a numerical semigroup, multiplicity(S)=m, genus(S)=g}"
+              ],
+              "normalized_claim": "For every integers m \u2265 2 and g \u2265 0, the set SG(m,g) is finite.",
+              "quantifier_order": [
+                "\u2200 m \u2208 Z (m \u2265 2)",
+                "\u2200 g \u2208 Z (g \u2265 0)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "fixed multiplicity parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "g",
+                  "role": "fixed genus parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "powerset(powerset(N0))",
+                  "name": "SG(m,g)",
+                  "role": "family of numerical semigroups with multiplicity m and genus g",
+                  "type": "set of sets of nonnegative integers"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let m be an integer with m >= 2 and g be an integer with g >= 0. Let SG(m,g) be the set of all numerical semigroups S subseteq N0 with multiplicity m and genus g. Then SG(m,g) is finite."
+          },
+          {
+            "formalization_cost_estimate": 0.12,
+            "local_id": "L3",
+            "role_in_assembly": "Identifies the canonical element to delete when passing from genus g to genus g+1.",
+            "self_check_notes": "This is immediate from maximality of the Frobenius number and the fact that all integers greater than F(S) lie in S.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "F(S) = max(N0 \\ S)",
+                "m is the least positive element of S"
+              ],
+              "normalized_claim": "For every numerical semigroup S of multiplicity m, one has F(S)+m \u2208 S.",
+              "quantifier_order": [
+                "\u2200 m \u2208 Z (m \u2265 2)",
+                "\u2200 S \u2286 N0, if S is a numerical semigroup with multiplicity m, then ..."
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "multiplicity of S",
+                  "type": "integer"
+                },
+                {
+                  "domain": "subsets of N0",
+                  "name": "S",
+                  "role": "numerical semigroup",
+                  "type": "set of nonnegative integers"
+                },
+                {
+                  "domain": "N0",
+                  "name": "F(S)",
+                  "role": "Frobenius number of S",
+                  "type": "nonnegative integer"
+                }
+              ],
+              "witness_dependencies": [
+                "F(S) depends on S"
+              ]
+            },
+            "statement_nl": "Let S be a numerical semigroup with multiplicity m, where m is an integer and m >= 2. Let F(S) denote the Frobenius number, that is, the largest nonnegative integer not belonging to S. Then F(S) + m belongs to S."
+          },
+          {
+            "formalization_cost_estimate": 0.28,
+            "local_id": "L4",
+            "role_in_assembly": "Ensures that deleting F(S)+m preserves additive closure, so the child semigroup is again a numerical semigroup.",
+            "self_check_notes": "If x=a+b with positive a,b in S, then a>=m and hence b=x-a<=F(S); but b is also in S, contradiction to maximal-gap definition.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "F(S)=max(N0 \\ S)",
+                "x=F(S)+m"
+              ],
+              "normalized_claim": "For every numerical semigroup S of multiplicity m, the element x = F(S)+m is a minimal generator of S.",
+              "quantifier_order": [
+                "\u2200 m \u2208 Z (m \u2265 2)",
+                "\u2200 S \u2286 N0, if S is a numerical semigroup with multiplicity m, then ..."
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "multiplicity of S",
+                  "type": "integer"
+                },
+                {
+                  "domain": "subsets of N0",
+                  "name": "S",
+                  "role": "numerical semigroup",
+                  "type": "set of nonnegative integers"
+                },
+                {
+                  "domain": "N0",
+                  "name": "F(S)",
+                  "role": "Frobenius number of S",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "N0",
+                  "name": "x",
+                  "role": "the element F(S)+m",
+                  "type": "nonnegative integer"
+                }
+              ],
+              "witness_dependencies": [
+                "F(S) depends on S",
+                "x depends on S and m"
+              ]
+            },
+            "statement_nl": "Let S be a numerical semigroup with multiplicity m, where m is an integer and m >= 2. Let F(S) be the Frobenius number of S, and set x = F(S) + m. Then x is a minimal generator of S: x belongs to S, x is positive, and whenever a and b are positive elements of S with x = a + b, one must have a = 0 or b = 0. Equivalently, x cannot be written as a sum of two positive elements of S."
+          },
+          {
+            "formalization_cost_estimate": 0.42,
+            "local_id": "L5",
+            "role_in_assembly": "Gives the canonical genus-raising map from SG(m,g) to SG(m,g+1), with the Frobenius number of the child explicitly identified.",
+            "self_check_notes": "This packages well-definedness of the map and the key Frobenius identity needed for reconstruction.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "SG(m,g) = {S \u2286 N0 : S is a numerical semigroup, multiplicity(S)=m, genus(S)=g}",
+                "F(S)=max(N0 \\ S)",
+                "Psi(S)=S \\ {F(S)+m}"
+              ],
+              "normalized_claim": "For every S in SG(m,g), the set Psi(S)=S\\{F(S)+m} lies in SG(m,g+1), and F(Psi(S))=F(S)+m.",
+              "quantifier_order": [
+                "\u2200 m \u2208 Z (m \u2265 2)",
+                "\u2200 g \u2208 Z (g \u2265 0)",
+                "\u2200 S \u2208 SG(m,g)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "fixed multiplicity parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "g",
+                  "role": "fixed genus parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "SG(m,g)",
+                  "name": "S",
+                  "role": "source numerical semigroup",
+                  "type": "set of nonnegative integers"
+                },
+                {
+                  "domain": "N0",
+                  "name": "F(S)",
+                  "role": "Frobenius number of S",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "subsets of N0",
+                  "name": "Psi(S)",
+                  "role": "child semigroup obtained by deleting F(S)+m",
+                  "type": "set of nonnegative integers"
+                }
+              ],
+              "witness_dependencies": [
+                "F(S) depends on S",
+                "Psi(S) depends on S, m"
+              ]
+            },
+            "statement_nl": "Let m be an integer with m >= 2 and g be an integer with g >= 0. Let SG(m,g) be the set of all numerical semigroups S subseteq N0 with multiplicity m and genus g. For S in SG(m,g), let F(S) be the Frobenius number of S and define Psi(S) = S \\ {F(S) + m}. Then Psi(S) is a numerical semigroup with multiplicity m and genus g + 1. Moreover, the Frobenius number of Psi(S) is exactly F(S) + m. Therefore Psi maps SG(m,g) into SG(m,g+1)."
+          },
+          {
+            "formalization_cost_estimate": 0.3,
+            "local_id": "L6",
+            "role_in_assembly": "Replaces the rejected false Kunz-coordinate injectivity lemma with a correct semigroup-theoretic reconstruction of the parent from the child.",
+            "self_check_notes": "Using L5, F(Psi(S)) = F(S)+m, so adding back the child's Frobenius recovers the unique removed element.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "SG(m,g) = {S \u2286 N0 : S is a numerical semigroup, multiplicity(S)=m, genus(S)=g}",
+                "F(S)=max(N0 \\ S)",
+                "Psi(S)=S \\ {F(S)+m}"
+              ],
+              "normalized_claim": "For every S in SG(m,g), S = Psi(S) \u222a {F(Psi(S))}; hence Psi is injective on SG(m,g).",
+              "quantifier_order": [
+                "\u2200 m \u2208 Z (m \u2265 2)",
+                "\u2200 g \u2208 Z (g \u2265 0)",
+                "\u2200 S \u2208 SG(m,g)",
+                "\u2200 S' \u2208 SG(m,g)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "fixed multiplicity parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "g",
+                  "role": "fixed genus parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "SG(m,g)",
+                  "name": "S",
+                  "role": "source numerical semigroup",
+                  "type": "set of nonnegative integers"
+                },
+                {
+                  "domain": "SG(m,g)",
+                  "name": "S'",
+                  "role": "second source numerical semigroup",
+                  "type": "set of nonnegative integers"
+                },
+                {
+                  "domain": "N0",
+                  "name": "F(S)",
+                  "role": "Frobenius number of S",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "subsets of N0",
+                  "name": "Psi(S)",
+                  "role": "child semigroup",
+                  "type": "set of nonnegative integers"
+                }
+              ],
+              "witness_dependencies": [
+                "F(S) depends on S",
+                "Psi(S) depends on S, m"
+              ]
+            },
+            "statement_nl": "Let m be an integer with m >= 2 and g be an integer with g >= 0. Let SG(m,g) be the set of all numerical semigroups S subseteq N0 with multiplicity m and genus g. For S in SG(m,g), let F(S) be the Frobenius number of S and define Psi(S) = S \\ {F(S) + m}. Then for every S in SG(m,g), one has S = Psi(S) union {F(Psi(S))}. Consequently, if S and S' are elements of SG(m,g) and Psi(S) = Psi(S'), then S = S'. Equivalently, Psi is injective on SG(m,g)."
+          },
+          {
+            "formalization_cost_estimate": 0.03,
+            "local_id": "L7",
+            "role_in_assembly": "Converts injectivity of Psi into the desired inequality of cardinalities.",
+            "self_check_notes": "Standard finite-cardinality monotonicity under injections.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A is finite",
+                "B is finite",
+                "f is injective"
+              ],
+              "normalized_claim": "If A and B are finite and there is an injective map A -> B, then |A| \u2264 |B|.",
+              "quantifier_order": [
+                "\u2200 finite sets A",
+                "\u2200 finite sets B",
+                "\u2200 functions f : A -> B"
+              ],
+              "variables": [
+                {
+                  "domain": "Type/finite set",
+                  "name": "A",
+                  "role": "source finite set",
+                  "type": "set"
+                },
+                {
+                  "domain": "Type/finite set",
+                  "name": "B",
+                  "role": "target finite set",
+                  "type": "set"
+                },
+                {
+                  "domain": "A -> B",
+                  "name": "f",
+                  "role": "injective map",
+                  "type": "function"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A and B be finite sets. If there exists an injective function f from A to B, then the cardinality of A is less than or equal to the cardinality of B."
+          },
+          {
+            "formalization_cost_estimate": 0.02,
+            "local_id": "L8",
+            "role_in_assembly": "Identifies the theorem's quantity N(m,g) with the cardinality of the concrete finite set SG(m,g).",
+            "self_check_notes": "Pure definitional unpacking of the counting notation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "SG(m,g) = {S \u2286 N0 : S is a numerical semigroup, multiplicity(S)=m, genus(S)=g}",
+                "N(m,g) is defined as the number of numerical semigroups with multiplicity m and genus g"
+              ],
+              "normalized_claim": "For every integers m \u2265 2 and g \u2265 0, N(m,g) = |SG(m,g)|.",
+              "quantifier_order": [
+                "\u2200 m \u2208 Z (m \u2265 2)",
+                "\u2200 g \u2208 Z (g \u2265 0)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "fixed multiplicity parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "g",
+                  "role": "fixed genus parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "powerset(powerset(N0))",
+                  "name": "SG(m,g)",
+                  "role": "family being counted",
+                  "type": "set of sets of nonnegative integers"
+                },
+                {
+                  "domain": "N0",
+                  "name": "N(m,g)",
+                  "role": "count of numerical semigroups with multiplicity m and genus g",
+                  "type": "nonnegative integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let m be an integer with m >= 2 and g be an integer with g >= 0. Let SG(m,g) be the set of all numerical semigroups S subseteq N0 with multiplicity m and genus g. If N(m,g) denotes the number of numerical semigroups with multiplicity m and genus g, then N(m,g) = |SG(m,g)|."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "A numerical semigroup is a subset S of N0 = {0,1,2,...} such that 0 \u2208 S, S is closed under addition, and N0 \\ S is finite. The multiplicity of S is the least positive element of S. The genus of S is the cardinality of N0 \\ S. For a numerical semigroup S, the Frobenius number F(S) is the largest element of N0 \\ S, which exists because N0 \\ S is finite.",
+            "label": "Numerical semigroup conventions"
+          },
+          {
+            "content": "For integers m \u2265 2 and g \u2265 0, write SG(m,g) for the set of all numerical semigroups S with multiplicity m and genus g.",
+            "label": "Fixed-parameter family"
+          }
+        ],
+        "strategy_summary": "Use the canonical semigroup-tree child obtained by deleting the effective generator F(S)+m, where F(S) is the Frobenius number. This explicitly avoids the rejected least-admissible Kunz-coordinate map, replaces the false injectivity lemma with a reconstruction from the child's Frobenius number, and adds an explicit finiteness lemma for the fixed-(m,g) families before applying cardinality comparison."
+      }
+    ],
+    "status": "completed"
+  },
+  "status": "completed",
+  "target_id": "thm_root_20260324012430_9851dde8",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-24T01:35:22.772465Z",
+  "worker_job_id": "wrk_thm_root_20260324012430_9851dde8_decompose_1_track_1_req_20260324013133_c742e6db",
+  "worker_kind": "decomposition_generation"
+}

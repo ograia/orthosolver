@@ -1,0 +1,174 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324061320_d3da8117/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-24T06:17:28.711729Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T06:17:17.540934Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260324061320_d3da8117",
+    "proof_nl": "Fix an integer m >= 2 and a tuple x=(x_1,...,x_{m-1}) of positive integers satisfying the stated inequalities. Define\nS_x = {0} \u222a {q m : q \u2208 N0} \u222a {q m + (m x_i + i) : q \u2208 N0,\n1 <= i <= m-1}.\nWe must prove that the genus |N0 \\ S_x| equals x_1+...+x_{m-1}. Equivalently, for each residue class i with 1 <= i <= m-1, exactly x_i nonnegative integers congruent to i mod m are absent from S_x.\n\nObserve first that every nonnegative integer n has a unique residue modulo m, so the sets of numbers in the different residue classes mod m are disjoint. Hence the complement N0 \\ S_x can be counted residue class by residue class.\n\n1. Residue class 0 modulo m.\nBy definition, {q m : q \u2208 N0} \u2286 S_x. Thus every nonnegative multiple of m belongs to S_x, so there are no missing elements in residue class 0.\n\n2. Residue class i modulo m, where 1 <= i <= m-1.\nFix such an i. Consider the set of all nonnegative integers congruent to i mod m; it is exactly\n{i + t m : t \u2208 N0}.\nFrom the definition of S_x, the elements of S_x in this residue class are exactly\n{q m + (m x_i + i) : q \u2208 N0} = {i + (x_i + q)m : q \u2208 N0} = {i + t m : t >= x_i}.\nIndeed:\n- every number of the form q m + (m x_i + i) is congruent to i mod m and equals i + (x_i+q)m, so it is of the form i + t m with t >= x_i;\n- conversely, if t >= x_i, then writing t = x_i + q with q \u2208 N0 gives i + t m = q m + (m x_i + i) \u2208 S_x.\n\nNow we show that no smaller number in this residue class lies in S_x. Let 0 <= t < x_i. Then i + t m is not a multiple of m because 1 <= i <= m-1, and it also cannot be of the form q m + (m x_j + j) with j \u2260 i, since such a number is congruent to j mod m, not to i. If it were of the form q m + (m x_i + i), then comparing with i + t m would give t = x_i + q >= x_i, contradicting t < x_i. Therefore i + t m \u2209 S_x.\n\nSo, in residue class i modulo m, the elements missing from S_x are precisely\n{i, i+m, i+2m, ..., i+(x_i-1)m},\nwhich is a set of exactly x_i elements.\n\n3. Counting the whole complement.\nThe missing elements of N0 split disjointly according to their residue class modulo m. There are 0 missing elements in residue class 0, and for each i = 1,...,m-1 there are exactly x_i missing elements in residue class i. Therefore\n|N0 \\ S_x| = \u03a3_{i=1}^{m-1} x_i.\nThis is exactly the claimed genus formula.\n\nHence the genus of S_x is x_1 + ... + x_{m-1}, equivalently for each residue class i with 1 <= i <= m-1 exactly x_i integers congruent to i mod m are not in S_x. The stated inequalities on the x_i are not needed for this counting argument, but they are compatible with the definition of S_x.\n\nTherefore the lemma is proved.",
+    "role_in_assembly": "Identifies the genus parameter with coordinate sum in the Kunz model.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "x is a tuple of length m\u22121: x = (x_1,...,x_{m-1}) with each x_i a positive integer",
+        "Inequalities quantified over i,j \u2208 {1,...,m-1}",
+        "Inequalities are conditional on comparison of i+j with m: the statement specifies constraints only for cases i+j<m and i+j>m; the case i+j=m is not constrained by these rules",
+        "In the inequality term x_{i+j-m}, the index i+j-m is understood to lie in {1,...,m-1} when i+j>m (this is satisfied given i,j\u2208{1,...,m-1})",
+        "S_x is constructed using q \u2208 N0, so all elements of S_x are intended to lie in N0"
+      ],
+      "normalized_claim": "For every integer m \u2265 2 and every tuple (x_1,...,x_{m-1}) of positive integers satisfying: for all i,j \u2208 {1,...,m-1}, (i+j<m \u21d2 x_i+x_j \u2265 x_{i+j}) and (i+j>m \u21d2 x_i+x_j+1 \u2265 x_{i+j-m}), let S_x := {0} \u222a {q m : q\u2208N0} \u222a {q m + (m x_i + i) : q\u2208N0, 1\u2264i\u2264m-1}. Then the genus, defined as |N0 \\ S_x|, equals x_1+...+x_{m-1}. Equivalently, for each residue i \u2208 {1,...,m-1}, exactly x_i integers of the form i (mod m) are not in S_x.",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 x_1,...,x_{m-1} \u2208 Z_{>0} (subject to: \u2200 i,j \u2208 {1,...,m-1}, if i+j<m then x_i+x_j \u2265 x_{i+j}; if i+j>m then x_i+x_j+1 \u2265 x_{i+j-m})",
+        "Define S_x from m and x",
+        "Then |N0 \\ S_x| = \u03a3_{i=1}^{m-1} x_i"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "modulus parameter; also multiplicity of the generated set",
+          "type": "integer"
+        },
+        {
+          "domain": "{1,2,...,m-1}",
+          "name": "i",
+          "role": "residue-class index / component index",
+          "type": "integer index"
+        },
+        {
+          "domain": "{1,2,...,m-1}",
+          "name": "j",
+          "role": "second index in defining inequalities",
+          "type": "integer index"
+        },
+        {
+          "domain": "(Z_{>0})^{m-1}",
+          "name": "x",
+          "role": "parameter controlling which shifted residue classes are included",
+          "type": "tuple of positive integers"
+        },
+        {
+          "domain": "Z_{>0} for each k \u2208 {1,...,m-1}",
+          "name": "x_k",
+          "role": "counts of missing elements in residue class k modulo m",
+          "type": "positive integer"
+        },
+        {
+          "domain": "N0 = {0,1,2,...}",
+          "name": "q",
+          "role": "quantifier parameter for generating arithmetic progressions in S_x",
+          "type": "integer"
+        },
+        {
+          "domain": "P(N0)",
+          "name": "S_x",
+          "role": "numerical set constructed from m and x",
+          "type": "subset of N0"
+        },
+        {
+          "domain": "N \u222a {\u221e} (implicitly claimed finite)",
+          "name": "genus(S_x)",
+          "role": "genus defined as |N0 \\ S_x|",
+          "type": "cardinality"
+        }
+      ],
+      "witness_dependencies": [
+        "S_x depends deterministically on (m, x)",
+        "The claim about genus depends on the same (m, x) satisfying the stated inequalities",
+        "No existential witnesses are introduced in the statement; only universal quantification over parameters (m, x) and universal quantification within the defining inequalities for i,j and within S_x for q"
+      ]
+    },
+    "statement_nl": "Let m be an integer with m >= 2, and let x = (x_1,...,x_{m-1}) be a tuple of positive integers satisfying the inequalities: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}. Define S_x = {0} union {q m : q in N0} union {q m + (m x_i + i) : q in N0 and 1 <= i <= m-1}, where N0 = {0,1,2,...}. Then the genus of S_x is exactly x_1 + x_2 + ... + x_{m-1}, where the genus means the cardinality of N0 \\ S_x. Equivalently, for each residue class i with 1 <= i <= m-1, exactly x_i integers congruent to i modulo m are missing from S_x."
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "detailed_findings": [
+      {
+        "finding": "The residue-class decomposition is correct and sufficient to compute the complement cardinality.",
+        "location": "overall structure",
+        "severity": "low"
+      },
+      {
+        "finding": "The proof fully justifies that in residue class i, S_x contains exactly the terms i+tm with t >= x_i.",
+        "location": "Step 2",
+        "severity": "low"
+      },
+      {
+        "finding": "The observation that the stated inequalities on x are unused is acceptable here, since the genus formula follows solely from the definition of S_x.",
+        "location": "final paragraph",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "lemma_id": "lem_20260324061320_d3da8117",
+    "proof_status": "complete",
+    "reason": "The proof correctly characterizes, for each residue class modulo m, exactly which elements lie in S_x and which do not. In residue class 0 all multiples of m are included, and in residue class i\\in{1,...,m-1} the included elements are exactly {i+tm : t\\ge x_i}, so the missing ones are exactly {i+tm : 0\\le t < x_i}, giving x_i missing elements. Since residue classes are disjoint, summing yields |N0 \\\\ S_x| = \\sum_i x_i. This matches the lemma statement exactly. The Kunz inequalities are indeed unused for this counting lemma, but that is not a defect since the claim depends only on the explicit form of S_x.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed"
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260324061320_d3da8117",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T06:17:28.711735Z",
+  "worker_job_id": "wrk_lem_20260324061320_d3da8117_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

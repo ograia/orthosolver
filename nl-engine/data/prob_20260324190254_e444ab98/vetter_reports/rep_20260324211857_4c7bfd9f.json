@@ -1,0 +1,46 @@
+{
+  "confidence": 0.98,
+  "created_at": "2026-03-24T21:18:57.009340Z",
+  "detailed_findings": [
+    {
+      "finding": "Genus-0 case is fully justified: genus 0 forces no missing nonnegative integers, hence S = N_0, and conversely N_0 is a numerical semigroup of genus 0.",
+      "location": "Genus 0 section",
+      "severity": "low"
+    },
+    {
+      "finding": "Genus-1 classification is correct: if the unique missing element m were >= 2, then 1 in S and closure under addition would force all n >= 0 into S, contradicting m notin S; hence m = 1, and the converse verification of the explicit set is complete.",
+      "location": "Genus 1 section",
+      "severity": "low"
+    },
+    {
+      "finding": "Genus-2 classification is correct: 1 cannot lie in S, so the missing set is {1,m}; if m >= 4 then both 2 and m-2 lie in S, forcing m in S by closure, contradiction; thus m is 2 or 3, yielding exactly the two listed semigroups.",
+      "location": "Genus 2 section",
+      "severity": "low"
+    },
+    {
+      "finding": "Both candidate genus-2 sets are explicitly checked to be cofinite additive submonoids containing 0, so the existence direction is complete.",
+      "location": "Genus 2 converse checks",
+      "severity": "low"
+    },
+    {
+      "finding": "The conclusion N(0)=1, N(1)=1, N(2)=2 and hence N(2)=N(1)+N(0) matches the lemma statement and the intended boundary-case role for g = 2.",
+      "location": "Final paragraph",
+      "severity": "low"
+    }
+  ],
+  "drift_assessment": {
+    "drift_description": null,
+    "drift_detected": false,
+    "drift_severity": "none",
+    "drift_type": null
+  },
+  "feedback_for_solver": null,
+  "problem_id": "prob_20260324190254_e444ab98",
+  "proof_status": "complete",
+  "reason": "The proof correctly classifies numerical semigroups of genus 0, 1, and 2 using only the definition of numerical semigroup and genus. Each uniqueness direction and each existence check is supplied, and the final count N(0)=1, N(1)=1, N(2)=2 implies the required boundary-case inequality N(2) >= N(1)+N(0). There is no substantive semantic drift from the lemma sketch or its role in the assembly, and no undeclared or forbidden dependencies are used.",
+  "recommended_action": "send_to_lean",
+  "report_id": "rep_20260324211857_4c7bfd9f",
+  "statement_status": "plausible",
+  "target_id": "lem_20260324211309_09b0f450",
+  "target_kind": "lemma"
+}

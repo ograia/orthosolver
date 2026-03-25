@@ -1,0 +1,73 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-16T20:42:27.539759Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.68,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix a prime p>5 with p \\equiv 1 \\pmod 8. For k\\in\\{1,\\dots,p-1\\}, let I(k)\\in\\{1,\\dots,p-1\\} be the unique inverse of k modulo p, and let\nS=\\{k\\in\\{1,\\dots,p-2\\}: I(k+1)<I(k)\\}.\nWe will prove the stronger bound |S|\\ge (p-7)/2; since p\\equiv 1\\pmod 8 implies p\\ge 17 and \\lfloor p/4\\rfloor=(p-1)/4, this will imply |S|\\ge \\lfloor p/4\\rfloor.\n\nFirst, for each n\\in\\{2,\\dots,p-1\\}, define J(n) to be the inverse of p modulo n, chosen in \\{1,\\dots,n-1\\}. There is a useful reciprocity identity:\n\nn I(n)+p J(n)=pn+1.   (1)\n\nProof of (1): write n I(n)=1+p a with an integer a. Since 2\\le n\\le p-1 and 1\\le I(n)\\le p-1, we have 1\\le a\\le n-1. Set J(n)=n-a. Then 1\\le J(n)\\le n-1, and\nn I(n)+p J(n)=n I(n)+p(n-a)=n I(n)+pn-(n I(n)-1)=pn+1.\nAlso pJ(n)\\equiv 1 \\pmod n, so this J(n) is indeed the inverse of p modulo n.\n\nNow fix k\\in\\{1,\\dots,p-2\\}, and set\nn:=I(k)+1.\nSince I is a permutation of \\{1,\\dots,p-1\\} and I(p-1)=p-1, the map k\\mapsto n is a bijection from \\{1,\\dots,p-2\\} to \\{2,\\dots,p-1\\}.\n\nDefine\ny:=\\frac{n-1+pJ(n)}{n}.\nBecause pJ(n)\\equiv 1\\pmod n, the numerator is divisible by n, so y is an integer. Also 1\\le J(n)\\le n-1 gives\n0<n-1+pJ(n)<n p,\nso 1\\le y\\le p-1.\n\nI claim that y=I(k+1). Indeed, modulo p we have\nny=n-1+pJ(n)\\equiv n-1.\nAlso k(n-1)=k I(k)\\equiv 1\\pmod p, hence\n(k+1)(n-1)\\equiv 1+(n-1)=n \\pmod p.\nTherefore\n(k+1)ny\\equiv (k+1)(n-1)\\equiv n \\pmod p.\nSince 2\\le n\\le p-1, n is invertible modulo p, so (k+1)y\\equiv 1\\pmod p. As 1\\le y\\le p-1, uniqueness of inverses gives y=I(k+1).\n\nThus\nk\\in S \\iff I(k+1)<I(k)=n-1\n\\iff y<n-1\n\\iff \\frac{n-1+pJ(n)}{n}<n-1\n\\iff pJ(n)<(n-1)^2.\nUsing (1), this is equivalent to\npn+1-nI(n)<(n-1)^2=n^2-2n+1,\nthat is,\nI(n)>p-n+2.\nSo the bijection k\\mapsto n=I(k)+1 sends S exactly onto\nA_+:=\\{n\\in\\{2,\\dots,p-1\\}: I(n)>p-n+2\\}\n=\\{n\\in\\{1,\\dots,p-1\\}: n+I(n)>p+2\\}.\nHence\n|S|=|A_+|.   (2)\n\nNow define f(n):=n+I(n) for n\\in\\{1,\\dots,p-1\\}. Since I(p-n)=p-I(n), we have\nf(p-n)=(p-n)+(p-I(n))=2p-f(n).\nTherefore the map n\\mapsto p-n is a bijection between\nA_+=\\{n: f(n)>p+2\\}\nand\nA_-:=\\{n: f(n)<p-2\\}.\nSo\n|A_+|=|A_-|.   (3)\n\nWe next bound the number of n with f(n) near p.\n\n1) There is no n with f(n)=p+2.\nFor then I(n)=p+2-n, so from nI(n)\\equiv 1\\pmod p we get\nn(p+2-n)\\equiv 1 \\pmod p,\ni.e.\n(n-1)^2\\equiv 0 \\pmod p.\nHence n\\equiv 1 \\pmod p, impossible because f(1)=2\\ne p+2.\n\n2) There is no n with f(n)=p-2.\nFor then I(n)=p-2-n, so similarly\nn(p-2-n)\\equiv 1 \\pmod p,\ni.e.\n(n+1)^2\\equiv 0 \\pmod p.\nHence n\\equiv -1 \\pmod p, impossible because then n=p-1 but f(p-1)=2p-2\\ne p-2.\n\n3) For each c\\in\\{-1,0,1\\}, there are at most 2 values of n with f(n)=p+c.\nIndeed, f(n)=p+c means I(n)=p+c-n, and then\nn(p+c-n)\\equiv 1 \\pmod p\n\\iff n^2-c n+1\\equiv 0 \\pmod p.\nThis is a quadratic congruence modulo the prime p, so it has at most 2 solutions.\n\nTherefore the \"middle strip\"\nM:=\\{n\\in\\{1,\\dots,p-1\\}: p-2\\le f(n)\\le p+2\\}\nhas size at most 6.\n\nNow \\{1,\\dots,p-1\\} is the disjoint union of A_-, M, A_+. Using (3),\np-1=|A_-|+|M|+|A_+|=2|A_+|+|M|\\le 2|A_+|+6.\nHence\n|A_+|\\ge \\frac{p-7}{2}.\nBy (2),\n|S|\\ge \\frac{p-7}{2}.\nFinally, since p\\equiv 1\\pmod 8 and p>5, we have p\\ge 17, so\n\\frac{p-7}{2}\\ge \\frac{p-1}{4}=\\left\\lfloor\\frac p4\\right\\rfloor.\nTherefore\n|S|\\ge \\left\\lfloor\\frac p4\\right\\rfloor.\nThis is exactly the desired claim.",
+  "latest_vetter_report_id": "rep_20260317002755_6fdd7366",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260316204148_eb7a7f49",
+  "parent_id": "thm_root_20260316200002_2d33d280",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260316200002_e457403f",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Handles the first residue class modulo 8 in a self-contained way, avoiding the broken universal counting lemma from the failed attempts.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let p be a prime number with p > 5 and p \u2261 1 (mod 8). For each k in {1,2,...,p-1}, let I(k) be the unique integer in {1,2,...,p-1} such that k * I(k) \u2261 1 (mod p), and define S = { k in {1,2,...,p-2} : I(k+1) < I(k) }. Then |S| >= floor(p/4).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "p is an integer prime with p > 5 and p \u2261 1 (mod 8)",
+      "k ranges over integers 1 through p-1 when defining I(k); S uses k \u2208 {1,...,p-2}",
+      "I(k) is constrained to be the unique representative in the set {1,...,p-1} satisfying the congruence k * I(k) \u2261 1 (mod p)",
+      "Comparisons I(k+1) < I(k) are ordinary integer comparisons between elements of {1,...,p-1}"
+    ],
+    "normalized_claim": "For every prime integer p > 5 with p \u2261 1 (mod 8), define I: {1,...,p-1} \u2192 {1,...,p-1} by I(k) \u2261 k^{-1} (mod p) (the unique representative in 1..p-1). Let S = { k \u2208 {1,...,p-2} : I(k+1) < I(k) }. Then the cardinality of S satisfies |S| \u2265 \u230ap/4\u230b.",
+    "quantifier_order": [
+      "For all p (integer) such that p is prime, p > 5, and p \u2261 1 (mod 8)",
+      "  For each k \u2208 {1,...,p-1}, define I(k) \u2208 {1,...,p-1} as the unique integer with k * I(k) \u2261 1 (mod p)",
+      "  Define S := { k \u2208 {1,...,p-2} : I(k+1) < I(k) }",
+      "Claim: |S| \u2265 floor(p/4)"
+    ],
+    "variables": [
+      {
+        "domain": "prime integers, p > 5, and p \u2261 1 (mod 8)",
+        "name": "p",
+        "role": "parameter (global): the prime with given congruence condition",
+        "type": "integer"
+      },
+      {
+        "domain": "for purposes of definition: k \u2208 {1,2,...,p-1}; for S: k \u2208 {1,2,...,p-2}",
+        "name": "k",
+        "role": "index variable ranging over residues mod p (excluding 0), used to define inverses and membership in S",
+        "type": "integer"
+      },
+      {
+        "domain": "I: {1,...,p-1} \u2192 {1,...,p-1}",
+        "name": "I",
+        "role": "map sending k to the (unique) multiplicative inverse of k modulo p, represented as an integer in 1..p-1",
+        "type": "function"
+      },
+      {
+        "domain": "subset of {1,2,...,p-2}",
+        "name": "S",
+        "role": "set of indices k where the integer representative of the inverse strictly decreases: I(k+1) < I(k)",
+        "type": "set"
+      }
+    ],
+    "witness_dependencies": [
+      "I(k) is a witness (the modular inverse) that depends on both p and k; existence and uniqueness of I(k) depend on gcd(k,p)=1 (holds because p is prime and 1 \u2264 k \u2264 p-1)",
+      "S depends on the whole list of values {I(k) : k = 1,...,p-1} and thus on p and all k",
+      "The bound floor(p/4) depends only on p"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-16T20:42:27.539760Z"
+}

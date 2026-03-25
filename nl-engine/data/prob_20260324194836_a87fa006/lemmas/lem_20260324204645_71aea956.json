@@ -1,0 +1,76 @@
+{
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260324205304_4fba1e58",
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T20:46:50.851871Z",
+  "decomposition_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_dependency_check_id": "depchk_20260324205746_d2a9b790",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Work in the rational-function field in q. By definition, [n choose r]_q = (prod_{i=1}^r (1 - q^(n-r+i))) / (prod_{i=1}^r (1 - q^i)), and, replacing r by n-r, [n choose n-r]_q = (prod_{i=1}^{n-r} (1 - q^(r+i))) / (prod_{i=1}^{n-r} (1 - q^i)). Set A = prod_{i=1}^r (1 - q^(n-r+i)), B = prod_{i=1}^r (1 - q^i), C = prod_{i=1}^{n-r} (1 - q^i), and D = prod_{i=1}^{n-r} (1 - q^(r+i)). Then [n choose r]_q = A/B and [n choose n-r]_q = D/C. The factors in A are exactly (1 - q^t) for t = n-r+1, ..., n, while the factors in C are exactly (1 - q^t) for t = 1, ..., n-r. These two index sets are disjoint and their union is {1, ..., n}; hence, by commutativity of multiplication, A C = prod_{t=1}^n (1 - q^t). Similarly, the factors in D are exactly (1 - q^t) for t = r+1, ..., n, while the factors in B are exactly (1 - q^t) for t = 1, ..., r, so again the index sets are disjoint with union {1, ..., n}; hence D B = prod_{t=1}^n (1 - q^t). Therefore A C = D B. Now B and C are nonzero (each is a finite product of factors 1 - q^i, or an empty product equal to 1), so in the rational-function field we may divide by B C and obtain A/B = D/C. Thus [n choose r]_q = [n choose n-r]_q. This includes the boundary cases r = 0 and r = n, since the relevant empty product is 1.",
+  "latest_vetter_report_id": "rep_20260324205746_7d6e00a5",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324204645_71aea956",
+  "minor_rejection_count": 0,
+  "parent_id": "thm_root_20260324194836_7ca60a42",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/lemmas/lem_20260324204645_71aea956.json",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Reduces the original quotient to the symmetric indices a := min(k, n-k) and b := min(l, n-l).",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "For integers n and r with 0 <= r <= n, define the Gaussian q-binomial coefficient by [n choose r]_q := prod_{i=1}^r (1 - q^(n-r+i)) / (1 - q^i), with the empty product equal to 1 when r = 0. Then [n choose r]_q = [n choose n-r]_q.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n and r are integers",
+      "0 <= r <= n",
+      "The product index i ranges over integers i = 1,2,...,r; when r = 0 the product is empty and equals 1",
+      "Implicitly, the denominator factors (1 - q^i) for i = 1,...,r must be meaningful (nonzero) if q is a numeric parameter; alternatively the identity is intended in a formal/polynomial/rational-function sense where the expression is well-defined"
+    ],
+    "normalized_claim": "For all integers n and r with 0 <= r <= n, the quantity defined by [n choose r]_q := (\u220f_{i=1}^r (1 - q^(n-r+i)))/(\u220f_{i=1}^r (1 - q^i)), with \u220f_{i=1}^0 := 1, satisfies [n choose r]_q = [n choose (n-r)]_q, where [n choose (n-r)]_q is defined by the same formula with r replaced by (n-r).",
+    "quantifier_order": [
+      "For all integers n",
+      "For all integers r",
+      "with 0 <= r <= n: define [n choose r]_q by the given product (empty product convention when r = 0); then assert equality [n choose r]_q = [n choose n-r]_q"
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "n",
+        "role": "upper index in the q-binomial coefficient; constrained by quantifier to satisfy 0 <= r <= n",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "r",
+        "role": "lower index in the q-binomial coefficient; constrained by quantifier to satisfy 0 <= r <= n",
+        "type": "integer"
+      },
+      {
+        "domain": "unspecified (typically indeterminate / formal variable or element of a field)",
+        "name": "q",
+        "role": "base of the q-binomial coefficient; appears as exponents q^k",
+        "type": "parameter"
+      },
+      {
+        "domain": "Z",
+        "name": "i",
+        "role": "dummy index of the product defining [n choose r]_q",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T20:46:50.851872Z"
+}

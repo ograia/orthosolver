@@ -1,0 +1,66 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-20T18:18:02.724785Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let m = |X| and n = |Y|. For each integer r >= 0, write [r] = {1,2,...,r}, with [0] = the empty set. Since X and Y are finite, there exist bijections a : X -> [m] and b : Y -> [n]. If f : X -> Y is injective, then g := b o f o a^{-1} : [m] -> [n] is also injective. Thus it is enough to prove the following claim:\n\nClaim. If there exists an injective map [m] -> [n], then m <= n.\n\nWe prove the claim by induction on n.\n\nBase case n = 0. Then [n] is empty. A function [m] -> empty set can exist only if [m] is empty, so m = 0. Hence m <= 0 = n.\n\nInductive step. Assume the claim holds for some n >= 0, and let g : [m] -> [n+1] be injective. If m = 0, then m <= n+1 is immediate. So suppose m >= 1.\n\nLet k = g(m). Define tau : [n+1] -> [n+1] to be the transposition that swaps k and n+1 and fixes every other element. Then h := tau o g is injective, and h(m) = n+1.\n\nNow let i be any element of [m-1]. If h(i) = n+1, then h(i) = h(m), contradicting injectivity of h. Therefore h(i) is in [n] for every i in [m-1]. So the restriction of h to [m-1] is an injective map [m-1] -> [n]. By the induction hypothesis, m-1 <= n. Hence m <= n+1.\n\nThis proves the claim.\n\nApplying the claim to the injective map g gives m <= n, that is, |X| <= |Y|. Therefore, if there exists an injective function f : X -> Y between finite sets, then |X| <= |Y|.",
+  "latest_vetter_report_id": "rep_20260320221241_c8a0131a",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260320181759_9b9a0b65",
+  "parent_id": "thm_root_20260320180855_1d8d4f17",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Converts the injective map between Kunz layers into the desired inequality of counts.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let X and Y be finite sets. If there exists an injective function f : X -> Y, then |X| <= |Y|.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "X is finite",
+      "Y is finite",
+      "f : X \u2192 Y exists",
+      "f is injective (i.e., for all x1,x2 in X, f(x1)=f(x2) implies x1=x2)"
+    ],
+    "normalized_claim": "For all finite sets X and Y, if there exists an injective function f: X \u2192 Y, then the cardinalities satisfy |X| \u2264 |Y|.",
+    "quantifier_order": [
+      "For all finite sets X",
+      "For all finite sets Y",
+      "If there exists a function f : X \u2192 Y that is injective",
+      "then |X| <= |Y|"
+    ],
+    "variables": [
+      {
+        "domain": "all finite sets",
+        "name": "X",
+        "role": "source set of an injection",
+        "type": "set"
+      },
+      {
+        "domain": "all finite sets",
+        "name": "Y",
+        "role": "target set of an injection",
+        "type": "set"
+      },
+      {
+        "domain": "X \u2192 Y",
+        "name": "f",
+        "role": "witness of injectivity",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "The existential witness f depends on the chosen X and Y."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-20T18:18:02.724786Z"
+}

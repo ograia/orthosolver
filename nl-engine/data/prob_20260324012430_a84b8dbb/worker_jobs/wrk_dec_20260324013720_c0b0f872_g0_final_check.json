@@ -1,0 +1,571 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/final_check/dec_20260324013720_c0b0f872",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-24T06:07:28.001228Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent6_final_check",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "decomposition": {
+      "assembly_plan": {
+        "proof_skeleton_nl": "Fix integers m >= 2 and g >= 0. Translate multiplicity-m numerical semigroups of genus g into Kunz-coordinate tuples with coordinate sum g; this gives N(m,g) = |K_{m,g}|. Do the same for genus g+1 to get N(m,g+1) = |K_{m,g+1}|. Next, prove separately that K_{m,g} and K_{m,g+1} are finite. Then invoke the core combinatorial lemma asserting the existence of an injective map J_{m,g} : K_{m,g} -> K_{m,g+1}. By the finite-set injection principle, this implies |K_{m,g}| <= |K_{m,g+1}|. Finally, substitute the two counting equalities to obtain N(m,g) <= N(m,g+1). This assembly explicitly fixes the earlier gap: finiteness is established before the cardinality comparison is made, and no use is made of the previously rejected false 'least admissible coordinate' injection.",
+        "steps": [
+          {
+            "derives": "For every integers m >= 2 and g >= 0, N(m,g) = |K_{m,g}|, where K_{m,g} is the set of positive integer tuples satisfying the multiplicity-m Kunz inequalities and having coordinate sum g.",
+            "is_trivial": true,
+            "step_id": "A1",
+            "trivial_justification": "This is exactly the statement of L3.",
+            "uses_lemmas": [
+              "lem_20260324013747_af6fcf4d"
+            ],
+            "uses_prior_steps": []
+          },
+          {
+            "derives": "For every integers m >= 2 and g >= 0, the set K_{m,g} is finite.",
+            "is_trivial": true,
+            "step_id": "A2",
+            "trivial_justification": "This is exactly the statement of L4 with the given parameters m and g.",
+            "uses_lemmas": [
+              "lem_20260324013757_1de6e5cf"
+            ],
+            "uses_prior_steps": []
+          },
+          {
+            "derives": "For every integers m >= 2 and g >= 0, the set K_{m,g+1} is finite.",
+            "is_trivial": true,
+            "step_id": "A3",
+            "trivial_justification": "Apply L4 with the same m and with genus parameter replaced by g+1. Since g >= 0, we have g+1 >= 0, so the lemma applies.",
+            "uses_lemmas": [
+              "lem_20260324013757_1de6e5cf"
+            ],
+            "uses_prior_steps": []
+          },
+          {
+            "derives": "For every integers m >= 2 and g >= 0, there exists an injective function J_{m,g} : K_{m,g} -> K_{m,g+1}.",
+            "is_trivial": true,
+            "step_id": "A4",
+            "trivial_justification": "This is exactly the statement of L5.",
+            "uses_lemmas": [
+              "lem_20260324013805_2c445eb6"
+            ],
+            "uses_prior_steps": []
+          },
+          {
+            "derives": "For every integers m >= 2 and g >= 0, |K_{m,g}| <= |K_{m,g+1}|.",
+            "is_trivial": false,
+            "step_id": "A5",
+            "trivial_justification": "From A2, the set K_{m,g} is finite. From A3, the set K_{m,g+1} is finite. From A4, there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}. Applying L6 to A = K_{m,g}, B = K_{m,g+1}, and f = J_{m,g} yields |K_{m,g}| <= |K_{m,g+1}|.",
+            "uses_lemmas": [
+              "lem_20260324013813_247050aa"
+            ],
+            "uses_prior_steps": [
+              "A2",
+              "A3",
+              "A4"
+            ]
+          },
+          {
+            "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m,g) of numerical semigroups with multiplicity m and genus g satisfies N(m,g) <= N(m,g+1).",
+            "is_trivial": false,
+            "step_id": "A6",
+            "trivial_justification": "Apply A1 with genus g to obtain N(m,g) = |K_{m,g}|. Apply A1 again with genus g+1 to obtain N(m,g+1) = |K_{m,g+1}|. From A5 we have |K_{m,g}| <= |K_{m,g+1}|. Substituting the two equalities into this inequality gives N(m,g) <= N(m,g+1), which is exactly the root theorem statement.",
+            "uses_lemmas": [],
+            "uses_prior_steps": [
+              "A1",
+              "A5"
+            ]
+          }
+        ]
+      },
+      "decomposition_id": "dec_20260324013720_c0b0f872",
+      "shared_context": [
+        {
+          "content": "A numerical semigroup is a subset S of the nonnegative integers N0 such that 0 belongs to S, S is closed under addition, and N0 \\ S is finite. The multiplicity of S is the least positive element of S. The genus of S is the cardinality of N0 \\ S.",
+          "label": "Numerical semigroup"
+        },
+        {
+          "content": "For integers m >= 2 and g >= 0, N(m,g) denotes the number of numerical semigroups whose multiplicity is m and whose genus is g.",
+          "label": "Counting function N(m,g)"
+        }
+      ],
+      "strategy_summary": "Use the Kunz-coordinate encoding only to translate the theorem into a finite combinatorial counting problem, but unlike the rejected attempt, do not use the false 'least admissible coordinate' map. Instead, isolate the genus-raising step as a separate existence-of-injection lemma on Kunz vectors, and add explicit finiteness lemmas before applying the finite-set injection principle."
+    },
+    "lemmas": [
+      {
+        "lemma_id": "lem_20260324013720_8d833c92",
+        "proof_nl": "Fix an integer m>=2.\n\nWe prove both directions.\n\nForward direction. Let S be a numerical semigroup of multiplicity m. Thus S\\subseteq N_0, 0\\in S, S is closed under addition, N_0\\setminus S is finite, and the least positive element of S is m.\n\nFor each i\\in\\{1,\\dots,m-1\\}, define w_i to be the least element of S congruent to i modulo m. We first justify existence of w_i. Since N_0\\setminus S is finite, there exists some integer N such that every n\\ge N lies in S. Fix i\\in\\{1,\\dots,m-1\\}. Choose q so large that qm+i\\ge N. Then qm+i\\in S and qm+i\\equiv i\\pmod m. Hence the set \\{s\\in S:s\\equiv i\\pmod m\\} is nonempty, so its least element w_i exists.\n\nBy definition w_i\\equiv i\\pmod m, so there is an integer x_i with w_i=mx_i+i.\n\nWe now show x_i is a positive integer. Since w_i\\in S and w_i\\equiv i\\not\\equiv 0\\pmod m, we have w_i\\ne 0. Therefore w_i is a positive element of S. Because m is the multiplicity of S, every positive element of S is at least m, so w_i\\ge m. If x_i\\le 0, then w_i=mx_i+i\\le i<m, contradicting w_i\\ge m. Hence x_i\\ge 1. Therefore each x_i is a positive integer.\n\nNext we prove the stated description of S:\nS = {0} \\cup \\{qm:q\\in N_0\\} \\cup \\{qm+(mx_i+i): q\\in N_0, 1\\le i\\le m-1\\}.\n\nFirst, every element of the right-hand side belongs to S. Indeed, 0\\in S. Also m\\in S, so by closure under addition qm\\in S for every q\\in N_0. And since w_i=mx_i+i\\in S, again by closure qm+w_i\\in S for every q\\in N_0. Thus the right-hand side is contained in S.\n\nConversely, let s\\in S. If s=0, then s is in the right-hand side. If s>0 and s\\equiv 0\\pmod m, write s=qm with q\\in N_0; then s is in the right-hand side. If s\\equiv i\\pmod m for some i\\in\\{1,\\dots,m-1\\}, then by minimality of w_i among elements of S in that residue class we have s\\ge w_i, and since s-w_i is divisible by m we may write s=w_i+qm for some integer q\\ge 0. Hence s=qm+(mx_i+i), so again s lies in the right-hand side. This proves equality.\n\nNow we prove the Kunz inequalities.\n\nTake i,j\\in\\{1,\\dots,m-1\\}.\n\nCase 1: i+j<m. Then w_i+w_j\\in S by closure, and\nw_i+w_j \\equiv i+j \\pmod m.\nSince w_{i+j} is the least element of S congruent to i+j mod m, we get\nw_i+w_j\\ge w_{i+j}.\nSubstituting w_t=mx_t+t gives\n(mx_i+i)+(mx_j+j) \\ge mx_{i+j}+(i+j),\nso\nm(x_i+x_j)\\ge mx_{i+j}.\nBecause m>0, this yields x_i+x_j\\ge x_{i+j}.\n\nCase 2: i+j>m. Then w_i+w_j\\in S and\nw_i+w_j \\equiv i+j-m \\pmod m,\nwith i+j-m\\in\\{1,\\dots,m-1\\}. By minimality of w_{i+j-m},\nw_i+w_j\\ge w_{i+j-m}.\nSubstituting gives\n(mx_i+i)+(mx_j+j) \\ge mx_{i+j-m}+(i+j-m),\nthat is,\nm(x_i+x_j+1)\\ge mx_{i+j-m}.\nHence x_i+x_j+1\\ge x_{i+j-m}.\n\nThis proves all assertions in the forward direction.\n\nConverse direction. Now let x=(x_1,\\dots,x_{m-1}) be any tuple of positive integers satisfying:\n- if i+j<m, then x_i+x_j\\ge x_{i+j};\n- if i+j>m, then x_i+x_j+1\\ge x_{i+j-m};\nfor all i,j\\in\\{1,\\dots,m-1\\}.\n\nDefine\nS_x := {0} \\cup \\{qm:q\\in N_0\\} \\cup \\{qm+(mx_i+i): q\\in N_0,\\ 1\\le i\\le m-1\\}.\nWe must show S_x is a numerical semigroup of multiplicity m.\n\nFirst, S_x\\subseteq N_0 and 0\\in S_x by definition.\n\nSecond, m\\in S_x (take q=1 in \\{qm:q\\in N_0\\}). Also, no positive integer less than m belongs to S_x. Indeed, every nonzero multiple qm of m is at least m, and every element of the third set has the form\nqm+(mx_i+i)=m(q+x_i)+i.\nSince x_i\\ge 1 and q\\ge 0, we have q+x_i\\ge 1, so this number is at least m+i>m. Therefore the least positive element of S_x is m, once we know S_x is a numerical semigroup. In particular, multiplicity m will follow.\n\nThird, N_0\\setminus S_x is finite. For each residue class i\\in\\{1,\\dots,m-1\\}, all numbers congruent to i mod m and at least mx_i+i belong to S_x, because they are exactly the numbers qm+(mx_i+i) with q\\in N_0. Also every multiple of m belongs to S_x. Thus the only possible missing numbers are:\n- no multiples of m are missing;\n- in residue class i, only the finitely many numbers i, m+i, 2m+i, ..., (x_i-1)m+i may be missing.\nHence N_0\\setminus S_x is finite.\n\nIt remains to prove closure under addition. Let a,b\\in S_x. We consider cases.\n\n1. If a=0 or b=0, then a+b is the other summand, so a+b\\in S_x.\n\n2. If both a and b are multiples of m, say a=q_1m and b=q_2m, then a+b=(q_1+q_2)m\\in S_x.\n\n3. If one is a multiple of m and the other is not, say a=q_1m and b=q_2m+(mx_i+i) for some i, then\na+b=(q_1+q_2)m+(mx_i+i)\\in S_x.\nThe same argument applies with a and b interchanged.\n\n4. Suppose both are of the third type:\na=q_1m+(mx_i+i),\\qquad b=q_2m+(mx_j+j)\nfor some i,j\\in\\{1,\\dots,m-1\\} and q_1,q_2\\in N_0.\nThen\na+b=(q_1+q_2)m + (mx_i+i)+(mx_j+j).\nWe split according to i+j.\n\n4a. If i+j<m, then by the inequality x_i+x_j\\ge x_{i+j}. Hence there exists an integer\nr:=x_i+x_j-x_{i+j}\\ge 0.\nNow\n(mx_i+i)+(mx_j+j)=m(x_i+x_j)+(i+j)=mr+(mx_{i+j}+(i+j)).\nTherefore\na+b=(q_1+q_2+r)m + (mx_{i+j}+(i+j)) \\in S_x.\n\n4b. If i+j=m, then\n(mx_i+i)+(mx_j+j)=m(x_i+x_j+1),\nso\na+b=(q_1+q_2+x_i+x_j+1)m\\in S_x.\n\n4c. If i+j>m, then by the inequality x_i+x_j+1\\ge x_{i+j-m}. Hence\nr:=x_i+x_j+1-x_{i+j-m}\\ge 0.\nAlso\n(mx_i+i)+(mx_j+j)=m(x_i+x_j)+i+j = mr + (mx_{i+j-m}+(i+j-m)).\nIndeed, since i+j=(i+j-m)+m,\nm(x_i+x_j)+i+j = m(x_i+x_j+1)+(i+j-m)\n= mr + (mx_{i+j-m}+(i+j-m)).\nThus\na+b=(q_1+q_2+r)m + (mx_{i+j-m}+(i+j-m)) \\in S_x.\n\nIn all cases a+b\\in S_x, so S_x is closed under addition.\n\nWe have shown that S_x is a subset of N_0 containing 0, closed under addition, and with finite complement in N_0. Therefore S_x is a numerical semigroup. Since m\\in S_x and no positive integer less than m belongs to S_x, its multiplicity is exactly m.\n\nThis proves the converse.\n\nTherefore, for every integer m\\ge 2, the numerical semigroups of multiplicity m are exactly those obtained from positive integer tuples (x_1,\\dots,x_{m-1}) satisfying the stated Kunz inequalities, via the displayed formula, and for a given numerical semigroup the associated coordinates satisfy all the asserted properties.",
+        "role_in_assembly": "Provides the exact combinatorial model of multiplicity-m numerical semigroups by Kunz-coordinate tuples, with all closure conditions fully inlined.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m >= 2",
+            "S is a numerical semigroup (subset of N0, contains 0, closed under addition, has finite complement in N0)",
+            "S has multiplicity m: equivalently the least positive element of S equals m",
+            "w_i exists for each i in {1,...,m-1}: S contains some element congruent to i mod m (true for numerical semigroups of multiplicity m)",
+            "w_i is defined as the least element of S with w_i \u2261 i (mod m)",
+            "w_i is written in the form w_i = m x_i + i; this enforces x_i \u2208 Z a priori",
+            "In the forward direction: each x_i \u2208 Z is forced to be a positive integer",
+            "In the Kunz inequalities, indices i,j range over {1,...,m-1}",
+            "In the inequality conditions: the subcases use i+j < m, i+j > m (with the missing/handled case i+j = m)",
+            "In the definition of S and S_x, q ranges over N0 and i ranges over {1,...,m-1}"
+          ],
+          "normalized_claim": "For fixed m \u2265 2: (1) If S is a numerical semigroup with multiplicity m and for each i\u2208{1,...,m-1} one defines w_i as the least element of S congruent to i mod m and writes w_i = m x_i + i, then (a) all x_i are positive integers, (b) S equals {0} \u222a {q m : q\u2208N0} \u222a {q m + (m x_i + i) : q\u2208N0, 1\u2264i\u2264m-1}, and (c) for all i,j\u2208{1,...,m-1}: if i+j<m then x_i+x_j\u2265x_{i+j}, and if i+j>m then x_i+x_j+1\u2265x_{i+j-m}. (2) Conversely, if x=(x_1,...,x_{m-1}) is any tuple of positive integers satisfying those same Kunz inequalities, and S_x is defined by the same union formula with x_i in place of the forward-defined coordinates, then S_x is a numerical semigroup and has multiplicity m.",
+          "quantifier_order": [
+            "Let m be an integer with m >= 2 (universal over allowed m as a parameter)",
+            "For each i in {1,2,...,m-1}, define w_i as the least element of S congruent to i modulo m",
+            "Then (for the given S) each x_i is a positive integer",
+            "Then (for the given S) S is exactly the specified union",
+            "For all i,j in {1,...,m-1} with condition i + j < m: x_i + x_j >= x_{i+j}",
+            "For all i,j in {1,...,m-1} with condition i + j > m: x_i + x_j + 1 >= x_{i+j-m}",
+            "Conversely: For any tuple x = (x_1,...,x_{m-1}) of positive integers satisfying those inequalities",
+            "Define S_x by the specified union",
+            "Then S_x is a numerical semigroup of multiplicity m"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "fixed parameter (multiplicity)",
+              "type": "integer"
+            },
+            {
+              "domain": "subsets of N0",
+              "name": "S",
+              "role": "numerical semigroup of multiplicity m",
+              "type": "set"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "i",
+              "role": "Ap\u00e9ry residue class index",
+              "type": "integer"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "j",
+              "role": "Ap\u00e9ry residue class index for Kunz inequalities",
+              "type": "integer"
+            },
+            {
+              "domain": "S",
+              "name": "w_i",
+              "role": "least element of S congruent to i (mod m)",
+              "type": "integer"
+            },
+            {
+              "domain": "Z initially, then proved positive integer",
+              "name": "x_i",
+              "role": "quotient in decomposition w_i = m x_i + i",
+              "type": "integer"
+            },
+            {
+              "domain": "(Z)^{m-1} with positivity required in the converse",
+              "name": "x",
+              "role": "Kunz coordinate tuple (x_1,...,x_{m-1})",
+              "type": "tuple"
+            },
+            {
+              "domain": "N0",
+              "name": "q",
+              "role": "nonnegative multiplier for generating elements in S (and S_x)",
+              "type": "integer"
+            },
+            {
+              "domain": "subsets of N0 defined from x",
+              "name": "S_x",
+              "role": "numerical semigroup candidate constructed from Kunz coordinates",
+              "type": "set"
+            }
+          ],
+          "witness_dependencies": [
+            "w_i depends on S and on i via: w_i = min{ s \u2208 S : s \u2261 i (mod m) }",
+            "x_i depends on w_i (hence on S and i) via: x_i = (w_i - i)/m",
+            "The set-expression for S depends on m and on the entire tuple (x_1,...,x_{m-1}) constructed from S",
+            "In the converse, the constructed semigroup S_x depends on the chosen tuple x and on m via the given union formula",
+            "The verification that S_x has multiplicity m depends on the positivity of all x_i and the Kunz inequalities"
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2. For a numerical semigroup S of multiplicity m, define for each i in {1,2,...,m-1} the Ap\u00e9ry representative w_i to be the least element of S congruent to i modulo m, and write w_i = m x_i + i with x_i an integer. Then each x_i is a positive integer, the set S is exactly {0} union {q m : q in N0} union {q m + (m x_i + i) : q in N0 and 1 <= i <= m-1}, and the tuple x = (x_1,...,x_{m-1}) satisfies the Kunz inequalities: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}. Conversely, if x = (x_1,...,x_{m-1}) is any tuple of positive integers satisfying those same Kunz inequalities, and S_x is defined by S_x = {0} union {q m : q in N0} union {q m + (m x_i + i) : q in N0 and 1 <= i <= m-1}, then S_x is a numerical semigroup of multiplicity m."
+      },
+      {
+        "lemma_id": "lem_20260324013730_6abb2748",
+        "proof_nl": "Fix an integer m >= 2 and a tuple x=(x_1,...,x_{m-1}) of positive integers satisfying the stated Kunz inequalities, and define\n\nS_x = {0} \u222a {q m : q \u2208 N0} \u222a {q m + (m x_i + i) : q \u2208 N0, 1 <= i <= m-1}.\n\nWe must prove that the genus g(S_x), i.e. the number of elements of N0 \\ S_x, is\n\nsum_{i=1}^{m-1} x_i.\n\nThe proof is by describing exactly which nonnegative integers are missing from S_x.\n\nFirst, every nonnegative integer n has a unique expression n = q m + r with q \u2208 N0 and 0 <= r <= m-1.\n\nWe analyze membership in S_x residue class by residue class modulo m.\n\n1. Residue class 0 modulo m.\nIf r=0, then n=q m, so by definition n \u2208 S_x. Hence there are no gaps in the residue class 0 modulo m.\n\n2. Residue class i modulo m, where 1 <= i <= m-1.\nTake n = q m + i with q \u2208 N0.\n\nWe claim:\n\nn \u2208 S_x if and only if q >= x_i.\n\nIndeed, by definition, the elements of S_x congruent to i mod m are exactly those of the form\n\nq' m + (m x_i + i) = (q' + x_i)m + i\n\nwith q' \u2208 N0. Thus the set of elements of S_x having residue i mod m is exactly\n\n{t m + i : t >= x_i, t \u2208 N0}.\n\nSo for n=q m+i we have n \u2208 S_x exactly when q >= x_i, proving the claim.\n\nTherefore the elements of N0 in residue class i that are not in S_x are precisely\n\ni, m+i, 2m+i, ..., (x_i-1)m+i.\n\nBecause x_i is a positive integer, this list contains exactly x_i numbers.\n\n3. Counting all gaps.\nBy the preceding analysis, the gaps of S_x are exactly the union over i=1,...,m-1 of the sets\n\n{i, m+i, 2m+i, ..., (x_i-1)m+i}.\n\nThese sets are pairwise disjoint, because their elements have different residues modulo m. Hence the total number of gaps is the sum of their cardinalities:\n\n|N0 \\ S_x| = sum_{i=1}^{m-1} x_i.\n\nBy definition of genus, g(S_x) = |N0 \\ S_x|. Therefore\n\ng(S_x) = sum_{i=1}^{m-1} x_i.\n\nThis is exactly the desired conclusion.\n\nNote that the Kunz inequalities were not needed for this counting argument itself; they serve to ensure that the set defined from x is indeed a numerical semigroup in the intended correspondence. Once S_x is given by the displayed formula, the genus is determined by the above residue-class count.",
+        "role_in_assembly": "Identifies the genus parameter with the coordinate sum in the Kunz model.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer and m >= 2",
+            "each coordinate x_i is a positive integer for i in {1,...,m-1}",
+            "Kunz inequalities are required to hold for all i,j in {1,...,m-1} under the conditions: (i+j<m) => x_i + x_j >= x_{i+j}, and (i+j>m) => x_i + x_j + 1 >= x_{i+j-m}",
+            "Definition of S_x uses q in N0 and indices i in {1,...,m-1}; S_x = {0} \u222a {q m : q\u2208N0} \u222a {q m + (m x_i + i) : q\u2208N0, 1<=i<=m-1}",
+            "Implicit: S_x is treated as a numerical semigroup so that its genus is defined"
+          ],
+          "normalized_claim": "For every integer m >= 2 and every tuple x=(x_1,...,x_{m-1}) of positive integers satisfying the Kunz inequalities (as specified for all i,j in {1,...,m-1} in the cases i+j<m and i+j>m), let S_x = {0} \u222a {q m : q\u2208N0} \u222a {q m + (m x_i + i) : q\u2208N0, 1<=i<=m-1}. Then the genus g(S_x) (number of gaps of S_x in N0) satisfies g(S_x) = \u03a3_{i=1}^{m-1} x_i.",
+          "quantifier_order": [
+            "for all m in Z with m >= 2",
+            "for all x = (x_1,...,x_{m-1}) in (positive integers)^{m-1} such that (Kunz inequalities hold for all i,j in {1,...,m-1} with the stated case split),",
+            "then genus(S_x) = sum_{i=1}^{m-1} x_i"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "modulus/embedding dimension parameter for the construction S_x; determines the index set {1,...,m-1}",
+              "type": "integer"
+            },
+            {
+              "domain": "Z^{m-1}",
+              "name": "x",
+              "role": "Kunz-coordinate vector; determines both the Kunz inequalities and the generating set offsets m x_i + i used in S_x",
+              "type": "tuple of integers indexed by {1,...,m-1}"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "i",
+              "role": "index into x and into the definition of S_x",
+              "type": "integer index"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "j",
+              "role": "index into x used in the Kunz inequalities",
+              "type": "integer index"
+            },
+            {
+              "domain": "N0",
+              "name": "q",
+              "role": "multiplicity parameter generating elements q m and q m + (m x_i + i) in S_x",
+              "type": "natural number"
+            }
+          ],
+          "witness_dependencies": [
+            "S_x depends functionally on (m,x): all elements are constructed from q\u2208N0 and i\u2208{1,...,m-1} using the offsets m x_i + i",
+            "The numerical semigroup genus being claimed depends on S_x, hence on (m,x)",
+            "There are no existential witnesses in the main claim; only universal quantification over m and x (subject to inequalities) and auxiliary indices q,i,j in definitions/conditions"
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2, and let x = (x_1,...,x_{m-1}) be a tuple of positive integers satisfying the Kunz inequalities: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}. Define S_x = {0} union {q m : q in N0} union {q m + (m x_i + i) : q in N0 and 1 <= i <= m-1}. Then the genus of the numerical semigroup S_x is exactly x_1 + x_2 + ... + x_{m-1}."
+      },
+      {
+        "lemma_id": "lem_20260324013747_af6fcf4d",
+        "proof_nl": "Fix integers m\\ge 2 and g\\ge 0. We prove that the numerical semigroups of multiplicity m and genus g are in bijection with the set K_{m,g}.\n\nWe use the standard definitions.\nA numerical semigroup is a cofinite submonoid S of \\mathbb N_0 containing 0. Its multiplicity is its least positive element, denoted m(S). Its genus is g(S):=|\\mathbb N_0\\setminus S|. For a nonzero m\\in S, the Ap\u00e9ry set of S with respect to m is\nAp(S,m):=\\{w\\in S: w-m\\notin S\\}.\nIt is standard and easy to check that Ap(S,m) contains exactly one element in each residue class mod m; thus we may write\nAp(S,m)=\\{w_0,w_1,\\dots,w_{m-1}\\}\nwith w_0=0 and w_i\\equiv i\\pmod m for 1\\le i\\le m-1.\nSince m is the multiplicity, no positive integer <m belongs to S, hence for i=1,\\dots,m-1 we have w_i>i. Therefore each w_i has the form\nw_i=i+m x_i\nwith x_i\\in \\mathbb Z_{>0}.\nThe tuple x=(x_1,\\dots,x_{m-1}) is the Kunz-coordinate vector of S.\n\nWe first show that if S has multiplicity m and genus g, then its Kunz-coordinate vector lies in K_{m,g}.\n\nLet S be a numerical semigroup with multiplicity m and genus g. Define x_i by w_i=i+m x_i as above.\n\n1. Positivity.\nFor each i\\in\\{1,\\dots,m-1\\}, we have x_i\\ge 1 because w_i>i.\n\n2. Kunz inequalities.\nTake any i,j\\in\\{1,\\dots,m-1\\}.\nBecause w_i,w_j\\in S and S is closed under addition, w_i+w_j\\in S.\n\nIf i+j<m, then w_i+w_j\\equiv i+j\\pmod m. Since w_{i+j} is the least element of S congruent to i+j mod m, we have\nw_i+w_j\\ge w_{i+j}.\nSubstituting w_k=k+m x_k gives\n(i+m x_i)+(j+m x_j)\\ge (i+j)+m x_{i+j},\nso m(x_i+x_j)\\ge m x_{i+j}, hence\nx_i+x_j\\ge x_{i+j}.\n\nIf i+j>m, then w_i+w_j\\equiv i+j-m\\pmod m. Again by minimality of the Ap\u00e9ry representative in that residue class,\nw_i+w_j\\ge w_{i+j-m}.\nSubstituting,\n(i+m x_i)+(j+m x_j)\\ge (i+j-m)+m x_{i+j-m}.\nSince i+j=(i+j-m)+m, this becomes\nm(x_i+x_j+1)\\ge m x_{i+j-m},\nso\nx_i+x_j+1\\ge x_{i+j-m}.\nThus all required inequalities hold.\n\n3. Sum equals genus.\nFor each residue class i\\in\\{1,\\dots,m-1\\}, the numbers congruent to i mod m that are smaller than w_i are exactly\ni,\\ i+m,\\ i+2m,\\ \\dots,\\ i+(x_i-1)m,\nand there are exactly x_i of them. By definition of w_i as the least element of S in that residue class, all these x_i numbers are gaps of S. Conversely, every gap of S is of this form for a unique residue class i\\in\\{1,\\dots,m-1\\}. Therefore\ng(S)=\\sum_{i=1}^{m-1} x_i.\nSince g(S)=g, we get x_1+\\cdots+x_{m-1}=g.\n\nSo x\\in K_{m,g}. This defines a map\n\\Phi:\\{S: S \\text{ numerical semigroup with } m(S)=m,\\ g(S)=g\\}\\to K_{m,g},\n\\Phi(S)=(x_1,\\dots,x_{m-1}).\n\nNow we construct the inverse map. Let x=(x_1,\\dots,x_{m-1})\\in K_{m,g}. Define\nw_0:=0,\\qquad w_i:=i+m x_i\\quad (1\\le i\\le m-1),\nand set\nS_x:=\\{w_i+qm: 0\\le i\\le m-1,\\ q\\in \\mathbb N_0\\}.\nEquivalently, S_x is the set generated by the arithmetic tails starting at the w_i.\nWe prove that S_x is a numerical semigroup of multiplicity m and genus g.\n\nFirst, S_x\\subseteq \\mathbb N_0 contains 0, because w_0=0.\nAlso m=w_0+m\\in S_x.\n\nWe next prove closure under addition. Take arbitrary a,b\\in S_x. Write\na=w_i+pm,\\qquad b=w_j+qm\nfor some i,j\\in\\{0,1,\\dots,m-1\\} and p,q\\in\\mathbb N_0. Then\na+b=(w_i+w_j)+(p+q)m.\nSo it is enough to show that w_i+w_j\\in S_x for all i,j.\n\n- If i=0 or j=0, then w_i+w_j is just w_j or w_i, hence belongs to S_x.\n- If 1\\le i,j\\le m-1 and i+j<m, then by the defining inequality of K_{m,g}, x_i+x_j\\ge x_{i+j}. Therefore\nw_i+w_j-w_{i+j}=(i+m x_i)+(j+m x_j)-((i+j)+m x_{i+j})=m(x_i+x_j-x_{i+j})\\in m\\mathbb N_0.\nHence w_i+w_j=w_{i+j}+tm for some t\\in\\mathbb N_0, so w_i+w_j\\in S_x.\n- If 1\\le i,j\\le m-1 and i+j>m, then x_i+x_j+1\\ge x_{i+j-m}. Therefore\nw_i+w_j-w_{i+j-m}=(i+m x_i)+(j+m x_j)-((i+j-m)+m x_{i+j-m})\n=m(x_i+x_j+1-x_{i+j-m})\\in m\\mathbb N_0.\nSo again w_i+w_j\\in S_x.\n- If i+j=m, then\nw_i+w_j=(i+m x_i)+(j+m x_j)=m(1+x_i+x_j)=w_0+(1+x_i+x_j)m\\in S_x.\nThus S_x is closed under addition.\n\nNext we show cofinite. For each residue class i mod m, all integers of the form w_i+qm (q\\ge 0) belong to S_x, so every sufficiently large integer in each residue class lies in S_x. Hence only finitely many nonnegative integers are missing from S_x, and S_x is a numerical semigroup.\n\nNow determine its multiplicity. We already know m\\in S_x. For 1\\le i\\le m-1, positivity of x_i gives w_i=i+m x_i\\ge i+m>m. Thus no element of S_x in a nonzero residue class is less than or equal to m. Also in residue class 0 the positive elements are positive multiples of m, so the smallest positive one is m. Therefore the multiplicity of S_x is exactly m.\n\nNow determine its genus. In residue class i\\in\\{1,\\dots,m-1\\}, the least element of S_x is w_i=i+m x_i. Hence the missing nonnegative integers in that residue class are exactly\ni,\\ i+m,\\dots, i+(x_i-1)m,\nso there are exactly x_i of them. In residue class 0 there are no gaps, since 0,m,2m,\\dots all lie in S_x. Therefore\ng(S_x)=\\sum_{i=1}^{m-1} x_i=g.\n\nThus x determines a numerical semigroup S_x of multiplicity m and genus g. This gives a map\n\\Psi:K_{m,g}\\to \\{S: S \\text{ numerical semigroup with } m(S)=m,\\ g(S)=g\\}.\n\nFinally we check that \\Phi and \\Psi are inverse to each other.\n\n- Start from a semigroup S. Its Ap\u00e9ry representatives are w_i=i+m x_i by definition of \\Phi. The construction of \\Psi from x produces exactly the set of all numbers w_i+qm with q\\ge 0. But every element s\\in S has a unique residue class i mod m; subtracting suitable multiples of m (which belong to S because m\\in S) shows that s can be written as w_i+qm with q\\ge 0, while every such number lies in S because w_i,m\\in S. Hence \\Psi(\\Phi(S))=S.\n- Start from x\\in K_{m,g}. In S_x, for each i\\in\\{1,\\dots,m-1\\}, the least element congruent to i mod m is exactly w_i=i+m x_i, since all smaller numbers in that residue class are the listed x_i gaps. Therefore the Kunz coordinate recovered by \\Phi from S_x is exactly x. So \\Phi(\\Psi(x))=x.\n\nTherefore \\Phi is a bijection between the set of numerical semigroups with multiplicity m and genus g and the set K_{m,g}. Consequently their cardinalities are equal:\nN(m,g)=|K_{m,g}|.\nThis is exactly the claimed statement.",
+        "role_in_assembly": "Translates the original theorem into a cardinality inequality for the combinatorial sets K_{m,g}.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m \u2208 Z and m >= 2",
+            "g \u2208 Z and g >= 0",
+            "x = (x_1,...,x_{m-1}) with each x_k \u2208 Z_{>0} (positive integers)",
+            "indices i,j range over {1,...,m-1}",
+            "case split conditions: if i+j < m then inequality involves x_{i+j}; if i+j > m then inequality involves x_{i+j-m} (which is within {1,...,m-1})",
+            "sum constraint: x_1 + ... + x_{m-1} = g"
+          ],
+          "normalized_claim": "Fix integers m>=2 and g>=0. Let K_{m,g} be the set of tuples x=(x_1,...,x_{m-1}) with x_k>0 for all k and x_1+...+x_{m-1}=g, such that for every i,j\u2208{1,...,m-1}: (i+j<m \u21d2 x_i+x_j\u2265x_{i+j}) and (i+j>m \u21d2 x_i+x_j+1\u2265x_{i+j-m}). Then the number N(m,g) of numerical semigroups with multiplicity m and genus g equals the cardinality |K_{m,g}|.",
+          "quantifier_order": [
+            "For all integers m with m >= 2",
+            "For all integers g with g >= 0",
+            "K_{m,g} = { x : (x is a tuple (x_1,...,x_{m-1})) such that (x_1+...+x_{m-1}=g) and (for all i,j in {1,...,m-1}, the Kunz inequalities hold under the stated cases) }",
+            "Claim: N(m,g) = |K_{m,g}|"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z^{m-1} with coordinates restricted to positive integers",
+              "name": "x",
+              "role": "Kunz-coordinate tuple; used to define membership in K_{m,g}",
+              "type": "tuple of integers"
+            },
+            {
+              "domain": "Z_{>0}",
+              "name": "x_1,...,x_{m-1}",
+              "role": "coordinates of x; constrained by Kunz inequalities and by sum condition",
+              "type": "integer (coordinate variables)"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "i",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "j",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "Any inequalities are universal over i,j; no existential witnesses are introduced beyond choosing x as an element of K_{m,g}.",
+            "Membership witness for cardinality |K_{m,g}| is the tuple x, whose allowable set depends on the fixed parameters (m,g).",
+            "Inequalities for x depend on i and j but not on any additional choices."
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that x satisfies the Kunz inequalities for multiplicity m, namely: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Then N(m,g), the number of numerical semigroups of multiplicity m and genus g, is equal to the cardinality of K_{m,g}."
+      },
+      {
+        "lemma_id": "lem_20260324013757_1de6e5cf",
+        "proof_nl": "Fix integers m and g with m >= 2 and g >= 0, and define K_{m,g} as in the statement.\n\nWe will show that K_{m,g} is finite.\n\nLet x = (x_1,\\dots,x_{m-1}) be any element of K_{m,g}. By definition, each x_k is a positive integer, so for every k in {1,\\dots,m-1} we have\nx_k >= 1.\nAlso, again by definition,\nx_1 + \\cdots + x_{m-1} = g.\n\nFrom positivity and the fixed sum g, each coordinate is automatically bounded above by g: indeed, for any k,\nx_k <= x_1 + \\cdots + x_{m-1} = g.\nSo every x in K_{m,g} satisfies\nx \\in \\{1,2,\\dots,g\\}^{m-1}\nwhen g >= 1.\nTherefore K_{m,g} is a subset of the finite set \\{1,2,\\dots,g\\}^{m-1}, hence K_{m,g} is finite.\n\nIt remains only to consider the case g = 0. If x were in K_{m,0}, then each x_k would be a positive integer, so\nx_1 + \\cdots + x_{m-1} >= m-1.\nSince m >= 2, we have m-1 >= 1, so x_1 + \\cdots + x_{m-1} >= 1, which cannot equal 0. Hence K_{m,0} = \\varnothing, and therefore K_{m,0} is finite.\n\nThus in all cases K_{m,g} is finite.\n\nNote that the inequalities involving i and j are irrelevant for this finiteness argument: the positivity of the coordinates together with the fixed sum already places K_{m,g} inside a finite ambient set.",
+        "role_in_assembly": "Supplies the finiteness hypothesis that was missing in the rejected attempt before applying an injection-counting principle.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2 (so m-1 \u2265 1 and the tuple length is at least 1)",
+            "g is an integer with g \u2265 0",
+            "x = (x_1,...,x_{m-1}) has each x_k a positive integer (x_k \u2208 {1,2,3,...})",
+            "Indices i,j range over {1,...,m-1}",
+            "Constraints are conditional on the comparison between i+j and m:",
+            "\u2022 If i+j < m then the inequality x_i + x_j \u2265 x_{i+j} is required (here i+j \u2208 {2,...,m-1}, so x_{i+j} is a valid component)",
+            "\u2022 If i+j > m then the inequality x_i + x_j + 1 \u2265 x_{i+j-m} is required (here i+j-m \u2208 {1,...,m-2}, so x_{i+j-m} is a valid component)",
+            "\u2022 If i+j = m then no inequality is specified by the definition"
+          ],
+          "normalized_claim": "For every fixed integers m and g with m \u2265 2 and g \u2265 0, let K_{m,g} be the set of all tuples x \u2208 Z_{>0}^{m-1} such that \u03a3_{k=1}^{m-1} x_k = g and for all i,j \u2208 {1,...,m-1}: if i+j<m then x_i+x_j \u2265 x_{i+j}, and if i+j>m then x_i+x_j+1 \u2265 x_{i+j-m}. Then K_{m,g} is finite.",
+          "quantifier_order": [
+            "\u2203 m \u2208 Z (m \u2265 2)",
+            "\u2203 g \u2208 Z (g \u2265 0)",
+            "K_{m,g} := { x \u2208 Z_{>0}^{m-1} : (\u2200 i,j \u2208 {1,...,m-1}) [ (i+j<m) \u21d2 (x_i+x_j \u2265 x_{i+j}) \u2227 (i+j>m) \u21d2 (x_i+x_j+1 \u2265 x_{i+j-m}) ] \u2227 (\u03a3_{k=1}^{m-1} x_k = g) }",
+            "Claim: K_{m,g} is finite"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "fixed parameter; tuple length is m-1",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "fixed parameter; sum constraint target",
+              "type": "integer"
+            },
+            {
+              "domain": "Z_{>0}^{m-1}",
+              "name": "x",
+              "role": "element of K_{m,g}; decision variables x_1,...,x_{m-1}",
+              "type": "tuple of integers"
+            },
+            {
+              "domain": "{1,...,m-1}",
+              "name": "i",
+              "role": "index for constraint quantification",
+              "type": "integer"
+            },
+            {
+              "domain": "{1,...,m-1}",
+              "name": "j",
+              "role": "index for constraint quantification",
+              "type": "integer"
+            },
+            {
+              "domain": "Z_{>0}",
+              "name": "x_k",
+              "role": "k-th component of x, where k ranges over {1,...,m-1}",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "Any candidate tuple x is defined to depend on the fixed parameters (m,g) and must satisfy the universal constraints for all (i,j) in {1,...,m-1}\u00d7{1,...,m-1}",
+            "The indices x_{i+j} and x_{i+j-m} that appear in inequalities depend on m and on the chosen (i,j) via the expressions i+j and i+j-m"
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Then K_{m,g} is a finite set."
+      },
+      {
+        "lemma_id": "lem_20260324013805_2c445eb6",
+        "proof_nl": "",
+        "role_in_assembly": "This is the new core combinatorial lemma replacing the rejected false reconstruction lemma based on the least-admissible-coordinate map.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2",
+            "g is an integer with g \u2265 0",
+            "x = (x_1,...,x_{m-1}) has all coordinates x_k \u2208 Z_{>0} (positive integers)",
+            "x satisfies the coordinate sum constraint: x_1 + ... + x_{m-1} = g",
+            "in the defining inequalities, i and j range over all ordered pairs with i,j \u2208 {1,...,m-1}",
+            "for i+j<m: inequality uses x_{i+j} (which lies in {1,...,m-1})",
+            "for i+j>m: inequality uses x_{i+j-m} (which lies in {1,...,m-1})",
+            "K_{m,g+1} is defined by the same conditions with x_1+...+x_{m-1}=g+1"
+          ],
+          "normalized_claim": "For every integer m \u2265 2 and every integer g \u2265 0, there exists a function J_{m,g} mapping each x \u2208 K_{m,g} (i.e., each positive integer (m\u22121)-tuple with sum g and satisfying the given conditional inequalities for all i,j\u2208{1,...,m\u22121}) into K_{m,g+1} (same constraints but sum g+1), such that for all x,y \u2208 K_{m,g}, x \u2260 y implies J_{m,g}(x) \u2260 J_{m,g}(y).",
+          "quantifier_order": [
+            "\u2200 m \u2208 Z (m \u2265 2)",
+            "\u2200 g \u2208 Z (g \u2265 0)",
+            "\u2203 J_{m,g} (J_{m,g}:K_{m,g}\u2192K_{m,g+1} and J_{m,g} is injective)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "global parameter controlling tuple length {1,...,m-1} and split in inequalities",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "global parameter fixing the required coordinate sum of elements of K_{m,g}",
+              "type": "integer"
+            },
+            {
+              "domain": "positive integers^{m-1}",
+              "name": "x",
+              "role": "arbitrary element of K_{m,g} with coordinates x_1,...,x_{m-1}",
+              "type": "tuple of integers"
+            },
+            {
+              "domain": "{1,...,m-1}",
+              "name": "i",
+              "role": "index used in defining the pairwise inequality constraints",
+              "type": "integer index"
+            },
+            {
+              "domain": "{1,...,m-1}",
+              "name": "j",
+              "role": "index used in defining the pairwise inequality constraints",
+              "type": "integer index"
+            },
+            {
+              "domain": "K_{m,g} -> K_{m,g+1}",
+              "name": "J_{m,g}",
+              "role": "witness for the existence of an injective mapping from K_{m,g} to K_{m,g+1}",
+              "type": "function"
+            }
+          ],
+          "witness_dependencies": [
+            "The function witness J_{m,g} is allowed to depend on the parameters (m,g).",
+            "The injectivity condition depends on the membership relation x,y \u2208 K_{m,g}."
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Define K_{m,g+1} analogously with coordinate sum g+1. Then there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}."
+      },
+      {
+        "lemma_id": "lem_20260324013813_247050aa",
+        "proof_nl": "Let A and B be finite sets, and suppose there exists an injective function f : A -> B. We must prove |A| <= |B|.\n\nBecause A and B are finite, there exist natural numbers n and m such that |A| = n and |B| = m. We will show n <= m.\n\nConsider the image f(A) = {f(a) : a in A} subseteq B. Since f is injective, the map f regarded as a function from A onto f(A) is bijective: it is surjective onto f(A) by definition of image, and it is injective by hypothesis. Therefore A and f(A) have the same cardinality, so\n|A| = |f(A)|.\n\nNow f(A) is a subset of B. Since B is finite, every subset of B has cardinality at most that of B. Hence\n|f(A)| <= |B|.\n\nCombining the two equalities/inequalities gives\n|A| = |f(A)| <= |B|,\nso |A| <= |B|, as required.\n\nThis proves that for all finite sets A and B, if there exists an injective function f : A -> B, then |A| <= |B|.",
+        "role_in_assembly": "Converts the injective map on finite Kunz sets into the desired inequality of their cardinalities.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "A is finite",
+            "B is finite",
+            "f is a function with domain exactly A and codomain exactly B (f: A \u2192 B)",
+            "injectivity means: for all a1, a2 in A, if a1 \u2260 a2 then f(a1) \u2260 f(a2)"
+          ],
+          "normalized_claim": "For all finite sets A and B, if there exists an injective function f: A \u2192 B, then |A| \u2264 |B|.",
+          "quantifier_order": [
+            "Let A be a finite set",
+            "Let B be a finite set",
+            "If there exists a function f: A \u2192 B such that f is injective, then |A| \u2264 |B|"
+          ],
+          "variables": [
+            {
+              "domain": "Universe of sets",
+              "name": "A",
+              "role": "source set for injection; domain of f",
+              "type": "finite set"
+            },
+            {
+              "domain": "Universe of sets",
+              "name": "B",
+              "role": "target set for injection; codomain of f",
+              "type": "finite set"
+            },
+            {
+              "domain": "set of all functions A \u2192 B",
+              "name": "f",
+              "role": "witness of injectivity from A into B",
+              "type": "function"
+            }
+          ],
+          "witness_dependencies": [
+            "The existence witness f depends on the particular sets A and B under consideration (f is not fixed across different A, B)."
+          ]
+        },
+        "statement_nl": "Let A and B be finite sets. If there exists an injective function f from A to B, then the cardinality of A is less than or equal to the cardinality of B."
+      }
+    ],
+    "problem_id": "prob_20260324012430_a84b8dbb",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "final_check",
+  "result_payload": {
+    "assembly_findings": [
+      {
+        "description": "The assembly relies on Lemma lem_20260324013805_2c445eb6 to supply an injective map J_{m,g}: K_{m,g} -> K_{m,g+1}. That lemma's proof is missing (empty). Without a demonstrated injective map, the application of the finite-set injection principle (L6) is unjustified and the final inequality N(m,g) <= N(m,g+1) is not established.",
+        "severity": "fatal"
+      }
+    ],
+    "confidence": 0.92,
+    "decomposition_findings": [
+      {
+        "description": "The decomposition cleanly isolates the genus-raising step as an explicit combinatorial lemma, which is good practice; however that lemma is critical to the final inequality and must be proven. Otherwise the decomposition is appropriate and no unused lemmas remain.",
+        "severity": "warning"
+      }
+    ],
+    "lemma_findings": [
+      {
+        "description": "Statement asserts existence of an injective map J_{m,g}: K_{m,g} -> K_{m,g+1} for all m>=2,g>=0, but no proof is provided. This lemma is essential for the assembly; lacking its proof the overall argument is incomplete.",
+        "lemma_id": "lem_20260324013805_2c445eb6",
+        "recommended_action": "retry_solver",
+        "severity": "fatal"
+      }
+    ],
+    "status": "completed",
+    "summary": "Overall the decomposition and assembly are coherent and the lemmas/formal objects are consistent, but the crucial existence-of-injection lemma (lem_20260324013805_2c445eb6) has no provided proof. The assembly depends on that lemma to conclude the cardinality inequality, so the final step is unsupported until that lemma is established. No other large-scale circularities or definition mismatches were found.",
+    "verdict": "assembly_issue"
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "dec_20260324013720_c0b0f872",
+  "target_kind": "decomposition",
+  "updated_at": "2026-03-24T06:07:40.385542Z",
+  "worker_job_id": "wrk_dec_20260324013720_c0b0f872_g0_final_check",
+  "worker_kind": "final_check"
+}

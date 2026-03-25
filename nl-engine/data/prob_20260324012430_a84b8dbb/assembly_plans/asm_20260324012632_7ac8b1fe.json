@@ -1,0 +1,69 @@
+{
+  "assembly_plan_id": "asm_20260324012632_7ac8b1fe",
+  "created_at": "2026-03-24T01:31:33.668592Z",
+  "decomposition_id": "dec_20260324012632_06b77862",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_skeleton_nl": "Fix integers m >= 2 and g >= 0. Encode numerical semigroups of multiplicity m by Kunz-coordinate tuples using the Ap\u00e9ry set. The Kunz inequalities characterize exactly which tuples arise, and the genus equals the sum of the coordinates. Therefore N(m,g) is the cardinality of the finite set K_{m,g} of Kunz vectors with coordinate sum g. Next, for each x in K_{m,g}, choose the least coordinate whose increment preserves the Kunz inequalities; existence of such a coordinate gives a well-defined map Phi from K_{m,g} to K_{m,g+1}. A separate reconstruction lemma shows that the least coadmissible coordinate of Phi(x) recovers the incremented coordinate, so Phi is injective. By the basic fact that an injection between finite sets implies a cardinality inequality, |K_{m,g}| <= |K_{m,g+1}|. Translating back through the Kunz correspondence gives N(m,g) <= N(m,g+1), which is exactly the theorem.",
+  "root_node_id": "thm_root_20260324012430_9851dde8",
+  "steps": [
+    {
+      "derives": "For every integer m >= 2 and every integer g >= 0, if K_{m,g} denotes the set of tuples x = (x_1,...,x_{m-1}) of positive integers satisfying the Kunz inequalities for multiplicity m and having coordinate sum g, then N(m,g) = |K_{m,g}|.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "L1 gives the Ap\u00e9ry/Kunz encoding of numerical semigroups of multiplicity m by positive integer tuples. L2 identifies exactly which tuples encode numerical semigroups: namely those satisfying the Kunz inequalities. L3 states that the genus of the semigroup encoded by x is exactly x_1 + ... + x_{m-1}. Therefore the numerical semigroups counted by N(m,g) are in bijection with the tuples in K_{m,g}, so N(m,g) = |K_{m,g}|.",
+      "uses_lemmas": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the rule Phi(x) = x + e_{alpha(x)}, where alpha(x) is the least admissible index of x, defines a function Phi : K_{m,g} -> K_{m,g+1}.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "By L4, every x in K_{m,g} has at least one admissible index, so alpha(x) is well-defined. By L5, the corresponding tuple Phi(x) belongs to K_{m,g+1}. Hence Phi is a well-defined function from K_{m,g} to K_{m,g+1}.",
+      "uses_lemmas": [
+        "L4",
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the function Phi : K_{m,g} -> K_{m,g+1} is injective.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "L6 proves a stronger statement on the full Kunz set K_m: for any x in K_m, the least coadmissible index of Phi(x) recovers the least admissible index of x, and therefore Phi(x) = Phi(x') implies x = x'. Since K_{m,g} is a subset of K_m and Phi maps K_{m,g} into K_{m,g+1}, the restriction of Phi to K_{m,g} is injective.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, |K_{m,g}| <= |K_{m,g+1}|.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Apply the finite-set injection principle to the injective map Phi : K_{m,g} -> K_{m,g+1} obtained in A3.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m,g) of numerical semigroups having multiplicity m and genus g satisfies N(m,g) <= N(m,g+1).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "By A1, N(m,g) = |K_{m,g}| and N(m,g+1) = |K_{m,g+1}|. By A4, |K_{m,g}| <= |K_{m,g+1}|. Substituting these equalities into the inequality yields exactly N(m,g) <= N(m,g+1).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A4"
+      ]
+    }
+  ]
+}

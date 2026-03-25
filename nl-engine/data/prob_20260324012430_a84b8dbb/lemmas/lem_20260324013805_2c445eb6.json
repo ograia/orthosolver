@@ -1,0 +1,91 @@
+{
+  "assembly_step_ids": [],
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T01:38:13.615644Z",
+  "decomposition_count": 4,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.9,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324013805_2c445eb6",
+  "minor_rejection_count": 0,
+  "parent_id": "thm_root_20260324012430_9851dde8",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_bundle_artifact_id": "problems/prob_20260324012430_a84b8dbb/proof_bundles/lemmas/lem_20260324013805_2c445eb6.json",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "This is the new core combinatorial lemma replacing the rejected false reconstruction lemma based on the least-admissible-coordinate map.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 3,
+  "statement_lean": null,
+  "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Define K_{m,g+1} analogously with coordinate sum g+1. Then there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m \u2265 2",
+      "g is an integer with g \u2265 0",
+      "x = (x_1,...,x_{m-1}) has all coordinates x_k \u2208 Z_{>0} (positive integers)",
+      "x satisfies the coordinate sum constraint: x_1 + ... + x_{m-1} = g",
+      "in the defining inequalities, i and j range over all ordered pairs with i,j \u2208 {1,...,m-1}",
+      "for i+j<m: inequality uses x_{i+j} (which lies in {1,...,m-1})",
+      "for i+j>m: inequality uses x_{i+j-m} (which lies in {1,...,m-1})",
+      "K_{m,g+1} is defined by the same conditions with x_1+...+x_{m-1}=g+1"
+    ],
+    "normalized_claim": "For every integer m \u2265 2 and every integer g \u2265 0, there exists a function J_{m,g} mapping each x \u2208 K_{m,g} (i.e., each positive integer (m\u22121)-tuple with sum g and satisfying the given conditional inequalities for all i,j\u2208{1,...,m\u22121}) into K_{m,g+1} (same constraints but sum g+1), such that for all x,y \u2208 K_{m,g}, x \u2260 y implies J_{m,g}(x) \u2260 J_{m,g}(y).",
+    "quantifier_order": [
+      "\u2200 m \u2208 Z (m \u2265 2)",
+      "\u2200 g \u2208 Z (g \u2265 0)",
+      "\u2203 J_{m,g} (J_{m,g}:K_{m,g}\u2192K_{m,g+1} and J_{m,g} is injective)"
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "global parameter controlling tuple length {1,...,m-1} and split in inequalities",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "g",
+        "role": "global parameter fixing the required coordinate sum of elements of K_{m,g}",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers^{m-1}",
+        "name": "x",
+        "role": "arbitrary element of K_{m,g} with coordinates x_1,...,x_{m-1}",
+        "type": "tuple of integers"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "i",
+        "role": "index used in defining the pairwise inequality constraints",
+        "type": "integer index"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "j",
+        "role": "index used in defining the pairwise inequality constraints",
+        "type": "integer index"
+      },
+      {
+        "domain": "K_{m,g} -> K_{m,g+1}",
+        "name": "J_{m,g}",
+        "role": "witness for the existence of an injective mapping from K_{m,g} to K_{m,g+1}",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "The function witness J_{m,g} is allowed to depend on the parameters (m,g).",
+      "The injectivity condition depends on the membership relation x,y \u2208 K_{m,g}."
+    ]
+  },
+  "statement_status": "unvetted",
+  "updated_at": "2026-03-24T01:38:13.615645Z"
+}

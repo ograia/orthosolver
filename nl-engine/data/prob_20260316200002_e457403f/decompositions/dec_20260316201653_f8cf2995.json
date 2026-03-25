@@ -1,0 +1,48 @@
+{
+  "assembly_plan_id": "asm_20260316201653_e805034d",
+  "controller_status": "failed",
+  "created_at": "2026-03-16T20:22:46.690119Z",
+  "decomposition_id": "dec_20260316201653_f8cf2995",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.67,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "thm_root_20260316200002_2d33d280",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260316200718_e6c0a378",
+      "disguised_difficulty": [],
+      "drift_severity": "major",
+      "failure_mode": "rejected_fatal:failed",
+      "fixes_required": [
+        "Lemma L5 is false as stated; add the explicit assumption N >= 4 (or otherwise strengthen/restate the covering hypothesis).",
+        "After fixing L5, add a separate proof for the boundary case p = 5, since A3 cannot then be applied with N = p-2 = 3.",
+        "Lemma L6 is false; remove it or replace A4/A5 by the direct estimate ceil((p-2)/4) > p/4 - 1.",
+        "Lemma L2 is unused; either delete it from the decomposition or make its role in proving L4 explicit."
+      ],
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [
+        "L5: the statement is missing the necessary assumption N >= 4; without it the lemma is false.",
+        "After correcting L5 to N >= 4, the assembly no longer covers the theorem's boundary case p = 5 (since then N = p-2 = 3), so a separate base-case argument is needed."
+      ],
+      "strategy_summary": "Reduce the global lower bound on the number of descents of the modular-inverse permutation to a local obstruction: prove that five consecutive inverse values can never be strictly increasing. This implies that every block of four consecutive indices contains a descent. A purely combinatorial covering lemma then yields at least ceil((p-2)/4) descents, and for odd primes this equals floor(p/4), which is stronger than the required bound > p/4 - 1.",
+      "vet_summary": "The plan is not acceptable as stated because two lemmas are false: L5 fails for small N (in particular N = 3, which is exactly the p = 5 boundary case), and L6 is false for primes p congruent to 3 mod 4. The assembly is conditionally coherent if one assumes the stated lemmas, but the decomposition needs substantive repair: fix L5's domain and cover p = 5 separately, and remove or weaken L6."
+    }
+  ],
+  "problem_id": "prob_20260316200002_e457403f",
+  "shared_context": [
+    {
+      "content": "For a prime p and an integer k with 1 <= k <= p-1, the notation I(k) means the unique integer in {1,2,...,p-1} such that k * I(k) \u2261 1 (mod p).",
+      "label": "Modular inverse convention"
+    }
+  ],
+  "strategy_summary": "Use the same local-obstruction idea as the rejected attempt, but explicitly repair the two fatal gaps: the covering lemma is stated only for N >= 4, the boundary prime p = 5 is handled by a separate base-case lemma, and the false arithmetic lemma is replaced by the direct true estimate ceil((p-2)/4) > p/4 - 1.",
+  "updated_at": "2026-03-16T20:22:46.690129Z"
+}

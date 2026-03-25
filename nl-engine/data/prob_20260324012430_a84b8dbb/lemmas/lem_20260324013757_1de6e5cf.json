@@ -1,0 +1,92 @@
+{
+  "assembly_step_ids": [],
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T01:38:05.287060Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.12,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix integers m and g with m >= 2 and g >= 0, and define K_{m,g} as in the statement.\n\nWe will show that K_{m,g} is finite.\n\nLet x = (x_1,\\dots,x_{m-1}) be any element of K_{m,g}. By definition, each x_k is a positive integer, so for every k in {1,\\dots,m-1} we have\nx_k >= 1.\nAlso, again by definition,\nx_1 + \\cdots + x_{m-1} = g.\n\nFrom positivity and the fixed sum g, each coordinate is automatically bounded above by g: indeed, for any k,\nx_k <= x_1 + \\cdots + x_{m-1} = g.\nSo every x in K_{m,g} satisfies\nx \\in \\{1,2,\\dots,g\\}^{m-1}\nwhen g >= 1.\nTherefore K_{m,g} is a subset of the finite set \\{1,2,\\dots,g\\}^{m-1}, hence K_{m,g} is finite.\n\nIt remains only to consider the case g = 0. If x were in K_{m,0}, then each x_k would be a positive integer, so\nx_1 + \\cdots + x_{m-1} >= m-1.\nSince m >= 2, we have m-1 >= 1, so x_1 + \\cdots + x_{m-1} >= 1, which cannot equal 0. Hence K_{m,0} = \\varnothing, and therefore K_{m,0} is finite.\n\nThus in all cases K_{m,g} is finite.\n\nNote that the inequalities involving i and j are irrelevant for this finiteness argument: the positivity of the coordinates together with the fixed sum already places K_{m,g} inside a finite ambient set.",
+  "latest_vetter_report_id": "rep_20260324014231_3e6a341c",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324013757_1de6e5cf",
+  "minor_rejection_count": 0,
+  "parent_id": "thm_root_20260324012430_9851dde8",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_bundle_artifact_id": "problems/prob_20260324012430_a84b8dbb/proof_bundles/lemmas/lem_20260324013757_1de6e5cf.json",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Supplies the finiteness hypothesis that was missing in the rejected attempt before applying an injection-counting principle.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Then K_{m,g} is a finite set.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m \u2265 2 (so m-1 \u2265 1 and the tuple length is at least 1)",
+      "g is an integer with g \u2265 0",
+      "x = (x_1,...,x_{m-1}) has each x_k a positive integer (x_k \u2208 {1,2,3,...})",
+      "Indices i,j range over {1,...,m-1}",
+      "Constraints are conditional on the comparison between i+j and m:",
+      "\u2022 If i+j < m then the inequality x_i + x_j \u2265 x_{i+j} is required (here i+j \u2208 {2,...,m-1}, so x_{i+j} is a valid component)",
+      "\u2022 If i+j > m then the inequality x_i + x_j + 1 \u2265 x_{i+j-m} is required (here i+j-m \u2208 {1,...,m-2}, so x_{i+j-m} is a valid component)",
+      "\u2022 If i+j = m then no inequality is specified by the definition"
+    ],
+    "normalized_claim": "For every fixed integers m and g with m \u2265 2 and g \u2265 0, let K_{m,g} be the set of all tuples x \u2208 Z_{>0}^{m-1} such that \u03a3_{k=1}^{m-1} x_k = g and for all i,j \u2208 {1,...,m-1}: if i+j<m then x_i+x_j \u2265 x_{i+j}, and if i+j>m then x_i+x_j+1 \u2265 x_{i+j-m}. Then K_{m,g} is finite.",
+    "quantifier_order": [
+      "\u2203 m \u2208 Z (m \u2265 2)",
+      "\u2203 g \u2208 Z (g \u2265 0)",
+      "K_{m,g} := { x \u2208 Z_{>0}^{m-1} : (\u2200 i,j \u2208 {1,...,m-1}) [ (i+j<m) \u21d2 (x_i+x_j \u2265 x_{i+j}) \u2227 (i+j>m) \u21d2 (x_i+x_j+1 \u2265 x_{i+j-m}) ] \u2227 (\u03a3_{k=1}^{m-1} x_k = g) }",
+      "Claim: K_{m,g} is finite"
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "fixed parameter; tuple length is m-1",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "g",
+        "role": "fixed parameter; sum constraint target",
+        "type": "integer"
+      },
+      {
+        "domain": "Z_{>0}^{m-1}",
+        "name": "x",
+        "role": "element of K_{m,g}; decision variables x_1,...,x_{m-1}",
+        "type": "tuple of integers"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "i",
+        "role": "index for constraint quantification",
+        "type": "integer"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "j",
+        "role": "index for constraint quantification",
+        "type": "integer"
+      },
+      {
+        "domain": "Z_{>0}",
+        "name": "x_k",
+        "role": "k-th component of x, where k ranges over {1,...,m-1}",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "Any candidate tuple x is defined to depend on the fixed parameters (m,g) and must satisfy the universal constraints for all (i,j) in {1,...,m-1}\u00d7{1,...,m-1}",
+      "The indices x_{i+j} and x_{i+j-m} that appear in inequalities depend on m and on the chosen (i,j) via the expressions i+j and i+j-m"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T01:38:05.287060Z"
+}

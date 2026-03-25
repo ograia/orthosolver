@@ -1,0 +1,235 @@
+{
+  "artifact_prefix": "problems/prob_20260324190254_e444ab98/lemmas/lem_20260324211158_88623b69/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-24T22:21:28.416606Z",
+  "controller_consumed_by_execution_id": "exec_20260324190254_63765cb0",
+  "created_at": "2026-03-24T22:20:42.536608Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324190254_63765cb0",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+        "item_id": "pnode_20260324211635_1d8e991c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324190254_d5d5b561",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let N(g) denote the number of numerical semigroups of genus g. Prove that N(g) \u2265 N(g\u22121) + N(g\u22122) for every integer g \u2265 2."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324190254_d5d5b561",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "g is an integer satisfying g \u2265 2 (so g\u22121 and g\u22122 are defined and are \u2265 0)",
+            "N(k) is defined for integers k = g, g\u22121, g\u22122 (implicitly meaning genus is allowed to be any integer \u2265 0)"
+          ],
+          "normalized_claim": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+          "quantifier_order": [
+            "for every g \u2208 Z with g \u2265 2"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter indexing counts of numerical semigroups",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "none explicitly (the inequality compares cardinalities/counts only)"
+          ]
+        },
+        "statement_nl": "Let N(g) denote the number of numerical semigroups of genus g. Prove that N(g) \u2265 N(g\u22121) + N(g\u22122) for every integer g \u2265 2."
+      }
+    ],
+    "attempt_number": 1,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260324211158_88623b69",
+    "proof_nl": "Fix h \u2265 0. Let\nA = { (\u039b, x) : \u039b is a numerical semigroup of genus h and x is an effective generator of \u039b }\nand\nB = { S : S is a numerical semigroup of genus h+1 }.\nBy definition, N(h+1) = |B|.\n\nWe will prove that the map sending (\u039b, x) to the set obtained from \u039b by removing x is a bijection A \u2192 B.\n\nFirst, take (\u039b, x) \u2208 A, and let S be \u039b with x removed. Because x is a minimal generator, x is positive, so 0 still belongs to S. Since \u039b is cofinite, removing one element keeps it cofinite. It remains to check closure under addition. Let a, b \u2208 S. Since \u039b is an additive submonoid, a+b \u2208 \u039b. If a+b were not in S, then necessarily a+b = x, because x is the only element removed from \u039b. But x is not in S, so neither a nor b can be 0; hence a and b are positive. This contradicts the definition of x as a minimal generator of \u039b, since x would then be written as a+b with positive a, b \u2208 \u039b. Therefore a+b \u2208 S. So S is a numerical semigroup.\n\nIts complement in the nonnegative integers is exactly the complement of \u039b together with x. Hence the genus of S is h+1. Also, every integer not in \u039b is at most F(\u039b), and x > F(\u039b) because x is effective. Therefore every integer greater than x belongs to \u039b, and it still belongs to S because only x was removed. Since x itself is not in S, it follows that F(S) = x.\n\nThus the map \u03c6 : A \u2192 B defined by \u03c6(\u039b, x) = \u039b with x removed is well-defined.\n\nConversely, take S \u2208 B. Since h+1 > 0, S is not the whole set of nonnegative integers, so x := F(S) is an actual nonnegative integer not in S. Because 0 belongs to S, we have x > 0. Now let \u039b := S \u222a {x}. Clearly 0 \u2208 \u039b, and adding one element to a cofinite set keeps it cofinite. We check closure under addition.\n\nLet a, b \u2208 \u039b.\n- If a and b both belong to S, then a+b \u2208 S because S is a numerical semigroup.\n- If one of a, b is x and the other is 0, then a+b = x \u2208 \u039b.\n- In every other case, at least one summand is x and the other is positive, or both summands are x. Then a+b > x = F(S), so a+b belongs to S.\n\nSo \u039b is a numerical semigroup. Its complement in the nonnegative integers is the complement of S with x removed, hence genus(\u039b) = h.\n\nWe now show that x is an effective generator of \u039b. First, x is minimal. Suppose, toward a contradiction, that x = a+b with positive a, b \u2208 \u039b. Then a < x and b < x. Since x is the only element added to S, this implies a, b \u2208 S. But then closure of S gives x = a+b \u2208 S, contradicting the definition of x = F(S). So x is a minimal generator of \u039b.\n\nSecond, every integer not in \u039b is also not in S and is different from x, so it is strictly less than x. Therefore F(\u039b) < x. Hence x > F(\u039b), so x is effective.\n\nThus the map \u03c8 : B \u2192 A defined by \u03c8(S) = (S \u222a {F(S)}, F(S)) is well-defined.\n\nThe two maps are inverse. If (\u039b, x) \u2208 A, then from the first part we proved F(\u03c6(\u039b, x)) = x, so applying \u03c8 to \u03c6(\u039b, x) adds back exactly x and recovers (\u039b, x). If S \u2208 B, then applying \u03c8 adds F(S) and applying \u03c6 removes that same element, so one recovers S. Therefore \u03c6 is a bijection A \u2194 B.\n\nNow count A. For each fixed genus-h numerical semigroup \u039b, the elements of A having first coordinate \u039b are exactly the pairs (\u039b, x) where x is an effective generator of \u039b. There are exactly e(\u039b) such pairs. Therefore, using the finiteness of the displayed sum,\n|A| = sum over all genus-h numerical semigroups \u039b of e(\u039b).\nBecause A and B are bijective and N(h+1) = |B|, we obtain\nN(h+1) = sum over all genus-h numerical semigroups \u039b of e(\u039b).\n\nThis proves the first displayed identity.\n\nFor the equivalent form, partition the genus-h numerical semigroups according to the value of e(\u039b). For each integer r \u2265 0, let\nC_r = { \u039b : genus(\u039b)=h and e(\u039b)=r }.\nBy definition, |C_r| = n_h(r). The sets C_r partition the genus-h numerical semigroups, so, again using finiteness of the displayed sums,\nsum over genus-h \u039b of e(\u039b)\n= sum over r \u2265 0 of sum over \u039b in C_r of e(\u039b)\n= sum over r \u2265 0 of sum over \u039b in C_r of r\n= sum over r \u2265 0 of r \u00b7 n_h(r).\nCombining this with the first identity gives\nN(h+1) = sum from r=0 to infinity of r \u00b7 n_h(r).\n\nSo both asserted identities hold, and the lemma is proved.",
+    "role_in_assembly": "Converts one-step genus counts into sums of effective-generator labels and later rewrites grouped sums as N(h+1).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "g is an integer satisfying g \u2265 2 (so g\u22121 and g\u22122 are defined and are \u2265 0)",
+        "N(k) is defined for integers k = g, g\u22121, g\u22122 (implicitly meaning genus is allowed to be any integer \u2265 0)"
+      ],
+      "normalized_claim": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+      "quantifier_order": [
+        "for every g \u2208 Z with g \u2265 2"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter indexing counts of numerical semigroups",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "none explicitly (the inequality compares cardinalities/counts only)"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "Lambda ranges over numerical semigroups (cofinite additive submonoids of \u2124_{\u22650} containing 0)",
+        "genus(\u039b)=h means: genus(\u039b) is the number of nonnegative integers not in \u039b (so this count is finite by cofiniteness)",
+        "F(Lambda) is the largest integer not in \u039b; if \u039b=\u2124_{\u22650} then F(Lambda) is defined to be -1",
+        "minimal generator x of \u039b requires: x \u2208 \u039b \u2229 \u2124_{>0} and (not exists a,b \u2208 \u039b \u2229 \u2124_{>0} such that x=a+b)",
+        "effective generator requires: x is a minimal generator and x>F(\u039b)",
+        "e(\u039b) is the cardinality of the set of effective generators of \u039b, hence e(\u039b) \u2208 \u2124_{\u22650}",
+        "n_h(r) counts genus-h numerical semigroups \u039b with e(\u039b)=r, so n_h(r) is defined only for r \u2208 \u2124_{\u22650}",
+        "All displayed sums are finite (explicit assumption in the statement)"
+      ],
+      "normalized_claim": "For every h \u2208 \u2124_{\u22650}, with N(k) the number of numerical semigroups of genus k and n_h(r) = #{\u039b : genus(\u039b)=h and e(\u039b)=r} for r \u2208 \u2124_{\u22650}, we have the identities (both sums finite): N(h+1) = \u03a3_{\u039b : genus(\u039b)=h} e(\u039b) = \u03a3_{r=0}^{\u221e} r \u00b7 n_h(r).",
+      "quantifier_order": [
+        "Fix h \u2208 \u2124_{\u22650}",
+        "For all r \u2208 \u2124_{\u22650}, define n_h(r) as a count",
+        "Claim: N(h+1) = \u03a3_{\u039b : genus(\u039b)=h} e(\u039b)",
+        "Equivalent claim: N(h+1) = \u03a3_{r\u2208\u2124_{\u22650}} r \u00b7 n_h(r)"
+      ],
+      "variables": [
+        {
+          "domain": "nonnegative integers (\u2124_{\u22650})",
+          "name": "h",
+          "role": "fixed parameter (genus level)",
+          "type": "integer"
+        },
+        {
+          "domain": "implicitly nonnegative integers (genus values)",
+          "name": "k",
+          "role": "genus index for N(k)",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers (\u2124_{\u22650})",
+          "name": "r",
+          "role": "target value of e(Lambda) used to stratify genus-h semigroups",
+          "type": "integer"
+        },
+        {
+          "domain": "cofinite additive submonoid of \u2124_{\u22650} containing 0",
+          "name": "Lambda",
+          "role": "object being counted/summed over",
+          "type": "numerical semigroup"
+        },
+        {
+          "domain": "positive integers (\u2124_{>0})",
+          "name": "x",
+          "role": "candidate generator of Lambda",
+          "type": "integer"
+        },
+        {
+          "domain": "positive integers (\u2124_{>0})",
+          "name": "a",
+          "role": "used in (non)decomposability condition for minimal generators",
+          "type": "integer"
+        },
+        {
+          "domain": "positive integers (\u2124_{>0})",
+          "name": "b",
+          "role": "used in (non)decomposability condition for minimal generators",
+          "type": "integer"
+        },
+        {
+          "domain": "integers, with value in { -1 } \u222a \u2124_{\u22650} depending on Lambda",
+          "name": "F(Lambda)",
+          "role": "Frobenius number (largest integer not in Lambda, or -1 in the full-set case)",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers (count of effective generators)",
+          "name": "e(Lambda)",
+          "role": "number of effective generators of Lambda",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "N(k)",
+          "role": "number of numerical semigroups of genus k",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "n_h(r)",
+          "role": "number of genus-h numerical semigroups with exactly r effective generators",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "For any \u039b, the value F(\u039b) depends on \u039b (largest gap, with special-case value -1 if \u039b=\u2124_{\u22650})",
+        "For any \u039b, effective generators are determined by minimal generators x of \u039b together with the threshold inequality x>F(\u039b)",
+        "When asserting that x is a minimal generator of \u039b, the decomposition witnesses (a,b) are constrained to lie in \u039b \u2229 \u2124_{>0} and must satisfy x=a+b; minimality asserts no such witnesses exist",
+        "The count e(\u039b) depends on the set of effective generators of \u039b, hence on both \u039b and F(\u039b)"
+      ]
+    },
+    "statement_nl": "Let h be a nonnegative integer. A numerical semigroup is a cofinite additive submonoid of the nonnegative integers containing 0, and its genus is the number of nonnegative integers not belonging to it. For a numerical semigroup Lambda, let F(Lambda) be the largest integer not in Lambda, with the convention F(Lambda) = -1 for the whole set of nonnegative integers. A minimal generator of Lambda is a positive element x of Lambda that cannot be written as a+b with positive a,b in Lambda. An effective generator of Lambda is a minimal generator x satisfying x > F(Lambda). Let e(Lambda) be the number of effective generators of Lambda. Let N(k) be the number of numerical semigroups of genus k. For each integer r >= 0, let n_h(r) be the number of genus-h numerical semigroups Lambda with e(Lambda) = r. Then N(h+1) is equal to the sum, over all genus-h numerical semigroups Lambda, of e(Lambda). Equivalently, N(h+1) is equal to the sum, over all integers r >= 0, of r * n_h(r). All displayed sums are finite."
+  },
+  "problem_id": "prob_20260324190254_e444ab98",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "dependency_assessment": {
+      "dependency_legal": true,
+      "notes": "No external lemmas or forbidden ancestry claims are cited; the proof relies only on the definitions appearing in the lemma statement.",
+      "uses_only_declared_or_intrinsic_material": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The map \u03c6(\u039b, x) = \u039b \\ {x} is shown to land in genus-(h+1) numerical semigroups by proving closure under addition using minimality of x, cofiniteness, and the fact that x > F(\u039b), which also yields F(\u03c6(\u039b, x)) = x.",
+        "location": "first half of proof",
+        "severity": "low"
+      },
+      {
+        "finding": "The inverse map \u03c8(S) = (S \u222a {F(S)}, F(S)) is fully justified: closure of S \u222a {F(S)} is checked by cases, genus drops by one, and F(S) is proved to be an effective minimal generator of the enlarged semigroup.",
+        "location": "converse direction",
+        "severity": "low"
+      },
+      {
+        "finding": "The cardinality identity |A| = \u03a3 e(\u039b) and the regrouping \u03a3 e(\u039b) = \u03a3_r r\u00b7n_h(r) are correct given the explicit finiteness assumptions in the lemma statement.",
+        "location": "final counting step",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260324211158_88623b69",
+    "proof_status": "complete",
+    "reason": "The proof is mathematically complete and matches the lemma sketch closely. It constructs the standard bijection between pairs (\u039b, x) with \u039b of genus h and x an effective generator, and numerical semigroups S of genus h+1 obtained by removing/adding the Frobenius element. Both directions are checked carefully: numerical semigroup axioms, genus shift by one, identification of the Frobenius number, minimality of the added element, and effectiveness. The final counting argument and regrouping by the values r = e(\u039b) are correct under the stated finiteness assumptions.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260324211158_88623b69",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T22:21:28.416609Z",
+  "worker_job_id": "wrk_lem_20260324211158_88623b69_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

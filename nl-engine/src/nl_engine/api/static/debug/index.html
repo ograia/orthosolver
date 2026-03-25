@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orthosolver Debug Console</title>
+    <link rel="stylesheet" href="/debug/static/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>Orthosolver Debug Console <small style="font-size:0.45em;font-weight:400;color:#5a6978">v1.12</small></h1>
+        <p class="subtitle">Lifecycle, decomposition tree, requests, events, and artifacts in one place.</p>
+      </header>
+
+      <section class="message-panel">
+        <div id="message-line">Ready.</div>
+      </section>
+
+      <section class="toolbar">
+        <label class="grow">
+          Problem
+          <select id="problem-select"></select>
+        </label>
+        <button id="open-problem" type="button">Open Problem</button>
+        <button id="new-problem" type="button" class="primary">New Problem</button>
+        <button id="continue-problem" type="button" disabled>Continue</button>
+        <button id="pause-problem" type="button" disabled>Pause</button>
+        <button id="download-logs" type="button" disabled>⬇ Download Logs</button>
+        <button id="delete-problem" type="button" class="danger" disabled>Delete Problem</button>
+        <button id="reset-local" type="button" class="danger">Reset Local</button>
+      </section>
+
+      <section class="page-view active" id="page-submit">
+        <section class="panel">
+          <div class="row">
+            <div class="grow">
+              <h2>New Problem</h2>
+              <div id="submit-page-context" class="small">Create and launch a fresh problem here. Use the problem selector above to switch straight into monitoring any existing run.</div>
+            </div>
+          </div>
+        </section>
+        <div class="split">
+          <section class="panel">
+            <h2>Guided Form</h2>
+            <div class="form-grid">
+              <label>
+                Title
+                <input id="form-title" type="text" value="NL-only theorem test" />
+              </label>
+              <label>
+                Lean Image Tag
+                <input id="form-lean-image-tag" type="text" value="Orthosolver-lean-4.18.0-mathlib-v4.18.0" />
+              </label>
+              <label class="full-width">
+                Statement (NL)
+                <textarea id="form-statement-nl" rows="4">For all n, n = n</textarea>
+              </label>
+              <label class="full-width">
+                Statement (Lean, optional)
+                <textarea id="form-statement-lean" rows="2"></textarea>
+              </label>
+              <label class="full-width">
+                Imports (comma separated)
+                <input id="form-imports" type="text" value="Mathlib" />
+              </label>
+              <label class="inline">
+                <input id="form-nl-only" type="checkbox" checked />
+                NL-only mode
+              </label>
+              <section class="full-width">
+                <h3>Per-Agent LLM Overrides</h3>
+                <p class="small">Select per-agent model/reasoning/verbosity. Timeout is optional, defaults to 600s, and `0` means no timeout.</p>
+                <div class="agent-llm-grid">
+                  <div class="agent-llm-row">
+                    <span class="agent-label">agent1</span>
+                    <label>
+                      Model
+                      <select id="form-agent1-model">
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent1-thinking">
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent1-verbosity">
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent1-timeout" type="number" min="0" step="1" placeholder="600" />
+                    </label>
+                  </div>
+                  <div class="agent-llm-row">
+                    <span class="agent-label">agent2</span>
+                    <label>
+                      Model
+                      <select id="form-agent2-model">
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent2-thinking">
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent2-verbosity">
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent2-timeout" type="number" min="0" step="1" placeholder="600" />
+                    </label>
+                  </div>
+                  <div class="agent-llm-row">
+                    <span class="agent-label">agent3</span>
+                    <label>
+                      Model
+                      <select id="form-agent3-model">
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent3-thinking">
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent3-verbosity">
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent3-timeout" type="number" min="0" step="1" placeholder="600" />
+                    </label>
+                  </div>
+                  <div class="agent-llm-row">
+                    <span class="agent-label">agent4</span>
+                    <label>
+                      Model
+                      <select id="form-agent4-model">
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent4-thinking">
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent4-verbosity">
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent4-timeout" type="number" min="0" step="1" placeholder="600" />
+                    </label>
+                  </div>
+                  <div class="agent-llm-row">
+                    <span class="agent-label">agent5</span>
+                    <label>
+                      Model
+                      <select id="form-agent5-model">
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent5-thinking">
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent5-verbosity">
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent5-timeout" type="number" min="0" step="1" placeholder="600" />
+                    </label>
+                  </div>
+                  <div class="agent-llm-row">
+                    <span class="agent-label">agent6</span>
+                    <label>
+                      Model
+                      <select id="form-agent6-model">
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent6-thinking">
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent6-verbosity">
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent6-timeout" type="number" min="0" step="1" placeholder="600" />
+                    </label>
+                  </div>
+                  <p class="small" style="margin:0.75em 0 0.25em;font-weight:600;color:#5a6978">First-Attempt LLM Overrides — optional per-call model used only on the first attempt; retries fall back to the standard agent config.</p>
+                  <div class="agent-llm-row agent-llm-row--first-attempt">
+                    <span class="agent-label">agent2 first root</span>
+                    <label class="inline">
+                      <input id="form-agent2-first-root-enable" type="checkbox" data-first-attempt-key="agent2-first-root" />
+                      Enable
+                    </label>
+                    <label>
+                      Model
+                      <select id="form-agent2-first-root-model" disabled>
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent2-first-root-thinking" disabled>
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent2-first-root-verbosity" disabled>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent2-first-root-timeout" type="number" min="0" step="1" placeholder="600" disabled />
+                    </label>
+                  </div>
+                  <div class="agent-llm-row agent-llm-row--first-attempt">
+                    <span class="agent-label">agent2 first lemma</span>
+                    <label class="inline">
+                      <input id="form-agent2-first-lemma-enable" type="checkbox" data-first-attempt-key="agent2-first-lemma" />
+                      Enable
+                    </label>
+                    <label>
+                      Model
+                      <select id="form-agent2-first-lemma-model" disabled>
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent2-first-lemma-thinking" disabled>
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent2-first-lemma-verbosity" disabled>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent2-first-lemma-timeout" type="number" min="0" step="1" placeholder="600" disabled />
+                    </label>
+                  </div>
+                  <div class="agent-llm-row agent-llm-row--first-attempt">
+                    <span class="agent-label">agent4 first</span>
+                    <label class="inline">
+                      <input id="form-agent4-first-enable" type="checkbox" data-first-attempt-key="agent4-first" />
+                      Enable
+                    </label>
+                    <label>
+                      Model
+                      <select id="form-agent4-first-model" disabled>
+                        <option value="gpt-5.4">gpt-5.4</option>
+                        <option value="gpt-5.4-pro">gpt-5.4-pro</option>
+                        <option value="gpt-5-mini">gpt-5-mini</option>
+                        <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+                        <option value="gpt-5.4-nano">gpt-5.4-nano</option>
+                      </select>
+                    </label>
+                    <label>
+                      Thinking
+                      <select id="form-agent4-first-thinking" disabled>
+                        <option value="none">none</option>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                        <option value="xhigh">xhigh</option>
+                      </select>
+                    </label>
+                    <label>
+                      Verbosity
+                      <select id="form-agent4-first-verbosity" disabled>
+                        <option value="low">low</option>
+                        <option value="medium">medium</option>
+                        <option value="high">high</option>
+                      </select>
+                    </label>
+                    <label>
+                      Timeout (s)
+                      <input id="form-agent4-first-timeout" type="number" min="0" step="1" placeholder="600" disabled />
+                    </label>
+                  </div>
+                </div>
+              </section>
+              <label class="full-width">
+                Initial Trusted Context (JSON array)
+                <textarea id="form-initial-trusted-context" rows="5">[]</textarea>
+              </label>
+              <section class="full-width">
+                <h3>Config Options</h3>
+                <p class="small">Guided form shows simplified user-facing `config.*` fields. Use Raw JSON for advanced/internal options.</p>
+                <div id="form-config-fields" class="config-fields"></div>
+              </section>
+            </div>
+            <div class="row">
+              <button id="sync-form-to-json" type="button">Generate JSON from Form</button>
+              <button id="sync-json-to-form" type="button">Apply JSON to Form</button>
+            </div>
+          </section>
+
+          <section class="panel">
+            <h2>Raw JSON Request</h2>
+            <p class="small">Paste full payload exactly as you would send via curl.</p>
+            <textarea id="request-json" class="editor" spellcheck="false"></textarea>
+            <div class="row">
+              <button id="load-template" type="button">Reset to Template</button>
+              <button id="submit-request" type="button" class="primary">Submit Request</button>
+            </div>
+            <h3>Submit Response</h3>
+            <pre id="submit-response">No submission yet.</pre>
+          </section>
+        </div>
+      </section>
+
+      <section class="page-view" id="page-problem">
+        <section class="status-strip">
+          <span class="badge" id="badge-problem">problem: none</span>
+          <span class="badge" id="badge-status">status: -</span>
+          <span class="badge" id="badge-verification">verification: -</span>
+          <span class="badge" id="badge-mode">mode: -</span>
+          <span class="badge" id="badge-auto">auto-run: idle</span>
+          <span class="badge" id="badge-refresh">refresh: live (2s)</span>
+        </section>
+
+        <nav class="tabs" id="tabs-nav">
+          <button data-tab="overview" class="tab active">Overview</button>
+          <button data-tab="tree" class="tab">Tree Explorer</button>
+          <button data-tab="requests" class="tab">Requests</button>
+          <button data-tab="artifacts" class="tab">Artifacts</button>
+          <button data-tab="events" class="tab">Events</button>
+          <button data-tab="raw" class="tab">Raw Data</button>
+        </nav>
+
+        <section class="tab-content active" id="tab-overview">
+        <div id="overview-cards" class="cards"></div>
+        <section class="panel">
+          <h2>LLM Usage</h2>
+          <div id="overview-usage-stages" class="list compact"></div>
+        </section>
+        <section class="panel">
+          <h2>Running Final Proof (JSON)</h2>
+          <pre id="overview-running-final-proof">Running final proof is not available yet.</pre>
+        </section>
+        <section class="panel">
+          <h2>Final NL Output (JSON)</h2>
+          <pre id="overview-final-nl-output">NL-only final output is not available yet.</pre>
+        </section>
+        <section class="panel">
+          <h2>Problem Input JSON</h2>
+          <div id="overview-problem-input-meta" class="small">Select a problem to view its original create payload.</div>
+          <pre id="overview-problem-input-json">No problem selected.</pre>
+        </section>
+        <div class="split">
+          <section class="panel">
+            <h2>Decompositions</h2>
+            <div id="overview-decompositions" class="list"></div>
+          </section>
+          <section class="panel">
+            <h2>Lemmas</h2>
+            <div id="overview-lemmas" class="list"></div>
+          </section>
+        </div>
+        </section>
+
+        <section class="tab-content" id="tab-tree">
+        <div class="split">
+          <section class="panel">
+            <h2>Node Tree</h2>
+            <div class="row">
+              <label>
+                Root Track
+                <select id="tree-root-track">
+                  <option value="all">all root tracks</option>
+                </select>
+              </label>
+            </div>
+            <div id="tree-explorer" class="tree"></div>
+          </section>
+          <section class="panel">
+            <h2>Node Details</h2>
+            <div class="row">
+              <button id="tree-detail-proof-tab" type="button" class="primary">Proof JSON</button>
+              <button id="tree-detail-status-tab" type="button">Status JSON</button>
+            </div>
+            <pre id="tree-node-detail">Select a node.</pre>
+          </section>
+        </div>
+        </section>
+
+        <section class="tab-content" id="tab-requests">
+        <section class="panel">
+          <div class="row">
+            <label>
+              Source
+              <select id="request-source-filter">
+                <option value="">all</option>
+                <option value="agent1">agent1</option>
+                <option value="agent2">agent2</option>
+                <option value="agent3">agent3</option>
+                <option value="agent4">agent4</option>
+                <option value="agent5">agent5</option>
+                <option value="agent6">agent6</option>
+                <option value="lean">lean</option>
+              </select>
+            </label>
+          </div>
+          <div id="request-log-list" class="list"></div>
+        </section>
+        <section class="panel">
+          <h2>Request Inspector</h2>
+          <div id="request-inspector-meta" class="small">Select a request entry.</div>
+          <div class="row">
+            <label>
+              View
+              <select id="request-inspector-view">
+                <option value="input">Input payload</option>
+                <option value="prompt">System prompt</option>
+                <option value="output">Output</option>
+                <option value="failure">Failure details</option>
+              </select>
+            </label>
+            <label class="grow">
+              Artifact
+              <select id="request-inspector-artifact"></select>
+            </label>
+          </div>
+          <div id="request-related-artifacts" class="list compact"></div>
+          <pre id="request-log-detail">Select a request entry.</pre>
+        </section>
+        </section>
+
+        <section class="tab-content" id="tab-artifacts">
+        <section class="panel">
+          <div class="row">
+            <label class="grow">
+              Prefix
+              <input id="artifact-prefix" type="text" placeholder="problems/{problem_id}" />
+            </label>
+            <label class="inline">
+              <input id="artifact-include-worker" type="checkbox" checked />
+              Include worker jobs
+            </label>
+            <label>
+              Search
+              <input id="artifact-search" type="text" />
+            </label>
+          </div>
+          <div id="artifacts-view" class="list"></div>
+        </section>
+        <section class="panel">
+          <h2>Artifact Content</h2>
+          <pre id="artifact-content">Select an artifact.</pre>
+        </section>
+        </section>
+
+        <section class="tab-content" id="tab-events">
+        <section class="panel">
+          <div class="row">
+            <label>
+              Stage Filter
+              <input id="event-stage-filter" type="text" placeholder="e.g. lemma.vetter_route" />
+            </label>
+            <label>
+              Search
+              <input id="event-text-filter" type="text" placeholder="match reason/target/job" />
+            </label>
+            <button id="load-more-events" type="button">Load More</button>
+          </div>
+          <div id="events-view" class="list"></div>
+        </section>
+        </section>
+
+        <section class="tab-content" id="tab-raw">
+        <section class="panel">
+          <h2>Snapshot JSON</h2>
+          <pre id="raw-snapshot"></pre>
+          <h2>Progress JSON</h2>
+          <pre id="raw-progress"></pre>
+        </section>
+      </section>
+      </section>
+    </main>
+
+    <script src="/debug/static/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,69 @@
+{
+  "assembly_plan_id": "asm_20260320040145_2c030ec9",
+  "created_at": "2026-03-20T04:05:25.802779Z",
+  "decomposition_id": "dec_20260320040145_2a5123e9",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260320035508_76899425",
+  "proof_skeleton_nl": "Take an arbitrary numerical semigroup S. By L1, its conductor c exists. By L2 and L3, the finite set L = {s in S : s < c} and the embedding dimension e = |MinGen(S)| are well-defined. By L4, if g counts the gaps below c, then c = |L| + g. By L5, the target inequality e * |L| >= c is equivalent to (e - 1) * |L| >= g. This reaches the standard genus form of Wilf's conjecture. The previous rejection correctly identified that any universal lemma asserting (e - 1) * |L| >= g is essentially equivalent to the original theorem. Therefore, after removing the unused structural lemma from the failed attempt and making the reduction explicit, one still cannot honestly complete a proof of the exact root theorem from currently proved general lemmas.",
+  "root_node_id": "thm_root_20260320035508_2bc588ab",
+  "steps": [
+    {
+      "derives": "For a numerical semigroup S, the conductor c exists and is uniquely determined.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the content of L1.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For a numerical semigroup S, the quantities e = |MinGen(S)| and |L| for L = {s in S : s < c} are both well-defined nonnegative integers, with e >= 1.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Apply L2 to the conductor c obtained in A1 to conclude that L is finite and |L| is defined. Independently apply L3 to conclude that MinGen(S) is finite and e = |MinGen(S)| is a positive integer. Combining these gives the well-definedness of both numerical quantities appearing in the root theorem.",
+      "uses_lemmas": [
+        "L2",
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "If g denotes the number of gaps of S below the conductor c, then c = |L| + g.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the statement of L4 for the already defined conductor c and set L.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "The desired root-theorem inequality e * |L| >= c is equivalent to the inequality (e - 1) * |L| >= g.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "L5 states precisely this equivalence.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "The assembly cannot proceed to the exact root theorem using only the listed lemmas, because the missing statement '(e - 1) * |L| >= g for every numerical semigroup S' is itself equivalent to the root theorem and is not currently available as a proved universal lemma.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "By A4, proving the root theorem for all numerical semigroups is exactly the same as proving the genus inequality for all numerical semigroups. The previous failed attempt was rejected precisely because no true proved lemma of that strength was supplied. Since the root statement is open in full generality, an honest decomposition can reduce to this missing ingredient but cannot derive it from established facts.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    }
+  ]
+}

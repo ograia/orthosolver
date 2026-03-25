@@ -1,0 +1,92 @@
+{
+  "assembly_step_ids": [],
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T06:13:41.984505Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.36,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix integers m >= 2 and g >= 0.\n\nWe must prove that the number N(m,g) of numerical semigroups of multiplicity m and genus g equals the cardinality of K_{m,g}, where K_{m,g} consists of all tuples x=(x_1,...,x_{m-1}) of positive integers such that\n(1) x_1+...+x_{m-1}=g,\n(2) for all i,j in {1,...,m-1}, if i+j<m then x_i+x_j >= x_{i+j}, and if i+j>m then x_i+x_j+1 >= x_{i+j-m}.\n\nWe will construct a bijection between:\nA = {numerical semigroups S subseteq N0 with multiplicity m and genus g}\nand K_{m,g}.\n\nFor convenience, for any integer r with 1 <= r <= m-1, write r mod m simply as the residue class r.\n\nStep 1: From a numerical semigroup S of multiplicity m to a tuple x(S).\n\nLet S be a numerical semigroup with multiplicity m. Since m is the least positive element of S, we have\n0 in S,\nm in S,\nand 1,2,...,m-1 notin S.\nIn particular, in each nonzero residue class r modulo m, there is no element of S smaller than m+r.\n\nFor each r in {1,...,m-1}, consider the set\nT_r = {n in S : n congruent to r mod m}.\nBecause N0 \\ S is finite, all sufficiently large integers lie in S; hence each residue class modulo m contains some element of S, so T_r is nonempty. By well-ordering, T_r has a least element; denote it by w_r.\nSince w_r congruent to r mod m, there is an integer x_r >= 0 such that\nw_r = m x_r + r.\nBecause r notin S and w_r is the least element of S in residue class r, we cannot have x_r=0; thus x_r >= 1.\nSo we obtain a tuple\nx(S) = (x_1,...,x_{m-1})\nof positive integers.\n\nWe now show that x(S) satisfies the defining inequalities of K_{m,g}.\n\nTake i,j in {1,...,m-1}.\n\nCase 1: i+j < m.\nThen w_i + w_j belongs to S by closure under addition, and\nw_i+w_j = m(x_i+x_j) + (i+j).\nThis has residue i+j modulo m. Since w_{i+j} is the least element of S in that residue class, we have\nw_{i+j} <= w_i+w_j.\nSubstituting w_{i+j} = m x_{i+j} + (i+j) gives\nm x_{i+j} + (i+j) <= m(x_i+x_j) + (i+j),\nso x_{i+j} <= x_i+x_j.\nHence x_i+x_j >= x_{i+j}.\n\nCase 2: i+j > m.\nThen\nw_i+w_j = m(x_i+x_j) + (i+j)\n= m(x_i+x_j+1) + (i+j-m).\nAgain this sum lies in S and has residue i+j-m modulo m, so by minimality of w_{i+j-m},\n w_{i+j-m} <= w_i+w_j.\nThus\nm x_{i+j-m} + (i+j-m) <= m(x_i+x_j+1) + (i+j-m),\nwhence x_{i+j-m} <= x_i+x_j+1.\nSo x_i+x_j+1 >= x_{i+j-m}.\n\nTherefore x(S) satisfies all the inequality conditions.\n\nNext we compute its coordinate sum. For each residue class r in {1,...,m-1}, the numbers less than w_r and congruent to r mod m are exactly\nr, m+r, 2m+r, ..., (x_r-1)m+r,\nwhich are x_r numbers. None of them lies in S, by minimality of w_r. Conversely, every n notin S must have some residue r in {1,...,m-1} modulo m, because all multiples of m belong to S (since m in S and S is closed under addition), and then n must be one of those x_r numbers below w_r in residue class r; otherwise n >= w_r and n congruent r mod m, so n = w_r + qm for some q >= 0, and since w_r,m in S and S is closed under addition, we would have n in S, contradiction.\n\nHence the gaps N0 \\ S are exactly the disjoint union, over r=1,...,m-1, of those x_r numbers in residue class r. Therefore\n|N0 \\ S| = x_1+...+x_{m-1}.\nSince S has genus g, this equals g. Thus x(S) belongs to K_{m,g}.\n\nSo we have defined a map\nPhi : A -> K_{m,g},\nPhi(S)=x(S).\n\nStep 2: From a tuple x in K_{m,g} to a numerical semigroup S(x).\n\nNow let x=(x_1,...,x_{m-1}) be any element of K_{m,g}. Define\nS(x) = {0} union {qm+r : r in {1,...,m-1}, q >= x_r} union {qm : q >= 1}.\nEquivalently, S(x) consists of 0 together with all nonnegative integers n such that either n is a positive multiple of m, or if n congruent r mod m with 1 <= r <= m-1, then n >= m x_r + r.\n\nWe prove that S(x) is a numerical semigroup of multiplicity m and genus g.\n\nFirst, 0 in S(x) by definition. Also all sufficiently large integers belong to S(x): indeed, if n=qm+r with 0<=r<=m-1 and q >= max{x_1,...,x_{m-1}}, then n is included. Therefore N0 \\ S(x) is finite.\n\nSecond, m in S(x), and no positive integer less than m lies in S(x): for 1 <= r <= m-1, since x_r >= 1, the number r has quotient q=0 < x_r, so r notin S(x). Hence the least positive element of S(x) is m, so the multiplicity is m.\n\nThe main point is closure under addition. Let a,b in S(x). We must show a+b in S(x).\n\nWrite a = m q + i and b = m p + j with q,p >= 0, 0 <= i,j <= m-1.\nWe consider cases.\n\nIf i=0 and j=0, then a+b = m(q+p), a multiple of m, so a+b in S(x).\n\nIf i=0 and 1 <= j <= m-1, then because b in S(x), we have p >= x_j. Hence\na+b = m(q+p)+j\nhas quotient q+p >= p >= x_j, so a+b in S(x).\nThe case j=0 is symmetric.\n\nIt remains to treat 1 <= i,j <= m-1. Since a,b in S(x), we have q >= x_i and p >= x_j.\n\nIf i+j < m, then\na+b = m(q+p) + (i+j).\nBecause x satisfies the defining inequality, x_i+x_j >= x_{i+j}. Therefore\nq+p >= x_i+x_j >= x_{i+j}.\nSo a+b belongs to S(x) in residue class i+j.\n\nIf i+j = m, then\na+b = m(q+p+1),\na positive multiple of m, hence a+b in S(x). No inequality condition is needed in this case.\n\nIf i+j > m, then\na+b = m(q+p+1) + (i+j-m).\nSince x belongs to K_{m,g}, we have x_i+x_j+1 >= x_{i+j-m}. Thus\nq+p+1 >= x_i+x_j+1 >= x_{i+j-m},\nso a+b belongs to S(x) in residue class i+j-m.\n\nThus S(x) is closed under addition. Therefore S(x) is a numerical semigroup.\n\nNow compute its genus. For each r in {1,...,m-1}, the integers congruent to r modulo m that are not in S(x) are exactly\nr, m+r, ..., (x_r-1)m+r,\nnamely x_r integers. There are no missing multiples of m, because every multiple of m belongs to S(x). Hence\n|N0 \\ S(x)| = x_1+...+x_{m-1} = g,\nusing the defining condition of K_{m,g}. So S(x) has genus g and multiplicity m. Thus S(x) belongs to A.\n\nThis defines a map\nPsi : K_{m,g} -> A,\nPsi(x)=S(x).\n\nStep 3: Phi and Psi are inverse maps.\n\nTake S in A and let x=Phi(S). For each residue class r in {1,...,m-1}, by construction the least element of S in that class is w_r = m x_r + r. Since m is in S, every larger number in the same residue class, namely w_r + tm for t>=0, also lies in S; and no smaller number in that residue class lies in S. Also every positive multiple of m lies in S. Therefore S is exactly the set S(x) defined from x. Hence\nPsi(Phi(S)) = S.\n\nConversely, take x in K_{m,g} and let S=Psi(x)=S(x). In residue class r, the least element of S is clearly m x_r + r, because numbers r,m+r,...,(x_r-1)m+r are excluded and m x_r + r is included. Therefore the tuple extracted from S by the construction of Phi is exactly x. Hence\nPhi(Psi(x)) = x.\n\nSo Phi and Psi are inverse bijections between A and K_{m,g}. Therefore\nN(m,g) = |A| = |K_{m,g}|.\n\nThis is exactly the desired statement.",
+  "latest_vetter_report_id": "rep_20260324061748_422174e7",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324061332_ee90200a",
+  "minor_rejection_count": 0,
+  "parent_id": "thm_root_20260324012430_9851dde8",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_bundle_artifact_id": "problems/prob_20260324012430_a84b8dbb/proof_bundles/lemmas/lem_20260324061332_ee90200a.json",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Translates the original theorem into a cardinality statement for the combinatorial sets K_{m,g}; this fixes the prior self-containment issue by inlining N0, numerical semigroup, multiplicity, and genus.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Let N(m,g) denote the number of numerical semigroups of multiplicity m and genus g, where N0 = {0,1,2,...}, a numerical semigroup means a subset S of N0 containing 0, closed under addition, with finite complement N0 \\ S, the multiplicity means the least positive element of S, and the genus means the cardinality of N0 \\ S. Then N(m,g) = |K_{m,g}|.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "x_k are required to be positive integers for k \u2208 {1,...,m-1}",
+      "Indices i,j are quantified over the finite set {1,...,m-1}",
+      "Conditional inequality case 1: only applies when i + j < m; then i + j \u2208 {1,...,m-1}, so x_{i+j} is defined",
+      "Conditional inequality case 2: only applies when i + j > m; then i + j - m \u2208 {1,...,m-1}, so x_{i+j-m} is defined",
+      "No explicit condition is stated for the remaining case i + j = m",
+      "Numerical semigroups S are subsets of \u21150 containing 0, closed under addition, with finite complement in \u21150",
+      "Multiplicity of S is the least positive element of S and is required to equal m",
+      "Genus of S is |\u21150 \\ S| and is required to equal g"
+    ],
+    "normalized_claim": "For every integer pair (m,g) with m \u2265 2 and g \u2265 0, the number N(m,g) of numerical semigroups S \u2286 \u21150 with multiplicity m and genus g equals the cardinality of the set K_{m,g} of all tuples x=(x_1,...,x_{m-1}) of positive integers satisfying: (i) x_1+...+x_{m-1}=g and (ii) for all i,j \u2208 {1,...,m-1}, if i+j<m then x_i+x_j \u2265 x_{i+j}, and if i+j>m then x_i+x_j+1 \u2265 x_{i+j-m}.",
+    "quantifier_order": [
+      "For all m, g with m \u2265 2 and g \u2265 0",
+      "K_{m,g} = { x : (for all i,j in {1,...,m-1} subject to conditional cases, inequalities hold) AND (x_1 + ... + x_{m-1} = g) }",
+      "N(m,g) = #{ numerical semigroups S satisfying: multiplicity = m and genus = g }",
+      "Claim: for all such m,g, N(m,g) = |K_{m,g}|"
+    ],
+    "variables": [
+      {
+        "domain": "m \u2208 \u2124, m \u2265 2",
+        "name": "m",
+        "role": "global parameter fixing tuple length and semigroup multiplicity",
+        "type": "integer"
+      },
+      {
+        "domain": "g \u2208 \u2124, g \u2265 0",
+        "name": "g",
+        "role": "global parameter fixing the genus target and tuple sum",
+        "type": "integer"
+      },
+      {
+        "domain": "x = (x_1,...,x_{m-1}), with x_k \u2208 \u2124_{>0}",
+        "name": "x",
+        "role": "candidate element of K_{m,g}",
+        "type": "tuple of positive integers"
+      },
+      {
+        "domain": "i \u2208 {1,...,m-1}",
+        "name": "i",
+        "role": "quantified index in inequalities",
+        "type": "integer index"
+      },
+      {
+        "domain": "j \u2208 {1,...,m-1}",
+        "name": "j",
+        "role": "quantified index in inequalities",
+        "type": "integer index"
+      },
+      {
+        "domain": "S \u2286 \u21150, 0 \u2208 S, S closed under addition, |\u21150 \\ S| < \u221e, multiplicity m, genus g",
+        "name": "S",
+        "role": "implicit object counted by N(m,g)",
+        "type": "set of nonnegative integers"
+      }
+    ],
+    "witness_dependencies": [
+      "Elements x \u2208 K_{m,g} depend on parameters (m,g): x has length m-1 and must satisfy sum constraint x_1+...+x_{m-1}=g",
+      "The index-inequalities defining K_{m,g} depend on m through both the comparison thresholds (m) and index transforms (i+j and i+j-m)"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T06:13:41.984506Z"
+}

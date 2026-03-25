@@ -1,0 +1,75 @@
+{
+  "assembly_plan_id": "asm_20260320181635_6d47dfa5",
+  "created_at": "2026-03-20T18:20:45.391610Z",
+  "decomposition_id": "dec_20260320181635_e87dd126",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_skeleton_nl": "Fix arbitrary integers m >= 2 and g >= 0. Translate numerical semigroups of multiplicity m and genus g into Kunz vectors with coordinate sum g using the bijection from L5, and similarly translate genus g+1 semigroups into Kunz vectors with coordinate sum g+1. Invoke the coordinate-layer injection from L6 to obtain an injective map K_{m,g} -> K_{m,g+1}. Since these Kunz layers are finite, apply the finite-cardinality injection principle from L7 to deduce |K_{m,g}| <= |K_{m,g+1}|. Finally replace these cardinalities by N(m,g) and N(m,g+1) using the equalities from L5. Because m and g were arbitrary, the desired inequality holds for all m >= 2 and g >= 0.",
+  "root_node_id": "thm_root_20260320180855_1d8d4f17",
+  "steps": [
+    {
+      "derives": "For fixed integers m >= 2 and g >= 0, if K_{m,g} denotes the set of positive integer tuples satisfying the Kunz inequalities and having coordinate sum g, then N(m,g) = |K_{m,g}|.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the concluding statement of L5 after unpacking the locally defined symbols A_{m,g}, K_{m,g}, and N(m,g).",
+      "uses_lemmas": [
+        "lem_20260320181731_cd64e08f"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For the same fixed integers m >= 2 and g >= 0, one also has N(m,g+1) = |K_{m,g+1}|, where K_{m,g+1} is the Kunz-vector set with coordinate sum g+1.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "Apply L5 with g replaced by g+1. Since g >= 0, the integer g+1 is also in the allowed genus domain.",
+      "uses_lemmas": [
+        "lem_20260320181731_cd64e08f"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "There exists an injective function Phi_{m,g} : K_{m,g} -> K_{m,g+1}.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is precisely the assertion of L6 for the fixed integers m >= 2 and g >= 0.",
+      "uses_lemmas": [
+        "lem_20260320181743_f926805b"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "|K_{m,g}| <= |K_{m,g+1}|.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Step A3 gives an injective function from K_{m,g} to K_{m,g+1}. The sets K_{m,g} and K_{m,g+1} are finite because they are sets of positive integer (m-1)-tuples with prescribed finite coordinate sum. Therefore L7 applies and yields the cardinality inequality |K_{m,g}| <= |K_{m,g+1}|.",
+      "uses_lemmas": [
+        "lem_20260320181759_9b9a0b65"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "N(m,g) <= N(m,g+1).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "From A1, substitute N(m,g) for |K_{m,g}|. From A2, substitute N(m,g+1) for |K_{m,g+1}|. Applying these two equalities to the inequality obtained in A4 gives N(m,g) <= N(m,g+1).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "The argument in A1\u2013A5 was carried out for arbitrary fixed integers m >= 2 and g >= 0. Since the choices of m and g were arbitrary, universal generalization yields exactly the root theorem statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    }
+  ]
+}

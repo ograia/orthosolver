@@ -1,0 +1,512 @@
+{
+    "problem_id": "prob_20260315030804_a862b834",
+    "title": "Putnam A2",
+    "verification_level": "nl_only",
+    "root_theorem": {
+      "theorem_id": "thm_root_20260315030804_17507f1c",
+      "statement_nl": "Find the largest real number $a$ and the smallest real number $b$ such that\\n\\\\[\\nax(\\\\pi-x) \\\\leq \\\\sin x \\\\leq bx(\\\\pi-x)\\n\\\\]\\nfor all $x$ in the interval $[0, \\\\pi]$.",
+      "semantic_sketch": {
+        "variables": [
+          {
+            "name": "a",
+            "type": "real number",
+            "domain": "R",
+            "role": "unknown constant to be maximized (largest a) subject to the inequality holding for all x"
+          },
+          {
+            "name": "b",
+            "type": "real number",
+            "domain": "R",
+            "role": "unknown constant to be minimized (smallest b) subject to the inequality holding for all x"
+          },
+          {
+            "name": "x",
+            "type": "real variable",
+            "domain": "[0, π]",
+            "role": "universal variable: inequality must hold for every x in this interval"
+          },
+          {
+            "name": "f",
+            "type": "function (0,π) -> R",
+            "domain": "(0, π)",
+            "role": "auxiliary ratio f(x) = sin x / (x(π - x)), used to reduce the inequality to bounds on this ratio"
+          }
+        ],
+        "quantifier_order": [
+          "Optimize constants a,b ∈ R (find largest a and smallest b) subject to",
+          "∀ x ∈ [0, π]: a x(π-x) ≤ sin x ≤ b x(π-x)"
+        ],
+        "domain_restrictions": [
+          "x is in the closed interval [0, π] (universal quantifier over this set)",
+          "when forming the ratio f(x) = sin x/(x(π-x)) one must restrict to x ∈ (0, π) because x(π-x)=0 at endpoints",
+          "a and b are real numbers (constants independent of x)",
+          "x(π-x) ≥ 0 for x ∈ [0, π], so the inequalities' sign is not flipped by multiplication by x(π-x)"
+        ],
+        "witness_dependencies": [
+          "The maximal admissible a is determined by a = inf_{x ∈ (0, π)} f(x) where f(x) = sin x/(x(π-x)); i.e. a ≤ f(x) for all x, so largest a is the pointwise infimum of f on (0,π)",
+          "The minimal admissible b is determined by b = sup_{x ∈ (0, π)} f(x); i.e. b ≥ f(x) for all x, so smallest b is the pointwise supremum of f on (0,π)",
+          "The values of a and b depend on the global behaviour of f on (0,π), not on any single x",
+          "Inequalities at x=0 and x=π hold for any a,b because both sides equal 0 there; but these points are excluded when computing f"
+        ],
+        "normalized_claim": "Let f(x) = sin x/(x(π-x)) for x ∈ (0,π). The set of admissible constants is { (a,b) ∈ R^2 : ∀ x ∈ (0,π), a ≤ f(x) ≤ b }. The largest admissible a is a* = inf_{x ∈ (0,π)} f(x) and the smallest admissible b is b* = sup_{x ∈ (0,π)} f(x). For these a*,b* the inequalities a* x(π-x) ≤ sin x ≤ b* x(π-x) hold for all x ∈ [0,π]."
+      }
+    },
+    "selected_decomposition": {
+      "decomposition_id": "dec_20260315031430_de615307",
+      "strategy_summary": "Reduce the two-sided inequality to extremizing the ratio f(x)=sin x/(x(π-x)) on (0,π), then determine its supremum and infimum by symmetry, endpoint limits, and a midpoint maximum argument based on concavity of sin.",
+      "controller_status": "succeeded",
+      "llm_vetting_status": "accepted",
+      "assembly_plan": {
+        "assembly_plan_id": "asm_20260315031430_05698b17",
+        "steps": [
+          {
+            "step_id": "A1",
+            "uses_lemmas": [
+              "lem_20260315031430_1912f371"
+            ],
+            "uses_prior_steps": [],
+            "derives": "The original problem is equivalent to finding the largest lower bound and smallest upper bound of f(x)=sin x/(x(π-x)) on (0,π).",
+            "is_trivial": true,
+            "trivial_justification": "L1 is exactly the equivalence between the two-sided inequality on [0,π] and ratio bounds on (0,π)."
+          },
+          {
+            "step_id": "A2",
+            "uses_lemmas": [
+              "lem_20260315031522_8bfa0dc7",
+              "lem_20260315031549_f1fcee00",
+              "lem_20260315031613_1645b79b",
+              "lem_20260315032024_9b4e1f0b"
+            ],
+            "uses_prior_steps": [],
+            "derives": "For f(x)=sin x/(x(π-x)), one has inf_{x∈(0,π)} f(x)=1/π and sup_{x∈(0,π)} f(x)=4/π^2.",
+            "is_trivial": true,
+            "trivial_justification": "L4 gives the global lower bound 1/π, L3 shows this value is approached at both endpoints, L5 gives the global upper bound 4/π^2 with equality at x=π/2, and L6 packages these facts into the exact infimum and supremum."
+          },
+          {
+            "step_id": "A3",
+            "uses_lemmas": [
+              "lem_20260315032055_4bc9cc21"
+            ],
+            "uses_prior_steps": [
+              "A2"
+            ],
+            "derives": "Among all constants A,B with A≤f(x)≤B for every x∈(0,π), the largest possible A is 1/π and the smallest possible B is 4/π^2.",
+            "is_trivial": true,
+            "trivial_justification": "This is the defining optimality property of infimum and supremum from L7."
+          },
+          {
+            "step_id": "A4",
+            "uses_lemmas": [
+              "lem_20260315031430_1912f371"
+            ],
+            "uses_prior_steps": [
+              "A3"
+            ],
+            "derives": "The largest real number a and the smallest real number b such that a x(π-x) ≤ sin x ≤ b x(π-x) for all x in [0,π] are a=1/π and b=4/π^2.",
+            "is_trivial": true,
+            "trivial_justification": "Apply the equivalence in L1 to convert the optimal ratio bounds back to the original inequality, with endpoints automatic."
+          }
+        ],
+        "proof_skeleton_nl": "First rewrite the inequality as bounds on the ratio f(x)=sin x/(x(π-x)) for x in (0,π) using L1. Next, use L4 and the endpoint limits from L3 to identify 1/π as the infimum candidate, and use L5 to identify 4/π^2 as the exact supremum, then conclude these are indeed the infimum and supremum by L6. By L7, these are exactly the largest global lower bound and smallest global upper bound for f. Finally, translate back through L1 to obtain the optimal constants in the original statement: a=1/π and b=4/π^2.",
+        "is_trivially_composable": true
+      }
+    },
+    "lemmas": [
+      {
+        "lemma_id": "lem_20260315031430_1912f371",
+        "statement_nl": "Let a and b be real numbers. Then the statement \"for every x in [0,π], a x(π-x) ≤ sin x ≤ b x(π-x)\" is equivalent to the conjunction of: (i) for every x in (0,π), a ≤ sin x/(x(π-x)) ≤ b, and (ii) the endpoint equalities at x=0 and x=π, which hold automatically because x(π-x)=0 and sin 0=sin π=0.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "a",
+              "type": "real number",
+              "domain": "R",
+              "role": "parameter (fixed real coefficient)"
+            },
+            {
+              "name": "b",
+              "type": "real number",
+              "domain": "R",
+              "role": "parameter (fixed real coefficient)"
+            },
+            {
+              "name": "x",
+              "type": "real variable",
+              "domain": "[0,\\u03c0] (in original); (0,\\u03c0) when forming quotient",
+              "role": "universally quantified variable in the inequalities"
+            },
+            {
+              "name": "\\u03c0",
+              "type": "real constant",
+              "domain": "positive real number (the usual mathematical constant)",
+              "role": "fixed constant; defines interval endpoints"
+            }
+          ],
+          "quantifier_order": [
+            "a ∈ R (parameter, fixed)",
+            "b ∈ R (parameter, fixed)",
+            "statement concerns equivalence between two formulas each quantifying x:",
+            "  Formula A: ∀ x ∈ [0,\\u03c0], a * x*(\\u03c0 - x) ≤ sin(x) ≤ b * x*(\\u03c0 - x)",
+            "  Formula B: (∀ x ∈ (0,\\u03c0), a ≤ sin(x)/(x*(\\u03c0 - x)) ≤ b) ∧ endpoint equalities at x=0 and x=\\u03c0"
+          ],
+          "domain_restrictions": [
+            "In Formula A, x ranges over the closed interval [0,\\u03c0].",
+            "In Formula B, the quotient sin(x)/(x(\\u03c0-x)) is only formed for x ∈ (0,\\u03c0) because x(\\u03c0-x)=0 at endpoints.",
+            "For x ∈ (0,\\u03c0), x>0 and \\u03c0-x>0, so x(\\u03c0-x)>0 (denominator strictly positive).",
+            "a and b are finite real numbers (no infinities or NaN).",
+            "Sin is the usual real sine function with sin(0)=0 and sin(\\u03c0)=0."
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are introduced by the statement; all quantifiers are universal over x.",
+            "The quotient value sin(x)/(x(\\u03c0-x)) is a function of x (hence any assertion about it for all x depends pointwise on x).",
+            "Division step: passing from 'a * x(\\u03c0-x) ≤ sin x ≤ b * x(\\u03c0-x)' to 'a ≤ sin x/(x(\\u03c0-x)) ≤ b' is valid only when x(\\u03c0-x)>0, i.e. for x ∈ (0,\\u03c0); there is no need for a witness at endpoints because both sides evaluate to 0 there."
+          ],
+          "normalized_claim": "For all real a,b: (∀ x ∈ [0,π], a·x(π−x) ≤ sin x ≤ b·x(π−x)) ⇔ ((∀ x ∈ (0,π), a ≤ sin x/(x(π−x)) ≤ b) ∧ sin 0 = 0 ∧ sin π = 0). The equivalence uses that for x∈(0,π) the denominator x(π−x)>0 so inequalities can be divided through, and at x=0,π both sides are zero so the endpoint inequalities impose no extra constraints on a,b."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let D(x)=x(π−x). We prove the stated equivalence.\n\nFirst assume\n∀x∈[0,π], aD(x) ≤ sin x ≤ bD(x).\nWe show the two parts of the conjunction.\n\n1) Interior points. Let x∈(0,π). Then x>0 and π−x>0, so D(x)=x(π−x)>0. Applying the assumed inequality at this x gives\n aD(x) ≤ sin x ≤ bD(x).\nSince D(x)>0, we may divide throughout by D(x) without changing the direction of the inequalities, obtaining\n a ≤ sin x / D(x) ≤ b,\nthat is,\n a ≤ sin x / (x(π−x)) ≤ b.\nSince x was arbitrary in (0,π), condition (i) holds.\n\n2) Endpoints. At x=0 we have D(0)=0·π=0 and sin 0=0, hence\n aD(0)=0=sin 0=bD(0).\nAt x=π we have D(π)=π·0=0 and sin π=0, hence\n aD(π)=0=sin π=bD(π).\nSo the endpoint equalities in (ii) hold.\n\nThus the original closed-interval inequality implies the conjunction of (i) and (ii).\n\nConversely, assume (i):\n∀x∈(0,π), a ≤ sin x/(x(π−x)) ≤ b,\nand also the endpoint equalities in (ii).\nWe prove\n∀x∈[0,π], aD(x) ≤ sin x ≤ bD(x).\n\nLet x∈[0,π]. There are two cases.\n\nCase 1: x∈(0,π). Then D(x)>0. From (i) we have\n a ≤ sin x / D(x) ≤ b.\nMultiplying throughout by the positive number D(x) preserves the inequalities, so\n aD(x) ≤ sin x ≤ bD(x),\ni.e.\n a x(π−x) ≤ sin x ≤ b x(π−x).\n\nCase 2: x=0 or x=π. By (ii), at each endpoint we have\n aD(x)=sin x=bD(x)=0.\nTherefore certainly\n aD(x) ≤ sin x ≤ bD(x).\n\nSince every x∈[0,π] is either an interior point or an endpoint, we conclude that\n∀x∈[0,π], a x(π−x) ≤ sin x ≤ b x(π−x).\n\nThis proves the equivalence.\n\nIn particular, the only nontrivial content is on the open interval (0,π), where the denominator x(π−x) is strictly positive; at x=0 and x=π the inequalities are automatic because both sides are 0.",
+        "role_in_parent": "Converts the original optimization problem into finding the infimum and supremum of the ratio f on (0,π)."
+      },
+      {
+        "lemma_id": "lem_20260315031457_d3b391e8",
+        "statement_nl": "Define f:(0,π)→R by f(x)=sin x/(x(π-x)). Then f(π-x)=f(x) for every x in (0,π). In particular, the behavior of f on (0,π) is symmetric about x=π/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "function",
+              "domain": "(0,π) → R",
+              "role": "function being defined by a formula"
+            },
+            {
+              "name": "x",
+              "type": "real",
+              "domain": "x ∈ (0,π)",
+              "role": "indeterminate / function argument; universally quantified in the claim"
+            },
+            {
+              "name": "π",
+              "type": "real constant",
+              "domain": "π ≈ 3.14159..., positive real constant",
+              "role": "the usual circle constant used in the formula and reflection x ↦ π - x"
+            },
+            {
+              "name": "sin",
+              "type": "trigonometric function",
+              "domain": "sin: R → R (standard sine function)",
+              "role": "used in the formula for f(x)"
+            }
+          ],
+          "quantifier_order": [
+            "Definition: for all x ∈ (0,π), f(x) is defined by f(x) = sin(x) / ( x(π - x) )",
+            "Claim: for all x ∈ (0,π), f(π - x) = f(x)"
+          ],
+          "domain_restrictions": [
+            "x is a real number satisfying 0 < x < π (open interval endpoints excluded)",
+            "Denominator x(π - x) ≠ 0 holds automatically for x ∈ (0,π)",
+            "π - x ∈ (0,π) whenever x ∈ (0,π), so f(π - x) is well-defined",
+            "sin is defined for all real inputs (no additional restriction)"
+          ],
+          "witness_dependencies": [],
+          "normalized_claim": "Let f: (0,π) → R be given by f(x) = sin(x) / ( x(π - x) ) for every real x with 0 < x < π. Then for every real x with 0 < x < π we have f(π - x) = f(x). Equivalently, f is invariant under the involution x ↦ π - x and hence symmetric about x = π/2 (i.e. for all t with -π/2 < t < π/2, f(π/2 + t) = f(π/2 - t))."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let x be any real number with 0 < x < π. Then also 0 < π - x < π, so f(π-x) is well-defined.\n\nBy the definition of f,\n\nf(π-x) = sin(π-x) / ((π-x)(π-(π-x))).\n\nSince π-(π-x)=x, this becomes\n\nf(π-x) = sin(π-x) / ((π-x)x).\n\nNow use the standard trigonometric identity sin(π-x)=sin x. Then\n\nf(π-x) = sin x / (x(π-x)) = f(x).\n\nBecause x was arbitrary in (0,π), we have proved that for every x in (0,π),\n\nf(π-x)=f(x).\n\nIn particular, the involution x ↦ π-x is the reflection about the midpoint π/2, so f has symmetry about x=π/2. Equivalently, if -π/2 < t < π/2 and x = π/2+t, then π-x = π/2-t, hence\n\nf(π/2+t)=f(π/2-t).\n\nThus the behavior of f on (0,π) is symmetric about x=π/2.",
+        "role_in_parent": "Provides symmetry, allowing reduction of extremum analysis to one side of the interval and identifying the midpoint as the natural candidate for the maximum."
+      },
+      {
+        "lemma_id": "lem_20260315031522_8bfa0dc7",
+        "statement_nl": "Define f:(0,π)→R by f(x)=sin x/(x(π-x)). Then lim_{x→0+} f(x)=1/π and lim_{x→π-} f(x)=1/π.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "function",
+              "domain": "(0,\\u03c0) \\to \\mathbb{R}",
+              "role": "function under study, defined by f(x)=sin x / (x(\\u03c0-x)) for x in (0,\\u03c0)"
+            },
+            {
+              "name": "x",
+              "type": "real",
+              "domain": "x \\in (0,\\u03c0)",
+              "role": "independent variable, approaches 0 from the right or \\u03c0 from the left"
+            },
+            {
+              "name": "\\u03c0",
+              "type": "real constant",
+              "domain": "\\u03c0 = the usual positive constant (pi), \\u03c0 > 0",
+              "role": "constant appearing in domain and formula"
+            },
+            {
+              "name": "\\u03b5",
+              "type": "positive real",
+              "domain": "\\u03b5 > 0",
+              "role": "epsilon in epsilon-delta definition of limits"
+            },
+            {
+              "name": "\\u03b4",
+              "type": "positive real",
+              "domain": "\\u03b4 > 0",
+              "role": "delta witness in epsilon-delta definition; may depend on \\u03b5"
+            }
+          ],
+          "quantifier_order": [
+            "Limit x -> 0+: For every \\u03b5 > 0 there exists \\u03b4 > 0 such that for all x in (0,\\u03c0), if 0 < x < \\u03b4 then |f(x) - 1/\\u03c0| < \\u03b5.",
+            "Limit x -> \\u03c0-: For every \\u03b5 > 0 there exists \\u03b4 > 0 such that for all x in (0,\\u03c0), if 0 < \\u03c0 - x < \\u03b4 then |f(x) - 1/\\u03c0| < \\u03b5."
+          ],
+          "domain_restrictions": [
+            "f is only defined on the open interval (0,\\u03c0); the formula uses denominators x and (\\u03c0-x) which are nonzero and positive for x in (0,\\u03c0).",
+            "Limits are one-sided: x approaches 0 from the right (x>0) and \\u03c0 from the left (x<\\u03c0).",
+            "Implicit real-number context: x, \\u03b5, \\u03b4 are real; sine is the real sine function."
+          ],
+          "witness_dependencies": [
+            "\\u03b4 is an explicit witness that depends on \\u03b5 (i.e. \\u03b4 = \\u03b4(\\u03b5) > 0).",
+            "For the x->0+ limit, one may choose \\u03b4(\\u03b5) <= \\u03c0/2 so that for 0<x<\\u03b4 we have \\u03c0 - x >= \\u03c0/2, ensuring the denominator x(\\u03c0-x) is bounded below by (\\u03c0/2) x; thus \\u03b4 can be chosen as min(\\u03c0/2, some function of \\u03b5) to satisfy the inequality.",
+            "For the x->\\u03c0- limit, similarly choose \\u03b4(\\u03b5) <= \\u03c0/2 and reason with y = \\u03c0 - x to reduce to the x->0+ case; again \\u03b4 depends on \\u03b5."
+          ],
+          "normalized_claim": "Two epsilon-delta statements: (1) For every \\u03b5>0 there exists \\u03b4>0 such that for all x in (0,\\u03c0), 0<x<\\u03b4 implies |sin x/(x(\\u03c0-x)) - 1/\\u03c0| < \\u03b5. (2) For every \\u03b5>0 there exists \\u03b4>0 such that for all x in (0,\\u03c0), 0<\\u03c0-x<\\u03b4 implies |sin x/(x(\\u03c0-x)) - 1/\\u03c0| < \\u03b5. Equivalently, lim_{x->0+} f(x)=1/\\u03c0 and lim_{x->\\u03c0-} f(x)=1/\\u03c0."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let u(t)=t-sin t for t>=0. Then u(0)=0 and u'(t)=1-cos t>=0 because cos t<=1, so u is increasing; hence u(t)>=0 for t>=0. Therefore sin t<=t for all t>=0.\n\nNow let v(t)=t^3/6-t+sin t. Then v(0)=0 and v''(t)=t-sin t=u(t)>=0. So v' is increasing. Since v'(0)=0, we get v'(t)>=0 for t>=0, hence v is increasing. Therefore v(t)>=0 for t>=0, i.e. t-sin t<=t^3/6 for all t>=0.\n\nFix epsilon>0 and choose delta=min(1, pi/2, epsilon pi^2/(2(1+pi/6))). This delta is positive. If 0<x<delta, then x<1 and pi-x>pi/2. Using the bound above,\n|f(x)-1/pi|\n= |(pi sin x - x(pi-x))/(pi x(pi-x))|\n= |(x^2 - pi(x-sin x))/(pi x(pi-x))|\n<= (x^2 + pi(x-sin x))/(pi x(pi-x))\n<= (x^2 + pi x^3/6)/(pi x(pi-x))\n= x(1+pi x/6)/(pi(pi-x))\n<= 2(1+pi/6)x/pi^2\n< 2(1+pi/6)delta/pi^2\n<= epsilon.\nHence lim_{x->0+} f(x)=1/pi.\n\nFor the left limit at pi, fix epsilon>0 and take delta as above for this epsilon. If 0<pi-x<delta, set y=pi-x. Then 0<y<delta and\nf(x)=sin x/(x(pi-x)) = sin(pi-y)/((pi-y)y) = sin y/(y(pi-y)) = f(y).\nBy the first part, |f(y)-1/pi|<epsilon, so |f(x)-1/pi|<epsilon whenever 0<pi-x<delta. Therefore lim_{x->pi-} f(x)=1/pi.",
+        "role_in_parent": "Identifies the endpoint limiting value, which will be the infimum candidate."
+      },
+      {
+        "lemma_id": "lem_20260315031549_f1fcee00",
+        "statement_nl": "For every real x with 0<x<π, one has sin x ≥ x(π-x)/π. Equivalently, for f(x)=sin x/(x(π-x)) on (0,π), one has f(x)≥1/π for all x in (0,π).",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "x",
+              "type": "real scalar",
+              "domain": "(0, π) ⊂ ℝ",
+              "role": "main universally quantified variable; argument of sin and f"
+            },
+            {
+              "name": "f",
+              "type": "function (real -> real)",
+              "domain": "(0, π)",
+              "role": "auxiliary function defined by f(x) = sin(x) / ( x(π−x) )"
+            },
+            {
+              "name": "π",
+              "type": "real constant",
+              "domain": "π > 0 (the usual mathematical constant)",
+              "role": "fixed positive constant appearing in the formula"
+            },
+            {
+              "name": "sin",
+              "type": "function ℝ -> [−1,1]",
+              "domain": "ℝ",
+              "role": "standard sine function (angle units implicit)"
+            }
+          ],
+          "quantifier_order": [
+            "Define f on (0, π) by f(x) = sin(x) / ( x(π−x) ).",
+            "For all x ∈ ℝ with 0 < x < π, the claimed inequality holds (equivalently: for all x ∈ (0, π), f(x) ≥ 1/π)."
+          ],
+          "domain_restrictions": [
+            "x is a real number and 0 < x < π (open interval).",
+            "Denominator x(π−x) is strictly positive on (0, π), so division is well-defined.",
+            "sin is the usual real-valued sine function; angle units must be radians for standard analytic identities/limits to hold.",
+            "f is only defined (as given) on the open interval (0, π); endpoints x=0 and x=π are excluded."
+          ],
+          "witness_dependencies": [
+            "None: the statement is purely universal (no existential quantifier), so there are no existential witnesses or dependencies to track."
+          ],
+          "normalized_claim": "For all x ∈ (0, π), sin(x) / ( x(π−x) ) ≥ 1/π. Equivalently, since x(π−x) > 0 on (0,π), for all x ∈ (0,π) we have sin(x) ≥ x(π−x)/π."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix x in (0,pi). First suppose 0 < x <= pi/2. For any t in [0,x], set lambda = 2t/pi, so lambda is in [0,1] and t = (1-lambda)*0 + lambda*(pi/2). On [0,pi/2] we have the second derivative cos''(u) = -cos u <= 0, hence cos is concave there. Therefore, by concavity, cos t = cos((1-lambda)*0 + lambda*(pi/2)) >= (1-lambda) cos 0 + lambda cos(pi/2) = 1 - 2t/pi. Integrating from 0 to x gives sin x = integral_0^x cos t dt >= integral_0^x (1 - 2t/pi) dt = x - x^2/pi = x(pi-x)/pi. Now suppose pi/2 <= x < pi. Put y = pi - x, so 0 < y <= pi/2. Applying the first case to y, we get sin y >= y(pi-y)/pi. Using sin x = sin(pi-x) = sin y and y(pi-y) = x(pi-x), we obtain sin x >= x(pi-x)/pi. Thus for every x with 0 < x < pi, sin x >= x(pi-x)/pi. Since x(pi-x) > 0 on (0,pi), dividing by x(pi-x) yields sin x / (x(pi-x)) >= 1/pi, i.e. f(x) >= 1/pi.",
+        "role_in_parent": "Gives a global lower bound showing 1/π is a lower bound for the ratio."
+      },
+      {
+        "lemma_id": "lem_20260315031613_1645b79b",
+        "statement_nl": "Define f:(0,π)→R by f(x)=sin x/(x(π-x)). Then for every x in (0,π), one has f(x)≤4/π^2, with equality if and only if x=π/2. Equivalently, for every x in (0,π), sin x ≤ (4/π^2)x(π-x), and equality holds exactly at x=π/2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "x",
+              "type": "real number",
+              "domain": "(0,π)",
+              "role": "the independent variable over which the universal quantifier ranges"
+            },
+            {
+              "name": "f",
+              "type": "real-valued function",
+              "domain": "(0,π)",
+              "role": "function defined by f(x)=sin x / ( x(π-x) )"
+            },
+            {
+              "name": "π",
+              "type": "real constant",
+              "domain": "π>0 (the usual mathematical constant)",
+              "role": "fixed constant determining the interval and the constant 4/π^2"
+            },
+            {
+              "name": "sin",
+              "type": "standard real-to-real function",
+              "domain": "R",
+              "role": "sine function used in definition of f"
+            }
+          ],
+          "quantifier_order": [
+            "∀ x ∈ (0,π): f(x) ≤ 4/π^2",
+            "∃ x ∈ (0,π): f(x) = 4/π^2 (the statement asserts such an x exists; witness given is x = π/2)",
+            "∀ x ∈ (0,π): (f(x) = 4/π^2) ⇒ (x = π/2)  (uniqueness of the maximizer)"
+          ],
+          "domain_restrictions": [
+            "x is a real number and x ∈ (0,π) (open interval: endpoints 0 and π excluded)",
+            "Denominator x(π - x) is positive on the domain (so f is well-defined and finite for all x in (0,π))",
+            "π denotes the usual positive real constant ~3.14159",
+            "Inequalities and equalities are with respect to the standard order on the real numbers"
+          ],
+          "witness_dependencies": [
+            "Existence witness for equality: x = π/2 (this witness is a fixed constant, independent of any other variable)",
+            "Uniqueness: the implication 'f(x)=4/π^2 ⇒ x=π/2' has no additional hidden existential dependence (it is a universal implication over x)",
+            "No existential witnesses depend on arbitrary x; the bound 4/π^2 is uniform (independent of x)"
+          ],
+          "normalized_claim": "Let f:(0,π)→R be defined by f(x)=sin(x)/(x(π-x)). Then (i) ∀x∈(0,π), f(x) ≤ 4/π^2. (ii) f(π/2) = 4/π^2. (iii) ∀x∈(0,π), if f(x) = 4/π^2 then x = π/2. Equivalently: ∀x∈(0,π), sin(x) ≤ (4/π^2) x(π-x), with equality iff x = π/2."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let U = π^2/4 and define φ:[0,U]→R by φ(u)=cos(√u). The function φ is continuous on [0,U] and differentiable on (0,U). For 0<u<U, write s=√u∈(0,π/2). Then φ'(u)=−sin s/(2s) and φ''(u)=(sin s−s cos s)/(4s^3).\n\nNow set m(s)=tan s−s on [0,π/2). Since m'(s)=sec^2 s−1 = tan^2 s>0 for s∈(0,π/2) and m(0)=0, we have m(s)>0 for 0<s<π/2. Because cos s>0 on (0,π/2), this gives sin s−s cos s = cos s·(tan s−s)>0. Hence φ''(u)>0 for 0<u<U, so φ' is strictly increasing on (0,U).\n\nFix u∈(0,U). By the mean value theorem applied on [0,u] and [u,U], there exist a∈(0,u) and b∈(u,U) such that (φ(u)−φ(0))/u = φ'(a) and (φ(U)−φ(u))/(U−u) = φ'(b). Since a<b and φ' is strictly increasing, φ'(a)<φ'(b). Therefore (φ(u)−φ(0))/u < (φ(U)−φ(u))/(U−u). Multiplying by u(U−u)>0 and rearranging yields φ(u) < ((U−u)/U)φ(0) + (u/U)φ(U). Because φ(0)=1 and φ(U)=cos(π/2)=0, we obtain cos(√u)=φ(u) < 1−u/U = 1−4u/π^2 for every 0<u<U. At the endpoints u=0 and u=U, equality is immediate. So for all u∈[0,U], cos(√u) ≤ 1−4u/π^2, with equality iff u=0 or u=U.\n\nNow let x∈(0,π) and set u=(x−π/2)^2. Then 0≤u<U, and √u=|x−π/2|. Since cosine is even, sin x = cos(x−π/2)=cos(√u). Hence sin x ≤ 1−4(x−π/2)^2/π^2 = 4x(π−x)/π^2. Because x∈(0,π), we have u<U, so the equality case u=U cannot occur; therefore equality holds iff u=0, i.e. iff x=π/2.\n\nFinally, x(π−x)>0 on (0,π), so dividing by this positive quantity gives f(x)=sin x/(x(π−x)) ≤ 4/π^2, with equality iff x=π/2. In particular f(π/2)=1/((π/2)^2)=4/π^2. This proves exactly the stated lemma.",
+        "role_in_parent": "Determines the exact supremum and the point where it is attained."
+      },
+      {
+        "lemma_id": "lem_20260315032024_9b4e1f0b",
+        "statement_nl": "Let f:(0,π)→R be defined by f(x)=sin x/(x(π-x)). Assume that (i) f(x)≥1/π for all x in (0,π), (ii) lim_{x→0+}f(x)=lim_{x→π-}f(x)=1/π, and (iii) f(x)≤4/π^2 for all x in (0,π), with equality at x=π/2. Then inf_{x∈(0,π)} f(x)=1/π and sup_{x∈(0,π)} f(x)=4/π^2.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "function",
+              "domain": "(0,\\u03c0)",
+              "role": "given real-valued function f:(0,\\u03c0)\\u2192R"
+            },
+            {
+              "name": "x",
+              "type": "real variable",
+              "domain": "(0,\\u03c0)",
+              "role": "argument variable ranging over the open interval (0,\\u03c0)"
+            },
+            {
+              "name": "\\u03c0",
+              "type": "real constant",
+              "domain": "real, equal to pi > 0",
+              "role": "the constant pi (endpoint of interval)"
+            },
+            {
+              "name": "R",
+              "type": "set",
+              "domain": "the real numbers",
+              "role": "codomain of f"
+            },
+            {
+              "name": "x_n, y_n",
+              "type": "sequences of reals",
+              "domain": "each sequence is contained in (0,\\u03c0)",
+              "role": "potential witness sequences approaching 0+ or \\u03c0- used to realize the boundary limit 1/\\u03c0"
+            }
+          ],
+          "quantifier_order": [
+            "Given f : (0,\\u03c0) -> R defined by f(x) = sin x / ( x(\\u03c0 - x) )",
+            "Assume (i) For all x in (0,\\u03c0), f(x) \\u2265 1/\\u03c0",
+            "Assume (ii) lim_{x->0+} f(x) = 1/\\u03c0 and lim_{x->\\u03c0-} f(x) = 1/\\u03c0",
+            "Assume (iii) For all x in (0,\\u03c0), f(x) \\u2264 4/\\u03c0^2",
+            "Assume additionally f(\\u03c0/2) = 4/\\u03c0^2 (equality point)",
+            "Conclude: inf_{x \\in (0,\\u03c0)} f(x) = 1/\\u03c0 and sup_{x \\in (0,\\u03c0)} f(x) = 4/\\u03c0^2"
+          ],
+          "domain_restrictions": [
+            "x is restricted to the open interval (0,\\u03c0); endpoints 0 and \\u03c0 are not in domain",
+            "f is real-valued on (0,\\u03c0)",
+            "\\u03c0 is the positive constant pi; denominators x(\\u03c0-x) are nonzero on (0,\\u03c0)",
+            "limits in (ii) refer to one-sided limits from inside the domain (approach 0 from >0 and approach \\u03c0 from <\\u03c0)"
+          ],
+          "witness_dependencies": [
+            "infimum = 1/\\u03c0 is not asserted to be attained at an interior point; it is realized as the greatest lower bound because (i) gives f(x) \\u2265 1/\\u03c0 for all x and (ii) provides sequences x_n -> 0+ or y_n -> \\u03c0- with f(x_n) -> 1/\\u03c0, so the witness for approaching the infimum is a sequence that depends on choosing a sequence approaching an endpoint",
+            "supremum = 4/\\u03c0^2 is witnessed by the explicit interior point x = \\u03c0/2 (existential witness independent of sequences), due to the equality in (iii)",
+            "the limit equalities in (ii) provide the existence of sequences in the domain whose f-values converge to 1/\\u03c0; these sequences depend on the choice of approach to the endpoints"
+          ],
+          "normalized_claim": "Let f : (0,\\u03c0) -> R satisfy: (A) for all x in (0,\\u03c0), 1/\\u03c0 \\u2264 f(x) \\u2264 4/\\u03c0^2; (B) lim_{x->0+} f(x) = lim_{x->\\u03c0-} f(x) = 1/\\u03c0; and (C) f(\\u03c0/2) = 4/\\u03c0^2. Then the infimum of f over (0,\\u03c0) equals 1/\\u03c0 (infimum achieved as a limit at the boundary, not necessarily by any interior x) and the supremum of f over (0,\\u03c0) equals 4/\\u03c0^2 (attained at x = \\u03c0/2)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let S={f(x):x∈(0,π)}.\n\nFirst, prove inf S=1/π.\nBy assumption (i), for every x∈(0,π) we have f(x)≥1/π. Hence 1/π is a lower bound of S.\n\nIt remains to show that no larger number is a lower bound. Let ε>0. Since lim_{x→0+} f(x)=1/π by assumption (ii), there exists δ>0 such that whenever 0<x<δ, one has |f(x)-1/π|<ε. Choose x0=min(δ/2,π/2). Then x0∈(0,π) and x0<δ, so\nf(x0)<1/π+ε.\nTherefore, for every ε>0 there exists some value of f that is strictly less than 1/π+ε. Equivalently, no number bigger than 1/π can be a lower bound of S: indeed, if L>1/π, take ε=L-1/π>0; then for the corresponding x0 we get f(x0)<1/π+ε=L, so L is not a lower bound.\n\nThus 1/π is a lower bound of S, and every number larger than 1/π fails to be a lower bound. Hence inf S=1/π, i.e.\ninf_{x∈(0,π)} f(x)=1/π.\n\nNow prove sup S=4/π^2.\nBy assumption (iii), for every x∈(0,π) we have f(x)≤4/π^2. Hence 4/π^2 is an upper bound of S.\n\nAlso, assumption (iii) says equality holds at x=π/2. Since π/2∈(0,π), we have\nf(π/2)=4/π^2,\nso 4/π^2 is actually an element of S. Therefore every upper bound of S must be at least 4/π^2, while 4/π^2 itself is an upper bound. Hence\nsup S=4/π^2,\ni.e. sup_{x∈(0,π)} f(x)=4/π^2.\n\nCombining the two parts,\ninf_{x∈(0,π)} f(x)=1/π and sup_{x∈(0,π)} f(x)=4/π^2, as claimed.",
+        "role_in_parent": "Packages the extremum extraction from the analytic bounds and limits."
+      },
+      {
+        "lemma_id": "lem_20260315032055_4bc9cc21",
+        "statement_nl": "Let f:(0,π)→R be any function, and let α,β be real numbers. If inf_{x∈(0,π)} f(x)=α and sup_{x∈(0,π)} f(x)=β, then α is the largest real number A such that A≤f(x) for all x in (0,π), and β is the smallest real number B such that f(x)≤B for all x in (0,π).",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "f",
+              "type": "function",
+              "domain": "(0,π) → R",
+              "role": "given arbitrary function whose infimum and supremum are described"
+            },
+            {
+              "name": "α",
+              "type": "real number",
+              "domain": "R",
+              "role": "given value asserted equal to inf_{x∈(0,π)} f(x)"
+            },
+            {
+              "name": "β",
+              "type": "real number",
+              "domain": "R",
+              "role": "given value asserted equal to sup_{x∈(0,π)} f(x)"
+            },
+            {
+              "name": "x",
+              "type": "real number",
+              "domain": "x ∈ (0,π)",
+              "role": "variable ranging over the domain of f used in universal statements"
+            },
+            {
+              "name": "A",
+              "type": "real number",
+              "domain": "R",
+              "role": "an arbitrary candidate lower bound for f (to be compared with α)"
+            },
+            {
+              "name": "B",
+              "type": "real number",
+              "domain": "R",
+              "role": "an arbitrary candidate upper bound for f (to be compared with β)"
+            }
+          ],
+          "quantifier_order": [
+            "forall f : (0,π) → R",
+            "forall α, β ∈ R",
+            "assume α = inf_{x∈(0,π)} f(x) and β = sup_{x∈(0,π)} f(x) (premise)",
+            "then (conclusions):",
+            "  forall x ∈ (0,π): α ≤ f(x)  and  forall x ∈ (0,π): f(x) ≤ β",
+            "  forall A ∈ R: [ (forall x ∈ (0,π), A ≤ f(x)) ⇒ A ≤ α ]",
+            "  forall B ∈ R: [ (forall x ∈ (0,π), f(x) ≤ B) ⇒ β ≤ B ]"
+          ],
+          "domain_restrictions": [
+            "f is a function with domain (0,π) and codomain R (so f(x) is a real number for every x in (0,π))",
+            "(0,π) is nonempty (indeed it contains points), so inf and sup over this set are meaningful",
+            "α and β are finite real numbers (the statement interprets inf and sup as real numbers, not ±∞)",
+            "A and B range over all real numbers when used in the universal comparison clauses"
+          ],
+          "witness_dependencies": [
+            "α and β are determined by f: α = inf_{x∈(0,π)} f(x) and β = sup_{x∈(0,π)} f(x); thus α,β depend on f",
+            "A is an arbitrary real chosen subject only to the property (∀x∈(0,π)) A ≤ f(x); A does not depend on x but may depend on f implicitly via that property",
+            "B is an arbitrary real chosen subject only to the property (∀x∈(0,π)) f(x) ≤ B; B does not depend on x but may depend on f implicitly via that property"
+          ],
+          "normalized_claim": "For every function f:(0,π)→R and every real numbers α,β, if α = inf_{x∈(0,π)} f(x) and β = sup_{x∈(0,π)} f(x) (finite), then (i) ∀x∈(0,π), α ≤ f(x), and moreover ∀A∈R, ( (∀x∈(0,π), A ≤ f(x)) ⇒ A ≤ α ), and (ii) ∀x∈(0,π), f(x) ≤ β, and moreover ∀B∈R, ( (∀x∈(0,π), f(x) ≤ B) ⇒ β ≤ B ). Equivalently, α is the greatest lower bound of {f(x): x∈(0,π)} and β is the least upper bound of {f(x): x∈(0,π)}."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let S={f(x): x∈(0,π)}⊂R. The hypotheses are precisely that inf S=α and sup S=β.\n\nWe first prove the statement about α.\n\nBecause α=inf S, by the definition of infimum, α is a lower bound of S and is greater than or equal to every other lower bound of S. Concretely:\n1. For every s∈S, α≤s.\n2. If A∈R satisfies A≤s for every s∈S, then A≤α.\n\nFrom (1), for every x∈(0,π) we have f(x)∈S, hence α≤f(x). So α itself is a real number with the property that α≤f(x) for all x∈(0,π).\n\nNow let A be any real number such that A≤f(x) for all x∈(0,π). Then for every s∈S, since s=f(x) for some x∈(0,π), we have A≤s. Thus A is a lower bound of S. By (2), A≤α.\n\nTherefore α has the required property, and every real number A with that property satisfies A≤α. Hence α is the largest real number A such that A≤f(x) for all x∈(0,π).\n\nNow we prove the statement about β.\n\nBecause β=sup S, by the definition of supremum, β is an upper bound of S and is less than or equal to every other upper bound of S. Concretely:\n1. For every s∈S, s≤β.\n2. If B∈R satisfies s≤B for every s∈S, then β≤B.\n\nFrom (1), for every x∈(0,π) we have f(x)∈S, hence f(x)≤β. So β itself is a real number with the property that f(x)≤β for all x∈(0,π).\n\nNow let B be any real number such that f(x)≤B for all x∈(0,π). Then for every s∈S, since s=f(x) for some x∈(0,π), we have s≤B. Thus B is an upper bound of S. By (2), β≤B.\n\nTherefore β has the required property, and every real number B with that property satisfies β≤B. Hence β is the smallest real number B such that f(x)≤B for all x∈(0,π).\n\nThis proves the lemma.",
+        "role_in_parent": "Translates computed infimum and supremum into the optimal constants in the original inequality problem."
+      }
+    ],
+    "all_visible_lemmas_nl_accepted": true
+  }

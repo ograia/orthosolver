@@ -1,0 +1,127 @@
+{
+  "assembly_plan_id": "asm_20260325053625_3100e946",
+  "created_at": "2026-03-25T05:39:21.013645Z",
+  "decomposition_id": "dec_20260325053625_1770ae52",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_skeleton_nl": "First show the generators lie in the positive-degree ideal, so the subalgebra A=k[g_1,...,g_d] is positively graded. The finite-dimensional quotient S/(g_1,...,g_d) then implies, by a graded Nakayama-type finiteness criterion, that S is module-finite over A. Since S is a polynomial ring, it is Cohen-Macaulay of dimension d; the finite extension therefore forces A to have dimension d as well. But A is generated over k by exactly d elements, so dimension d forces those generators to be algebraically independent, hence A is itself a polynomial ring k[T_1,...,T_d] with T_i mapping to g_i. Miracle flatness now implies that S is flat over this polynomial ring A. The coordinate variables T_1,...,T_d form a regular sequence in A, and flatness carries that regular sequence to their images g_1,...,g_d in S.",
+  "root_node_id": "lem_20260325041619_e5453e92",
+  "steps": [
+    {
+      "derives": "Each g_i lies in the positive-degree ideal S_+=(x_1,...,x_d) of S.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Apply L1 directly to the given sequence g_1,...,g_d and the hypothesis that S/(g_1,...,g_d) is finite-dimensional over k.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If A = k[g_1,...,g_d] subseteq S, then S is finitely generated as an A-module.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "By A1, each g_i is a homogeneous element of S_+. Define the graded subalgebra A=k[g_1,...,g_d]. The quotient S/(g_1,...,g_d)S is finite-dimensional by hypothesis, so L2 applies with h_i=g_i and yields that S is finite over A.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "The ring S has Krull dimension d and is Cohen-Macaulay.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly L5.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The subring A=k[g_1,...,g_d] is a finitely generated k-domain.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "By definition, A is generated as a k-algebra by the d elements g_1,...,g_d, so it is a finitely generated k-algebra. Since A is a subring of the domain S, it is itself a domain.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The subalgebra A has Krull dimension d.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "A4 supplies that A is a Noetherian domain because it is a finitely generated k-domain. A2 says S is finite as an A-module, and S is a domain. Therefore L3 applies to the inclusion A subseteq S and gives dim(A)=dim(S). Using A3, dim(S)=d, so dim(A)=d.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "The generators g_1,...,g_d are algebraically independent over k, so the map phi: k[T_1,...,T_d] -> A sending T_i to g_i is an isomorphism. Thus A may be identified with a polynomial ring in the generators g_i.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "A4 says A is a finitely generated k-domain of the form k[g_1,...,g_d], and A5 says dim(A)=d. Applying L4 with a_i=g_i shows that the natural map from the polynomial ring k[T_1,...,T_d] to A is an isomorphism.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "After identifying A with k[T_1,...,T_d] via A6, the A-algebra S is flat as an A-module.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "By A6, A is isomorphic to k[T_1,...,T_d]. By A2, S is finite as an A-module. By A3, S is Cohen-Macaulay and has dimension d. By A5, A also has dimension d. Therefore all hypotheses of L6 are satisfied, so S is flat over A.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3",
+        "A5",
+        "A6"
+      ]
+    },
+    {
+      "derives": "In the polynomial ring A identified in A6, the sequence T_1,...,T_d is regular.",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "This is exactly L7.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The images of T_1,...,T_d in S form a regular sequence in S. Under the identification from A6, those images are exactly g_1,...,g_d. Hence for each i, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "A7 gives that the ring map A -> S is flat. A8 gives a regular sequence T_1,...,T_d in A. Applying L8 to this flat map shows that their images in S form a regular sequence. By the definition of the map in A6, the image of T_i in S is precisely g_i, so the resulting regular sequence is g_1,...,g_d.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A6",
+        "A7",
+        "A8"
+      ]
+    },
+    {
+      "derives": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d are homogeneous elements of S and S/(g_1,...,g_d) is finite-dimensional over k, then for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor. Equivalently, g_1,...,g_d is a homogeneous regular sequence.",
+      "is_trivial": true,
+      "step_id": "A10",
+      "trivial_justification": "A9 gives exactly the sequential non-zero-divisor statement, and because the g_i are homogeneous by hypothesis, this is exactly the claim that g_1,...,g_d is a homogeneous regular sequence.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A9"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "assembly_plan_id": "asm_20260324202917_fc16938a",
+  "created_at": "2026-03-24T20:33:43.481870Z",
+  "decomposition_id": "dec_20260324202917_61db9fb9",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_skeleton_nl": "Fix arbitrary integers n, k, l with 0 <= k, l <= n and assume [n choose k]_q / [n choose l]_q is a polynomial. First use Gaussian symmetry to replace k and l by a = min(k, n-k) and b = min(l, n-l), so both reduced indices lie in [0, n/2]. A degree comparison then rules out a < b, because a quotient with smaller reduced numerator index would have negative degree and could not be a polynomial. With a >= b, rewrite the reduced quotient as an interval product Q_{A,B,d}(q) = prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)). Next compute the exponent of each cyclotomic polynomial Phi_m(q) in Q_{A,B,d}(q); it is exactly the floor-difference e_m attached to the two intervals. Since the original quotient is assumed to be a polynomial, the general cyclotomic criterion forces every exponent e_m to be nonnegative. The only genuine hard input is then the reduced interval-product positivity theorem L6, which says that these nonnegative exponent inequalities imply coefficientwise nonnegativity of Q_{A,B,d}(q). Substituting back through the normal-form identity yields the desired positivity for [n choose k]_q / [n choose l]_q.",
+  "root_node_id": "thm_root_20260324194836_7ca60a42",
+  "steps": [
+    {
+      "derives": "Let a := min(k, n-k) and b := min(l, n-l). Then [n choose k]_q / [n choose l]_q = [n choose a]_q / [n choose b]_q, and by construction 0 <= a <= n/2 and 0 <= b <= n/2.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Apply L1 once with r = k and once with r = l. The definition of minimum gives a <= n/2 and b <= n/2.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The reduced indices satisfy a >= b.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "By A1, the original quotient equals [n choose a]_q / [n choose b]_q and is a polynomial by hypothesis. If a < b, then 0 <= a < b <= n/2, so L2 says [n choose a]_q / [n choose b]_q cannot lie in Q[q]. This contradicts the hypothesis. Therefore a >= b.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Define d := a-b, A := n-a, and B := b. Then d >= 0 and A >= B >= 0, and the original quotient can be written as [n choose k]_q / [n choose l]_q = Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "A1 rewrites the quotient as [n choose a]_q / [n choose b]_q. Since A2 gives 0 <= b <= a <= n/2, the hypotheses of L3 hold, so L3 converts that reduced quotient into the interval product Q_{A,B,d}(q). Also A = n-a >= a >= b = B.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "The rational function Q_{A,B,d}(q) belongs to Q[q].",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "By A3, Q_{A,B,d}(q) is exactly the original quotient, and the theorem hypothesis states that the original quotient is a polynomial in q.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "For each positive integer m, the exponent of Phi_m(q) in the cyclotomic factorization of Q_{A,B,d}(q) is e_m = floor((A+d)/m) - floor(A/m) - floor((B+d)/m) + floor(B/m).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Apply L4 directly to the interval product Q_{A,B,d}(q) obtained in A3.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "For every positive integer m, one has e_m >= 0.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "A5 identifies Q_{A,B,d}(q) as a finite cyclotomic product with exponents e_m. A4 says this product lies in Q[q]. By L5, a finite cyclotomic product is a polynomial exactly when all its exponents are nonnegative. Hence each e_m is >= 0.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "The polynomial Q_{A,B,d}(q) has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "L6 applies to the same parameters A, B, d because A3 gives A >= B >= 0 and d >= 0, while A6 verifies the hypothesis e_m >= 0 for every positive integer m.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    },
+    {
+      "derives": "For all integers n, k, l with 0 <= k, l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then that polynomial has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "A3 shows that the original quotient equals Q_{A,B,d}(q), and A7 shows that this polynomial is coefficientwise nonnegative. Since n, k, and l were arbitrary subject to the stated hypotheses, universal generalization yields exactly the root theorem.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A3",
+        "A7"
+      ]
+    }
+  ]
+}
