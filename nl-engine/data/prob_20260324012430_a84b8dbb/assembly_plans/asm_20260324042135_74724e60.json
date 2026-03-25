@@ -1,0 +1,82 @@
+{
+  "assembly_plan_id": "asm_20260324042135_74724e60",
+  "created_at": "2026-03-24T04:25:34.417087Z",
+  "decomposition_id": "dec_20260324042135_12955923",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_skeleton_nl": "Encode each tuple by first sorting its coordinates with deterministic tie-breaking, then recording cumulative differences between consecutive sorted values. This partitions K_{m,g} into disjoint chambers indexed by permutations. Inside a fixed chamber, the genus and Kunz conditions are linear in the difference variables. A chamberwise injection from degree g to degree g+1 is then assumed/proved on those encoded chambers. Finally, decode chamberwise and take the disjoint union over all chambers to obtain the global injection on K_{m,g}.",
+  "root_node_id": "lem_20260324013805_2c445eb6",
+  "steps": [
+    {
+      "derives": "For every positive tuple x in K_{m,g}, there is a unique sorting permutation sigma_x and a unique difference vector e(x) from which x can be reconstructed by cumulative sums. This gives the basic encoding data needed for the chamber decomposition.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The set K_{m,g} splits as a disjoint union of the chambers X_{m,sigma,g} indexed by permutations sigma of {1,...,m-1}. For each fixed sigma, the encoding x -> e(x) is a bijection from X_{m,sigma,g} onto the corresponding encoded set E_{m,sigma,g}. Thus the global problem decomposes into independent sigma-chambers.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Inside any fixed chamber sigma, the total sum condition x_1+...+x_{m-1}=g becomes the weighted degree equation sum_{r=0}^{m-2}(m-1-r)e_r = g by L2, and the Kunz inequalities become a finite linear system in the variables e by L4. Therefore E_{m,sigma,g} and E_{m,sigma,g+1} are exactly the encoded degree-g and degree-(g+1) slices of the same chamberwise constraint system.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L2",
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For each permutation sigma, apply L5 to obtain an injective chamberwise map I_{m,sigma,g}:E_{m,sigma,g} -> E_{m,sigma,g+1}. This gives a genus-raising injection separately on every encoded chamber.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Using the uniqueness of the sorting permutation and the family of chamberwise injections from A4, L6 constructs a global map J_{m,g}:K_{m,g} -> K_{m,g+1} by: encode x by its chamber label sigma_x and its difference vector e(x), apply the chamberwise map I_{m,sigma_x,g}, and decode back by cumulative sums. The same lemma shows that this piecewise-defined map is well-defined and injective.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A4"
+      ]
+    },
+    {
+      "derives": "Therefore, for the given integers m >= 2 and g >= 0, there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}.",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "A5 already constructs such a function and proves its injectivity.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "assembly_plan_id": "asm_20260316202246_b164b74d",
+  "controller_status": "failed",
+  "created_at": "2026-03-16T20:31:14.229175Z",
+  "decomposition_id": "dec_20260316202246_9f23cc51",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.77,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "thm_root_20260316200002_2d33d280",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260316200718_e6c0a378",
+      "disguised_difficulty": [],
+      "drift_severity": "major",
+      "failure_mode": "rejected_fatal:failed",
+      "fixes_required": [
+        "Lemma L5 is false as stated; add the explicit assumption N >= 4 (or otherwise strengthen/restate the covering hypothesis).",
+        "After fixing L5, add a separate proof for the boundary case p = 5, since A3 cannot then be applied with N = p-2 = 3.",
+        "Lemma L6 is false; remove it or replace A4/A5 by the direct estimate ceil((p-2)/4) > p/4 - 1.",
+        "Lemma L2 is unused; either delete it from the decomposition or make its role in proving L4 explicit."
+      ],
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [
+        "L5: the statement is missing the necessary assumption N >= 4; without it the lemma is false.",
+        "After correcting L5 to N >= 4, the assembly no longer covers the theorem's boundary case p = 5 (since then N = p-2 = 3), so a separate base-case argument is needed."
+      ],
+      "strategy_summary": "Reduce the global lower bound on the number of descents of the modular-inverse permutation to a local obstruction: prove that five consecutive inverse values can never be strictly increasing. This implies that every block of four consecutive indices contains a descent. A purely combinatorial covering lemma then yields at least ceil((p-2)/4) descents, and for odd primes this equals floor(p/4), which is stronger than the required bound > p/4 - 1.",
+      "vet_summary": "The plan is not acceptable as stated because two lemmas are false: L5 fails for small N (in particular N = 3, which is exactly the p = 5 boundary case), and L6 is false for primes p congruent to 3 mod 4. The assembly is conditionally coherent if one assumes the stated lemmas, but the decomposition needs substantive repair: fix L5's domain and cover p = 5 separately, and remove or weaken L6."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260316200918_9f919b8b",
+      "disguised_difficulty": [],
+      "drift_severity": "major",
+      "failure_mode": "rejected_fatal:failed",
+      "fixes_required": [
+        "Replace L5 with a correct combinatorial statement. From the given hypothesis one can only conclude a bound of order floor(N/4), not ceil(N/4).",
+        "Revise the overall strategy after repairing L5: the local obstruction in L4/A2 is insufficient on its own to prove the root theorem, especially for p \u2261 1 mod 4; add a stronger arithmetic input or extra structural information about S.",
+        "Repair or remove L6. The claimed identity ceil((p-2)/4)=floor(p/4) is false (e.g. p=7).",
+        "If any corrected combinatorial lemma has a lower-bound side condition on N, add a separate base-case proof for p=5.",
+        "Step A4 claims triviality but requires deriving oddness of p, applying L6, and substituting the result; break it into smaller steps or remove the triviality flag."
+      ],
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [
+        "The hypothesis obtained in A2 ('every four consecutive indices contain a descent') does not by itself imply the theorem's target bound. The strongest universal combinatorial consequence is only about floor(N/4), not ceil(N/4). For example, with N=11 the set {4,8} meets every 4-interval but has size 2, so an A2-type hypothesis cannot force the p=13 target |S|>=3. A stronger arithmetic/combinatorial ingredient is missing.",
+        "If L5 were repaired by adding a small-N side condition, the proof would also need a separate treatment of the base case p=5."
+      ],
+      "strategy_summary": "Reduce the global lower bound on the number of descents of the modular-inverse permutation to a local obstruction: prove that five consecutive inverse values can never be strictly increasing. This implies that every block of four consecutive indices contains a descent. A purely combinatorial covering lemma then yields at least ceil((p-2)/4) descents, and for odd primes this equals floor(p/4), which is stronger than the required bound > p/4 - 1.",
+      "vet_summary": "L1-L4 are plausible, but the proof tail is invalid. L5 is false as stated (and in fact overclaims the best possible interval-hitting bound), and L6 is false as stated. Worse, after repairing L5 to a true combinatorial statement, the assembly no longer reaches the theorem: the local four-block hitting property from A2 is too weak to force the claimed global bound, especially when p \u2261 1 mod 4 (e.g. p=13)."
+    }
+  ],
+  "problem_id": "prob_20260316200002_e457403f",
+  "shared_context": [
+    {
+      "content": "For a fixed prime p > 3, define I : {1,...,p-1} -> {1,...,p-1} by letting I(k) be the unique integer in {1,...,p-1} such that k*I(k) \u2261 1 (mod p). Define S = { k in {1,...,p-2} : I(k+1) < I(k) }.",
+      "label": "Inverse-permutation notation"
+    }
+  ],
+  "strategy_summary": "Unlike the failed attempts, this strategy does not try to deduce the theorem from the bare four-block hitting property alone. It keeps the true local obstruction that five consecutive inverse values cannot be strictly increasing, adds the involutive symmetry and the forced central descent, and then uses a strengthened counting tail with an explicit separate near-centre input instead of the false ceiling identity or the insufficient old covering lemma. A separate base case p=5 is included explicitly.",
+  "updated_at": "2026-03-16T20:31:14.229176Z"
+}

@@ -1,0 +1,102 @@
+{
+  "assembly_plan_id": "asm_20260325064653_6ae0a8c0",
+  "created_at": "2026-03-25T06:51:34.089237Z",
+  "decomposition_id": "dec_20260325064653_70ac9e3a",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_skeleton_nl": "Split into the two possibilities for the generated ideal I=(g_1,...,g_d). The full-ideal branch is isolated as an explicit bottleneck lemma. In the proper-ideal branch, finite-dimensionality forces I to be m-primary, so S/I has Krull dimension 0. Independently, the weighted polynomial ring has Krull dimension d and is Cohen-Macaulay. Therefore the general proper-ideal Cohen-Macaulay regularity theorem applies to g_1,...,g_d and gives the successive non-zero-divisor property. Finally, combine the two branches and translate that property into the phrase 'homogeneous regular sequence'.",
+  "root_node_id": "lem_20260325055554_837eceb4",
+  "steps": [
+    {
+      "derives": "Let I=(g_1,...,g_d). Then either I=S or I is a proper ideal of S.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "Every ideal is either the whole ring or proper; this is the exhaustive case split used in the rest of the proof.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "In the case I=S, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is a direct application of L1 to the sequence g_1,...,g_d.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "In the case I is proper, the quotient S/I has Krull dimension 0.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Under the proper-ideal branch, the ideal I is homogeneous because the generators g_1,...,g_d are homogeneous. The root hypothesis gives that S/I is finite-dimensional over k. Applying L2 to this proper homogeneous ideal I yields m^N subseteq I for some N, hence sqrt(I)=m and therefore dim(S/I)=0.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "The ring S has Krull dimension d.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is exactly the content of L3.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The underlying commutative ring S is Cohen-Macaulay.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is exactly the content of L4.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "In the case I is proper, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Apply L5 with R=S and a_j=g_j. Step A5 gives that R is Cohen-Macaulay. Polynomial rings over fields are Noetherian, so the Noetherian hypothesis in L5 is satisfied. Step A4 gives dim R=d. In the proper-ideal branch, I=(g_1,...,g_d) is proper by assumption of the branch, and Step A3 gives dim(R/I)=0. Therefore all hypotheses of L5 hold, and L5 yields the desired successive non-zero-divisor statements.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A3",
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "Without any extra case assumption, for every i with 1 <= i <= d, the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "By Step A1 there are only two possibilities. If I=S, Step A2 gives the desired conclusion. If I is proper, Step A6 gives the same conclusion. By disjunction elimination, the conclusion holds unconditionally.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A6"
+      ]
+    },
+    {
+      "derives": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d are homogeneous elements of S and S/(g_1,...,g_d) is finite-dimensional over k, then for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor. Equivalently, g_1,...,g_d is a homogeneous regular sequence.",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "Step A7 gives the first sentence of the theorem. Since the g_i are homogeneous by hypothesis, L6 identifies that sentence exactly with the statement that g_1,...,g_d is a homogeneous regular sequence.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A7"
+      ]
+    }
+  ]
+}

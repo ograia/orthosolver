@@ -1,0 +1,62 @@
+{
+  "active_decomposition_id": null,
+  "artifact_ids": [],
+  "created_at": "2026-03-20T03:55:08.375447Z",
+  "final_decl_name": null,
+  "kind": "theorem",
+  "problem_id": "prob_20260320035508_76899425",
+  "statement_lean": null,
+  "statement_nl": "Let S be a numerical semigroup. Let e be the number of minimal generators of S, let c be the smallest integer such that every integer greater than or equal to c belongs to S, and let L be the set of elements of S that are strictly less than c. Then e multiplied by the number of elements of L is at least c.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "S must be a numerical semigroup: subset of nonnegative integers, contains 0, closed under addition, with finite complement in Z_{>=0}",
+      "minimal generating set of S is finite and its cardinality is e (so e \u2208 Z_{>=1})",
+      "c is the conductor (smallest integer with all larger integers in S) and exists because Z_{>=0}\\S is finite",
+      "L is finite: L = S \u2229 [0, c-1]",
+      "cardinality |L| denotes the number of elements of L (a nonnegative integer)"
+    ],
+    "normalized_claim": "For all S \u2286 Z_{>=0} with 0 \u2208 S, closed under addition, and Z_{>=0}\\S finite, let e = |MinGen(S)|, let c = min{ n \u2208 Z : \u2200 m \u2265 n, m \u2208 S }, and let L = S \u2229 [0,c-1]. Then e * |L| \u2265 c.",
+    "quantifier_order": [
+      "forall S (S is a numerical semigroup, i.e. S \u2286 Z_{>=0}, 0 \u2208 S, closed under addition, Z_{>=0} \\ S finite)",
+      "define e := |MinGen(S)| (finite)",
+      "define c := min{ n \u2208 Z : \u2200 m \u2265 n, m \u2208 S } (exists because Z_{>=0}\\S finite)",
+      "define L := S \u2229 [0, c-1]",
+      "claim: e * |L| \u2265 c"
+    ],
+    "variables": [
+      {
+        "domain": "subset of Z_{>=0}",
+        "name": "S",
+        "role": "subject: assumed to be a numerical semigroup (cofinite submonoid of Z_{>=0}, includes 0, closed under addition)",
+        "type": "set"
+      },
+      {
+        "domain": "cardinality of minimal generating set of S",
+        "name": "e",
+        "role": "number of minimal generators of S (|MinGen(S)|)",
+        "type": "natural number"
+      },
+      {
+        "domain": "the conductor: minimal n in Z such that all m >= n belong to S",
+        "name": "c",
+        "role": "threshold/conductor of S",
+        "type": "integer"
+      },
+      {
+        "domain": "L = {x in S : x < c} = S \u2229 [0, c-1]",
+        "name": "L",
+        "role": "elements of S strictly less than c",
+        "type": "finite set"
+      }
+    ],
+    "witness_dependencies": [
+      "e depends on S: e = |MinGen(S)|",
+      "c depends on S: c = min{ n \u2208 Z : \u2200 m \u2265 n, m \u2208 S }",
+      "L depends on S and c: L = S \u2229 [0, c-1]",
+      "the inequality to be checked is e(S) * |L(S)| \u2265 c(S)"
+    ]
+  },
+  "status": "failed",
+  "theorem_id": "thm_root_20260320035508_2bc588ab",
+  "updated_at": "2026-03-20T03:55:08.375447Z"
+}

@@ -1,0 +1,78 @@
+{
+  "assembly_plan_id": "asm_20260324013348_8e5fdaac",
+  "created_at": "2026-03-24T01:37:20.335579Z",
+  "decomposition_id": "dec_20260324013348_2584a0d8",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_skeleton_nl": "Fix integers m >= 2 and g >= 0. Encode numerical semigroups of multiplicity m by positive integer Kunz-coordinate tuples via the Ap\u00e9ry set; the exact equivalence is given by the Kunz inequalities, and the genus equals the coordinate sum. Therefore the quantity N(m,g) is exactly the cardinality of the slice K_{m,g} of Kunz vectors with sum g. Next, for each x in K_{m,g}, choose the greatest admissible coordinate rho(x), meaning the greatest index whose increment preserves the Kunz inequalities, and define Psi_{m,g}(x) = x + e_{rho(x)}. Existence of at least one admissible coordinate makes this well-defined, and the sum increases by one, so Psi_{m,g}(x) lies in K_{m,g+1}. A separate reconstruction lemma asserts that for the resulting vector Psi(x), the incremented coordinate can be recovered as the greatest removable index; hence the map is injective. Since each slice K_{m,g} is finite by positivity plus fixed coordinate sum, the finite-set injection principle gives |K_{m,g}| <= |K_{m,g+1}|. Translating back through the Kunz correspondence yields N(m,g) <= N(m,g+1), which is exactly the theorem.",
+  "root_node_id": "thm_root_20260324012430_9851dde8",
+  "steps": [
+    {
+      "derives": "For every integers m >= 2 and g >= 0, N(m,g) = |K_{m,g}|, where K_{m,g} is the set of positive integer Kunz vectors for multiplicity m having coordinate sum g.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the statement of L8.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the rule Psi_{m,g}(x) = x + e_{rho(x)} defines a function from K_{m,g} to K_{m,g+1}.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "By L4, every x in K_{m,g} has at least one admissible index, so rho(x) is well-defined as the greatest admissible index. Applying L5 then shows that x + e_{rho(x)} lies in K_{m,g+1}. Therefore the rule x \u21a6 Psi_{m,g}(x) is a well-defined function K_{m,g} \u2192 K_{m,g+1}.",
+      "uses_lemmas": [
+        "L4",
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the function Psi_{m,g} : K_{m,g} -> K_{m,g+1} is injective.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Lemma L6 proves injectivity for the map Psi on the full Kunz set K_m obtained by incrementing the greatest admissible coordinate. Since K_{m,g} is a subset of K_m and A2 shows that the restriction of this map sends K_{m,g} into K_{m,g+1}, the restricted map Psi_{m,g} is also injective.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, both K_{m,g} and K_{m,g+1} are finite sets.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Apply L3 first with genus parameter g to obtain finiteness of K_{m,g}, and then again with genus parameter g+1 to obtain finiteness of K_{m,g+1}. The assumption g >= 0 implies g+1 >= 0, so the second application is valid.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, |K_{m,g}| <= |K_{m,g+1}|.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Step A3 provides an injective function Psi_{m,g} from K_{m,g} to K_{m,g+1}. Step A4 provides that both source and target are finite. Therefore L7 applies and yields |K_{m,g}| <= |K_{m,g+1}|.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m,g) of numerical semigroups with multiplicity m and genus g satisfies N(m,g) <= N(m,g+1).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "From A1 with parameter g, we have N(m,g) = |K_{m,g}|. From A1 with parameter g+1, we have N(m,g+1) = |K_{m,g+1}|. Step A5 gives |K_{m,g}| <= |K_{m,g+1}|. Substituting the two equalities into this inequality yields exactly N(m,g) <= N(m,g+1).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A5"
+      ]
+    }
+  ]
+}

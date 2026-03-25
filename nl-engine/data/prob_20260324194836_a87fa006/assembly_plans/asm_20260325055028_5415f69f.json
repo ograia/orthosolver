@@ -1,0 +1,99 @@
+{
+  "assembly_plan_id": "asm_20260325055028_5415f69f",
+  "created_at": "2026-03-25T05:55:12.910587Z",
+  "decomposition_id": "dec_20260325055028_d7f465d7",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_skeleton_nl": "Treat d=0 separately. For d>0, construct the explicit recursive family h_n inside the weighted polynomial ring. The bottleneck lemma shows that polynomiality of Q_{A,B,d}(q) forces the quotient by h_{A+1},...,h_{A+d} to be finite-dimensional. A general Cohen-Macaulay fact for positively graded polynomial rings then upgrades these d homogeneous elements to a homogeneous regular sequence. Finally, the standard weighted complete-intersection Hilbert-series formula identifies the quotient with Q_{A,B,d}(q).",
+  "root_node_id": "lem_20260324204708_474b5c77",
+  "steps": [
+    {
+      "derives": "If d = 0, then the theorem holds: S=Q, Q_{A,B,0}(q)=1, and the empty sequence of homogeneous polynomials is a homogeneous regular sequence whose quotient has Hilbert series 1.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "Lemma L5 is exactly the d=0 case.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Assume d > 0. For every i in {1,...,d}, the recursively defined element h_{A+i} lies in S and is homogeneous of weighted degree A+i.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Instantiate Lemma L1 successively at n=A+1, A+2, ..., A+d. Because A >= B >= 0 and i >= 1, each A+i is nonnegative, so the lemma applies to every required index.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Assume d > 0. The quotient S/(h_{A+1},...,h_{A+d}) is finite-dimensional over Q.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the conclusion of Lemma L2 under the standing assumptions A >= B >= 0, d > 0, and Q_{A,B,d}(q) in Q[q].",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Assume d > 0. The sequence h_{A+1},...,h_{A+d} is a homogeneous regular sequence in S; equivalently, for each i the image of h_{A+i} in S/(h_{A+1},...,h_{A+i-1}) is not a zero-divisor.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Apply Lemma L3 with k=Q, weights w_i=B+i, and g_i=h_{A+i}. Step A2 gives homogeneity of each g_i, Step A3 gives finite-dimensionality of the quotient, and B+i > 0 for every i because B >= 0 and 1 <= i <= d.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "Assume d > 0. Setting f_i := h_{A+i} for i=1,...,d gives homogeneous elements f_1,...,f_d in S with deg(f_i)=A+i, and for each i the image of f_i in S/(f_1,...,f_{i-1}) is not a zero-divisor.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is a direct renaming of the elements from Steps A2 and A4.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A4"
+      ]
+    },
+    {
+      "derives": "Assume d > 0. The quotient by the constructed sequence satisfies Hilb_{S/(f_1,...,f_d)}(q) = prod_{i=1}^d (1 - q^(A+i)) / prod_{i=1}^d (1 - q^(B+i)) = Q_{A,B,d}(q).",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "Apply Lemma L4 with k=Q, variable weights w_i=B+i, relation degrees e_i=A+i, and g_i=f_i. Step A5 supplies the regular-sequence and degree hypotheses, and the displayed quotient is exactly the definition of Q_{A,B,d}(q).",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    },
+    {
+      "derives": "Assume d > 0. There exist homogeneous polynomials f_1, ..., f_d in S = Q[x_1, ..., x_d] graded by deg(x_i)=B+i such that deg(f_i)=A+i for every i, and for each i the image of f_i in S/(f_1, ..., f_{i-1}) is not a zero-divisor. Moreover Hilb_{S/(f_1,...,f_d)}(q)=Q_{A,B,d}(q), so Q_{A,B,d}(q) is realized by a homogeneous regular sequence in the weighted polynomial ring with variable weights B+1, ..., B+d and relation degrees A+1, ..., A+d.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "Step A5 already gives homogeneous elements of the required degrees with the successive non-zero-divisor property; that property is exactly the defining condition for a homogeneous regular sequence. Step A6 then identifies the Hilbert series of the quotient by this regular sequence with Q_{A,B,d}(q), which is precisely the realization clause.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5",
+        "A6"
+      ]
+    },
+    {
+      "derives": "For integers A, B, d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)), with the empty product equal to 1 when d = 0. Assume Q_{A,B,d}(q) belongs to Q[q]. Let S be the weighted polynomial ring Q[x_1, ..., x_d] graded by deg(x_i) = B+i; when d = 0 interpret S as Q. Then there exist homogeneous polynomials f_1, ..., f_d in S such that deg(f_i) = A+i for every i, and for each i the image of f_i in S/(f_1, ..., f_{i-1}) is not a zero-divisor. Equivalently, Q_{A,B,d}(q) is realized by a homogeneous regular sequence in a weighted polynomial ring with variable weights B+1, ..., B+d and relation degrees A+1, ..., A+d.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "Split into the two exhaustive cases allowed by d >= 0. If d=0, Step A1 proves the claim. If d>0, Step A7 proves the claim. Therefore the exact root theorem follows for all d >= 0.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A7"
+      ]
+    }
+  ]
+}

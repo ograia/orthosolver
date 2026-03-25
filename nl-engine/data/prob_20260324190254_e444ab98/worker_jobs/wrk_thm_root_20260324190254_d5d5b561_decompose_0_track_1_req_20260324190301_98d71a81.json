@@ -1,0 +1,418 @@
+{
+  "artifact_prefix": "problems/prob_20260324190254_e444ab98/decomposer/attempt_20260324190301_351a2296_track_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-24T19:03:01.663278Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324190254_63765cb0",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 5,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "g is an integer satisfying g \u2265 2 (so g\u22121 and g\u22122 are defined and are \u2265 0)",
+        "N(k) is defined for integers k = g, g\u22121, g\u22122 (implicitly meaning genus is allowed to be any integer \u2265 0)"
+      ],
+      "normalized_claim": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+      "quantifier_order": [
+        "for every g \u2208 Z with g \u2265 2"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter indexing counts of numerical semigroups",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "none explicitly (the inequality compares cardinalities/counts only)"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let N(g) denote the number of numerical semigroups of genus g. Prove that N(g) \u2265 N(g\u22121) + N(g\u22122) for every integer g \u2265 2.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324190254_e444ab98",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Handle g=2 by explicit enumeration. For g\u22653, write h=g\u22122 and let n_h(e) count genus-h semigroups with exactly e effective generators. The standard one-step tree count gives N(h+1)=\u03a3 e\u00b7n_h(e). Next, for a fixed genus-h parent \u039b with e effective generators and s strong ones, the sum of the effective-generator counts of all its children is at least e(e\u22121)/2+s. Partitioning level h+1 by unique parents and summing this local estimate over all genus-h parents yields N(h+2)\u2265\u03a3 (e(e\u22121)/2)\u00b7n_h(e)+S(h), where S(h) is the total number of strong effective generators at genus h. The bottleneck lemma then says that this lower bound is already at least N(h+1)+N(h). Replacing h by g\u22122 gives the desired recurrence N(g)\u2265N(g\u22121)+N(g\u22122).",
+          "steps": [
+            {
+              "derives": "If g=2, then N(g)=N(g\u22121)+N(g\u22122).",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "By L1, N(2)=2, N(1)=1, and N(0)=1. Therefore when g=2 we have N(g)=N(2)=2=1+1=N(1)+N(0)=N(g\u22121)+N(g\u22122).",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For the remaining branch, assume g\u22653 and set h:=g\u22122. Then h\u22651, g=h+2, g\u22121=h+1, and g\u22122=h.",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "This is direct arithmetic from the definition h:=g\u22122 and the assumption g\u22653.",
+              "uses_lemmas": [],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For each e\u22650, let n_h(e) be the number of genus-h numerical semigroups with exactly e effective generators, and let S(h)=\u03a3_{|\u2115\u2216\u039b|=h} s(\u039b), where s(\u039b) is the number of strong effective generators of \u039b.",
+              "is_trivial": true,
+              "step_id": "A3",
+              "trivial_justification": "This step only introduces the notation that will be used in the later counting identities.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "N(h+2)=\u03a3_{|\u2115\u2216\u039b|=h} \u03a3_{\u0393\u2208Child(\u039b)} e(\u0393).",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "Apply L4 with the integer h from A2. This rewrites the number of genus-(h+2) semigroups as a sum of effective-generator counts over the children of each genus-h parent.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "N(h+2)\u2265\u03a3_{e\u22650} (e(e\u22121)/2)\u00b7n_h(e) + S(h).",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "Fix a genus-h parent \u039b. Order its effective generators increasingly and denote the corresponding children by \u0393_1,\u2026,\u0393_{e(\u039b)}. By L3, the inner sum over this parent satisfies \u03a3_{\u0393\u2208Child(\u039b)} e(\u0393)=\u03a3_i e(\u0393_i) \u2265 e(\u039b)(e(\u039b)\u22121)/2 + s(\u039b). Summing this inequality over all genus-h semigroups in the identity from A4 gives N(h+2) \u2265 \u03a3_{|\u2115\u2216\u039b|=h} [e(\u039b)(e(\u039b)\u22121)/2 + s(\u039b)]. Now group the first sum by the value e=e(\u039b): there are exactly n_h(e) parents with that label, so \u03a3_{|\u2115\u2216\u039b|=h} e(\u039b)(e(\u039b)\u22121)/2 = \u03a3_{e\u22650} (e(e\u22121)/2)\u00b7n_h(e). The second sum is exactly S(h) by the notation introduced in A3. Hence the displayed inequality follows.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A3",
+                "A4"
+              ]
+            },
+            {
+              "derives": "N(h+1)=\u03a3_{e\u22650} e\u00b7n_h(e).",
+              "is_trivial": true,
+              "step_id": "A6",
+              "trivial_justification": "Apply L2 with the same h as in A2; the notation n_h(e) is exactly the notation fixed in A3.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A3"
+              ]
+            },
+            {
+              "derives": "\u03a3_{e\u22650} (e(e\u22121)/2)\u00b7n_h(e) + S(h) \u2265 N(h+1)+N(h).",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "L5 gives S(h)+\u03a3_{e\u22650}(e(e\u22121)/2 \u2212 e)\u00b7n_h(e) \u2265 N(h). Add \u03a3_{e\u22650} e\u00b7n_h(e) to both sides. The left-hand side becomes \u03a3_{e\u22650}(e(e\u22121)/2)\u00b7n_h(e)+S(h). By A6, the added term on the right-hand side is exactly N(h+1). Therefore \u03a3_{e\u22650}(e(e\u22121)/2)\u00b7n_h(e)+S(h) \u2265 N(h)+N(h+1).",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A3",
+                "A6"
+              ]
+            },
+            {
+              "derives": "N(h+2)\u2265N(h+1)+N(h).",
+              "is_trivial": true,
+              "step_id": "A8",
+              "trivial_justification": "A5 gives N(h+2) at least the quantity X:=\u03a3_{e\u22650}(e(e\u22121)/2)\u00b7n_h(e)+S(h), and A7 shows X\u2265N(h+1)+N(h). By transitivity of \u2265, N(h+2)\u2265N(h+1)+N(h).",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A5",
+                "A7"
+              ]
+            },
+            {
+              "derives": "If g\u22653, then N(g)\u2265N(g\u22121)+N(g\u22122).",
+              "is_trivial": true,
+              "step_id": "A9",
+              "trivial_justification": "Substitute h=g\u22122 into A8. Then h+2=g, h+1=g\u22121, and h=g\u22122.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A2",
+                "A8"
+              ]
+            },
+            {
+              "derives": "For every integer g\u22652, N(g)\u2265N(g\u22121)+N(g\u22122).",
+              "is_trivial": false,
+              "step_id": "A10",
+              "trivial_justification": "Use a case split on g. The case g=2 is exactly A1. The case g\u22653 is exactly A9. Since every integer g\u22652 falls into one of these two cases, the theorem follows for all g\u22652.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A9"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "A numerical semigroup is a subset \u039b \u2286 \u2115 such that 0 \u2208 \u039b, \u039b is closed under addition, and \u2115\u2216\u039b is finite. Its genus is |\u2115\u2216\u039b|.",
+            "kind": "definition",
+            "label": "numerical semigroup and genus"
+          },
+          {
+            "content": "If \u039b has positive genus, then F(\u039b)=max(\u2115\u2216\u039b) and m(\u039b)=min(\u039b\u2216{0}). An element x \u2208 \u039b\u2216{0} is a minimal generator if x cannot be written as a+b with a,b \u2208 \u039b\u2216{0}.",
+            "kind": "definition",
+            "label": "Frobenius number, multiplicity, minimal generator"
+          },
+          {
+            "content": "For positive-genus \u039b, an effective generator is a minimal generator x with x>F(\u039b). It is strong if \u0393:=\u039b\u2216{x} is a numerical semigroup and x+m(\u039b) is a minimal generator of \u0393.",
+            "kind": "definition",
+            "label": "effective and strong generators"
+          },
+          {
+            "content": "N(g) is the number of genus-g numerical semigroups. For a numerical semigroup \u039b, e(\u039b) is the number of effective generators of \u039b, and s(\u039b) is the number of strong effective generators of \u039b.",
+            "kind": "notation",
+            "label": "counting functions"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.89,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "role_in_assembly": "Handles the boundary case g=2 so that the structural lemmas can be used only for h=g\u22122\u22651.",
+            "self_check_notes": "All notation is introduced locally; this lemma is an explicit small-genus enumeration.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "N(g) counts numerical semigroups of genus g"
+              ],
+              "normalized_claim": "N(0)=1, N(1)=1, and N(2)=2.",
+              "quantifier_order": [],
+              "variables": [],
+              "witness_dependencies": [
+                "none"
+              ]
+            },
+            "statement_nl": "Let N(g) denote the number of numerical semigroups \u039b \u2286 \u2115 with genus |\u2115\u2216\u039b|=g. Then N(0)=1, N(1)=1, and N(2)=2.",
+            "strictly_easier_reason": "This is only a finite computation in the first three genera and does not involve any uniform recurrence."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.4,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L2",
+            "role_in_assembly": "Rewrites N(h+1) as a weighted sum over the effective-generator distribution at genus h.",
+            "self_check_notes": "The statement defines both n_h(e) and effective generators locally, so it can be attacked in isolation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "for each e \u2265 0, n_h(e) counts genus-h numerical semigroups having exactly e effective generators"
+              ],
+              "normalized_claim": "N(h+1)=\u03a3_{e\u22650} e\u00b7n_h(e).",
+              "quantifier_order": [
+                "for every integer h with h \u2265 1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "h",
+                  "role": "genus level",
+                  "type": "integer"
+                },
+                {
+                  "domain": "\u2115 \u2192 \u2115",
+                  "name": "n_h",
+                  "role": "distribution of genus-h semigroups by effective-generator count",
+                  "type": "function"
+                }
+              ],
+              "witness_dependencies": [
+                "n_h depends on h"
+              ]
+            },
+            "statement_nl": "For every integer h \u2265 1, and for each integer e \u2265 0, let n_h(e) be the number of genus-h numerical semigroups \u039b \u2286 \u2115 that have exactly e effective generators, where an effective generator means an integer x with x \u2208 \u039b\u2216{0}, x cannot be written as a+b with a,b \u2208 \u039b\u2216{0}, and x > F(\u039b), with F(\u039b)=max(\u2115\u2216\u039b). Then N(h+1)=\u03a3_{e\u22650} e\u00b7n_h(e).",
+            "strictly_easier_reason": "This is a one-step counting identity in the semigroup tree, not a two-step Fibonacci lower bound."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.62,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "role_in_assembly": "Provides the parentwise lower bound on the total contribution of one level-h semigroup to level h+2.",
+            "self_check_notes": "The empty-list case e=0 is explicitly covered; all child semigroups and counts are defined within the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "the effective generators of \u039b are listed increasingly as \u03bb_1<\u22ef<\u03bb_e",
+                "for each i, \u0393_i=\u039b\u2216{\u03bb_i} is the child obtained by deleting \u03bb_i",
+                "s(\u039b) counts the indices i for which \u03bb_i is strong"
+              ],
+              "normalized_claim": "The total number of effective generators among all children of \u039b is at least e(e\u22121)/2 + s(\u039b).",
+              "quantifier_order": [
+                "for every positive-genus numerical semigroup \u039b"
+              ],
+              "variables": [
+                {
+                  "domain": "positive-genus numerical semigroups",
+                  "name": "\u039b",
+                  "role": "parent semigroup",
+                  "type": "subset of \u2115"
+                },
+                {
+                  "domain": "number of effective generators of \u039b",
+                  "name": "e",
+                  "role": "label of the parent",
+                  "type": "natural number"
+                },
+                {
+                  "domain": "number of strong effective generators of \u039b",
+                  "name": "s",
+                  "role": "strong-generator count",
+                  "type": "natural number"
+                }
+              ],
+              "witness_dependencies": [
+                "\u0393_i depends on \u039b and i"
+              ]
+            },
+            "statement_nl": "Let \u039b \u2286 \u2115 be a numerical semigroup of positive genus. Let m(\u039b)=min(\u039b\u2216{0}) and F(\u039b)=max(\u2115\u2216\u039b). Order the effective generators of \u039b increasingly as \u03bb_1<\u22ef<\u03bb_e, where an effective generator means an element x \u2208 \u039b\u2216{0} that cannot be written as a+b with a,b \u2208 \u039b\u2216{0} and satisfies x>F(\u039b); if \u039b has no effective generators, take e=0 and the list empty. For each i\u2208{1,\u2026,e}, let \u0393_i:=\u039b\u2216{\u03bb_i}; this is a numerical semigroup. Let s(\u039b) be the number of indices i such that \u03bb_i+m(\u039b) cannot be written as u+v with u,v \u2208 \u0393_i\u2216{0}; equivalently, the number of strong effective generators of \u039b. For each i, let e(\u0393_i) denote the number of integers y with y \u2208 \u0393_i\u2216{0}, y cannot be written as r+s with r,s \u2208 \u0393_i\u2216{0}, and y>F(\u0393_i). Then \u03a3_{i=1}^e e(\u0393_i) \u2265 e(e\u22121)/2 + s(\u039b).",
+            "strictly_easier_reason": "This is a local estimate for the immediate children of a single semigroup, rather than a global recurrence across all semigroups of two different genera."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.5,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "role_in_assembly": "Reorganizes the level-(h+2) count as a sum over level-h parents and their level-(h+1) children.",
+            "self_check_notes": "The unique-parent formula and the definition of Child(\u039b) are stated explicitly; no hidden references remain.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "Child(\u039b) consists exactly of the semigroups obtained from \u039b by deleting one effective generator"
+              ],
+              "normalized_claim": "N(h+2)=\u03a3_{|\u2115\u2216\u039b|=h} \u03a3_{\u0393\u2208Child(\u039b)} e(\u0393).",
+              "quantifier_order": [
+                "for every integer h with h \u2265 1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "h",
+                  "role": "genus level",
+                  "type": "integer"
+                },
+                {
+                  "domain": "genus-h numerical semigroups \u2192 finite sets of genus-(h+1) numerical semigroups",
+                  "name": "Child",
+                  "role": "parent-to-children map",
+                  "type": "operator"
+                }
+              ],
+              "witness_dependencies": [
+                "Child depends on the chosen parent \u039b"
+              ]
+            },
+            "statement_nl": "For every integer h \u2265 1, let Child(\u039b) denote the set of numerical semigroups \u0393 obtained from a genus-h numerical semigroup \u039b \u2286 \u2115 by deleting one effective generator of \u039b, where an effective generator means an integer x with x \u2208 \u039b\u2216{0}, x cannot be written as a+b with a,b \u2208 \u039b\u2216{0}, and x>F(\u039b), with F(\u039b)=max(\u2115\u2216\u039b). Then every genus-(h+1) numerical semigroup \u0393 has a unique parent P=\u0393\u222a{F(\u0393)} of genus h, so the family of sets Child(\u039b), as \u039b ranges over genus-h numerical semigroups, partitions the genus-(h+1) numerical semigroups. Consequently, if e(\u0393) denotes the number of effective generators of \u0393, then N(h+2)=\u03a3_{|\u2115\u2216\u039b|=h} \u03a3_{\u0393\u2208Child(\u039b)} e(\u0393).",
+            "strictly_easier_reason": "This is a structural partition of the semigroup tree by unique parents; it does not itself yield the desired Fibonacci inequality."
+          },
+          {
+            "bottleneck_reason": "This is the key global estimate in the label-distribution strategy: it asserts that the aggregate surplus coming from strong generators and high-label parents is large enough to dominate N(h). Proving this is essentially the nontrivial new content beyond standard semigroup-tree identities.",
+            "formalization_cost_estimate": 0.94,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "role_in_assembly": "This is the frontier inequality that upgrades the standard semigroup-tree estimates to the Fibonacci lower bound.",
+            "self_check_notes": "All quantities n_h(e), s(\u039b), and S(h) are defined inside the statement. This lemma is intentionally marked as the main frontier bottleneck.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "for each e \u2265 0, n_h(e) counts genus-h semigroups with exactly e effective generators",
+                "S(h) is the total number of strong effective generators among all genus-h semigroups"
+              ],
+              "normalized_claim": "S(h)+\u03a3_{e\u22650}(e(e\u22121)/2 \u2212 e)\u00b7n_h(e) \u2265 N(h).",
+              "quantifier_order": [
+                "for every integer h with h \u2265 1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "h",
+                  "role": "genus level",
+                  "type": "integer"
+                },
+                {
+                  "domain": "\u2115 \u2192 \u2115",
+                  "name": "n_h",
+                  "role": "distribution of genus-h semigroups by effective-generator count",
+                  "type": "function"
+                },
+                {
+                  "domain": "integers h \u2265 1",
+                  "name": "S",
+                  "role": "total number of strong effective generators at each genus",
+                  "type": "function"
+                }
+              ],
+              "witness_dependencies": [
+                "n_h and S depend on h"
+              ]
+            },
+            "statement_nl": "For every integer h \u2265 1, and for each integer e \u2265 0, let n_h(e) be the number of genus-h numerical semigroups \u039b \u2286 \u2115 with exactly e effective generators, where an effective generator means an integer x with x \u2208 \u039b\u2216{0}, x cannot be written as a+b with a,b \u2208 \u039b\u2216{0}, and x>F(\u039b), with F(\u039b)=max(\u2115\u2216\u039b). For a genus-h numerical semigroup \u039b, let s(\u039b) be the number of integers x such that x \u2208 \u039b\u2216{0}, x cannot be written as a+b with a,b \u2208 \u039b\u2216{0}, x>F(\u039b), the set \u039b\u2216{x} is a numerical semigroup, and x+m(\u039b) cannot be written as u+v with u,v \u2208 (\u039b\u2216{x})\u2216{0}, where m(\u039b)=min(\u039b\u2216{0}); these are the strong effective generators of \u039b. Define S(h):=\u03a3_{|\u2115\u2216\u039b|=h} s(\u039b). Then S(h)+\u03a3_{e\u22650}(e(e\u22121)/2 \u2212 e)\u00b7n_h(e) \u2265 N(h).",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "A numerical semigroup is a subset \u039b \u2286 \u2115 such that 0 \u2208 \u039b, \u039b is closed under addition, and \u2115\u2216\u039b is finite. Its genus is |\u2115\u2216\u039b|.",
+            "kind": "definition",
+            "label": "numerical semigroup and genus"
+          },
+          {
+            "content": "If \u039b has positive genus, then F(\u039b)=max(\u2115\u2216\u039b) and m(\u039b)=min(\u039b\u2216{0}). An element x \u2208 \u039b\u2216{0} is a minimal generator if x cannot be written as a+b with a,b \u2208 \u039b\u2216{0}.",
+            "kind": "definition",
+            "label": "Frobenius number, multiplicity, minimal generator"
+          },
+          {
+            "content": "For positive-genus \u039b, an effective generator is a minimal generator x with x>F(\u039b). It is strong if \u0393:=\u039b\u2216{x} is a numerical semigroup and x+m(\u039b) is a minimal generator of \u0393.",
+            "kind": "definition",
+            "label": "effective and strong generators"
+          },
+          {
+            "content": "N(g) is the number of genus-g numerical semigroups. For a numerical semigroup \u039b, e(\u039b) is the number of effective generators of \u039b, and s(\u039b) is the number of strong effective generators of \u039b.",
+            "kind": "notation",
+            "label": "counting functions"
+          }
+        ],
+        "strategy_summary": "Use the semigroup tree but track each genus-h semigroup by its label e(\u039b), the number of effective generators. First rewrite N(h+1) as the weighted count \u03a3 e\u00b7n_h(e), where n_h(e) counts genus-h semigroups with exactly e effective generators. Then prove a local lower bound: if a parent has e effective generators and s strong ones, then the sum of the labels of all its children is at least e(e\u22121)/2+s. Summing over all parents gives a global lower bound for N(h+2). The theorem is reduced to one explicit bottleneck inequality involving the distribution n_h(e) and the total strong-generator count S(h)."
+      }
+    ],
+    "status": "completed"
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260324190254_d5d5b561",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-24T19:42:03.509849Z",
+  "worker_job_id": "wrk_thm_root_20260324190254_d5d5b561_decompose_0_track_1_req_20260324190301_98d71a81",
+  "worker_kind": "decomposition_generation"
+}

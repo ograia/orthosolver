@@ -1,0 +1,255 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324015500_c80e72ed/solver_attempt_1",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-24T01:57:00.273116Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T01:56:37.377379Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lemma_id": "lem_20260324015500_c80e72ed",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "role_in_assembly": "Translates the genus condition into the linear sum condition on the tuple, both for the forward map and for the reconstructed semigroup.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "S \u2286 Z>=0",
+        "0 \u2208 S",
+        "S is closed under addition: if a,b \u2208 S then a+b \u2208 S",
+        "Z>=0 \\ S is finite (numerical semigroup condition ensuring genus is finite)",
+        "m is the least positive element of S",
+        "m \u2265 2",
+        "r \u2208 {1,2,...,m\u22121} (hence r is positive and < m)",
+        "q is a positive integer (q \u2265 1)",
+        "x_r is defined only when the set { q \u2208 Z>=1 : q*m + r \u2208 S } is nonempty; then x_r is its minimum"
+      ],
+      "normalized_claim": "Let S be a numerical semigroup. Let m \u2265 2 be the least positive element of S. For each integer r with 1 \u2264 r \u2264 m\u22121, define x_r := min{ q \u2208 Z>=1 : q*m + r \u2208 S }. Let genus(S) := #{ n \u2208 Z>=0 : n \u2209 S }. Then genus(S) = \u03a3_{r=1}^{m\u22121} x_r.",
+      "quantifier_order": [
+        "For all numerical semigroups S \u2286 Z>=0",
+        "Let m be the multiplicity of S (m is the least positive element of S; assume m \u2265 2)",
+        "For all r \u2208 {1,...,m\u22121}",
+        "There exists a least positive integer q such that q*m + r \u2208 S (define x_r := that least q)",
+        "Conclude: genus(S) = \u03a3_{r=1}^{m\u22121} x_r"
+      ],
+      "variables": [
+        {
+          "domain": "Z>=0",
+          "name": "S",
+          "role": "numerical semigroup; subject of the claim",
+          "type": "subset of Z>=0"
+        },
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity of S; least positive element of S",
+          "type": "integer"
+        },
+        {
+          "domain": "{1,2,...,m-1}",
+          "name": "r",
+          "role": "index/residue class parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z>=1",
+          "name": "q",
+          "role": "witness for membership of q*m + r in S; chosen minimally",
+          "type": "integer"
+        },
+        {
+          "domain": "Z>=1",
+          "name": "x_r",
+          "role": "defined as the least positive q such that q*m + r \u2208 S",
+          "type": "integer"
+        },
+        {
+          "domain": "Z>=0",
+          "name": "g",
+          "role": "genus of S; number of elements of Z>=0 not in S",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "x_r depends on S and r: x_r = min { q \u2265 1 : q*m + r \u2208 S }",
+        "The witness q (minimizer) depends on S and r as the least q satisfying q*m + r \u2208 S",
+        "m depends on S (m is determined by S as its multiplicity)"
+      ]
+    },
+    "shared_context": [
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260324013747_af6fcf4d",
+        "role_in_parent": "Translates the original theorem into a cardinality inequality for the combinatorial sets K_{m,g}.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m \u2208 Z and m >= 2",
+            "g \u2208 Z and g >= 0",
+            "x = (x_1,...,x_{m-1}) with each x_k \u2208 Z_{>0} (positive integers)",
+            "indices i,j range over {1,...,m-1}",
+            "case split conditions: if i+j < m then inequality involves x_{i+j}; if i+j > m then inequality involves x_{i+j-m} (which is within {1,...,m-1})",
+            "sum constraint: x_1 + ... + x_{m-1} = g"
+          ],
+          "normalized_claim": "Fix integers m>=2 and g>=0. Let K_{m,g} be the set of tuples x=(x_1,...,x_{m-1}) with x_k>0 for all k and x_1+...+x_{m-1}=g, such that for every i,j\u2208{1,...,m-1}: (i+j<m \u21d2 x_i+x_j\u2265x_{i+j}) and (i+j>m \u21d2 x_i+x_j+1\u2265x_{i+j-m}). Then the number N(m,g) of numerical semigroups with multiplicity m and genus g equals the cardinality |K_{m,g}|.",
+          "quantifier_order": [
+            "For all integers m with m >= 2",
+            "For all integers g with g >= 0",
+            "K_{m,g} = { x : (x is a tuple (x_1,...,x_{m-1})) such that (x_1+...+x_{m-1}=g) and (for all i,j in {1,...,m-1}, the Kunz inequalities hold under the stated cases) }",
+            "Claim: N(m,g) = |K_{m,g}|"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z^{m-1} with coordinates restricted to positive integers",
+              "name": "x",
+              "role": "Kunz-coordinate tuple; used to define membership in K_{m,g}",
+              "type": "tuple of integers"
+            },
+            {
+              "domain": "Z_{>0}",
+              "name": "x_1,...,x_{m-1}",
+              "role": "coordinates of x; constrained by Kunz inequalities and by sum condition",
+              "type": "integer (coordinate variables)"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "i",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "j",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "Any inequalities are universal over i,j; no existential witnesses are introduced beyond choosing x as an element of K_{m,g}.",
+            "Membership witness for cardinality |K_{m,g}| is the tuple x, whose allowable set depends on the fixed parameters (m,g).",
+            "Inequalities for x depend on i and j but not on any additional choices."
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that x satisfies the Kunz inequalities for multiplicity m, namely: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Then N(m,g), the number of numerical semigroups of multiplicity m and genus g, is equal to the cardinality of K_{m,g}."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324012430_9851dde8",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2",
+            "g is an integer with g \u2265 0",
+            "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+          ],
+          "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+          "quantifier_order": [
+            "\u2200 m \u2208 Z (m \u2265 2)",
+            "\u2200 g \u2208 Z (g \u2265 0)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "N0",
+              "name": "N(m,g)",
+              "role": "count of numerical semigroups with multiplicity m and genus g",
+              "type": "nonnegative integer (cardinality)"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+      }
+    ],
+    "statement_nl": "Let S be a numerical semigroup, meaning a subset S of the nonnegative integers that contains 0, is closed under addition, and has finite complement. Assume its multiplicity is m, meaning m >= 2 is the least positive element of S. For each r in {1,...,m-1}, let x_r be the least positive integer q such that q m + r belongs to S. Then the genus of S, that is, the number of nonnegative integers not belonging to S, is x_1 + ... + x_{m-1}.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "lemma_id": "lem_20260324015500_c80e72ed",
+    "proof_nl": "Let S be a numerical semigroup, and let m be its multiplicity, so m is the least positive element of S and m>=2. For each r in {1,...,m-1}, define\nx_r := min{ q in Z_{>=1} : qm+r in S }.\nWe must prove that genus(S) = sum_{r=1}^{m-1} x_r.\n\nFirst we justify that each x_r is well-defined. Fix r in {1,...,m-1}. Since S has finite complement in Z_{>=0}, only finitely many nonnegative integers fail to belong to S. Among the infinitely many integers of the form qm+r with q>=1, at least one must therefore lie in S. Hence the set { q>=1 : qm+r in S } is nonempty. Being a nonempty set of positive integers, it has a least element, namely x_r.\n\nNow fix r in {1,...,m-1}. By definition of x_r, we have:\n- x_r m + r belongs to S;\n- for every integer q with 1<=q<x_r, qm+r does not belong to S.\nAlso r itself does not belong to S, because 0<r<m and m is the least positive element of S. Therefore the integers in the residue class r modulo m that are not in S are at least\nr, m+r, 2m+r, ..., (x_r-1)m+r.\nThese are exactly x_r numbers, corresponding to q=0,1,...,x_r-1.\n\nWe next show that there are no further gaps in this residue class. Let q>=x_r. Since x_r m + r is in S and m is in S, and S is closed under addition, we get\nqm+r = (x_r m+r) + (q-x_r)m in S,\nbecause (q-x_r)m is a nonnegative multiple of m and hence lies in S (indeed m in S and repeated addition gives km in S for every k>=0, with 0 in S as well). Thus every integer congruent to r mod m with quotient q>=x_r belongs to S.\n\nSo for each fixed r in {1,...,m-1}, the gaps of S in the residue class r modulo m are exactly\nr, m+r, 2m+r, ..., (x_r-1)m+r,\nand hence there are exactly x_r such gaps.\n\nNow consider the residue class 0 modulo m. Since 0 is in S and m is in S, closure under addition shows that every nonnegative multiple of m belongs to S. Hence there are no gaps congruent to 0 mod m.\n\nTherefore the complement Z_{>=0}\\S is the disjoint union, over r=1,...,m-1, of the x_r gaps in residue class r modulo m. Since every nonnegative integer has a unique residue modulo m, these classes are disjoint and cover all nonzero residues. It follows that\n\ngenus(S) = #(Z_{>=0}\\S) = sum_{r=1}^{m-1} x_r.\n\nThis is exactly the claimed formula.",
+    "proof_summary": "For each residue class r=1,...,m-1 mod m, finiteness of the complement guarantees existence of a least x_r>=1 with x_r m+r in S. Because m is the least positive element of S, the numbers r, m+r, ..., (x_r-1)m+r are not in S, while closure under addition with m implies every q m+r with q>=x_r is in S. Thus there are exactly x_r gaps in residue class r, and there are no gaps in residue class 0 since all multiples of m lie in S. Summing over residues gives genus(S)=sum_{r=1}^{m-1} x_r.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "A nonempty subset of the positive integers has a least element (well-ordering).",
+        "If m is in a submonoid S of Z_{>=0}, then every nonnegative multiple of m is in S by repeated addition."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null
+  },
+  "status": "completed",
+  "target_id": "lem_20260324015500_c80e72ed",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T01:57:00.273136Z",
+  "worker_job_id": "wrk_lem_20260324015500_c80e72ed_solve_1",
+  "worker_kind": "lemma_solver"
+}

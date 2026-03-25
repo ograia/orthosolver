@@ -1,0 +1,583 @@
+{
+    "problem_id": "prob_20260315030719_fffb3b00",
+    "title": "Putnam A1",
+    "verification_level": "nl_only",
+    "root_theorem": {
+      "theorem_id": "thm_root_20260315030719_e6ca3a5b",
+      "statement_nl": "Let $m_0$ and $n_0$ be distinct positive integers. For every positive integer $k$,\\ndefine $m_k$ and $n_k$ to be the relatively prime positive integers such that\\n\\\\[\\n\\\\frac{m_k}{n_k} = \\\\frac{2m_{k-1} + 1}{2n_{k-1}+1}.\\n\\\\]\\nProve that $2m_k+1$ and $2n_k+1$ are relatively prime for all but finitely many positive integers $k$.",
+      "semantic_sketch": {
+        "variables": [
+          {
+            "name": "m0",
+            "type": "integer",
+            "domain": "positive integers (Z_{>0})",
+            "role": "given initial parameter"
+          },
+          {
+            "name": "n0",
+            "type": "integer",
+            "domain": "positive integers (Z_{>0}), distinct from m0",
+            "role": "given initial parameter"
+          },
+          {
+            "name": "k",
+            "type": "integer index",
+            "domain": "positive integers (Z_{>0}); used as recursion index (k>=1 for definitions)",
+            "role": "recurrence index"
+          },
+          {
+            "name": "m_k",
+            "type": "sequence of integers",
+            "domain": "positive integers for each k (Z_{>0})",
+            "role": "k-th numerator in reduced form; depends on m_{k-1},n_{k-1}"
+          },
+          {
+            "name": "n_k",
+            "type": "sequence of integers",
+            "domain": "positive integers for each k (Z_{>0})",
+            "role": "k-th denominator in reduced form; depends on m_{k-1},n_{k-1}"
+          },
+          {
+            "name": "K",
+            "type": "integer (witness)",
+            "domain": "nonnegative or positive integer (Z_{>=1})",
+            "role": "existential threshold after which the coprimality property holds; depends on m0,n0"
+          }
+        ],
+        "quantifier_order": [
+          "forall m0,n0 in Z_{>0} with m0 != n0 (given initial data)",
+          "define sequences (m_k,n_k) for all integers k>=1 by: m_k/n_k = (2 m_{k-1}+1)/(2 n_{k-1}+1), with gcd(m_k,n_k)=1 and m_k,n_k >0 (reduced form)",
+          "exists K in Z_{>=1} (may depend on m0,n0) such that",
+          "forall integers k >= K: gcd(2 m_k + 1, 2 n_k + 1) = 1"
+        ],
+        "domain_restrictions": [
+          "m0 and n0 are positive integers and m0 != n0",
+          "for each k>=1, m_k and n_k are positive integers and are the coprime numerator and denominator of the rational number (2 m_{k-1}+1)/(2 n_{k-1}+1)",
+          "each denominator 2 n_{k-1} + 1 is nonzero and positive (since n_{k-1}>0)",
+          "gcd(m_k,n_k)=1 by definition for each k"
+        ],
+        "witness_dependencies": [
+          "m_k and n_k are defined recursively and depend only on (m_{k-1}, n_{k-1}) via reduction of (2 m_{k-1}+1)/(2 n_{k-1}+1)",
+          "K (the finite-exception threshold) is allowed to depend on the initial pair (m0,n0)",
+          "the statement 'for all but finitely many k' is interpreted as 'there exists K (depending on m0,n0) such that for all k>=K the property holds'"
+        ],
+        "normalized_claim": "For all distinct positive integers m0,n0, define sequences (m_k,n_k)_{k>=1} by m_k/n_k = (2 m_{k-1}+1)/(2 n_{k-1}+1) with m_k,n_k positive and gcd(m_k,n_k)=1. Then there exists K in Z_{>=1}, depending on m0 and n0, such that for every integer k >= K we have gcd(2 m_k + 1, 2 n_k + 1) = 1."
+      }
+    },
+    "selected_decomposition": {
+      "decomposition_id": "dec_20260315032921_257444e9",
+      "strategy_summary": "Use the corrected cumulative divisibility invariant requested in the failed attempt: if d_k := gcd(2m_{k-1}+1,2n_{k-1}+1), then m_k=(2m_{k-1}+1)/d_k and n_k=(2n_{k-1}+1)/d_k, and the exact difference formula m_k-n_k=2(m_{k-1}-n_{k-1})/d_k implies by induction that d_1 d_2 ... d_k divides 2^k |m_0-n_0|. Since every d_i is odd, the product d_1...d_k actually divides the fixed integer |m_0-n_0|, so only finitely many d_k can exceed 1. This explicitly fixes the false monotonicity argument and makes every lemma self-contained.",
+      "controller_status": "succeeded",
+      "llm_vetting_status": "accepted",
+      "assembly_plan": {
+        "assembly_plan_id": "asm_20260315032921_060c7b6c",
+        "steps": [
+          {
+            "step_id": "A1",
+            "uses_lemmas": [
+              "lem_20260315032921_8bcb0ad7"
+            ],
+            "uses_prior_steps": [],
+            "derives": "For the recursively defined sequence in the theorem, if d_k := gcd(2m_{k-1}+1,2n_{k-1}+1), then m_k=(2m_{k-1}+1)/d_k and n_k=(2n_{k-1}+1)/d_k for every k>=1, and each d_k is odd.",
+            "is_trivial": true,
+            "trivial_justification": "Apply L1 at each step with a=m_{k-1} and b=n_{k-1}."
+          },
+          {
+            "step_id": "A2",
+            "uses_lemmas": [
+              "lem_20260315033043_bd72d344",
+              "lem_20260315033109_7360bff1"
+            ],
+            "uses_prior_steps": [
+              "A1"
+            ],
+            "derives": "For every k>=1, the product d_1 d_2 ... d_k divides |m_0-n_0|.",
+            "is_trivial": true,
+            "trivial_justification": "By L4, d_1...d_k divides 2^k|m_0-n_0|; by A1 each d_i is odd, so L5 removes the factor 2^k."
+          },
+          {
+            "step_id": "A3",
+            "uses_lemmas": [
+              "lem_20260315033134_415173a4"
+            ],
+            "uses_prior_steps": [
+              "A2"
+            ],
+            "derives": "Only finitely many indices k>=1 satisfy d_k>1. Hence there exists K>=1 such that for all k>=K+1, d_k=1.",
+            "is_trivial": true,
+            "trivial_justification": "Apply L6 with N=|m_0-n_0| and e_i=d_i."
+          },
+          {
+            "step_id": "A4",
+            "uses_lemmas": [
+              "lem_20260315033205_c6218886"
+            ],
+            "uses_prior_steps": [
+              "A3"
+            ],
+            "derives": "There exists K>=1 such that for all integers j>=K, gcd(2m_j+1,2n_j+1)=1.",
+            "is_trivial": true,
+            "trivial_justification": "From A3, for all j>=K we have d_{j+1}=1; by L7 this is equivalent to gcd(2m_j+1,2n_j+1)=1."
+          }
+        ],
+        "proof_skeleton_nl": "Define d_k = gcd(2m_{k-1}+1,2n_{k-1}+1). By reduced-form uniqueness, m_k=(2m_{k-1}+1)/d_k and n_k=(2n_{k-1}+1)/d_k, and each d_k is odd. Iterating the exact difference identity m_k-n_k = 2(m_{k-1}-n_{k-1})/d_k yields that every prefix product d_1...d_k divides 2^k|m_0-n_0|. Because the prefix product is odd, it already divides |m_0-n_0|. Therefore all prefix products are divisors of one fixed positive integer, so only finitely many factors d_k can exceed 1. Hence d_k=1 for all sufficiently large k. Since d_{j+1} = gcd(2m_j+1,2n_j+1), this means gcd(2m_j+1,2n_j+1)=1 for all sufficiently large j, exactly as required.",
+        "is_trivially_composable": true
+      }
+    },
+    "lemmas": [
+      {
+        "lemma_id": "lem_20260315032921_8bcb0ad7",
+        "statement_nl": "Let a and b be positive integers, and let d = gcd(2a+1, 2b+1). Let m and n be positive integers such that m/n = (2a+1)/(2b+1) and gcd(m,n)=1. Then necessarily m = (2a+1)/d and n = (2b+1)/d. In particular, gcd(2a+1,2b+1) is odd.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "a",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integers)",
+              "role": "given parameter; appears in numerators 2a+1 (odd positive integer)"
+            },
+            {
+              "name": "b",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integers)",
+              "role": "given parameter; appears in denominators 2b+1 (odd positive integer)"
+            },
+            {
+              "name": "d",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integer), defined as gcd(2a+1,2b+1)",
+              "role": "greatest common divisor of 2a+1 and 2b+1; therefore d | (2a+1) and d | (2b+1)"
+            },
+            {
+              "name": "m",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integers)",
+              "role": "numerator of a reduced fraction equal to (2a+1)/(2b+1); assumed gcd(m,n)=1"
+            },
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integers)",
+              "role": "denominator of a reduced fraction equal to (2a+1)/(2b+1); assumed gcd(m,n)=1"
+            }
+          ],
+          "quantifier_order": [
+            "For all a ∈ Z_{>0}",
+            "For all b ∈ Z_{>0}",
+            "Let d = gcd(2a+1,2b+1) (thus d ∈ Z_{>0} and d | 2a+1, d | 2b+1)",
+            "For all m ∈ Z_{>0}, for all n ∈ Z_{>0} such that m/n = (2a+1)/(2b+1) and gcd(m,n)=1",
+            "Conclusion: m = (2a+1)/d and n = (2b+1)/d; moreover gcd(2a+1,2b+1) is odd"
+          ],
+          "domain_restrictions": [
+            "a,b ∈ Z_{>0} (positive integers)",
+            "2a+1 and 2b+1 are odd positive integers",
+            "d = gcd(2a+1,2b+1) ∈ Z_{>0} and divides both 2a+1 and 2b+1",
+            "m,n ∈ Z_{>0} and gcd(m,n)=1 (m/n is in lowest terms)",
+            "Equality m/n = (2a+1)/(2b+1) is an equality of rational numbers; denominators nonzero (2b+1>0)"
+          ],
+          "witness_dependencies": [
+            "d is determined by a and b: d = gcd(2a+1,2b+1)",
+            "m and n (assumed coprime) are forced by the equality of fractions to be the pair ((2a+1)/k,(2b+1)/k) for some k dividing both 2a+1 and 2b+1; the coprimality gcd(m,n)=1 forces k to equal d",
+            "Thus m depends on a,b only via d: m = (2a+1)/d; similarly n = (2b+1)/d",
+            "Oddness of d follows from 2a+1 and 2b+1 being odd (no factor 2 can divide them)"
+          ],
+          "normalized_claim": "For all positive integers a,b, let d = gcd(2a+1,2b+1). If m,n are positive integers with m/n = (2a+1)/(2b+1) and gcd(m,n)=1, then m = (2a+1)/d and n = (2b+1)/d. Consequently d = gcd(2a+1,2b+1) is odd."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let\nA = (2a+1)/d, \\qquad B = (2b+1)/d.\nSince d = gcd(2a+1,2b+1), the integers A and B are positive.\n\nWe first show that gcd(A,B)=1. Indeed, if some integer c>1 divided both A and B, then cd would divide both dA=2a+1 and dB=2b+1. But cd>d, so this would give a common divisor of 2a+1 and 2b+1 larger than their greatest common divisor d, a contradiction. Hence gcd(A,B)=1.\n\nNow\nm/n = (2a+1)/(2b+1) = (dA)/(dB) = A/B,\nso cross-multiplication gives\nmB = nA.\n\nBecause A divides nA, the equality mB=nA shows that A divides mB. Since gcd(A,B)=1, Euclid's lemma implies that A divides m. Thus there exists a positive integer t such that\nm = At.\nSubstituting into mB=nA gives\nAtB = nA.\nSince A>0, we may cancel A and obtain\nn = Bt.\nSo t divides both m and n. But gcd(m,n)=1, therefore t=1.\n\nHence\nm = A = (2a+1)/d\nand\nn = B = (2b+1)/d,\nas required.\n\nFinally, d=gcd(2a+1,2b+1) is odd. For if d were even, then 2 would divide d, and hence 2 would divide both 2a+1 and 2b+1, impossible because 2a+1 and 2b+1 are odd. Therefore d is odd.",
+        "role_in_parent": "Identifies the recurrence explicitly in terms of d_k and records that every d_k is odd."
+      },
+      {
+        "lemma_id": "lem_20260315032944_124a8204",
+        "statement_nl": "Let a and b be distinct positive integers, let d = gcd(2a+1,2b+1), and define m = (2a+1)/d and n = (2b+1)/d. Then m-n = 2(a-b)/d. Consequently d divides 2(a-b).",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "a",
+              "type": "integer",
+              "domain": "positive integers (Z_{>0})",
+              "role": "universal parameter (given)"
+            },
+            {
+              "name": "b",
+              "type": "integer",
+              "domain": "positive integers (Z_{>0})",
+              "role": "universal parameter (given), with a ≠ b"
+            },
+            {
+              "name": "d",
+              "type": "integer",
+              "domain": "positive integer (value = gcd(2a+1,2b+1))",
+              "role": "derived (greatest common divisor of 2a+1 and 2b+1)"
+            },
+            {
+              "name": "m",
+              "type": "integer",
+              "domain": "integers (explicitly (2a+1)/d, integer because d | 2a+1)",
+              "role": "derived witness depending on a and d"
+            },
+            {
+              "name": "n",
+              "type": "integer",
+              "domain": "integers (explicitly (2b+1)/d, integer because d | 2b+1)",
+              "role": "derived witness depending on b and d"
+            }
+          ],
+          "quantifier_order": [
+            "forall a ∈ Z_{>0}",
+            "forall b ∈ Z_{>0}",
+            "assume a ≠ b",
+            "define d := gcd(2a+1, 2b+1) (d ∈ Z_{>0})",
+            "define m := (2a+1)/d (integer)",
+            "define n := (2b+1)/d (integer)",
+            "claim: m - n = 2(a - b)/d and hence d | 2(a - b)"
+          ],
+          "domain_restrictions": [
+            "a and b are positive integers",
+            "a ≠ b (distinctness)",
+            "d is the positive greatest common divisor of 2a+1 and 2b+1, so d | (2a+1) and d | (2b+1)",
+            "m and n are integers because d divides 2a+1 and 2b+1 respectively",
+            "2a+1 and 2b+1 are odd integers (implied by a,b integers)"
+          ],
+          "witness_dependencies": [
+            "d depends on a and b: d = gcd(2a+1,2b+1)",
+            "m depends on a and d: m = (2a+1)/d",
+            "n depends on b and d: n = (2b+1)/d",
+            "the expression m - n depends on a, b, and d",
+            "the divisibility conclusion d | 2(a-b) follows from m-n ∈ Z and 2(a-b) = d*(m-n)"
+          ],
+          "normalized_claim": "For all distinct positive integers a,b, let d = gcd(2a+1,2b+1) (positive). Define m = (2a+1)/d and n = (2b+1)/d (integers). Then m - n = 2(a - b)/d. Equivalently, 2(a - b) = d*(m - n), so d divides 2(a - b)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "By definition of gcd, from d = gcd(2a+1,2b+1) we have d \\mid (2a+1) and d \\mid (2b+1). Therefore the quantities\nm = (2a+1)/d and n = (2b+1)/d\nare integers.\n\nNow compute directly:\nm - n = (2a+1)/d - (2b+1)/d = ((2a+1) - (2b+1))/d = (2a+1-2b-1)/d = 2(a-b)/d.\nThis proves the stated identity.\n\nConsequently, multiplying both sides by d gives\n2(a-b) = d(m-n).\nSince m-n is an integer, the right-hand side is divisible by d. Hence d \\mid 2(a-b).\n\nThus both conclusions of the lemma hold.",
+        "role_in_parent": "Provides the exact one-step difference relation needed for the cumulative divisibility invariant."
+      },
+      {
+        "lemma_id": "lem_20260315033008_b1ba019f",
+        "statement_nl": "Let m_0 and n_0 be distinct positive integers. For each integer k >= 1, define d_k = gcd(2m_{k-1}+1, 2n_{k-1}+1), and define positive integers m_k,n_k by m_k = (2m_{k-1}+1)/d_k and n_k = (2n_{k-1}+1)/d_k. Then for every integer k >= 1, one has m_k - n_k = 2(m_{k-1}-n_{k-1})/d_k. Hence m_k != n_k for every k >= 0.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "m_0",
+              "type": "integer",
+              "domain": "Z_{>0}",
+              "role": "initial parameter (given positive integer)"
+            },
+            {
+              "name": "n_0",
+              "type": "integer",
+              "domain": "Z_{>0}",
+              "role": "initial parameter (given positive integer), with m_0 != n_0"
+            },
+            {
+              "name": "k",
+              "type": "integer index",
+              "domain": "k >= 1 (for d_k and for defining m_k,n_k); also k >= 0 for statements about m_k,n_k",
+              "role": "recurrence index"
+            },
+            {
+              "name": "d_k",
+              "type": "integer (depending on k)",
+              "domain": "Z_{>0} for k >= 1 (d_k = gcd(2 m_{k-1}+1, 2 n_{k-1}+1))",
+              "role": "gcd witness dividing 2m_{k-1}+1 and 2n_{k-1}+1"
+            },
+            {
+              "name": "m_k",
+              "type": "integer (depending on k)",
+              "domain": "Z_{>0} for k >= 0 (m_0 given; for k>=1 defined as quotient)",
+              "role": "sequence defined recursively by m_k = (2 m_{k-1} + 1) / d_k for k>=1"
+            },
+            {
+              "name": "n_k",
+              "type": "integer (depending on k)",
+              "domain": "Z_{>0} for k >= 0 (n_0 given; for k>=1 defined as quotient)",
+              "role": "sequence defined recursively by n_k = (2 n_{k-1} + 1) / d_k for k>=1"
+            }
+          ],
+          "quantifier_order": [
+            "forall m_0, n_0 in Z_{>0} with m_0 != n_0,",
+            "define sequences (m_k)_{k>=0}, (n_k)_{k>=0}, (d_k)_{k>=1} recursively as below,",
+            "then forall k >= 1 the stated equality holds,",
+            "hence forall k >= 0 the inequality m_k != n_k holds"
+          ],
+          "domain_restrictions": [
+            "m_0, n_0 are positive integers (Z_{>0}) and m_0 != n_0",
+            "for each k >= 1, d_k = gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1) ∈ Z_{>0}",
+            "for each k >= 1, d_k divides both 2 m_{k-1} + 1 and 2 n_{k-1} + 1, so the quotients (2 m_{k-1}+1)/d_k and (2 n_{k-1}+1)/d_k are integers",
+            "m_k and n_k as defined are positive integers for all k >= 0 (positivity inherited from numerators and divisors > 0)"
+          ],
+          "witness_dependencies": [
+            "d_k is a function of (m_{k-1}, n_{k-1}): d_k = gcd(2 m_{k-1}+1, 2 n_{k-1}+1)",
+            "m_k depends on (m_{k-1}, n_{k-1}) via d_k: m_k = (2 m_{k-1} + 1) / d_k (for k>=1)",
+            "n_k depends on (m_{k-1}, n_{k-1}) via d_k: n_k = (2 n_{k-1} + 1) / d_k (for k>=1)",
+            "the claimed relation m_k - n_k = 2 (m_{k-1} - n_{k-1}) / d_k depends on d_k and the previous difference m_{k-1}-n_{k-1}",
+            "the deduction m_k != n_k for all k >= 0 uses induction on k and the previous nonvanishing of m_{k-1}-n_{k-1}"
+          ],
+          "normalized_claim": "For all m_0,n_0 ∈ Z_{>0} with m_0 ≠ n_0, define sequences (m_k)_{k>=0}, (n_k)_{k>=0} and (d_k)_{k>=1} by: for each k >= 1 set d_k = gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1) ∈ Z_{>0}, and set m_k = (2 m_{k-1} + 1)/d_k and n_k = (2 n_{k-1} + 1)/d_k (these divisions are exact in Z). Then for every integer k >= 1 one has the exact integer equality m_k - n_k = 2 (m_{k-1} - n_{k-1}) / d_k, and consequently (by induction from m_0 ≠ n_0) m_k ≠ n_k for every integer k >= 0."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix any k >= 1. By definition,\n\nd_k = gcd(2m_{k-1}+1, 2n_{k-1}+1),\n\nso d_k is a positive integer dividing both 2m_{k-1}+1 and 2n_{k-1}+1. Also, by the recursive definition,\n\nm_k = (2m_{k-1}+1)/d_k,   n_k = (2n_{k-1}+1)/d_k.\n\nTherefore\n\nm_k - n_k\n= (2m_{k-1}+1)/d_k - (2n_{k-1}+1)/d_k\n= ((2m_{k-1}+1) - (2n_{k-1}+1))/d_k\n= 2(m_{k-1}-n_{k-1})/d_k.\n\nThis proves the stated identity for every integer k >= 1.\n\nNow we prove that m_k != n_k for every k >= 0 by induction on k.\n\nBase case: k = 0. This is exactly the hypothesis: m_0 != n_0.\n\nInductive step: assume for some k >= 1 that m_{k-1} != n_{k-1}. Then m_{k-1}-n_{k-1} is a nonzero integer. Suppose, for contradiction, that m_k = n_k. Then m_k - n_k = 0, and by the identity already proved,\n\n0 = m_k - n_k = 2(m_{k-1}-n_{k-1})/d_k.\n\nSince d_k > 0, multiplying both sides by d_k gives\n\n2(m_{k-1}-n_{k-1}) = 0,\n\nhence m_{k-1}-n_{k-1} = 0, i.e. m_{k-1} = n_{k-1}, contradicting the inductive hypothesis. Therefore m_k != n_k.\n\nBy induction, m_k != n_k for all k >= 0.",
+        "role_in_parent": "Turns the one-step identity into a recurrence for differences and ensures the difference never becomes zero."
+      },
+      {
+        "lemma_id": "lem_20260315033043_bd72d344",
+        "statement_nl": "Let m_0 and n_0 be distinct positive integers. For each integer k >= 1, define d_k = gcd(2m_{k-1}+1, 2n_{k-1}+1), and define positive integers m_k,n_k by m_k = (2m_{k-1}+1)/d_k and n_k = (2n_{k-1}+1)/d_k. Then for every integer k >= 1, one has d_1 d_2 ... d_k divides 2^k (m_0 - n_0). Equivalently, d_1 d_2 ... d_k divides 2^k |m_0-n_0|.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "m_0",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integers)",
+              "role": "initial value of the m-sequence"
+            },
+            {
+              "name": "n_0",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integers), with n_0 != m_0",
+              "role": "initial value of the n-sequence (distinct from m_0)"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "Z_{>=1} (index variable)",
+              "role": "index for the recursively defined sequences; quantifier ranges over these"
+            },
+            {
+              "name": "d_k (for k>=1)",
+              "type": "sequence of integers",
+              "domain": "d_k = gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1) ∈ Z_{>0}",
+              "role": "gcd-based divisors defined recursively"
+            },
+            {
+              "name": "m_k (for k>=1)",
+              "type": "sequence of integers",
+              "domain": "m_k = (2 m_{k-1} + 1) / d_k ∈ Z_{>0}",
+              "role": "recursively defined m-sequence; integer because dividing by gcd"
+            },
+            {
+              "name": "n_k (for k>=1)",
+              "type": "sequence of integers",
+              "domain": "n_k = (2 n_{k-1} + 1) / d_k ∈ Z_{>0}",
+              "role": "recursively defined n-sequence; integer because dividing by gcd"
+            }
+          ],
+          "quantifier_order": [
+            "forall m_0 ∈ Z_{>0}",
+            "forall n_0 ∈ Z_{>0} with n_0 ≠ m_0",
+            "define recursively for all integers k ≥ 1: d_k = gcd(2 m_{k-1}+1, 2 n_{k-1}+1), m_k = (2 m_{k-1}+1)/d_k, n_k = (2 n_{k-1}+1)/d_k",
+            "then forall integers k ≥ 1: conclusion holds (product d_1...d_k divides 2^k (m_0 - n_0))"
+          ],
+          "domain_restrictions": [
+            "m_0, n_0 are positive integers (Z_{>0}) and distinct",
+            "k ranges over positive integers (Z_{>=1})",
+            "gcd is the standard positive greatest common divisor, so each d_k ∈ Z_{>0}",
+            "m_k and n_k as defined are integers (since dividing by gcd of the two numerators)",
+            "divisibility relation is integer divisibility: a divides b means there exists integer t with b = a t"
+          ],
+          "witness_dependencies": [
+            "d_1 is determined by (m_0, n_0): d_1 = gcd(2 m_0 + 1, 2 n_0 + 1)",
+            "m_1, n_1 are determined by (m_0, n_0, d_1): m_1 = (2 m_0 + 1) / d_1, n_1 = (2 n_0 + 1) / d_1",
+            "Inductively, for each i ≥ 1: d_i depends on (m_{i-1}, n_{i-1}); then m_i,n_i depend on (m_{i-1}, n_{i-1}, d_i)",
+            "The product d_1 ... d_k is thus a function of the initial pair (m_0, n_0) via the recursive definitions up to index k"
+          ],
+          "normalized_claim": "For all m_0,n_0 ∈ Z_{>0} with m_0 ≠ n_0, define sequences (d_k,m_k,n_k)_{k≥1} by d_k := gcd(2 m_{k-1}+1, 2 n_{k-1}+1) and m_k := (2 m_{k-1}+1)/d_k, n_k := (2 n_{k-1}+1)/d_k. Then for every integer k ≥ 1, the integer product d_1·d_2·...·d_k divides 2^k (m_0 - n_0). Equivalently, d_1·...·d_k divides 2^k |m_0 - n_0|."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "For each j >= 1, the definitions give\n2m_{j-1}+1 = d_j m_j and 2n_{j-1}+1 = d_j n_j.\nSubtracting these two equalities, we obtain\n\nd_j (m_j - n_j) = 2 (m_{j-1} - n_{j-1}).\n\nI claim that, in fact, for every k >= 1,\n\nd_1 d_2 ... d_k (m_k - n_k) = 2^k (m_0 - n_0).\n\nThis stronger identity immediately implies the stated divisibility, because m_k - n_k is an integer.\n\nWe prove the claim by induction on k.\n\nBase case k = 1: the claim is exactly the displayed relation above with j = 1, namely\n\nd_1 (m_1 - n_1) = 2 (m_0 - n_0).\n\nInductive step: assume for some k >= 1 that\n\nd_1 d_2 ... d_k (m_k - n_k) = 2^k (m_0 - n_0).\n\nApply the one-step relation with j = k+1:\n\nd_{k+1} (m_{k+1} - n_{k+1}) = 2 (m_k - n_k).\n\nMultiplying by d_1 d_2 ... d_k and using the induction hypothesis gives\n\nd_1 d_2 ... d_k d_{k+1} (m_{k+1} - n_{k+1})\n= 2 d_1 d_2 ... d_k (m_k - n_k)\n= 2 * 2^k (m_0 - n_0)\n= 2^{k+1} (m_0 - n_0).\n\nSo the claim holds for k+1. By induction, it holds for all k >= 1.\n\nTherefore, for every k >= 1,\n\n2^k (m_0 - n_0) = d_1 d_2 ... d_k (m_k - n_k),\n\nand hence d_1 d_2 ... d_k divides 2^k (m_0 - n_0), as required.\n\nSince each d_i > 0, this is equivalent to saying that d_1 d_2 ... d_k divides 2^k |m_0 - n_0|.",
+        "role_in_parent": "Supplies the corrected cumulative divisibility invariant demanded by the rejection notes."
+      },
+      {
+        "lemma_id": "lem_20260315033109_7360bff1",
+        "statement_nl": "Let N be a nonzero integer, and let e_1,e_2,e_3,... be odd positive integers such that for every integer r >= 1, the product e_1 e_2 ... e_r divides 2^r |N|. Then for every integer r >= 1, the product e_1 e_2 ... e_r divides |N|.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "N",
+              "type": "integer",
+              "domain": "Z \\ {0} (nonzero integers)",
+              "role": "given parameter (fixed)"
+            },
+            {
+              "name": "e_i",
+              "type": "sequence",
+              "domain": "for each i>=1: e_i ∈ Z_{>0} and e_i is odd",
+              "role": "given sequence of odd positive integers (fixed)"
+            },
+            {
+              "name": "r",
+              "type": "integer",
+              "domain": "r ∈ Z, r >= 1",
+              "role": "universally quantified index for finite products"
+            },
+            {
+              "name": "E_r",
+              "type": "integer",
+              "domain": "E_r = Π_{i=1}^r e_i (product of first r terms, hence odd and positive)",
+              "role": "shorthand for the product e_1...e_r"
+            }
+          ],
+          "quantifier_order": [
+            "∀ N ∈ Z \\ {0}",
+            "∀ sequences (e_i)_{i≥1} with each e_i ∈ Z_{>0} and odd",
+            "Assume: ∀ r ∈ Z, r >= 1, E_r | (2^r * |N|)",
+            "Conclude: ∀ r ∈ Z, r >= 1, E_r | |N|"
+          ],
+          "domain_restrictions": [
+            "N is a nonzero integer (so |N| ∈ Z_{>0})",
+            "Each e_i is an odd positive integer (so E_r is odd and positive for every r)",
+            "r ranges over integers >= 1",
+            "Divisibility is the standard integer divisibility relation (a | b means b is integer multiple of a)",
+            "2^r |N| denotes 2^r * |N| (not exponentiation ambiguity)"
+          ],
+          "witness_dependencies": [
+            "There are no existential witnesses in the statement; all quantifiers are universal or are an implication over universals.",
+            "The sequence (e_i) is fixed once chosen and may depend on N (i.e. e_i can be chosen with knowledge of N), but not on r other than by indexing; E_r is determined by (e_i) and r."
+          ],
+          "normalized_claim": "For all N ∈ Z \\ {0} and for every sequence (e_i)_{i≥1} with each e_i ∈ Z_{>0} odd, if for every integer r >= 1 the product E_r := Π_{i=1}^r e_i divides 2^r * |N|, then for every integer r >= 1 the product E_r divides |N|."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let E_r:=e_1e_2\\cdots e_r for each integer r\\ge 1. We must prove that E_r\\mid |N| for every r\\ge 1.\n\nFix an arbitrary integer r\\ge 1. Since each e_i is an odd positive integer, their product E_r is also odd. Hence E_r is relatively prime to 2^r; that is,\n\\[\\gcd(E_r,2^r)=1.\\]\nBy Bézout's identity, there exist integers u and v such that\n\\[uE_r+v2^r=1.\\]\nMultiplying by |N| gives\n\\[|N|=uE_r|N|+v2^r|N|.\\]\nNow E_r divides the first term uE_r|N| trivially. Also, by the hypothesis of the lemma, E_r\\mid 2^r|N|. Therefore E_r also divides the second term v2^r|N|. Since a divisor of two integers also divides their sum, it follows that\n\\[E_r\\mid |N|.\\]\nBecause the choice of r\\ge 1 was arbitrary, we conclude that for every integer r\\ge 1,\n\\[e_1e_2\\cdots e_r=E_r\\mid |N|.\\]\nThis is exactly the desired conclusion.",
+        "role_in_parent": "Removes the powers of 2 from the cumulative divisibility invariant using oddness of the gcd factors."
+      },
+      {
+        "lemma_id": "lem_20260315033134_415173a4",
+        "statement_nl": "Let N be a positive integer. Let e_1,e_2,e_3,... be positive integers with e_i >= 1 for all i, and suppose that for every integer r >= 1, the product e_1 e_2 ... e_r divides N. Then only finitely many indices i satisfy e_i > 1. More precisely, if S = { i >= 1 : e_i > 1 }, then |S| <= floor(log_2 N).",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "N",
+              "type": "integer",
+              "domain": "Z_{>0} (positive integers)",
+              "role": "fixed parameter (given positive integer)"
+            },
+            {
+              "name": "e",
+              "type": "sequence of integers",
+              "domain": "(e_i)_{i>=1}, each e_i ∈ Z_{>=1}",
+              "role": "given infinite sequence of positive integers indexed by i∈Z_{>0}"
+            },
+            {
+              "name": "i",
+              "type": "integer index",
+              "domain": "i ∈ Z_{>0} (positive integers)",
+              "role": "index for the sequence e_i and for members of S"
+            },
+            {
+              "name": "r",
+              "type": "integer index",
+              "domain": "r ∈ Z_{>=1} (positive integers)",
+              "role": "universal quantifier in the hypothesis: considers initial segments 1..r"
+            },
+            {
+              "name": "S",
+              "type": "set of indices",
+              "domain": "S = { i ∈ Z_{>0} : e_i > 1 }",
+              "role": "derived set whose cardinality is bounded"
+            }
+          ],
+          "quantifier_order": [
+            "N ∈ Z_{>0} (arbitrary/fixed)",
+            "(e_i)_{i>=1} is a sequence with each e_i ∈ Z_{>=1}",
+            "∀ r ∈ Z_{>=1}: (∏_{i=1}^r e_i) divides N",
+            "Define S = { i ∈ Z_{>0} : e_i > 1 }",
+            "Claim: S is finite and |S| ≤ floor(log_2 N)"
+          ],
+          "domain_restrictions": [
+            "N is a positive integer (N ≥ 1)",
+            "For all i ≥ 1, e_i is an integer and e_i ≥ 1",
+            "For all r ≥ 1, the integer product ∏_{i=1}^r e_i divides N in Z (i.e. N is a multiple of each partial product)",
+            "log_2 denotes base-2 logarithm; floor(log_2 N) is well-defined for N ≥ 1",
+            "Indices i,r range over positive integers (starting at 1)"
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are asserted in the hypothesis; the statement is universal over sequences satisfying the divisibility condition.",
+            "One may refer to finite initial segments: for each r, the bound 2^{|S ∩ {1..r}|} ≤ ∏_{i=1}^r e_i ≤ N holds; the choice of r used to capture all elements of S (i.e. r0 = max S) would depend on S, but existence of such finite r0 is part of the conclusion (finiteness of S), not an assumption."
+          ],
+          "normalized_claim": "For any fixed N ∈ Z_{>0} and any sequence (e_i)_{i>=1} with each e_i ∈ Z_{>=1} such that for every r ∈ Z_{>=1} the partial product P_r := ∏_{i=1}^r e_i divides N, the set S := { i ∈ Z_{>0} : e_i > 1 } is finite and satisfies 2^{|S|} ≤ N. Consequently |S| ≤ floor(log_2 N)."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Let L = floor(log_2 N). We prove that |S| <= L, where S = { i >= 1 : e_i > 1 }.\n\nAssume for contradiction that |S| >= L+1. Then there exist distinct indices\ni_1 < i_2 < ... < i_{L+1}\nin S. Set r = i_{L+1}. For each j = 1,2,...,L+1, we have e_{i_j} > 1, and since e_{i_j} is a positive integer, this means e_{i_j} >= 2. For every other index i with 1 <= i <= r, we still have e_i >= 1.\n\nTherefore the r-th partial product satisfies\nP_r := e_1 e_2 ... e_r >= e_{i_1} e_{i_2} ... e_{i_{L+1}} >= 2^{L+1}.\n\nBy the hypothesis of the lemma, P_r divides N. Since P_r and N are positive integers, divisibility implies P_r <= N. Hence\nN >= P_r >= 2^{L+1}.\n\nOn the other hand, L = floor(log_2 N), so by the defining property of the floor function,\nL <= log_2 N < L+1.\nExponentiating base 2 gives\n2^L <= N < 2^{L+1}.\nIn particular, N < 2^{L+1}, contradicting N >= 2^{L+1}.\n\nThis contradiction shows that S cannot have L+1 elements. Hence |S| <= L = floor(log_2 N).\n\nTherefore S is finite, so only finitely many indices i satisfy e_i > 1. This is exactly the desired conclusion.",
+        "role_in_parent": "Converts bounded divisibility of all prefix products into finiteness of nontrivial gcd factors."
+      },
+      {
+        "lemma_id": "lem_20260315033205_c6218886",
+        "statement_nl": "Let m_0 and n_0 be distinct positive integers. For each integer k >= 1, let m_k and n_k be the relatively prime positive integers satisfying m_k/n_k = (2m_{k-1}+1)/(2n_{k-1}+1), and define d_k = gcd(2m_{k-1}+1, 2n_{k-1}+1). Then d_k = 1 if and only if gcd(2m_{k-1}+1, 2n_{k-1}+1) = 1. Equivalently, for every integer j >= 0, if one writes d_{j+1} = gcd(2m_j+1,2n_j+1), then d_{j+1}=1 exactly when 2m_j+1 and 2n_j+1 are relatively prime.",
+        "semantic_sketch": {
+          "variables": [
+            {
+              "name": "m_0",
+              "type": "integer",
+              "domain": "positive integers (Z_{>0})",
+              "role": "initial distinct positive integer, given"
+            },
+            {
+              "name": "n_0",
+              "type": "integer",
+              "domain": "positive integers (Z_{>0})",
+              "role": "initial distinct positive integer, given, with m_0 != n_0"
+            },
+            {
+              "name": "k",
+              "type": "integer",
+              "domain": "k >= 1 (index)",
+              "role": "index of the recurrence/sequence"
+            },
+            {
+              "name": "m_k",
+              "type": "integer (indexed family)",
+              "domain": "positive integers (Z_{>0}) for each k >= 1",
+              "role": "sequence element defined for each k >= 1; required gcd(m_k,n_k)=1 and m_k/n_k = (2 m_{k-1}+1)/(2 n_{k-1}+1)"
+            },
+            {
+              "name": "n_k",
+              "type": "integer (indexed family)",
+              "domain": "positive integers (Z_{>0}) for each k >= 1",
+              "role": "sequence element defined for each k >= 1; required gcd(m_k,n_k)=1 and m_k/n_k = (2 m_{k-1}+1)/(2 n_{k-1}+1)"
+            },
+            {
+              "name": "d_k",
+              "type": "integer (indexed family)",
+              "domain": "positive integers (Z_{>0}) for each k >= 1",
+              "role": "defined as d_k = gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1)"
+            },
+            {
+              "name": "j",
+              "type": "integer",
+              "domain": "j >= 0 (alternative index)",
+              "role": "alternative index used in equivalent rephrasing; j+1 plays role of k"
+            }
+          ],
+          "quantifier_order": [
+            "For all m_0, n_0 in Z_{>0} with m_0 != n_0,",
+            "For all integers k >= 1,",
+            "There exist m_k, n_k in Z_{>0} with gcd(m_k,n_k)=1 such that m_k / n_k = (2 m_{k-1} + 1) / (2 n_{k-1} + 1),",
+            "Define d_k := gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1).",
+            "Claim: for each such k, d_k = 1 iff gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1) = 1."
+          ],
+          "domain_restrictions": [
+            "m_0, n_0 are positive integers and m_0 != n_0",
+            "For each k >= 1, m_k and n_k are positive integers and gcd(m_k, n_k) = 1",
+            "Denominator 2 n_{k-1} + 1 is nonzero and positive since n_{k-1} >= 1",
+            "d_k is a positive integer (gcd returns a positive integer)"
+          ],
+          "witness_dependencies": [
+            "m_k and n_k depend on m_{k-1}, n_{k-1} via reduction of the rational (2 m_{k-1} + 1)/(2 n_{k-1} + 1) to lowest terms: m_k = (2 m_{k-1} + 1)/d_k, n_k = (2 n_{k-1} + 1)/d_k where d_k = gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1)",
+            "d_k depends only on m_{k-1} and n_{k-1} (d_k = gcd(2 m_{k-1}+1, 2 n_{k-1}+1))",
+            "The statement for index j is the same as the statement for k with k = j+1 (i.e. d_{j+1} depends on m_j,n_j)"
+          ],
+          "normalized_claim": "For all distinct positive integers m_0,n_0 and for all integers k >= 1, define sequences by: d_k := gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1), and set m_k = (2 m_{k-1} + 1)/d_k, n_k = (2 n_{k-1} + 1)/d_k (so gcd(m_k,n_k)=1). Then for every k >= 1, d_k = 1 if and only if 2 m_{k-1} + 1 and 2 n_{k-1} + 1 are relatively prime (equivalently gcd(2 m_{k-1} + 1, 2 n_{k-1} + 1) = 1). Equivalently, for every j >= 0, d_{j+1} = 1 iff gcd(2 m_j + 1, 2 n_j + 1) = 1."
+        },
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "proof_nl": "Fix any admissible initial data and any integer k >= 1. By the given definition,\n\nd_k := gcd(2m_{k-1}+1, 2n_{k-1}+1).\n\nTherefore the statement\n\nd_k = 1\n\nis exactly the same statement as\n\ngcd(2m_{k-1}+1, 2n_{k-1}+1) = 1.\n\nHence, for every k >= 1,\n\nd_k = 1 if and only if gcd(2m_{k-1}+1, 2n_{k-1}+1) = 1.\n\nThis proves the first formulation.\n\nFor the reindexed formulation, let j >= 0 and put k = j+1. Then k >= 1, so by the definition of d_k we have\n\nd_{j+1} = gcd(2m_j+1, 2n_j+1).\n\nThus the assertion\n\nd_{j+1} = 1\n\nis exactly the same as\n\ngcd(2m_j+1, 2n_j+1) = 1.\n\nFinally, by the standard meaning of “relatively prime,” the condition gcd(2m_j+1, 2n_j+1) = 1 is equivalent to saying that 2m_j+1 and 2n_j+1 are relatively prime. So d_{j+1}=1 exactly when 2m_j+1 and 2n_j+1 are relatively prime.\n\nNo further properties of the recurrence are needed for this lemma.",
+        "role_in_parent": "Translates eventual triviality of the d_k sequence into the exact theorem statement with the correct index shift."
+      }
+    ],
+    "all_visible_lemmas_nl_accepted": true
+  }

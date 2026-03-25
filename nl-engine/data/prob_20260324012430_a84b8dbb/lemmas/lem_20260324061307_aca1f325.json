@@ -1,0 +1,112 @@
+{
+  "assembly_step_ids": [],
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T06:13:20.918789Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.63,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer m >= 2.\n\nLet x=(x_1,...,x_{m-1}) with each x_i a positive integer. For 1<=i<=m-1 define\nw_i = m x_i + i,\nand define\nS_x = {0} union {q m : q in N0} union {q m + w_i : q in N0,\n1<=i<=m-1}.\nWe prove the equivalence of (a) and (b), and then the moreover statement.\n\nFirst note that each w_i is a positive integer congruent to i modulo m, and because x_i>=1 we have\nw_i = m x_i + i >= m + 1.\nSo every w_i is strictly larger than m.\n\nProof that (b) implies (a).\nWe assume:\nfor all i,j in {1,...,m-1},\n- if i+j<m, then x_i+x_j >= x_{i+j},\n- if i+j>m, then x_i+x_j+1 >= x_{i+j-m}.\nWe show that S_x is a numerical semigroup with multiplicity exactly m.\n\n1. S_x is a subset of N0 and contains 0.\nThis is immediate from the definition: qm and qm+w_i are all nonnegative integers, and 0 is explicitly included.\n\n2. S_x is closed under addition.\nTake arbitrary a,b in S_x. We must show a+b in S_x.\nThere are several cases.\n\n- If a=0 or b=0, this is immediate.\n\n- If a=q m and b=q' m are multiples of m, then\n  a+b=(q+q')m in S_x.\n\n- If a=q m and b=q' m + w_i, then\n  a+b=(q+q')m + w_i in S_x.\n  The same argument works with the roles reversed.\n\n- It remains to treat the case\n  a=q m + w_i,\n  b=q' m + w_j\n  for some 1<=i,j<=m-1.\n  Then\n  a+b=(q+q')m + w_i + w_j.\n  Since\n  w_i+w_j = m(x_i+x_j)+(i+j),\n  we distinguish three subcases.\n\n  (i) If i+j<m, then\n  w_i+w_j = m(x_i+x_j)+(i+j)\n          = m(x_i+x_j-x_{i+j}) + (m x_{i+j} + (i+j))\n          = m(x_i+x_j-x_{i+j}) + w_{i+j}.\n  By the assumed inequality x_i+x_j>=x_{i+j}, the coefficient x_i+x_j-x_{i+j} is in N0. Hence\n  a+b = (q+q' + x_i+x_j-x_{i+j})m + w_{i+j} in S_x.\n\n  (ii) If i+j>m, then\n  w_i+w_j = m(x_i+x_j)+(i+j)\n          = m(x_i+x_j+1) + (i+j-m)\n          = m(x_i+x_j+1-x_{i+j-m}) + w_{i+j-m}.\n  By the assumed inequality x_i+x_j+1>=x_{i+j-m}, the coefficient is in N0. Hence\n  a+b = (q+q' + x_i+x_j+1-x_{i+j-m})m + w_{i+j-m} in S_x.\n\n  (iii) If i+j=m, then\n  w_i+w_j = m(x_i+x_j+1),\n  which is a multiple of m. Therefore\n  a+b = (q+q'+x_i+x_j+1)m in S_x.\n\nSo S_x is closed under addition.\n\n3. N0 \\ S_x is finite.\nLet M = max{w_i : 1<=i<=m-1}. We claim every integer n>=M belongs to S_x.\nIndeed, write n=q m + r with q in N0 and 0<=r<=m-1.\n- If r=0, then n=q m in S_x.\n- If 1<=r<=m-1, then n=q m + r >= M >= w_r = m x_r + r, so q>=x_r. Hence\n  n = (q-x_r)m + (m x_r + r) = (q-x_r)m + w_r in S_x.\nThus every n>=M lies in S_x, so the complement is finite.\n\n4. The least positive element of S_x is m.\nCertainly m=1*m belongs to S_x. There is no positive element smaller than m in S_x, because:\n- the positive multiples of m are m,2m,3m,..., so the smallest of them is m;\n- each w_i is >= m+1, and therefore every number of the form q m + w_i is >= m+1.\nSo m is the least positive element of S_x.\n\nTherefore S_x is a numerical semigroup and its multiplicity is exactly m. This proves (a).\n\nProof that (a) implies (b).\nAssume S_x is a numerical semigroup with multiplicity exactly m.\nTake any i,j in {1,...,m-1}.\nSince w_i,w_j are in S_x and S_x is closed under addition, w_i+w_j is in S_x.\nWe derive the required inequalities by looking at the residue modulo m.\n\n- Suppose i+j<m.\n  Then\n  w_i+w_j = m(x_i+x_j) + (i+j),\n  so w_i+w_j is congruent to i+j modulo m. Since 1<=i+j<=m-1, this is not divisible by m. By the definition of S_x, every element of S_x congruent to i+j modulo m is of the form t m + w_{i+j} for some t in N0. Hence for some t in N0,\n  w_i+w_j = t m + w_{i+j}.\n  Substituting w_i = m x_i + i, w_j = m x_j + j, and w_{i+j} = m x_{i+j} + (i+j), we obtain\n  m(x_i+x_j) + (i+j) = t m + m x_{i+j} + (i+j),\n  so\n  x_i+x_j = t + x_{i+j}.\n  Since t>=0, we get x_i+x_j >= x_{i+j}.\n\n- Suppose i+j>m.\n  Then\n  w_i+w_j = m(x_i+x_j+1) + (i+j-m),\n  so w_i+w_j is congruent to i+j-m modulo m, where 1<=i+j-m<=m-1. Again by the definition of S_x, every element of S_x with this residue is of the form t m + w_{i+j-m} for some t in N0. Thus\n  w_i+w_j = t m + w_{i+j-m}\n  for some t in N0. Substituting the formulas for the w's gives\n  m(x_i+x_j+1) + (i+j-m) = t m + m x_{i+j-m} + (i+j-m),\n  hence\n  x_i+x_j+1 = t + x_{i+j-m}.\n  Since t>=0, we conclude x_i+x_j+1 >= x_{i+j-m}.\n\nThis is exactly condition (b). Hence (a) implies (b).\n\nSo (a) and (b) are equivalent.\n\nNow we prove the moreover statement.\nLet S be any numerical semigroup of multiplicity m. For each i in {1,...,m-1}, let w_i be the least element of S congruent to i modulo m, and write\nw_i = m x_i + i.\nWe must show:\n1. each x_i is a positive integer,\n2. x satisfies condition (b),\n3. S = {0} union {q m : q in N0} union {q m + w_i : q in N0, 1<=i<=m-1}.\n\nFirst, these least elements w_i do exist. Since S has finite complement in N0, each residue class modulo m contains some sufficiently large element of S; therefore in each class i with 1<=i<=m-1 there is at least one element of S congruent to i modulo m. As S is a subset of N0, the least such element exists by well-ordering.\n\n1. Positivity of x_i.\nBecause w_i congruent i modulo m, there is an integer x_i with w_i = m x_i + i. Since w_i belongs to S and the multiplicity of S is m, there is no positive element of S smaller than m. But 1<=i<=m-1, so if x_i were 0 then w_i=i would be a positive element of S smaller than m, contradiction. Hence x_i>=1, so each x_i is a positive integer.\n\n2. Condition (b).\nTake i,j in {1,...,m-1}.\nSince w_i,w_j belong to S and S is closed under addition, w_i+w_j belongs to S.\n\n- If i+j<m, then w_i+w_j is congruent to i+j modulo m. Since w_{i+j} is by definition the least element of S with that residue, we must have\n  w_i+w_j >= w_{i+j}.\n  Therefore\n  m(x_i+x_j)+(i+j) >= m x_{i+j} + (i+j),\n  hence x_i+x_j >= x_{i+j}.\n\n- If i+j>m, then w_i+w_j is congruent to i+j-m modulo m, so by minimality of w_{i+j-m},\n  w_i+w_j >= w_{i+j-m}.\n  Writing this out,\n  m(x_i+x_j)+(i+j) >= m x_{i+j-m} + (i+j-m),\n  which is equivalent to\n  m(x_i+x_j+1) + (i+j-m) >= m x_{i+j-m} + (i+j-m),\n  hence x_i+x_j+1 >= x_{i+j-m}.\n\nThus x satisfies condition (b).\n\n3. Reconstruction of S.\nLet\nT = {0} union {q m : q in N0} union {q m + w_i : q in N0, 1<=i<=m-1}.\nWe show S=T.\n\nFirst, T is contained in S.\n- 0 belongs to S because S is a numerical semigroup.\n- Since the multiplicity of S is m, we have m in S; by closure under addition, every q m with q in N0 belongs to S.\n- Also each w_i belongs to S by definition, so by adding q copies of m we get q m + w_i in S for every q in N0.\nThus T subseteq S.\n\nConversely, let s in S.\n- If s=0, then s in T.\n- If s>0 and s is divisible by m, say s=q m, then s in T.\n- If s is not divisible by m, let i be the residue of s modulo m, so 1<=i<=m-1. Since w_i is the least element of S congruent to i modulo m and s is another element of S with that residue, we have s>=w_i. Also s-w_i is divisible by m. Therefore s-w_i = q m for some q in N0, and hence s=q m + w_i in T.\nSo S subseteq T.\n\nTherefore S=T.\n\nThis proves the moreover clause, and hence the full lemma.",
+  "latest_vetter_report_id": "rep_20260324061806_826fea83",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324061307_aca1f325",
+  "minor_rejection_count": 0,
+  "parent_id": "thm_root_20260324012430_9851dde8",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_bundle_artifact_id": "problems/prob_20260324012430_a84b8dbb/proof_bundles/lemmas/lem_20260324061307_aca1f325.json",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides the exact self-contained equivalence between multiplicity-m numerical semigroups and positive integer tuples satisfying the explicit Kunz inequalities.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let m be an integer with m >= 2. Let x = (x_1,...,x_{m-1}) be a tuple of positive integers. For each i with 1 <= i <= m-1 define w_i = m x_i + i, and define a subset S_x of the set N0 = {0,1,2,...} by S_x = {0} union {q m : q in N0} union {q m + w_i : q in N0 and 1 <= i <= m-1}. Then the following are equivalent: (a) S_x is a numerical semigroup whose multiplicity is exactly m, meaning that S_x is a subset of N0 containing 0, closed under addition, with finite complement N0 \\ S_x, and with least positive element equal to m; (b) for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}. Moreover, if S is any numerical semigroup of multiplicity m, and for each i in {1,...,m-1} one lets w_i be the least element of S congruent to i modulo m and writes w_i = m x_i + i, then the resulting tuple x consists of positive integers, satisfies condition (b), and reconstructs S by the formula S = {0} union {q m : q in N0} union {q m + w_i : q in N0 and 1 <= i <= m-1}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m >= 2.",
+      "For all i in {1,...,m-1}, x_i is a positive integer (>= 1).",
+      "All q used in set constructions range over N0 = {0,1,2,...}.",
+      "Set S_x is defined as a subset of N0 via arithmetic progressions; implicitly S_x \u2286 N0.",
+      "Condition (a) additionally requires: S_x contains 0, is closed under addition (\u2200a,b\u2208S_x: a+b\u2208S_x), has finite complement N0 \\ S_x, and has least positive element equal to m.",
+      "Condition (b) quantifies i,j over {1,...,m-1} and uses the cases (i+j < m) and (i+j > m); there is no stated constraint when i+j = m."
+    ],
+    "normalized_claim": "Fix an integer m >= 2 and a tuple x = (x_1,...,x_{m-1}) with x_i \u2208 Z_{>0}. Define w_i = m x_i + i for 1<=i<=m-1 and define S_x = {0} \u222a {q m : q\u2208N0} \u222a {q m + w_i : q\u2208N0, 1<=i<=m-1}. Then S_x is a numerical semigroup with multiplicity exactly m iff for all i,j\u2208{1,...,m-1}: if i+j<m then x_i+x_j >= x_{i+j}; and if i+j>m then x_i+x_j+1 >= x_{i+j-m}. Furthermore, for any numerical semigroup S of multiplicity m, define for each i\u2208{1,...,m-1} w_i as the least element of S with w_i \u2261 i (mod m), write w_i = m x_i + i, then each x_i \u2208 Z_{>0}, the same inequalities as above hold for x, and S equals {0} \u222a {q m : q\u2208N0} \u222a {q m + w_i : q\u2208N0, 1<=i<=m-1}.",
+    "quantifier_order": [
+      "Let m be an integer (m >= 2).",
+      "Let x be a tuple (x_1,...,x_{m-1}) of positive integers.",
+      "Define w_i for all i in {1,...,m-1} (w_i depends on m and x_i).",
+      "Define S_x (depends on m and x through w_i).",
+      "Claim: (a) about S_x is equivalent to (b), where (b) is universally quantified over all i,j in {1,...,m-1} with piecewise conditions on i+j (<m or >m).",
+      "Moreover: For all numerical semigroups S with multiplicity m, define for each i in {1,...,m-1} a least element w_i in S with w_i \u2261 i (mod m), write w_i = m x_i + i, then the resulting tuple x satisfies (i) positivity of x_i, (ii) condition (b) (same piecewise inequalities), and (iii) reconstruction equality S = {0} \u222a {q m} \u222a {q m + w_i}."
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "global parameter; multiplicity candidate",
+        "type": "integer"
+      },
+      {
+        "domain": "Z^{m-1}",
+        "name": "x",
+        "role": "parameter tuple (x_1,...,x_{m-1}) controlling w_i and hence S_x",
+        "type": "tuple of integers"
+      },
+      {
+        "domain": "{1,2,3,...}",
+        "name": "x_i",
+        "role": "component of x for each index i with 1<=i<=m-1",
+        "type": "integer"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "i",
+        "role": "residue-class index modulo m",
+        "type": "index integer"
+      },
+      {
+        "domain": "{1,...,m-1}",
+        "name": "j",
+        "role": "residue-class index modulo m",
+        "type": "index integer"
+      },
+      {
+        "domain": "Z",
+        "name": "w_i",
+        "role": "least representative in residue class i modulo m generated from x via w_i = m x_i + i",
+        "type": "integer"
+      },
+      {
+        "domain": "N0 = {0,1,2,...}",
+        "name": "q",
+        "role": "multiplier for constructing S_x by arithmetic progressions",
+        "type": "quantifier variable integer"
+      },
+      {
+        "domain": "P(N0)",
+        "name": "S_x",
+        "role": "candidate numerical semigroup built from m and x",
+        "type": "set of integers"
+      },
+      {
+        "domain": "P(N0)",
+        "name": "S",
+        "role": "arbitrary numerical semigroup of multiplicity m used in the 'moreover' reconstruction clause",
+        "type": "set of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "w_i := m x_i + i depends on both m and the component x_i.",
+      "S_x depends on m and the entire tuple x only through the derived family (w_i).",
+      "In the 'moreover' clause, for each i in {1,...,m-1}, w_i is chosen as the least element of S congruent to i modulo m; this witness (least element) depends on S and i, not on the previously chosen x (since x is reconstructed from w_i).",
+      "The reconstructed x_i is defined from the witness w_i by x_i := (w_i - i)/m; hence x_i depends on S and i."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T06:13:20.918789Z"
+}

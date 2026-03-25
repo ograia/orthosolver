@@ -1,0 +1,275 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324015431_5c716404/solver_attempt_1",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-24T01:56:52.669121Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T01:56:37.165562Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lemma_id": "lem_20260324015431_5c716404",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "role_in_assembly": "Shows that the tuple Phi(S) lies on the Kunz side of the correspondence.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "S \u2286 Z_{\u22650}",
+        "0 \u2208 S",
+        "S is closed under addition: \u2200a,b \u2208 S, a+b \u2208 S",
+        "S has finite complement in Z_{\u22650} (i.e., Z_{\u22650} \\ S is finite)",
+        "m \u2208 Z and m \u2265 2",
+        "m is the least positive element of S: m \u2208 S, m>0, and \u2200t \u2208 Z with 0 < t < m, t \u2209 S",
+        "r ranges over integers in {1,2,...,m-1}",
+        "q ranges over integers in Z_{>0} when defining x_r",
+        "x_r is defined as a least positive integer q satisfying q\u00b7m + r \u2208 S",
+        "i,j range over integers in {1,2,...,m-1}",
+        "Case split: inequalities are asserted only for i+j < m and for i+j > m; the case i+j = m is not specified",
+        "In the first inequality, i+j < m implies i+j \u2208 {1,...,m-1}, so x_{i+j} is among the defined indices",
+        "In the second inequality, i+j > m implies i+j-m \u2208 {1,...,m-1}, so x_{i+j-m} is among the defined indices"
+      ],
+      "normalized_claim": "Let S be a numerical semigroup with multiplicity m\u22652. For each r \u2208 {1,...,m-1}, let x_r be the least q \u2208 Z_{>0} such that q m + r \u2208 S. Then for all i,j \u2208 {1,...,m-1}: (i+j < m \u21d2 x_i + x_j \u2265 x_{i+j}) and (i+j > m \u21d2 x_i + x_j + 1 \u2265 x_{i+j-m}). No inequality is claimed for i+j = m.",
+      "quantifier_order": [
+        "Let S be a numerical semigroup (universal over choice of S, but treated as given).",
+        "Assume m is the multiplicity of S (given).",
+        "For each r \u2208 {1,...,m-1}, define x_r as the least q \u2208 Z_{>0} such that q m + r \u2208 S (implicit existence + minimality).",
+        "For all i,j \u2208 {1,...,m-1}, if i + j < m then ...; if i + j > m then ..."
+      ],
+      "variables": [
+        {
+          "domain": "S \u2286 Z_{\u22650}",
+          "name": "S",
+          "role": "ambient numerical semigroup",
+          "type": "set"
+        },
+        {
+          "domain": "m \u2208 Z, m \u2265 2",
+          "name": "m",
+          "role": "multiplicity of S (least positive element of S)",
+          "type": "integer"
+        },
+        {
+          "domain": "r \u2208 {1,2,...,m-1}",
+          "name": "r",
+          "role": "index for defined quantities x_r",
+          "type": "integer"
+        },
+        {
+          "domain": "q \u2208 Z_{>0}",
+          "name": "q",
+          "role": "witness in the definition of x_r (least such q)",
+          "type": "integer"
+        },
+        {
+          "domain": "x_r \u2208 Z_{>0}",
+          "name": "x_r",
+          "role": "least positive integer q with q\u00b7m + r \u2208 S",
+          "type": "integer"
+        },
+        {
+          "domain": "i \u2208 {1,2,...,m-1}",
+          "name": "i",
+          "role": "index in the final inequalities",
+          "type": "integer"
+        },
+        {
+          "domain": "j \u2208 {1,2,...,m-1}",
+          "name": "j",
+          "role": "index in the final inequalities",
+          "type": "integer"
+        },
+        {
+          "domain": "k1 = i + j (when i + j < m) so k1 \u2208 {1,...,m-1}",
+          "name": "k1",
+          "role": "argument index for x_{i+j} in the first case",
+          "type": "integer (derived)"
+        },
+        {
+          "domain": "k2 = i + j - m (when i + j > m) so k2 \u2208 {1,...,m-1}",
+          "name": "k2",
+          "role": "argument index for x_{i+j-m} in the second case",
+          "type": "integer (derived)"
+        }
+      ],
+      "witness_dependencies": [
+        "x_r depends on the semigroup S and on m, and on the index r via the definition x_r = min{ q \u2208 Z_{>0} : q\u00b7m + r \u2208 S }",
+        "The statement inequalities use x_i, x_j, x_{i+j} (only when i+j < m) and x_{i+j-m} (only when i+j > m), so the involved x-terms inherit dependence on S and m"
+      ]
+    },
+    "shared_context": [
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260324013747_af6fcf4d",
+        "role_in_parent": "Translates the original theorem into a cardinality inequality for the combinatorial sets K_{m,g}.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m \u2208 Z and m >= 2",
+            "g \u2208 Z and g >= 0",
+            "x = (x_1,...,x_{m-1}) with each x_k \u2208 Z_{>0} (positive integers)",
+            "indices i,j range over {1,...,m-1}",
+            "case split conditions: if i+j < m then inequality involves x_{i+j}; if i+j > m then inequality involves x_{i+j-m} (which is within {1,...,m-1})",
+            "sum constraint: x_1 + ... + x_{m-1} = g"
+          ],
+          "normalized_claim": "Fix integers m>=2 and g>=0. Let K_{m,g} be the set of tuples x=(x_1,...,x_{m-1}) with x_k>0 for all k and x_1+...+x_{m-1}=g, such that for every i,j\u2208{1,...,m-1}: (i+j<m \u21d2 x_i+x_j\u2265x_{i+j}) and (i+j>m \u21d2 x_i+x_j+1\u2265x_{i+j-m}). Then the number N(m,g) of numerical semigroups with multiplicity m and genus g equals the cardinality |K_{m,g}|.",
+          "quantifier_order": [
+            "For all integers m with m >= 2",
+            "For all integers g with g >= 0",
+            "K_{m,g} = { x : (x is a tuple (x_1,...,x_{m-1})) such that (x_1+...+x_{m-1}=g) and (for all i,j in {1,...,m-1}, the Kunz inequalities hold under the stated cases) }",
+            "Claim: N(m,g) = |K_{m,g}|"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter; scope: fixed at top level for the claim",
+              "type": "integer"
+            },
+            {
+              "domain": "Z^{m-1} with coordinates restricted to positive integers",
+              "name": "x",
+              "role": "Kunz-coordinate tuple; used to define membership in K_{m,g}",
+              "type": "tuple of integers"
+            },
+            {
+              "domain": "Z_{>0}",
+              "name": "x_1,...,x_{m-1}",
+              "role": "coordinates of x; constrained by Kunz inequalities and by sum condition",
+              "type": "integer (coordinate variables)"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "i",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            },
+            {
+              "domain": "{1,2,...,m-1}",
+              "name": "j",
+              "role": "index variable in Kunz inequalities",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "Any inequalities are universal over i,j; no existential witnesses are introduced beyond choosing x as an element of K_{m,g}.",
+            "Membership witness for cardinality |K_{m,g}| is the tuple x, whose allowable set depends on the fixed parameters (m,g).",
+            "Inequalities for x depend on i and j but not on any additional choices."
+          ]
+        },
+        "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that x satisfies the Kunz inequalities for multiplicity m, namely: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Then N(m,g), the number of numerical semigroups of multiplicity m and genus g, is equal to the cardinality of K_{m,g}."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324012430_9851dde8",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2",
+            "g is an integer with g \u2265 0",
+            "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+          ],
+          "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+          "quantifier_order": [
+            "\u2200 m \u2208 Z (m \u2265 2)",
+            "\u2200 g \u2208 Z (g \u2265 0)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "N0",
+              "name": "N(m,g)",
+              "role": "count of numerical semigroups with multiplicity m and genus g",
+              "type": "nonnegative integer (cardinality)"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+      }
+    ],
+    "statement_nl": "Let S be a numerical semigroup, meaning a subset S of the nonnegative integers that contains 0, is closed under addition, and has finite complement. Assume its multiplicity is m, meaning m >= 2 is the least positive element of S. For each r in {1,...,m-1}, let x_r be the least positive integer q such that q m + r belongs to S. Then for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "lemma_id": "lem_20260324015431_5c716404",
+    "proof_nl": "Let S be a numerical semigroup with multiplicity m, where m>=2. For each r\\in\\{1,\\dots,m-1\\}, let x_r be the least positive integer q such that qm+r\\in S.\n\nWe first justify that each x_r is well-defined. Since S has finite complement in \\mathbb Z_{\\ge 0}, for each fixed r the infinite set \\{qm+r:q\\in \\mathbb Z_{>0}\\} cannot be disjoint from S; hence there exists some positive q with qm+r\\in S. By the well-ordering principle, there is a least such positive q, namely x_r.\n\nNow fix arbitrary i,j\\in\\{1,\\dots,m-1\\}.\n\nWe will use the defining minimality of the numbers x_r repeatedly: if t\\in\\{1,\\dots,m-1\\} and q>0 satisfy qm+t\\in S, then necessarily x_t\\le q.\n\nCase 1: i+j<m.\n\nBy definition of x_i and x_j, we have\nx_i m+i\\in S \\quad\\text{and}\\quad x_j m+j\\in S.\nSince S is closed under addition,\n(x_i m+i)+(x_j m+j)=(x_i+x_j)m+(i+j)\\in S.\nBecause i+j<m and i,j\\ge 1, we have i+j\\in\\{1,\\dots,m-1\\}. Thus the element above has the form qm+(i+j) with q=x_i+x_j>0. By the minimality property of x_{i+j}, it follows that\nx_{i+j}\\le x_i+x_j.\nEquivalently,\nx_i+x_j\\ge x_{i+j},\nwhich is exactly the first required inequality.\n\nCase 2: i+j>m.\n\nAgain,\n(x_i m+i)+(x_j m+j)=(x_i+x_j)m+(i+j)\\in S.\nSince i+j>m, rewrite this as\n(x_i+x_j+1)m+(i+j-m)\\in S.\nAlso, because i,j\\le m-1 and i+j>m, we have 1\\le i+j-m\\le m-2, so i+j-m\\in\\{1,\\dots,m-1\\}. Therefore, by the defining minimality of x_{i+j-m},\nx_{i+j-m}\\le x_i+x_j+1.\nEquivalently,\nx_i+x_j+1\\ge x_{i+j-m},\nwhich is exactly the second required inequality.\n\nSince i and j were arbitrary in \\{1,\\dots,m-1\\}, both assertions hold for all such i,j. This proves the lemma.",
+    "proof_summary": "Add the two Ap\u00e9ry representatives x_i m+i and x_j m+j in S. If i+j<m, the sum has residue i+j mod m, so minimality gives x_i+x_j>=x_{i+j}. If i+j>m, rewrite the sum as (x_i+x_j+1)m+(i+j-m), and minimality gives x_i+x_j+1>=x_{i+j-m}. Existence of each x_r follows from finiteness of the complement of S.",
+    "self_report": {
+      "confidence": 0.98,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "A numerical semigroup has finite complement in Z_{>=0}, so every sufficiently large nonnegative integer lies in S; hence for each residue class r mod m there exists some qm+r in S.",
+        "Well-ordering principle for positive integers."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null
+  },
+  "status": "completed",
+  "target_id": "lem_20260324015431_5c716404",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T01:56:52.669132Z",
+  "worker_job_id": "wrk_lem_20260324015431_5c716404_solve_1",
+  "worker_kind": "lemma_solver"
+}

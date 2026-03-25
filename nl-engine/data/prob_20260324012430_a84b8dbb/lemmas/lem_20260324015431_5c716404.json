@@ -1,0 +1,114 @@
+{
+  "assembly_step_ids": [],
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T01:54:40.324862Z",
+  "decomposition_count": 0,
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.32,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let S be a numerical semigroup with multiplicity m, where m>=2. For each r\\in\\{1,\\dots,m-1\\}, let x_r be the least positive integer q such that qm+r\\in S.\n\nWe first justify that each x_r is well-defined. Since S has finite complement in \\mathbb Z_{\\ge 0}, for each fixed r the infinite set \\{qm+r:q\\in \\mathbb Z_{>0}\\} cannot be disjoint from S; hence there exists some positive q with qm+r\\in S. By the well-ordering principle, there is a least such positive q, namely x_r.\n\nNow fix arbitrary i,j\\in\\{1,\\dots,m-1\\}.\n\nWe will use the defining minimality of the numbers x_r repeatedly: if t\\in\\{1,\\dots,m-1\\} and q>0 satisfy qm+t\\in S, then necessarily x_t\\le q.\n\nCase 1: i+j<m.\n\nBy definition of x_i and x_j, we have\nx_i m+i\\in S \\quad\\text{and}\\quad x_j m+j\\in S.\nSince S is closed under addition,\n(x_i m+i)+(x_j m+j)=(x_i+x_j)m+(i+j)\\in S.\nBecause i+j<m and i,j\\ge 1, we have i+j\\in\\{1,\\dots,m-1\\}. Thus the element above has the form qm+(i+j) with q=x_i+x_j>0. By the minimality property of x_{i+j}, it follows that\nx_{i+j}\\le x_i+x_j.\nEquivalently,\nx_i+x_j\\ge x_{i+j},\nwhich is exactly the first required inequality.\n\nCase 2: i+j>m.\n\nAgain,\n(x_i m+i)+(x_j m+j)=(x_i+x_j)m+(i+j)\\in S.\nSince i+j>m, rewrite this as\n(x_i+x_j+1)m+(i+j-m)\\in S.\nAlso, because i,j\\le m-1 and i+j>m, we have 1\\le i+j-m\\le m-2, so i+j-m\\in\\{1,\\dots,m-1\\}. Therefore, by the defining minimality of x_{i+j-m},\nx_{i+j-m}\\le x_i+x_j+1.\nEquivalently,\nx_i+x_j+1\\ge x_{i+j-m},\nwhich is exactly the second required inequality.\n\nSince i and j were arbitrary in \\{1,\\dots,m-1\\}, both assertions hold for all such i,j. This proves the lemma.",
+  "latest_vetter_report_id": "rep_20260324015706_479b8a46",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324015431_5c716404",
+  "minor_rejection_count": 0,
+  "parent_id": "lem_20260324013747_af6fcf4d",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Shows that the tuple Phi(S) lies on the Kunz side of the correspondence.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let S be a numerical semigroup, meaning a subset S of the nonnegative integers that contains 0, is closed under addition, and has finite complement. Assume its multiplicity is m, meaning m >= 2 is the least positive element of S. For each r in {1,...,m-1}, let x_r be the least positive integer q such that q m + r belongs to S. Then for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "S \u2286 Z_{\u22650}",
+      "0 \u2208 S",
+      "S is closed under addition: \u2200a,b \u2208 S, a+b \u2208 S",
+      "S has finite complement in Z_{\u22650} (i.e., Z_{\u22650} \\ S is finite)",
+      "m \u2208 Z and m \u2265 2",
+      "m is the least positive element of S: m \u2208 S, m>0, and \u2200t \u2208 Z with 0 < t < m, t \u2209 S",
+      "r ranges over integers in {1,2,...,m-1}",
+      "q ranges over integers in Z_{>0} when defining x_r",
+      "x_r is defined as a least positive integer q satisfying q\u00b7m + r \u2208 S",
+      "i,j range over integers in {1,2,...,m-1}",
+      "Case split: inequalities are asserted only for i+j < m and for i+j > m; the case i+j = m is not specified",
+      "In the first inequality, i+j < m implies i+j \u2208 {1,...,m-1}, so x_{i+j} is among the defined indices",
+      "In the second inequality, i+j > m implies i+j-m \u2208 {1,...,m-1}, so x_{i+j-m} is among the defined indices"
+    ],
+    "normalized_claim": "Let S be a numerical semigroup with multiplicity m\u22652. For each r \u2208 {1,...,m-1}, let x_r be the least q \u2208 Z_{>0} such that q m + r \u2208 S. Then for all i,j \u2208 {1,...,m-1}: (i+j < m \u21d2 x_i + x_j \u2265 x_{i+j}) and (i+j > m \u21d2 x_i + x_j + 1 \u2265 x_{i+j-m}). No inequality is claimed for i+j = m.",
+    "quantifier_order": [
+      "Let S be a numerical semigroup (universal over choice of S, but treated as given).",
+      "Assume m is the multiplicity of S (given).",
+      "For each r \u2208 {1,...,m-1}, define x_r as the least q \u2208 Z_{>0} such that q m + r \u2208 S (implicit existence + minimality).",
+      "For all i,j \u2208 {1,...,m-1}, if i + j < m then ...; if i + j > m then ..."
+    ],
+    "variables": [
+      {
+        "domain": "S \u2286 Z_{\u22650}",
+        "name": "S",
+        "role": "ambient numerical semigroup",
+        "type": "set"
+      },
+      {
+        "domain": "m \u2208 Z, m \u2265 2",
+        "name": "m",
+        "role": "multiplicity of S (least positive element of S)",
+        "type": "integer"
+      },
+      {
+        "domain": "r \u2208 {1,2,...,m-1}",
+        "name": "r",
+        "role": "index for defined quantities x_r",
+        "type": "integer"
+      },
+      {
+        "domain": "q \u2208 Z_{>0}",
+        "name": "q",
+        "role": "witness in the definition of x_r (least such q)",
+        "type": "integer"
+      },
+      {
+        "domain": "x_r \u2208 Z_{>0}",
+        "name": "x_r",
+        "role": "least positive integer q with q\u00b7m + r \u2208 S",
+        "type": "integer"
+      },
+      {
+        "domain": "i \u2208 {1,2,...,m-1}",
+        "name": "i",
+        "role": "index in the final inequalities",
+        "type": "integer"
+      },
+      {
+        "domain": "j \u2208 {1,2,...,m-1}",
+        "name": "j",
+        "role": "index in the final inequalities",
+        "type": "integer"
+      },
+      {
+        "domain": "k1 = i + j (when i + j < m) so k1 \u2208 {1,...,m-1}",
+        "name": "k1",
+        "role": "argument index for x_{i+j} in the first case",
+        "type": "integer (derived)"
+      },
+      {
+        "domain": "k2 = i + j - m (when i + j > m) so k2 \u2208 {1,...,m-1}",
+        "name": "k2",
+        "role": "argument index for x_{i+j-m} in the second case",
+        "type": "integer (derived)"
+      }
+    ],
+    "witness_dependencies": [
+      "x_r depends on the semigroup S and on m, and on the index r via the definition x_r = min{ q \u2208 Z_{>0} : q\u00b7m + r \u2208 S }",
+      "The statement inequalities use x_i, x_j, x_{i+j} (only when i+j < m) and x_{i+j-m} (only when i+j > m), so the involved x-terms inherit dependence on S and m"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T01:54:40.324865Z"
+}

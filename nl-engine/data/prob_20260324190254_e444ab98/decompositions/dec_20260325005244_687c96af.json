@@ -1,0 +1,53 @@
+{
+  "assembly_plan_id": "asm_20260325005244_81dc6727",
+  "controller_status": "failed",
+  "created_at": "2026-03-25T00:57:23.717246Z",
+  "decomposition_id": "dec_20260325005244_687c96af",
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "none",
+  "failure_origin": "agent3:fatal",
+  "failure_reason": "Lemma L6 is false: for the primitive root R={0,2,4,5,6,...} and d=0, A_R(0)={\u2205}, e(R)=1, s(R)=1, so the lemma claims 1>=2.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.79,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "lem_20260324211257_04fd67c3",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260324190254_e444ab98",
+  "proof_bundle_artifact_id": "problems/prob_20260324190254_e444ab98/proof_bundles/decompositions/dec_20260325005244_687c96af.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260324190254_e444ab98/decomposition_candidates/dec_20260325005244_687c96af/agent2_candidate.json",
+  "shared_context": [
+    {
+      "content": "For an integer h >= 1, G_h denotes the set of numerical semigroups Lambda with genus(Lambda)=h.",
+      "kind": "notation",
+      "label": "G_h"
+    },
+    {
+      "content": "For a numerical semigroup Lambda, an effective generator is a positive element x in Lambda such that x is not of the form a+b with positive a,b in Lambda and x > F(Lambda). The integer e(Lambda) is the number of effective generators of Lambda. The integer s(Lambda) is the number of effective generators x of Lambda such that, in c_x(Lambda)=Lambda with x removed, the element m(Lambda)+x is a minimal generator.",
+      "kind": "definition",
+      "label": "Effective generators and the functions e,s"
+    },
+    {
+      "content": "If Lambda is a numerical semigroup and x is an effective generator of Lambda, then c_x(Lambda) means Lambda with x removed. The edge Lambda -> c_x(Lambda) is strong if m(Lambda)+x is a minimal generator of c_x(Lambda), and weak otherwise.",
+      "kind": "definition",
+      "label": "Tree edges"
+    },
+    {
+      "content": "For a numerical semigroup R and an integer d >= 0, Desc_R(d) denotes the set of numerical semigroups obtainable from R by exactly d successive weak edges.",
+      "kind": "notation",
+      "label": "Desc_R(d)"
+    },
+    {
+      "content": "A primitive root means either O_1={0,2,3,4,...} or a positive-genus numerical semigroup R such that, with p(R):=R union {F(R)}, the edge p(R) -> R is strong.",
+      "kind": "definition",
+      "label": "Primitive root"
+    }
+  ],
+  "strategy_summary": "Partition the genus-h level of the semigroup tree into disjoint weak-descendant families indexed by unique primitive roots (either O_1 or a semigroup born by a strong edge). Encode each family by weakly admissible subsets of the root's effective generators, prove the target inequality family-by-family, then sum over all primitive-root families and regroup by the value of e(Lambda).",
+  "updated_at": "2026-03-25T00:57:23.717247Z"
+}

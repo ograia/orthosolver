@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS events, failure_reports, trusted_context, lean_results, lean_jobs, vetter_reports, lemmas, assembly_plans, decompositions, theorems, problems CASCADE;
+DROP TYPE IF EXISTS failure_reason, lean_error_scope, lean_error_class, lean_job_status, lean_job_mode, routing_status, proof_status, statement_status, controller_status, lean_assembly_status, llm_vetting_status, node_status, node_kind, verification_level, input_mode, problem_status CASCADE;

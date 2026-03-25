@@ -1,0 +1,161 @@
+{
+  "artifact_prefix": "problems/prob_20260320180855_11f16fb8/lemmas/lem_20260323194748_4d6bb641/solver_attempt_1",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-23T19:50:26.783955Z",
+  "controller_consumed_by_execution_id": "exec_20260323194042_2ab14324",
+  "created_at": "2026-03-23T19:50:15.947982Z",
+  "error_payload": null,
+  "execution_id": "exec_20260323194042_2ab14324",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lemma_id": "lem_20260323194748_4d6bb641",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "role_in_assembly": "Converts the injection between Kunz layers into the needed inequality of cardinalities.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m >= 2",
+        "g is an integer with g >= 0",
+        "g+1 is therefore an integer >= 1 (so genus value g+1 is within the stated integer domain)"
+      ],
+      "normalized_claim": "For all integers m >= 2 and all integers g >= 0, the counting function N(m,g) is monotonically nondecreasing in g with step size 1: N(m,g) <= N(m,g+1).",
+      "quantifier_order": [
+        "forall m (integer, m >= 2)",
+        "forall g (integer, g >= 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter of numerical semigroups; universally quantified",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter of numerical semigroups; universally quantified",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "cardinality of the set of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (count)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "X is finite",
+        "Y is finite",
+        "f is a function with domain exactly X and codomain exactly Y"
+      ],
+      "normalized_claim": "For all finite sets X and Y: if there exists an injective function f : X -> Y, then |X| <= |Y|.",
+      "quantifier_order": [
+        "Let X, Y be finite sets",
+        "If (there exists f : X -> Y such that f is injective)",
+        "then (|X| <= |Y|)"
+      ],
+      "variables": [
+        {
+          "domain": "universe of sets",
+          "name": "X",
+          "role": "finite set in the antecedent and domain of f",
+          "type": "set"
+        },
+        {
+          "domain": "universe of sets",
+          "name": "Y",
+          "role": "finite set in the antecedent and codomain of f",
+          "type": "set"
+        },
+        {
+          "domain": "f : X -> Y",
+          "name": "f",
+          "role": "witness of an injective mapping from X into Y",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "The existential witness f depends on the chosen pair (X, Y) (i.e., f is not fixed independently of X and Y)."
+      ]
+    },
+    "shared_context": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260320180855_1d8d4f17",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m >= 2",
+            "g is an integer with g >= 0",
+            "g+1 is therefore an integer >= 1 (so genus value g+1 is within the stated integer domain)"
+          ],
+          "normalized_claim": "For all integers m >= 2 and all integers g >= 0, the counting function N(m,g) is monotonically nondecreasing in g with step size 1: N(m,g) <= N(m,g+1).",
+          "quantifier_order": [
+            "forall m (integer, m >= 2)",
+            "forall g (integer, g >= 0)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter of numerical semigroups; universally quantified",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter of numerical semigroups; universally quantified",
+              "type": "integer"
+            },
+            {
+              "domain": "N0",
+              "name": "N(m,g)",
+              "role": "cardinality of the set of numerical semigroups with multiplicity m and genus g",
+              "type": "nonnegative integer (count)"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+      }
+    ],
+    "statement_nl": "Let X and Y be finite sets. If there exists an injective function f : X -> Y, then the cardinalities satisfy |X| <= |Y|.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "lemma_id": "lem_20260323194748_4d6bb641",
+    "proof_nl": "Let X and Y be finite sets, and assume there exists an injective function f : X -> Y. We must prove that |X| <= |Y|.\n\nBecause Y is finite, every subset of Y is finite, and its cardinality is at most |Y|. Consider the image f(X) = {f(x) : x in X}. Since f(X) is a subset of Y, it follows that f(X) is finite and\n|f(X)| <= |Y|.\n\nNow we use injectivity of f to compare X and f(X). The map f, viewed as a function from X onto f(X), is surjective by definition of image. It is also injective by hypothesis. Hence f : X -> f(X) is a bijection. Therefore X and f(X) have the same cardinality:\n|X| = |f(X)|.\n\nCombining the two facts,\n|X| = |f(X)| <= |Y|,\nso |X| <= |Y|, as required.",
+    "proof_summary": "The image f(X) is a subset of the finite set Y, so |f(X)| <= |Y|. Since f is injective, the induced map X -> f(X) is bijective, hence |X| = |f(X)|. Therefore |X| <= |Y|.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "A subset of a finite set is finite and has cardinality at most that of the whole set.",
+        "An injective map X -> Y is a bijection from X onto its image f(X), so |X| = |f(X)|."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null
+  },
+  "status": "completed",
+  "target_id": "lem_20260323194748_4d6bb641",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-23T19:50:26.783977Z",
+  "worker_job_id": "wrk_lem_20260323194748_4d6bb641_solve_1",
+  "worker_kind": "lemma_solver"
+}

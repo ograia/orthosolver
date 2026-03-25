@@ -1,0 +1,66 @@
+{
+  "active_decomposition_id": "dec_20260317030727_7ba907e6",
+  "artifact_ids": [],
+  "created_at": "2026-03-17T02:50:02.447449Z",
+  "final_decl_name": null,
+  "kind": "theorem",
+  "problem_id": "prob_20260317025002_5d137122",
+  "statement_lean": null,
+  "statement_nl": "Let $\\\\mathbb{N} = \\\\{1,2,3,\\\\dots\\\\}$. Find the largest real constant $r$ such that there exists a function $g\\\\colon \\\\mathbb{N} \\\\to \\\\mathbb{N}$ such that\\n\\\\[\\ng(n+1)-g(n) \\\\geq (g(g(n)))^r\\n\\\\]\\nfor all $n \\\\in \\\\mathbb{N}$.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "N = {1,2,3,...} (natural numbers start at 1)",
+      "g maps into N, so for every n, g(n) is a positive integer (\u22651)",
+      "Exponentiation (g(g(n)))^r is the standard real power of a positive real base (base \u22651)",
+      "Inequality must hold for every n \u2208 N (including n=1)",
+      "Comparison is between integers (left-hand side) and real numbers (right-hand side); conventional ordering on R is used"
+    ],
+    "normalized_claim": "Define S = { r \u2208 R : \u2203 g : N \u2192 N such that \u2200 n \u2208 N, g(n+1) - g(n) \u2265 (g(g(n)))^r }. The problem asks for r_max = sup S and whether this supremum is attained (i.e. \u2203 g for r = r_max). Equivalently: find the largest real r for which there exists at least one function g: N\u2192N satisfying the stated universal inequality.",
+    "quantifier_order": [
+      "Choose r \u2208 R (we seek the largest such r)",
+      "There exists a function g : N \u2192 N (choice of g may depend on r)",
+      "For all n \u2208 N, the inequality g(n+1) - g(n) \u2265 (g(g(n)))^r holds"
+    ],
+    "variables": [
+      {
+        "domain": "{1,2,3,...}",
+        "name": "N",
+        "role": "ambient domain of natural-number indices and function values",
+        "type": "set"
+      },
+      {
+        "domain": "R (all real numbers)",
+        "name": "r",
+        "role": "constant to be maximized (outermost quantifier).",
+        "type": "real"
+      },
+      {
+        "domain": "g: N -> N",
+        "name": "g",
+        "role": "existential witness function depending on r; must satisfy the inequality for all n",
+        "type": "function"
+      },
+      {
+        "domain": "n in N",
+        "name": "n",
+        "role": "universal quantifier ranging over positive integers in the inequality",
+        "type": "integer index"
+      },
+      {
+        "domain": "expr = (g(g(n)))^r, where g(g(n)) \u2208 N (\u22651)",
+        "name": "expr",
+        "role": "right-hand side of the inequality; real-valued because r is real",
+        "type": "real expression"
+      }
+    ],
+    "witness_dependencies": [
+      "The existential witness g is allowed to depend on the chosen r (notation: for a given r, one must produce some g satisfying the universal condition).",
+      "g must be a single function working for all n; there is no per-n choice of different witnesses.",
+      "No constraints on g(1) are given beyond g(1) \u2208 N; g(1) may be chosen as part of the witness.",
+      "The value g(g(n)) which appears on the RHS depends on g and thus indirectly on r."
+    ]
+  },
+  "status": "succeeded",
+  "theorem_id": "thm_root_20260317025002_2660065c",
+  "updated_at": "2026-03-17T02:50:02.447450Z"
+}

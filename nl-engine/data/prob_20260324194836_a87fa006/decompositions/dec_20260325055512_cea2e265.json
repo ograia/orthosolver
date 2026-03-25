@@ -1,0 +1,1104 @@
+{
+  "assembly_plan_id": "asm_20260325055512_01175bd0",
+  "controller_status": "active",
+  "created_at": "2026-03-25T06:00:15.334074Z",
+  "decomposition_id": "dec_20260325055512_cea2e265",
+  "dependency_status": "passed",
+  "equivalence_risk": "none",
+  "failure_origin": null,
+  "failure_reason": null,
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.89,
+  "lean_assembly_status": "skipped",
+  "lemma_ids": [
+    "lem_20260325055512_c22398ed",
+    "lem_20260325055521_7fb399fe",
+    "lem_20260325055533_dbf08e70",
+    "lem_20260325055544_4b539e62",
+    "lem_20260325055554_837eceb4",
+    "lem_20260325055602_aa5fc314",
+    "lem_20260325055611_618c8565"
+  ],
+  "llm_vetting_status": "accepted",
+  "node_id": "lem_20260324204708_474b5c77",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decision": "accepted",
+      "decomposition_id": "dec_20260325041214_70bc1b69",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "rejected_fatal:failed",
+      "failure_origin": "agent3:invalid_agent_output",
+      "fixes_required": [],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Define an explicit recursive family h_n inside the weighted polynomial ring. The decisive input is that polynomiality of Q_{A,B,d}(q) forces the specific quotient S/(h_{A+1},...,h_{A+d}) to be finite-dimensional. Since S is a positively graded polynomial ring of dimension d, any d homogeneous elements with Artinian quotient form a homogeneous regular sequence. Taking f_i=h_{A+i} then gives the required witnesses, and the standard Hilbert-series formula for a regular sequence yields exactly Q_{A,B,d}(q).",
+          "steps": [
+            {
+              "derives": "If d = 0, then the theorem holds: S=Q, Q_{A,B,0}(q)=1, and the empty sequence is a homogeneous regular sequence whose quotient has Hilbert series 1.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "Lemma L5 gives exactly the d=0 case, including the empty sequence and the resulting Hilbert series.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Assume d > 0. For each i in {1,...,d}, the recursively defined element h_{A+i} lies in S and is homogeneous of weighted degree A+i.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Instantiate Lemma L1 with n=A+1, A+2, ..., A+d. Since A >= B >= 0, each A+i is nonnegative, so the lemma applies to every required index.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Assume d > 0. The quotient S/(h_{A+1},...,h_{A+d}) is finite-dimensional over Q.",
+              "is_trivial": true,
+              "step_id": "A3",
+              "trivial_justification": "This is the direct conclusion of Lemma L2 from the standing assumption that Q_{A,B,d}(q) belongs to Q[q].",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. The sequence h_{A+1},...,h_{A+d} is a homogeneous regular sequence in S; equivalently, for each i the image of h_{A+i} in S/(h_{A+1},...,h_{A+i-1}) is not a zero-divisor.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "Step A2 provides homogeneity of the d elements and Step A3 provides finite-dimensionality of the quotient, so Lemma L3 applies directly.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A3"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. Setting f_i := h_{A+i} for i=1,...,d gives homogeneous elements f_1,...,f_d in S with deg(f_i)=A+i, and for each i the image of f_i in S/(f_1,...,f_{i-1}) is not a zero-divisor.",
+              "is_trivial": true,
+              "step_id": "A5",
+              "trivial_justification": "This is immediate from the definition f_i := h_{A+i}, together with the degree information from Step A2 and the regular-sequence conclusion from Step A4.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A2",
+                "A4"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. The quotient by the constructed sequence satisfies Hilb_{S/(f_1,...,f_d)}(q) = prod_{i=1}^d (1-q^(A+i)) / prod_{i=1}^d (1-q^(B+i)) = Q_{A,B,d}(q).",
+              "is_trivial": true,
+              "step_id": "A6",
+              "trivial_justification": "Apply Lemma L4 with variable weights w_i=B+i and relation degrees e_i=A+i, then substitute the definition of Q_{A,B,d}(q).",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            },
+            {
+              "derives": "For integers A, B, d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)), with the empty product equal to 1 when d = 0. Assume Q_{A,B,d}(q) belongs to Q[q]. Let S be the weighted polynomial ring Q[x_1, ..., x_d] graded by deg(x_i) = B+i; when d = 0 interpret S as Q. Then there exist homogeneous polynomials f_1, ..., f_d in S such that deg(f_i) = A+i for every i, and for each i the image of f_i in S/(f_1, ..., f_{i-1}) is not a zero-divisor. Equivalently, Q_{A,B,d}(q) is realized by a homogeneous regular sequence in a weighted polynomial ring with variable weights B+1, ..., B+d and relation degrees A+1, ..., A+d.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "Use Step A1 for the case d=0. For d>0, Step A5 gives the required regular sequence with the exact degrees, and Step A6 gives the stated realization of Q_{A,B,d}(q) as the Hilbert-series quotient associated to that regular sequence.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A5",
+                "A6"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For integers A,B,d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)); when d = 0 the empty product is 1.",
+            "kind": "definition",
+            "label": "Q_{A,B,d}(q)"
+          },
+          {
+            "content": "For integers B,d with B >= 0 and d >= 0, let S_{B,d} := Q[x_1,...,x_d] with weighted grading deg(x_i)=B+i; when d=0, interpret S_{B,0} as Q.",
+            "kind": "definition",
+            "label": "Weighted polynomial ring S_{B,d}"
+          },
+          {
+            "content": "For a positively graded Q-algebra R = direct_sum_{n >= 0} R_n, write Hilb_R(q) := sum_{n >= 0} (dim_Q R_n) q^n.",
+            "kind": "notation",
+            "label": "Hilbert series"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.81,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.24,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "role_in_assembly": "Provides explicit candidate witnesses f_i := h_{A+i} and certifies their degrees.",
+            "self_check_notes": "The ring S, the recursion for h_n, and the grading are all defined inside the lemma statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "B >= 0",
+                "d >= 0",
+                "deg(x_i)=B+i",
+                "h_n=0 for n<0, h_0=1, and h_n=sum_{i=1}^d (-1)^(B+i+1) x_i h_{n-(B+i)} for n>=1"
+              ],
+              "normalized_claim": "For every n >= 0, h_n belongs to S and is homogeneous of weighted degree n.",
+              "quantifier_order": [
+                "B",
+                "d",
+                "S",
+                "h",
+                "n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "B",
+                  "role": "shift determining the weights",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Q[x_1,...,x_d] or Q if d=0",
+                  "name": "S",
+                  "role": "ambient weighted polynomial ring",
+                  "type": "graded ring"
+                },
+                {
+                  "domain": "S",
+                  "name": "h",
+                  "role": "recursively defined coefficient family",
+                  "type": "integer-indexed family of polynomials"
+                },
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "index of one coefficient h_n",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let B,d be integers with B >= 0 and d >= 0. Let S = Q[x_1,...,x_d] with weighted grading deg(x_i)=B+i; when d=0 let S=Q. Define elements h_n in S for all integers n by h_n=0 for n<0, h_0=1, and for n>=1 by h_n := sum_{i=1}^d (-1)^(B+i+1) x_i h_{n-(B+i)}. Then for every integer n>=0, the element h_n is a well-defined polynomial in S and is homogeneous of weighted degree n.",
+            "strictly_easier_reason": "It only constructs and grades an explicit recursive family; it does not assert finite codimension, regularity, or any consequence of the polynomiality assumption."
+          },
+          {
+            "bottleneck_reason": "This is the frontier step of the explicit strategy: one must derive Artinianity of a very specific ideal from the bare assumption that the product Q_{A,B,d}(q) is a polynomial.",
+            "formalization_cost_estimate": 0.92,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L2",
+            "role_in_assembly": "This is the key arithmetic-to-algebra transfer: it shows the explicit h_{A+i} cut the weighted polynomial ring down to dimension zero.",
+            "self_check_notes": "The statement repeats the full recursive definition of h_n and the quotient it studies; nothing is imported from another lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A >= B >= 0",
+                "d >= 0",
+                "deg(x_i)=B+i",
+                "h_n=0 for n<0, h_0=1, and h_n=sum_{i=1}^d (-1)^(B+i+1) x_i h_{n-(B+i)} for n>=1",
+                "Q_{A,B,d}(q) belongs to Q[q]"
+              ],
+              "normalized_claim": "The quotient S/(h_{A+1},...,h_{A+d}) has finite dimension over Q.",
+              "quantifier_order": [
+                "A",
+                "B",
+                "d",
+                "S",
+                "h"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "A",
+                  "role": "shift determining the target relation degrees",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "B",
+                  "role": "shift determining the variable weights",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables and number of relations",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Q[x_1,...,x_d] or Q if d=0",
+                  "name": "S",
+                  "role": "ambient weighted polynomial ring",
+                  "type": "graded ring"
+                },
+                {
+                  "domain": "S",
+                  "name": "h",
+                  "role": "explicit recursive candidates",
+                  "type": "integer-indexed family of homogeneous polynomials"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A,B,d be integers with A >= B >= 0 and d >= 0. Let S = Q[x_1,...,x_d] with weighted grading deg(x_i)=B+i; when d=0 let S=Q. Define elements h_n in S for all integers n by h_n=0 for n<0, h_0=1, and for n>=1 by h_n := sum_{i=1}^d (-1)^(B+i+1) x_i h_{n-(B+i)}. If Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)) belongs to Q[q], then the quotient ring S/(h_{A+1},...,h_{A+d}) is finite-dimensional as a Q-vector space.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.36,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L3",
+            "role_in_assembly": "Converts finite-dimensionality of the quotient into the desired successive non-zero-divisor property.",
+            "self_check_notes": "All symbols are standard or defined locally; the statement does not rely on any theorem-specific notation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d >= 0",
+                "each w_i > 0",
+                "deg(x_i)=w_i",
+                "each g_i is homogeneous",
+                "S/(g_1,...,g_d) is finite-dimensional over k"
+              ],
+              "normalized_claim": "An Artinian quotient of a positively graded polynomial ring by d homogeneous elements forces those d elements to form a homogeneous regular sequence.",
+              "quantifier_order": [
+                "k",
+                "d",
+                "w",
+                "S",
+                "g"
+              ],
+              "variables": [
+                {
+                  "domain": "all fields",
+                  "name": "k",
+                  "role": "coefficient field",
+                  "type": "field"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "integer"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "w",
+                  "role": "positive weights of the variables",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d]",
+                  "name": "S",
+                  "role": "ambient positively graded regular ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "S",
+                  "name": "g",
+                  "role": "candidate generators",
+                  "type": "d-tuple of homogeneous polynomials"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d are homogeneous elements of S and the quotient S/(g_1,...,g_d) is finite-dimensional over k, then for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor. Equivalently, g_1,...,g_d is a homogeneous regular sequence.",
+            "strictly_easier_reason": "This is a general commutative-algebra fact about positively graded polynomial rings and does not use the special arithmetic progression structure of the theorem."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.22,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "role_in_assembly": "Supplies the concluding Hilbert-series identity showing that the constructed regular sequence realizes Q_{A,B,d}(q).",
+            "self_check_notes": "Only standard graded-ring notation is used; all nonstandard symbols are introduced in the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d >= 0",
+                "each w_i > 0",
+                "each e_i > 0",
+                "deg(x_i)=w_i",
+                "deg(g_i)=e_i",
+                "g_1,...,g_d is a homogeneous regular sequence"
+              ],
+              "normalized_claim": "The Hilbert series of a quotient by a homogeneous regular sequence is the ambient Hilbert series multiplied by prod_i (1-q^(e_i)).",
+              "quantifier_order": [
+                "k",
+                "d",
+                "w",
+                "e",
+                "S",
+                "g"
+              ],
+              "variables": [
+                {
+                  "domain": "all fields",
+                  "name": "k",
+                  "role": "coefficient field",
+                  "type": "field"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "integer"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "w",
+                  "role": "weights of the variables",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "e",
+                  "role": "degrees of the regular-sequence elements",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d]",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "S",
+                  "name": "g",
+                  "role": "regular sequence in S",
+                  "type": "d-tuple of homogeneous polynomials"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d is a homogeneous regular sequence in S and deg(g_i)=e_i for each i, then the graded Hilbert series of the quotient is Hilb_{S/(g_1,...,g_d)}(q) = prod_{i=1}^d (1 - q^(e_i)) / prod_{i=1}^d (1 - q^(w_i)).",
+            "strictly_easier_reason": "This is the standard Hilbert-series computation for a homogeneous regular sequence in a weighted polynomial ring."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.03,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L5",
+            "role_in_assembly": "Handles the boundary case d=0 separately so the main argument may assume d>0.",
+            "self_check_notes": "All notation for the d=0 case is explicitly given in the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A >= B >= 0",
+                "d = 0"
+              ],
+              "normalized_claim": "The theorem is immediate in the empty-variable case: S=Q, Q_{A,B,0}(q)=1, and the empty sequence is regular.",
+              "quantifier_order": [
+                "A",
+                "B"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "A",
+                  "role": "upper parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "B",
+                  "role": "lower parameter",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A,B be integers with A >= B >= 0. For d=0 one has Q_{A,B,0}(q)=1, the weighted polynomial ring is S=Q, and the empty sequence of elements of S is a homogeneous regular sequence. Its quotient is S itself, whose Hilbert series is 1.",
+            "strictly_easier_reason": "This is the degenerate empty-product case and requires no nontrivial algebra."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For integers A,B,d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)); when d = 0 the empty product is 1.",
+            "kind": "definition",
+            "label": "Q_{A,B,d}(q)"
+          },
+          {
+            "content": "For integers B,d with B >= 0 and d >= 0, let S_{B,d} := Q[x_1,...,x_d] with weighted grading deg(x_i)=B+i; when d=0, interpret S_{B,0} as Q.",
+            "kind": "definition",
+            "label": "Weighted polynomial ring S_{B,d}"
+          },
+          {
+            "content": "For a positively graded Q-algebra R = direct_sum_{n >= 0} R_n, write Hilb_R(q) := sum_{n >= 0} (dim_Q R_n) q^n.",
+            "kind": "notation",
+            "label": "Hilbert series"
+          }
+        ],
+        "strategy_summary": "Use an explicit symmetric-function-style construction. Define a canonical recursive family h_n in the weighted polynomial ring by inverting the truncated elementary generating function. The hard step is to prove that, under the assumption Q_{A,B,d}(q) in Q[q], the specific ideal (h_{A+1},...,h_{A+d}) has finite codimension. Once that Artinianity is known, standard Cohen-Macaulay facts for weighted polynomial rings imply that h_{A+1},...,h_{A+d} is a homogeneous regular sequence, and the usual Hilbert-series formula gives back Q_{A,B,d}(q)."
+      },
+      "lean_assembly_status": "pending",
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [],
+      "rejection_reason": "Candidate materialization failed before decomposition vetting because agent3 returned invalid_agent_output. Retry the same candidate before replacing the decomposition strategy. Artifact: problems/prob_20260324194836_a87fa006/decomposition_vetter/dec_20260325041214_70bc1b69/agent3_validation_error.json",
+      "strategy_summary": "Use an explicit symmetric-function-style construction. Define a canonical recursive family h_n in the weighted polynomial ring by inverting the truncated elementary generating function. The hard step is to prove that, under the assumption Q_{A,B,d}(q) in Q[q], the specific ideal (h_{A+1},...,h_{A+d}) has finite codimension. Once that Artinianity is known, standard Cohen-Macaulay facts for weighted polynomial rings imply that h_{A+1},...,h_{A+d} is a homogeneous regular sequence, and the usual Hilbert-series formula gives back Q_{A,B,d}(q).",
+      "vet_summary": "The decomposition is logically coherent. All lemmas are plausible on standard algebraic grounds, with L2 correctly isolated as the hard bottleneck rather than disguised as a restatement of the theorem. Assuming the lemmas, the assembly proves the exact root claim, and the steps marked trivial are genuinely direct applications or substitutions."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "accepted",
+      "decomposition_id": "dec_20260325041540_d80c23ec",
+      "disguised_difficulty": [
+        "L3 is the main bottleneck: a broad weighted existence theorem carrying most of the geometric content. This is acceptable because it is explicitly identified as the bottleneck and is not a restatement of the root theorem."
+      ],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "accepted",
+      "fixes_required": [],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Start by translating polynomiality of Q_{A,B,d}(q) into cyclotomic multiplicity inequalities. Upgrade those inequalities to a Hall-type semigroup condition saying that every coordinate subset J sees at least |J| accessible target degrees. Invoke the weighted existence theorem to choose homogeneous equations of degrees A+1,...,A+d whose common zero set is only the origin. By Nullstellensatz the quotient is Artinian, and since the ambient ring is a positively graded polynomial ring of dimension d, those d homogeneous equations form a regular sequence. The standard Hilbert-series formula then gives exactly Q_{A,B,d}(q).",
+          "steps": [
+            {
+              "derives": "If d = 0, then the theorem holds: S=Q, Q_{A,B,0}(q)=1, and the empty sequence is a homogeneous regular sequence whose quotient has Hilbert series 1.",
+              "is_trivial": false,
+              "step_id": "B1",
+              "trivial_justification": "Lemma L7 is exactly the required statement in the empty-variable case.",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Assume d > 0 and Q_{A,B,d}(q) belongs to Q[q]. Then for every positive integer n, the divisibility-count inequality #{ j in {1,...,d} : n divides (B+j) } <= #{ e in {A+1,...,A+d} : n divides e } holds.",
+              "is_trivial": true,
+              "step_id": "B2",
+              "trivial_justification": "This is the forward implication of Lemma L1 applied to the given polynomiality assumption.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Assume d > 0. For every nonempty subset J of {1,...,d}, if Sigma(J) = { sum_{j in J} m_j (B+j) : m_j in Z_{>=0} }, then at least |J| of the integers A+1,...,A+d lie in Sigma(J).",
+              "is_trivial": true,
+              "step_id": "B3",
+              "trivial_justification": "Step B2 supplies exactly the hypotheses of Lemma L2, so Lemma L2 yields the Hall-type semigroup condition for the weights B+1,...,B+d and degrees A+1,...,A+d.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "B2"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. There exist homogeneous polynomials g_1,...,g_d in S=Q[x_1,...,x_d] with deg(g_i)=A+i such that, over an algebraic closure of Q, the common zero locus of g_1,...,g_d in affine d-space is exactly the origin.",
+              "is_trivial": true,
+              "step_id": "B4",
+              "trivial_justification": "Apply Lemma L3 with k=Q, weights w_j=B+j, and target degrees e_i=A+i. The field Q is infinite, and Step B3 verifies the required Hall-type semigroup hypothesis.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "B3"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. The quotient S/(g_1,...,g_d) is finite-dimensional over Q.",
+              "is_trivial": true,
+              "step_id": "B5",
+              "trivial_justification": "This is the direct conclusion of Lemma L4 applied to the homogeneous ideal I=(g_1,...,g_d), using the zero-locus statement from Step B4.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "B4"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. The sequence g_1,...,g_d is a homogeneous regular sequence in S; equivalently, for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor.",
+              "is_trivial": true,
+              "step_id": "B6",
+              "trivial_justification": "Step B4 provides homogeneity of the d elements and Step B5 provides finite-dimensionality of the quotient, so Lemma L5 applies immediately.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "B4",
+                "B5"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. Setting f_i := g_i for i=1,...,d gives homogeneous elements f_1,...,f_d in S with deg(f_i)=A+i, and for each i the image of f_i in S/(f_1,...,f_{i-1}) is not a zero-divisor.",
+              "is_trivial": true,
+              "step_id": "B7",
+              "trivial_justification": "This is a direct renaming of the elements from Steps B4 and B6.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "B4",
+                "B6"
+              ]
+            },
+            {
+              "derives": "Assume d > 0. The quotient by the constructed sequence satisfies Hilb_{S/(f_1,...,f_d)}(q) = prod_{i=1}^d (1-q^(A+i)) / prod_{i=1}^d (1-q^(B+i)) = Q_{A,B,d}(q).",
+              "is_trivial": true,
+              "step_id": "B8",
+              "trivial_justification": "Apply Lemma L6 with weights w_i=B+i and degrees e_i=A+i, then substitute the definition of Q_{A,B,d}(q).",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "B7"
+              ]
+            },
+            {
+              "derives": "For integers A, B, d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)), with the empty product equal to 1 when d = 0. Assume Q_{A,B,d}(q) belongs to Q[q]. Let S be the weighted polynomial ring Q[x_1, ..., x_d] graded by deg(x_i) = B+i; when d = 0 interpret S as Q. Then there exist homogeneous polynomials f_1, ..., f_d in S such that deg(f_i) = A+i for every i, and for each i the image of f_i in S/(f_1, ..., f_{i-1}) is not a zero-divisor. Equivalently, Q_{A,B,d}(q) is realized by a homogeneous regular sequence in a weighted polynomial ring with variable weights B+1, ..., B+d and relation degrees A+1, ..., A+d.",
+              "is_trivial": false,
+              "step_id": "B9",
+              "trivial_justification": "Use Step B1 for d=0. For d>0, Step B7 gives the required regular sequence in the specified degrees, and Step B8 gives the claimed realization of Q_{A,B,d}(q) as the Hilbert-series quotient associated to that regular sequence.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "B1",
+                "B7",
+                "B8"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 1,
+        "context_items": [
+          {
+            "content": "For integers A,B,d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)); when d = 0 the empty product is 1.",
+            "kind": "definition",
+            "label": "Q_{A,B,d}(q)"
+          },
+          {
+            "content": "Write w_j := B+j for j=1,...,d and e_i := A+i for i=1,...,d.",
+            "kind": "definition",
+            "label": "Weights and target degrees"
+          },
+          {
+            "content": "For J subseteq {1,...,d}, define Sigma(J) := {sum_{j in J} m_j w_j : each m_j is a nonnegative integer}. Thus Sigma(J) is the set of weighted degrees occurring in the coordinate subring generated by variables with indices in J.",
+            "kind": "definition",
+            "label": "Numerical semigroup attached to a subset of variables"
+          },
+          {
+            "content": "For a positively graded Q-algebra R = direct_sum_{n >= 0} R_n, write Hilb_R(q) := sum_{n >= 0} (dim_Q R_n) q^n.",
+            "kind": "notation",
+            "label": "Hilbert series"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.88,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.29,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "role_in_assembly": "Extracts a purely arithmetic form of the hypothesis Q_{A,B,d}(q) in Q[q].",
+            "self_check_notes": "The product Q and the counting functions mu_n are both defined inside the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A >= B >= 0",
+                "d >= 0",
+                "Q(q)=prod_{i=1}^d (1-q^(A+i))/(1-q^(B+i))",
+                "mu_n(C,d)=#{ i in {1,...,d} : n divides C+i }"
+              ],
+              "normalized_claim": "Polynomiality of Q is equivalent to nonnegativity of all cyclotomic multiplicity differences, i.e. mu_n(B,d) <= mu_n(A,d) for every n >= 1.",
+              "quantifier_order": [
+                "A",
+                "B",
+                "d",
+                "Q",
+                "n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "A",
+                  "role": "upper shift for numerator degrees",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "B",
+                  "role": "lower shift for denominator degrees",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "length of the product",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Q(q)",
+                  "name": "Q",
+                  "role": "the product under study",
+                  "type": "formal rational expression in q"
+                },
+                {
+                  "domain": "functions of (C,d)",
+                  "name": "mu_n",
+                  "role": "counts multiples of n in a shifted interval",
+                  "type": "integer-valued counting function"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A,B,d be integers with A >= B >= 0 and d >= 0, and define Q(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)), with the empty product equal to 1 if d=0. For each positive integer n define mu_n(C,d) := #{ i in {1,...,d} : n divides C+i }. Then Q(q) belongs to Q[q] if and only if mu_n(B,d) <= mu_n(A,d) for every positive integer n.",
+            "strictly_easier_reason": "It is only an arithmetic characterization of polynomiality and contains no ring-theoretic construction whatsoever."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.77,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "role_in_assembly": "Translates cyclotomic divisibility information into the combinatorial accessibility condition needed on every coordinate stratum.",
+            "self_check_notes": "Weights, the set E, and the semigroup Sigma(J) are fully defined in the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A >= B >= 0",
+                "d >= 0",
+                "w_j=B+j for j=1,...,d",
+                "E={A+1,...,A+d}",
+                "for every n>=1, #{j : n divides w_j} <= #{e in E : n divides e}",
+                "Sigma(J)={sum_{j in J} m_j w_j : m_j in Z_{>=0}}"
+              ],
+              "normalized_claim": "The divisibility inequalities force the Hall-type semigroup condition #(E intersect Sigma(J)) >= |J| for every nonempty J.",
+              "quantifier_order": [
+                "A",
+                "B",
+                "d",
+                "w",
+                "E",
+                "J"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "A",
+                  "role": "upper shift defining E",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "B",
+                  "role": "lower shift defining the weights",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "size of the weight list and target list",
+                  "type": "integer"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "w",
+                  "role": "weights w_j=B+j",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "subsets of Z",
+                  "name": "E",
+                  "role": "target degree set {A+1,...,A+d}",
+                  "type": "finite set of integers"
+                },
+                {
+                  "domain": "P({1,...,d}) -> P(Z_{>=0})",
+                  "name": "Sigma",
+                  "role": "degree semigroup on each coordinate subset",
+                  "type": "set-valued function on subsets"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A,B,d be integers with A >= B >= 0 and d >= 0. For j=1,...,d put w_j := B+j and let E := {A+1,...,A+d}. Assume that for every positive integer n one has #{ j in {1,...,d} : n divides w_j } <= #{ e in E : n divides e }. For each subset J of {1,...,d}, define Sigma(J) := { sum_{j in J} m_j w_j : each m_j is a nonnegative integer }. Then for every nonempty subset J of {1,...,d}, at least |J| elements of E lie in Sigma(J); equivalently, #(E intersect Sigma(J)) >= |J|.",
+            "strictly_easier_reason": "It is a purely numerical semigroup statement; it does not yet produce any forms or any regular sequence."
+          },
+          {
+            "bottleneck_reason": "This is the central geometric realization theorem in the abstract strategy: it turns the semigroup Hall condition into actual homogeneous equations with zero-dimensional intersection.",
+            "formalization_cost_estimate": 0.94,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L3",
+            "role_in_assembly": "Provides the actual degree-prescribed equations once the Hall-type semigroup condition has been verified.",
+            "self_check_notes": "The statement defines the semigroup condition, the ring S, the required degrees, and the geometric conclusion internally.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "k is infinite",
+                "d >= 0",
+                "each w_j > 0",
+                "each e_i > 0",
+                "deg(x_j)=w_j",
+                "Sigma(J)={sum_{j in J} m_j w_j : m_j in Z_{>=0}}",
+                "for every nonempty J, at least |J| of the e_i lie in Sigma(J)"
+              ],
+              "normalized_claim": "The Hall-type semigroup condition implies existence of homogeneous forms of the prescribed degrees whose only common zero is the origin.",
+              "quantifier_order": [
+                "k",
+                "d",
+                "w",
+                "e",
+                "S",
+                "g"
+              ],
+              "variables": [
+                {
+                  "domain": "infinite fields",
+                  "name": "k",
+                  "role": "coefficient field",
+                  "type": "field"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables and equations",
+                  "type": "integer"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "w",
+                  "role": "weights of the variables",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "e",
+                  "role": "prescribed degrees of the desired forms",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d]",
+                  "name": "S",
+                  "role": "ambient weighted polynomial ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "S",
+                  "name": "g",
+                  "role": "desired equations",
+                  "type": "d-tuple of homogeneous polynomials"
+                }
+              ],
+              "witness_dependencies": [
+                "The witnesses g_1,...,g_d depend on the weight tuple w and the target degree tuple e."
+              ]
+            },
+            "statement_nl": "Let k be an infinite field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] with weighted grading deg(x_j)=w_j. Let e_1,...,e_d be positive integers. For each subset J of {1,...,d}, define Sigma(J) := { sum_{j in J} m_j w_j : each m_j is a nonnegative integer }. Assume that for every nonempty subset J of {1,...,d}, at least |J| of the integers e_1,...,e_d belong to Sigma(J). Then there exist homogeneous polynomials g_1,...,g_d in S with deg(g_i)=e_i for each i such that, over an algebraic closure of k, the common zero locus of g_1,...,g_d in affine d-space is exactly the origin.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.21,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "role_in_assembly": "Turns the geometric conclusion of L3 into the finite-dimensional quotient needed for commutative-algebra arguments.",
+            "self_check_notes": "The ring, ideal, grading, and zero-locus hypothesis are all explicitly stated.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d >= 0",
+                "each w_i > 0",
+                "deg(x_i)=w_i",
+                "I is homogeneous",
+                "the affine zero locus of I over an algebraic closure of k equals {(0,...,0)}"
+              ],
+              "normalized_claim": "A homogeneous ideal in a positively graded polynomial ring whose only affine zero is the origin has Artinian quotient.",
+              "quantifier_order": [
+                "k",
+                "d",
+                "w",
+                "S",
+                "I"
+              ],
+              "variables": [
+                {
+                  "domain": "all fields",
+                  "name": "k",
+                  "role": "coefficient field",
+                  "type": "field"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "integer"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "w",
+                  "role": "weights of the variables",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d]",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "ideals of S",
+                  "name": "I",
+                  "role": "ideal whose zero locus is assumed to be only the origin",
+                  "type": "homogeneous ideal"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] with weighted grading deg(x_i)=w_i. Let I be a homogeneous ideal of S. If, over an algebraic closure of k, the common zero locus of I in affine d-space is exactly the origin, then S/I is finite-dimensional as a k-vector space.",
+            "strictly_easier_reason": "This is a standard Nullstellensatz/Artinianity statement independent of the special degrees A+i and weights B+i."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.36,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L5",
+            "role_in_assembly": "Converts Artinianity of the quotient into the successive non-zero-divisor statement required by the theorem.",
+            "self_check_notes": "No outside notation is used; the statement is fully standalone.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d >= 0",
+                "each w_i > 0",
+                "deg(x_i)=w_i",
+                "each g_i is homogeneous",
+                "S/(g_1,...,g_d) is finite-dimensional over k"
+              ],
+              "normalized_claim": "Any d homogeneous elements in a positively graded polynomial ring whose quotient is Artinian form a homogeneous regular sequence.",
+              "quantifier_order": [
+                "k",
+                "d",
+                "w",
+                "S",
+                "g"
+              ],
+              "variables": [
+                {
+                  "domain": "all fields",
+                  "name": "k",
+                  "role": "coefficient field",
+                  "type": "field"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "integer"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "w",
+                  "role": "weights of the variables",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d]",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "S",
+                  "name": "g",
+                  "role": "candidate regular-sequence generators",
+                  "type": "d-tuple of homogeneous polynomials"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d are homogeneous elements of S and S/(g_1,...,g_d) is finite-dimensional over k, then for each i the image of g_i in S/(g_1,...,g_{i-1}) is not a zero-divisor. Equivalently, g_1,...,g_d is a homogeneous regular sequence.",
+            "strictly_easier_reason": "This is a general structural fact about polynomial rings and does not depend on the special form of Q_{A,B,d}(q)."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.22,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L6",
+            "role_in_assembly": "Computes the quotient Hilbert series and identifies it with Q_{A,B,d}(q).",
+            "self_check_notes": "The statement is self-contained and uses only standard graded-ring notation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d >= 0",
+                "each w_i > 0",
+                "each e_i > 0",
+                "deg(x_i)=w_i",
+                "deg(g_i)=e_i",
+                "g_1,...,g_d is a homogeneous regular sequence"
+              ],
+              "normalized_claim": "The quotient by a homogeneous regular sequence has Hilbert series equal to the weighted polynomial-ring series multiplied by prod_i (1-q^(e_i)).",
+              "quantifier_order": [
+                "k",
+                "d",
+                "w",
+                "e",
+                "S",
+                "g"
+              ],
+              "variables": [
+                {
+                  "domain": "all fields",
+                  "name": "k",
+                  "role": "coefficient field",
+                  "type": "field"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "number of variables",
+                  "type": "integer"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "w",
+                  "role": "weights of the variables",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "(Z_{>0})^d",
+                  "name": "e",
+                  "role": "degrees of the regular-sequence elements",
+                  "type": "tuple of integers"
+                },
+                {
+                  "domain": "k[x_1,...,x_d]",
+                  "name": "S",
+                  "role": "ambient ring",
+                  "type": "graded polynomial ring"
+                },
+                {
+                  "domain": "S",
+                  "name": "g",
+                  "role": "homogeneous regular sequence",
+                  "type": "d-tuple of homogeneous polynomials"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] be graded by deg(x_i)=w_i. If g_1,...,g_d is a homogeneous regular sequence in S and deg(g_i)=e_i for each i, then the graded Hilbert series of the quotient is Hilb_{S/(g_1,...,g_d)}(q) = prod_{i=1}^d (1 - q^(e_i)) / prod_{i=1}^d (1 - q^(w_i)).",
+            "strictly_easier_reason": "This is the standard Hilbert-series identity for a complete intersection in a weighted polynomial ring."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.03,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L7",
+            "role_in_assembly": "Separates off the degenerate case d=0.",
+            "self_check_notes": "All data for the d=0 case are spelled out explicitly.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A >= B >= 0",
+                "d = 0"
+              ],
+              "normalized_claim": "The empty-variable case is immediate: Q_{A,B,0}(q)=1 and the empty sequence in S=Q is regular.",
+              "quantifier_order": [
+                "A",
+                "B"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "A",
+                  "role": "upper parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "B",
+                  "role": "lower parameter",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A,B be integers with A >= B >= 0. For d=0 one has Q_{A,B,0}(q)=1, the weighted polynomial ring is S=Q, and the empty sequence of elements of S is a homogeneous regular sequence. Its quotient is S itself, whose Hilbert series is 1.",
+            "strictly_easier_reason": "This is the trivial empty-product case."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For integers A,B,d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)); when d = 0 the empty product is 1.",
+            "kind": "definition",
+            "label": "Q_{A,B,d}(q)"
+          },
+          {
+            "content": "Write w_j := B+j for j=1,...,d and e_i := A+i for i=1,...,d.",
+            "kind": "definition",
+            "label": "Weights and target degrees"
+          },
+          {
+            "content": "For J subseteq {1,...,d}, define Sigma(J) := {sum_{j in J} m_j w_j : each m_j is a nonnegative integer}. Thus Sigma(J) is the set of weighted degrees occurring in the coordinate subring generated by variables with indices in J.",
+            "kind": "definition",
+            "label": "Numerical semigroup attached to a subset of variables"
+          },
+          {
+            "content": "For a positively graded Q-algebra R = direct_sum_{n >= 0} R_n, write Hilb_R(q) := sum_{n >= 0} (dim_Q R_n) q^n.",
+            "kind": "notation",
+            "label": "Hilbert series"
+          }
+        ],
+        "strategy_summary": "Use a two-stage existence theorem. First translate polynomiality of Q_{A,B,d}(q) into divisibility inequalities via cyclotomic factor multiplicities, then into a Hall-type condition on which target degrees are visible on each coordinate subspace of the weighted affine space. Next invoke a weighted complete-intersection realization theorem: if every coordinate stratum sees enough accessible degrees, then one can choose homogeneous forms of the prescribed degrees whose only common zero is the origin. From there, Nullstellensatz gives an Artinian quotient, Cohen-Macaulayness upgrades it to a regular sequence, and the Hilbert-series formula yields Q_{A,B,d}(q)."
+      },
+      "lean_assembly_status": "skipped",
+      "llm_vetting_status": "accepted",
+      "missing_coverage": [],
+      "strategy_summary": "Use a two-stage existence theorem. First translate polynomiality of Q_{A,B,d}(q) into divisibility inequalities via cyclotomic factor multiplicities, then into a Hall-type condition on which target degrees are visible on each coordinate subspace of the weighted affine space. Next invoke a weighted complete-intersection realization theorem: if every coordinate stratum sees enough accessible degrees, then one can choose homogeneous forms of the prescribed degrees whose only common zero is the origin. From there, Nullstellensatz gives an Artinian quotient, Cohen-Macaulayness upgrades it to a regular sequence, and the Hilbert-series formula yields Q_{A,B,d}(q).",
+      "vet_summary": "All seven lemmas are plausible on standard grounds and small-case testing, and the assembly plan does derive the stated theorem cleanly. The only substantial proof risk is the broad weighted existence theorem L3 (with L2 as a nontrivial arithmetic bridge), but this is an explicit bottleneck rather than a disguised restatement of the parent theorem."
+    }
+  ],
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/decompositions/dec_20260325055512_cea2e265.json",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "raw_candidate_artifact_id": "problems/prob_20260324194836_a87fa006/decomposition_candidates/dec_20260325055512_cea2e265/agent2_candidate.json",
+  "shared_context": [
+    {
+      "content": "For integers A,B,d with A >= B >= 0 and d >= 0, define Q_{A,B,d}(q) := prod_{i=1}^d (1 - q^(A+i)) / (1 - q^(B+i)); when d = 0 the empty product is 1.",
+      "kind": "definition",
+      "label": "Q_{A,B,d}(q)"
+    },
+    {
+      "content": "Write w_j := B+j for j=1,...,d and e_i := A+i for i=1,...,d.",
+      "kind": "definition",
+      "label": "Weights and target degrees"
+    },
+    {
+      "content": "For J subseteq {1,...,d}, define Sigma(J) := { sum_{j in J} m_j w_j : each m_j is a nonnegative integer }. Thus Sigma(J) is the set of weighted degrees appearing in the coordinate subring generated by the variables indexed by J.",
+      "kind": "definition",
+      "label": "Semigroup Sigma(J)"
+    },
+    {
+      "content": "For a positively graded Q-algebra R = direct_sum_{n >= 0} R_n, write Hilb_R(q) := sum_{n >= 0} (dim_Q R_n) q^n.",
+      "kind": "notation",
+      "label": "Hilbert series"
+    }
+  ],
+  "strategy_summary": "This candidate differs from that explicit retry by avoiding recursive witnesses altogether and instead using the previously accepted cyclotomic/Hall-condition geometry route, now split into fully standalone arithmetic, geometric, and commutative-algebra lemmas to avoid materialization ambiguity. No missing-coverage or fixes_required items were reported; the only frontier step remains the broad weighted existence theorem, kept explicit as bottleneck L3.",
+  "updated_at": "2026-03-25T06:00:16.598922Z"
+}

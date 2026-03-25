@@ -1,0 +1,126 @@
+{
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260325060015_b66e3aae",
+  "consecutive_fatal_rejections": 1,
+  "consecutive_infrastructure_failures": 0,
+  "created_at": "2026-03-25T05:55:33.028855Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.77,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-25T07:14:42.096299Z",
+  "last_dependency_check_id": "depchk_20260325065507_fc69570e",
+  "last_terminal_worker_result": "agent4:failed",
+  "last_transition_reason": "solver attempt 2 submitted",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260325055521_7fb399fe",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "lem_20260324204708_474b5c77",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/lemmas/lem_20260325055521_7fb399fe.json",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "proof_status": "proof_flawed",
+  "role_in_parent": "Upgrades cyclotomic divisibility information to the Hall-type semigroup condition needed on every coordinate subset.",
+  "routing_status": "retry_solver",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": "2026-03-25T06:00:20.471945Z",
+  "statement_lean": null,
+  "statement_nl": "Let A,B,d be integers with A >= B >= 0 and d >= 0. For j=1,...,d put w_j := B+j and let E := {A+1,...,A+d}. Assume that for every positive integer n, the number of indices j in {1,...,d} for which n divides w_j is at most the number of integers e in E for which n divides e. For each subset J of {1,...,d}, define Sigma(J) := { sum_{j in J} m_j w_j : each m_j is a nonnegative integer }. Then for every nonempty subset J of {1,...,d}, the cardinality of E intersect Sigma(J) is at least |J|.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "A, B, d are integers",
+      "A >= B >= 0",
+      "d >= 0",
+      "j ranges over integers 1 through d when forming w_j",
+      "n is a positive integer",
+      "J is a subset of {1,...,d}",
+      "J is nonempty in the conclusion",
+      "in Sigma(J), each coefficient m_j is a nonnegative integer"
+    ],
+    "normalized_claim": "For all nonempty subsets J of {1,...,d}, there exist at least |J| distinct integers e in E such that each such e is representable as a sum of the form sum over j in J of m_j times w_j, where all m_j are nonnegative integers; equivalently, the set E intersect Sigma(J) has cardinality at least |J|.",
+    "quantifier_order": [
+      "for all integers A,B,d with constraints A >= B >= 0 and d >= 0",
+      "for all positive integers n",
+      "for all subsets J of {1,...,d} with J nonempty"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "A",
+        "role": "global parameter; used to form E = {A+1,...,A+d} and constrained by A >= B",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "B",
+        "role": "global parameter; constrained by B >= 0 and A >= B; used to form w_j = B + j",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "d",
+        "role": "global parameter; constrained by d >= 0; determines index range {1,...,d} and set E",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of integers: 1 to d",
+        "name": "j",
+        "role": "index for the sequence w_j",
+        "type": "integer (index)"
+      },
+      {
+        "domain": "integers",
+        "name": "w_j",
+        "role": "defined quantity B + j for j in 1 to d",
+        "type": "integer"
+      },
+      {
+        "domain": "finite subset of integers",
+        "name": "E",
+        "role": "E = {A+1,...,A+d}",
+        "type": "set of integers"
+      },
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "divisibility test variable in the assumption",
+        "type": "positive integer"
+      },
+      {
+        "domain": "all subsets of {1,...,d}",
+        "name": "J",
+        "role": "subset of indices used to define Sigma(J) and to state the final bound; assumed nonempty in the conclusion",
+        "type": "subset of indices"
+      },
+      {
+        "domain": "integers",
+        "name": "e",
+        "role": "element of E considered in the divisibility inequality and in the intersection E intersect Sigma(J)",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m_j",
+        "role": "coefficients used in defining Sigma(J); indexed only by j in J",
+        "type": "nonnegative integer"
+      }
+    ],
+    "witness_dependencies": [
+      "Membership of an element e in Sigma(J) means there exists a choice of nonnegative integers m_j for each j in J (the witness coefficients depend on both J and e) such that e equals the sum over j in J of m_j times w_j",
+      "The elements e being counted in E intersect Sigma(J) depend on the chosen subset J; in particular the specific representations use only w_j with j in J"
+    ]
+  },
+  "statement_status": "unvetted",
+  "updated_at": "2026-03-25T07:14:42.096299Z"
+}

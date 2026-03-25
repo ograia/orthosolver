@@ -1,0 +1,201 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324013720_8d833c92/vetter_attempt_1",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-24T01:56:55.098356Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T01:56:37.000828Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260324013720_8d833c92",
+    "proof_nl": "Fix an integer m>=2.\n\nWe prove both directions.\n\nForward direction. Let S be a numerical semigroup of multiplicity m. Thus S\\subseteq N_0, 0\\in S, S is closed under addition, N_0\\setminus S is finite, and the least positive element of S is m.\n\nFor each i\\in\\{1,\\dots,m-1\\}, define w_i to be the least element of S congruent to i modulo m. We first justify existence of w_i. Since N_0\\setminus S is finite, there exists some integer N such that every n\\ge N lies in S. Fix i\\in\\{1,\\dots,m-1\\}. Choose q so large that qm+i\\ge N. Then qm+i\\in S and qm+i\\equiv i\\pmod m. Hence the set \\{s\\in S:s\\equiv i\\pmod m\\} is nonempty, so its least element w_i exists.\n\nBy definition w_i\\equiv i\\pmod m, so there is an integer x_i with w_i=mx_i+i.\n\nWe now show x_i is a positive integer. Since w_i\\in S and w_i\\equiv i\\not\\equiv 0\\pmod m, we have w_i\\ne 0. Therefore w_i is a positive element of S. Because m is the multiplicity of S, every positive element of S is at least m, so w_i\\ge m. If x_i\\le 0, then w_i=mx_i+i\\le i<m, contradicting w_i\\ge m. Hence x_i\\ge 1. Therefore each x_i is a positive integer.\n\nNext we prove the stated description of S:\nS = {0} \\cup \\{qm:q\\in N_0\\} \\cup \\{qm+(mx_i+i): q\\in N_0, 1\\le i\\le m-1\\}.\n\nFirst, every element of the right-hand side belongs to S. Indeed, 0\\in S. Also m\\in S, so by closure under addition qm\\in S for every q\\in N_0. And since w_i=mx_i+i\\in S, again by closure qm+w_i\\in S for every q\\in N_0. Thus the right-hand side is contained in S.\n\nConversely, let s\\in S. If s=0, then s is in the right-hand side. If s>0 and s\\equiv 0\\pmod m, write s=qm with q\\in N_0; then s is in the right-hand side. If s\\equiv i\\pmod m for some i\\in\\{1,\\dots,m-1\\}, then by minimality of w_i among elements of S in that residue class we have s\\ge w_i, and since s-w_i is divisible by m we may write s=w_i+qm for some integer q\\ge 0. Hence s=qm+(mx_i+i), so again s lies in the right-hand side. This proves equality.\n\nNow we prove the Kunz inequalities.\n\nTake i,j\\in\\{1,\\dots,m-1\\}.\n\nCase 1: i+j<m. Then w_i+w_j\\in S by closure, and\nw_i+w_j \\equiv i+j \\pmod m.\nSince w_{i+j} is the least element of S congruent to i+j mod m, we get\nw_i+w_j\\ge w_{i+j}.\nSubstituting w_t=mx_t+t gives\n(mx_i+i)+(mx_j+j) \\ge mx_{i+j}+(i+j),\nso\nm(x_i+x_j)\\ge mx_{i+j}.\nBecause m>0, this yields x_i+x_j\\ge x_{i+j}.\n\nCase 2: i+j>m. Then w_i+w_j\\in S and\nw_i+w_j \\equiv i+j-m \\pmod m,\nwith i+j-m\\in\\{1,\\dots,m-1\\}. By minimality of w_{i+j-m},\nw_i+w_j\\ge w_{i+j-m}.\nSubstituting gives\n(mx_i+i)+(mx_j+j) \\ge mx_{i+j-m}+(i+j-m),\nthat is,\nm(x_i+x_j+1)\\ge mx_{i+j-m}.\nHence x_i+x_j+1\\ge x_{i+j-m}.\n\nThis proves all assertions in the forward direction.\n\nConverse direction. Now let x=(x_1,\\dots,x_{m-1}) be any tuple of positive integers satisfying:\n- if i+j<m, then x_i+x_j\\ge x_{i+j};\n- if i+j>m, then x_i+x_j+1\\ge x_{i+j-m};\nfor all i,j\\in\\{1,\\dots,m-1\\}.\n\nDefine\nS_x := {0} \\cup \\{qm:q\\in N_0\\} \\cup \\{qm+(mx_i+i): q\\in N_0,\\ 1\\le i\\le m-1\\}.\nWe must show S_x is a numerical semigroup of multiplicity m.\n\nFirst, S_x\\subseteq N_0 and 0\\in S_x by definition.\n\nSecond, m\\in S_x (take q=1 in \\{qm:q\\in N_0\\}). Also, no positive integer less than m belongs to S_x. Indeed, every nonzero multiple qm of m is at least m, and every element of the third set has the form\nqm+(mx_i+i)=m(q+x_i)+i.\nSince x_i\\ge 1 and q\\ge 0, we have q+x_i\\ge 1, so this number is at least m+i>m. Therefore the least positive element of S_x is m, once we know S_x is a numerical semigroup. In particular, multiplicity m will follow.\n\nThird, N_0\\setminus S_x is finite. For each residue class i\\in\\{1,\\dots,m-1\\}, all numbers congruent to i mod m and at least mx_i+i belong to S_x, because they are exactly the numbers qm+(mx_i+i) with q\\in N_0. Also every multiple of m belongs to S_x. Thus the only possible missing numbers are:\n- no multiples of m are missing;\n- in residue class i, only the finitely many numbers i, m+i, 2m+i, ..., (x_i-1)m+i may be missing.\nHence N_0\\setminus S_x is finite.\n\nIt remains to prove closure under addition. Let a,b\\in S_x. We consider cases.\n\n1. If a=0 or b=0, then a+b is the other summand, so a+b\\in S_x.\n\n2. If both a and b are multiples of m, say a=q_1m and b=q_2m, then a+b=(q_1+q_2)m\\in S_x.\n\n3. If one is a multiple of m and the other is not, say a=q_1m and b=q_2m+(mx_i+i) for some i, then\na+b=(q_1+q_2)m+(mx_i+i)\\in S_x.\nThe same argument applies with a and b interchanged.\n\n4. Suppose both are of the third type:\na=q_1m+(mx_i+i),\\qquad b=q_2m+(mx_j+j)\nfor some i,j\\in\\{1,\\dots,m-1\\} and q_1,q_2\\in N_0.\nThen\na+b=(q_1+q_2)m + (mx_i+i)+(mx_j+j).\nWe split according to i+j.\n\n4a. If i+j<m, then by the inequality x_i+x_j\\ge x_{i+j}. Hence there exists an integer\nr:=x_i+x_j-x_{i+j}\\ge 0.\nNow\n(mx_i+i)+(mx_j+j)=m(x_i+x_j)+(i+j)=mr+(mx_{i+j}+(i+j)).\nTherefore\na+b=(q_1+q_2+r)m + (mx_{i+j}+(i+j)) \\in S_x.\n\n4b. If i+j=m, then\n(mx_i+i)+(mx_j+j)=m(x_i+x_j+1),\nso\na+b=(q_1+q_2+x_i+x_j+1)m\\in S_x.\n\n4c. If i+j>m, then by the inequality x_i+x_j+1\\ge x_{i+j-m}. Hence\nr:=x_i+x_j+1-x_{i+j-m}\\ge 0.\nAlso\n(mx_i+i)+(mx_j+j)=m(x_i+x_j)+i+j = mr + (mx_{i+j-m}+(i+j-m)).\nIndeed, since i+j=(i+j-m)+m,\nm(x_i+x_j)+i+j = m(x_i+x_j+1)+(i+j-m)\n= mr + (mx_{i+j-m}+(i+j-m)).\nThus\na+b=(q_1+q_2+r)m + (mx_{i+j-m}+(i+j-m)) \\in S_x.\n\nIn all cases a+b\\in S_x, so S_x is closed under addition.\n\nWe have shown that S_x is a subset of N_0 containing 0, closed under addition, and with finite complement in N_0. Therefore S_x is a numerical semigroup. Since m\\in S_x and no positive integer less than m belongs to S_x, its multiplicity is exactly m.\n\nThis proves the converse.\n\nTherefore, for every integer m\\ge 2, the numerical semigroups of multiplicity m are exactly those obtained from positive integer tuples (x_1,\\dots,x_{m-1}) satisfying the stated Kunz inequalities, via the displayed formula, and for a given numerical semigroup the associated coordinates satisfy all the asserted properties.",
+    "role_in_assembly": "Provides the exact combinatorial model of multiplicity-m numerical semigroups by Kunz-coordinate tuples, with all closure conditions fully inlined.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m >= 2",
+        "S is a numerical semigroup (subset of N0, contains 0, closed under addition, has finite complement in N0)",
+        "S has multiplicity m: equivalently the least positive element of S equals m",
+        "w_i exists for each i in {1,...,m-1}: S contains some element congruent to i mod m (true for numerical semigroups of multiplicity m)",
+        "w_i is defined as the least element of S with w_i \u2261 i (mod m)",
+        "w_i is written in the form w_i = m x_i + i; this enforces x_i \u2208 Z a priori",
+        "In the forward direction: each x_i \u2208 Z is forced to be a positive integer",
+        "In the Kunz inequalities, indices i,j range over {1,...,m-1}",
+        "In the inequality conditions: the subcases use i+j < m, i+j > m (with the missing/handled case i+j = m)",
+        "In the definition of S and S_x, q ranges over N0 and i ranges over {1,...,m-1}"
+      ],
+      "normalized_claim": "For fixed m \u2265 2: (1) If S is a numerical semigroup with multiplicity m and for each i\u2208{1,...,m-1} one defines w_i as the least element of S congruent to i mod m and writes w_i = m x_i + i, then (a) all x_i are positive integers, (b) S equals {0} \u222a {q m : q\u2208N0} \u222a {q m + (m x_i + i) : q\u2208N0, 1\u2264i\u2264m-1}, and (c) for all i,j\u2208{1,...,m-1}: if i+j<m then x_i+x_j\u2265x_{i+j}, and if i+j>m then x_i+x_j+1\u2265x_{i+j-m}. (2) Conversely, if x=(x_1,...,x_{m-1}) is any tuple of positive integers satisfying those same Kunz inequalities, and S_x is defined by the same union formula with x_i in place of the forward-defined coordinates, then S_x is a numerical semigroup and has multiplicity m.",
+      "quantifier_order": [
+        "Let m be an integer with m >= 2 (universal over allowed m as a parameter)",
+        "For each i in {1,2,...,m-1}, define w_i as the least element of S congruent to i modulo m",
+        "Then (for the given S) each x_i is a positive integer",
+        "Then (for the given S) S is exactly the specified union",
+        "For all i,j in {1,...,m-1} with condition i + j < m: x_i + x_j >= x_{i+j}",
+        "For all i,j in {1,...,m-1} with condition i + j > m: x_i + x_j + 1 >= x_{i+j-m}",
+        "Conversely: For any tuple x = (x_1,...,x_{m-1}) of positive integers satisfying those inequalities",
+        "Define S_x by the specified union",
+        "Then S_x is a numerical semigroup of multiplicity m"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "fixed parameter (multiplicity)",
+          "type": "integer"
+        },
+        {
+          "domain": "subsets of N0",
+          "name": "S",
+          "role": "numerical semigroup of multiplicity m",
+          "type": "set"
+        },
+        {
+          "domain": "{1,2,...,m-1}",
+          "name": "i",
+          "role": "Ap\u00e9ry residue class index",
+          "type": "integer"
+        },
+        {
+          "domain": "{1,2,...,m-1}",
+          "name": "j",
+          "role": "Ap\u00e9ry residue class index for Kunz inequalities",
+          "type": "integer"
+        },
+        {
+          "domain": "S",
+          "name": "w_i",
+          "role": "least element of S congruent to i (mod m)",
+          "type": "integer"
+        },
+        {
+          "domain": "Z initially, then proved positive integer",
+          "name": "x_i",
+          "role": "quotient in decomposition w_i = m x_i + i",
+          "type": "integer"
+        },
+        {
+          "domain": "(Z)^{m-1} with positivity required in the converse",
+          "name": "x",
+          "role": "Kunz coordinate tuple (x_1,...,x_{m-1})",
+          "type": "tuple"
+        },
+        {
+          "domain": "N0",
+          "name": "q",
+          "role": "nonnegative multiplier for generating elements in S (and S_x)",
+          "type": "integer"
+        },
+        {
+          "domain": "subsets of N0 defined from x",
+          "name": "S_x",
+          "role": "numerical semigroup candidate constructed from Kunz coordinates",
+          "type": "set"
+        }
+      ],
+      "witness_dependencies": [
+        "w_i depends on S and on i via: w_i = min{ s \u2208 S : s \u2261 i (mod m) }",
+        "x_i depends on w_i (hence on S and i) via: x_i = (w_i - i)/m",
+        "The set-expression for S depends on m and on the entire tuple (x_1,...,x_{m-1}) constructed from S",
+        "In the converse, the constructed semigroup S_x depends on the chosen tuple x and on m via the given union formula",
+        "The verification that S_x has multiplicity m depends on the positivity of all x_i and the Kunz inequalities"
+      ]
+    },
+    "statement_nl": "Let m be an integer with m >= 2. For a numerical semigroup S of multiplicity m, define for each i in {1,2,...,m-1} the Ap\u00e9ry representative w_i to be the least element of S congruent to i modulo m, and write w_i = m x_i + i with x_i an integer. Then each x_i is a positive integer, the set S is exactly {0} union {q m : q in N0} union {q m + (m x_i + i) : q in N0 and 1 <= i <= m-1}, and the tuple x = (x_1,...,x_{m-1}) satisfies the Kunz inequalities: for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}. Conversely, if x = (x_1,...,x_{m-1}) is any tuple of positive integers satisfying those same Kunz inequalities, and S_x is defined by S_x = {0} union {q m : q in N0} union {q m + (m x_i + i) : q in N0 and 1 <= i <= m-1}, then S_x is a numerical semigroup of multiplicity m."
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.97,
+    "detailed_findings": [
+      {
+        "finding": "Existence of each w_i is justified from finiteness of the complement, by showing every sufficiently large number in the residue class i mod m lies in S.",
+        "location": "Forward direction, definition/existence of w_i",
+        "severity": "low"
+      },
+      {
+        "finding": "The argument that x_i is positive is correct: w_i is a positive element of S not congruent to 0 mod m, hence at least m, and x_i <= 0 would force w_i < m.",
+        "location": "Forward direction, positivity of x_i",
+        "severity": "low"
+      },
+      {
+        "finding": "The representation of every s in S as either 0, a multiple of m, or w_i plus a nonnegative multiple of m is complete and uses minimality of w_i appropriately.",
+        "location": "Forward direction, equality description of S",
+        "severity": "low"
+      },
+      {
+        "finding": "Both Kunz inequalities are derived correctly from closure and minimality of the appropriate Ap\u00e9ry representative; the omission of the i+j=m case is consistent with the statement.",
+        "location": "Forward direction, Kunz inequalities",
+        "severity": "low"
+      },
+      {
+        "finding": "In the converse direction, finite complement and multiplicity m are established correctly from positivity of the x_i and the explicit residue-class description.",
+        "location": "Converse direction, finite complement and multiplicity",
+        "severity": "low"
+      },
+      {
+        "finding": "Closure under addition for S_x is handled by a full and correct case split, including the necessary special case i+j=m.",
+        "location": "Converse direction, closure proof",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "lemma_id": "lem_20260324013720_8d833c92",
+    "proof_status": "complete",
+    "reason": "The proof correctly establishes both directions of the Kunz-coordinate characterization at multiplicity m. In the forward direction it proves existence/minimality of each Ap\u00e9ry representative w_i, derives positivity of x_i, proves the exact decomposition of S by residue classes mod m, and derives the two stated Kunz inequalities from minimality of the corresponding Ap\u00e9ry representatives. In the converse direction it defines S_x, proves finite complement, verifies closure under addition by a complete residue-class case split (including the i+j=m case needed for closure), and checks that no positive element below m lies in S_x while m does, yielding multiplicity m. The proof matches the semantic sketch with no substantive omissions or drift.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed"
+  },
+  "status": "completed",
+  "target_id": "lem_20260324013720_8d833c92",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T01:56:55.098378Z",
+  "worker_job_id": "wrk_lem_20260324013720_8d833c92_vet_1",
+  "worker_kind": "lemma_vetter"
+}

@@ -1,0 +1,108 @@
+{
+  "created_at": "2026-03-24T21:16:35.845825Z",
+  "graph_node_id": "pnode_20260324211635_1c5c8a54",
+  "metadata": {
+    "parent_id": "thm_root_20260324190254_d5d5b561"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "3e709837ca81c8eb201993998b98947b821d0a03e06e03ab4b3e7c146c75f29b",
+  "owner_id": "lem_20260324211158_88623b69",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260324211635_ead9f040",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "Lambda ranges over numerical semigroups (cofinite additive submonoids of \u2124_{\u22650} containing 0)",
+      "genus(\u039b)=h means: genus(\u039b) is the number of nonnegative integers not in \u039b (so this count is finite by cofiniteness)",
+      "F(Lambda) is the largest integer not in \u039b; if \u039b=\u2124_{\u22650} then F(Lambda) is defined to be -1",
+      "minimal generator x of \u039b requires: x \u2208 \u039b \u2229 \u2124_{>0} and (not exists a,b \u2208 \u039b \u2229 \u2124_{>0} such that x=a+b)",
+      "effective generator requires: x is a minimal generator and x>F(\u039b)",
+      "e(\u039b) is the cardinality of the set of effective generators of \u039b, hence e(\u039b) \u2208 \u2124_{\u22650}",
+      "n_h(r) counts genus-h numerical semigroups \u039b with e(\u039b)=r, so n_h(r) is defined only for r \u2208 \u2124_{\u22650}",
+      "All displayed sums are finite (explicit assumption in the statement)"
+    ],
+    "normalized_claim": "For every h \u2208 \u2124_{\u22650}, with N(k) the number of numerical semigroups of genus k and n_h(r) = #{\u039b : genus(\u039b)=h and e(\u039b)=r} for r \u2208 \u2124_{\u22650}, we have the identities (both sums finite): N(h+1) = \u03a3_{\u039b : genus(\u039b)=h} e(\u039b) = \u03a3_{r=0}^{\u221e} r \u00b7 n_h(r).",
+    "quantifier_order": [
+      "Fix h \u2208 \u2124_{\u22650}",
+      "For all r \u2208 \u2124_{\u22650}, define n_h(r) as a count",
+      "Claim: N(h+1) = \u03a3_{\u039b : genus(\u039b)=h} e(\u039b)",
+      "Equivalent claim: N(h+1) = \u03a3_{r\u2208\u2124_{\u22650}} r \u00b7 n_h(r)"
+    ],
+    "variables": [
+      {
+        "domain": "nonnegative integers (\u2124_{\u22650})",
+        "name": "h",
+        "role": "fixed parameter (genus level)",
+        "type": "integer"
+      },
+      {
+        "domain": "implicitly nonnegative integers (genus values)",
+        "name": "k",
+        "role": "genus index for N(k)",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers (\u2124_{\u22650})",
+        "name": "r",
+        "role": "target value of e(Lambda) used to stratify genus-h semigroups",
+        "type": "integer"
+      },
+      {
+        "domain": "cofinite additive submonoid of \u2124_{\u22650} containing 0",
+        "name": "Lambda",
+        "role": "object being counted/summed over",
+        "type": "numerical semigroup"
+      },
+      {
+        "domain": "positive integers (\u2124_{>0})",
+        "name": "x",
+        "role": "candidate generator of Lambda",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers (\u2124_{>0})",
+        "name": "a",
+        "role": "used in (non)decomposability condition for minimal generators",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers (\u2124_{>0})",
+        "name": "b",
+        "role": "used in (non)decomposability condition for minimal generators",
+        "type": "integer"
+      },
+      {
+        "domain": "integers, with value in { -1 } \u222a \u2124_{\u22650} depending on Lambda",
+        "name": "F(Lambda)",
+        "role": "Frobenius number (largest integer not in Lambda, or -1 in the full-set case)",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers (count of effective generators)",
+        "name": "e(Lambda)",
+        "role": "number of effective generators of Lambda",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "N(k)",
+        "role": "number of numerical semigroups of genus k",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n_h(r)",
+        "role": "number of genus-h numerical semigroups with exactly r effective generators",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "For any \u039b, the value F(\u039b) depends on \u039b (largest gap, with special-case value -1 if \u039b=\u2124_{\u22650})",
+      "For any \u039b, effective generators are determined by minimal generators x of \u039b together with the threshold inequality x>F(\u039b)",
+      "When asserting that x is a minimal generator of \u039b, the decomposition witnesses (a,b) are constrained to lie in \u039b \u2229 \u2124_{>0} and must satisfy x=a+b; minimality asserts no such witnesses exist",
+      "The count e(\u039b) depends on the set of effective generators of \u039b, hence on both \u039b and F(\u039b)"
+    ]
+  },
+  "statement_nl": "Let h be a nonnegative integer. A numerical semigroup is a cofinite additive submonoid of the nonnegative integers containing 0, and its genus is the number of nonnegative integers not belonging to it. For a numerical semigroup Lambda, let F(Lambda) be the largest integer not in Lambda, with the convention F(Lambda) = -1 for the whole set of nonnegative integers. A minimal generator of Lambda is a positive element x of Lambda that cannot be written as a+b with positive a,b in Lambda. An effective generator of Lambda is a minimal generator x satisfying x > F(Lambda). Let e(Lambda) be the number of effective generators of Lambda. Let N(k) be the number of numerical semigroups of genus k. For each integer r >= 0, let n_h(r) be the number of genus-h numerical semigroups Lambda with e(Lambda) = r. Then N(h+1) is equal to the sum, over all genus-h numerical semigroups Lambda, of e(Lambda). Equivalently, N(h+1) is equal to the sum, over all integers r >= 0, of r * n_h(r). All displayed sums are finite.",
+  "updated_at": "2026-03-24T21:16:35.845825Z"
+}

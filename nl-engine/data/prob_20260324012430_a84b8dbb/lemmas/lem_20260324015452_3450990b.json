@@ -1,0 +1,83 @@
+{
+  "assembly_step_ids": [],
+  "consecutive_fatal_rejections": 0,
+  "created_at": "2026-03-24T01:55:00.190589Z",
+  "decomposition_count": 0,
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.18,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer m>=2 and a tuple x=(x_1,\u2026,x_{m-1}) with each x_r>0. Define\nS_x:=\\{km:k\\in \\mathbb Z_{\\ge 0}\\}\\cup \\bigcup_{t=1}^{m-1}\\{qm+t:q\\in \\mathbb Z_{\\ge 0},\\ q\\ge x_t\\}.\nWe must show that for each fixed r\\in\\{1,\\dots,m-1\\}, the least positive integer q such that qm+r\\in S_x is exactly x_r.\n\nSo fix r\\in\\{1,\\dots,m-1\\}. First, since x_r is a positive integer, it is in particular a nonnegative integer and satisfies x_r\\ge x_r. Therefore, by the defining clause of S_x corresponding to the same residue class r, the integer x_r m+r belongs to S_x. Hence the set\nA_r:=\\{q\\in \\mathbb Z_{>0}: qm+r\\in S_x\\}\nis nonempty, and x_r\\in A_r.\n\nIt remains to show that no positive integer q<x_r belongs to A_r. Let q\\in \\mathbb Z_{>0} and assume qm+r\\in S_x. By the definition of S_x, membership can occur in one of the following ways.\n\n1. It could be that qm+r is a nonnegative multiple of m, say qm+r=km for some k\\in \\mathbb Z_{\\ge 0}. Then r=(k-q)m. But 1\\le r\\le m-1, while the right-hand side is divisible by m. This is impossible.\n\n2. Otherwise, there exists some t\\in\\{1,\\dots,m-1\\} such that qm+r is in the t-th union component, so\nqm+r=q' m+t\nfor some q'\\in \\mathbb Z_{\\ge 0} with q'\\ge x_t.\nRearranging gives\n(q-q')m=t-r.\nNow t-r satisfies -(m-2)\\le t-r\\le m-2, and in particular |t-r|<m. Since the left-hand side is divisible by m, t-r must also be divisible by m. The only multiple of m with absolute value strictly less than m is 0, so t-r=0. Hence t=r. Then (q-q')m=0, so q=q'. Because q'\\ge x_r, we obtain q\\ge x_r.\n\nThus every positive integer q with qm+r\\in S_x satisfies q\\ge x_r. Combined with the earlier observation that x_r m+r\\in S_x, this shows that x_r is the smallest positive integer q for which qm+r\\in S_x.\n\nSince r was arbitrary, the conclusion holds for every r\\in\\{1,\\dots,m-1\\}. Therefore, for each such r, the least positive integer q with qm+r\\in S_x is exactly x_r.",
+  "latest_vetter_report_id": "rep_20260324015709_2e096439",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260324015452_3450990b",
+  "minor_rejection_count": 0,
+  "parent_id": "lem_20260324013747_af6fcf4d",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides one side of the inverse relationship, namely Phi(Psi(x)) = x.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Fix an integer m >= 2 and a tuple x=(x_1,...,x_{m-1}) of positive integers. Define S_x to be the set consisting of all nonnegative multiples of m and, for each r in {1,...,m-1}, all integers q m + r where q is a nonnegative integer and q >= x_r. Then for each r in {1,...,m-1}, the least positive integer q such that q m + r belongs to S_x is exactly x_r.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m \u2265 2",
+      "x_r is a positive integer for each r \u2208 {1,...,m-1}",
+      "r ranges over the finite set {1,2,...,m-1}",
+      "S_x includes all integers of the form k*m with k \u2208 Z_{>=0} (so 0 is included in S_x)",
+      "For each r \u2208 {1,...,m-1}, S_x additionally includes all integers of the form q*m + r with q \u2208 Z_{>=0} and q \u2265 x_r",
+      "In the conclusion, q is required to be a positive integer (q \u2208 Z_{>0})"
+    ],
+    "normalized_claim": "For fixed m \u2265 2 and fixed tuple x=(x_1,...,x_{m-1}) with each x_r \u2208 Z_{>0}, define S_x := {k*m : k \u2208 Z_{>=0}} \u222a \u22c3_{r=1}^{m-1} {q*m + r : q \u2208 Z_{>=0}, q \u2265 x_r}. Then for every r \u2208 {1,...,m-1}: (i) x_r*m + r \u2208 S_x, and (ii) for all q \u2208 Z_{>0}, if q*m + r \u2208 S_x then q \u2265 x_r; hence the least positive integer q with q*m + r \u2208 S_x is exactly x_r.",
+    "quantifier_order": [
+      "Fix m \u2208 Z with m \u2265 2",
+      "Fix x_1,...,x_{m-1} \u2208 Z_{>0}",
+      "For each r \u2208 {1,...,m-1}",
+      "Let q be the least element of { q \u2208 Z_{>0} : q*m + r \u2208 S_x }"
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "fixed parameter with constraint m >= 2",
+        "type": "integer"
+      },
+      {
+        "domain": "(Z_{>0})^{m-1}",
+        "name": "x",
+        "role": "fixed parameter vector x=(x_1,...,x_{m-1}) of positive integers",
+        "type": "tuple"
+      },
+      {
+        "domain": "{1,2,...,m-1}",
+        "name": "r",
+        "role": "residue class index",
+        "type": "integer"
+      },
+      {
+        "domain": "Z_{>0} (when minimized), and Z_{>=0} in the definition of S_x",
+        "name": "q",
+        "role": "multiplier used in the expression q*m + r; minimized in the claim",
+        "type": "integer"
+      },
+      {
+        "domain": "P(Z)",
+        "name": "S_x",
+        "role": "subset of integers defined in terms of m and x",
+        "type": "set"
+      }
+    ],
+    "witness_dependencies": [
+      "The minimizing q depends on the chosen r (the claim is per-r) and on the parameters (m,x) via the condition q \u2265 x_r in the definition of S_x",
+      "The value that q is asserted to equal, x_r, is the coordinate of the fixed tuple x corresponding to the same residue index r"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-24T01:55:00.190594Z"
+}

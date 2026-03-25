@@ -1,0 +1,19 @@
+name: Deploy VM
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vm
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, x64, nl-engine-dev]
+
+    steps:
+      - name: Deploy on VM
+        run: sudo /usr/local/bin/deploy-nl-engine.sh

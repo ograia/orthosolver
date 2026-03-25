@@ -1,0 +1,97 @@
+{
+  "created_at": "2026-03-24T20:53:04.334470Z",
+  "graph_node_id": "pnode_20260324205304_75c3de09",
+  "metadata": {
+    "parent_id": "thm_root_20260324194836_7ca60a42"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "c9fea1acc514236220e377adcb2993974bc4b2078ae0bb3ede85245ece3ca2c3",
+  "owner_id": "lem_20260324204732_43996e0f",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d is a nonnegative integer",
+      "If d=0, then S is interpreted as Q and the empty product equals 1",
+      "For i=1,...,d: w_i and e_i are positive integers (so no weight/degree is 0 or negative)",
+      "S is a graded polynomial ring with weights: deg(x_i)=w_i and induced grading on S",
+      "Each f_i is homogeneous and has graded degree exactly e_i",
+      "For each i, f_i modulo (f_1,...,f_{i-1}) is a non-zero-divisor in the quotient ring S/(f_1,...,f_{i-1})",
+      "Hilbert series is defined for graded Q-vector spaces M=\u2295_{m\u22650} M_m with each M_m finite-dimensional",
+      "The stated identity is in the ring of formal power series Q[[q]]"
+    ],
+    "normalized_claim": "Given weighted grading deg(x_i)=w_i on S=Q[x_1,...,x_d] (or S=Q if d=0), and homogeneous elements f_i\ntogether with deg(f_i)=e_i (w_i,e_i>0) such that for each i the class of f_i in S/(f_1,...,f_{i-1}) is a non-zero-divisor, then the Hilbert series of the graded quotient M:=S/(f_1,...,f_d) satisfies, as an identity of formal power series in Q[[q]],\nHilb_{S/(f_1,...,f_d)}(q)=\\prod_{i=1}^d \\frac{1-q^{e_i}}{1-q^{w_i}}, with the convention that if d=0 the product is 1.",
+    "quantifier_order": [
+      "\u2200 d \u2208 Z_{\u22650}",
+      "\u2200 (w_i)_{1\u2264i\u2264d} with w_i \u2208 Z_{>0}",
+      "\u2200 (e_i)_{1\u2264i\u2264d} with e_i \u2208 Z_{>0}",
+      "Define S := Q[x_1,...,x_d] graded by deg(x_i)=w_i (or S:=Q if d=0)",
+      "\u2200 (f_i)_{1\u2264i\u2264d} with f_i \u2208 S homogeneous and deg(f_i)=e_i",
+      "Assumption: for each i=1,...,d, the image of f_i in S/(f_1,...,f_{i-1}) is not a zero-divisor",
+      "Then equality holds for M := S/(f_1,...,f_d) as an identity in Q[[q]]"
+    ],
+    "variables": [
+      {
+        "domain": "Z_{\u22650}",
+        "name": "d",
+        "role": "number of variables / length of sequence",
+        "type": "integer"
+      },
+      {
+        "domain": "Z_{>0} for each i (1 \u2264 i \u2264 d)",
+        "name": "w_i",
+        "role": "weight of x_i in the grading of S",
+        "type": "integer"
+      },
+      {
+        "domain": "Z_{>0} for each i (1 \u2264 i \u2264 d)",
+        "name": "e_i",
+        "role": "degree of f_i in the grading",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomial variables present when d>0 (1 \u2264 i \u2264 d)",
+        "name": "x_i",
+        "role": "generators of the graded polynomial ring",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "S := Q[x_1,...,x_d] if d>0; S := Q if d=0",
+        "name": "S",
+        "role": "ambient graded polynomial ring",
+        "type": "graded ring"
+      },
+      {
+        "domain": "f_i \u2208 S homogeneous with deg(f_i)=e_i (1 \u2264 i \u2264 d)",
+        "name": "f_i",
+        "role": "sequence elements used to form the quotient",
+        "type": "element of S"
+      },
+      {
+        "domain": "power series ring Q[[q]]",
+        "name": "q",
+        "role": "argument of Hilbert series",
+        "type": "formal variable"
+      },
+      {
+        "domain": "finite-dimensional Q-vector spaces for each m \u2265 0",
+        "name": "M_m",
+        "role": "graded components of a graded Q-vector space M",
+        "type": "Q-vector space"
+      },
+      {
+        "domain": "M = \u2295_{m\u22650} M_m with each M_m finite-dimensional",
+        "name": "M",
+        "role": "object whose Hilbert series is computed (later specialized to S/(f_1,...,f_d))",
+        "type": "graded Q-vector space"
+      }
+    ],
+    "witness_dependencies": [
+      "The non-zero-divisor condition for f_i depends on the previously chosen elements f_1,...,f_{i-1} via the quotient S/(f_1,...,f_{i-1})",
+      "The quotient defining M (namely S/(f_1,...,f_d)) depends on the entire sequence (f_1,...,f_d)"
+    ]
+  },
+  "statement_nl": "Let d be a nonnegative integer, let w_1, ..., w_d and e_1, ..., e_d be positive integers, and let S := Q[x_1, ..., x_d] be graded by deg(x_i) = w_i; when d = 0 interpret S as Q. Let f_1, ..., f_d be homogeneous elements of S with deg(f_i) = e_i, and assume that for each i the image of f_i in S/(f_1, ..., f_{i-1}) is not a zero-divisor. For a graded Q-vector space M = direct sum_{m >= 0} M_m with each M_m finite-dimensional, define Hilb_M(q) := sum_{m >= 0} (dim_Q M_m) q^m. Then Hilb_{S/(f_1, ..., f_d)}(q) = prod_{i=1}^d (1 - q^(e_i)) / (1 - q^(w_i)) as an identity in Q[[q]], with the empty product equal to 1 if d = 0.",
+  "updated_at": "2026-03-24T20:53:04.334471Z"
+}

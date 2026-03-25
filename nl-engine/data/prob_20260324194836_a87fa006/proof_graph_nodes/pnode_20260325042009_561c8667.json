@@ -1,0 +1,102 @@
+{
+  "created_at": "2026-03-25T04:20:09.691515Z",
+  "graph_node_id": "pnode_20260325042009_561c8667",
+  "metadata": {
+    "parent_id": "lem_20260324204708_474b5c77"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "cc1f4c167d0771d6273aaf1b546f152b8aaeb93934b2a78d6c84b514ee6721f4",
+  "owner_id": "lem_20260325041547_6ddfd09b",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "A, B, d are integers",
+      "A >= B and B >= 0",
+      "d >= 0",
+      "w_j is defined only for indices j with 1 <= j <= d",
+      "E is defined as the set of integers A + 1 through A + d (so it has size d)",
+      "n ranges over positive integers",
+      "J ranges over subsets of {1,...,d}",
+      "Sigma(J) uses coefficients m_j that are nonnegative integers for each j in J",
+      "the conclusion applies only to nonempty J"
+    ],
+    "normalized_claim": "For all integers A,B,d with A >= B >= 0 and d >= 0, define w_j = B + j for j = 1,...,d and E = {A + 1,...,A + d}. Assume that for every positive integer n, the number of indices j in {1,...,d} with n dividing w_j is at most the number of elements e in E with n dividing e. Then for every nonempty subset J of {1,...,d}, the cardinality of the intersection of E with Sigma(J) is at least the cardinality of J.",
+    "quantifier_order": [
+      "for all integers A,B,d such that A >= B and B >= 0 and d >= 0",
+      "for all integers j with 1 <= j <= d (definition of w_j)",
+      "for all positive integers n (hypothesis on divisibility counts)",
+      "for all subsets J of {1,...,d} (definition of Sigma(J))",
+      "for all subsets J of {1,...,d} with J nonempty (conclusion)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "A",
+        "role": "parameter defining the set E",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "B",
+        "role": "parameter defining the sequence w_j",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "d",
+        "role": "length parameter for indices j and the set E",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= j <= d",
+        "name": "j",
+        "role": "index for defining w_j and for subsets J",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "w_j",
+        "role": "value B + j used in divisibility counts and in Sigma(J)",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of integers",
+        "name": "E",
+        "role": "finite target set {A+1,...,A+d}",
+        "type": "set of integers"
+      },
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "divisibility test parameter in the hypothesis",
+        "type": "positive integer"
+      },
+      {
+        "domain": "subsets of the index set {1,...,d}",
+        "name": "J",
+        "role": "index subset used to define Sigma(J)",
+        "type": "subset of integers"
+      },
+      {
+        "domain": "subset of integers",
+        "name": "Sigma(J)",
+        "role": "all nonnegative integer linear combinations of {w_j : j in J}",
+        "type": "set of integers"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m_j",
+        "role": "coefficient in the representation of elements of Sigma(J), one coefficient for each j in J",
+        "type": "nonnegative integer"
+      }
+    ],
+    "witness_dependencies": [
+      "To state membership of an element e in Sigma(J), there must exist a choice of nonnegative integers m_j (one for each j in J) such that e equals the sum over j in J of m_j times w_j; these coefficients depend on J and on the chosen e.",
+      "For the conclusion, for each nonempty J there are at least |J| distinct elements e in E such that e is in Sigma(J); the particular elements e and their representing coefficients depend on J."
+    ]
+  },
+  "statement_nl": "Let A,B,d be integers with A >= B >= 0 and d >= 0. For j=1,...,d put w_j := B+j and let E := {A+1,...,A+d}. Assume that for every positive integer n one has #{ j in {1,...,d} : n divides w_j } <= #{ e in E : n divides e }. For each subset J of {1,...,d}, define Sigma(J) := { sum_{j in J} m_j w_j : each m_j is a nonnegative integer }. Then for every nonempty subset J of {1,...,d}, at least |J| elements of E lie in Sigma(J); equivalently, #(E intersect Sigma(J)) >= |J|.",
+  "updated_at": "2026-03-25T04:20:09.691516Z"
+}

@@ -1,0 +1,155 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324015452_3450990b/vetter_attempt_1",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-24T01:57:09.902735Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T01:56:57.151492Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260324015452_3450990b",
+    "proof_nl": "Fix an integer m>=2 and a tuple x=(x_1,\u2026,x_{m-1}) with each x_r>0. Define\nS_x:=\\{km:k\\in \\mathbb Z_{\\ge 0}\\}\\cup \\bigcup_{t=1}^{m-1}\\{qm+t:q\\in \\mathbb Z_{\\ge 0},\\ q\\ge x_t\\}.\nWe must show that for each fixed r\\in\\{1,\\dots,m-1\\}, the least positive integer q such that qm+r\\in S_x is exactly x_r.\n\nSo fix r\\in\\{1,\\dots,m-1\\}. First, since x_r is a positive integer, it is in particular a nonnegative integer and satisfies x_r\\ge x_r. Therefore, by the defining clause of S_x corresponding to the same residue class r, the integer x_r m+r belongs to S_x. Hence the set\nA_r:=\\{q\\in \\mathbb Z_{>0}: qm+r\\in S_x\\}\nis nonempty, and x_r\\in A_r.\n\nIt remains to show that no positive integer q<x_r belongs to A_r. Let q\\in \\mathbb Z_{>0} and assume qm+r\\in S_x. By the definition of S_x, membership can occur in one of the following ways.\n\n1. It could be that qm+r is a nonnegative multiple of m, say qm+r=km for some k\\in \\mathbb Z_{\\ge 0}. Then r=(k-q)m. But 1\\le r\\le m-1, while the right-hand side is divisible by m. This is impossible.\n\n2. Otherwise, there exists some t\\in\\{1,\\dots,m-1\\} such that qm+r is in the t-th union component, so\nqm+r=q' m+t\nfor some q'\\in \\mathbb Z_{\\ge 0} with q'\\ge x_t.\nRearranging gives\n(q-q')m=t-r.\nNow t-r satisfies -(m-2)\\le t-r\\le m-2, and in particular |t-r|<m. Since the left-hand side is divisible by m, t-r must also be divisible by m. The only multiple of m with absolute value strictly less than m is 0, so t-r=0. Hence t=r. Then (q-q')m=0, so q=q'. Because q'\\ge x_r, we obtain q\\ge x_r.\n\nThus every positive integer q with qm+r\\in S_x satisfies q\\ge x_r. Combined with the earlier observation that x_r m+r\\in S_x, this shows that x_r is the smallest positive integer q for which qm+r\\in S_x.\n\nSince r was arbitrary, the conclusion holds for every r\\in\\{1,\\dots,m-1\\}. Therefore, for each such r, the least positive integer q with qm+r\\in S_x is exactly x_r.",
+    "role_in_assembly": "Provides one side of the inverse relationship, namely Phi(Psi(x)) = x.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "x_r is a positive integer for each r \u2208 {1,...,m-1}",
+        "r ranges over the finite set {1,2,...,m-1}",
+        "S_x includes all integers of the form k*m with k \u2208 Z_{>=0} (so 0 is included in S_x)",
+        "For each r \u2208 {1,...,m-1}, S_x additionally includes all integers of the form q*m + r with q \u2208 Z_{>=0} and q \u2265 x_r",
+        "In the conclusion, q is required to be a positive integer (q \u2208 Z_{>0})"
+      ],
+      "normalized_claim": "For fixed m \u2265 2 and fixed tuple x=(x_1,...,x_{m-1}) with each x_r \u2208 Z_{>0}, define S_x := {k*m : k \u2208 Z_{>=0}} \u222a \u22c3_{r=1}^{m-1} {q*m + r : q \u2208 Z_{>=0}, q \u2265 x_r}. Then for every r \u2208 {1,...,m-1}: (i) x_r*m + r \u2208 S_x, and (ii) for all q \u2208 Z_{>0}, if q*m + r \u2208 S_x then q \u2265 x_r; hence the least positive integer q with q*m + r \u2208 S_x is exactly x_r.",
+      "quantifier_order": [
+        "Fix m \u2208 Z with m \u2265 2",
+        "Fix x_1,...,x_{m-1} \u2208 Z_{>0}",
+        "For each r \u2208 {1,...,m-1}",
+        "Let q be the least element of { q \u2208 Z_{>0} : q*m + r \u2208 S_x }"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "fixed parameter with constraint m >= 2",
+          "type": "integer"
+        },
+        {
+          "domain": "(Z_{>0})^{m-1}",
+          "name": "x",
+          "role": "fixed parameter vector x=(x_1,...,x_{m-1}) of positive integers",
+          "type": "tuple"
+        },
+        {
+          "domain": "{1,2,...,m-1}",
+          "name": "r",
+          "role": "residue class index",
+          "type": "integer"
+        },
+        {
+          "domain": "Z_{>0} (when minimized), and Z_{>=0} in the definition of S_x",
+          "name": "q",
+          "role": "multiplier used in the expression q*m + r; minimized in the claim",
+          "type": "integer"
+        },
+        {
+          "domain": "P(Z)",
+          "name": "S_x",
+          "role": "subset of integers defined in terms of m and x",
+          "type": "set"
+        }
+      ],
+      "witness_dependencies": [
+        "The minimizing q depends on the chosen r (the claim is per-r) and on the parameters (m,x) via the condition q \u2265 x_r in the definition of S_x",
+        "The value that q is asserted to equal, x_r, is the coordinate of the fixed tuple x corresponding to the same residue index r"
+      ]
+    },
+    "statement_nl": "Fix an integer m >= 2 and a tuple x=(x_1,...,x_{m-1}) of positive integers. Define S_x to be the set consisting of all nonnegative multiples of m and, for each r in {1,...,m-1}, all integers q m + r where q is a nonnegative integer and q >= x_r. Then for each r in {1,...,m-1}, the least positive integer q such that q m + r belongs to S_x is exactly x_r."
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "detailed_findings": [
+      {
+        "finding": "The proof correctly shows x_r m + r belongs to S_x using the r-th defining component and the positivity of x_r.",
+        "location": "existence step",
+        "severity": "low"
+      },
+      {
+        "finding": "The proof correctly rules out the possibility that qm+r is in the multiples-of-m component, since r would have to be divisible by m despite 1 <= r <= m-1.",
+        "location": "case 1",
+        "severity": "low"
+      },
+      {
+        "finding": "The proof correctly handles membership in another residue-class component by comparing qm+r = q'm+t and using that t-r is a multiple of m with absolute value less than m, forcing t=r and then q=q'.",
+        "location": "case 2",
+        "severity": "low"
+      },
+      {
+        "finding": "The argument establishes minimality over positive integers q exactly as required by the statement.",
+        "location": "conclusion",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "lemma_id": "lem_20260324015452_3450990b",
+    "proof_status": "complete",
+    "reason": "The proof directly matches the lemma statement and establishes both existence and minimality of the claimed least positive q for each residue class r. The case analysis on membership in S_x is complete: qm+r cannot be a multiple of m since 1 <= r <= m-1, and if qm+r = q'm+t from a union component, congruence modulo m forces t=r and then q=q' >= x_r. Together with x_r m + r in S_x, this proves the least positive q is exactly x_r.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed"
+  },
+  "status": "completed",
+  "target_id": "lem_20260324015452_3450990b",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T01:57:09.902756Z",
+  "worker_job_id": "wrk_lem_20260324015452_3450990b_vet_1",
+  "worker_kind": "lemma_vetter"
+}

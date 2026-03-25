@@ -1,0 +1,106 @@
+{
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260325042009_c57d22ef",
+  "consecutive_fatal_rejections": 1,
+  "consecutive_infrastructure_failures": 0,
+  "created_at": "2026-03-25T04:16:19.810747Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "retryable_violation",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.21,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-25T05:39:24.390672Z",
+  "last_dependency_check_id": "depchk_20260325045949_646f46df",
+  "last_terminal_worker_result": "agent5:dependency_violation",
+  "last_transition_reason": "solver attempt 4 submitted",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let K be an algebraic closure of k, and set J := I K[x_1,...,x_d] inside K[x_1,...,x_d]. The weighted grading and the homogeneity of I are not needed for the argument.\n\nFirst handle the case d = 0. Then S = k. The affine 0-space over K has exactly one point, namely the origin. If I = S, then its zero locus is empty, contrary to the hypothesis that the zero locus is exactly the origin. Hence I = 0, so S/I is isomorphic to k, which is finite-dimensional over k.\n\nNow assume d >= 1. The common zero locus of J in K^d is the same as the common zero locus of I in K^d: every element of I lies in J, and every element of J is a finite K[x_1,...,x_d]-linear combination of elements of I, so a point of K^d annihilates all elements of I if and only if it annihilates all elements of J. By hypothesis, V(J) = {0}.\n\nBecause K is algebraically closed, Hilbert's Nullstellensatz gives that the radical of J is the ideal of all polynomials vanishing on V(J). Since V(J) = {0}, this ideal is exactly (x_1,...,x_d). Therefore, for each i = 1,...,d, we have x_i in rad(J), so there exists an integer N_i >= 1 such that x_i^(N_i) belongs to J.\n\nWe next prove that J intersect S = I. The inclusion I subseteq J intersect S is immediate. For the reverse inclusion, let f be an element of J intersect S. Since f belongs to J, there exist finitely many elements g_1,...,g_m of I and polynomials A_1,...,A_m in K[x_1,...,x_d] such that\nf = sum_{r=1}^m A_r g_r.\nLet V be the finite-dimensional k-subspace of K spanned by 1 and by all coefficients of all the A_r. Choose a k-basis b_1,...,b_t of V with b_1 = 1. Since every coefficient of each A_r lies in V, we can write uniquely\nA_r = sum_{s=1}^t b_s B_{r,s}\nwith B_{r,s} in S = k[x_1,...,x_d]. Hence\nf = sum_{s=1}^t b_s G_s,\nwhere G_s := sum_{r=1}^m B_{r,s} g_r belongs to I for each s.\nNow set H_1 := G_1 - f and H_s := G_s for s > 1. Then each H_s lies in S, and\nsum_{s=1}^t b_s H_s = 0\nin K[x_1,...,x_d]. Write each H_s as a finite sum\nH_s = sum_alpha c_{s,alpha} x^alpha\nwith c_{s,alpha} in k. Since the monomials x^alpha are linearly independent over K in the polynomial ring K[x_1,...,x_d], for each multi-index alpha we get\nsum_{s=1}^t b_s c_{s,alpha} = 0\nin K. But b_1,...,b_t are k-linearly independent, and each c_{s,alpha} lies in k. Therefore all c_{s,alpha} are zero. So every H_s is the zero polynomial. In particular H_1 = 0, hence f = G_1 belongs to I. This proves J intersect S = I.\n\nApplying this to x_i^(N_i), we obtain x_i^(N_i) in I for every i. Therefore any monomial x_1^(a_1) ... x_d^(a_d) with some a_i >= N_i lies in I, because it is divisible by x_i^(N_i). It follows that the residue classes of the finitely many monomials x_1^(a_1) ... x_d^(a_d) with 0 <= a_i < N_i for all i span S/I over k. Hence S/I is finite-dimensional as a k-vector space.\n\nThus the lemma is proved.",
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260325041610_ef79370b",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "lem_20260324204708_474b5c77",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/lemmas/lem_20260325041610_ef79370b.json",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "proof_status": "proof_flawed",
+  "role_in_parent": "Turns the geometric conclusion of L3 into the finite-dimensional quotient needed for commutative-algebra arguments.",
+  "routing_status": "retry_solver",
+  "shared_context_refs": [],
+  "solver_attempt_count": 3,
+  "solver_series_started_at": "2026-03-25T04:59:49.776663Z",
+  "statement_lean": null,
+  "statement_nl": "Let k be a field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] with weighted grading deg(x_i)=w_i. Let I be a homogeneous ideal of S. If, over an algebraic closure of k, the common zero locus of I in affine d-space is exactly the origin, then S/I is finite-dimensional as a k-vector space.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "d is a nonnegative integer (so affine d-space and the polynomial ring have d variables; includes the special case d = 0)",
+      "each weight w_i is a positive integer",
+      "I is homogeneous with respect to the weighted grading determined by deg(x_i) = w_i",
+      "the zero-locus condition is stated after base change to an algebraic closure of k, so points are taken in affine d-space over k_bar"
+    ],
+    "normalized_claim": "For all fields k, all nonnegative integers d, all positive integer weights w_1 through w_d, and all ideals I in S = k[x_1,...,x_d] that are homogeneous for the weighted grading, if the variety over an algebraic closure k_bar has common zeros exactly at the origin in affine d-space, then the quotient ring S/I has finite dimension as a vector space over k.",
+    "quantifier_order": [
+      "for all fields k",
+      "for all nonnegative integers d",
+      "for all positive integer weights w_1,...,w_d",
+      "for all weighted-homogeneous ideals I of S = k[x_1,...,x_d]",
+      "if over k_bar the common zero locus of I in affine d-space equals exactly the origin",
+      "then S divided by I is finite-dimensional as a k-vector space"
+    ],
+    "variables": [
+      {
+        "domain": "all fields",
+        "name": "k",
+        "role": "base field over which the polynomial ring and quotient are defined",
+        "type": "field"
+      },
+      {
+        "domain": "subset of integers with d >= 0",
+        "name": "d",
+        "role": "number of variables / dimension of affine space",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "subset of integers with w_i > 0 for each i in 1..d",
+        "name": "w_i",
+        "role": "weights defining a weighted grading on the polynomial ring",
+        "type": "positive integer"
+      },
+      {
+        "domain": "polynomial ring k[x_1,...,x_d] with weighted grading",
+        "name": "S",
+        "role": "ambient ring containing the ideal I",
+        "type": "graded commutative ring"
+      },
+      {
+        "domain": "coordinate variables for affine d-space",
+        "name": "x_i",
+        "role": "generators of S and coordinates in the zero locus statement",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "ideals of S that are homogeneous with respect to the given weighted grading",
+        "name": "I",
+        "role": "constraint ideal defining the zero locus",
+        "type": "ideal"
+      },
+      {
+        "domain": "algebraic closure of k",
+        "name": "k_bar",
+        "role": "field over which the zero locus is evaluated",
+        "type": "field extension"
+      }
+    ],
+    "witness_dependencies": [
+      "no explicit existential witnesses are introduced in the statement"
+    ]
+  },
+  "statement_status": "unvetted",
+  "updated_at": "2026-03-25T05:39:24.390672Z"
+}

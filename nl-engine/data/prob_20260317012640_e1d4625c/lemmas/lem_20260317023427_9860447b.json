@@ -1,0 +1,103 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-17T02:34:57.468738Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Assume the hypotheses of the lemma. Thus f has the property that for all points U,V,W in R^2, if U,V,W are noncollinear and f(U)=f(V)=f(W), then f(circumcenter(U,V,W))=f(U).\n\nNow apply this property to the specific triple U=O, V=A, W=B. By hypothesis, O,A,B are noncollinear, and also f(O)=f(A)=f(B). Therefore the assumed property yields\n\nf(circumcenter(O,A,B)) = f(O).\n\nBut X = circumcenter(O,A,B) by hypothesis. Substituting this equality into the previous conclusion gives\n\nf(X) = f(O).\n\nThis is exactly the desired conclusion.",
+  "latest_vetter_report_id": "rep_20260317024632_9ce7f4bf",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260317023427_9860447b",
+  "parent_id": "thm_root_20260317012640_4ba3e92b",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260317012640_e1d4625c",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Transfers the color c from O and a support pair A_i,B_i to the auxiliary point X_i once X_i is known to be the circumcenter of triangle O A_i B_i.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let f : R^2 -> {red,green} be a coloring with the following property: for every noncollinear triple U,V,W in R^2, if f(U)=f(V)=f(W), then f(circumcenter(U,V,W))=f(U). Let O,A,B,X be points of R^2 such that O,A,B are noncollinear and X = circumcenter(O,A,B). If f(O)=f(A)=f(B), then f(X)=f(O).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "f is a total function from R^2 to the two-element set {red,green}",
+      "circumcenter(U,V,W) is only defined/meaningful when U,V,W are noncollinear",
+      "the universal property P quantifies over triples (U,V,W) restricted to noncollinear triples",
+      "O,A,B in the instance are required to be noncollinear so that X := circumcenter(O,A,B) is defined"
+    ],
+    "normalized_claim": "For every function f: R^2 -> {red,green}, assume P(f): for all U,V,W in R^2, if noncollinear(U,V,W) and f(U)=f(V)=f(W) then f(circumcenter(U,V,W)) = f(U). Then for all O,A,B in R^2, if noncollinear(O,A,B) and X := circumcenter(O,A,B), we have: if f(O)=f(A)=f(B) then f(X)=f(O).",
+    "quantifier_order": [
+      "for all f : R^2 -> {red,green} such that P(f) holds (see property below)",
+      "where P(f) := for all U,V,W in R^2, if noncollinear(U,V,W) and f(U)=f(V)=f(W) then f(circumcenter(U,V,W)) = f(U)",
+      "for all O,A,B in R^2 with noncollinear(O,A,B)",
+      "let X := circumcenter(O,A,B)",
+      "then: if f(O)=f(A)=f(B) then f(X)=f(O)"
+    ],
+    "variables": [
+      {
+        "domain": "R^2 -> {red,green}",
+        "name": "f",
+        "role": "given coloring (assumed to satisfy the stated property)",
+        "type": "function"
+      },
+      {
+        "domain": "R^2",
+        "name": "U",
+        "role": "universally quantified point in the property hypothesis",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "V",
+        "role": "universally quantified point in the property hypothesis",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "W",
+        "role": "universally quantified point in the property hypothesis",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "O",
+        "role": "arbitrary point used in the instance (subject to noncollinearity)",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "A",
+        "role": "arbitrary point used in the instance (subject to noncollinearity)",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "B",
+        "role": "arbitrary point used in the instance (subject to noncollinearity)",
+        "type": "point"
+      },
+      {
+        "domain": "R^2 (when defined)",
+        "name": "X",
+        "role": "witness defined by X = circumcenter(O,A,B); depends on O,A,B and existence requires O,A,B noncollinear",
+        "type": "point (defined)"
+      },
+      {
+        "domain": "noncollinear triples of R^2 -> R^2",
+        "name": "circumcenter",
+        "role": "geometric construction mapping a noncollinear triple to its circumcenter",
+        "type": "partial function"
+      }
+    ],
+    "witness_dependencies": [
+      "X is not an independent existential: X is defined as circumcenter(O,A,B), so X depends only on O,A,B (and hence on O,A,B being noncollinear)",
+      "in the general property, circumcenter(U,V,W) is a deterministic function of U,V,W (no additional hidden existential dependence)"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-17T02:34:57.468740Z"
+}

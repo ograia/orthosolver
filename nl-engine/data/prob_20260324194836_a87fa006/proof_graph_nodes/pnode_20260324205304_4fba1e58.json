@@ -1,0 +1,56 @@
+{
+  "created_at": "2026-03-24T20:53:04.313278Z",
+  "graph_node_id": "pnode_20260324205304_4fba1e58",
+  "metadata": {
+    "parent_id": "thm_root_20260324194836_7ca60a42"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "770ee5ab422f7be555e205d28165d5653d667d9fa77a216b0cfcf4dddc261273",
+  "owner_id": "lem_20260324204645_71aea956",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n and r are integers",
+      "0 <= r <= n",
+      "The product index i ranges over integers i = 1,2,...,r; when r = 0 the product is empty and equals 1",
+      "Implicitly, the denominator factors (1 - q^i) for i = 1,...,r must be meaningful (nonzero) if q is a numeric parameter; alternatively the identity is intended in a formal/polynomial/rational-function sense where the expression is well-defined"
+    ],
+    "normalized_claim": "For all integers n and r with 0 <= r <= n, the quantity defined by [n choose r]_q := (\u220f_{i=1}^r (1 - q^(n-r+i)))/(\u220f_{i=1}^r (1 - q^i)), with \u220f_{i=1}^0 := 1, satisfies [n choose r]_q = [n choose (n-r)]_q, where [n choose (n-r)]_q is defined by the same formula with r replaced by (n-r).",
+    "quantifier_order": [
+      "For all integers n",
+      "For all integers r",
+      "with 0 <= r <= n: define [n choose r]_q by the given product (empty product convention when r = 0); then assert equality [n choose r]_q = [n choose n-r]_q"
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "n",
+        "role": "upper index in the q-binomial coefficient; constrained by quantifier to satisfy 0 <= r <= n",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "r",
+        "role": "lower index in the q-binomial coefficient; constrained by quantifier to satisfy 0 <= r <= n",
+        "type": "integer"
+      },
+      {
+        "domain": "unspecified (typically indeterminate / formal variable or element of a field)",
+        "name": "q",
+        "role": "base of the q-binomial coefficient; appears as exponents q^k",
+        "type": "parameter"
+      },
+      {
+        "domain": "Z",
+        "name": "i",
+        "role": "dummy index of the product defining [n choose r]_q",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_nl": "For integers n and r with 0 <= r <= n, define the Gaussian q-binomial coefficient by [n choose r]_q := prod_{i=1}^r (1 - q^(n-r+i)) / (1 - q^i), with the empty product equal to 1 when r = 0. Then [n choose r]_q = [n choose n-r]_q.",
+  "updated_at": "2026-03-24T20:53:04.313279Z"
+}

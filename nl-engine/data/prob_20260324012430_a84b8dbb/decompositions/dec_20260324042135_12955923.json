@@ -1,0 +1,29 @@
+{
+  "assembly_plan_id": "asm_20260324042135_74724e60",
+  "controller_status": "failed",
+  "created_at": "2026-03-24T04:25:34.417067Z",
+  "decomposition_id": "dec_20260324042135_12955923",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.78,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "lem_20260324013805_2c445eb6",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "shared_context": [
+    {
+      "content": "For integers m >= 2 and h >= 0, K_{m,h} is the set of tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=h and, for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, while if i+j > m then x_i+x_j+1 >= x_{i+j-m}.",
+      "label": "K_definition"
+    },
+    {
+      "content": "For a positive tuple x=(x_1,...,x_{m-1}), let sigma_x be the unique permutation of {1,...,m-1} that orders the pairs (x_i,i) in nondecreasing lexicographic order. Define e_0 = x_{sigma_x(1)} and e_r = x_{sigma_x(r+1)} - x_{sigma_x(r)} for 1 <= r <= m-2. Then x_{sigma_x(k)} = e_0+...+e_{k-1}.",
+      "label": "sorted_difference_encoding"
+    }
+  ],
+  "strategy_summary": "Partition K_{m,g} into disjoint chambers according to the sorted order of the coordinates, with ties broken by the index. Inside a fixed chamber, encode a tuple by the cumulative differences between consecutive sorted coordinates. The Kunz inequalities then become a finite linear system in these difference variables. Prove a genus-raising injection separately inside each chamber, and then decode and assemble the chamberwise injections into a global injection.",
+  "updated_at": "2026-03-24T04:25:34.417070Z"
+}

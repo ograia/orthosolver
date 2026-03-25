@@ -1,0 +1,109 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-23T19:47:19.111960Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.48,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer m>=2 and a tuple k=(k_1,\u2026,k_{m-1}) of positive integers satisfying the stated Kunz inequalities.\n\nDefine\nS(k)=\\{qm+r\\in \\mathbb N_0: q,r\\in \\mathbb Z,\\ q\\ge 0,\\ 0\\le r\\le m-1,\\text{ and }(r=0\\text{ or }q\\ge k_r)\\}.\n\nWe prove all claimed properties.\n\nFirst, 0\\in S(k). Indeed, take q=0 and r=0; then 0=0\\cdot m+0, with q\\ge 0 and 0\\le r\\le m-1, and since r=0 the extra inequality is automatic. So 0\\in S(k).\n\nNext we prove closure under addition. Let a,b\\in S(k). Choose representations\n\na=q_1m+r_1, \\qquad b=q_2m+r_2,\n\nwith q_1,q_2\\ge 0, 0\\le r_1,r_2\\le m-1, and with the defining condition that if r_t\\ne 0 then q_t\\ge k_{r_t} for t=1,2.\n\nWe must show a+b\\in S(k). We consider cases according to r_1,r_2.\n\nCase 1: r_1=0 and r_2=0.\nThen a+b=(q_1+q_2)m has residue 0 mod m, with quotient q_1+q_2\\ge 0. Hence a+b\\in S(k).\n\nCase 2: exactly one of r_1,r_2 is 0.\nWithout loss of generality r_1=0 and r_2=s with 1\\le s\\le m-1. Then\n\na+b=(q_1+q_2)m+s.\nSince b\\in S(k) and s\\ne 0, we have q_2\\ge k_s. Therefore q_1+q_2\\ge q_2\\ge k_s, so the element (q_1+q_2)m+s lies in S(k). Thus a+b\\in S(k).\n\nCase 3: r_1,r_2\\in\\{1,\\dots,m-1\\}.\nThen q_1\\ge k_{r_1} and q_2\\ge k_{r_2}. Put s=r_1+r_2.\n\nIf s<m, then\n\na+b=(q_1+q_2)m+s.\nWe need q_1+q_2\\ge k_s. Since the Kunz inequalities are stated for indices i,j with 1\\le i\\le j\\le m-1, reorder r_1,r_2 if necessary: let i=\\min(r_1,r_2), j=\\max(r_1,r_2). Then 1\\le i\\le j\\le m-1 and i+j=s<m, so the hypothesis gives\nk_i+k_j\\ge k_s.\nBecause q_1\\ge k_{r_1} and q_2\\ge k_{r_2}, we get\nq_1+q_2\\ge k_{r_1}+k_{r_2}=k_i+k_j\\ge k_s.\nHence a+b\\in S(k).\n\nIf s=m, then\n\na+b=(q_1+q_2+1)m,\nwhich has residue 0 mod m and quotient q_1+q_2+1\\ge 0. So a+b\\in S(k).\n\nIf s>m, then write t=s-m, so 1\\le t\\le m-1, and\n\na+b=(q_1+q_2+1)m+t.\nAgain let i=\\min(r_1,r_2), j=\\max(r_1,r_2). Then 1\\le i\\le j\\le m-1 and i+j=s>m, so the Kunz hypothesis gives\nk_i+k_j+1\\ge k_{i+j-m}=k_t.\nThus\nq_1+q_2+1\\ge k_{r_1}+k_{r_2}+1=k_i+k_j+1\\ge k_t.\nTherefore (q_1+q_2+1)m+t\\in S(k), so a+b\\in S(k).\n\nAll cases are covered, so S(k) is closed under addition.\n\nNow we prove that \\mathbb N_0\\setminus S(k) is finite. For residue 0 modulo m, every number qm with q\\ge 0 lies in S(k) by definition. For each fixed residue r with 1\\le r\\le m-1, the numbers congruent to r mod m that lie in S(k) are exactly those of the form qm+r with q\\ge k_r. Therefore the numbers of residue r that are not in S(k) are among\n\\{r,\\ m+r,\\ 2m+r,\\dots,(k_r-1)m+r\\},\nwhich is a finite set (possibly empty if k_r=0, though here each k_r\\ge 1). Hence\n\\mathbb N_0\\setminus S(k)\\subseteq \\bigcup_{r=1}^{m-1}\\{qm+r:0\\le q<k_r\\},\nwhich is a finite union of finite sets. So \\mathbb N_0\\setminus S(k) is finite.\n\nThus S(k) is a numerical semigroup in the sense stated: it contains 0, is closed under addition, and has finite complement in \\mathbb N_0.\n\nWe now show that its least positive element is m.\n\nFirst, m\\in S(k): take q=1 and r=0, so m=1\\cdot m+0.\n\nNow let x\\in S(k) with x>0. Write x=qm+r in the defining form, where q\\ge 0 and 0\\le r\\le m-1.\n\nIf r=0, then x=qm and x>0 imply q\\ge 1, hence x\\ge m.\n\nIf r\\in\\{1,\\dots,m-1\\}, then by definition q\\ge k_r, and since each k_r is positive we have q\\ge 1. Therefore\nx=qm+r\\ge m+1>m.\n\nSo every positive element of S(k) is at least m, and m itself belongs to S(k). Hence m is the least positive element of S(k).\n\nFinally, fix r with 1\\le r\\le m-1. We prove that the least element of S(k) congruent to r modulo m is exactly r+mk_r.\n\nFirst, r+mk_r\\in S(k): take q=k_r and residue r. Since k_r>0, certainly q\\ge 0, and because q=k_r\\ge k_r, the defining condition holds. Hence r+mk_r\\in S(k).\n\nNow let x\\in S(k) satisfy x\\equiv r\\pmod m. Because 0\\le r\\le m-1 and the residue representative in the definition is unique in this range, x must be of the form x=qm+r for some integer q\\ge 0. Since r\\ne 0 and x\\in S(k), the defining condition forces q\\ge k_r. Therefore\nx=qm+r\\ge mk_r+r.\nThus every element of S(k) congruent to r mod m is at least r+mk_r, and that value itself lies in S(k). So\n\\min\\{x\\in S(k): x\\equiv r\\pmod m\\}=r+mk_r.\n\nThis proves every part of the lemma.",
+  "latest_vetter_report_id": "rep_20260323195106_5f32eb22",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260323194703_e14a3ebf",
+  "parent_id": "thm_root_20260320180855_1d8d4f17",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides the inverse construction from admissible Kunz vectors to numerical semigroups.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let m be an integer with m >= 2. Let k = (k_1, ..., k_{m-1}) be a tuple of positive integers satisfying the Kunz inequalities: for all integers i and j with 1 <= i <= j <= m-1, if i + j < m then k_i + k_j >= k_{i+j}, and if i + j > m then k_i + k_j + 1 >= k_{i+j-m}. Define a subset S(k) of N0 = {0,1,2,...} by S(k) = {q m + r : q and r are integers, q >= 0, 0 <= r <= m-1, and either r = 0 or q >= k_r}. Then S(k) is a numerical semigroup, meaning that 0 belongs to S(k), S(k) is closed under addition, and N0 \\ S(k) is finite. Its least positive element is m. For each integer r with 1 <= r <= m-1, the least element of S(k) congruent to r modulo m is exactly r + m k_r.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m >= 2",
+      "For each index t with 1 <= t <= m-1, k_t is a positive integer (k_t >= 1)",
+      "In Kunz inequalities: i and j are integers with 1 <= i <= j <= m-1",
+      "Kunz inequalities split by comparison of i+j with m: case (i+j < m) uses index i+j in [1,m-1]; case (i+j > m) uses index i+j-m in [1,m-1]",
+      "Definition of S(k): elements x are in N0; membership requires existence of integers q,res with q >= 0 and 0 <= res <= m-1",
+      "In definition of S(k): if res = 0 then the condition on q is dropped; if res \u2208 {1,...,m-1} then require q >= k_res",
+      "In the final statement: residue index r satisfies 1 <= r <= m-1 (so r != 0)"
+    ],
+    "normalized_claim": "Let m \u2208 Z with m >= 2 and let k = (k_1,...,k_{m-1}) with each k_t \u2208 Z_{>0}. Assume (Kunz inequalities) that for all i,j \u2208 Z with 1 <= i <= j <= m-1: if i+j < m then k_i + k_j >= k_{i+j}, and if i+j > m then k_i + k_j + 1 >= k_{i+j-m}. Define S(k) \u2286 N0 by x \u2208 S(k) iff \u2203 q,res \u2208 Z such that q >= 0, 0 <= res <= m-1, x = q*m + res, and (res=0 or q >= k_res). Then: (a) 0 \u2208 S(k), (b) \u2200 a,b \u2208 S(k), a+b \u2208 S(k), (c) N0\\S(k) is finite, (d) m is the least positive element of S(k), and (e) for every r \u2208 {1,...,m-1}, the minimum of {x \u2208 S(k) : x \u2261 r (mod m)} exists and equals r + m*k_r.",
+    "quantifier_order": [
+      "\u2203 m \u2208 Z (m >= 2)  [given]",
+      "\u2203 k \u2208 (Z_{>0})^{m-1} such that  \u2200 i,j \u2208 Z ( (1 <= i <= j <= m-1) \u2227 (i+j < m) -> k_i + k_j >= k_{i+j} ) \u2227 ( (1 <= i <= j <= m-1) \u2227 (i+j > m) -> k_i + k_j + 1 >= k_{i+j-m} )  [Kunz inequalities]",
+      "Define S(k) = { x \u2208 N0 : \u2203 q,res \u2208 Z ( q >= 0 \u2227 0 <= res <= m-1 \u2227 x = q*m + res \u2227 (res = 0 \u2228 q >= k_res) ) }",
+      "Then: (i) 0 \u2208 S(k)  \u2227 (ii) \u2200 a,b \u2208 S(k), a+b \u2208 S(k)  \u2227 (iii) N0 \\ S(k) is finite",
+      "Least positive element: m \u2208 S(k) \u2227 \u2200 x \u2208 S(k) (x > 0 -> m <= x)",
+      "\u2200 r \u2208 Z (1 <= r <= m-1 ->  min{ x \u2208 S(k) : x \u2261 r (mod m) } = r + m*k_r )"
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "multiplicity parameter; also defines tuple length and modular classes",
+        "type": "integer"
+      },
+      {
+        "domain": "Z^{m-1}",
+        "name": "k",
+        "role": "Kunz coordinates (with components k_1,...,k_{m-1})",
+        "type": "tuple of integers"
+      },
+      {
+        "domain": "Z",
+        "name": "k_i",
+        "role": "component of k for i in [1,m-1], required to be positive; used in Kunz inequalities and membership thresholds",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "i",
+        "role": "index for Kunz inequalities, with constraint 1 <= i <= j <= m-1",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "j",
+        "role": "index for Kunz inequalities, with constraint 1 <= i <= j <= m-1",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "q",
+        "role": "quotient in representation of elements of S(k): element = q*m + residue",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "res",
+        "role": "residue class representative in [0,m-1] used in definition of S(k)",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "x",
+        "role": "generic element for statements of membership/order/minimality within S(k)",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "r",
+        "role": "residue class index in the final minimality statement (1 <= r <= m-1)",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "Membership witness for x \u2208 S(k): existential witnesses (q,res) satisfy x = q*m + res and the inequality guard (res = 0 \u2228 q >= k_res); thus q depends on x and res, and res is constrained to [0,m-1]",
+      "The specific claimed minimal element for a fixed residue r depends deterministically on k: candidate = r + m*k_r",
+      "For least-element property: the lower bound part quantifies over all x \u2208 S(k) with x \u2261 r (mod m); the minimizing x is witnessed by the explicit candidate r + m*k_r"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-23T19:47:19.111961Z"
+}

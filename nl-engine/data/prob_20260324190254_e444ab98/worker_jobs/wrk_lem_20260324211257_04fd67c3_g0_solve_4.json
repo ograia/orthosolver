@@ -1,0 +1,165 @@
+{
+  "artifact_prefix": "problems/prob_20260324190254_e444ab98/lemmas/lem_20260324211257_04fd67c3/solver_attempt_4",
+  "attempt_count": 2,
+  "attempt_number": 4,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-25T00:14:50.337363Z",
+  "controller_consumed_by_execution_id": "exec_20260324190254_63765cb0",
+  "created_at": "2026-03-24T23:43:01.425238Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324190254_63765cb0",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+        "item_id": "pnode_20260324211635_1d8e991c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 4,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260324211635_fdca8840",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let N(g) denote the number of numerical semigroups of genus g. Prove that N(g) \u2265 N(g\u22121) + N(g\u22122) for every integer g \u2265 2."
+      }
+    ],
+    "lemma_id": "lem_20260324211257_04fd67c3",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260324234301_de4fdfec",
+    "role_in_assembly": "Supplies the single auxiliary inequality that upgrades the structural lower bound to the Fibonacci-type lower bound in the g >= 3 branch.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "g is an integer satisfying g \u2265 2 (so g\u22121 and g\u22122 are defined and are \u2265 0)",
+        "N(k) is defined for integers k = g, g\u22121, g\u22122 (implicitly meaning genus is allowed to be any integer \u2265 0)"
+      ],
+      "normalized_claim": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+      "quantifier_order": [
+        "for every g \u2208 Z with g \u2265 2"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter indexing counts of numerical semigroups",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "none explicitly (the inequality compares cardinalities/counts only)"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "h \u2265 1",
+        "r \u2265 0 when used as index in n_h(r) and in both displayed sums",
+        "\u039b ranges over numerical semigroups (additive cofinite submonoids of N0 containing 0)",
+        "genus(\u039b) is exactly h when \u039b is used inside n_h(r) and S(h)",
+        "m(\u039b) is the least positive element of \u039b (implies \u039b contains at least one positive element; holds for numerical semigroups with h \u2265 1)",
+        "effective generator x must satisfy: x is a minimal generator, x > F(\u039b), and x > 0",
+        "in 'minimal generator' condition, a and b are required to be positive elements in \u039b",
+        "convention: F(\u039b) = -1 only for the special case \u039b = N0; otherwise F(\u039b) is the largest integer not in \u039b"
+      ],
+      "normalized_claim": "For each integer h \u2265 1: letting n_h(r) = #{\u039b : genus(\u039b)=h \u2227 e(\u039b)=r} for all integers r \u2265 0 and S(h)=\u03a3_{\u039b : genus(\u039b)=h} s(\u039b), the inequality holds:\n\u03a3_{r \u2265 0} n_h(r)\u00b7(r(r\u22121)/2) + S(h) \u2265 \u03a3_{r \u2265 0} n_h(r)\u00b7(r+1),\nwith all sums finite.",
+      "quantifier_order": [
+        "\u2200 h \u2208 Z, (h \u2265 1) \u21d2 [definitions follow and inequality holds for this h]",
+        "\u2200 r \u2208 Z, (r \u2265 0) : n_h(r) := #{\u039b : genus(\u039b)=h \u2227 e(\u039b)=r}",
+        "S(h) := \u03a3_{\u039b : genus(\u039b)=h} s(\u039b)",
+        "Inequality: \u03a3_{r \u2265 0} n_h(r) * (r(r-1)/2) + S(h) \u2265 \u03a3_{r \u2265 0} n_h(r) * (r+1)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "h",
+          "role": "fixed parameter (genus level)",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "r",
+          "role": "effective-generator count parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "additive cofinite submonoid of N0 containing 0",
+          "name": "\u039b",
+          "role": "ranging object for genus-h numerical semigroups",
+          "type": "numerical semigroup"
+        },
+        {
+          "domain": "integers",
+          "name": "x",
+          "role": "candidate effective generator of \u039b",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "a",
+          "role": "auxiliary positive summand used in minimal-generator definition",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "b",
+          "role": "auxiliary positive summand used in minimal-generator definition",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "To count e(\u039b), witnesses are the effective generators x of \u039b, where effectiveness depends on F(\u039b) and minimal-generator structure within \u039b",
+        "s(\u039b) counts those effective generators x for which the element m(\u039b)+x (dependent on \u039b and x) is a minimal generator of c_x(\u039b)",
+        "c_x(\u039b) depends on \u039b and on the chosen effective generator x, via 'remove x from \u039b'",
+        "m(\u039b) depends only on \u039b (least positive element) and is used inside the condition defining s(\u039b)"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let h be an integer with h >= 1. A numerical semigroup is a cofinite additive submonoid of the nonnegative integers containing 0, and its genus is the number of nonnegative integers not belonging to it. For a numerical semigroup Lambda, let F(Lambda) be the largest integer not in Lambda, with the convention F(Lambda) = -1 for the whole set of nonnegative integers. Let m(Lambda) be the least positive element of Lambda. A minimal generator of Lambda is a positive element x of Lambda that cannot be written as a+b with positive a,b in Lambda. An effective generator of Lambda is a minimal generator x with x > F(Lambda), and let e(Lambda) be the number of effective generators of Lambda. For an effective generator x of Lambda, let c_x(Lambda) be the set obtained from Lambda by removing x. Let s(Lambda) be the number of effective generators x such that m(Lambda) + x is a minimal generator of c_x(Lambda). For each integer r >= 0, let n_h(r) be the number of genus-h numerical semigroups Lambda with e(Lambda) = r. Let S(h) be the sum of s(Lambda) over all genus-h numerical semigroups Lambda. Then the sum, over all integers r >= 0, of n_h(r) * r(r-1)/2 plus S(h) is at least the sum, over all integers r >= 0, of n_h(r) * (r+1). All displayed sums are finite.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324190254_e444ab98",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 4,
+    "candidate_counterexample": null,
+    "citations": [],
+    "dependency_self_check": {},
+    "lemma_id": "lem_20260324211257_04fd67c3",
+    "proof_nl": null,
+    "proof_summary": "I could rigorously reduce the lemma to a stronger recurrence for the total counts. Let N(k) be the number of genus-k numerical semigroups. First, by the parent-child bijection \u03a8 \u21a6 (\u03a8 \u222a {F(\u03a8)}, F(\u03a8)), one gets \u03a3_{r\u22650} n_h(r)\u00b7r = N(h+1). Second, for a genus-h semigroup \u039b with effective generators x_1<...<x_r, if \u039b is non-ordinary then for each i the child c_{x_i}(\u039b) has exactly (r-i) surviving effective generators x_{i+1},...,x_r, plus one more exactly when x_i is strong; hence e(c_{x_i}(\u039b)) = (r-i) + 1_{x_i strong}. For the unique ordinary genus-h semigroup there is one extra effective generator in the child obtained by removing its multiplicity. Summing over all genus-h semigroups gives N(h+2) = 1 + \u03a3_{r\u22650} n_h(r)\u00b7r(r-1)/2 + S(h). Therefore the stated lemma is equivalent to the stronger inequality N(h+2) \u2265 N(h+1) + N(h) + 1. I was not able to prove that stronger inequality from the allowed context alone.",
+    "self_report": {
+      "confidence": 0.29,
+      "every_step_justified": false,
+      "proves_exactly_the_statement": false,
+      "suspected_gaps": [
+        "I did not prove the final step N(h+2) \u2265 N(h+1) + N(h) + 1 after reducing the lemma to it.",
+        "I could not find a direct global injection/surjection argument showing that the counted configurations on the left dominate all genus-h and genus-(h+1) semigroups."
+      ],
+      "used_external_facts": []
+    },
+    "status": "failed",
+    "stuck_point": "The genuine obstruction is the missing '+1'. The allowed external anchor only gives N(g) \u2265 N(g-1) + N(g-2), which is too weak once the lemma is reduced to N(h+2) \u2265 N(h+1) + N(h) + 1. I do not see a self-contained way, from the given definitions alone, to recover that extra 1 rigorously.",
+    "used_forbidden_claim": false
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260324211257_04fd67c3",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-25T00:14:50.337368Z",
+  "worker_job_id": "wrk_lem_20260324211257_04fd67c3_g0_solve_4",
+  "worker_kind": "lemma_solver"
+}

@@ -1,0 +1,183 @@
+{
+  "artifact_prefix": "problems/prob_20260320180855_11f16fb8/lemmas/lem_20260323194740_6ea53c77/solver_attempt_3",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-23T19:53:58.804396Z",
+  "controller_consumed_by_execution_id": "exec_20260323194042_2ab14324",
+  "created_at": "2026-03-23T19:52:49.102404Z",
+  "error_payload": null,
+  "execution_id": "exec_20260323194042_2ab14324",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 3,
+    "lemma_id": "lem_20260323194740_6ea53c77",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "role_in_assembly": "Isolates the substantive monotonicity step in the coordinate model; this replaces the false effective-generator child-map from the rejected attempt.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m >= 2",
+        "g is an integer with g >= 0",
+        "g+1 is therefore an integer >= 1 (so genus value g+1 is within the stated integer domain)"
+      ],
+      "normalized_claim": "For all integers m >= 2 and all integers g >= 0, the counting function N(m,g) is monotonically nondecreasing in g with step size 1: N(m,g) <= N(m,g+1).",
+      "quantifier_order": [
+        "forall m (integer, m >= 2)",
+        "forall g (integer, g >= 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter of numerical semigroups; universally quantified",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter of numerical semigroups; universally quantified",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "cardinality of the set of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (count)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m\u22652",
+        "g is an integer with g\u22650",
+        "K_{m,g} consists of tuples k=(k_1,...,k_{m-1}) where each k_t is a positive integer (k_t\u2208Z_{>0})",
+        "In the membership inequalities, i and j are integers with 1\u2264i\u2264j\u2264m\u22121",
+        "Case split for inequalities uses: if i+j<m then compare with index (i+j) in {2,...,m\u22121}; if i+j>m then compare with index (i+j\u2212m) in {1,...,m\u22122}",
+        "Sum constraint: k_1+...+k_{m-1}=g for K_{m,g}, and =g+1 for K_{m,g+1}"
+      ],
+      "normalized_claim": "For every fixed integers m\u22652 and g\u22650, there exists an injective map \u03a6_{m,g}:K_{m,g}\u2192K_{m,g+1}, where K_{m,g} is the set of all (m\u22121)-tuples k with positive integer entries summing to g and satisfying the stated pairwise inequalities for all integer indices i,j with 1\u2264i\u2264j\u2264m\u22121 (using the two index cases i+j<m and i+j>m). Equivalently: \u2200k\u2208K_{m,g}, \u03a6_{m,g}(k) is a valid element of K_{m,g+1}, and \u03a6_{m,g} is one-to-one on K_{m,g}.",
+      "quantifier_order": [
+        "Fix m\u2208Z with m\u22652; Fix g\u2208Z with g\u22650.",
+        "For the definition of K_{m,g}: element quantifier is implicit (k ranges over tuples), with internal universal quantification: \u2200 i,j\u2208Z (1\u2264i\u2264j\u2264m\u22121) satisfying case conditions (i+j<m or i+j>m) impose inequalities on k.",
+        "Existence claim: \u2203 an injective function \u03a6_{m,g} such that (i) \u2200k\u2208K_{m,g}, \u03a6_{m,g}(k)\u2208K_{m,g+1}, and (ii) \u2200k1,k2\u2208K_{m,g}, k1\u2260k2 \u21d2 \u03a6_{m,g}(k1)\u2260\u03a6_{m,g}(k2)."
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "fixed parameter; controls tuple length and inequality index split",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "fixed parameter; sets the required coordinate sum for K_{m,g}",
+          "type": "integer"
+        },
+        {
+          "domain": "(Z_{>0})^{m-1}",
+          "name": "k",
+          "role": "element of K_{m,g}; k=(k_1,...,k_{m-1}) with positive coordinates",
+          "type": "tuple of integers"
+        },
+        {
+          "domain": "Z",
+          "name": "i",
+          "role": "quantified index in membership inequalities",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "j",
+          "role": "quantified index in membership inequalities",
+          "type": "integer"
+        },
+        {
+          "domain": "from K_{m,g} to K_{m,g+1}",
+          "name": "Phi_{m,g}",
+          "role": "witness of existence; depends on parameters m,g",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "\u03a6_{m,g} may depend on the fixed parameters (m,g) but not on the particular choice of k except through input to the function.",
+        "For injectivity, the distinctness requirement depends only on the inputs k\u2208K_{m,g}."
+      ]
+    },
+    "shared_context": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260320180855_1d8d4f17",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m >= 2",
+            "g is an integer with g >= 0",
+            "g+1 is therefore an integer >= 1 (so genus value g+1 is within the stated integer domain)"
+          ],
+          "normalized_claim": "For all integers m >= 2 and all integers g >= 0, the counting function N(m,g) is monotonically nondecreasing in g with step size 1: N(m,g) <= N(m,g+1).",
+          "quantifier_order": [
+            "forall m (integer, m >= 2)",
+            "forall g (integer, g >= 0)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter of numerical semigroups; universally quantified",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter of numerical semigroups; universally quantified",
+              "type": "integer"
+            },
+            {
+              "domain": "N0",
+              "name": "N(m,g)",
+              "role": "cardinality of the set of numerical semigroups with multiplicity m and genus g",
+              "type": "nonnegative integer (count)"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+      }
+    ],
+    "statement_nl": "Fix integers m and g with m >= 2 and g >= 0. Define K_{m,g} to be the set of all tuples k = (k_1, ..., k_{m-1}) of positive integers such that: for all integers i and j with 1 <= i <= j <= m-1, if i + j < m then k_i + k_j >= k_{i+j}, if i + j > m then k_i + k_j + 1 >= k_{i+j-m}, and also k_1 + ... + k_{m-1} = g. Define K_{m,g+1} analogously, with the same inequalities and with coordinate sum equal to g+1. Then there exists an injective function Phi_{m,g} : K_{m,g} -> K_{m,g+1}.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 3,
+    "candidate_counterexample": null,
+    "lemma_id": "lem_20260323194740_6ea53c77",
+    "proof_nl": null,
+    "proof_summary": null,
+    "self_report": {
+      "confidence": 0.09,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [
+        "I could not construct a globally injective map Phi_{m,g}:K_{m,g}->K_{m,g+1} from the tuple inequalities alone.",
+        "Natural candidate maps of the form k -> k + e_t fail in general, and I did not find a branching construction with a rigorous injectivity proof."
+      ],
+      "used_external_facts": []
+    },
+    "status": "failed",
+    "stuck_point": "The main obstruction is that increasing a single coordinate k_t by 1 preserves all inequalities except those where k_t appears on the right-hand side, and there is no evident uniform choice of t that always works. Moreover, choosing t depending on k creates collisions, so I could not establish injectivity."
+  },
+  "status": "completed",
+  "target_id": "lem_20260323194740_6ea53c77",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-23T19:53:58.804400Z",
+  "worker_job_id": "wrk_lem_20260323194740_6ea53c77_solve_3",
+  "worker_kind": "lemma_solver"
+}

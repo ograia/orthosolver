@@ -1,0 +1,95 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-20T18:17:02.753682Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.38,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let A_r be the set of all s in S congruent to r modulo m. Since the complement of S in N_0 is finite, there exists an integer N such that every n >= N lies in S. Fix r in {1,...,m-1}. Choose an integer t with r + tm >= N. Then r + tm belongs to S, so A_r is nonempty. Because A_r is a nonempty subset of N_0, it has a least element; by definition this is w_r. Since w_r is congruent to r modulo m, there exists an integer k_r with w_r = r + m k_r. If k_r = 0, then w_r = r, which is a positive element of S smaller than m, contradicting that m is the multiplicity, that is, the least positive element of S. Hence k_r >= 1, so k_r is a positive integer.\n\nNow fix integers i,j with 1 <= i <= j <= m-1.\n\nIf i + j < m, then i + j is in {1,...,m-1}. Since w_i and w_j belong to S and S is closed under addition, w_i + w_j belongs to S. Also w_i + w_j is congruent to i + j modulo m. By minimality of w_{i+j} among elements of S in that residue class, w_i + w_j >= w_{i+j}. Writing each w_t as t + m k_t, we get\n(i + m k_i) + (j + m k_j) >= (i + j) + m k_{i+j}.\nCancelling i + j gives m(k_i + k_j - k_{i+j}) >= 0. Since m > 0, it follows that k_i + k_j >= k_{i+j}.\n\nIf i + j > m, then 1 <= i + j - m <= m-1, so w_{i+j-m} is defined. Again w_i + w_j belongs to S, and it is congruent to i + j - m modulo m because i + j and i + j - m differ by m. Therefore, by minimality of w_{i+j-m} in that residue class, w_i + w_j >= w_{i+j-m}. Substituting w_t = t + m k_t gives\n(i + m k_i) + (j + m k_j) >= (i + j - m) + m k_{i+j-m}.\nRearranging gives m(k_i + k_j + 1 - k_{i+j-m}) >= 0. Since m > 0, we obtain k_i + k_j + 1 >= k_{i+j-m}.\n\nThese are exactly the inequalities asserted in the lemma. Therefore the tuple (k_1,...,k_{m-1}) satisfies the Kunz inequalities.",
+  "latest_vetter_report_id": "rep_20260320221241_73fc8171",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260320181648_25a93830",
+  "parent_id": "thm_root_20260320180855_1d8d4f17",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Shows that every numerical semigroup of multiplicity m determines an admissible Kunz vector.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let S be a numerical semigroup with multiplicity m >= 2. For each r in {1,...,m-1}, let w_r be the least element of S congruent to r modulo m, and write w_r = r + m k_r with k_r a positive integer. Then the tuple (k_1,...,k_{m-1}) satisfies the Kunz inequalities: for all integers i,j with 1 <= i <= j <= m-1, if i + j < m then k_i + k_j >= k_{i+j}, and if i + j > m then k_i + k_j + 1 >= k_{i+j-m}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "S is a numerical semigroup: S \u2286 \u21150, 0 \u2208 S, closed under addition, and \u21150\\S is finite",
+      "m is the multiplicity of S: m = min(S\\{0}), with m \u2265 2",
+      "Residue-class definition requires that for each r \u2208 {1,...,m-1}, the set { s \u2208 S : s \u2261 r (mod m) } is nonempty and has a least element (implied by the numerical semigroup/Apery-set property, but not stated explicitly)",
+      "For each r \u2208 {1,...,m-1}, w_r is the least element of S with w_r \u2261 r (mod m)",
+      "Integers i,j satisfy 1 \u2264 i \u2264 j \u2264 m-1",
+      "Case split is only for i+j < m and i+j > m (no explicit inequality stated for i+j = m)"
+    ],
+    "normalized_claim": "Given any numerical semigroup S with multiplicity m \u2265 2, define for each r \u2208 {1,...,m-1} the least element w_r \u2208 S such that w_r \u2261 r (mod m), and set k_r \u2208 \u2115 by w_r = r + m k_r (so k_r > 0). Then for all integers i,j with 1 \u2264 i \u2264 j \u2264 m-1: (a) if i+j < m then k_i + k_j \u2265 k_{i+j}; (b) if i+j > m then k_i + k_j + 1 \u2265 k_{i+j\u2212m}.",
+    "quantifier_order": [
+      "For all numerical semigroups S with multiplicity m \u2265 2",
+      "For each r \u2208 {1,...,m-1}, define w_r as the least element of S with w_r \u2261 r (mod m) and write w_r = r + m k_r",
+      "For all integers i,j with 1 \u2264 i \u2264 j \u2264 m-1",
+      "If i + j < m then (inequality 1 holds)",
+      "If i + j > m then (inequality 2 holds)"
+    ],
+    "variables": [
+      {
+        "domain": "S \u2286 \u21150 and S is a numerical semigroup (0 \u2208 S, closed under addition, and \u21150\\S finite)",
+        "name": "S",
+        "role": "ambient object; semigroup from which witnesses w_r and values k_r are derived",
+        "type": "set of integers"
+      },
+      {
+        "domain": "\u2115 with m \u2265 2",
+        "name": "m",
+        "role": "multiplicity of S; also modulus for residue classes",
+        "type": "integer"
+      },
+      {
+        "domain": "r \u2208 {1,2,...,m-1}",
+        "name": "r",
+        "role": "residue-class index defining w_r and k_r",
+        "type": "integer"
+      },
+      {
+        "domain": "w_r \u2208 S and w_r \u2261 r (mod m)",
+        "name": "w_r",
+        "role": "least element of S in the residue class r modulo m (a witness depending on S and r)",
+        "type": "integer"
+      },
+      {
+        "domain": "k_r \u2208 \u2115 and k_r > 0, defined by w_r = r + m\u00b7k_r",
+        "name": "k_r",
+        "role": "Kunz coordinate corresponding to residue class r",
+        "type": "integer"
+      },
+      {
+        "domain": "1 \u2264 i \u2264 m-1",
+        "name": "i",
+        "role": "index in Kunz inequalities",
+        "type": "integer"
+      },
+      {
+        "domain": "i \u2264 j \u2264 m-1 (and hence 1 \u2264 j \u2264 m-1)",
+        "name": "j",
+        "role": "index in Kunz inequalities",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "w_r depends on (S,m,r) via w_r = min{ s \u2208 S : s \u2261 r (mod m) }",
+      "k_r depends on (S,m,r) via k_r = (w_r \u2212 r)/m",
+      "The inequalities depend only on the resulting tuple (k_1,...,k_{m-1})"
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-20T18:17:02.753688Z"
+}

@@ -1,0 +1,171 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-17T02:35:52.396788Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "formalization_cost_estimate": 0.83,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix distinct points O,G and put r := dist(O,G), so r > 0. Let C := Circle(G,s). Since s > 0, the circle C is infinite; for example, G + s(cos t, sin t) lies on C for every real t.\n\nFirst we show that every point X in C can be realized as the circumcenter of a nondegenerate triangle OAB with A,B on Circle(O,r). Let d := dist(O,X). By the triangle inequality,\n d >= dist(O,G) - dist(G,X) = r - s > r/2.\nChoose an orthonormal basis with origin O whose first basis vector e1 points from O to X; then X has coordinates (d,0) in this basis. Let e2 be the second basis vector, and set\n m := r^2/(2d),   h := sqrt(r^2 - m^2).\nBecause d > r/2, we have 0 < m < r, hence h > 0. Define\n A := O + m e1 + h e2,   B := O + m e1 - h e2.\nThen\n dist(O,A)^2 = m^2 + h^2 = r^2,\nand similarly dist(O,B)^2 = r^2, so A,B lie on Circle(O,r). Also\n dist(X,A)^2 = (d-m)^2 + h^2 = d^2 - 2dm + m^2 + h^2 = d^2 - r^2 + r^2 = d^2,\nbecause 2dm = r^2; similarly dist(X,B)^2 = d^2. Thus dist(X,O) = dist(X,A) = dist(X,B). Since h > 0, A and B are distinct; moreover the line AB has first coordinate constantly m > 0, so O is not on AB. Hence O,A,B are noncollinear. Therefore X is the circumcenter of triangle OAB.\n\nNow choose the required points recursively. Suppose 0 <= k < 5 and we have already chosen pairwise distinct points X_1,...,X_k in C and, for each i <= k, points A_i,B_i on Circle(O,r) such that O,A_i,B_i are noncollinear, X_i = circumcenter(O,A_i,B_i), and all 2k points A_1,B_1,...,A_k,B_k are pairwise distinct. Let T_k := {A_1,B_1,...,A_k,B_k}.\n\nFor each Y in T_k, let l_Y be the perpendicular bisector of segment OY; equivalently, l_Y is the set of points Z with dist(Z,O) = dist(Z,Y). If, for a point X in C, one of the two points A,B produced by the first paragraph were equal to Y, then dist(X,O) = dist(X,Y), so X would belong to l_Y. Therefore any X chosen outside all sets C intersect l_Y will produce points A,B different from every element of T_k.\n\nEach set C intersect l_Y has at most two points, because a line meets a circle in at most two points. Hence the set F_k consisting of X_1,...,X_k and, for each Y in T_k, all points of C lying on l_Y, is finite. Since C is infinite, we can choose X_{k+1} in C but not in F_k. Apply the first paragraph to X_{k+1}; obtain points A_{k+1},B_{k+1} on Circle(O,r) such that O,A_{k+1},B_{k+1} are noncollinear and X_{k+1} = circumcenter(O,A_{k+1},B_{k+1}). These two new points are distinct from each other by construction. They are also distinct from every Y in T_k: indeed, if A_{k+1} = Y or B_{k+1} = Y, then dist(X_{k+1},O) = dist(X_{k+1},Y), so X_{k+1} would lie in C intersect l_Y, contradicting the choice of X_{k+1}. And X_{k+1} is different from X_1,...,X_k because those points also belong to F_k. So the induction hypothesis is preserved with k+1 in place of k.\n\nStarting from k = 0 and repeating this step five times, we obtain pairwise distinct points X_1,X_2,X_3,X_4,X_5 on Circle(G,s) and points A_i,B_i on Circle(O,r) such that all ten points A_1,B_1,A_2,B_2,A_3,B_3,A_4,B_4,A_5,B_5 are pairwise distinct, each triple O,A_i,B_i is noncollinear, and X_i = circumcenter(O,A_i,B_i) for every i. This is exactly the required statement.",
+  "latest_vetter_report_id": "rep_20260317024632_e6df2d37",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260317023457_af92e6d8",
+  "parent_id": "thm_root_20260317012640_4ba3e92b",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260317012640_e1d4625c",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Supplies the exact finite geometric configuration needed for the later counting argument and for exact application of the color-transfer lemma.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Let O,G be distinct points of R^2, let r := dist(O,G), and let s be a real number with 0 < s < r/2. Then there exist five pairwise distinct points X_1,X_2,X_3,X_4,X_5 on Circle(G,s) and, for each index i in {1,2,3,4,5}, points A_i,B_i on Circle(O,r) such that: (i) all ten points A_1,B_1,A_2,B_2,A_3,B_3,A_4,B_4,A_5,B_5 are pairwise distinct; (ii) for each i, the points O,A_i,B_i are noncollinear; and (iii) for each i, X_i = circumcenter(O,A_i,B_i).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "O,G are points in R^2 and O \u2260 G",
+      "r is defined as dist(O,G) and therefore r > 0",
+      "s is a real number satisfying 0 < s < r/2",
+      "Circle(G,s) = {p \u2208 R^2 : dist(p,G) = s} (hence s > 0 implies infinitely many points)",
+      "Circle(O,r) = {p \u2208 R^2 : dist(p,O) = r} (r > 0)",
+      "X_i \u2208 Circle(G,s) for i = 1..5 and X_i are pairwise distinct",
+      "For each i, A_i,B_i \u2208 Circle(O,r)",
+      "(i) the ten points {A_1,B_1,...,A_5,B_5} are pairwise distinct",
+      "(ii) for each i, O,A_i,B_i are noncollinear (this is required to make circumcenter(O,A_i,B_i) well-defined as the unique circumcenter of a noncollinear triple)",
+      "(iii) for each i, X_i = circumcenter(O,A_i,B_i)"
+    ],
+    "normalized_claim": "For all O,G \u2208 R^2 with O \u2260 G, let r := dist(O,G). For all real s with 0 < s < r/2, there exist points X_1,...,X_5 \u2208 R^2 such that (a) for each i in {1,..,5}, dist(X_i,G) = s, (b) X_1,...,X_5 are pairwise distinct, and there exist points A_1,B_1,...,A_5,B_5 \u2208 R^2 with each A_i,B_i satisfying dist(A_i,O)=dist(B_i,O)=r, such that (i) the ten points A_1,B_1,...,A_5,B_5 are pairwise distinct, (ii) for each i, the triple (O,A_i,B_i) is noncollinear, and (iii) for each i, X_i is the circumcenter of the noncollinear triple (O,A_i,B_i).",
+    "quantifier_order": [
+      "forall O,G in R^2 with O \u2260 G",
+      "let r := dist(O,G) (hence r > 0)",
+      "forall real s with 0 < s < r/2",
+      "exists points X_1,X_2,X_3,X_4,X_5 \u2208 Circle(G,s) that are pairwise distinct",
+      "for each i in {1,2,3,4,5} exists points A_i,B_i \u2208 Circle(O,r) (simultaneously) such that conditions (i)-(iii) hold"
+    ],
+    "variables": [
+      {
+        "domain": "R^2",
+        "name": "O",
+        "role": "given; center of circle Circle(O,r)",
+        "type": "point"
+      },
+      {
+        "domain": "R^2",
+        "name": "G",
+        "role": "given; center of circle Circle(G,s)",
+        "type": "point"
+      },
+      {
+        "domain": ">= 0 (defined as distance)",
+        "name": "r",
+        "role": "r := dist(O,G) (hence r > 0 because O \u2260 G)",
+        "type": "real"
+      },
+      {
+        "domain": "0 < s < r/2",
+        "name": "s",
+        "role": "given radius for Circle(G,s)",
+        "type": "real"
+      },
+      {
+        "domain": "Circle(G,s) = {p in R^2 : dist(p,G)=s}",
+        "name": "X_1",
+        "role": "existential witness; one of five pairwise distinct circumcenters",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(G,s)",
+        "name": "X_2",
+        "role": "as X_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(G,s)",
+        "name": "X_3",
+        "role": "as X_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(G,s)",
+        "name": "X_4",
+        "role": "as X_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(G,s)",
+        "name": "X_5",
+        "role": "as X_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r) = {p in R^2 : dist(p,O)=r}",
+        "name": "A_1",
+        "role": "existential witness paired with B_1; determines circumcenter X_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "B_1",
+        "role": "paired with A_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "A_2",
+        "role": "as A_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "B_2",
+        "role": "as B_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "A_3",
+        "role": "as A_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "B_3",
+        "role": "as B_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "A_4",
+        "role": "as A_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "B_4",
+        "role": "as B_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "A_5",
+        "role": "as A_1",
+        "type": "point"
+      },
+      {
+        "domain": "Circle(O,r)",
+        "name": "B_5",
+        "role": "as B_1",
+        "type": "point"
+      }
+    ],
+    "witness_dependencies": [
+      "The existential tuple (X_1,...,X_5) may be chosen depending on the given O,G,s (i.e. on r and s) but not on any A_i,B_i (they are chosen later in the scope).",
+      "For each index i, the points A_i,B_i are existentially chosen after X_1,...,X_5 are fixed, so each A_i,B_i may depend on O,G,s and on the entire chosen tuple (X_1,...,X_5) and on i.",
+      "The requirement that the ten points A_1,B_1,...,A_5,B_5 are pairwise distinct couples the choices of A_i,B_i across different i: the A_i,B_i must be chosen jointly (simultaneously) to satisfy the global distinctness constraint.",
+      "Noncollinearity (O,A_i,B_i) is a constraint on each pair (A_i,B_i) and therefore affects their possible dependence on X_1,...,X_5."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-17T02:35:52.396789Z"
+}

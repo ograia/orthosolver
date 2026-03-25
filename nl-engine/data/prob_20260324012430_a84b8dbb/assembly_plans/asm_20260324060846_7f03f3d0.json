@@ -1,0 +1,76 @@
+{
+  "assembly_plan_id": "asm_20260324060846_7f03f3d0",
+  "created_at": "2026-03-24T06:12:09.664331Z",
+  "decomposition_id": "dec_20260324060846_347b3026",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_skeleton_nl": "Fix integers m >= 2 and g >= 0. First, use the Ap\u00e9ry/Kunz correspondence together with the genus-equals-coordinate-sum fact to identify N(m,g) with the cardinality of the explicitly defined Kunz slice K_{m,g}. Next, separately prove that K_{m,g} is finite and that K_{m,g+1} is finite; this addresses the gap present in the rejected decompositions. Then invoke the core combinatorial lemma asserting the existence of an injective map J_{m,g} from K_{m,g} to K_{m,g+1}. The finite-set injection principle converts that injective map into the inequality |K_{m,g}| <= |K_{m,g+1}|. Finally, translate back through the counting identity for genus g and for genus g+1, obtaining N(m,g) <= N(m,g+1). The argument avoids the previously rejected false least-admissible and greatest-admissible explicit increment maps by packaging the difficult genus-raising step into the standalone injection-existence lemma L5.",
+  "root_node_id": "thm_root_20260324012430_9851dde8",
+  "steps": [
+    {
+      "derives": "For every integers m >= 2 and g >= 0, N(m,g) = |K_{m,g}|, where K_{m,g} is the set of all tuples x = (x_1,...,x_{m-1}) of positive integers satisfying the explicitly stated multiplicity-m Kunz inequalities and x_1 + ... + x_{m-1} = g.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the statement of L3.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the set K_{m,g} is finite.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is exactly the statement of L4 applied with the parameters m and g.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, the set K_{m,g+1} is finite.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Apply L4 with the same integer m and with genus parameter replaced by g+1. The hypothesis g >= 0 implies g+1 >= 0, so the assumptions of L4 are satisfied. Therefore K_{m,g+1} is finite.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, there exists an injective function J_{m,g} : K_{m,g} -> K_{m,g+1}.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is exactly the statement of L5.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integers m >= 2 and g >= 0, |K_{m,g}| <= |K_{m,g+1}|.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "From A2, K_{m,g} is finite. From A3, K_{m,g+1} is finite. From A4, there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}. Applying L6 to the finite sets A = K_{m,g} and B = K_{m,g+1} and to the injective map f = J_{m,g} yields the inequality |K_{m,g}| <= |K_{m,g+1}|.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m,g) of numerical semigroups with multiplicity m and genus g satisfies N(m,g) <= N(m,g+1).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Apply A1 with genus parameter g to obtain N(m,g) = |K_{m,g}|. Apply A1 again with genus parameter g+1 to obtain N(m,g+1) = |K_{m,g+1}|. Step A5 gives |K_{m,g}| <= |K_{m,g+1}|. Replacing |K_{m,g}| by N(m,g) and replacing |K_{m,g+1}| by N(m,g+1) in that inequality gives exactly N(m,g) <= N(m,g+1).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A5"
+      ]
+    }
+  ]
+}

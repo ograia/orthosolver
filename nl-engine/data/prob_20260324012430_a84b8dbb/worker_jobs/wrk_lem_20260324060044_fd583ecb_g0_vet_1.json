@@ -1,0 +1,180 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324060044_fd583ecb/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-24T06:07:27.921431Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T06:07:15.924127Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 1,
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260324060044_fd583ecb",
+    "proof_nl": "Fix integers m>=2 and h>=0. Define f:K_{m,h}\\to \\mathbb Z^{m-1} by\nf(x_1,\\dots,x_{m-1})=(w_1,\\dots,w_{m-1}),\\qquad w_i:=mx_i+i\\quad (1\\le i\\le m-1).\nWe prove that f is a bijection from K_{m,h} onto A_{m,h}, and that the inverse is given by\ng(w)_i=\\frac{w_i-i}{m}.\n\nWe proceed in three parts.\n\n1. For every x\\in K_{m,h}, one has f(x)\\in A_{m,h}.\n\nLet x=(x_1,\\dots,x_{m-1})\\in K_{m,h}, and put w=f(x).\nWe verify the defining conditions of A_{m,h}.\n\n(a) Lower bounds and congruences.\nSince each x_i is a positive integer, x_i\\ge 1. Hence\nw_i=mx_i+i\\ge m+i.\nAlso w_i-i=mx_i is divisible by m, so w_i\\equiv i\\pmod m.\nThus the first condition in the definition of A_{m,h} holds.\n\n(b) Sum condition.\nBecause x_1+\\cdots+x_{m-1}=h,\n\\[\n\\sum_{i=1}^{m-1} w_i\n=\\sum_{i=1}^{m-1}(mx_i+i)\n=m\\sum_{i=1}^{m-1}x_i+\\sum_{i=1}^{m-1}i\n=mh+\\frac{m(m-1)}2.\n\\]\nSo the second condition holds.\n\n(c) Inequalities.\nTake any i,j\\in\\{1,\\dots,m-1\\}.\n\nIf i+j<m, then since x\\in K_{m,h},\n\\[\nx_i+x_j\\ge x_{i+j}.\n\\]\nMultiplying by m and adding i+j gives\n\\[\nmx_i+i+mx_j+j\\ge mx_{i+j}+i+j.\n\\]\nSince i+j<m, the right-hand side is exactly w_{i+j}. Therefore\n\\[\nw_i+w_j\\ge w_{i+j}.\n\\]\n\nIf i+j>m, then since x\\in K_{m,h},\n\\[\nx_i+x_j+1\\ge x_{i+j-m}.\n\\]\nMultiplying by m gives\n\\[\nmx_i+mx_j+m\\ge mx_{i+j-m}.\n\\]\nAdding i+j-m to both sides yields\n\\[\nmx_i+mx_j+i+j\\ge mx_{i+j-m}+(i+j-m).\n\\]\nBut the left-hand side is w_i+w_j, and the right-hand side is w_{i+j-m}. Hence\n\\[\nw_i+w_j\\ge w_{i+j-m}.\n\\]\nThus the third condition also holds.\n\nTherefore w\\in A_{m,h}. This proves f(K_{m,h})\\subseteq A_{m,h}.\n\n2. For every w\\in A_{m,h}, the tuple g(w) belongs to K_{m,h}, and f(g(w))=w.\n\nLet w=(w_1,\\dots,w_{m-1})\\in A_{m,h}. Define x=(x_1,\\dots,x_{m-1}) by\n\\[\nx_i:=\\frac{w_i-i}{m}\\qquad(1\\le i\\le m-1).\n\\]\nWe must show x\\in K_{m,h}.\n\n(a) Each x_i is a positive integer.\nBecause w_i\\equiv i\\pmod m, the difference w_i-i is divisible by m, so x_i\\in\\mathbb Z.\nBecause w_i\\ge m+i,\n\\[\nx_i=\\frac{w_i-i}{m}\\ge \\frac{m+i-i}{m}=1.\n\\]\nSo each x_i is a positive integer.\n\n(b) Sum condition.\nUsing the defining sum condition for A_{m,h},\n\\[\n\\sum_{i=1}^{m-1}x_i\n=\\sum_{i=1}^{m-1}\\frac{w_i-i}{m}\n=\\frac{1}{m}\\left(\\sum_{i=1}^{m-1}w_i-\\sum_{i=1}^{m-1}i\\right)\n=\\frac{1}{m}\\left(mh+\\frac{m(m-1)}2-\\frac{m(m-1)}2\\right)=h.\n\\]\nThus x_1+\\cdots+x_{m-1}=h.\n\n(c) Inequalities.\nTake any i,j\\in\\{1,\\dots,m-1\\}.\n\nIf i+j<m, then since w\\in A_{m,h},\n\\[\nw_i+w_j\\ge w_{i+j}.\n\\]\nSubstituting w_k=mx_k+k for k=i,j,i+j gives\n\\[\n(mx_i+i)+(mx_j+j)\\ge mx_{i+j}+(i+j).\n\\]\nCancel i+j and divide by m to obtain\n\\[\nx_i+x_j\\ge x_{i+j}.\n\\]\n\nIf i+j>m, then since w\\in A_{m,h},\n\\[\nw_i+w_j\\ge w_{i+j-m}.\n\\]\nSubstituting w_k=mx_k+k gives\n\\[\n(mx_i+i)+(mx_j+j)\\ge mx_{i+j-m}+(i+j-m).\n\\]\nRearranging,\n\\[\nm(x_i+x_j)+m\\ge mx_{i+j-m},\n\\]\nso dividing by m yields\n\\[\nx_i+x_j+1\\ge x_{i+j-m}.\n\\]\nThus the defining inequalities for K_{m,h} hold.\n\nTherefore x\\in K_{m,h}.\n\nNow compute, for each i,\n\\[\nf(g(w))_i = m\\left(\\frac{w_i-i}{m}\\right)+i = w_i.\n\\]\nHence f(g(w))=w.\n\nSo every w\\in A_{m,h} has a preimage under f, namely g(w), and that preimage lies in K_{m,h}. This proves A_{m,h}\\subseteq f(K_{m,h}). Combined with Part 1, we get f(K_{m,h})=A_{m,h}.\n\n3. The maps f and g are inverse to each other on their domains.\n\nWe already proved in Part 2 that for every w\\in A_{m,h},\n\\[\nf(g(w))=w.\n\\]\nNow let x\\in K_{m,h}. If w=f(x), then w_i=mx_i+i, so\n\\[\ng(f(x))_i=\\frac{w_i-i}{m}=\\frac{mx_i+i-i}{m}=x_i.\n\\]\nThus g(f(x))=x.\n\nTherefore g is a two-sided inverse of f, so f is a bijection from K_{m,h} onto A_{m,h}. The inverse is exactly the coordinatewise formula\n\\[\ng(w)_i=\\frac{w_i-i}{m}.\n\\]\nThis is precisely the claimed statement.",
+    "role_in_assembly": "Homogenizes the affine Kunz inequalities and places the counting problem into a fixed cone/lattice framework, which motivates the Hilbert-series statement.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m>=2",
+        "h is an integer with h>=0",
+        "K_{m,h} consists of tuples x=(x_1,...,x_{m-1}) where each x_i is a positive integer",
+        "For x in K_{m,h}, x_1+...+x_{m-1}=h",
+        "For x in K_{m,h}, for all i,j in {1,...,m-1}: if i+j<m then x_i+x_j >= x_{i+j}; if i+j>m then x_i+x_j+1 >= x_{i+j-m}",
+        "A_{m,h} consists of tuples w=(w_1,...,w_{m-1}) of integers",
+        "For w in A_{m,h}, for every i in {1,...,m-1}: w_i >= m+i",
+        "For w in A_{m,h}, for every i in {1,...,m-1}: w_i is congruent to i modulo m (i.e., w_i \u2261 i (mod m))",
+        "For w in A_{m,h}, w_1+...+w_{m-1} = m h + m(m-1)/2",
+        "For w in A_{m,h}, for all i,j in {1,...,m-1}: if i+j<m then w_i+w_j >= w_{i+j}; if i+j>m then w_i+w_j >= w_{i+j-m}"
+      ],
+      "normalized_claim": "Fix integers m>=2 and h>=0. Define f:K_{m,h}\u2192Z^(m-1) by f(x)=w where for each i\u2208{1,...,m-1}, w_i = m x_i + i. Let A_{m,h} be the set of tuples w=(w_1,...,w_{m-1})\u2208Z^(m-1) satisfying: (1) \u2200i, w_i >= m+i and w_i \u2261 i (mod m); (2) \u03a3_{i=1}^{m-1} w_i = m h + m(m-1)/2; (3) \u2200i,j\u2208{1,...,m-1}, if i+j<m then w_i+w_j >= w_{i+j}, and if i+j>m then w_i+w_j >= w_{i+j-m} (no constraint asserted for i+j=m). Then f is a bijection from K_{m,h} onto A_{m,h}, with inverse g:A_{m,h}\u2192K_{m,h} given coordinatewise by g(w)_i = (w_i - i)/m. Equivalently: (i) \u2200x\u2208K_{m,h}, f(x)\u2208A_{m,h}; (ii) \u2200w\u2208A_{m,h}, g(w)\u2208K_{m,h} and f(g(w))=w; (iii) g(f(x))=x for all x\u2208K_{m,h}.",
+      "quantifier_order": [
+        "For all integers m, if m>=2",
+        "For all integers h, if h>=0",
+        "For all tuples x in K_{m,h}",
+        "For all indices i,j in {1,...,m-1}, conditions are applied casewise by whether i+j<m, i+j=m, or i+j>m",
+        "For all tuples w in A_{m,h}",
+        "There exists a tuple x (uniquely determined) with x_i=(w_i-i)/m such that x in K_{m,h} and f(x)=w"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "global parameter (shape of index set {1,...,m-1}) with constraint m>=2",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "h",
+          "role": "global parameter (target sum of x_i) with constraint h>=0",
+          "type": "integer"
+        },
+        {
+          "domain": "Z^(m-1) with additional restrictions defining K_{m,h}",
+          "name": "x",
+          "role": "element of K_{m,h}; components x_i are positive integers",
+          "type": "tuple of integers"
+        },
+        {
+          "domain": "Z",
+          "name": "x_i",
+          "role": "i-th component of x; required to be positive and to satisfy constraints",
+          "type": "integer"
+        },
+        {
+          "domain": "Z^(m-1) with additional restrictions defining A_{m,h}",
+          "name": "w",
+          "role": "image of x under mapping f; components w_i are integers satisfying congruences/inequalities",
+          "type": "tuple of integers"
+        },
+        {
+          "domain": "Z",
+          "name": "w_i",
+          "role": "i-th component of w; must satisfy w_i \u2261 i (mod m), w_i >= m+i, and inequalities",
+          "type": "integer"
+        },
+        {
+          "domain": "{1,...,m-1}",
+          "name": "i",
+          "role": "index for coordinates",
+          "type": "integer"
+        },
+        {
+          "domain": "{1,...,m-1}",
+          "name": "j",
+          "role": "index for coordinates",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The forward mapping f depends on (m,h) via the index range and is defined coordinatewise by w_i = m x_i + i for each i",
+        "The inverse mapping g(w) depends on w (and on m only through division by m): x_i = (w_i - i)/m",
+        "The integrality of x_i as an inverse image is guaranteed only when w_i \u2261 i (mod m), which is part of membership in A_{m,h}"
+      ]
+    },
+    "statement_nl": "Let m be an integer with m >= 2 and let h be an integer with h >= 0. Define K_{m,h} to be the set of all tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=h and such that for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, and if i+j > m then x_i+x_j+1 >= x_{i+j-m}. For x in K_{m,h}, define w=(w_1,...,w_{m-1}) by w_i = m x_i + i for each i. Then x -> w is a bijection from K_{m,h} onto the set A_{m,h} of all tuples w=(w_1,...,w_{m-1}) of integers satisfying the following conditions: for every i in {1,...,m-1}, one has w_i >= m+i and w_i is congruent to i modulo m; one has w_1+...+w_{m-1} = m h + m(m-1)/2; and for all i,j in {1,...,m-1}, if i+j < m then w_i+w_j >= w_{i+j}, and if i+j > m then w_i+w_j >= w_{i+j-m}. The inverse map is x_i = (w_i - i)/m."
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "detailed_findings": [
+      {
+        "finding": "Forward direction correctly proves lower bounds, congruences, sum condition, and both inequality families for f(x).",
+        "location": "Part 1",
+        "severity": "low"
+      },
+      {
+        "finding": "Inverse construction correctly uses w_i\u2261i mod m for integrality and w_i\u2265m+i for positivity, then derives the sum and Kunz inequalities for g(w).",
+        "location": "Part 2",
+        "severity": "low"
+      },
+      {
+        "finding": "Both compositions f(g(w))=w and g(f(x))=x are explicitly verified, completing bijectivity.",
+        "location": "Part 3",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "lemma_id": "lem_20260324060044_fd583ecb",
+    "proof_status": "complete",
+    "reason": "The proof establishes both directions of the claimed bijection exactly as specified in the lemma sketch. It verifies that x\u21a6(mx_i+i) sends K_{m,h} into A_{m,h}, constructs the inverse g(w)_i=(w_i-i)/m from the congruence conditions, proves g(w)\u2208K_{m,h}, and checks both compositions f\u2218g and g\u2218f are identities. The case split on i+j<m and i+j>m matches the statement, with no missing use of the excluded i+j=m case.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed"
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260324060044_fd583ecb",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T06:07:27.921437Z",
+  "worker_job_id": "wrk_lem_20260324060044_fd583ecb_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

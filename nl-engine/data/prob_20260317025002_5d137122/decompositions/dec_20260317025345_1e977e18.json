@@ -1,0 +1,29 @@
+{
+  "assembly_plan_id": "asm_20260317025345_635a486a",
+  "controller_status": "failed",
+  "created_at": "2026-03-17T03:04:48.230218Z",
+  "decomposition_id": "dec_20260317025345_1e977e18",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.74,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "thm_root_20260317025002_2660065c",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260317025002_5d137122",
+  "shared_context": [
+    {
+      "content": "Throughout, \\mathbb{N} = \\{1,2,3,\\dots\\}. A function g: \\mathbb{N} \\to \\mathbb{N} takes positive integer values. For a real number r and positive integer m, the expression m^r is the usual real power.",
+      "label": "Natural-number convention"
+    },
+    {
+      "content": "For a function g: \\mathbb{N} \\to \\mathbb{N}, define d_n := g(n+1)-g(n) for n \\in \\mathbb{N}. If g satisfies g(n+1)-g(n) \\ge (g(g(n)))^r for all n and r \\ge 0, then each d_n is a positive integer.",
+      "label": "Difference-sequence convention"
+    }
+  ],
+  "strategy_summary": "Reformulate the problem through the difference sequence d_n := g(n+1)-g(n). Prove the lower bound by the explicit quadratic construction g(n)=n^2. For the upper bound, first show any admissible function is strictly increasing, hence the difference sequence is positive and nondecreasing when r>0. Then derive a structural lower bound g(g(n)) \\ge (g(n)-1)^2/n from monotone averages of the differences. This converts the original inequality into a growth inequality for d_n in terms of g(n). A dedicated impossibility lemma shows that these coupled monotonicity and growth constraints force r \\le 1/4. The theorem then follows by combining the explicit witness at r=1/4 with the impossibility of any witness for r>1/4.",
+  "updated_at": "2026-03-17T03:04:48.230220Z"
+}

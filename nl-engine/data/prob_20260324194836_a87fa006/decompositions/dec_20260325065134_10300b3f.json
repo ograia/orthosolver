@@ -1,0 +1,48 @@
+{
+  "assembly_plan_id": "asm_20260325065134_9f31ebdb",
+  "controller_status": "failed",
+  "created_at": "2026-03-25T06:55:04.710191Z",
+  "decomposition_id": "dec_20260325065134_10300b3f",
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "medium",
+  "failure_origin": "context_purity",
+  "failure_reason": "Rejected: decomposition context purity validation found a fatal issue.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.89,
+  "lean_assembly_status": "pending",
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "node_id": "lem_20260325055554_837eceb4",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260324194836_a87fa006",
+  "proof_bundle_artifact_id": "problems/prob_20260324194836_a87fa006/proof_bundles/decompositions/dec_20260325065134_10300b3f.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260324194836_a87fa006/decomposition_candidates/dec_20260325065134_10300b3f/agent2_candidate.json",
+  "shared_context": [
+    {
+      "content": "S = k[x_1,...,x_d] with deg(x_i) = w_i for positive integers w_i; homogeneity always refers to this weighted grading.",
+      "kind": "definition",
+      "label": "Weighted polynomial ring"
+    },
+    {
+      "content": "m = (x_1,...,x_d) is the homogeneous maximal ideal of S.",
+      "kind": "notation",
+      "label": "Irrelevant maximal ideal"
+    },
+    {
+      "content": "S_m denotes the localization of S at the complement of m.",
+      "kind": "notation",
+      "label": "Localization at m"
+    },
+    {
+      "content": "A sequence g_1,...,g_d of homogeneous elements of a graded ring is called a homogeneous regular sequence if for every i with 1 <= i <= d, multiplication by the image of g_i on S/(g_1,...,g_{i-1}) is injective; equivalently, that image is not a zero-divisor there.",
+      "kind": "definition",
+      "label": "Homogeneous regular sequence"
+    }
+  ],
+  "strategy_summary": "Local regular-ring strategy: isolate the full-ideal branch as a bottleneck, and in the proper-ideal branch localize at the homogeneous maximal ideal m=(x_1,...,x_d). Finite-dimensionality makes the localized quotient finite length, S_m is regular local of dimension d, so the localized sequence is regular. Then descend injectivity from the localization back to the original graded quotients using a graded local-to-global injectivity lemma.",
+  "updated_at": "2026-03-25T06:55:05.197299Z"
+}

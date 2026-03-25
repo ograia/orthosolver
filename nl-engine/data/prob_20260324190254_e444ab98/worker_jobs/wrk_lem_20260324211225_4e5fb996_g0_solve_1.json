@@ -1,0 +1,196 @@
+{
+  "artifact_prefix": "problems/prob_20260324190254_e444ab98/lemmas/lem_20260324211225_4e5fb996/solver_attempt_1",
+  "attempt_count": 2,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-24T22:19:53.622051Z",
+  "controller_consumed_by_execution_id": "exec_20260324190254_63765cb0",
+  "created_at": "2026-03-24T21:16:36.018704Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324190254_63765cb0",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+        "item_id": "pnode_20260324211635_1d8e991c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260324211635_fdca8840",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let N(g) denote the number of numerical semigroups of genus g. Prove that N(g) \u2265 N(g\u22121) + N(g\u22122) for every integer g \u2265 2."
+      }
+    ],
+    "lemma_id": "lem_20260324211225_4e5fb996",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260324211636_ea18078d",
+    "role_in_assembly": "Provides the local child-sum inequality for one parent, including the q = 0 case that fixes the earlier coverage gap.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "g is an integer satisfying g \u2265 2 (so g\u22121 and g\u22122 are defined and are \u2265 0)",
+        "N(k) is defined for integers k = g, g\u22121, g\u22122 (implicitly meaning genus is allowed to be any integer \u2265 0)"
+      ],
+      "normalized_claim": "For all integers g \u2265 2, the number of numerical semigroups of genus g is at least the sum of the numbers of numerical semigroups of genus g\u22121 and genus g\u22122: N(g) \u2265 N(g\u22121) + N(g\u22122).",
+      "quantifier_order": [
+        "for every g \u2208 Z with g \u2265 2"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter indexing counts of numerical semigroups",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "none explicitly (the inequality compares cardinalities/counts only)"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "Lambda is a cofinite additive submonoid of Z_{\u2265 0} containing 0 (numerical semigroup)",
+        "F(Lambda) is defined as the largest integer not in Lambda; if Lambda = Z_{\u2265 0}, then F(Lambda) = -1",
+        "m(Lambda) exists as the least positive element of Lambda (implied by numerical semigroup structure; if Lambda = Z_{\u2265 0} then m(Lambda)=1)",
+        "Minimal generator definition: x in Lambda is a positive element that cannot be written as a+b where a,b are positive elements of Lambda",
+        "Effective generator definition: x is a minimal generator and satisfies x > F(Lambda)",
+        "q is the number of effective generators; q can be 0, in which case (lambda_1,...,lambda_q) is the empty list",
+        "For i in 1..q, Gamma_i is the set obtained from Lambda by removing exactly lambda_i",
+        "e(Sigma) is only meaningful as stated when Sigma is a numerical semigroup; implicit in the use of e(Gamma_i) is that each Gamma_i is a numerical semigroup",
+        "Strong condition: lambda_i is 'strong' iff m(Lambda)+lambda_i is a minimal generator of Gamma_i",
+        "Arithmetic: q(q-1)/2 is interpreted in integer arithmetic consistent with q being an integer (typically the rational value which is an integer for integer q)"
+      ],
+      "normalized_claim": "For every numerical semigroup Lambda, let q be the number of effective generators of Lambda, enumerated increasingly as lambda_1<...<lambda_q (empty if q=0). For each i in {1,...,q}, set Gamma_i = Lambda \\ {lambda_i}. Let s(Lambda) be the number of indices i in {1,...,q} such that m(Lambda)+lambda_i is a minimal generator of Gamma_i. Then, with the convention that the sum is 0 when q=0, we have\n\n(sum_{i=1}^{q} e(Gamma_i)) >= q(q-1)/2 + s(Lambda),\n\nwhere e(Sigma) is the number of effective generators of Sigma (minimal generators y of Sigma with y > F(Sigma)).",
+      "quantifier_order": [
+        "forall Lambda (numerical semigroup), then define F(Lambda), m(Lambda), q, the ordered list (lambda_1,...,lambda_q) of effective generators",
+        "for each i with 1 <= i <= q, define Gamma_i by removing lambda_i from Lambda",
+        "define s(Lambda) as the count of indices i in 1..q such that lambda_i is 'strong' (m(Lambda)+lambda_i is a minimal generator of Gamma_i)",
+        "then the inequality holds: sum_{i=1 to q} e(Gamma_i) >= q(q-1)/2 + s(Lambda) (with sum interpreted as 0 if q=0)"
+      ],
+      "variables": [
+        {
+          "domain": "subset of Z_{\u2265 0} that is an additive submonoid, cofinite in Z_{\u2265 0}, and contains 0",
+          "name": "Lambda",
+          "role": "parameter semigroup to which all other definitions apply",
+          "type": "numerical semigroup"
+        },
+        {
+          "domain": "Z (with convention F(Lambda) = -1 when Lambda = Z_{\u2265 0})",
+          "name": "F(Lambda)",
+          "role": "Frobenius number; boundary for defining 'effective' generators",
+          "type": "integer"
+        },
+        {
+          "domain": "Z_{>0}",
+          "name": "m(Lambda)",
+          "role": "least positive element of Lambda",
+          "type": "positive integer"
+        },
+        {
+          "domain": "Z_{\u2265 0}",
+          "name": "q",
+          "role": "number of effective generators of Lambda",
+          "type": "nonnegative integer"
+        },
+        {
+          "domain": "Z_{>0}",
+          "name": "lambda_i",
+          "role": "i-th effective generator of Lambda in increasing order, for i in 1..q",
+          "type": "positive integer"
+        },
+        {
+          "domain": "subset of Z_{\u2265 0}",
+          "name": "Gamma_i",
+          "role": "object formed from Lambda by removing the element lambda_i (used as input to e(\u00b7)",
+          "type": "numerical semigroup candidate (set after removal)"
+        },
+        {
+          "domain": "Z_{\u2265 0}",
+          "name": "s(Lambda)",
+          "role": "number of strong effective generators among {lambda_1,...,lambda_q}",
+          "type": "nonnegative integer"
+        },
+        {
+          "domain": "Z_{\u2265 0}",
+          "name": "e(Sigma)",
+          "role": "for a numerical semigroup Sigma, counts minimal generators y of Sigma with y > F(Sigma)",
+          "type": "nonnegative integer"
+        },
+        {
+          "domain": "subset of Z_{\u2265 0} meeting numerical semigroup conditions",
+          "name": "Sigma",
+          "role": "generic variable used in definition of e(Sigma)",
+          "type": "numerical semigroup"
+        },
+        {
+          "domain": "Z",
+          "name": "i",
+          "role": "index for effective generators and corresponding removed semigroups; constrained by 1 <= i <= q",
+          "type": "integer index"
+        }
+      ],
+      "witness_dependencies": [
+        "The ordered list lambda_1 < ... < lambda_q is uniquely determined by Lambda as the increasing enumeration of effective generators of Lambda",
+        "Each Gamma_i depends on Lambda and on the corresponding effective generator lambda_i (Gamma_i = Lambda \\ {lambda_i})",
+        "The strong/weak status of lambda_i depends on Lambda through both m(Lambda) and the minimal-generator structure of Gamma_i",
+        "s(Lambda) depends on the collection {Gamma_i} and on the condition 'm(Lambda)+lambda_i is a minimal generator of Gamma_i'",
+        "Each term e(Gamma_i) depends on Gamma_i, hence on Lambda and i"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let Lambda be a numerical semigroup, meaning a cofinite additive submonoid of the nonnegative integers containing 0. Let F(Lambda) be its Frobenius number, defined as the largest integer not in Lambda, with the convention F(Lambda) = -1 for the whole set of nonnegative integers. Let m(Lambda) be the least positive element of Lambda. A minimal generator of Lambda is a positive element x of Lambda that cannot be written as a+b with positive a,b in Lambda. An effective generator of Lambda is a minimal generator x with x > F(Lambda). Let q be the number of effective generators of Lambda. If q > 0, list them increasingly as lambda_1 < lambda_2 < ... < lambda_q; if q = 0, regard this as the empty list. For each i with 1 <= i <= q, define Gamma_i to be the set obtained from Lambda by removing lambda_i; if q = 0 there are no Gamma_i. Call an effective generator lambda_i strong if m(Lambda) + lambda_i is a minimal generator of Gamma_i, and let s(Lambda) be the number of strong effective generators of Lambda; when q = 0 this number is 0. For any numerical semigroup Sigma, let e(Sigma) denote the number of its effective generators, meaning the number of minimal generators y of Sigma satisfying y > F(Sigma). Then the sum over i = 1 to q of e(Gamma_i), interpreted as 0 when q = 0, is at least q(q-1)/2 + s(Lambda).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324190254_e444ab98",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "dependency_self_check": {
+      "used_allowed_manifest_items": [],
+      "used_forbidden_claims": [],
+      "used_only_statement_definitions": true
+    },
+    "lemma_id": "lem_20260324211225_4e5fb996",
+    "proof_nl": "Proof. If q = 0, then the sum over i is empty, so it equals 0, and also s(Lambda) = 0 by definition. Thus the claimed inequality holds.\n\nAssume now q > 0. Fix i in {1,...,q} and let Gamma_i be obtained from Lambda by removing lambda_i.\n\nFirst, Gamma_i is a numerical semigroup. Because lambda_i is an effective generator, it is a positive element of Lambda, so 0 belongs to Gamma_i. Its complement in the nonnegative integers is the complement of Lambda together with the single extra missing element lambda_i, hence is finite. For additive closure, let a and b belong to Gamma_i. Then a and b belong to Lambda, so a+b belongs to Lambda. If a+b were equal to lambda_i, then either one of a,b would be 0, forcing the other to be lambda_i and therefore not in Gamma_i, or both a and b would be positive elements of Lambda with a+b = lambda_i, contradicting that lambda_i is a minimal generator of Lambda. Hence a+b is not lambda_i, so a+b belongs to Gamma_i. Therefore Gamma_i is a numerical semigroup.\n\nNext, F(Gamma_i) = lambda_i. Indeed, lambda_i is not in Gamma_i. On the other hand, since lambda_i is effective, lambda_i > F(Lambda). Because F(Lambda) is the largest integer not in Lambda, every integer n > F(Lambda) lies in Lambda. In particular, every n > lambda_i lies in Lambda; and since n is not lambda_i, it also lies in Gamma_i. Thus every integer larger than lambda_i belongs to Gamma_i, while lambda_i does not. So the Frobenius number of Gamma_i is exactly lambda_i.\n\nNow consider any j > i. Then lambda_j belongs to Gamma_i, and since the list is increasing, lambda_j > lambda_i = F(Gamma_i). I claim that lambda_j is a minimal generator of Gamma_i. If not, there would exist positive a,b in Gamma_i with lambda_j = a+b. But then a,b are also positive elements of Lambda, giving a decomposition of lambda_j in Lambda, contrary to the fact that lambda_j is a minimal generator of Lambda. Hence lambda_j is an effective generator of Gamma_i. Therefore Gamma_i has at least q-i effective generators, namely lambda_{i+1},...,lambda_q.\n\nIf lambda_i is strong, then by definition m(Lambda)+lambda_i is a minimal generator of Gamma_i. Since m(Lambda) > 0, this element is larger than lambda_i = F(Gamma_i), so it is an effective generator of Gamma_i. It is distinct from all lambda_j with j > i: if m(Lambda)+lambda_i = lambda_j for some j > i, then lambda_j would be written in Lambda as the sum of the two positive elements m(Lambda) and lambda_i, contradicting the minimality of lambda_j in Lambda. So in the strong case Gamma_i has at least (q-i)+1 effective generators.\n\nDefine epsilon_i to be 1 if lambda_i is strong and 0 otherwise. The previous paragraph shows that for every i, e(Gamma_i) >= (q-i) + epsilon_i.\n\nSumming over i = 1,...,q, we obtain sum_{i=1}^q e(Gamma_i) >= sum_{i=1}^q (q-i) + sum_{i=1}^q epsilon_i = (q-1)+(q-2)+...+1+0 + s(Lambda) = q(q-1)/2 + s(Lambda), because sum_{i=1}^q epsilon_i is exactly the number of strong effective generators. This is the required inequality.",
+    "proof_summary": "For each i, Gamma_i is a numerical semigroup with Frobenius number lambda_i. Every later effective generator lambda_j with j>i remains an effective generator of Gamma_i, giving at least q-i effective generators. If lambda_i is strong, then m(Lambda)+lambda_i is one more distinct effective generator of Gamma_i. Hence e(Gamma_i) is at least q-i plus the indicator that lambda_i is strong; summing over i yields q(q-1)/2 + s(Lambda).",
+    "self_report": {
+      "confidence": 0.98,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Finite union of finite sets is finite.",
+        "0+1+...+(q-1)=q(q-1)/2."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260324211225_4e5fb996",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T22:19:53.622057Z",
+  "worker_job_id": "wrk_lem_20260324211225_4e5fb996_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

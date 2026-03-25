@@ -1,0 +1,97 @@
+{
+  "assembly_plan_id": "asm_20260323194203_8efaa4a4",
+  "created_at": "2026-03-23T19:45:29.893320Z",
+  "decomposition_id": "dec_20260323194203_c27832ba",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_skeleton_nl": "Fix arbitrary integers m >= 2 and g >= 0. Use the Kunz-coordinate bijection to translate numerical semigroups of multiplicity m and genus g into the coordinate layer K_{m,g}, and similarly translate genus g+1 semigroups into K_{m,g+1}. Prove both coordinate layers are finite. Invoke the hard coordinate-layer monotonicity lemma giving an injection K_{m,g} -> K_{m,g+1}. Apply the finite-set injection principle to deduce |K_{m,g}| <= |K_{m,g+1}|. Finally replace these cardinalities by N(m,g) and N(m,g+1) via the bijection lemma. Since m and g were arbitrary, the desired inequality holds for all m >= 2 and g >= 0.",
+  "root_node_id": "thm_root_20260320180855_1d8d4f17",
+  "steps": [
+    {
+      "derives": "Fix integers m >= 2 and g >= 0. If A_{m,g} is the set of numerical semigroups S with multiplicity m(S)=m and genus g(S)=g, if N(m,g)=|A_{m,g}|, and if K_{m,g} is the set of positive integer tuples satisfying the Kunz inequalities and having coordinate sum g, then N(m,g)=|K_{m,g}|.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the concluding sentence of L5.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For the same fixed integers m >= 2 and g >= 0, if K_{m,g+1} is defined by the same Kunz inequalities together with coordinate sum g+1, then N(m,g+1)=|K_{m,g+1}|.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "Apply L5 with the genus parameter replaced by g+1; the hypothesis g >= 0 implies g+1 >= 0.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For the fixed integers m >= 2 and g >= 0, the set K_{m,g} is finite.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the assertion of L6.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For the same fixed integers m >= 2 and g >= 0, the set K_{m,g+1} is finite.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Apply L6 with the genus parameter replaced by g+1.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For the fixed integers m >= 2 and g >= 0, there exists an injective function Phi_{m,g} : K_{m,g} -> K_{m,g+1}.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is exactly the assertion of L7.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "|K_{m,g}| <= |K_{m,g+1}|.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "From A3 and A4, both K_{m,g} and K_{m,g+1} are finite. From A5, there is an injective function from K_{m,g} to K_{m,g+1}. Applying L8 to these two finite sets and this injection yields the cardinality inequality |K_{m,g}| <= |K_{m,g+1}|.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "N(m,g) <= N(m,g+1).",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "A1 identifies N(m,g) with |K_{m,g}|. A2 identifies N(m,g+1) with |K_{m,g+1}|. Substituting these equalities into the inequality from A6 gives N(m,g) <= N(m,g+1).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A6"
+      ]
+    },
+    {
+      "derives": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "The argument in A1-A7 was carried out for arbitrary fixed integers m >= 2 and g >= 0. Therefore universal generalization yields exactly the stated theorem.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A7"
+      ]
+    }
+  ]
+}

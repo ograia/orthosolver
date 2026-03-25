@@ -1,0 +1,122 @@
+{
+  "assembly_step_ids": [],
+  "created_at": "2026-03-23T19:47:33.402499Z",
+  "decomposition_count": 0,
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.57,
+  "kind": "lemma",
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix integers m,g with m\\ge 2 and g\\ge 0.\n\nWe will construct mutually inverse maps between A_{m,g} and K_{m,g}.\n\nFirst, for S\\in A_{m,g}, define for each i\\in\\{1,\\dots,m-1\\}\n\\[\nw_i:=\\min\\{s\\in S: s\\equiv i\\pmod m\\}.\n\\]\nThis is well-defined: since \\mathbb N_0\\setminus S is finite, there exists M such that every integer n\\ge M lies in S. For any fixed residue class i mod m, there are arbitrarily large integers congruent to i mod m, so some such integer lies in S; hence the displayed set is nonempty. As it is a nonempty subset of \\mathbb N_0, it has a least element.\n\nBecause the least positive element of S is m, none of 1,2,\\dots,m-1 belongs to S. Therefore w_i cannot equal i, so w_i>i. Since w_i\\equiv i\\pmod m}, there is a unique integer k_i\\ge 1 such that\n\\[\nw_i=k_i m+i.\n\\]\nThus we obtain a tuple\n\\[\n\\Phi(S):=(k_1,\\dots,k_{m-1}).\n\\]\nWe show that \\Phi(S)\\in K_{m,g}.\n\n1. Positivity of coordinates has already been shown: each k_i\\in \\mathbb Z_{>0}.\n\n2. Kunz inequalities. Let 1\\le i\\le j\\le m-1.\n\nIf i+j<m, then w_i+w_j\\in S by closure of S under addition, and\n\\[\nw_i+w_j\\equiv i+j\\pmod m.\n\\]\nBy minimality of w_{i+j} among elements of S congruent to i+j mod m, we have\n\\[\nw_i+w_j\\ge w_{i+j}.\n\\]\nSubstituting w_t=k_t m+t gives\n\\[\n(k_i m+i)+(k_j m+j)\\ge k_{i+j}m+(i+j),\n\\]\nhence\n\\[\nk_i+k_j\\ge k_{i+j}.\n\\]\n\nIf i+j>m, then w_i+w_j\\in S and\n\\[\nw_i+w_j\\equiv i+j-m\\pmod m.\n\\]\nBy minimality of w_{i+j-m},\n\\[\nw_i+w_j\\ge w_{i+j-m}.\n\\]\nSubstituting gives\n\\[\n(k_i m+i)+(k_j m+j)\\ge k_{i+j-m}m+(i+j-m),\n\\]\nso\n\\[\n(k_i+k_j+1)m\\ge k_{i+j-m}m,\n\\]\nand therefore\n\\[\nk_i+k_j+1\\ge k_{i+j-m}.\n\\]\nThis is exactly the required inequality. (As in the definition, no condition is needed when i+j=m.)\n\n3. Sum condition. We claim that\n\\[\n|\\mathbb N_0\\setminus S|=k_1+\\cdots+k_{m-1}.\n\\]\nIndeed, for each residue i\\in\\{1,\\dots,m-1\\}, the minimal element of S in that residue class is w_i=k_i m+i. Hence the numbers in that residue class that are not in S are exactly\n\\[\ni,\\; m+i,\\; 2m+i,\\; \\dots,\\; (k_i-1)m+i.\n\\]\nThere are exactly k_i such numbers. Also, among multiples of m, none is missing from S: 0\\in S and m\\in S, so by closure every multiple tm=(t-1)m+m belongs to S for all t\\ge 1. Therefore the complement \\mathbb N_0\\setminus S is the disjoint union over i=1,\\dots,m-1 of those k_i missing numbers in residue class i, and its cardinality is \\sum_i k_i. Since S\\in A_{m,g}, this cardinality equals g. Hence\n\\[\nk_1+\\cdots+k_{m-1}=g.\n\\]\nSo \\Phi(S)\\in K_{m,g}.\n\nThus \\Phi:A_{m,g}\\to K_{m,g} is well-defined.\n\nNow define a map in the opposite direction. Let k=(k_1,\\dots,k_{m-1})\\in K_{m,g}. For each i=1,\\dots,m-1, set\n\\[\nw_i:=k_i m+i,\n\\]\nand define\n\\[\n\\Psi(k):=\\{0\\}\\cup \\{qm:q\\in\\mathbb N, q\\ge 1\\}\\cup \\bigcup_{i=1}^{m-1}\\{w_i+tm:t\\in \\mathbb N_0\\}.\n\\]\nEquivalently, \\Psi(k) consists of 0, all positive multiples of m, and in each nonzero residue class i mod m, all integers congruent to i mod m that are at least w_i.\n\nWe show that \\Psi(k)\\in A_{m,g}.\n\n1. 0\\in \\Psi(k) by definition.\n\n2. \\Psi(k) is closed under addition. Take a,b\\in \\Psi(k). We consider cases.\n\n- If one of a,b is 0, then a+b is the other element, hence belongs to \\Psi(k).\n\n- If both are multiples of m, then a+b is a multiple of m, hence in \\Psi(k).\n\n- If a is a positive multiple of m and b=w_i+tm for some i and t\\ge 0, then a+b=w_i+(t+q)m for some q\\ge 1, so a+b\\in \\Psi(k). The same holds with a and b interchanged.\n\n- If a=w_i+tm and b=w_j+um with 1\\le i,j\\le m-1 and t,u\\ge 0, then\n\\[\na+b=w_i+w_j+(t+u)m.\n\\]\nIf i+j<m, the defining inequality of K_{m,g} gives k_i+k_j\\ge k_{i+j}, hence\n\\[\nw_i+w_j=(k_i+k_j)m+(i+j)\\ge k_{i+j}m+(i+j)=w_{i+j}.\n\\]\nTherefore a+b\\ge w_{i+j} and a+b\\equiv i+j\\pmod m, so a+b belongs to the tail \\{w_{i+j}+rm:r\\in\\mathbb N_0\\}\\subseteq \\Psi(k).\n\nIf i+j=m, then\n\\[\nw_i+w_j=(k_i+k_j+1)m,\n\\]\nwhich is a positive multiple of m, so a+b\\in \\Psi(k).\n\nIf i+j>m, the defining inequality gives k_i+k_j+1\\ge k_{i+j-m}, hence\n\\[\nw_i+w_j=(k_i+k_j)m+(i+j)\\ge k_{i+j-m}m+(i+j-m)=w_{i+j-m}.\n\\]\nAlso a+b\\equiv i+j-m\\pmod m, so again a+b lies in the corresponding tail and hence in \\Psi(k).\n\nAll cases are covered, so \\Psi(k) is closed under addition.\n\n3. \\mathbb N_0\\setminus \\Psi(k) is finite. Indeed, in residue class 0 mod m, every multiple of m belongs to \\Psi(k). In residue class i\\in\\{1,\\dots,m-1\\}, every number \\ge w_i and congruent to i mod m belongs to \\Psi(k), so the only missing numbers in that class are\n\\[\ni,\\; m+i,\\; 2m+i,\\; \\dots,\\; (k_i-1)m+i,\n\\]\nwhich is a finite set. Since there are only finitely many residue classes, the complement is finite.\n\n4. The least positive element of \\Psi(k) is m. Since each k_i\\ge 1, we have w_i=k_i m+i\\ge m+i>m for every i=1,\\dots,m-1. Thus no element of \\Psi(k) in a nonzero residue class is less than or equal to m. On the other hand m itself is in \\Psi(k) as a positive multiple of m. Therefore the least positive element is exactly m.\n\n5. The genus equals g. As observed above, in residue class 0 mod m there are no missing numbers, and in residue class i the missing numbers are exactly\n\\[\ni,\\; m+i,\\; \\dots,\\; (k_i-1)m+i,\n\\]\nso there are exactly k_i of them. Hence\n\\[\n|\\mathbb N_0\\setminus \\Psi(k)|=k_1+\\cdots+k_{m-1}=g,\n\\]\nusing the defining condition of K_{m,g}.\n\nTherefore \\Psi(k)\\in A_{m,g}. So \\Psi:K_{m,g}\\to A_{m,g} is well-defined.\n\nIt remains to show that \\Phi and \\Psi are inverse bijections.\n\nFirst let S\\in A_{m,g}. Construct k=\\Phi(S), so w_i=k_i m+i is the least element of S in residue class i. We claim that \\Psi(k)=S. In residue class 0 mod m, both sets contain exactly all multiples of m: these are all in S because 0,m\\in S and S is closed under addition, and they are all in \\Psi(k) by definition. In residue class i\\in\\{1,\\dots,m-1\\}, by minimality of w_i, no smaller number congruent to i mod m lies in S; and if x\\in S with x\\equiv i\\pmod m, then x\\ge w_i, so x=w_i+tm for some t\\ge 0. Conversely every w_i+tm lies in S because w_i,m\\in S and S is closed under addition. Thus S and \\Psi(k) have exactly the same elements in each residue class, hence are equal.\n\nSecond let k\\in K_{m,g}. Form S=\\Psi(k). For each i\\in\\{1,\\dots,m-1\\}, the least element of S congruent to i mod m is exactly w_i=k_i m+i, because by construction every smaller number in that residue class is omitted from S. Therefore \\Phi(S)=(k_1,\\dots,k_{m-1})=k.\n\nSo \\Phi and \\Psi are inverse maps. Hence there exists a bijection between A_{m,g} and K_{m,g}.\n\nConsequently,\n\\[\nN(m,g)=|A_{m,g}|=|K_{m,g}|.\n\\]\nThis is exactly the claimed statement.",
+  "latest_vetter_report_id": "rep_20260323195115_ac5b861a",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260323194719_6e62cfe1",
+  "parent_id": "thm_root_20260320180855_1d8d4f17",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260320180855_11f16fb8",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Transfers the original counting problem from numerical semigroups to Kunz-coordinate layers.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "statement_lean": null,
+  "statement_nl": "Fix integers m and g with m >= 2 and g >= 0. Define A_{m,g} to be the set of all subsets S of N0 = {0,1,2,...} such that: 0 belongs to S, S is closed under addition, N0 \\ S is finite, the least positive element of S is m, and |N0 \\ S| = g. Define K_{m,g} to be the set of all tuples k = (k_1, ..., k_{m-1}) of positive integers such that: for all integers i and j with 1 <= i <= j <= m-1, if i + j < m then k_i + k_j >= k_{i+j}, if i + j > m then k_i + k_j + 1 >= k_{i+j-m}, and also k_1 + ... + k_{m-1} = g. Then there exists a bijection between A_{m,g} and K_{m,g}. Consequently, if N(m,g) denotes the cardinality |A_{m,g}|, then N(m,g) = |K_{m,g}|.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is an integer with m \u2265 2.",
+      "g is an integer with g \u2265 0.",
+      "N0 = {0,1,2,...}.",
+      "A_{m,g} only contains subsets S \u2286 N0.",
+      "In A_{m,g}: 0 \u2208 S.",
+      "In A_{m,g}: S is closed under addition, i.e., \u2200 a,b \u2208 S, a+b \u2208 S.",
+      "In A_{m,g}: N0 \\ S is finite (so |N0 \\ S| is well-defined as a finite integer).",
+      "In A_{m,g}: the least positive element of S exists and equals m, i.e., m \u2208 S and \u2200 t \u2208 N, 1 \u2264 t < m implies t \u2209 S.",
+      "In A_{m,g}: |N0 \\ S| = g.",
+      "K_{m,g} only contains tuples k = (k_1,...,k_{m-1}) of positive integers, i.e., k_i \u2208 Z_{>0} for each i \u2208 {1,...,m-1}.",
+      "In K_{m,g}: inequalities are quantified over integers i,j with 1 \u2264 i \u2264 j \u2264 m-1.",
+      "For the case i+j < m: the index i+j lies in {2,...,m-1}, so k_{i+j} is among the tuple coordinates.",
+      "For the case i+j > m: the index i+j-m lies in {1,...,m-2}, so k_{i+j-m} is among the tuple coordinates.",
+      "No inequality is imposed when i+j = m (neither i+j < m nor i+j > m).",
+      "In K_{m,g}: k_1 + ... + k_{m-1} = g."
+    ],
+    "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, the sets A_{m,g} and K_{m,g} are in bijection; hence with N(m,g) := |A_{m,g}|, one has N(m,g) = |K_{m,g}|.",
+    "quantifier_order": [
+      "Fix (i.e., take arbitrary but fixed) m,g \u2208 Z with m \u2265 2 and g \u2265 0.",
+      "A_{m,g} is defined by: for all S \u2286 N0, S \u2208 A_{m,g} iff (0 \u2208 S) \u2227 (\u2200 a,b \u2208 S, a+b \u2208 S) \u2227 (N0 \\ S is finite) \u2227 (min(S\\{0}) = m) \u2227 (|N0 \\ S| = g).",
+      "K_{m,g} is defined by: for all tuples k = (k_1,...,k_{m-1}) with k_i \u2208 Z_{>0}, k \u2208 K_{m,g} iff (\u2200 i,j \u2208 Z, 1 \u2264 i \u2264 j \u2264 m-1: [if i+j < m then k_i+k_j \u2265 k_{i+j}] \u2227 [if i+j > m then k_i+k_j+1 \u2265 k_{i+j-m}]) \u2227 (\u2211_{t=1}^{m-1} k_t = g).",
+      "There exists a bijection f such that f: A_{m,g} \u2192 K_{m,g} is bijective (dependence allowed on m,g).",
+      "Therefore (as a corollary), N(m,g) := |A_{m,g}| equals |K_{m,g}|."
+    ],
+    "variables": [
+      {
+        "domain": "Z",
+        "name": "m",
+        "role": "fixed parameter; additive-index bound (length of tuple is m-1)",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "g",
+        "role": "fixed parameter; size of complement and sum constraint",
+        "type": "integer"
+      },
+      {
+        "domain": "P(N0)",
+        "name": "S",
+        "role": "element of A_{m,g}; additive submonoid candidate with specified gaps",
+        "type": "subset of N0"
+      },
+      {
+        "domain": "(Z_{>0})^{m-1}",
+        "name": "k",
+        "role": "element of K_{m,g}; constrained by superadditivity-type inequalities",
+        "type": "m-1 tuple of integers"
+      },
+      {
+        "domain": "Z_{>0}",
+        "name": "k_i",
+        "role": "i-th coordinate of tuple k, for i in [1, m-1]",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "i",
+        "role": "index in inequalities for k_i and k_j; quantified with 1 <= i <= j <= m-1",
+        "type": "integer"
+      },
+      {
+        "domain": "Z",
+        "name": "j",
+        "role": "index in inequalities for k_i and k_j; quantified with 1 <= i <= j <= m-1",
+        "type": "integer"
+      },
+      {
+        "domain": "N0",
+        "name": "a",
+        "role": "dummy variable witnessing closure under addition inside A_{m,g} definition",
+        "type": "integer"
+      },
+      {
+        "domain": "N0",
+        "name": "b",
+        "role": "dummy variable witnessing closure under addition inside A_{m,g} definition",
+        "type": "integer"
+      },
+      {
+        "domain": "A_{m,g} -> K_{m,g}",
+        "name": "f",
+        "role": "bijection whose existence is claimed",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "The bijection f exists for each fixed pair (m,g); i.e., f may depend on m and g.",
+      "Membership conditions for S \u2208 A_{m,g} depend on m and g through: (i) least positive element equals m, and (ii) complement size equals g.",
+      "Membership conditions for k \u2208 K_{m,g} depend on m and g through: (i) tuple length is m-1, (ii) the inequalities reference indices relative to m, and (iii) sum equals g."
+    ]
+  },
+  "statement_status": "plausible",
+  "updated_at": "2026-03-23T19:47:33.402500Z"
+}

@@ -1,0 +1,43 @@
+{
+  "assembly_plan_id": "asm_20260324015412_8cf7d960",
+  "controller_status": "succeeded",
+  "created_at": "2026-03-24T01:56:15.263249Z",
+  "decomposition_id": "dec_20260324015412_818a5c7a",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.63,
+  "lean_assembly_status": "skipped",
+  "lemma_ids": [
+    "lem_20260324015412_5c04f602",
+    "lem_20260324015431_5c716404",
+    "lem_20260324015440_8c148792",
+    "lem_20260324015452_3450990b",
+    "lem_20260324015500_c80e72ed"
+  ],
+  "llm_vetting_status": "accepted",
+  "node_id": "lem_20260324013747_af6fcf4d",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "shared_context": [
+    {
+      "content": "A numerical semigroup is a subset S of the nonnegative integers such that 0 belongs to S, S is closed under addition, and only finitely many nonnegative integers are missing from S. Its multiplicity is the least positive element of S. Its genus is the number of nonnegative integers not in S.",
+      "label": "NS_and_invariants"
+    },
+    {
+      "content": "For fixed integers m >= 2 and g >= 0, let A_{m,g} be the set of numerical semigroups with multiplicity m and genus g. By definition, N(m,g) = |A_{m,g}|.",
+      "label": "A_m_g"
+    },
+    {
+      "content": "K_{m,g} is the set of tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=g and, for all i,j in {1,...,m-1}, if i+j < m then x_i+x_j >= x_{i+j}, while if i+j > m then x_i+x_j+1 >= x_{i+j-m}.",
+      "label": "K_m_g"
+    },
+    {
+      "content": "For a numerical semigroup S of multiplicity m, Phi(S) denotes the tuple x whose coordinate x_r is the least positive integer q such that q m + r belongs to S. For a tuple x of positive integers, Psi(x) denotes the set S_x consisting of all nonnegative multiples of m together with all integers q m + r where 1 <= r <= m-1 and q is a nonnegative integer satisfying q >= x_r.",
+      "label": "Phi_and_Psi"
+    }
+  ],
+  "strategy_summary": "Direct residue-threshold strategy: encode a numerical semigroup of multiplicity m by the first occupied level x_r in each nonzero residue class modulo m, prove that closure under addition is exactly the Kunz system, reconstruct the semigroup from such a threshold tuple, and count gaps residue class by residue class to recover the genus.",
+  "updated_at": "2026-03-24T01:56:15.263255Z"
+}

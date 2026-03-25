@@ -1,0 +1,84 @@
+{
+  "created_at": "2026-03-24T20:53:04.346023Z",
+  "graph_node_id": "pnode_20260324205304_7baa652c",
+  "metadata": {
+    "parent_id": "thm_root_20260324194836_7ca60a42"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "7883f8ce04a56643c868636d78de512cda936c452ad47bc8e9e12e3e7950a570",
+  "owner_id": "lem_20260324204753_54a075e7",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d \u2208 {0,1,2,...}",
+      "For each i with 1<=i<=d: w_i \u2208 {1,2,3,...} (positive, nonzero weights)",
+      "m \u2208 {0,1,2,...} (only nonnegative grading degrees considered)",
+      "S = Q[x_1,...,x_d] when d>=1; S = Q when d=0 (so there are no variables and only degree 0 exists)",
+      "I is assumed homogeneous so that (S/I)_m is well-defined as the mth graded component of a graded quotient"
+    ],
+    "normalized_claim": "Given d\u22650 and weights w_1,...,w_d>0, define the weighted grading on S by deg(x_i)=w_i (and if d=0 set S:=Q with only degree 0). Then for every m\u22650, the homogeneous component S_m is a finite-dimensional Q-vector space. Moreover, for any homogeneous ideal I\u2286S and every m\u22650, the homogeneous component (S/I)_m is finite-dimensional over Q.",
+    "quantifier_order": [
+      "\u2203 implicit none",
+      "For all d (nonnegative integer), for all weights w_1,...,w_d (positive integers), for all m (integer, m>=0): ...",
+      "For all homogeneous ideals I of S, for all m (integer, m>=0): ..."
+    ],
+    "variables": [
+      {
+        "domain": "{0,1,2,...}",
+        "name": "d",
+        "role": "number of variables in the polynomial ring",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "{1,2,3,...}",
+        "name": "w_1,...,w_d",
+        "role": "weights defining the grading deg(x_i)=w_i",
+        "type": "positive integers"
+      },
+      {
+        "domain": "S = Q[x_1,...,x_d] for d>=1; S = Q for d=0",
+        "name": "S",
+        "role": "polynomial ring equipped with a weighted grading",
+        "type": "graded Q-algebra"
+      },
+      {
+        "domain": "formal variables over Q",
+        "name": "x_i",
+        "role": "generators of S whose degrees are specified by w_i",
+        "type": "indeterminates"
+      },
+      {
+        "domain": "{0,1,2,...}",
+        "name": "m",
+        "role": "grading index for homogeneous components",
+        "type": "integer"
+      },
+      {
+        "domain": "homogeneous ideal of S",
+        "name": "I",
+        "role": "used to form the quotient graded ring S/I",
+        "type": "ideal"
+      },
+      {
+        "domain": "mth graded piece of the quotient by a homogeneous ideal",
+        "name": "(S/I)_m",
+        "role": "object claimed to be finite-dimensional over Q",
+        "type": "Q-vector space"
+      },
+      {
+        "domain": "mth graded piece of S under the weighted grading",
+        "name": "S_m",
+        "role": "object claimed to be finite-dimensional over Q",
+        "type": "Q-vector space"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; the claim is purely universal: finite-dimensionality holds for each fixed m with the given d and weights.",
+      "In the second part, the ideal I is a universally quantified parameter (no witness dependence stated); finite-dimensionality is asserted for each m given that I is homogeneous."
+    ]
+  },
+  "statement_nl": "Let d be a nonnegative integer and let w_1, ..., w_d be positive integers. Give S := Q[x_1, ..., x_d] the grading deg(x_i) = w_i; when d = 0 interpret S as Q. Then for every integer m >= 0 the homogeneous component S_m is finite-dimensional over Q. Consequently, if I is a homogeneous ideal of S, then for every integer m >= 0 the homogeneous component (S/I)_m is finite-dimensional over Q.",
+  "updated_at": "2026-03-24T20:53:04.346024Z"
+}

@@ -1,0 +1,108 @@
+{
+  "assembly_plan_id": "asm_20260324060332_bbdaccab",
+  "created_at": "2026-03-24T06:06:44.807960Z",
+  "decomposition_id": "dec_20260324060332_f3cb58fc",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "proof_skeleton_nl": "Construct the bipartite graph whose edges are valid one-coordinate increments from K_{m,g} to K_{m,g+1}. Instead of the false lexicographic reduction from the rejected attempt, introduce a new admissible-transfer partial order on K_{m,g}. A corrected compression lemma says every subset can be replaced by a same-size lower ideal with no larger neighborhood, and a separate hard lemma proves Hall's inequality for all such lower ideals. Hall's theorem then yields the desired injective map.",
+  "root_node_id": "lem_20260324013805_2c445eb6",
+  "steps": [
+    {
+      "derives": "For the fixed integers m >= 2 and g >= 0, the one-coordinate increment relation between K_{m,g} and K_{m,g+1} defines a finite bipartite graph G_{m,g} whose left part is K_{m,g} and whose right part is K_{m,g+1}.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let A be an arbitrary subset of the left vertex set K_{m,g}. To verify Hall's condition for G_{m,g}, it is enough to prove the inequality |N_{G_{m,g}}(A)| >= |A| for this arbitrary subset A.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "Hall's condition is exactly the universal statement that every subset A of the left side satisfies |N(A)| >= |A|.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "By L2, the admissible left-transfer relation <=_tr on K_{m,g} is a genuine partial order: it is reflexive and transitive by construction, and antisymmetry follows because every admissible left-transfer strictly decreases the weight omega(x)=sum_{r=1}^{m-1} r x_r. Therefore the notion of a lower ideal for <=_tr is well-defined.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Apply the corrected compression lemma L3 to the arbitrary subset A from A2. This produces a subset I of K_{m,g} such that I is a lower ideal for the transfer order <=_tr, |I|=|A|, and |N_{G_{m,g}}(I)| <= |N_{G_{m,g}}(A)|.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "Because I is a lower ideal for the transfer order, L4 applies and yields |N_{G_{m,g}}(I)| >= |I|.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "From A4, one has |N_{G_{m,g}}(A)| >= |N_{G_{m,g}}(I)| because |N_{G_{m,g}}(I)| <= |N_{G_{m,g}}(A)|. From A5, one has |N_{G_{m,g}}(I)| >= |I|. Again by A4, |I|=|A|. Combining these three facts gives |N_{G_{m,g}}(A)| >= |A|.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "Because the subset A was arbitrary, the conclusion of A6 shows that every subset of the left vertex set K_{m,g} satisfies Hall's inequality in the graph G_{m,g}.",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "This is direct universal generalization from the arbitrary subset A fixed in A2.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    },
+    {
+      "derives": "Apply Hall's theorem L5 to the finite bipartite graph G_{m,g}. Since A7 establishes Hall's condition on the left side, there exists an injective function f:K_{m,g} -> K_{m,g+1} such that each x in K_{m,g} is adjacent in G_{m,g} to f(x). In particular, f is an injective map from K_{m,g} into K_{m,g+1}.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A7"
+      ]
+    },
+    {
+      "derives": "Set J_{m,g}=f. Therefore, for the given integers m >= 2 and g >= 0, if K_{m,g} denotes the set of all tuples x=(x_1,...,x_{m-1}) of positive integers such that x_1+...+x_{m-1}=g and for all i,j in {1,...,m-1} one has x_i+x_j >= x_{i+j} when i+j < m and x_i+x_j+1 >= x_{i+j-m} when i+j > m, and K_{m,g+1} is defined analogously with coordinate sum g+1, then there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}.",
+      "is_trivial": true,
+      "step_id": "A9",
+      "trivial_justification": "This is just renaming the injective function f produced in A8.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    }
+  ]
+}

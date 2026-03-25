@@ -1,0 +1,186 @@
+{
+  "artifact_prefix": "problems/prob_20260324012430_a84b8dbb/lemmas/lem_20260324013805_2c445eb6/solver_attempt_3",
+  "attempt_count": 1,
+  "controller_consumed_at": "2026-03-24T02:00:10.111128Z",
+  "controller_consumed_by_execution_id": "exec_20260324012432_92677aa6",
+  "created_at": "2026-03-24T01:58:37.014981Z",
+  "error_payload": null,
+  "execution_id": "exec_20260324012432_92677aa6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "attempt_number": 3,
+    "lemma_id": "lem_20260324013805_2c445eb6",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "role_in_assembly": "This is the new core combinatorial lemma replacing the rejected false reconstruction lemma based on the least-admissible-coordinate map.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+      ],
+      "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "multiplicity parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "genus parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "N0",
+          "name": "N(m,g)",
+          "role": "count of numerical semigroups with multiplicity m and genus g",
+          "type": "nonnegative integer (cardinality)"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1).",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer with m \u2265 2",
+        "g is an integer with g \u2265 0",
+        "x = (x_1,...,x_{m-1}) has all coordinates x_k \u2208 Z_{>0} (positive integers)",
+        "x satisfies the coordinate sum constraint: x_1 + ... + x_{m-1} = g",
+        "in the defining inequalities, i and j range over all ordered pairs with i,j \u2208 {1,...,m-1}",
+        "for i+j<m: inequality uses x_{i+j} (which lies in {1,...,m-1})",
+        "for i+j>m: inequality uses x_{i+j-m} (which lies in {1,...,m-1})",
+        "K_{m,g+1} is defined by the same conditions with x_1+...+x_{m-1}=g+1"
+      ],
+      "normalized_claim": "For every integer m \u2265 2 and every integer g \u2265 0, there exists a function J_{m,g} mapping each x \u2208 K_{m,g} (i.e., each positive integer (m\u22121)-tuple with sum g and satisfying the given conditional inequalities for all i,j\u2208{1,...,m\u22121}) into K_{m,g+1} (same constraints but sum g+1), such that for all x,y \u2208 K_{m,g}, x \u2260 y implies J_{m,g}(x) \u2260 J_{m,g}(y).",
+      "quantifier_order": [
+        "\u2200 m \u2208 Z (m \u2265 2)",
+        "\u2200 g \u2208 Z (g \u2265 0)",
+        "\u2203 J_{m,g} (J_{m,g}:K_{m,g}\u2192K_{m,g+1} and J_{m,g} is injective)"
+      ],
+      "variables": [
+        {
+          "domain": "Z",
+          "name": "m",
+          "role": "global parameter controlling tuple length {1,...,m-1} and split in inequalities",
+          "type": "integer"
+        },
+        {
+          "domain": "Z",
+          "name": "g",
+          "role": "global parameter fixing the required coordinate sum of elements of K_{m,g}",
+          "type": "integer"
+        },
+        {
+          "domain": "positive integers^{m-1}",
+          "name": "x",
+          "role": "arbitrary element of K_{m,g} with coordinates x_1,...,x_{m-1}",
+          "type": "tuple of integers"
+        },
+        {
+          "domain": "{1,...,m-1}",
+          "name": "i",
+          "role": "index used in defining the pairwise inequality constraints",
+          "type": "integer index"
+        },
+        {
+          "domain": "{1,...,m-1}",
+          "name": "j",
+          "role": "index used in defining the pairwise inequality constraints",
+          "type": "integer index"
+        },
+        {
+          "domain": "K_{m,g} -> K_{m,g+1}",
+          "name": "J_{m,g}",
+          "role": "witness for the existence of an injective mapping from K_{m,g} to K_{m,g+1}",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "The function witness J_{m,g} is allowed to depend on the parameters (m,g).",
+        "The injectivity condition depends on the membership relation x,y \u2208 K_{m,g}."
+      ]
+    },
+    "shared_context": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260324012430_9851dde8",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "m is an integer with m \u2265 2",
+            "g is an integer with g \u2265 0",
+            "g + 1 is therefore an integer with g + 1 \u2265 1 (so the genus parameter remains in the intended nonnegative-integer regime)"
+          ],
+          "normalized_claim": "For all integers m \u2265 2 and g \u2265 0, letting N(m,g) be the number of numerical semigroups having multiplicity m and genus g, we have N(m,g) \u2264 N(m,g+1).",
+          "quantifier_order": [
+            "\u2200 m \u2208 Z (m \u2265 2)",
+            "\u2200 g \u2208 Z (g \u2265 0)"
+          ],
+          "variables": [
+            {
+              "domain": "Z",
+              "name": "m",
+              "role": "multiplicity parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "Z",
+              "name": "g",
+              "role": "genus parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "N0",
+              "name": "N(m,g)",
+              "role": "count of numerical semigroups with multiplicity m and genus g",
+              "type": "nonnegative integer (cardinality)"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For every integer m >= 2 and every integer g >= 0, the number N(m, g) of numerical semigroups with multiplicity m and genus g satisfies N(m, g) <= N(m, g + 1)."
+      }
+    ],
+    "statement_nl": "Let m be an integer with m >= 2 and let g be an integer with g >= 0. Define K_{m,g} to be the set of all tuples x = (x_1,...,x_{m-1}) of positive integers such that for all i,j in {1,...,m-1}, if i + j < m then x_i + x_j >= x_{i+j}, and if i + j > m then x_i + x_j + 1 >= x_{i+j-m}, and such that x_1 + ... + x_{m-1} = g. Define K_{m,g+1} analogously with coordinate sum g+1. Then there exists an injective function J_{m,g} from K_{m,g} to K_{m,g+1}.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260324012430_a84b8dbb",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 3,
+    "candidate_counterexample": null,
+    "lemma_id": "lem_20260324013805_2c445eb6",
+    "proof_nl": null,
+    "proof_summary": "I found a natural existence argument for a coordinate that can be increased by 1 while preserving the defining inequalities: if x\\in K_{m,g} is nonempty and t is the smallest index at which x_t attains the global minimum of the coordinates, then increasing x_t by 1 still satisfies all inequalities. The verification is straightforward: inequalities with x_t on the left only become easier; if x_t appears on the right in a non-wrapping relation i+j=t, then i,j<t, so by minimality of t we have x_i,x_j\\ge x_t+1, hence x_i+x_j\\ge x_t+1; if x_t appears on the right in a wrapping relation i+j-m=t, then x_i,x_j\\ge x_t, so x_i+x_j+1\\ge x_t+1. However, this does not by itself give an injective map, and the obvious map x\\mapsto x+e_t is not injective: for m=3, x=(1,2) and x'=(2,1) both satisfy the defining conditions, and this rule sends both to (2,2). I was unable to repair this into a rigorous injective construction, and I also do not have a counterexample to the existence of some other injective map.",
+    "self_report": {
+      "confidence": 0.25,
+      "every_step_justified": false,
+      "proves_exactly_the_statement": false,
+      "suspected_gaps": [
+        "I do not have a valid injective construction J_{m,g}.",
+        "I cannot prove that the cardinalities |K_{m,g}| are nondecreasing in g from the given self-contained data.",
+        "I found a collision for a natural candidate map, so the main missing point is genuinely substantial rather than cosmetic."
+      ],
+      "used_external_facts": []
+    },
+    "status": "failed",
+    "stuck_point": "The key obstruction is injectivity. I can show that every nonempty x in K_{m,g} has at least one coordinate that may be increased by 1 while staying inside K_{m,g+1}, but I could not turn this into a globally injective rule. Natural choices (such as increasing the first or last minimal coordinate) admit explicit collisions."
+  },
+  "status": "completed",
+  "target_id": "lem_20260324013805_2c445eb6",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-24T02:00:10.111147Z",
+  "worker_job_id": "wrk_lem_20260324013805_2c445eb6_solve_3",
+  "worker_kind": "lemma_solver"
+}

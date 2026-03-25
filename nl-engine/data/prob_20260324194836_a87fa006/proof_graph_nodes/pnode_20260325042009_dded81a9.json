@@ -1,0 +1,136 @@
+{
+  "created_at": "2026-03-25T04:20:09.718572Z",
+  "graph_node_id": "pnode_20260325042009_dded81a9",
+  "metadata": {
+    "parent_id": "lem_20260324204708_474b5c77"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "b48c8eeaca04d505ec22e00a04040d25349afb2a9467e3cc8de578f7172e52c5",
+  "owner_id": "lem_20260325041558_c25c397a",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260324205304_8753384e",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d is a nonnegative integer",
+      "w_j is a positive integer for each j in {1,...,d}",
+      "e_i is a positive integer for each i in {1,...,d}",
+      "Sigma(J) consists of all integers representable as sum over j in J of m_j times w_j with each m_j a nonnegative integer (so Sigma(J) contains 0 when J is nonempty, though e_i are positive)",
+      "the polynomials g_i are required to be homogeneous with respect to the weighted grading on S"
+    ],
+    "normalized_claim": "Given an infinite field k, a nonnegative integer d, positive weights w_1,...,w_d, and positive target degrees e_1,...,e_d, define S = k[x_1,...,x_d] with weighted grading deg(x_j) = w_j and for each subset J of {1,...,d} let Sigma(J) be the set of all sums of the form sum over j in J of m_j times w_j with m_j nonnegative integers. If for every nonempty subset J of {1,...,d} at least |J| of the values e_1,...,e_d belong to Sigma(J), then there exist weighted-homogeneous polynomials g_1,...,g_d in S with weighted degree deg(g_i) = e_i such that after extending scalars to an algebraic closure of k, the common zero set of g_1,...,g_d in affine d-space is exactly the origin.",
+    "quantifier_order": [
+      "for all infinite fields k",
+      "for all nonnegative integers d",
+      "for all weight vectors w_1,...,w_d of positive integers",
+      "for all degree vectors e_1,...,e_d of positive integers",
+      "assume that for all subsets J of {1,...,d} with J nonempty, at least |J| of the integers e_1,...,e_d lie in Sigma(J)",
+      "there exist homogeneous polynomials g_1,...,g_d in S with weighted degree of g_i equal to e_i for each i",
+      "such that over an algebraic closure of k, the set of common zeros of g_1,...,g_d in affine d-space is exactly the origin"
+    ],
+    "variables": [
+      {
+        "domain": "infinite fields",
+        "name": "k",
+        "role": "base field; coefficients of the polynomial ring",
+        "type": "field"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "d",
+        "role": "number of variables / dimension of affine space",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "w_1",
+        "role": "weight assigned to variable x_1 for weighted grading",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "w_j",
+        "role": "weights assigned to variables x_j for weighted grading, for j in {1,...,d}",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomial ring over k",
+        "name": "S",
+        "role": "S = k[x_1,...,x_d] with weighted grading",
+        "type": "ring"
+      },
+      {
+        "domain": "polynomial indeterminate",
+        "name": "x_1",
+        "role": "graded variable with deg(x_1) = w_1",
+        "type": "variable"
+      },
+      {
+        "domain": "polynomial indeterminate",
+        "name": "x_j",
+        "role": "graded variable with deg(x_j) = w_j, for j in {1,...,d}",
+        "type": "variable"
+      },
+      {
+        "domain": "positive integers",
+        "name": "e_1",
+        "role": "target weighted degree for g_1",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "e_i",
+        "role": "target weighted degree for g_i, for i in {1,...,d}",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of {1,...,d}",
+        "name": "J",
+        "role": "index subset used to define Sigma(J)",
+        "type": "subset"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m_j",
+        "role": "coefficients in the weighted degree sums defining Sigma(J)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "Sigma(J)",
+        "role": "Sigma(J) = all weighted sums of the form sum over j in J of m_j times w_j",
+        "type": "set of integers"
+      },
+      {
+        "domain": "S = k[x_1,...,x_d]",
+        "name": "g_1",
+        "role": "homogeneous polynomial with weighted degree e_1",
+        "type": "polynomial"
+      },
+      {
+        "domain": "S = k[x_1,...,x_d]",
+        "name": "g_i",
+        "role": "homogeneous polynomial with weighted degree e_i, for i in {1,...,d}",
+        "type": "polynomial"
+      },
+      {
+        "domain": "an algebraic closure of k",
+        "name": "kbar",
+        "role": "field extension used to state the zero-locus condition",
+        "type": "field"
+      },
+      {
+        "domain": "affine d-space over kbar",
+        "name": "origin",
+        "role": "the single common zero required",
+        "type": "point"
+      }
+    ],
+    "witness_dependencies": [
+      "the existential choices g_1,...,g_d may depend on the given data k, d, weights w_1,...,w_d, and target degrees e_1,...,e_d",
+      "the existence of g_1,...,g_d is conditional on the universal degree-covering assumption over all nonempty subsets J"
+    ]
+  },
+  "statement_nl": "Let k be an infinite field, let d be a nonnegative integer, let w_1,...,w_d be positive integers, and let S = k[x_1,...,x_d] with weighted grading deg(x_j)=w_j. Let e_1,...,e_d be positive integers. For each subset J of {1,...,d}, define Sigma(J) := { sum_{j in J} m_j w_j : each m_j is a nonnegative integer }. Assume that for every nonempty subset J of {1,...,d}, at least |J| of the integers e_1,...,e_d belong to Sigma(J). Then there exist homogeneous polynomials g_1,...,g_d in S with deg(g_i)=e_i for each i such that, over an algebraic closure of k, the common zero locus of g_1,...,g_d in affine d-space is exactly the origin.",
+  "updated_at": "2026-03-25T04:20:09.718572Z"
+}
