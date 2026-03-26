@@ -84,8 +84,12 @@ class RoutingStatus(StrEnum):
 
 class LeanJobMode(StrEnum):
     CHECK_ASSEMBLY = "check_assembly"
+    PREPARE_TRACK = "prepare_track"
     FORMALIZE_LEMMA = "formalize_lemma"
+    FORMALIZE_LEMMA_FROM_NL = "formalize_lemma_from_nl"
+    SPLIT_PROOF_INTO_SUBLEMMAS = "split_proof_into_sublemmas"
     ASSEMBLE_ROOT = "assemble_root"
+    ASSEMBLE_ROOT_FROM_TRACK = "assemble_root_from_track"
     CHECK_STATEMENT_PLAUSIBILITY = "check_statement_plausibility"
 
 

@@ -19,6 +19,7 @@ class _Resp:
 
 class _HttpClientMock:
     last_headers: dict[str, str] | None = None
+    last_url: str | None = None
 
     def __init__(self, *args, **kwargs) -> None:
         pass
@@ -31,10 +32,12 @@ class _HttpClientMock:
 
     def post(self, url: str, json: dict[str, Any] | None = None, headers: dict[str, str] | None = None):
         _HttpClientMock.last_headers = headers
+        _HttpClientMock.last_url = url
         return _Resp({"ok": True})
 
     def get(self, url: str, headers: dict[str, str] | None = None):
         _HttpClientMock.last_headers = headers
+        _HttpClientMock.last_url = url
         return _Resp({"ok": True})
 
 
@@ -68,3 +71,22 @@ def test_lean_client_oidc_auth_from_env(monkeypatch) -> None:
     client.get_job("job_2")
     headers = _HttpClientMock.last_headers or {}
     assert headers["Authorization"] == "Bearer test-token"
+
+
+def test_lean_client_submit_operation_targets_v2_endpoint(monkeypatch) -> None:
+    monkeypatch.setenv("LEAN_ENGINE_AUTH_MODE", "none")
+    get_settings.cache_clear()
+
+    import httpx
+
+    monkeypatch.setattr(httpx, "Client", _HttpClientMock)
+    client = LeanClient()
+    client.submit_operation(
+        "prepare_track",
+        {"operation_id": "op_1", "problem_id": "p", "target_id": "t", "target_kind": "assembly", "payload": {}},
+        request_id="req_op_1",
+    )
+    assert _HttpClientMock.last_url is not None
+    assert _HttpClientMock.last_url.endswith("/v2/operations/prepare_track")
+    headers = _HttpClientMock.last_headers or {}
+    assert headers["X-Idempotency-Key"] == "op_1"

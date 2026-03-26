@@ -55,6 +55,7 @@ class ProblemSummary(BaseModel):
     status: str
     verification_level: str
     nl_only_mode: bool
+    lean_mode: bool | None = None
     root_theorem_id: str | None
     active_decomposition_id: str | None
     standby_decomposition_id: str | None
@@ -134,10 +135,28 @@ class FailureReportResponse(ApiEnvelope):
     failure_report: dict[str, Any]
 
 
+LeanModeStatus = Literal["pending", "compiling", "success", "error", "cancelled"]
+LeanIssueKind = Literal["proof_issue", "lean_issue"]
+
+
+class LemmaLeanStatus(BaseModel):
+    """Per-lemma Lean status summary for progress and debugging views."""
+
+    lemma_id: str
+    status: LeanModeStatus
+    error_class: str | None = None
+    issue_kind: LeanIssueKind | None = None
+    attempt_index: int = 0
+    job_id: str | None = None
+    confidence: float | None = None
+    fatality: str | None = None
+
+
 class ProgressResponse(ApiEnvelope):
     problem_id: str
     status: str
     verification_level: str
+    lean_mode: bool | None = None
     execution_id: str | None = None
     execution_status: str | None = None
     execution_desired_state: str | None = None
@@ -147,6 +166,8 @@ class ProgressResponse(ApiEnvelope):
     standby_decomposition_status: str | None
     lemma_counts: dict[str, Any]
     lean_job_counts: dict[str, Any]
+    per_lemma_lean_status: list[LemmaLeanStatus] = Field(default_factory=list)
+    lean_v2_track_id: str | None = None
     current_stage: str | None
     blocking_kind: str | None = None
     blocking_ref_id: str | None = None
@@ -192,6 +213,7 @@ class DebugProblemItem(BaseModel):
     status: str
     verification_level: str
     nl_only_mode: bool
+    lean_mode: bool | None = None
     root_theorem_id: str | None
     active_decomposition_id: str | None
     standby_decomposition_id: str | None
@@ -385,7 +407,16 @@ class LeanJobSubmitRequest(BaseModel):
     problem_id: str
     target_id: str
     target_kind: Literal["lemma", "theorem", "assembly"]
-    mode: Literal["check_assembly", "formalize_lemma", "assemble_root", "check_statement_plausibility"]
+    mode: Literal[
+        "check_assembly",
+        "prepare_track",
+        "formalize_lemma",
+        "formalize_lemma_from_nl",
+        "split_proof_into_sublemmas",
+        "assemble_root",
+        "assemble_root_from_track",
+        "check_statement_plausibility",
+    ]
     lean_image_tag: str
     callback_url: str | None = None
     payload: dict[str, Any]
@@ -396,6 +427,33 @@ class LeanJobSubmitResponse(BaseModel):
     status: Literal["queued"]
     created_at: datetime
     estimated_duration_seconds: int
+
+
+class LeanJobStatusItem(BaseModel):
+    job_id: str
+    target_id: str
+    target_kind: str
+    mode: str
+    operation: str | None = None
+    status: str
+    attempt_index: int
+    progress_snapshot: dict[str, Any] | None = None
+    issue_kind: LeanIssueKind | None = None
+    confidence: float | None = None
+    fatality: str | None = None
+    error_class: str | None = None
+    error_message: str | None = None
+    recommended_next_step: str | None = None
+    request_artifact_id: str | None = None
+    result_artifact_id: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class LeanJobsResponse(ApiEnvelope):
+    problem_id: str
+    count: int
+    jobs: list[LeanJobStatusItem]
 
 
 # ---------------------------------------------------------------------------

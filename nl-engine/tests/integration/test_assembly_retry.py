@@ -23,6 +23,16 @@ class BadStatementThenSuccessLeanClient:
             "estimated_duration_seconds": 0,
         }
 
+    def submit_operation(self, operation: str, body, request_id: str, version: str = "v2", mock_behavior=None):
+        operation_id = body.get("operation_id") or body.get("job_id")
+        envelope = dict(body)
+        envelope["job_id"] = operation_id
+        envelope["mode"] = operation
+        response = self.submit_job(envelope, request_id=request_id, mock_behavior=mock_behavior)
+        response["operation_id"] = operation_id
+        response["operation"] = operation
+        return response
+
     def get_job(self, job_id: str):
         record = self.jobs[job_id]
         mode = record["body"]["mode"]
@@ -114,6 +124,12 @@ class BadStatementThenSuccessLeanClient:
             "created_at": record["created_at"],
             "completed_at": now,
         }
+
+    def get_operation(self, operation_id: str, version: str = "v2"):
+        payload = self.get_job(operation_id)
+        payload.setdefault("operation_id", operation_id)
+        payload.setdefault("operation", payload.get("mode"))
+        return payload
 
     def cancel_job(self, job_id: str):
         return {"job_id": job_id, "status": "cancelled"}

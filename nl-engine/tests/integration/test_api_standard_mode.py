@@ -17,8 +17,22 @@ class MockLeanClientProxy:
         assert response.status_code in {202, 409}
         return response.json()
 
+    def submit_operation(self, operation: str, body, request_id: str, version: str = "v2", mock_behavior=None):
+        operation_id = body.get("operation_id") or body.get("job_id")
+        headers = {"X-Request-Id": request_id, "X-Idempotency-Key": operation_id}
+        if mock_behavior:
+            headers["X-Mock-Behavior"] = mock_behavior
+        response = self.client.post(f"/{version}/operations/{operation}", json=body, headers=headers)
+        assert response.status_code in {202, 409}
+        return response.json()
+
     def get_job(self, job_id: str):
         response = self.client.get(f"/v1/jobs/{job_id}")
+        assert response.status_code == 200
+        return response.json()
+
+    def get_operation(self, operation_id: str, version: str = "v2"):
+        response = self.client.get(f"/{version}/operations/{operation_id}")
         assert response.status_code == 200
         return response.json()
 

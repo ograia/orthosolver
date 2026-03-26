@@ -12,10 +12,12 @@ from typing import Any
 from ..config import RuntimeConfig, load_runtime_config
 from ..integrations import IntegrationPreflight, lean_lsp_mcp
 from ..workspace import create_workspace_from_template
-from .jobs import ServiceJobManager
+from .jobs import SUPPORTED_SERVICE_MODES, ServiceJobManager
 from .store import JobStore
 
-JOB_PATH_RE = re.compile(r"^/v1/jobs/([^/]+)$")
+JOB_PATH_RE = re.compile(r"^/(v1|v2)/jobs/([^/]+)$")
+JOB_CANCEL_PATH_RE = re.compile(r"^/(v1|v2)/jobs/([^/]+)/cancel$")
+OPERATION_PATH_RE = re.compile(r"^/v2/operations/([^/]+)$")
 
 
 class LeanEngineServiceApp:
@@ -100,6 +102,69 @@ class LeanEngineServiceApp:
             return _json_error(HTTPStatus.NOT_FOUND, "job_not_found", f"job not found: {job_id}")
         return int(HTTPStatus.OK), record.to_poll_response()
 
+    def cancel_job(self, job_id: str) -> tuple[int, dict[str, Any]]:
+        try:
+            record = self._jobs.cancel(job_id)
+        except KeyError:
+            return _json_error(HTTPStatus.NOT_FOUND, "job_not_found", f"job not found: {job_id}")
+        return int(HTTPStatus.OK), record.to_poll_response()
+
+    def submit_operation(
+        self,
+        operation: str,
+        body: dict[str, Any],
+        *,
+        idempotency_key: str | None = None,
+    ) -> tuple[int, dict[str, Any]]:
+        operation_name = operation.strip()
+        if operation_name not in SUPPORTED_SERVICE_MODES:
+            return _json_error(HTTPStatus.BAD_REQUEST, "invalid_request", f"unsupported operation: {operation_name}")
+
+        if not isinstance(body, dict):
+            return _json_error(HTTPStatus.BAD_REQUEST, "invalid_request", "request body must be a JSON object")
+
+        request = dict(body)
+        operation_id = idempotency_key.strip() if idempotency_key and idempotency_key.strip() else None
+        payload_operation_id = request.get("operation_id")
+        if operation_id is None and isinstance(payload_operation_id, str) and payload_operation_id.strip():
+            operation_id = payload_operation_id.strip()
+        if operation_id is None and isinstance(request.get("job_id"), str) and str(request["job_id"]).strip():
+            operation_id = str(request["job_id"]).strip()
+
+        if operation_id is None:
+            return _json_error(
+                HTTPStatus.BAD_REQUEST,
+                "invalid_request",
+                "operation_id (or X-Idempotency-Key) is required for v2 operations",
+            )
+
+        if isinstance(payload_operation_id, str) and payload_operation_id.strip() and payload_operation_id.strip() != operation_id:
+            return _json_error(
+                HTTPStatus.BAD_REQUEST,
+                "invalid_request",
+                "X-Idempotency-Key must match body.operation_id when both are present",
+            )
+
+        request["operation_id"] = operation_id
+        request["job_id"] = operation_id
+        request["mode"] = operation_name
+        request["operation"] = operation_name
+
+        status_code, payload = self.submit_job(request, idempotency_key=operation_id)
+        response_payload = dict(payload)
+        response_payload["operation"] = operation_name
+        response_payload["operation_id"] = operation_id
+        return status_code, response_payload
+
+    def get_operation(self, operation_id: str) -> tuple[int, dict[str, Any]]:
+        status_code, payload = self.get_job(operation_id)
+        if status_code != int(HTTPStatus.OK):
+            return status_code, payload
+        response_payload = dict(payload)
+        response_payload.setdefault("operation", response_payload.get("mode"))
+        response_payload["operation_id"] = operation_id
+        return status_code, response_payload
+
     def health(self) -> tuple[int, dict[str, Any]]:
         template_ok = _lean_template_ok(self._default_runtime_config)
         mcp_available = _mcp_config_available(self._default_runtime_config)
@@ -158,35 +223,85 @@ def run_http_service(
 def _build_handler_class(app: LeanEngineServiceApp):
     class ServiceHandler(BaseHTTPRequestHandler):
         def do_POST(self) -> None:  # noqa: N802
-            if self.path != "/v1/jobs":
-                self._send_json(
-                    HTTPStatus.NOT_FOUND,
-                    {
-                        "status": "fatal",
-                        "error_class": "not_found",
-                        "message": f"unsupported endpoint: {self.path}",
-                    },
+            if self.path in {"/v1/jobs", "/v2/jobs"}:
+                body, error = self._read_json_body()
+                if error is not None:
+                    self._send_json(HTTPStatus.BAD_REQUEST, error)
+                    return
+
+                idempotency_key = self.headers.get("X-Idempotency-Key")
+                status_code, payload = app.submit_job(body, idempotency_key=idempotency_key)
+                self._send_json(status_code, payload)
+                return
+
+            operation_match = OPERATION_PATH_RE.match(self.path)
+            if operation_match is not None:
+                body, error = self._read_json_body()
+                if error is not None:
+                    self._send_json(HTTPStatus.BAD_REQUEST, error)
+                    return
+
+                idempotency_key = self.headers.get("X-Idempotency-Key")
+                status_code, payload = app.submit_operation(
+                    operation_match.group(1),
+                    body,
+                    idempotency_key=idempotency_key,
                 )
+                self._send_json(status_code, payload)
                 return
 
-            body, error = self._read_json_body()
-            if error is not None:
-                self._send_json(HTTPStatus.BAD_REQUEST, error)
+            cancel_match = JOB_CANCEL_PATH_RE.match(self.path)
+            if cancel_match is not None:
+                status_code, payload = app.cancel_job(cancel_match.group(2))
+                self._send_json(status_code, payload)
                 return
 
-            idempotency_key = self.headers.get("X-Idempotency-Key")
-            status_code, payload = app.submit_job(body, idempotency_key=idempotency_key)
-            self._send_json(status_code, payload)
+            self._send_json(
+                HTTPStatus.NOT_FOUND,
+                {
+                    "status": "fatal",
+                    "error_class": "not_found",
+                    "message": f"unsupported endpoint: {self.path}",
+                },
+            )
+
+        def do_DELETE(self) -> None:  # noqa: N802
+            job_match = JOB_PATH_RE.match(self.path)
+            if job_match is not None:
+                status_code, payload = app.cancel_job(job_match.group(2))
+                self._send_json(status_code, payload)
+                return
+
+            operation_match = OPERATION_PATH_RE.match(self.path)
+            if operation_match is not None:
+                status_code, payload = app.cancel_job(operation_match.group(1))
+                self._send_json(status_code, payload)
+                return
+
+            self._send_json(
+                HTTPStatus.NOT_FOUND,
+                {
+                    "status": "fatal",
+                    "error_class": "not_found",
+                    "message": f"unsupported endpoint: {self.path}",
+                },
+            )
 
         def do_GET(self) -> None:  # noqa: N802
-            if self.path == "/v1/health":
+            if self.path in {"/v1/health", "/v2/health"}:
                 status_code, payload = app.health()
                 self._send_json(status_code, payload)
                 return
 
             job_match = JOB_PATH_RE.match(self.path)
             if job_match is not None:
-                status_code, payload = app.get_job(job_match.group(1))
+                status_code, payload = app.get_job(job_match.group(2))
+                self._send_json(status_code, payload)
+                return
+
+            operation_match = OPERATION_PATH_RE.match(self.path)
+            if operation_match is not None:
+                status_code, payload = app.get_operation(operation_match.group(1))
                 self._send_json(status_code, payload)
                 return
 

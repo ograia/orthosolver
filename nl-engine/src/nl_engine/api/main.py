@@ -21,6 +21,9 @@ from nl_engine.domain.contracts import (
     EventItem,
     EventsResponse,
     FailureReportResponse,
+    LeanJobStatusItem,
+    LeanJobsResponse,
+    LemmaLeanStatus,
     ProblemCostSummaryResponse,
     ProblemCancelResponse,
     ProblemCreateRequest,
@@ -50,6 +53,7 @@ from nl_engine.persistence.repositories import (
     EventRepository,
     FailureReportRepository,
     LeanJobRepository,
+    LeanResultRepository,
     LlmUsageRepository,
     LemmaRepository,
     ProblemExecutionRepository,
@@ -401,6 +405,7 @@ def get_problem(problem_id: str, db: FileStore = Depends(get_db)) -> ProblemGetR
         status=problem.status,
         verification_level=problem.verification_level,
         nl_only_mode=problem.nl_only_mode,
+        lean_mode=not problem.nl_only_mode,
         root_theorem_id=problem.root_theorem_id,
         active_decomposition_id=problem.active_decomposition_id,
         standby_decomposition_id=problem.standby_decomposition_id,
@@ -973,6 +978,9 @@ def get_progress(problem_id: str, db: FileStore = Depends(get_db)) -> ProgressRe
     event_repo = EventRepository(db)
     latest_event = event_repo.latest_for_problem(problem_id)
     decomp_repo = DecompositionRepository(db)
+    lemma_repo = LemmaRepository(db)
+    lean_jobs_repo = LeanJobRepository(db)
+    lean_results_repo = LeanResultRepository(db)
     execution = _latest_execution(db, problem_id)
     active_decomposition = decomp_repo.get(problem.active_decomposition_id) if problem.active_decomposition_id else None
     standby_decomposition = decomp_repo.get(problem.standby_decomposition_id) if problem.standby_decomposition_id else None
@@ -990,12 +998,42 @@ def get_progress(problem_id: str, db: FileStore = Depends(get_db)) -> ProgressRe
     resume_anchor_lemma_id = problem.resume_anchor_lemma_id
     resume_anchor_owner_decomposition_id = problem.resume_anchor_owner_decomposition_id
 
+    status_map = {
+        "queued": "pending",
+        "running": "compiling",
+        "success": "success",
+        "repairable": "error",
+        "fatal": "error",
+        "cancelled": "cancelled",
+    }
+    latest_jobs = lean_jobs_repo.latest_by_lemma(problem_id)
+    per_lemma_lean_status: list[LemmaLeanStatus] = []
+    for lemma in lemma_repo.list_by_problem(problem_id):
+        job = latest_jobs.get(lemma.lemma_id)
+        if not job:
+            continue
+        result = lean_results_repo.get_for_job(job.job_id)
+        per_lemma_lean_status.append(
+            LemmaLeanStatus(
+                lemma_id=lemma.lemma_id,
+                status=status_map.get(job.status, "pending"),
+                error_class=result.error_class if result else None,
+                issue_kind=(result.issue_kind if result else None) or job.issue_kind,
+                attempt_index=job.attempt_index,
+                job_id=job.job_id,
+                confidence=(result.confidence if result and result.confidence is not None else job.confidence),
+                fatality=(result.fatality if result and result.fatality is not None else job.fatality),
+            )
+        )
+    per_lemma_lean_status.sort(key=lambda row: row.lemma_id)
+
     return ProgressResponse(
         request_id=new_id("req"),
         server_time=now_utc(),
         problem_id=problem.problem_id,
         status=problem.status,
         verification_level=problem.verification_level,
+        lean_mode=not problem.nl_only_mode,
         execution_id=execution.execution_id if execution else None,
         execution_status=execution.status if execution else None,
         execution_desired_state=execution.desired_state if execution else None,
@@ -1003,8 +1041,10 @@ def get_progress(problem_id: str, db: FileStore = Depends(get_db)) -> ProgressRe
         active_decomposition_status=active_decomposition.controller_status if active_decomposition else None,
         standby_decomposition_id=problem.standby_decomposition_id,
         standby_decomposition_status=standby_decomposition.controller_status if standby_decomposition else None,
-        lemma_counts=LemmaRepository(db).count_by_status(problem_id),
-        lean_job_counts=LeanJobRepository(db).count_by_mode_status(problem_id),
+        lemma_counts=lemma_repo.count_by_status(problem_id),
+        lean_job_counts=lean_jobs_repo.count_by_mode_status(problem_id),
+        per_lemma_lean_status=per_lemma_lean_status,
+        lean_v2_track_id=active_decomposition.lean_v2_track_id if active_decomposition else None,
         current_stage=execution.current_stage if execution and execution.current_stage else (latest_event.stage if latest_event else None),
         blocking_kind=execution.blocking_kind if execution else None,
         blocking_ref_id=execution.blocking_ref_id if execution else None,
@@ -1013,6 +1053,50 @@ def get_progress(problem_id: str, db: FileStore = Depends(get_db)) -> ProgressRe
         last_event_id=latest_event.event_id if latest_event else None,
         resume_anchor_lemma_id=resume_anchor_lemma_id,
         resume_anchor_owner_decomposition_id=resume_anchor_owner_decomposition_id,
+    )
+
+
+@app.get("/v1/problems/{problem_id}/lean-jobs", response_model=LeanJobsResponse)
+def get_lean_jobs(problem_id: str, db: FileStore = Depends(get_db)) -> LeanJobsResponse:
+    problem = ProblemRepository(db).get(problem_id)
+    if not problem:
+        raise_api_error(404, code="problem_not_found", message="problem not found")
+
+    jobs_repo = LeanJobRepository(db)
+    results_repo = LeanResultRepository(db)
+
+    rows: list[LeanJobStatusItem] = []
+    for job in jobs_repo.list_by_problem(problem_id):
+        result = results_repo.get_for_job(job.job_id)
+        rows.append(
+            LeanJobStatusItem(
+                job_id=job.job_id,
+                target_id=job.target_id,
+                target_kind=job.target_kind,
+                mode=job.mode,
+                operation=job.operation,
+                status=job.status,
+                attempt_index=job.attempt_index,
+                progress_snapshot=(result.progress_snapshot if result and result.progress_snapshot is not None else job.progress_snapshot),
+                issue_kind=(result.issue_kind if result else None) or job.issue_kind,
+                confidence=(result.confidence if result and result.confidence is not None else job.confidence),
+                fatality=(result.fatality if result and result.fatality is not None else job.fatality),
+                error_class=result.error_class if result else None,
+                error_message=result.error_message if result else None,
+                recommended_next_step=result.recommended_next_step if result else None,
+                request_artifact_id=job.request_artifact_id,
+                result_artifact_id=job.result_artifact_id,
+                created_at=job.created_at,
+                updated_at=job.updated_at,
+            )
+        )
+
+    return LeanJobsResponse(
+        request_id=new_id("req"),
+        server_time=now_utc(),
+        problem_id=problem_id,
+        count=len(rows),
+        jobs=rows,
     )
 
 
@@ -1120,7 +1204,14 @@ async def stream_events(
                         "reason": row.reason,
                         "created_at": row.created_at.isoformat(),
                     }
-                    event_name = "terminal" if row.stage in {"problem.succeeded", "problem.failed"} else "event"
+                    if row.stage in {"problem.succeeded", "problem.failed"}:
+                        event_name = "terminal"
+                    elif row.stage == "lean.result_classified":
+                        event_name = "lean_classified"
+                    elif row.stage.startswith("lean.") or row.stage.startswith("lean_v2."):
+                        event_name = "lean"
+                    else:
+                        event_name = "event"
                     yield f"id: {row.event_id}\nevent: {event_name}\ndata: {json.dumps(payload)}\n\n"
                     cursor = row.event_id
                     since_heartbeat = 0

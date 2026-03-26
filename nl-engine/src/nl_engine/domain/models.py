@@ -69,6 +69,10 @@ class DecompositionORM(BaseModel):
     lemma_ids: list[str] = Field(default_factory=list)
     assembly_plan_id: str | None = None
     pinned_statement_signatures: dict[str, str] | None = None
+    lean_run_dir: str | None = None
+    lean_v2_track_id: str | None = None
+    lean_v2_lemma_handles: dict[str, str] = Field(default_factory=dict)
+    lean_v2_prepare_status: str | None = None
     formalization_cost_estimate: float | None = None
     llm_vetting_status: str = "pending"
     lean_assembly_status: str = "pending"
@@ -128,6 +132,8 @@ class LemmaORM(BaseModel):
     proof_bundle_artifact_id: str | None = None
     latest_vetter_report_id: str | None = None
     latest_lean_result_id: str | None = None
+    latest_lean_issue_class: str | None = None
+    latest_lean_issue_kind: str | None = None
     counterexample_status: str = "none"
     active_counterexample_id: str | None = None
     dependency_status: str = "legacy_unknown"
@@ -224,8 +230,15 @@ class LeanJobORM(BaseModel):
     target_id: str
     target_kind: str
     mode: str
+    operation: str | None = None
+    remote_operation_id: str | None = None
     status: str = "queued"
     attempt_index: int = 1
+    progress_snapshot: dict[str, Any] | None = None
+    issue_kind: str | None = None
+    confidence: float | None = None
+    fatality: str | None = None
+    last_error: str | None = None
     lean_image_tag: str = ""
     request_artifact_id: str | None = None
     result_artifact_id: str | None = None
@@ -240,12 +253,17 @@ class LeanResultORM(BaseModel):
     job_id: str
     status: str
     error_class: str | None = None
+    issue_kind: str | None = None
+    confidence: float | None = None
+    fatality: str | None = None
     error_scope: str | None = None
     error_message: str | None = None
+    progress_snapshot: dict[str, Any] | None = None
     diagnostics: list[dict[str, Any]] = Field(default_factory=list)
     decl_name: str | None = None
     lean_code_artifact_id: str | None = None
     compiler_log_artifact_id: str | None = None
+    artifact_index: dict[str, Any] = Field(default_factory=dict)
     recommended_next_step: str | None = None
     routing_confidence: float | None = None
     created_at: datetime = Field(default_factory=utcnow)

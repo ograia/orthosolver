@@ -35,6 +35,26 @@ class JobRecord:
     started_at: str | None
     completed_at: str | None
 
+    def _default_progress_snapshot(self) -> dict[str, Any]:
+        payload = self.request.get("payload") if isinstance(self.request.get("payload"), dict) else {}
+        attempt = payload.get("attempt_index", 1)
+        round_index = payload.get("round_index", 1)
+        try:
+            attempt = int(attempt)
+        except Exception:
+            attempt = 1
+        try:
+            round_index = int(round_index)
+        except Exception:
+            round_index = 1
+        phase = str(self.request.get("operation") or self.mode)
+        return {
+            "phase": phase,
+            "round": round_index,
+            "attempt": attempt,
+            "last_error": None,
+        }
+
     def to_submit_response(self) -> dict[str, Any]:
         return {
             "job_id": self.job_id,
@@ -51,7 +71,7 @@ class JobRecord:
                 int((datetime.now(timezone.utc) - parse_utc_iso(started)).total_seconds()),
                 0,
             )
-            return {
+            response = {
                 "job_id": self.job_id,
                 "status": self.status,
                 "mode": self.mode,
@@ -59,6 +79,8 @@ class JobRecord:
                 "updated_at": self.updated_at,
                 "created_at": self.created_at,
             }
+            response["progress_snapshot"] = self._default_progress_snapshot()
+            return response
 
         payload = {
             "job_id": self.job_id,
@@ -70,6 +92,15 @@ class JobRecord:
         }
         if self.error_class:
             payload["error_class"] = self.error_class
+        if isinstance(self.result, dict):
+            if "progress_snapshot" in self.result:
+                payload["progress_snapshot"] = self.result.get("progress_snapshot")
+            if "issue_kind" in self.result:
+                payload["issue_kind"] = self.result.get("issue_kind")
+            if "confidence" in self.result:
+                payload["confidence"] = self.result.get("confidence")
+            if "fatality" in self.result:
+                payload["fatality"] = self.result.get("fatality")
         return payload
 
 
@@ -161,10 +192,32 @@ class JobStore:
                     """
                     UPDATE jobs
                     SET status = ?, started_at = ?, updated_at = ?
-                    WHERE job_id = ?
+                    WHERE job_id = ? AND status = ?
                     """,
-                    ("running", now, now, job_id),
+                    ("running", now, now, job_id, "queued"),
                 )
+
+    def cancel_job(self, job_id: str) -> JobRecord | None:
+        """Best-effort cancellation for queued/running jobs."""
+        with self._lock:
+            row = self.get(job_id)
+            if row is None:
+                return None
+            if row.status not in ACTIVE_JOB_STATUSES:
+                return row
+
+            now = utc_now_iso()
+            with self._connect() as conn:
+                conn.execute(
+                    """
+                    UPDATE jobs
+                    SET status = ?, updated_at = ?, completed_at = ?
+                    WHERE job_id = ? AND status IN (?, ?)
+                    """,
+                    ("cancelled", now, now, job_id, "queued", "running"),
+                )
+
+        return self.get(job_id)
 
     def mark_terminal(
         self,
@@ -188,7 +241,7 @@ class JobStore:
                         message = ?,
                         updated_at = ?,
                         completed_at = ?
-                    WHERE job_id = ?
+                    WHERE job_id = ? AND status != 'cancelled'
                     """,
                     (
                         status,

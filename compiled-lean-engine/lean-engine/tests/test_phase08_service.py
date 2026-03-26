@@ -11,6 +11,7 @@ from lean_engine.integrations import IntegrationPreflight
 from lean_engine.lean_checks import LeanCommandResult
 from lean_engine.normalize import normalize_problem_artifact
 from lean_engine.service.app import LeanEngineServiceApp, _integration_health
+from lean_engine.service.jobs import JobExecutionResult
 from lean_engine.statement_phase import build_phase03_decl_naming
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures"
@@ -296,3 +297,173 @@ def test_service_check_assembly_formalize_lemma_and_assemble_root_modes(
     assemble_terminal = _wait_for_terminal(service_app, assemble_request["job_id"])
     assert assemble_terminal["status"] == "fatal"
     assert assemble_terminal["result"]["error_class"] == "assembly_invalid"
+
+
+def test_service_v2_formalize_statement_alias(
+    tmp_path: Path,
+    service_app: LeanEngineServiceApp,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("lean_engine.lean_checks._run_command", _fake_run_command())
+    paths = _prepare_mock_files(tmp_path, "tiny_success")
+
+    request = {
+        "job_id": "phase08_v2_formalize_statement_job",
+        "operation": "formalize_statement_from_nl",
+        "payload": {
+            "source": str(paths["raw_fixture"]),
+            "source_kind": "path",
+            "statements_file": str(paths["statements_path"]),
+        },
+        "options": {
+            "artifact_root": str(tmp_path / "artifacts"),
+            "max_repair_rounds": 0,
+            "timeout_seconds": 1,
+        },
+    }
+
+    submit_code, _ = service_app.submit_job(request)
+    assert submit_code == 202
+    terminal = _wait_for_terminal(service_app, request["job_id"])
+    assert terminal["status"] == "success"
+    assert terminal["result"]["operation"] == "formalize_statement_from_nl"
+    assert isinstance(terminal["result"].get("run_dir"), str)
+
+
+def test_service_v2_prepare_track_and_formalize_from_handle(
+    tmp_path: Path,
+    service_app: LeanEngineServiceApp,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("lean_engine.lean_checks._run_command", _fake_run_command())
+    paths = _prepare_mock_files(tmp_path, "tiny_success")
+
+    prepare_code, prepare_submit = service_app.submit_operation(
+        "prepare_track",
+        {
+            "operation_id": "phase08_prepare_track_op",
+            "payload": {
+                "source": str(paths["raw_fixture"]),
+                "source_kind": "path",
+                "statements_file": str(paths["statements_path"]),
+                "decomposition_id": "dec_prepare_track",
+            },
+            "options": {
+                "artifact_root": str(tmp_path / "artifacts"),
+                "max_repair_rounds": 0,
+                "timeout_seconds": 1,
+            },
+        },
+    )
+    assert prepare_code == 202
+    assert prepare_submit["operation"] == "prepare_track"
+    assert prepare_submit["operation_id"] == "phase08_prepare_track_op"
+
+    prepare_terminal = _wait_for_terminal(service_app, "phase08_prepare_track_op")
+    assert prepare_terminal["status"] == "success"
+    prepare_result = prepare_terminal["result"]
+    assert prepare_result["operation"] == "prepare_track"
+    assert isinstance(prepare_result.get("run_dir"), str)
+
+    lemma_id = str(paths["lemma_id"])
+    lemma_handle = prepare_result["lemma_handles"][lemma_id]
+    formalize_code, formalize_submit = service_app.submit_operation(
+        "formalize_lemma_from_nl",
+        {
+            "operation_id": "phase08_formalize_from_handle_op",
+            "payload": {
+                "run_dir": prepare_result["run_dir"],
+                "lemma_handle": lemma_handle,
+                "proof_nl": "by trivial",
+                "mock_candidates_dir": str(paths["phase04_dir"]),
+            },
+            "options": {
+                "max_attempts_per_lemma": 1,
+                "timeout_seconds": 1,
+            },
+        },
+    )
+    assert formalize_code == 202
+    assert formalize_submit["operation"] == "formalize_lemma_from_nl"
+
+    formalize_terminal = _wait_for_terminal(service_app, "phase08_formalize_from_handle_op")
+    assert formalize_terminal["status"] == "success"
+    assert formalize_terminal["result"]["operation"] == "formalize_lemma_from_nl"
+    assert formalize_terminal["result"]["lemma"]["status"] == "ok"
+
+
+def test_service_v2_split_proof_operation(service_app: LeanEngineServiceApp) -> None:
+    submit_code, _ = service_app.submit_operation(
+        "split_proof_into_sublemmas",
+        {
+            "operation_id": "phase08_split_operation",
+            "payload": {
+                "statement_nl": "Show n = n for every natural number.",
+                "proof_nl": "Introduce n. Reduce to reflexivity. Close by rfl.",
+            },
+        },
+    )
+    assert submit_code == 202
+    terminal = _wait_for_terminal(service_app, "phase08_split_operation")
+    assert terminal["status"] == "success"
+    assert terminal["result"]["operation"] == "split_proof_into_sublemmas"
+    assert terminal["result"]["split_count"] >= 1
+
+
+def test_service_statement_plausibility_mode(
+    tmp_path: Path,
+    service_app: LeanEngineServiceApp,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("lean_engine.lean_checks._run_command", _fake_run_command())
+    paths = _prepare_mock_files(tmp_path, "tiny_success")
+
+    request = {
+        "job_id": "phase08_plausibility_job",
+        "mode": "check_statement_plausibility",
+        "payload": {
+            "source": str(paths["raw_fixture"]),
+            "source_kind": "path",
+            "statements_file": str(paths["statements_path"]),
+        },
+        "options": {
+            "artifact_root": str(tmp_path / "artifacts"),
+            "max_repair_rounds": 0,
+            "timeout_seconds": 1,
+        },
+    }
+
+    submit_code, _ = service_app.submit_job(request)
+    assert submit_code == 202
+    terminal = _wait_for_terminal(service_app, request["job_id"])
+    assert terminal["status"] == "success"
+    assert terminal["result"]["mode"] == "check_statement_plausibility"
+    assert terminal["result"]["verdict"] in {"plausible", "suspected_false"}
+
+
+def test_service_cancel_job_keeps_cancelled_terminal(
+    service_app: LeanEngineServiceApp,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def _slow_execute(_self, request: dict[str, object]) -> JobExecutionResult:
+        time.sleep(0.2)
+        mode = str(request.get("mode") or "unknown")
+        return JobExecutionResult(status="success", result={"mode": mode, "error_class": None})
+
+    monkeypatch.setattr("lean_engine.service.jobs.ServiceJobManager._execute_request", _slow_execute)
+
+    request = {
+        "job_id": "phase08_cancel_job",
+        "mode": "check_assembly",
+        "payload": {"source": "{}", "source_kind": "json"},
+    }
+
+    submit_code, _ = service_app.submit_job(request)
+    assert submit_code == 202
+
+    cancel_code, cancel_payload = service_app.cancel_job(request["job_id"])
+    assert cancel_code == 200
+    assert cancel_payload["status"] == "cancelled"
+
+    terminal = _wait_for_terminal(service_app, request["job_id"], timeout_s=3.0)
+    assert terminal["status"] == "cancelled"

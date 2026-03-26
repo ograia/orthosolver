@@ -45,6 +45,12 @@ def test_debug_problem_template_list_and_limit() -> None:
     assert "max_solver_attempts_per_lemma_total" in t["config"]["lemma_solving"]
     assert "max_consecutive_infrastructure_failures_per_lemma" in t["config"]["lemma_solving"]
     assert "max_solver_series_wall_clock_seconds_per_lemma" in t["config"]["lemma_solving"]
+    assert "lean_engine" in t["config"]
+    assert "model" in t["config"]["lean_engine"]
+    assert t["config"]["lean_engine"]["assembly_check_timeout_seconds"] == 240
+    assert t["config"]["lean_engine"]["lean_job_timeout_seconds"] == 300
+    assert t["config"]["lean_engine"]["plausibility_check_timeout_seconds"] == 45
+    assert t["config"]["lean_engine"]["assemble_root_timeout_seconds"] == 300
     assert t["config"]["final_check"]["fail_problem_on_fatal"] is False
     assert "routing" not in t["config"]
     assert "global" not in t["config"]

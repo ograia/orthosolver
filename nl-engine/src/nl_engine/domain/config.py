@@ -7,8 +7,45 @@ TextVerbosity = Literal["low", "medium", "high"]
 SupportedModel = Literal["gpt-5.4", "gpt-5.4-pro", "gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"]
 
 
+class LeanModeConfig(BaseModel):
+    """Feature flags for Lean API v2 orchestration flow."""
+
+    enabled: bool = False
+    use_v2_endpoints: bool = False
+    use_v2_prepare_track: bool = False
+    fallback_to_v1_on_error: bool = True
+    max_track_attempts: int = Field(default=3, ge=1)
+    auto_split_sublemmas: bool = False
+    stream_progress_payloads: bool = False
+    strict_proof_issue_fail_fast: bool = False
+    proof_issue_confidence_threshold: float = Field(default=0.8, ge=0.0, le=1.0)
+
+
 class ModeConfig(BaseModel):
     nl_only_mode: bool = False
+    lean_mode: bool | None = None
+    lean: LeanModeConfig = Field(default_factory=LeanModeConfig)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _accept_lean_mode_alias(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        payload = dict(value)
+        if "lean_mode" in payload and "nl_only_mode" not in payload:
+            raw_lean_mode = payload.get("lean_mode")
+            if isinstance(raw_lean_mode, bool):
+                payload["nl_only_mode"] = not raw_lean_mode
+        return payload
+
+    @model_validator(mode="after")
+    def _sync_mode_flags(self) -> "ModeConfig":
+        if self.lean_mode is None:
+            self.lean_mode = not self.nl_only_mode
+            return self
+        if self.lean_mode == self.nl_only_mode:
+            raise ValueError("lean_mode and nl_only_mode are contradictory")
+        return self
 
 
 class DecompositionConfig(BaseModel):
@@ -93,27 +130,20 @@ class LemmaSolvingConfig(BaseModel):
 
 
 class LeanEngineConfig(BaseModel):
+    model: str | None = None
     max_repair_rounds: int = 5
     max_lean_jobs_per_lemma: int = 3
     repair_context_token_budget: int = 32000
     assemble_root_repair_rounds: int = 3
+    assembly_check_timeout_seconds: int = 240
+    lean_job_timeout_seconds: int = 300
+    plausibility_check_timeout_seconds: int = 45
+    assemble_root_timeout_seconds: int = 300
 
     @property
     def max_tool_calls_per_job(self) -> int:
         # Keep Lean payload valid while making tool-call limits effectively non-user-facing.
         return 1_000_000
-
-    @property
-    def lean_job_timeout_seconds(self) -> int:
-        return 300
-
-    @property
-    def plausibility_check_timeout_seconds(self) -> int:
-        return 45
-
-    @property
-    def assemble_root_timeout_seconds(self) -> int:
-        return 300
 
 
 class RoutingConfig(BaseModel):

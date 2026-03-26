@@ -38,7 +38,7 @@ const FIRST_ATTEMPT_AGENT_SPECS = [
 const REQUEST_CONSOLE_HIDDEN_SOURCES = new Set(["api_create", "api_start", "api_pause", "api_resume", "api_run"]);
 const MODEL_OPTIONS = ["gpt-5.4", "gpt-5.4-pro", "gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"];
 const MINI_MODELS = new Set(["gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"]);
-const EXCLUDED_CONFIG_PATHS = new Set(["llm", "mode.nl_only_mode"]);
+const EXCLUDED_CONFIG_PATHS = new Set(["llm", "mode.nl_only_mode", "mode.lean_mode"]);
 const CONFIG_FIELD_HELP = {
   "decomposition.parallel_root_decompositions_n":
     "How many root decomposition candidates can run in parallel.",
@@ -56,6 +56,16 @@ const CONFIG_FIELD_HELP = {
     "Cumulative number of minor rejections a lemma can accumulate before decomposition is attempted.",
   "lemma_solving.max_total_lemma_nodes":
     "Global cap on total lemma nodes created for this problem.",
+  "lean_engine.model":
+    "Optional Lean-engine model override used for assembly checks, lemma formalization, plausibility checks, and root assembly.",
+  "lean_engine.assembly_check_timeout_seconds":
+    "Timeout for Lean check_assembly jobs generated from decomposition candidates.",
+  "lean_engine.lean_job_timeout_seconds":
+    "Timeout for formalize_lemma jobs for individual lemma attempts.",
+  "lean_engine.plausibility_check_timeout_seconds":
+    "Timeout for check_statement_plausibility jobs when false-lemma suspicion is raised.",
+  "lean_engine.assemble_root_timeout_seconds":
+    "Timeout for final assemble_root jobs once a winning decomposition is selected.",
   "final_check.fail_problem_on_fatal":
     "If true, any fatal Agent 6 finding fails the whole problem instead of reopening only the cited lemmas.",
 };
@@ -246,6 +256,32 @@ function safeJsonParse(text, fallback = null) {
   } catch {
     return fallback;
   }
+}
+
+function summarizeLeanResult(result) {
+  if (!result || typeof result !== "object" || Array.isArray(result)) {
+    return null;
+  }
+  const summary = {};
+  if (typeof result.status === "string" && result.status) {
+    summary.status = result.status;
+  }
+  if (typeof result.operation === "string" && result.operation) {
+    summary.operation = result.operation;
+  }
+  if (typeof result.error_class === "string" && result.error_class) {
+    summary.error_class = result.error_class;
+  }
+  if (typeof result.error_scope === "string" && result.error_scope) {
+    summary.error_scope = result.error_scope;
+  }
+  if (typeof result.recommended_next_step === "string" && result.recommended_next_step) {
+    summary.recommended_next_step = result.recommended_next_step;
+  }
+  if (typeof result.routing_confidence === "number" && Number.isFinite(result.routing_confidence)) {
+    summary.routing_confidence = Math.round(result.routing_confidence * 1000) / 1000;
+  }
+  return Object.keys(summary).length ? summary : null;
 }
 
 function deepClone(obj) {
@@ -752,7 +788,8 @@ function renderProblemBadges() {
   setBadge("badge-problem", `problem: ${problem.problem_id}`);
   setBadge("badge-status", `status: ${problem.status}`);
   setBadge("badge-verification", `verification: ${problem.verification_level}`);
-  setBadge("badge-mode", `mode: ${problem.nl_only_mode ? "nl_only" : "standard"}`);
+  const leanMode = typeof problem.lean_mode === "boolean" ? problem.lean_mode : !problem.nl_only_mode;
+  setBadge("badge-mode", `mode: ${leanMode ? "lean" : "nl_only"}`);
 }
 
 function initialPayloadFromTemplate() {
@@ -776,7 +813,7 @@ function initialPayloadFromTemplate() {
         max_minor_rejections_per_lemma: 10,
         max_total_lemma_nodes: 5000,
       },
-      mode: { nl_only_mode: true },
+      mode: { nl_only_mode: true, lean_mode: false },
       llm: {
         agent1: { model: "gpt-5-mini", thinking_level: "medium", verbosity: "medium", timeout_seconds: 60000 },
         agent2: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 60000 },
@@ -796,6 +833,9 @@ function initialPayloadFromTemplate() {
   payload.config.mode = payload.config.mode || defaultPayload.config.mode;
   if (typeof payload.config.mode.nl_only_mode !== "boolean") {
     payload.config.mode.nl_only_mode = true;
+  }
+  if (typeof payload.config.mode.lean_mode !== "boolean") {
+    payload.config.mode.lean_mode = !payload.config.mode.nl_only_mode;
   }
   return payload;
 }
@@ -840,7 +880,12 @@ function payloadFromForm() {
   base.initial_trusted_context = trusted;
 
   base.config = configFromFields();
-  base.config.mode = { ...(base.config.mode || {}), nl_only_mode: Boolean(byId("form-nl-only").checked) };
+  const nlOnlyMode = Boolean(byId("form-nl-only").checked);
+  base.config.mode = {
+    ...(base.config.mode || {}),
+    nl_only_mode: nlOnlyMode,
+    lean_mode: !nlOnlyMode,
+  };
 
   const llmOverrides = llmOverridesFromForm();
   if (Object.keys(llmOverrides).length > 0) {
@@ -1158,6 +1203,7 @@ function renderOverview() {
     ["status", p.status],
     ["verification", p.verification_level],
     ["nl_only_mode", String(p.nl_only_mode)],
+    ["lean_mode", String(typeof p.lean_mode === "boolean" ? p.lean_mode : !p.nl_only_mode)],
     ["active_decomposition", p.active_decomposition_id || "-"],
     ["standby_decomposition", p.standby_decomposition_id || "-"],
     ["lemma_count", (state.snapshot.visible_lemma_ids || []).length],
@@ -1195,10 +1241,17 @@ function renderOverview() {
   logicalDecompositions.forEach((row) => {
     const div = document.createElement("div");
     div.className = "list-row";
+    const runDir = row.lean_run_dir ? "run_dir=present" : "run_dir=-";
+    const trackId = row.lean_v2_track_id || "-";
+    const prepareStatus = row.lean_v2_prepare_status || "-";
+    const handleCount = row.lean_v2_lemma_handles && typeof row.lean_v2_lemma_handles === "object"
+      ? Object.keys(row.lean_v2_lemma_handles).length
+      : 0;
     div.innerHTML = `
       <strong>${row.logical_decomposition_id || row.decomposition_id}</strong><br />
       node=${row.node_id} controller=${row.controller_status} rev=${row.current_revision_number || row.revision_number || 1}/${row.revision_count || 1}<br />
-      llm=${row.llm_vetting_status} lean=${row.lean_assembly_status}
+      llm=${row.llm_vetting_status} lean=${row.lean_assembly_status} ${runDir}<br />
+      v2_track=${trackId} prepare=${prepareStatus} handles=${handleCount}
     `;
     decList.appendChild(div);
   });
@@ -1212,10 +1265,12 @@ function renderOverview() {
     const div = document.createElement("div");
     div.className = "list-row";
     const owner = state.snapshot.lemma_owner_decomposition?.[row.lemma_id] || "-";
+    const leanIssue = row.latest_lean_issue_kind || row.latest_lean_issue_class || "-";
     div.innerHTML = `
       <strong>${row.lemma_id}</strong><br />
       parent=${row.parent_id} owner_decomposition=${owner}<br />
-      proof=${row.proof_status} truth=${row.truth_status || "-"} routing=${row.routing_status} next=${row.next_action || "-"} attempts=${row.solver_attempt_count}
+      proof=${row.proof_status} truth=${row.truth_status || "-"} routing=${row.routing_status} next=${row.next_action || "-"} attempts=${row.solver_attempt_count}<br />
+      lean_issue=${leanIssue}
     `;
     lemList.appendChild(div);
   });
@@ -1368,6 +1423,9 @@ function statusJsonForNode(nodeId) {
       proof_bundle_artifact_id: row.proof_bundle_artifact_id,
       latest_vetter_report: row.latest_vetter_report,
       latest_lean_result: row.latest_lean_result,
+      latest_lean_result_summary: summarizeLeanResult(row.latest_lean_result),
+      latest_lean_issue_class: row.latest_lean_issue_class,
+      latest_lean_issue_kind: row.latest_lean_issue_kind,
       proof_attempts: row.proof_attempts,
       created_at: row.created_at,
       updated_at: row.updated_at,
@@ -1405,12 +1463,38 @@ function statusJsonForNode(nodeId) {
       controller_status: row.controller_status,
       llm_vetting_status: row.llm_vetting_status,
       lean_assembly_status: row.lean_assembly_status,
+      lean_run_dir: row.lean_run_dir,
+      lean_v2_track_id: row.lean_v2_track_id,
+      lean_v2_prepare_status: row.lean_v2_prepare_status,
+      lean_v2_lemma_handles: row.lean_v2_lemma_handles,
       final_check_passed: row.final_check_passed,
       final_check_job_id: row.final_check_job_id,
       proof_bundle_artifact_id: row.proof_bundle_artifact_id,
       assembly_plan: row.assembly_plan,
       agent3_vetter_output: row.agent3_vetter_output,
       agent6_final_check: row.agent6_final_check,
+      created_at: row.created_at,
+      updated_at: row.updated_at,
+    };
+  }
+  if (state.snapshot.lean_job_by_id && state.snapshot.lean_job_by_id[nodeId]) {
+    const row = state.snapshot.lean_job_by_id[nodeId];
+    return {
+      job_id: row.job_id,
+      target_id: row.target_id,
+      target_kind: row.target_kind,
+      mode: row.mode,
+      operation: row.operation,
+      status: row.status,
+      attempt_index: row.attempt_index,
+      progress_snapshot: row.progress_snapshot,
+      issue_kind: row.issue_kind,
+      confidence: row.confidence,
+      fatality: row.fatality,
+      last_error: row.last_error,
+      request_artifact_id: row.request_artifact_id,
+      result_artifact_id: row.result_artifact_id,
+      result: row.result,
       created_at: row.created_at,
       updated_at: row.updated_at,
     };
@@ -1618,7 +1702,18 @@ function renderTreeExplorer() {
     li.className = "tree-node";
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.textContent = `${node.kind} ${node.id} [${node.status}]`;
+    let label = `${node.kind} ${node.id} [${node.status}]`;
+    if (node.kind === "lean_job") {
+      const issue = node.metadata?.issue_kind;
+      const fatality = node.metadata?.fatality;
+      if (issue) {
+        label += ` <${issue}>`;
+      }
+      if (fatality) {
+        label += ` (${fatality})`;
+      }
+    }
+    btn.textContent = label;
     if (state.selectedTreeNodeId === nodeId) {
       btn.classList.add("primary");
     }

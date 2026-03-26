@@ -21,12 +21,13 @@ class Settings(BaseSettings):
     openai_model_agent5: str = "gpt-5-mini"
     openai_model_agent6: str = "gpt-5-mini"
     openai_reasoning_effort: Literal["none", "low", "medium", "high", "xhigh"] = "none"
-    openai_text_verbosity: Literal["low", "medium", "high"] = "low"
+    openai_text_verbosity: Literal["low", "medium", "high"] = "medium"
     openai_timeout_seconds: int = 180
     # For local SQLite reliability, default to buffering worker-thread usage writes.
     openai_usage_persistence_mode: Literal["immediate", "buffered", "disabled"] = "buffered"
 
     lean_engine_base_url: str = "http://localhost:8081"
+    lean_engine_api_version: str = "v1"
     lean_engine_timeout_seconds: int = 30
     lean_poll_interval_seconds: int = 5
     lean_engine_auth_mode: str = "none"  # none | oidc

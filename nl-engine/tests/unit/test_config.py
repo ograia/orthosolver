@@ -4,6 +4,8 @@ import pytest
 
 def test_config_defaults_and_caps_present() -> None:
     cfg = ProblemConfig()
+    assert cfg.mode.nl_only_mode is False
+    assert cfg.mode.lean_mode is True
     assert cfg.budget.max_estimated_cost_usd_per_problem is None
     assert cfg.budget.max_estimated_cost_usd_per_lemma is None
     assert cfg.decomposition.parallel_root_decompositions_n >= 1
@@ -41,7 +43,41 @@ def test_user_facing_config_excludes_global_ops_and_hidden_knobs() -> None:
     assert "solver_ancestry_depth_cap" not in payload["lemma_solving"]
     assert "assembly_check_max_tool_calls" not in payload["decomposition"]
     assert "max_tool_calls_per_job" not in payload["lean_engine"]
-    assert "lean_job_timeout_seconds" not in payload["lean_engine"]
+    assert payload["lean_engine"]["model"] is None
+    assert payload["lean_engine"]["assembly_check_timeout_seconds"] == 240
+    assert payload["lean_engine"]["lean_job_timeout_seconds"] == 300
+    assert payload["lean_engine"]["plausibility_check_timeout_seconds"] == 45
+    assert payload["lean_engine"]["assemble_root_timeout_seconds"] == 300
+
+
+def test_lean_engine_model_and_timeouts_round_trip() -> None:
+    cfg = ProblemConfig.model_validate(
+        {
+            "lean_engine": {
+                "model": "claude-sonnet-4-6",
+                "assembly_check_timeout_seconds": 180,
+                "lean_job_timeout_seconds": 420,
+                "plausibility_check_timeout_seconds": 90,
+                "assemble_root_timeout_seconds": 600,
+            }
+        }
+    )
+    assert cfg.lean_engine.model == "claude-sonnet-4-6"
+    assert cfg.lean_engine.assembly_check_timeout_seconds == 180
+    assert cfg.lean_engine.lean_job_timeout_seconds == 420
+    assert cfg.lean_engine.plausibility_check_timeout_seconds == 90
+    assert cfg.lean_engine.assemble_root_timeout_seconds == 600
+
+
+def test_mode_accepts_lean_mode_alias() -> None:
+    cfg = ProblemConfig.model_validate({"mode": {"lean_mode": False}})
+    assert cfg.mode.lean_mode is False
+    assert cfg.mode.nl_only_mode is True
+
+
+def test_mode_rejects_contradictory_flags() -> None:
+    with pytest.raises(Exception):
+        ProblemConfig.model_validate({"mode": {"lean_mode": True, "nl_only_mode": True}})
 
 
 def test_llm_reasoning_effort_input_alias_maps_to_thinking_level() -> None:

@@ -20,10 +20,27 @@ def route_vetter_result(statement_status: str, proof_status: str, drift_level: s
     return "retry_solver"
 
 
-def route_lean_result(status: str, error_class: str | None, config: ProblemConfig) -> str:
+def route_lean_result(
+    status: str,
+    error_class: str | None,
+    config: ProblemConfig,
+    issue_kind: str | None = None,
+) -> str:
     """Route Lean job terminal result according to docs/nl_engine.tex."""
     if status == "success":
         return "done"
+
+    if issue_kind == "lean_issue":
+        if error_class == "assembly_composition_failure":
+            return "retry_assembly_plan"
+        return "retry_lean_only"
+
+    if issue_kind == "proof_issue":
+        if error_class == "false_lemma_suspected":
+            return "check_statement_plausibility"
+        if error_class in config.routing.repairable_nl_loop_classes:
+            return "retry_nl_proof"
+        return "decompose_further"
 
     if error_class in config.routing.repairable_lean_only_classes:
         return "retry_lean_only"

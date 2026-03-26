@@ -342,7 +342,16 @@ def test_blocked_exhausted_lemma_retries_decomposition_when_slots_remain(monkeyp
         retry_called["count"] += 1
         return True
 
+    def fake_decompose_current_lemma_result(self, _problem, _lemma, _cfg):
+        retry_called["count"] += 1
+        return self._DECOMPOSE_OUTCOME_CHILD_PENDING, "mocked decomposition"
+
     monkeypatch.setattr(orchestrator_module.Orchestrator, "_decompose_current_lemma", fake_decompose_current_lemma)
+    monkeypatch.setattr(
+        orchestrator_module.Orchestrator,
+        "_decompose_current_lemma_result",
+        fake_decompose_current_lemma_result,
+    )
 
     orchestrator = orchestrator_module.Orchestrator(store)
     result = orchestrator.run_once(problem_id)

@@ -184,9 +184,11 @@ Runbook:
 
 Optional local HTTP service wrapper with async job polling:
 
-- `POST /v1/jobs`
-- `GET /v1/jobs/{job_id}`
-- `GET /v1/health`
+- `POST /v1/jobs` and `POST /v2/jobs`
+- `GET /v1/jobs/{job_id}` and `GET /v2/jobs/{job_id}`
+- `POST /v1/jobs/{job_id}/cancel` and `POST /v2/jobs/{job_id}/cancel`
+- `DELETE /v1/jobs/{job_id}` and `DELETE /v2/jobs/{job_id}`
+- `GET /v1/health` and `GET /v2/health`
 - SQLite-backed idempotent job tracking (`job_id`)
 - background execution that reuses the same Phase 01-07 modules
 

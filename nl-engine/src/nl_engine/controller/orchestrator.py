@@ -1907,28 +1907,19 @@ class Orchestrator:
                 continue
 
             lemmas = [self.lemmas.get(lemma_id) for lemma_id in dec.lemma_ids]
+            plan = self.assembly_plans.get(dec.assembly_plan_id) if dec.assembly_plan_id else None
+            source_payload = self._build_lean_source_for_decomposition(
+                problem=problem,
+                decomposition=dec,
+                theorem_nl=theorem_nl,
+                theorem_semantic_sketch=theorem_semantic_sketch,
+                lemma_rows=[lemma for lemma in lemmas if lemma is not None],
+                plan=plan,
+            )
             payload = {
-                "theorem_nl": theorem_nl,
-                "theorem_semantic_sketch": theorem_semantic_sketch,
-                "lemmas": [
-                    {
-                        "local_id": lemma.lemma_id,
-                        "statement_nl": lemma.statement_nl,
-                        "semantic_sketch": lemma.statement_semantic_sketch,
-                    }
-                    for lemma in lemmas
-                    if lemma is not None
-                ],
-                "assembly_plan": {
-                    "steps": self.assembly_plans.get(dec.assembly_plan_id).steps if dec.assembly_plan_id else [],
-                    "proof_skeleton_nl": self.assembly_plans.get(dec.assembly_plan_id).proof_skeleton_nl
-                    if dec.assembly_plan_id
-                    else "",
-                },
-                "imports": ["Mathlib"],
-                "max_repair_rounds": cfg.decomposition.assembly_check_repair_rounds,
-                "max_tool_calls": cfg.decomposition.assembly_check_max_tool_calls,
-                "timeout_seconds": cfg.decomposition.assembly_check_timeout_seconds,
+                "source": source_payload,
+                "source_kind": "json",
+                "source_name": f"{problem.problem_id}:{dec.decomposition_id}",
             }
             self._submit_lean_job(
                 problem,
@@ -1937,6 +1928,11 @@ class Orchestrator:
                 mode=LeanJobMode.CHECK_ASSEMBLY.value,
                 payload=payload,
                 attempt_index=1,
+                options={
+                    "max_repair_rounds": cfg.decomposition.assembly_check_repair_rounds,
+                    "timeout_seconds": cfg.lean_engine.assembly_check_timeout_seconds,
+                    "model": cfg.lean_engine.model,
+                },
             )
             changed = True
 
@@ -4826,6 +4822,7 @@ class Orchestrator:
         lemma_rows = [self.lemmas.get(lemma_id) for lemma_id in dec.lemma_ids]
         lemma_rows = [lem for lem in lemma_rows if lem is not None]
         changed = False
+        changed |= self._submit_prepare_track_if_v2(problem, dec, cfg)
         max_parallel = max(1, cfg.lemma_solving.max_parallel_lemmas)
         continuation_generation = self._continuation_generation(problem)
         inflight_solver_jobs = [
@@ -4986,6 +4983,121 @@ class Orchestrator:
 
         return changed
 
+    @staticmethod
+    def _lean_mode_cfg(cfg: ProblemConfig) -> Any:
+        return getattr(getattr(cfg, "mode", None), "lean", None)
+
+    def _lean_v2_prepare_enabled(self, cfg: ProblemConfig) -> bool:
+        if cfg.mode.nl_only_mode:
+            return False
+        lean_cfg = self._lean_mode_cfg(cfg)
+        if lean_cfg is None:
+            return False
+        return bool(getattr(lean_cfg, "enabled", False) and getattr(lean_cfg, "use_v2_prepare_track", False))
+
+    def _lean_v2_operations_enabled(self, cfg: ProblemConfig) -> bool:
+        lean_cfg = self._lean_mode_cfg(cfg)
+        if lean_cfg is None:
+            return False
+        return bool(getattr(lean_cfg, "enabled", False) and getattr(lean_cfg, "use_v2_endpoints", False))
+
+    def _submit_prepare_track_if_v2(self, problem: ProblemORM, dec: DecompositionORM, cfg: ProblemConfig) -> bool:
+        if not self._lean_v2_prepare_enabled(cfg):
+            return False
+        if dec.lean_v2_track_id:
+            return False
+
+        existing_jobs = [
+            job
+            for job in self.lean_jobs.list_by_target(problem.problem_id, dec.decomposition_id)
+            if (job.operation or job.mode) == "prepare_track"
+        ]
+        if any(job.status in {"queued", "running"} for job in existing_jobs):
+            return False
+
+        lean_cfg = self._lean_mode_cfg(cfg)
+        max_track_attempts = max(1, int(getattr(lean_cfg, "max_track_attempts", 3) or 3))
+        if len(existing_jobs) >= max_track_attempts:
+            dec.lean_v2_prepare_status = "exhausted"
+            self.decompositions.save(dec)
+            return False
+
+        if dec.node_kind == NodeKind.THEOREM.value:
+            root = self.theorems.get(problem.root_theorem_id) if problem.root_theorem_id else None
+            if not root:
+                return False
+            theorem_nl = root.statement_nl
+            theorem_semantic_sketch = root.statement_semantic_sketch
+        else:
+            owner_lemma = self.lemmas.get(dec.node_id)
+            if not owner_lemma:
+                return False
+            theorem_nl = owner_lemma.statement_nl
+            theorem_semantic_sketch = owner_lemma.statement_semantic_sketch
+
+        plan = self.assembly_plans.get(dec.assembly_plan_id) if dec.assembly_plan_id else None
+        lemma_rows = [self.lemmas.get(lemma_id) for lemma_id in dec.lemma_ids]
+        source_payload = self._build_lean_source_for_decomposition(
+            problem=problem,
+            decomposition=dec,
+            theorem_nl=theorem_nl,
+            theorem_semantic_sketch=theorem_semantic_sketch,
+            lemma_rows=[lemma for lemma in lemma_rows if lemma is not None],
+            plan=plan,
+        )
+
+        attempt_index = len(existing_jobs) + 1
+        track_id = f"track_{dec.decomposition_id}"
+        payload = {
+            "track_id": track_id,
+            "decomposition_id": dec.decomposition_id,
+            "source": source_payload,
+            "source_kind": "json",
+            "source_name": f"{problem.problem_id}:{dec.decomposition_id}:prepare_track:{attempt_index}",
+        }
+
+        try:
+            self._submit_lean_job(
+                problem,
+                target_id=dec.decomposition_id,
+                target_kind="assembly",
+                mode="prepare_track",
+                operation="prepare_track",
+                payload=payload,
+                attempt_index=attempt_index,
+                options={
+                    "max_repair_rounds": cfg.decomposition.assembly_check_repair_rounds,
+                    "timeout_seconds": cfg.lean_engine.assembly_check_timeout_seconds,
+                    "model": cfg.lean_engine.model,
+                },
+                prefer_operation_endpoint=self._lean_v2_operations_enabled(cfg),
+                fallback_to_job_endpoint=bool(getattr(lean_cfg, "fallback_to_v1_on_error", True)),
+            )
+        except Exception as exc:
+            dec.lean_v2_prepare_status = "failed"
+            self.decompositions.save(dec)
+            self.event_logger.transition(
+                problem.problem_id,
+                "lean_v2.prepare_track_failed",
+                None,
+                "failed",
+                target_node_id=dec.decomposition_id,
+                reason=f"prepare_track error: {str(exc)[:200]}",
+            )
+            return False
+
+        dec.lean_v2_prepare_status = "queued"
+        self.decompositions.save(dec)
+        self.event_logger.transition(
+            problem.problem_id,
+            "lean_v2.prepare_track_submitted",
+            None,
+            "queued",
+            target_node_id=dec.decomposition_id,
+            reason=f"attempt={attempt_index}",
+        )
+        return True
+
     def _ensure_formalize_job(self, problem: ProblemORM, lemma: LemmaORM, cfg: ProblemConfig) -> bool:
         existing = [job for job in self.lean_jobs.list_by_target(problem.problem_id, lemma.lemma_id) if job.mode == LeanJobMode.FORMALIZE_LEMMA.value]
         non_terminal = [job for job in existing if job.status in {"queued", "running"}]
@@ -5004,44 +5116,73 @@ class Orchestrator:
             return False
 
         latest_attempt = max((job.attempt_index for job in existing), default=0)
-        pinned_signature = None
         owner_decomp = self._find_owner_decomposition(problem.problem_id, lemma.lemma_id)
-        if owner_decomp and owner_decomp.pinned_statement_signatures:
-            pinned_signature = owner_decomp.pinned_statement_signatures.get(lemma.lemma_id)
+        run_dir = owner_decomp.lean_run_dir if owner_decomp else None
+        use_v2_formalize = self._lean_v2_prepare_enabled(cfg) and owner_decomp is not None and bool(owner_decomp.lean_v2_track_id)
+        lean_cfg = self._lean_mode_cfg(cfg)
 
-        payload = {
-            "lemma_id": lemma.lemma_id,
-            "statement_nl": lemma.statement_nl,
-            "semantic_sketch": lemma.statement_semantic_sketch,
-            "proof_nl": lemma.latest_nl_proof,
-            "pinned_statement_signature": pinned_signature,
-            "trusted_context": [
-                {"decl_name": row.decl_name, "lean_code": row.lean_code}
-                for row in self.trusted_context.list_for_graph(
-                    problem.problem_id,
-                    proof_graph_id=lemma.proof_graph_id or problem.active_proof_graph_id,
-                )
-            ],
-            "imports": ["Mathlib"],
-            "max_repair_rounds": cfg.lean_engine.max_repair_rounds,
-            "max_tool_calls": cfg.lean_engine.max_tool_calls_per_job,
-            "timeout_seconds": cfg.lean_engine.lean_job_timeout_seconds,
-            "repair_context_token_budget": cfg.lean_engine.repair_context_token_budget,
-        }
+        if run_dir:
+            payload = {
+                "run_dir": run_dir,
+                "lemma_id": lemma.lemma_id,
+            }
+            if use_v2_formalize:
+                payload["track_id"] = owner_decomp.lean_v2_track_id
+                payload["track_run_dir"] = run_dir
+                payload["lemma_handle"] = owner_decomp.lean_v2_lemma_handles.get(lemma.lemma_id) if owner_decomp else None
+            if lemma.latest_nl_proof:
+                payload["proof_nl"] = lemma.latest_nl_proof
+        else:
+            pinned_signature = None
+            if owner_decomp and owner_decomp.pinned_statement_signatures:
+                pinned_signature = owner_decomp.pinned_statement_signatures.get(lemma.lemma_id)
+            payload = {
+                "lemma_id": lemma.lemma_id,
+                "statement_nl": lemma.statement_nl,
+                "semantic_sketch": lemma.statement_semantic_sketch,
+                "proof_nl": lemma.latest_nl_proof,
+                "pinned_statement_signature": pinned_signature,
+                "trusted_context": [
+                    {"decl_name": row.decl_name, "lean_code": row.lean_code}
+                    for row in self.trusted_context.list_for_graph(
+                        problem.problem_id,
+                        proof_graph_id=lemma.proof_graph_id or problem.active_proof_graph_id,
+                    )
+                ],
+                "imports": ["Mathlib"],
+                "max_repair_rounds": cfg.lean_engine.max_repair_rounds,
+                "max_tool_calls": cfg.lean_engine.max_tool_calls_per_job,
+                "timeout_seconds": cfg.lean_engine.lean_job_timeout_seconds,
+                "repair_context_token_budget": cfg.lean_engine.repair_context_token_budget,
+                "model": cfg.lean_engine.model,
+            }
+            if use_v2_formalize:
+                payload["track_id"] = owner_decomp.lean_v2_track_id
+                payload["lemma_handle"] = owner_decomp.lean_v2_lemma_handles.get(lemma.lemma_id)
+                payload["proof_issue_class"] = None
+                payload["lean_issue_class"] = lemma.latest_lean_issue_class
 
         self._submit_lean_job(
             problem,
             target_id=lemma.lemma_id,
             target_kind="lemma",
             mode=LeanJobMode.FORMALIZE_LEMMA.value,
+            operation="formalize_lemma_from_nl" if use_v2_formalize else LeanJobMode.FORMALIZE_LEMMA.value,
             payload=payload,
             attempt_index=latest_attempt + 1,
+            options={
+                "max_attempts_per_lemma": cfg.lean_engine.max_repair_rounds,
+                "timeout_seconds": cfg.lean_engine.lean_job_timeout_seconds,
+                "model": cfg.lean_engine.model,
+            },
+            prefer_operation_endpoint=use_v2_formalize and self._lean_v2_operations_enabled(cfg),
+            fallback_to_job_endpoint=bool(getattr(lean_cfg, "fallback_to_v1_on_error", True)) if lean_cfg else True,
         )
         lemma.lean_attempt_count += 1
         self._save_lemma_transition(
             lemma,
             next_action="wait_on_lean_formalization",
-            reason="formalize_lemma submitted",
+            reason=("formalize_lemma_from_nl submitted" if use_v2_formalize else "formalize_lemma submitted"),
             clear_solver_series=True,
         )
         self.event_logger.transition(
@@ -5050,7 +5191,7 @@ class Orchestrator:
             None,
             "queued",
             target_node_id=lemma.lemma_id,
-            reason="formalize_lemma submitted",
+            reason=("formalize_lemma_from_nl submitted" if use_v2_formalize else "formalize_lemma submitted"),
         )
         return True
 
@@ -5059,6 +5200,57 @@ class Orchestrator:
             if lemma_id in dec.lemma_ids:
                 return dec
         return None
+
+    def _build_lean_source_for_decomposition(
+        self,
+        *,
+        problem: ProblemORM,
+        decomposition: DecompositionORM,
+        theorem_nl: str,
+        theorem_semantic_sketch: dict[str, Any],
+        lemma_rows: list[LemmaORM],
+        plan: AssemblyPlanORM | None,
+    ) -> dict[str, Any]:
+        root_theorem_id = (
+            decomposition.node_id
+            if decomposition.node_kind == NodeKind.THEOREM.value
+            else f"thm_{decomposition.decomposition_id}"
+        )
+        assembly_plan_id = plan.assembly_plan_id if plan else f"asm_{decomposition.decomposition_id}"
+        assembly_steps = plan.steps if plan else []
+        proof_skeleton_nl = plan.proof_skeleton_nl if plan else ""
+
+        return {
+            "problem_id": problem.problem_id,
+            "title": problem.title,
+            "verification_level": "formal",
+            "root_theorem": {
+                "theorem_id": root_theorem_id,
+                "statement_nl": theorem_nl,
+                "semantic_sketch": theorem_semantic_sketch,
+            },
+            "selected_decomposition": {
+                "decomposition_id": decomposition.decomposition_id,
+                "assembly_plan": {
+                    "assembly_plan_id": assembly_plan_id,
+                    "steps": assembly_steps,
+                    "proof_skeleton_nl": proof_skeleton_nl,
+                    "is_trivially_composable": True,
+                },
+            },
+            "lemmas": [
+                {
+                    "lemma_id": lemma.lemma_id,
+                    "statement_nl": lemma.statement_nl,
+                    "semantic_sketch": lemma.statement_semantic_sketch,
+                    "proof_nl": lemma.latest_nl_proof or "Proof sketch unavailable.",
+                    "proof_status": "nl_accepted",
+                    "routing_status": "done",
+                }
+                for lemma in lemma_rows
+            ],
+            "all_visible_lemmas_nl_accepted": True,
+        }
 
     def _submit_plausibility_job(self, problem: ProblemORM, lemma: LemmaORM, cfg: ProblemConfig) -> bool:
         existing = [
@@ -5082,6 +5274,48 @@ class Orchestrator:
             mode=LeanJobMode.CHECK_STATEMENT_PLAUSIBILITY.value,
             payload=payload,
             attempt_index=1,
+            options={
+                "timeout_seconds": cfg.lean_engine.plausibility_check_timeout_seconds,
+                "model": cfg.lean_engine.model,
+            },
+        )
+        return True
+
+    def _submit_split_job(self, problem: ProblemORM, lemma: LemmaORM, cfg: ProblemConfig) -> bool:
+        existing = [
+            job
+            for job in self.lean_jobs.list_by_target(problem.problem_id, lemma.lemma_id)
+            if (job.operation or job.mode) == "split_proof_into_sublemmas" and job.status in {"queued", "running"}
+        ]
+        if existing:
+            return False
+
+        prior = [
+            job
+            for job in self.lean_jobs.list_by_target(problem.problem_id, lemma.lemma_id)
+            if (job.operation or job.mode) == "split_proof_into_sublemmas"
+        ]
+        attempt_index = len(prior) + 1
+        lean_cfg = self._lean_mode_cfg(cfg)
+        payload = {
+            "lemma_id": lemma.lemma_id,
+            "statement_nl": lemma.statement_nl,
+            "proof_nl": lemma.latest_nl_proof,
+        }
+        self._submit_lean_job(
+            problem,
+            target_id=lemma.lemma_id,
+            target_kind="lemma",
+            mode="split_proof_into_sublemmas",
+            operation="split_proof_into_sublemmas",
+            payload=payload,
+            attempt_index=attempt_index,
+            options={
+                "timeout_seconds": cfg.lean_engine.lean_job_timeout_seconds,
+                "model": cfg.lean_engine.model,
+            },
+            prefer_operation_endpoint=self._lean_v2_operations_enabled(cfg),
+            fallback_to_job_endpoint=bool(getattr(lean_cfg, "fallback_to_v1_on_error", True)) if lean_cfg else True,
         )
         return True
 
@@ -5107,26 +5341,19 @@ class Orchestrator:
             theorem_sketch = parent_lemma.statement_semantic_sketch
 
         plan = self.assembly_plans.get(dec.assembly_plan_id) if dec.assembly_plan_id else None
+        lemma_rows = [self.lemmas.get(lemma_id) for lemma_id in dec.lemma_ids]
+        source_payload = self._build_lean_source_for_decomposition(
+            problem=problem,
+            decomposition=dec,
+            theorem_nl=theorem_nl,
+            theorem_semantic_sketch=theorem_sketch,
+            lemma_rows=[lemma for lemma in lemma_rows if lemma is not None],
+            plan=plan,
+        )
         payload = {
-            "theorem_nl": theorem_nl,
-            "theorem_semantic_sketch": theorem_sketch,
-            "lemmas": [
-                {
-                    "local_id": lemma.lemma_id,
-                    "statement_nl": lemma.statement_nl,
-                    "semantic_sketch": lemma.statement_semantic_sketch,
-                }
-                for lemma in [self.lemmas.get(lemma_id) for lemma_id in dec.lemma_ids]
-                if lemma is not None
-            ],
-            "assembly_plan": {
-                "steps": plan.steps if plan else [],
-                "proof_skeleton_nl": plan.proof_skeleton_nl if plan else "",
-            },
-            "imports": ["Mathlib"],
-            "max_repair_rounds": cfg.decomposition.assembly_check_repair_rounds,
-            "max_tool_calls": cfg.decomposition.assembly_check_max_tool_calls,
-            "timeout_seconds": cfg.decomposition.assembly_check_timeout_seconds,
+            "source": source_payload,
+            "source_kind": "json",
+            "source_name": f"{problem.problem_id}:{dec.decomposition_id}:retry{attempt_index}",
         }
 
         self._submit_lean_job(
@@ -5136,6 +5363,11 @@ class Orchestrator:
             mode=LeanJobMode.CHECK_ASSEMBLY.value,
             payload=payload,
             attempt_index=attempt_index,
+            options={
+                "max_repair_rounds": cfg.decomposition.assembly_check_repair_rounds,
+                "timeout_seconds": cfg.lean_engine.assembly_check_timeout_seconds,
+                "model": cfg.lean_engine.model,
+            },
         )
         return True
 
@@ -5146,10 +5378,15 @@ class Orchestrator:
         target_id: str,
         target_kind: str,
         mode: str,
+        operation: str | None = None,
         payload: dict[str, Any],
         attempt_index: int,
+        options: dict[str, Any] | None = None,
+        prefer_operation_endpoint: bool = False,
+        fallback_to_job_endpoint: bool = True,
     ) -> LeanJobORM:
-        job_id = f"lean_job_{target_id}_{mode}_{attempt_index}"
+        operation_name = operation or mode
+        job_id = f"lean_job_{target_id}_{operation_name}_{attempt_index}"
         existing = self.lean_jobs.get(job_id)
         if existing:
             return existing
@@ -5160,9 +5397,12 @@ class Orchestrator:
             "target_id": target_id,
             "target_kind": target_kind,
             "mode": mode,
+            "operation": operation_name,
+            "operation_id": job_id,
             "lean_image_tag": problem.lean_image_tag,
             "callback_url": None,
             "payload": payload,
+            "options": options or {},
         }
 
         req_artifact = self.artifacts.save_json(
@@ -5176,13 +5416,32 @@ class Orchestrator:
             target_id=target_id,
             target_kind=target_kind,
             mode=mode,
+            operation=operation_name,
             status="queued",
             attempt_index=attempt_index,
             lean_image_tag=problem.lean_image_tag,
             request_artifact_id=req_artifact,
         )
         stored = self.lean_jobs.create_if_absent(job)
-        submit_response = self.lean.submit_job(request_body, request_id=new_id("req"))
+
+        if prefer_operation_endpoint and hasattr(self.lean, "submit_operation"):
+            try:
+                submit_response = self.lean.submit_operation(
+                    operation_name,
+                    request_body,
+                    request_id=new_id("req"),
+                    version="v2",
+                )
+            except Exception:
+                if not fallback_to_job_endpoint:
+                    raise
+                submit_response = self.lean.submit_job(request_body, request_id=new_id("req"))
+        else:
+            submit_response = self.lean.submit_job(request_body, request_id=new_id("req"))
+
+        remote_operation_id = submit_response.get("operation_id")
+        if isinstance(remote_operation_id, str) and remote_operation_id.strip():
+            stored.remote_operation_id = remote_operation_id.strip()
         self.artifacts.save_json(
             f"problems/{problem.problem_id}/lean_jobs/{job_id}/submit_response.json",
             submit_response,
@@ -5191,7 +5450,7 @@ class Orchestrator:
             problem_id=problem.problem_id,
             lemma_id=target_id if target_kind == "lemma" else None,
             worker_job_id=job_id,
-            stage=f"lean.{mode}.submit",
+            stage=f"lean.{operation_name}.submit",
             provider="lean_engine",
             model=problem.lean_image_tag,
             input_tokens=0,
@@ -5201,6 +5460,9 @@ class Orchestrator:
             db_session=self.store,
         )
         stored.status = submit_response.get("status", "queued")
+        progress_snapshot = submit_response.get("progress_snapshot")
+        if isinstance(progress_snapshot, dict):
+            stored.progress_snapshot = progress_snapshot
         self.lean_jobs.save(stored)
         self.event_logger.transition(
             problem.problem_id,
@@ -5209,7 +5471,7 @@ class Orchestrator:
             stored.status,
             target_node_id=target_id,
             worker_job_id=stored.job_id,
-            reason=mode,
+            reason=operation_name,
         )
 
         return stored
@@ -5220,9 +5482,19 @@ class Orchestrator:
             return False
 
         job = non_terminal[0]
-        polled = self.lean.get_job(job.job_id)
+        if job.remote_operation_id and hasattr(self.lean, "get_operation"):
+            try:
+                polled = self.lean.get_operation(job.remote_operation_id, version="v2")
+            except Exception:
+                polled = self.lean.get_job(job.job_id)
+        else:
+            polled = self.lean.get_job(job.job_id)
         old_status = job.status
         job.status = polled.get("status", job.status)
+
+        polled_progress = polled.get("progress_snapshot")
+        if isinstance(polled_progress, dict):
+            job.progress_snapshot = polled_progress
 
         if job.status in {"queued", "running"}:
             self.lean_jobs.save(job)
@@ -5233,11 +5505,20 @@ class Orchestrator:
                 job.status,
                 target_node_id=job.target_id,
                 worker_job_id=job.job_id,
-                reason=f"mode={job.mode}",
+                reason=f"mode={job.mode} operation={job.operation or job.mode}",
             )
             return True
 
         result_payload = polled.get("result")
+        if isinstance(result_payload, dict):
+            if isinstance(result_payload.get("progress_snapshot"), dict):
+                job.progress_snapshot = result_payload.get("progress_snapshot")
+            job.issue_kind = result_payload.get("issue_kind")
+            if isinstance(result_payload.get("confidence"), (int, float)):
+                job.confidence = float(result_payload.get("confidence"))
+            job.fatality = result_payload.get("fatality")
+            job.last_error = result_payload.get("error_message")
+
         res_artifact = self.artifacts.save_json(
             f"problems/{problem.problem_id}/lean_jobs/{job.job_id}/response.json",
             polled,
@@ -5252,16 +5533,51 @@ class Orchestrator:
                 job_id=job.job_id,
                 status=job.status,
                 error_class=result_payload.get("error_class") if isinstance(result_payload, dict) else None,
+                issue_kind=result_payload.get("issue_kind") if isinstance(result_payload, dict) else None,
+                confidence=(
+                    float(result_payload.get("confidence"))
+                    if isinstance(result_payload, dict) and isinstance(result_payload.get("confidence"), (int, float))
+                    else None
+                ),
+                fatality=result_payload.get("fatality") if isinstance(result_payload, dict) else None,
                 error_scope=result_payload.get("error_scope") if isinstance(result_payload, dict) else None,
                 error_message=result_payload.get("error_message") if isinstance(result_payload, dict) else None,
+                progress_snapshot=(
+                    result_payload.get("progress_snapshot") if isinstance(result_payload, dict) else None
+                ),
                 diagnostics=result_payload.get("diagnostics", []) if isinstance(result_payload, dict) else [],
                 decl_name=result_payload.get("decl_name") if isinstance(result_payload, dict) else None,
                 lean_code_artifact_id=None,
                 compiler_log_artifact_id=None,
+                artifact_index=(
+                    result_payload.get("artifact_index") if isinstance(result_payload, dict) and isinstance(result_payload.get("artifact_index"), dict) else {}
+                ),
                 recommended_next_step=result_payload.get("recommended_next_step") if isinstance(result_payload, dict) else None,
                 routing_confidence=result_payload.get("routing_confidence") if isinstance(result_payload, dict) else None,
             )
             self.lean_results.create(result)
+        else:
+            result.status = job.status
+            if isinstance(result_payload, dict):
+                result.error_class = result_payload.get("error_class")
+                result.issue_kind = result_payload.get("issue_kind")
+                if isinstance(result_payload.get("confidence"), (int, float)):
+                    result.confidence = float(result_payload.get("confidence"))
+                result.fatality = result_payload.get("fatality")
+                result.error_scope = result_payload.get("error_scope")
+                result.error_message = result_payload.get("error_message")
+                if isinstance(result_payload.get("progress_snapshot"), dict):
+                    result.progress_snapshot = result_payload.get("progress_snapshot")
+                diagnostics = result_payload.get("diagnostics", [])
+                if isinstance(diagnostics, list):
+                    result.diagnostics = diagnostics
+                result.decl_name = result_payload.get("decl_name")
+                artifact_index = result_payload.get("artifact_index")
+                if isinstance(artifact_index, dict):
+                    result.artifact_index = artifact_index
+                result.recommended_next_step = result_payload.get("recommended_next_step")
+                result.routing_confidence = result_payload.get("routing_confidence")
+            self.lean_results.save(result)
 
         self.event_logger.transition(
             problem.problem_id,
@@ -5270,7 +5586,7 @@ class Orchestrator:
             job.status,
             target_node_id=job.target_id,
             worker_job_id=job.job_id,
-            reason=job.mode,
+            reason=job.operation or job.mode,
         )
 
         self._route_terminal_lean_result(problem, job, result_payload or {}, cfg, result)
@@ -5284,13 +5600,45 @@ class Orchestrator:
         cfg: ProblemConfig,
         result_row: LeanResultORM,
     ) -> None:
+        if (job.operation or job.mode) == "prepare_track":
+            dec = self.decompositions.get(job.target_id)
+            if not dec:
+                return
+            if job.status == "success":
+                dec.lean_v2_prepare_status = "success"
+                track_id = result_payload.get("track_id")
+                if isinstance(track_id, str) and track_id.strip():
+                    dec.lean_v2_track_id = track_id.strip()
+                run_dir = result_payload.get("run_dir")
+                if isinstance(run_dir, str) and run_dir.strip():
+                    dec.lean_run_dir = run_dir.strip()
+                lemma_handles = result_payload.get("lemma_handles")
+                if isinstance(lemma_handles, dict):
+                    dec.lean_v2_lemma_handles = {
+                        str(key): str(value)
+                        for key, value in lemma_handles.items()
+                        if isinstance(key, str) and isinstance(value, str)
+                    }
+                pinned_signatures = result_payload.get("pinned_statement_signatures")
+                if isinstance(pinned_signatures, dict):
+                    dec.pinned_statement_signatures = pinned_signatures
+            else:
+                dec.lean_v2_prepare_status = job.status
+            self.decompositions.save(dec)
+            return
+
         if job.mode == LeanJobMode.CHECK_ASSEMBLY.value:
             dec = self.decompositions.get(job.target_id)
             if not dec:
                 return
             if job.status == "success":
                 dec.lean_assembly_status = LeanAssemblyStatus.SUCCESS.value
-                dec.pinned_statement_signatures = result_payload.get("pinned_statement_signatures")
+                pinned_signatures = result_payload.get("pinned_statement_signatures")
+                if isinstance(pinned_signatures, dict):
+                    dec.pinned_statement_signatures = pinned_signatures
+                run_dir = result_payload.get("run_dir")
+                if isinstance(run_dir, str) and run_dir.strip():
+                    dec.lean_run_dir = run_dir.strip()
                 self.decompositions.save(dec)
             else:
                 error_class = result_payload.get("error_class")
@@ -5318,9 +5666,16 @@ class Orchestrator:
             if not lemma:
                 return
             lemma.latest_lean_result_id = result_row.result_id
+            issue_kind = result_payload.get("issue_kind") if isinstance(result_payload, dict) else None
+            if issue_kind is None:
+                issue_kind = result_row.issue_kind
+            confidence_raw = result_payload.get("confidence") if isinstance(result_payload, dict) else None
+            confidence = float(confidence_raw) if isinstance(confidence_raw, (int, float)) else result_row.confidence
             self.lemmas.save(lemma)
 
             if job.status == "success" and result_payload.get("compiler_ok"):
+                lemma.latest_lean_issue_class = None
+                lemma.latest_lean_issue_kind = None
                 lemma.proof_status = ProofStatus.PROOF_FORMALIZED.value
                 lemma.statement_status = StatementStatus.FORMALIZED.value
                 self._save_lemma_transition(
@@ -5358,8 +5713,28 @@ class Orchestrator:
                         )
                 return
 
-            route = route_lean_result(job.status, result_payload.get("error_class"), cfg)
             error_class = result_payload.get("error_class")
+            lemma.latest_lean_issue_class = error_class if isinstance(error_class, str) else None
+            lemma.latest_lean_issue_kind = issue_kind if isinstance(issue_kind, str) else None
+            self.lemmas.save(lemma)
+
+            route = route_lean_result(job.status, error_class, cfg, issue_kind=issue_kind)
+            lean_cfg = self._lean_mode_cfg(cfg)
+            strict_fail_fast = bool(getattr(lean_cfg, "strict_proof_issue_fail_fast", False)) if lean_cfg else False
+            confidence_threshold = float(getattr(lean_cfg, "proof_issue_confidence_threshold", 0.8)) if lean_cfg else 0.8
+            if issue_kind == "proof_issue" and strict_fail_fast and confidence is not None and confidence >= confidence_threshold:
+                route = "check_statement_plausibility" if error_class == "false_lemma_suspected" else "decompose_further"
+
+            self.event_logger.transition(
+                problem.problem_id,
+                "lean.result_classified",
+                None,
+                route,
+                target_node_id=lemma.lemma_id,
+                worker_job_id=job.job_id,
+                reason=f"issue_kind={issue_kind or '-'} error_class={error_class or '-'} confidence={confidence}",
+            )
+
             if route == "retry_lean_only" and lemma.lean_attempt_count < cfg.lean_engine.max_lean_jobs_per_lemma:
                 if error_class == "bad_statement_translation" and job.attempt_index >= 2:
                     self._save_lemma_transition(
@@ -5397,6 +5772,19 @@ class Orchestrator:
                 )
                 return
 
+            if route == "decompose_further":
+                lean_cfg = self._lean_mode_cfg(cfg)
+                auto_split = bool(getattr(lean_cfg, "auto_split_sublemmas", False)) if lean_cfg else False
+                if auto_split and self._submit_split_job(problem, lemma, cfg):
+                    self._save_lemma_transition(
+                        lemma,
+                        routing_status=RoutingStatus.BLOCKED.value,
+                        next_action="wait_on_split_sublemmas",
+                        reason="auto split requested after lean bottleneck",
+                        ensure_solver_series=True,
+                    )
+                    return
+
             lemma.lean_identical_fatal_count += 1
             self._save_lemma_transition(
                 lemma,
@@ -5413,6 +5801,41 @@ class Orchestrator:
                     terminal_lemma_id=lemma.lemma_id,
                     terminal_error_class=result_payload.get("error_class"),
                     terminal_error_message=result_payload.get("error_message"),
+                )
+            return
+
+        if (job.operation or job.mode) == "split_proof_into_sublemmas":
+            lemma = self.lemmas.get(job.target_id)
+            if not lemma:
+                return
+            sublemmas = result_payload.get("sublemmas") if isinstance(result_payload, dict) else None
+            sublemma_count = len(sublemmas) if isinstance(sublemmas, list) else 0
+            if job.status == "success" and sublemma_count > 0:
+                self.event_logger.transition(
+                    problem.problem_id,
+                    "lean.split.generated",
+                    None,
+                    "generated",
+                    target_node_id=lemma.lemma_id,
+                    worker_job_id=job.job_id,
+                    reason=f"count={sublemma_count}",
+                )
+                self._save_lemma_transition(
+                    lemma,
+                    proof_status=ProofStatus.PROOF_FLAWED.value,
+                    routing_status=RoutingStatus.DECOMPOSE_FURTHER.value,
+                    next_action="decompose_further",
+                    reason=f"auto split generated {sublemma_count} sublemmas",
+                    ensure_solver_series=True,
+                )
+            else:
+                self._save_lemma_transition(
+                    lemma,
+                    proof_status=ProofStatus.PROOF_FLAWED.value,
+                    routing_status=RoutingStatus.DECOMPOSE_FURTHER.value,
+                    next_action="decompose_further",
+                    reason="auto split unavailable; decomposing current lemma",
+                    ensure_solver_series=True,
                 )
             return
 
@@ -5809,31 +6232,47 @@ class Orchestrator:
             if job.mode == LeanJobMode.ASSEMBLE_ROOT.value
         ]
         if not existing:
-            payload = {
-                "theorem_nl": root.statement_nl,
-                "theorem_semantic_sketch": root.statement_semantic_sketch,
-                "assembly_plan": {
-                    "steps": self.assembly_plans.get(winner.assembly_plan_id).steps if winner.assembly_plan_id else [],
-                    "proof_skeleton_nl": self.assembly_plans.get(winner.assembly_plan_id).proof_skeleton_nl
-                    if winner.assembly_plan_id
-                    else "",
-                },
-                "trusted_context": [
-                    {"decl_name": row.decl_name, "lean_code": row.lean_code}
-                    for row in self.trusted_context.list_by_problem(problem.problem_id)
-                ],
-                "imports": ["Mathlib"],
-                "max_repair_rounds": cfg.lean_engine.assemble_root_repair_rounds,
-                "max_tool_calls": cfg.lean_engine.max_tool_calls_per_job,
-                "timeout_seconds": cfg.lean_engine.assemble_root_timeout_seconds,
-            }
+            lean_cfg = self._lean_mode_cfg(cfg)
+            use_v2_assembly = self._lean_v2_prepare_enabled(cfg) and bool(winner.lean_v2_track_id)
+            run_dir = winner.lean_run_dir
+            if run_dir:
+                payload = {
+                    "run_dir": run_dir,
+                    "track_run_dir": run_dir,
+                    "track_id": winner.lean_v2_track_id,
+                    "infer_dependencies": True,
+                }
+            else:
+                payload = {
+                    "theorem_nl": root.statement_nl,
+                    "theorem_semantic_sketch": root.statement_semantic_sketch,
+                    "assembly_plan": {
+                        "steps": self.assembly_plans.get(winner.assembly_plan_id).steps if winner.assembly_plan_id else [],
+                        "proof_skeleton_nl": self.assembly_plans.get(winner.assembly_plan_id).proof_skeleton_nl
+                        if winner.assembly_plan_id
+                        else "",
+                    },
+                    "trusted_context": [
+                        {"decl_name": row.decl_name, "lean_code": row.lean_code}
+                        for row in self.trusted_context.list_by_problem(problem.problem_id)
+                    ],
+                    "imports": ["Mathlib"],
+                }
             self._submit_lean_job(
                 problem,
                 target_id=root.theorem_id,
                 target_kind="theorem",
                 mode=LeanJobMode.ASSEMBLE_ROOT.value,
+                operation=("assemble_root_from_track" if use_v2_assembly else LeanJobMode.ASSEMBLE_ROOT.value),
                 payload=payload,
                 attempt_index=1,
+                options={
+                    "max_root_attempts": cfg.lean_engine.assemble_root_repair_rounds,
+                    "timeout_seconds": cfg.lean_engine.assemble_root_timeout_seconds,
+                    "model": cfg.lean_engine.model,
+                },
+                prefer_operation_endpoint=use_v2_assembly and self._lean_v2_operations_enabled(cfg),
+                fallback_to_job_endpoint=bool(getattr(lean_cfg, "fallback_to_v1_on_error", True)) if lean_cfg else True,
             )
             return True
 

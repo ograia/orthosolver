@@ -8,9 +8,14 @@ The service is asynchronous and idempotent by `job_id`.
 
 ## Endpoints
 
-- `POST /v1/jobs`
-- `GET /v1/jobs/{job_id}`
-- `GET /v1/health`
+- `POST /v1/jobs` and `POST /v2/jobs`
+- `GET /v1/jobs/{job_id}` and `GET /v2/jobs/{job_id}`
+- `POST /v1/jobs/{job_id}/cancel` and `POST /v2/jobs/{job_id}/cancel`
+- `DELETE /v1/jobs/{job_id}` and `DELETE /v2/jobs/{job_id}`
+- `POST /v2/operations/{operation}`
+- `GET /v2/operations/{operation_id}`
+- `DELETE /v2/operations/{operation_id}`
+- `GET /v1/health` and `GET /v2/health`
 
 ## Start Service
 
@@ -26,8 +31,24 @@ PYTHONPATH=src python -m lean_engine.cli service \
 ```json
 {
   "job_id": "job_001",
-  "mode": "run_full_pipeline | check_assembly | formalize_lemma | assemble_root",
+  "mode": "run_full_pipeline | check_assembly | prepare_track | formalize_lemma | formalize_lemma_from_nl | split_proof_into_sublemmas | assemble_root | assemble_root_from_track | check_statement_plausibility",
+  "operation": "optional v2 alias; defaults to mode",
   "payload": { "...": "mode specific" },
+  "options": { "...": "optional runtime overrides" }
+}
+```
+
+## Operation Request Shape (v2)
+
+`POST /v2/operations/{operation}` accepts the same body shape as jobs plus an explicit operation id:
+
+```json
+{
+  "operation_id": "op_001",
+  "problem_id": "prob_123",
+  "target_id": "lem_1",
+  "target_kind": "lemma",
+  "payload": { "...": "operation specific" },
   "options": { "...": "optional runtime overrides" }
 }
 ```
@@ -61,6 +82,19 @@ Useful options:
 - `options.max_repair_rounds`
 - `options.timeout_seconds`
 
+### `prepare_track`
+
+Required:
+
+- decomposition source (`payload.source` or decomposition fields used by `check_assembly`)
+
+Useful options:
+
+- `options.max_repair_rounds`
+- `options.timeout_seconds`
+
+Returns stable per-lemma handles (`lemma_handles`) and `run_dir` for follow-up operations.
+
 ### `formalize_lemma`
 
 Required:
@@ -73,6 +107,26 @@ Useful options:
 - `options.max_attempts_per_lemma`
 - `options.timeout_seconds`
 
+### `formalize_lemma_from_nl`
+
+Required:
+
+- `payload.lemma_id` or `payload.lemma_handle`
+- `payload.run_dir` or `payload.track_run_dir`
+
+Useful options:
+
+- `options.max_attempts_per_lemma`
+- `options.timeout_seconds`
+
+### `split_proof_into_sublemmas`
+
+Required:
+
+- none (best results with `payload.proof_nl` and `payload.statement_nl`)
+
+Returns a `sublemmas` array with generated intermediate claims.
+
 ### `assemble_root`
 
 Required:
@@ -84,9 +138,25 @@ Useful options:
 - `options.max_root_attempts`
 - `options.timeout_seconds`
 
+### `assemble_root_from_track`
+
+Required:
+
+- `payload.run_dir` or `payload.track_run_dir`
+
+Useful options:
+
+- `options.max_root_attempts`
+- `options.timeout_seconds`
+
 ## Idempotency
 
 - Re-posting the same `job_id` returns the existing job status (`409`) and does not re-run work.
+
+## Cancellation
+
+- Cancelling queued/running work marks the job terminal as `cancelled`.
+- If a worker thread is already executing, cancel is best-effort and terminal updates are blocked from overwriting `cancelled`.
 
 ## Fatal Classification
 
@@ -113,8 +183,12 @@ Queued/running response includes:
 
 - `status`
 - `elapsed_seconds`
+- `progress_snapshot` (`phase`, `round`, `attempt`, `last_error`)
 
 Terminal response includes:
 
 - `status = success | repairable | fatal`
 - `result` payload from the executed mode
+- `issue_kind` (`proof_issue` or `lean_issue`, when non-success)
+- `confidence` and `fatality`
+- `artifact_index` pointers when `run_dir` is present

@@ -686,9 +686,20 @@ class LeanJobRepository:
         jobs = self.list_by_problem(problem_id)
         matrix: dict[str, dict[str, int]] = {}
         for job in jobs:
-            matrix.setdefault(job.mode, {})
-            matrix[job.mode][job.status] = matrix[job.mode].get(job.status, 0) + 1
+            mode_key = str(job.operation or job.mode)
+            matrix.setdefault(mode_key, {})
+            matrix[mode_key][job.status] = matrix[mode_key].get(job.status, 0) + 1
         return matrix
+
+    def latest_by_lemma(self, problem_id: str) -> dict[str, LeanJobORM]:
+        latest: dict[str, LeanJobORM] = {}
+        for job in self.list_by_problem(problem_id):
+            if job.target_kind != "lemma":
+                continue
+            prior = latest.get(job.target_id)
+            if prior is None or prior.created_at <= job.created_at:
+                latest[job.target_id] = job
+        return latest
 
 
 class LeanResultRepository:
@@ -713,6 +724,9 @@ class LeanResultRepository:
                 return result
         # Fallback: if job not found, still save (shouldn't happen in practice)
         return result
+
+    def save(self, result: LeanResultORM) -> LeanResultORM:
+        return self.create(result)
 
     def get(self, result_id: str) -> LeanResultORM | None:
         if result_id is None:

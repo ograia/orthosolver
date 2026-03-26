@@ -87,9 +87,17 @@ def test_progress_events_and_sse_resume() -> None:
     assert progress.status_code == 200
     assert "lemma_counts" in progress.json()
     assert "lean_job_counts" in progress.json()
+    assert "per_lemma_lean_status" in progress.json()
+    assert "lean_v2_track_id" in progress.json()
     assert "active_decomposition_status" in progress.json()
     assert "standby_decomposition_status" in progress.json()
     assert "latest_blocking_reason" in progress.json()
+
+    lean_jobs = client.get(f"/v1/problems/{problem_id}/lean-jobs")
+    assert lean_jobs.status_code == 200
+    lean_jobs_body = lean_jobs.json()
+    assert lean_jobs_body["problem_id"] == problem_id
+    assert isinstance(lean_jobs_body["jobs"], list)
 
     events = client.get(f"/v1/problems/{problem_id}/events")
     assert events.status_code == 200
