@@ -377,6 +377,57 @@ class ProofGraphService:
             normalized.append({"kind": kind, "label": label, "content": content})
         return normalized
 
+    @staticmethod
+    def _definition_context_key(item: dict[str, Any]) -> tuple[str, str, str]:
+        return (
+            str(item.get("kind") or "").strip().lower(),
+            str(item.get("label") or item.get("name") or "").strip(),
+            str(item.get("content") or item.get("value") or "").strip(),
+        )
+
+    def _transitive_definition_context(self, problem_id: str, lemma: LemmaORM, *, depth_cap: int = 64) -> list[dict[str, Any]]:
+        collected: list[dict[str, Any]] = []
+        seen: set[tuple[str, str, str]] = set()
+        current_parent_id = lemma.parent_id
+        current_parent_kind = lemma.parent_kind
+        depth = 0
+
+        while depth < depth_cap and current_parent_id:
+            if current_parent_kind == "decomposition":
+                decomp = self.decompositions.get(current_parent_id)
+                if decomp is None or decomp.problem_id != problem_id:
+                    break
+                for item in self.normalize_definition_context(decomp.shared_context):
+                    key = self._definition_context_key(item)
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    collected.append(
+                        {
+                            "kind": item["kind"],
+                            "label": item["label"],
+                            "content": item["content"],
+                            "source_decomposition_id": decomp.decomposition_id,
+                        }
+                    )
+                current_parent_id = decomp.node_id
+                current_parent_kind = decomp.node_kind
+                depth += 1
+                continue
+
+            if current_parent_kind == "lemma":
+                parent_lemma = self.lemmas.get(current_parent_id)
+                if parent_lemma is None or parent_lemma.problem_id != problem_id:
+                    break
+                current_parent_id = parent_lemma.parent_id
+                current_parent_kind = parent_lemma.parent_kind
+                depth += 1
+                continue
+
+            break
+
+        return collected
+
     def validate_decomposition_context_purity(self, raw_context: list[dict[str, Any]]) -> list[dict[str, Any]]:
         findings: list[dict[str, Any]] = []
         for idx, item in enumerate(raw_context):
@@ -432,11 +483,22 @@ class ProofGraphService:
             return [], [], [], None
         allowed: list[DependencyManifestItem] = []
         definition_context: list[dict[str, Any]] = []
-        parent_decomp = self.decompositions.get(lemma.parent_id) if lemma.parent_kind == "decomposition" else None
-        if parent_decomp is not None:
-            definition_context = self.normalize_definition_context(parent_decomp.shared_context)
-            for item in definition_context:
-                def_node = self._ensure_definition_node(proof_graph_id, parent_decomp.decomposition_id, item)
+        context_items = self._transitive_definition_context(problem.problem_id, lemma)
+        if context_items:
+            definition_context = [
+                {
+                    "kind": item["kind"],
+                    "label": item["label"],
+                    "content": item["content"],
+                }
+                for item in context_items
+            ]
+            for item in context_items:
+                def_node = self._ensure_definition_node(
+                    proof_graph_id,
+                    str(item["source_decomposition_id"]),
+                    item,
+                )
                 allowed.append(
                     DependencyManifestItem(
                         item_id=def_node.graph_node_id,

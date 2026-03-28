@@ -152,6 +152,18 @@ def test_debug_snapshot_contains_graph_and_lookup_maps() -> None:
     assert isinstance(body["decomposition_candidate_by_id"], dict)
     assert isinstance(body["logical_decomposition_by_id"], dict)
     assert isinstance(body["lean_job_by_id"], dict)
+    visible_lemma_ids = set(body["visible_lemma_ids"])
+    owner_map = body["lemma_owner_decomposition"]
+    graph_edges = body["node_graph"]["edges"]
+    owned_visible_lemma_ids = [
+        lemma_id
+        for lemma_id, owner_id in owner_map.items()
+        if owner_id and lemma_id in visible_lemma_ids
+    ]
+    assert owned_visible_lemma_ids
+    for lemma_id in owned_visible_lemma_ids:
+        owner_id = owner_map[lemma_id]
+        assert any(edge["from"] == owner_id and edge["to"] == lemma_id for edge in graph_edges)
     lemma_row = body["lemmas"][0]
     assert "truth_status" in lemma_row
     assert "counterexample_status" in lemma_row

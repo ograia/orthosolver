@@ -1478,7 +1478,7 @@ class Orchestrator:
         return Agent2Input(
             theorem_nl=theorem_nl,
             root_semantic_sketch=theorem_semantic_sketch,
-            shared_context=[],
+            shared_context=self._collect_transitive_branch_shared_context(node_id),
             num_candidates=max(1, num_candidates),
             previous_attempt_summaries=(
                 list(previous_attempt_summaries)
@@ -1491,6 +1491,77 @@ class Orchestrator:
                 else self._trusted_context_summaries(problem.problem_id)
             ),
         )
+
+    @staticmethod
+    def _definition_context_dedupe_key(item: dict[str, Any]) -> tuple[str, str, str]:
+        return (
+            str(item.get("kind") or "").strip().lower(),
+            str(item.get("label") or item.get("name") or "").strip(),
+            str(item.get("content") or item.get("value") or "").strip(),
+        )
+
+    def _collect_transitive_branch_shared_context(self, node_id: str, *, depth_cap: int = 64) -> list[dict[str, Any]]:
+        lemma = self.lemmas.get(node_id)
+        if lemma is None:
+            return []
+
+        collected: list[dict[str, Any]] = []
+        seen: set[tuple[str, str, str]] = set()
+        current_parent_id = lemma.parent_id
+        current_parent_kind = lemma.parent_kind
+        depth = 0
+
+        while depth < depth_cap and current_parent_id:
+            if current_parent_kind == "decomposition":
+                decomp = self.decompositions.get(current_parent_id)
+                if decomp is None:
+                    break
+                for item in self.proof_graphs.normalize_definition_context(decomp.shared_context):
+                    key = self._definition_context_dedupe_key(item)
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    collected.append(item)
+                current_parent_id = decomp.node_id
+                current_parent_kind = decomp.node_kind
+                depth += 1
+                continue
+
+            if current_parent_kind == NodeKind.LEMMA.value:
+                parent_lemma = self.lemmas.get(current_parent_id)
+                if parent_lemma is None:
+                    break
+                current_parent_id = parent_lemma.parent_id
+                current_parent_kind = parent_lemma.parent_kind
+                depth += 1
+                continue
+
+            break
+
+        return collected
+
+    @staticmethod
+    def _child_decomposition_is_false_frontier(row: Any) -> bool:
+        return str(getattr(row, "failure_origin", "") or "").strip() in {
+            "agent3:false_lemma",
+            "child_lemma_false",
+        }
+
+    @staticmethod
+    def _child_decomposition_is_live_accepted(row: Any) -> bool:
+        if str(getattr(row, "llm_vetting_status", "") or "").strip() != "accepted":
+            return False
+        controller_status = getattr(row, "controller_status", None)
+        return controller_status != ControllerStatus.FAILED.value
+
+    @staticmethod
+    def _lemma_waiting_on_child_decomposition_frontier(lemma: LemmaORM) -> bool:
+        return str(lemma.next_action or "").strip() in {
+            "process_child_decomposition",
+            "wait_on_child_decomposition",
+            "retry_decomposition",
+            "evaluate_child_decompositions",
+        }
 
     def _run_decomposition_generation_request(
         self,
@@ -2661,7 +2732,7 @@ class Orchestrator:
         node_decs = self.decompositions.list_by_node(problem.problem_id, lemma.lemma_id)
         candidate_rows = self.decomposition_candidates.list_by_node(problem.problem_id, lemma.lemma_id)
         if not node_decs:
-            false_candidate = next((row for row in candidate_rows if row.failure_origin == "agent3:false_lemma"), None)
+            false_candidate = next((row for row in candidate_rows if self._child_decomposition_is_false_frontier(row)), None)
             if false_candidate is not None:
                 self._invalidate_parent_decomposition(
                     problem,
@@ -2671,6 +2742,20 @@ class Orchestrator:
                 )
                 return True
             if candidate_rows and self._select_active_decomposition_for_node(problem, lemma.lemma_id, NodeKind.LEMMA.value, cfg):
+                return True
+            if any(self._child_decomposition_is_live_accepted(row) for row in candidate_rows):
+                if (
+                    lemma.routing_status != RoutingStatus.BLOCKED.value
+                    or lemma.next_action != "wait_on_child_decomposition"
+                ):
+                    self._save_lemma_transition(
+                        lemma,
+                        proof_status=ProofStatus.PROOF_FLAWED.value,
+                        routing_status=RoutingStatus.BLOCKED.value,
+                        next_action="wait_on_child_decomposition",
+                        reason="accepted child decomposition candidate exists but promotion is not yet complete",
+                        clear_solver_series=True,
+                    )
                 return True
             if lemma.proof_status == ProofStatus.PROOF_EXHAUSTED.value and lemma.routing_status == RoutingStatus.BLOCKED.value:
                 remaining_slots = self._remaining_decomposition_slots(
@@ -2711,9 +2796,9 @@ class Orchestrator:
                         return True
             return False
 
-        false_child = next((d for d in node_decs if d.failure_origin == "agent3:false_lemma"), None)
+        false_child = next((d for d in node_decs if self._child_decomposition_is_false_frontier(d)), None)
         if false_child is None:
-            false_candidate = next((row for row in candidate_rows if row.failure_origin == "agent3:false_lemma"), None)
+            false_candidate = next((row for row in candidate_rows if self._child_decomposition_is_false_frontier(row)), None)
             if false_candidate is not None:
                 self._invalidate_parent_decomposition(
                     problem,
@@ -2735,23 +2820,39 @@ class Orchestrator:
         if not active:
             if self._select_active_decomposition_for_node(problem, lemma.lemma_id, NodeKind.LEMMA.value, cfg):
                 return True
-            has_accepted_child = any(d.llm_vetting_status == "accepted" for d in node_decs) or any(
-                row.llm_vetting_status == "accepted" for row in candidate_rows
+            has_accepted_child = any(self._child_decomposition_is_live_accepted(d) for d in node_decs) or any(
+                self._child_decomposition_is_live_accepted(row) for row in candidate_rows
             )
             if not cfg.mode.nl_only_mode and any(self._decomposition_pending_for_selection(d, cfg) for d in node_decs):
-                return False
-            if has_accepted_child:
-                # Accepted child decomposition exists but is not ready for promotion yet.
-                if lemma.routing_status != RoutingStatus.BLOCKED.value:
+                if (
+                    lemma.routing_status != RoutingStatus.BLOCKED.value
+                    or lemma.next_action != "wait_on_child_decomposition"
+                ):
                     self._save_lemma_transition(
                         lemma,
+                        proof_status=ProofStatus.PROOF_FLAWED.value,
+                        routing_status=RoutingStatus.BLOCKED.value,
+                        next_action="wait_on_child_decomposition",
+                        reason="child decomposition exists but Lean track preparation is not yet complete",
+                        clear_solver_series=True,
+                    )
+                return True
+            if has_accepted_child:
+                # Accepted child decomposition exists but is not ready for promotion yet.
+                if (
+                    lemma.routing_status != RoutingStatus.BLOCKED.value
+                    or lemma.next_action != "wait_on_child_decomposition"
+                ):
+                    self._save_lemma_transition(
+                        lemma,
+                        proof_status=ProofStatus.PROOF_FLAWED.value,
                         routing_status=RoutingStatus.BLOCKED.value,
                         next_action="wait_on_child_decomposition",
                         reason="accepted child decomposition exists but Lean track preparation is not yet complete",
                         clear_solver_series=True,
                     )
                     return True
-                return False
+                return True
 
             remaining_slots = self._remaining_decomposition_slots(
                 problem.problem_id,
@@ -5792,6 +5893,8 @@ class Orchestrator:
                 continue
 
             if lemma.proof_status in {ProofStatus.OPEN.value, ProofStatus.PROOF_FLAWED.value, ProofStatus.FAILED.value}:
+                if self._lemma_waiting_on_child_decomposition_frontier(lemma):
+                    continue
                 cap_reason = self._lemma_rejection_cap_reason(lemma, cfg)
                 guardrail_reason = self._lemma_solver_guardrail_reason(problem, lemma, cfg)
                 if cap_reason or guardrail_reason:

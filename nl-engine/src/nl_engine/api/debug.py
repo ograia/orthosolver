@@ -184,6 +184,7 @@ def _build_node_graph(
     lean_jobs_payload: list[dict[str, Any]],
     *,
     visible_lemma_ids: set[str] | None = None,
+    lemma_owner_decomposition: dict[str, str | None] | None = None,
 ) -> DebugNodeGraph:
     nodes: list[DebugNodeGraphNode] = []
     edges: list[DebugNodeGraphEdge] = []
@@ -229,6 +230,7 @@ def _build_node_graph(
     for lemma in lemmas_payload:
         if visible_lemma_ids is not None and lemma["lemma_id"] not in visible_lemma_ids:
             continue
+        owner_decomposition_id = (lemma_owner_decomposition or {}).get(lemma["lemma_id"])
         nodes.append(
             DebugNodeGraphNode(
                 id=lemma["lemma_id"],
@@ -237,13 +239,20 @@ def _build_node_graph(
                 status=lemma["proof_status"],
                 parent_id=lemma["parent_id"],
                 metadata={
+                    "owner_decomposition_id": owner_decomposition_id,
                     "routing_status": lemma["routing_status"],
                     "statement_status": lemma["statement_status"],
                     "solver_attempt_count": lemma["solver_attempt_count"],
                 },
             )
         )
-        edges.append(DebugNodeGraphEdge(from_id=lemma["parent_id"], to=lemma["lemma_id"], relation="contains"))
+        edges.append(
+            DebugNodeGraphEdge(
+                from_id=owner_decomposition_id or lemma["parent_id"],
+                to=lemma["lemma_id"],
+                relation="contains",
+            )
+        )
 
     for job in lean_jobs_payload:
         nodes.append(
@@ -2429,6 +2438,7 @@ def get_debug_problem_snapshot(
         decompositions_payload,
         lean_jobs_payload,
         visible_lemma_ids=set(visible_lemma_ids),
+        lemma_owner_decomposition=lemma_owner_decomposition,
     )
     root_track_decomposition_ids = _root_track_decomposition_ids(
         problem=problem,

@@ -14,6 +14,8 @@ const state = {
   selectedTreeNodeId: null,
   selectedTreeDetailTab: "proof",
   selectedRootTrackId: "all",
+  treeCollapsedByKey: {},
+  treeCollapseTouchedByKey: {},
   leanFileCache: {},
   selectedRequestEntryId: null,
   selectedRequestArtifactKey: null,
@@ -1872,6 +1874,77 @@ function filteredTreeGraph(snapshot) {
   };
 }
 
+function treeCollapseKey(nodeId) {
+  const problemId = state.snapshot?.problem_id || state.currentProblemId || "unknown";
+  return `${problemId}:${nodeId}`;
+}
+
+function isTreeNodeCollapsed(node, hasChildren) {
+  if (!hasChildren) {
+    return false;
+  }
+  const key = treeCollapseKey(node.id);
+  if (
+    state.treeCollapseTouchedByKey[key] !== true
+    && state.treeCollapsedByKey[key] === undefined
+    && node.kind === "decomposition"
+    && node.status === "failed"
+  ) {
+    state.treeCollapsedByKey[key] = true;
+  }
+  return state.treeCollapsedByKey[key] === true;
+}
+
+function setTreeNodeCollapsed(nodeId, collapsed, touched = true) {
+  const key = treeCollapseKey(nodeId);
+  state.treeCollapsedByKey[key] = collapsed;
+  if (touched) {
+    state.treeCollapseTouchedByKey[key] = true;
+  }
+}
+
+function formatTreeNodeLabel(node) {
+  const base = `${node.kind} ${node.id}`;
+  if (node.kind === "lemma") {
+    const row = state.snapshot?.lemma_by_id?.[node.id];
+    const statusBits = [];
+    if (row?.proof_status) {
+      statusBits.push(row.proof_status);
+    } else if (node.status) {
+      statusBits.push(node.status);
+    }
+    if (row?.routing_status && row.routing_status !== row.proof_status) {
+      statusBits.push(row.routing_status);
+    }
+    const parts = [`${base} [${statusBits.join(" | ")}]`, `proof ${row?.solver_attempt_count ?? 0}`];
+    if ((row?.decomposition_round_count ?? 0) > 0) {
+      parts.push(`decomp ${row.decomposition_round_count}`);
+    }
+    return parts.join(" ");
+  }
+
+  let label = `${base} [${node.status}]`;
+  if (node.kind === "decomposition") {
+    const origin = node.metadata?.decomposition_origin;
+    if (origin) {
+      label += ` <${origin}>`;
+    }
+    return label;
+  }
+
+  if (node.kind === "lean_job") {
+    const issue = node.metadata?.issue_kind;
+    const fatality = node.metadata?.fatality;
+    if (issue) {
+      label += ` <${issue}>`;
+    }
+    if (fatality) {
+      label += ` (${fatality})`;
+    }
+  }
+  return label;
+}
+
 function renderTreeExplorer() {
   const host = byId("tree-explorer");
   host.innerHTML = "";
@@ -1921,26 +1994,36 @@ function renderTreeExplorer() {
     const node = nodesById[nodeId];
     const li = document.createElement("li");
     li.className = "tree-node";
+    const row = document.createElement("div");
+    row.className = "tree-node-row";
+
+    const childIds = sortIds(children[nodeId] || []);
+    const collapsible = childIds.length > 0;
+    const collapsed = isTreeNodeCollapsed(node, collapsible);
+
+    if (collapsible) {
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "tree-node-toggle";
+      toggle.textContent = collapsed ? "▸" : "▾";
+      toggle.setAttribute("aria-expanded", String(!collapsed));
+      toggle.setAttribute("aria-label", `${collapsed ? "Expand" : "Collapse"} ${node.kind} ${node.id}`);
+      toggle.addEventListener("click", (event) => {
+        event.stopPropagation();
+        setTreeNodeCollapsed(nodeId, !collapsed, true);
+        renderTreeExplorer();
+      });
+      row.appendChild(toggle);
+    } else {
+      const spacer = document.createElement("span");
+      spacer.className = "tree-node-toggle-spacer";
+      row.appendChild(spacer);
+    }
+
     const btn = document.createElement("button");
     btn.type = "button";
-    let label = `${node.kind} ${node.id} [${node.status}]`;
-    if (node.kind === "decomposition") {
-      const origin = node.metadata?.decomposition_origin;
-      if (origin) {
-        label += ` <${origin}>`;
-      }
-    }
-    if (node.kind === "lean_job") {
-      const issue = node.metadata?.issue_kind;
-      const fatality = node.metadata?.fatality;
-      if (issue) {
-        label += ` <${issue}>`;
-      }
-      if (fatality) {
-        label += ` (${fatality})`;
-      }
-    }
-    btn.textContent = label;
+    btn.className = "tree-node-button";
+    btn.textContent = formatTreeNodeLabel(node);
     if (state.selectedTreeNodeId === nodeId) {
       btn.classList.add("primary");
     }
@@ -1949,9 +2032,9 @@ function renderTreeExplorer() {
       renderTreeExplorer();
       renderSelectedTreeNodeDetail();
     });
-    li.appendChild(btn);
-    const childIds = sortIds(children[nodeId] || []);
-    if (childIds.length > 0) {
+    row.appendChild(btn);
+    li.appendChild(row);
+    if (collapsible && !collapsed) {
       const ul = document.createElement("ul");
       childIds.forEach((childId) => ul.appendChild(renderNode(childId)));
       li.appendChild(ul);

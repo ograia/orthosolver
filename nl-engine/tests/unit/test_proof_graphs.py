@@ -184,6 +184,97 @@ def test_build_dependency_manifest_uses_graph_node_ids(tmp_path) -> None:
     assert all(not item.item_id.startswith("trusted_") for item in allowed)
 
 
+def test_build_dependency_manifest_includes_transitive_definition_context(tmp_path) -> None:
+    store = FileStore(str(tmp_path / "data"))
+    service = ProofGraphService(store)
+    problems = ProblemRepository(store)
+    theorems = TheoremRepository(store)
+    decomps = DecompositionRepository(store)
+    lemmas = LemmaRepository(store)
+    nodes = ProofGraphNodeRepository(store)
+
+    problem = problems.create(
+        ProblemORM(
+            problem_id="prob_graph_transitive_manifest",
+            root_theorem_id="thm_root_transitive",
+        )
+    )
+    root = theorems.create(
+        TheoremORM(
+            theorem_id="thm_root_transitive",
+            problem_id=problem.problem_id,
+            statement_nl="Root theorem",
+            statement_semantic_sketch={"normalized_claim": "root theorem"},
+        )
+    )
+    root_decomp = decomps.create(
+        DecompositionORM(
+            decomposition_id="dec_root_transitive",
+            problem_id=problem.problem_id,
+            node_id=root.theorem_id,
+            node_kind="theorem",
+            shared_context=[
+                {"kind": "definition", "label": "g_n", "content": "global definition"},
+                {"kind": "notation", "label": "S", "content": "root notation"},
+            ],
+            llm_vetting_status="accepted",
+        )
+    )
+    graph = service.ensure_graph_for_decomposition(problem, root_decomp)
+    assert graph is not None
+    root_decomp.proof_graph_id = graph.proof_graph_id
+    decomps.save(root_decomp)
+
+    parent_lemma = lemmas.create(
+        LemmaORM(
+            lemma_id="lem_parent_transitive",
+            problem_id=problem.problem_id,
+            parent_id=root_decomp.decomposition_id,
+            parent_kind="decomposition",
+            statement_nl="Parent lemma",
+            statement_semantic_sketch={"normalized_claim": "parent lemma"},
+            proof_graph_id=graph.proof_graph_id,
+        )
+    )
+    child_decomp = decomps.create(
+        DecompositionORM(
+            decomposition_id="dec_child_transitive",
+            problem_id=problem.problem_id,
+            node_id=parent_lemma.lemma_id,
+            node_kind="lemma",
+            proof_graph_id=graph.proof_graph_id,
+            shared_context=[
+                {"kind": "definition", "label": "h_n", "content": "local definition"},
+                {"kind": "definition", "label": "g_n", "content": "global definition"},
+            ],
+            llm_vetting_status="accepted",
+        )
+    )
+    target_lemma = lemmas.create(
+        LemmaORM(
+            lemma_id="lem_target_transitive",
+            problem_id=problem.problem_id,
+            parent_id=child_decomp.decomposition_id,
+            parent_kind="decomposition",
+            statement_nl="Target lemma",
+            statement_semantic_sketch={"normalized_claim": "target lemma"},
+            proof_graph_id=graph.proof_graph_id,
+        )
+    )
+
+    allowed, definition_context, _, _ = service.build_dependency_manifest(problem=problem, lemma=target_lemma, root=root)
+
+    assert definition_context == [
+        {"kind": "definition", "label": "h_n", "content": "local definition"},
+        {"kind": "definition", "label": "g_n", "content": "global definition"},
+        {"kind": "notation", "label": "S", "content": "root notation"},
+    ]
+    definition_items = [item for item in allowed if item.source == "definition_context"]
+    assert len(definition_items) == 3
+    graph_nodes = {row.graph_node_id for row in nodes.list_by_graph(graph.proof_graph_id)}
+    assert all(item.item_id in graph_nodes for item in definition_items)
+
+
 def test_final_graph_integrity_projects_proof_attempt_dependencies_to_claim_cycles(tmp_path) -> None:
     store = FileStore(str(tmp_path / "data"))
     graphs = ProofGraphRepository(store)
