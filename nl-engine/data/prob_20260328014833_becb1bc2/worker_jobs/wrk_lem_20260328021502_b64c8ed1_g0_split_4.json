@@ -1,0 +1,314 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328021502_b64c8ed1/split_existing_proof_attempt_4",
+  "attempt_count": 2,
+  "attempt_number": 4,
+  "completed_at": "2026-03-28T02:44:36.920016Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-28T02:35:16.370172Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent7_split_existing_proof",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260328015226_ec8a277f",
+        "role_in_parent": "Provide the canonical decomposition of an arbitrary real number into an integer part and a fractional part.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "x is a real number",
+            "frac(x) is constrained by inequality 0 <= frac(x) < 1"
+          ],
+          "normalized_claim": "For every real number x, define n = floor(x) and f = frac(x). Then x = n + f and the fractional part satisfies 0 <= f and f < 1.",
+          "quantifier_order": [
+            "For all real numbers x"
+          ],
+          "variables": [
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "input to floor and fractional part",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "f",
+              "role": "fractional part value of x, equal to frac(x)",
+              "type": "real number"
+            },
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "floor value of x, equal to floor(x)",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The integer n depends on x via n = floor(x)",
+            "The real f depends on x via f = frac(x)",
+            "The equality x = n + f uses the same x-dependent choices n = floor(x) and f = frac(x)"
+          ]
+        },
+        "statement_nl": "For every real number x, x = floor(x) + frac(x), and 0 <= frac(x) < 1."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lean_failure": {
+      "artifact_keys": {},
+      "confidence": 0.9,
+      "error_class": "service_execution_error",
+      "fatality": "fatal",
+      "issue_kind": "lean_issue",
+      "job_id": "lean_job_lem_20260328021502_b64c8ed1_formalize_lemma_from_nl_4",
+      "recommended_next_step": null
+    },
+    "lemma_id": "lem_20260328021502_b64c8ed1",
+    "parent_proof_nl": "Let x be an arbitrary real number, and set m = floor(x). By the defining property of the floor function, m is an integer such that m <= x < m + 1. Subtracting m from the inequality x < m + 1 gives x - m < 1. Since m = floor(x), this is exactly x - floor(x) < 1. Because x was arbitrary, the inequality holds for every real number x.",
+    "parent_semantic_sketch": {
+      "domain_restrictions": [
+        "x is a real number",
+        "floor(x) is the greatest integer less than or equal to x"
+      ],
+      "normalized_claim": "For all real numbers x, if m equals floor(x) (the greatest integer less than or equal to x), then x minus m is less than 1.",
+      "quantifier_order": [
+        "for all real numbers x"
+      ],
+      "variables": [
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "input to floor function and expression whose difference is bounded",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced; floor(x) is a deterministic function of x"
+      ]
+    },
+    "parent_statement_nl": "For every real number x, x - floor(x) < 1.",
+    "previous_attempt_summaries": [],
+    "role_in_parent": "Supplies the upper-bound part of the fractional-part estimate before rewriting the difference as frac(x).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "root_theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "split_existing_proof_generation",
+  "result_payload": {
+    "assembly_plan": {
+      "final_step_yields_exact_root": true,
+      "proof_skeleton_nl": "Fix any real number x. Let m = floor(x). By lem_floor_interval, we have x < m + 1, with m = floor(x). Then lem_subtract_strict applied to a = x and c = m gives x - m < 1. Replacing m by floor(x) yields x - floor(x) < 1. Since x was arbitrary, the result holds for all real x.",
+      "steps": [
+        {
+          "derives": "Apply lem_floor_interval to an arbitrary real x, with m = floor(x), to get x < floor(x) + 1.",
+          "is_trivial": true,
+          "step_id": "S1",
+          "trivial_justification": "normalized from textual assembly step",
+          "uses_lemmas": [],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "Apply lem_subtract_strict with a = x and c = floor(x) to deduce x - floor(x) < 1.",
+          "is_trivial": true,
+          "step_id": "S2",
+          "trivial_justification": "normalized from textual assembly step",
+          "uses_lemmas": [],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "Because x was arbitrary, conclude that x - floor(x) < 1 holds for every real number x.",
+          "is_trivial": true,
+          "step_id": "S3",
+          "trivial_justification": "normalized from textual assembly step",
+          "uses_lemmas": [],
+          "uses_prior_steps": []
+        }
+      ]
+    },
+    "confidence": 0.97,
+    "context_items": [],
+    "decision": "split",
+    "lemmas": [
+      {
+        "bottleneck_reason": null,
+        "formalization_cost_estimate": 0.15,
+        "lemma_relation_to_parent": "strictly_weaker",
+        "local_id": "lem_floor_interval",
+        "proof_nl": "Fix an arbitrary real number x and let m = floor(x). By the defining property of the floor function, m is an integer with m <= x, and it is the greatest integer with that property. Therefore x cannot be at least m + 1, because if x >= m + 1 then m + 1 would also be an integer less than or equal to x, contradicting the maximality of m. Hence x < m + 1. Combining this with m <= x gives m <= x < m + 1.",
+        "role_in_assembly": "Supplies the floor bound needed before subtracting m from the upper inequality.",
+        "self_check_notes": "This is the usual defining property of floor: m = floor(x) means m is the greatest integer not exceeding x, so m <= x and x < m + 1.",
+        "self_check_true": true,
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "x is a real number",
+            "m is an integer and m = floor(x)"
+          ],
+          "normalized_claim": "For every real x, if m = floor(x), then m <= x and x < m + 1.",
+          "quantifier_order": [
+            "For every real number x",
+            "Let m = floor(x)"
+          ],
+          "variables": [
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "input real number",
+              "type": "real number"
+            },
+            {
+              "domain": "integers",
+              "name": "m",
+              "role": "the floor of x",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "m depends on x via m = floor(x)"
+          ]
+        },
+        "statement_nl": "For every real number x, if m = floor(x), then m <= x < m + 1.",
+        "strictly_easier_reason": "It gives only the standard interval characterization of the floor, not the target inequality x - floor(x) < 1."
+      },
+      {
+        "bottleneck_reason": null,
+        "formalization_cost_estimate": 0.1,
+        "lemma_relation_to_parent": "orthogonal",
+        "local_id": "lem_subtract_strict",
+        "proof_nl": "Let a and c be real numbers and assume a < c + 1. Subtract c from both sides of the strict inequality. Since adding or subtracting the same real number preserves strict inequalities, we obtain a - c < (c + 1) - c. The right-hand side simplifies to 1, so a - c < 1.",
+        "role_in_assembly": "Converts the upper bound x < floor(x) + 1 into the desired form x - floor(x) < 1.",
+        "self_check_notes": "This is a routine order-preserving subtraction step for strict inequalities over the reals.",
+        "self_check_true": true,
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a and c are real numbers"
+          ],
+          "normalized_claim": "For any reals a and c, the inequality a < c + 1 implies a - c < 1.",
+          "quantifier_order": [
+            "For all real numbers a and c"
+          ],
+          "variables": [
+            {
+              "domain": "real numbers",
+              "name": "a",
+              "role": "left-hand side quantity",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "c",
+              "role": "shift amount to subtract",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For all real numbers a and c, if a < c + 1, then a - c < 1.",
+        "strictly_easier_reason": null
+      }
+    ],
+    "parent_reassembly_explanation": "The parent proof is recovered by combining the two child lemmas exactly as in the original argument: first obtain the upper floor bound x < floor(x) + 1 from the floor interval lemma, then subtract floor(x) using the subtraction lemma to get x - floor(x) < 1. The universal quantifier over x is handled by starting with an arbitrary real x.",
+    "shared_context": [],
+    "status": "completed",
+    "strategy_summary": "Split the proof into two reusable pieces: first, the standard floor interval bound for m = floor(x), and second, a general arithmetic lemma that turns an inequality of the form a < c + 1 into a - c < 1. The parent statement then follows by instantiating these lemmas with m = floor(x).",
+    "summary": "Completed split into two lemmas: the floor interval characterization and a generic strict-inequality subtraction lemma. Together they reassemble the parent proof of x - floor(x) < 1 for all real x."
+  },
+  "started_at": "2026-03-28T02:35:24.603762Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328021502_b64c8ed1",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:44:36.920016Z",
+  "worker_job_id": "wrk_lem_20260328021502_b64c8ed1_g0_split_4",
+  "worker_kind": "proof_split_generation"
+}

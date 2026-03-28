@@ -1,0 +1,160 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328015230_76f78c29/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T01:53:50.748898Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T01:53:50.996944Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T01:53:41.855511Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+        "item_id": "pnode_20260328015341_a57d9401",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260328015332_8df06097",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260328015230_76f78c29",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328015341_d0835c5a",
+    "role_in_assembly": "Compare any point in [0,1) to the left endpoint of the n-adic interval containing it.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "x is real and satisfies 0 <= x < 1",
+        "m is defined as floor of n times x, hence m is an integer",
+        "m divided by n is defined (requires n not equal to 0, satisfied by n > 1)"
+      ],
+      "normalized_claim": "For every integer n with n > 1 and every real x with 0 <= x < 1, if m is the floor of n times x, then E(n, x) is less than or equal to E(n, m divided by n).",
+      "quantifier_order": [
+        "for all integers n greater than 1",
+        "for all real numbers x with 0 <= x < 1"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "outer parameter in E; also input to floor",
+          "type": "integer"
+        },
+        {
+          "domain": "real interval from 0 inclusive to 1 exclusive",
+          "name": "x",
+          "role": "argument to E(n, x); also used to define m",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "defined as floor(n*x); used to form m/n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "m depends on n and x via m = floor(n*x)",
+        "the comparison target m/n depends on n and x through m"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be an integer greater than 1. If x is a real number with 0 <= x < 1 and m = floor(n*x), then E(n, x) <= E(n, m/n).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "respects_domain_0_le_x_lt_1": true,
+      "used_definition_of_E": true,
+      "used_floor_monotonicity": true,
+      "used_floor_n_times_m_over_n_equals_m": true
+    },
+    "lemma_id": "lem_20260328015230_76f78c29",
+    "proof_nl": "Fix an integer n > 1 and let x be a real number with 0 <= x < 1. Set m = floor(n x). Then m is an integer and, by definition of the floor function,\n\nm/n <= x < (m+1)/n.\n\nWe compare E(n,x) with E(n,m/n). First, since m/n is rational with n(m/n)=m, we have floor(n(m/n)) = m. So\n\nE(n,m/n) = m - sum_{k=1}^n floor(km/n)/k.\n\nNow let 1 <= k <= n. Because x >= m/n and the map t -> floor(t) is nondecreasing, we get\n\nfloor(kx) >= floor(km/n).\n\nTherefore, term by term,\n\nfloor(kx)/k >= floor(km/n)/k.\n\nSumming over k = 1, ..., n gives\n\nsum_{k=1}^n floor(kx)/k >= sum_{k=1}^n floor(km/n)/k.\n\nSince floor(nx) = m, it follows that\n\nE(n,x) = m - sum_{k=1}^n floor(kx)/k <= m - sum_{k=1}^n floor(km/n)/k = E(n,m/n).\n\nThis is exactly the desired inequality.",
+    "proof_summary": "For x in [0,1), let m=floor(nx), so x lies in [m/n,(m+1)/n). Since x >= m/n and floor is monotone, floor(kx) >= floor(km/n) for each k=1,...,n. Because E(n,x)=m-\u03a3 floor(kx)/k and E(n,m/n)=m-\u03a3 floor(km/n)/k, the inequality follows by termwise comparison.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T01:53:44.261671Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328015230_76f78c29",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T01:53:50.996948Z",
+  "worker_job_id": "wrk_lem_20260328015230_76f78c29_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

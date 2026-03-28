@@ -1,0 +1,83 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328015332_d0775c9a",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T01:52:43.787080Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.15,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T01:56:28.562007Z",
+  "last_dependency_check_id": "depchk_20260328015415_42cf6e06",
+  "last_submitted_lean_job_id": "lean_job_lem_20260328015236_05d35538_formalize_lemma_from_nl_1",
+  "last_submitted_lean_proof_fingerprint": "da04508455b2d10ff3618dc535e25f11b90ddb3d3691380c5a74af79d7a812ec",
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let H_m := \\sum_{j=1}^m \\frac1j. Fix an integer n>1 and a real x with \\frac{n-1}{n} \\le x < 1.\n\nFor each k with 1 \\le k \\le n-1, we have\nkx \\ge k\\cdot \\frac{n-1}{n} = k - \\frac{k}{n} > k-1,\nbecause k<n implies \\frac{k}{n}<1. Also kx<k since x<1. Hence k-1 < kx < k, so \\lfloor kx\\rfloor = k-1.\nFor k=n, we get n-1 \\le nx < n, so \\lfloor nx\\rfloor = n-1.\n\nTherefore\nE(n,x)= (n-1)-\\sum_{k=1}^{n-1}\\frac{k-1}{k}-\\frac{n-1}{n}.\nNow \\frac{k-1}{k}=1-\\frac1k, so\n\\sum_{k=1}^{n-1}\\frac{k-1}{k} = (n-1)-\\sum_{k=1}^{n-1}\\frac1k = (n-1)-H_{n-1}.\nSubstituting,\nE(n,x)= (n-1)-\\bigl((n-1)-H_{n-1}\\bigr)-\\frac{n-1}{n} = H_{n-1}-\\frac{n-1}{n}.\nSince H_n = H_{n-1}+\\frac1n, this equals\nH_n-1.\nThus E(n,x)=H_n-1 for every x in \\left[\\frac{n-1}{n},1\\right).",
+  "latest_vetted_proof_fingerprint": "da04508455b2d10ff3618dc535e25f11b90ddb3d3691380c5a74af79d7a812ec",
+  "latest_vetter_report_id": "rep_20260328015415_bc13b2e8",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328015236_05d35538",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_lean_formalization",
+  "parent_id": "thm_root_20260328014833_a00b1667",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328014833_becb1bc2/proof_bundles/lemmas/lem_20260328015236_05d35538.json",
+  "proof_graph_id": "pgraph_20260328015332_d1814f25",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Exhibit a full family of maximizers and compute the common value on the top interval.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1. If x is a real number with (n-1)/n <= x < 1, then E(n, x) = H_n - 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "x is a real number satisfying (n-1)/n <= x",
+      "x is a real number satisfying x < 1",
+      "the expressions (n-1)/n and H_n are assumed to be well-defined for the stated n"
+    ],
+    "normalized_claim": "For every integer n greater than 1, and for every real number x with (n-1)/n <= x < 1, the value E(n, x) equals H_n minus 1.",
+    "quantifier_order": [
+      "for all n in integers with n > 1",
+      "for all x in real numbers with (n-1)/n <= x and x < 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input variable restricted to an interval depending on n",
+        "type": "real"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses appear; the equation asserts equality for all allowed x"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T01:56:28.562007Z"
+}

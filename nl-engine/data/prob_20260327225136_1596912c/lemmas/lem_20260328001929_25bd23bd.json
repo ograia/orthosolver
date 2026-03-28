@@ -1,0 +1,79 @@
+{
+  "active_counterexample_id": "cex_20260328002138_b73ee39a",
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328002102_f37ebaca",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "accepted",
+  "created_at": "2026-03-28T00:19:35.838247Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.18,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T00:22:07.809026Z",
+  "last_dependency_check_id": "depchk_20260328002138_e4289940",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent4:counterexample_flagged",
+  "last_transition_reason": "The lemma is false as stated. The hypothesis only assumes differentiability on the open interval (0,1), so it gives no control over the endpoint value h(0). A function can have h'(u) <= 0 on (0,1) and still satisfy h(u) > h(0) for some u in [0,1), so the claimed conclusion fails.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328001929_25bd23bd",
+  "minor_rejection_count": 0,
+  "next_action": "invalidate_parent_decomposition",
+  "parent_id": "lem_20260327230124_caed970a",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260327225136_1596912c",
+  "proof_bundle_artifact_id": "problems/prob_20260327225136_1596912c/proof_bundles/lemmas/lem_20260328001929_25bd23bd.json",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "proof_status": "failed",
+  "role_in_parent": "Converts a derivative sign condition into a pointwise bound at the left endpoint.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let h : [0,1] -> R be differentiable on (0,1). If h'(u) <= 0 for every u in (0,1), then h(u) <= h(0) for every u with 0 <= u < 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "h is defined on the closed interval [0,1].",
+      "differentiability of h is assumed only on the open interval (0,1).",
+      "the condition h'(u) <= 0 is required for all u strictly between 0 and 1.",
+      "the conclusion is required for all u in the half-open interval [0,1)."
+    ],
+    "normalized_claim": "If h is differentiable on (0,1) and maps [0,1] to real numbers, and if for all u in (0,1) the derivative satisfies h'(u) is less than or equal to 0, then for all u in [0,1) the value h(u) is less than or equal to h(0).",
+    "quantifier_order": [
+      "There exists a function h mapping [0,1] to real numbers, differentiable on (0,1).",
+      "For every real u with u in (0,1), assume h'(u) <= 0.",
+      "For every real u with 0 <= u < 1, conclude h(u) <= h(0)."
+    ],
+    "variables": [
+      {
+        "domain": "all real x in the interval [0,1]",
+        "name": "h",
+        "role": "subject function; differentiable on the open interval (0,1)",
+        "type": "function from real numbers to real numbers"
+      },
+      {
+        "domain": "open interval (0,1) when used in the derivative hypothesis; domain [0,1) when used in the conclusion",
+        "name": "u",
+        "role": "point where the derivative inequality is evaluated; point where the function value comparison is asserted",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_status": "false",
+  "truth_status": "false",
+  "updated_at": "2026-03-28T00:22:07.809026Z"
+}

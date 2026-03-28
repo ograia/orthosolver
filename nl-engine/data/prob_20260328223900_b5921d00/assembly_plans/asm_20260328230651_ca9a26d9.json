@@ -1,0 +1,72 @@
+{
+  "assembly_plan_id": "asm_20260328230651_ca9a26d9",
+  "created_at": "2026-03-28T23:06:51.222849Z",
+  "decomposition_id": "dec_20260328230651_37052e1b",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260328223900_b5921d00",
+  "proof_skeleton_nl": "First bound n*t inside [0,n) using the hypothesis 0 \u2264 t < 1 and n > 1. Then use standard floor inequalities to place floor(n*t) between n*t and n*t+1. The lower bound 0 \u2264 n*t implies floor(n*t) is nonnegative, while the strict inequality floor(n*t) < n implies floor(n*t) \u2264 n\u22121. Finally, instantiate the cellwise comparison lemma at k = floor(n*t); its hypotheses are exactly the bounds established above, so it returns f_n(t) \u2264 g_n(floor(n*t)), which is the desired theorem.",
+  "root_node_id": "lem_20260328230002_b3e008db",
+  "steps": [
+    {
+      "derives": "From the assumptions n > 1 and 0 \u2264 t < 1, conclude 0 \u2264 n*t < n.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is a direct instantiation of the scaling lemma L3 with the given n and t.",
+      "uses_lemmas": [
+        "lem_20260328230534_10f5c8e1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Applying the two floor bounds to x = n*t gives floor(n*t) \u2264 n*t and n*t < floor(n*t) + 1, hence floor(n*t) \u2264 n*t < floor(n*t) + 1.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Two standard floor estimates are instantiated and combined into a single interval statement.",
+      "uses_lemmas": [
+        "lem_20260328230531_9feb4dcd",
+        "lem_20260328230532_8f33d84b"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Since A1 gives 0 \u2264 n*t, applying the nonnegativity-of-floor lemma to x = n*t yields 0 \u2264 floor(n*t).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "This uses the nonnegativity lemma together with the previously established lower bound on n*t.",
+      "uses_lemmas": [
+        "lem_20260328230537_48f402fa"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "From A2 we have floor(n*t) \u2264 n*t, and from A1 we have n*t < n, so floor(n*t) < n. Because floor(n*t) is an integer, L5 gives floor(n*t) \u2264 n - 1.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "This combines the floor lower bound with the scaled interval bound and then converts a strict integer inequality into a weak one.",
+      "uses_lemmas": [
+        "lem_20260328230531_9feb4dcd",
+        "lem_20260328230540_5e26107c"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "Let k = floor(n*t). The prior steps show k is an integer, 0 \u2264 k \u2264 n - 1, and k \u2264 n*t < k + 1. Therefore the cellwise comparison lemma applies and yields f_n(t) \u2264 g_n(floor(n*t)).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "This is a single application of the bottleneck lemma after verifying its hypotheses from the previous steps.",
+      "uses_lemmas": [
+        "lem_20260328230542_026d0fc6"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3",
+        "A4"
+      ]
+    }
+  ]
+}

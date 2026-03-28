@@ -1,0 +1,88 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328015332_c788bf86",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T01:52:26.963190Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T02:35:07.878902Z",
+  "last_dependency_check_id": "depchk_20260328023435_a7627d69",
+  "last_submitted_lean_job_id": "lean_job_lem_20260328015220_49341677_formalize_lemma_from_nl_4",
+  "last_submitted_lean_proof_fingerprint": "f1530de50fa4513a60f98255eb0c8e8a32b08534d94a376ed7ab3dded505edd6",
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "split_existing_proof attempt 4 submitted",
+  "latest_lean_issue_class": "service_execution_error",
+  "latest_lean_issue_kind": "lean_issue",
+  "latest_lean_result_id": "lean_res_20260328023506_4524097c",
+  "latest_nl_proof": "Fix an integer n>1, a real number x, and an integer z. By definition,\nE(n,t)=\\lfloor nt\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor kt\\rfloor}{k}.\nWe compute E(n,x+z). Since nz is an integer, the floor-translation identity gives\n\\lfloor n(x+z)\\rfloor=\\lfloor nx+nz\\rfloor=\\lfloor nx\\rfloor+nz.\nLikewise, for each k=1,2,\\dots,n, the number kz is an integer, so\n\\lfloor k(x+z)\\rfloor=\\lfloor kx+kz\\rfloor=\\lfloor kx\\rfloor+kz.\nSubstituting these into the definition of E(n,x+z) yields\nE(n,x+z)=\\bigl(\\lfloor nx\\rfloor+nz\\bigr)-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor+kz}{k}.\nSplitting the sum,\nE(n,x+z)=\\lfloor nx\\rfloor+nz-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}-\\sum_{k=1}^n \\frac{kz}{k}.\nSince \\frac{kz}{k}=z for every k, the last sum equals \\sum_{k=1}^n z=nz. Therefore the added nz terms cancel, and we get\nE(n,x+z)=\\lfloor nx\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}=E(n,x).\nHence E(n,x+z)=E(n,x) for every real x and every integer z.",
+  "latest_vetted_proof_fingerprint": "f1530de50fa4513a60f98255eb0c8e8a32b08534d94a376ed7ab3dded505edd6",
+  "latest_vetter_report_id": "rep_20260328023434_8168b510",
+  "lean_attempt_count": 4,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328015220_49341677",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_split_existing_proof",
+  "parent_id": "thm_root_20260328014833_a00b1667",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328014833_becb1bc2/proof_bundles/lemmas/lem_20260328015220_49341677.json",
+  "proof_graph_id": "pgraph_20260328015332_d1814f25",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Remove the integer part of x without changing the objective function.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 5,
+  "solver_series_started_at": "2026-03-28T02:35:07.874503Z",
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1. For every real number x and every integer z, E(n, x + z) = E(n, x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "x is a real number",
+      "z is an integer",
+      "E(n, t) is well-defined for integer n with n > 1 and for real inputs t"
+    ],
+    "normalized_claim": "For every integer n with n > 1, and for every real number x and every integer z, the function value E(n, x plus z) equals E(n, x).",
+    "quantifier_order": [
+      "for all n in integers with n > 1",
+      "for all x in reals",
+      "for all z in integers"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter of the function E; constrained by n > 1",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "x",
+        "role": "real input to the second argument of E",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "z",
+        "role": "integer shift added to x",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T02:35:07.878902Z"
+}

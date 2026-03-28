@@ -17,19 +17,20 @@ class Settings(BaseSettings):
     gcs_artifact_prefix: str = "orthosolver/artifacts"
 
     openai_api_key: str | None = None
-    openai_model_agent1: str = "gpt-5-mini"
-    openai_model_agent2: str = "gpt-5-mini"
-    openai_model_agent3: str = "gpt-5-mini"
-    openai_model_agent4: str = "gpt-5-mini"
-    openai_model_agent5: str = "gpt-5-mini"
-    openai_model_agent6: str = "gpt-5-mini"
-    openai_model_agent7: str = "gpt-5-mini"
-    openai_model_agent8: str = "gpt-5-mini"
+    openai_model_agent1: str = "gpt-5.4-nano"
+    openai_model_agent2: str = "gpt-5.4-mini"
+    openai_model_agent3: str = "gpt-5.4-mini"
+    openai_model_agent4: str = "gpt-5.4-mini"
+    openai_model_agent5: str = "gpt-5.4-mini"
+    openai_model_agent6: str = "gpt-5.4-mini"
+    openai_model_agent7: str = "gpt-5.4-mini"
+    openai_model_agent8: str = "gpt-5.4-mini"
     openai_reasoning_effort: Literal["none", "low", "medium", "high", "xhigh"] = "none"
     openai_text_verbosity: Literal["low", "medium", "high"] = "medium"
     openai_timeout_seconds: int = 180
     # Buffer worker-thread usage writes by default to reduce local I/O churn.
     openai_usage_persistence_mode: Literal["immediate", "buffered", "disabled"] = "buffered"
+    openai_webhook_secret: str | None = None
 
     lean_engine_base_url: str = "http://localhost:8081"
     lean_engine_runtime_mode: Literal["managed", "external"] = "managed"

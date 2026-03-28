@@ -176,7 +176,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.semantic_sketch(payload.statement_nl, artifact_prefix),
@@ -189,7 +193,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.decompose(payload, artifact_prefix, override_key=override_key),
@@ -232,7 +240,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.vet_decomposition(payload, artifact_prefix),
@@ -245,7 +257,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.solve_lemma(payload, artifact_prefix, override_key=override_key),
@@ -258,7 +274,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.vet_lemma_proof(payload, artifact_prefix),
@@ -271,7 +291,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.final_check(payload, artifact_prefix),
@@ -284,7 +308,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.split_existing_proof(payload, artifact_prefix),
@@ -297,7 +325,11 @@ class WorkerFacade:
         if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
             service.set_llm_overrides(llm_overrides)
         if hasattr(service, "set_runtime_context"):
-            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+            service.set_runtime_context(
+                worker_job_id=job.job_id,
+                execution_id=job.execution_id,
+                worker_attempt_count=job.worker_attempt_count,
+            )
         result = self._run_idempotent(
             job,
             lambda: service.vet_split_existing_proof(payload, artifact_prefix),

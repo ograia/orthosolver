@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-03-28T22:56:59.918475Z",
+  "graph_node_id": "pnode_20260328225659_f782c9e3",
+  "metadata": {
+    "node_kind": "theorem"
+  },
+  "node_kind": "claim",
+  "node_status": "active",
+  "normalized_claim_hash": "9064a7178b92198c5bc253ae34f969d53e9e3a310953a648fa14b2e4b9049d58",
+  "owner_id": "thm_root_20260328223900_ac5193ce",
+  "owner_kind": "theorem",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n is greater than 1",
+      "x is any real number",
+      "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+      "floor is applied to real numbers and returns an integer"
+    ],
+    "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+    "quantifier_order": [
+      "For a fixed integer n with n > 1",
+      "For real x (x ranges over all real numbers)",
+      "Choose x that achieves the maximum of the given expression over all real x",
+      "Determine the maximal value M"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "decision variable over which the expression is maximized",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "M",
+        "role": "the maximal value of the expression as a function of n",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "An optimal x (or the set of optimal x values) may depend on n",
+      "The maximal value M may depend on n"
+    ]
+  },
+  "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+  "updated_at": "2026-03-28T22:56:59.918476Z"
+}

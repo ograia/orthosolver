@@ -48,6 +48,7 @@ from nl_engine.domain.enums import (
 from nl_engine.domain.models import (
     AssemblyPlanORM,
     CounterexampleORM,
+    DecompositionCandidateORM,
     DecompositionORM,
     FailureReportORM,
     LeanJobORM,
@@ -59,6 +60,7 @@ from nl_engine.domain.models import (
     VetterReportORM,
 )
 from nl_engine.lean_client.sessions import LeanSessionManager
+from nl_engine.lean_client.client import LeanClient
 from nl_engine.observability.events import EventLogger
 from nl_engine.observability.costs import flush_buffered_usage_rows, record_usage_row
 from nl_engine.observability.metrics import MetricsExporter
@@ -66,6 +68,7 @@ from nl_engine.persistence.db import FileStore
 from nl_engine.persistence.repositories import (
     AssemblyPlanRepository,
     CounterexampleRepository,
+    DecompositionCandidateRepository,
     DecompositionRepository,
     EventRepository,
     FailureReportRepository,
@@ -114,6 +117,7 @@ class Orchestrator:
         self.problems = ProblemRepository(store)
         self.theorems = TheoremRepository(store)
         self.decompositions = DecompositionRepository(store)
+        self.decomposition_candidates = DecompositionCandidateRepository(store)
         self.assembly_plans = AssemblyPlanRepository(store)
         self.lemmas = LemmaRepository(store)
         self.counterexamples = CounterexampleRepository(store)
@@ -167,6 +171,36 @@ class Orchestrator:
         if lemma is None or lemma.problem_id != problem.problem_id:
             return None
         return lemma
+
+    def _consume_theorem_override_once(self, theorem_id: str, *, override_key: str | None) -> str | None:
+        if override_key != "agent2_first_root":
+            return override_key
+        theorem = self.theorems.get(theorem_id)
+        if theorem is None:
+            return None
+        if theorem.agent2_first_root_consumed:
+            return None
+        theorem.agent2_first_root_consumed = True
+        self.theorems.save(theorem)
+        return override_key
+
+    def _consume_lemma_override_once(self, lemma_id: str, *, override_key: str | None) -> str | None:
+        lemma = self.lemmas.get(lemma_id)
+        if lemma is None:
+            return None if override_key in {"agent2_first_lemma", "agent4_first"} else override_key
+        if override_key == "agent2_first_lemma":
+            if lemma.agent2_first_lemma_consumed:
+                return None
+            lemma.agent2_first_lemma_consumed = True
+            self.lemmas.save(lemma)
+            return override_key
+        if override_key == "agent4_first":
+            if lemma.agent4_first_consumed:
+                return None
+            lemma.agent4_first_consumed = True
+            self.lemmas.save(lemma)
+            return override_key
+        return override_key
 
     @staticmethod
     def _continuation_generation(problem: ProblemORM) -> int:
@@ -1258,8 +1292,177 @@ class Orchestrator:
     def _remaining_decomposition_slots(self, problem_id: str, node_id: str, node_kind: str, cfg: ProblemConfig) -> int:
         if node_kind == NodeKind.THEOREM.value:
             return max(0, cfg.decomposition.parallel_root_decompositions_n - self._current_root_track_count(problem_id, node_id))
-        existing = self.decompositions.list_by_node(problem_id, node_id)
-        return max(0, self._max_decompositions_for_node(node_kind, cfg) - len(existing))
+        lemma = self.lemmas.get(node_id)
+        consumed_rounds = int(lemma.decomposition_round_count) if lemma is not None else len(self.decompositions.list_by_node(problem_id, node_id))
+        return max(0, self._max_decompositions_for_node(node_kind, cfg) - consumed_rounds)
+
+    def _refresh_lemma_decomposition_counters(self, lemma: LemmaORM) -> None:
+        candidate_rows = self.decomposition_candidates.list_by_node(lemma.problem_id, lemma.lemma_id)
+        promoted_count = sum(1 for row in candidate_rows if row.promoted_decomposition_id)
+        if lemma.materialized_candidate_count != len(candidate_rows):
+            lemma.materialized_candidate_count = len(candidate_rows)
+        if lemma.promoted_decomposition_count != promoted_count:
+            lemma.promoted_decomposition_count = promoted_count
+        self.lemmas.save(lemma)
+
+    @staticmethod
+    def _lemma_candidate_sort_key(candidate: DecompositionCandidateORM) -> tuple[float, int, datetime, str]:
+        estimate = candidate.formalization_cost_estimate
+        return (
+            float(estimate) if estimate is not None else 999.0,
+            int(candidate.candidate_index or 0),
+            candidate.created_at,
+            candidate.candidate_id,
+        )
+
+    def _accepted_lemma_candidates(self, problem_id: str, lemma_id: str) -> list[DecompositionCandidateORM]:
+        rows = [
+            row
+            for row in self.decomposition_candidates.list_by_node(problem_id, lemma_id)
+            if row.llm_vetting_status == "accepted"
+        ]
+        rows.sort(key=self._lemma_candidate_sort_key)
+        return rows
+
+    def _unpromoted_lemma_candidates(self, problem_id: str, lemma_id: str) -> list[DecompositionCandidateORM]:
+        return [
+            row
+            for row in self._accepted_lemma_candidates(problem_id, lemma_id)
+            if not row.promoted_decomposition_id
+        ]
+
+    def _lemma_candidate_bundle_key(self, problem_id: str, candidate_id: str) -> str:
+        return f"problems/{problem_id}/decomposition_candidates/{candidate_id}/materialization_bundle.json"
+
+    def _promote_lemma_candidate(
+        self,
+        *,
+        problem: ProblemORM,
+        candidate_row: DecompositionCandidateORM,
+        cfg: ProblemConfig,
+    ) -> DecompositionORM | None:
+        if candidate_row.promoted_decomposition_id:
+            existing = self.decompositions.get(candidate_row.promoted_decomposition_id)
+            if existing is not None:
+                return existing
+
+        if not candidate_row.materialization_artifact_id or not self.artifacts.exists(candidate_row.materialization_artifact_id):
+            candidate_row.selection_status = "rejected_fatal"
+            candidate_row.failure_origin = candidate_row.failure_origin or "candidate_promotion:missing_materialization_artifact"
+            candidate_row.failure_reason = candidate_row.failure_reason or "accepted candidate could not be promoted because its materialization bundle is missing"
+            self.decomposition_candidates.save(candidate_row)
+            return None
+
+        bundle = self.artifacts.load_json(candidate_row.materialization_artifact_id)
+        decomposition_id = new_id("dec")
+        assembly_plan_id = new_id("asm")
+        logical_decomposition_id = self._logical_decomposition_id(
+            node_id=candidate_row.node_id,
+            node_kind=candidate_row.node_kind,
+        )
+        lemma_rows = [
+            LemmaORM.model_validate({**row, "proof_graph_id": None})
+            for row in bundle.get("candidate_lemma_rows", [])
+            if isinstance(row, dict)
+        ]
+        if not lemma_rows:
+            candidate_row.selection_status = "rejected_fatal"
+            candidate_row.failure_origin = candidate_row.failure_origin or "candidate_promotion:empty_bundle"
+            candidate_row.failure_reason = candidate_row.failure_reason or "accepted candidate materialization bundle did not contain lemma rows"
+            self.decomposition_candidates.save(candidate_row)
+            return None
+
+        decomp = DecompositionORM(
+            decomposition_id=decomposition_id,
+            problem_id=problem.problem_id,
+            logical_decomposition_id=logical_decomposition_id,
+            revision_number=self._next_decomposition_revision_number(
+                problem_id=problem.problem_id,
+                logical_decomposition_id=logical_decomposition_id,
+            ),
+            node_id=candidate_row.node_id,
+            node_kind=candidate_row.node_kind,
+            proof_graph_id=None,
+            strategy_summary=str(bundle.get("strategy_summary") or candidate_row.strategy_summary or ""),
+            shared_context=list(bundle.get("shared_context") or candidate_row.shared_context or []),
+            lemma_ids=[row.lemma_id for row in lemma_rows],
+            assembly_plan_id=assembly_plan_id,
+            pinned_statement_signatures=None,
+            formalization_cost_estimate=candidate_row.formalization_cost_estimate,
+            llm_vetting_status="accepted",
+            lean_assembly_status=(
+                LeanAssemblyStatus.SKIPPED.value
+                if cfg.mode.nl_only_mode
+                else LeanAssemblyStatus.PENDING.value
+            ),
+            controller_status=ControllerStatus.ACTIVE.value,
+            dependency_status="legacy_unknown",
+            raw_candidate_artifact_id=candidate_row.raw_candidate_artifact_id,
+            equivalence_risk="none",
+            previous_attempt_summaries=list(candidate_row.previous_attempt_summaries or []),
+            decomposition_origin=candidate_row.decomposition_origin,
+            decomposition_origin_reason=candidate_row.decomposition_origin_reason,
+            decomposition_origin_job_id=candidate_row.decomposition_origin_job_id,
+        )
+        plan = AssemblyPlanORM(
+            assembly_plan_id=assembly_plan_id,
+            problem_id=problem.problem_id,
+            decomposition_id=decomposition_id,
+            root_node_id=candidate_row.node_id,
+            steps=list(bundle.get("accepted_steps") or []),
+            proof_skeleton_nl=str(bundle.get("proof_skeleton_nl") or ""),
+            is_trivially_composable=bool(bundle.get("is_trivially_composable", False)),
+        )
+
+        self.decompositions.create(decomp)
+        self.assembly_plans.create(plan)
+        graph = self.proof_graphs.ensure_graph_for_decomposition(problem, decomp)
+        if graph is not None:
+            decomp.proof_graph_id = graph.proof_graph_id
+            decomp.dependency_status = "passed"
+        for row in lemma_rows:
+            row.proof_graph_id = decomp.proof_graph_id
+        self.lemmas.create_many(lemma_rows)
+        graph, _, reduction_check = self.proof_graphs.bootstrap_decomposition_graph(
+            problem=problem,
+            theorem=None,
+            decomp=decomp,
+            lemmas=lemma_rows,
+        )
+        for row in lemma_rows:
+            self.lemmas.save(row)
+        if graph is not None:
+            self.proof_graphs.record_dependency_check(
+                proof_graph_id=graph.proof_graph_id,
+                target_node_id=decomp.decomposition_id,
+                artifact_kind="decomposition",
+                artifact_id=decomposition_id,
+                check_status="passed" if not reduction_check else "retryable_violation",
+                violations=reduction_check,
+            )
+        self.decompositions.save(decomp)
+
+        candidate_row.selection_status = "promoted"
+        candidate_row.promoted_decomposition_id = decomp.decomposition_id
+        self.decomposition_candidates.save(candidate_row)
+
+        owner_lemma = self.lemmas.get(candidate_row.node_id)
+        if owner_lemma is not None:
+            owner_lemma.promoted_decomposition_count = int(owner_lemma.promoted_decomposition_count) + 1
+            self._refresh_lemma_decomposition_counters(owner_lemma)
+
+        if not cfg.mode.nl_only_mode:
+            self._submit_prepare_track_if_v2(problem, decomp, cfg)
+
+        self.event_logger.transition(
+            problem.problem_id,
+            "decomposition.promoted",
+            candidate_row.candidate_id,
+            decomp.decomposition_id,
+            target_node_id=decomp.decomposition_id,
+            reason=f"promoted lemma candidate {candidate_row.candidate_id}",
+        )
+        return decomp
 
     def _build_decomposition_generation_payload(
         self,
@@ -1521,14 +1724,49 @@ class Orchestrator:
             except AgentExecutionError as exc:
                 if exc.error_class == "interrupted":
                     raise
-                # Record a rejected_fatal decomposition so the system
-                # tracks the failed attempt and can eventually exhaust
-                # its retry budget.
                 logical_decomposition_id = self._logical_decomposition_id(
                     node_id=node_id,
                     node_kind=node_kind,
                     request_tag=request_tag,
                 )
+                if node_kind == NodeKind.LEMMA.value:
+                    candidate_row = DecompositionCandidateORM(
+                        candidate_id=new_id("deccand"),
+                        problem_id=problem.problem_id,
+                        node_id=node_id,
+                        node_kind=node_kind,
+                        logical_decomposition_id=logical_decomposition_id,
+                        candidate_index=int(getattr(candidate, "candidate_index", 0) or 0),
+                        strategy_summary=getattr(candidate, "strategy_summary", "agent_error"),
+                        shared_context=[],
+                        formalization_cost_estimate=0,
+                        llm_vetting_status="rejected_fatal",
+                        selection_status="rejected_fatal",
+                        raw_candidate_artifact_id=raw_candidate_artifact_id,
+                        failure_origin=f"{exc.agent_key}:{exc.error_class}",
+                        failure_reason=(
+                            f"Candidate materialization failed before decomposition vetting because "
+                            f"{exc.agent_key} returned {exc.error_class}. "
+                            f"Retry the same candidate before replacing the decomposition strategy. "
+                            f"Artifact: {exc.parse_error_artifact or exc.artifact_prefix}"
+                        ),
+                        previous_attempt_summaries=payload.previous_attempt_summaries,
+                    )
+                    self.decomposition_candidates.create(candidate_row)
+                    owner_lemma = self.lemmas.get(node_id)
+                    if owner_lemma is not None:
+                        self._refresh_lemma_decomposition_counters(owner_lemma)
+                    self.event_logger.transition(
+                        problem.problem_id,
+                        "decomposition.candidate_agent_error",
+                        None,
+                        "rejected_fatal",
+                        target_node_id=candidate_row.candidate_id,
+                        reason=json.dumps(exc.as_dict(), sort_keys=True),
+                        worker_job_id=decompose_job_id,
+                    )
+                    continue
+
                 decomp = DecompositionORM(
                     decomposition_id=decomposition_id,
                     problem_id=problem.problem_id,
@@ -1770,12 +2008,86 @@ class Orchestrator:
             accepted_steps.append(translated)
 
         is_accepted = llm_status == "accepted"
-        decomposition_lemma_ids = [row.lemma_id for row in candidate_lemma_rows] if is_accepted else []
         logical_decomposition_id = self._logical_decomposition_id(
             node_id=node_id,
             node_kind=node_kind,
             request_tag=request_tag,
         )
+        if node_kind == NodeKind.LEMMA.value:
+            candidate_id = new_id("deccand")
+            materialization_artifact_id = None
+            selection_status = "pending_selection" if is_accepted else llm_status
+            if is_accepted:
+                materialization_artifact_id = self._lemma_candidate_bundle_key(problem.problem_id, candidate_id)
+                self.artifacts.save_json(
+                    materialization_artifact_id,
+                    {
+                        "candidate_id": candidate_id,
+                        "node_id": node_id,
+                        "node_kind": node_kind,
+                        "strategy_summary": candidate.strategy_summary,
+                        "shared_context": candidate.context_items or candidate.shared_context,
+                        "formalization_cost_estimate": candidate.formalization_cost_estimate_total,
+                        "proof_skeleton_nl": candidate.assembly_plan.proof_skeleton_nl,
+                        "is_trivially_composable": is_trivial_assembly,
+                        "accepted_steps": accepted_steps,
+                        "candidate_lemma_rows": [row.model_dump(mode="json") for row in candidate_lemma_rows],
+                    },
+                )
+            candidate_row = DecompositionCandidateORM(
+                candidate_id=candidate_id,
+                problem_id=problem.problem_id,
+                node_id=node_id,
+                node_kind=node_kind,
+                logical_decomposition_id=logical_decomposition_id,
+                candidate_index=int(getattr(candidate, "candidate_index", 0) or 0),
+                strategy_summary=candidate.strategy_summary,
+                shared_context=candidate.context_items or candidate.shared_context,
+                formalization_cost_estimate=candidate.formalization_cost_estimate_total,
+                llm_vetting_status=llm_status,
+                selection_status=selection_status,
+                raw_candidate_artifact_id=raw_candidate_artifact_id,
+                materialization_artifact_id=materialization_artifact_id,
+                failure_origin=failure_origin,
+                failure_reason=failure_reason,
+                previous_attempt_summaries=payload.previous_attempt_summaries,
+                decomposition_origin=decomposition_origin,
+                decomposition_origin_reason=decomposition_origin_reason,
+                decomposition_origin_job_id=decomposition_origin_job_id,
+            )
+            self.decomposition_candidates.create(candidate_row)
+            owner_lemma = self.lemmas.get(node_id)
+            if owner_lemma is not None:
+                self._refresh_lemma_decomposition_counters(owner_lemma)
+
+            if drift_severity == "minor":
+                self.event_logger.transition(
+                    problem.problem_id,
+                    "decomposition.drift_warning",
+                    None,
+                    "minor",
+                    target_node_id=candidate_row.candidate_id,
+                    reason=vet_summary,
+                    worker_job_id=vet_job_id,
+                )
+            self.event_logger.transition(
+                problem.problem_id,
+                "decomposition.generated",
+                None,
+                llm_status,
+                target_node_id=candidate_row.candidate_id,
+                reason=(
+                    failure_reason
+                    if llm_status != "accepted" and failure_reason
+                    else vet_summary
+                    if final_step_yields_root
+                    else "final assembly step does not yield root theorem"
+                ),
+                worker_job_id=decompose_job_id,
+            )
+            return accepted_count
+
+        decomposition_lemma_ids = [row.lemma_id for row in candidate_lemma_rows] if is_accepted else []
         decomp = DecompositionORM(
             decomposition_id=decomposition_id,
             problem_id=problem.problem_id,
@@ -1914,7 +2226,10 @@ class Orchestrator:
         # the first decomposition of a lemma (no previous attempts).
         override_key: str | None = None
         if node_kind == NodeKind.LEMMA.value and not payload.previous_attempt_summaries:
-            override_key = "agent2_first_lemma"
+            override_key = self._consume_lemma_override_once(
+                node_id,
+                override_key="agent2_first_lemma",
+            )
         decompose_job, payload, output = self._run_decomposition_generation_request(
             problem=problem,
             node_id=node_id,
@@ -2002,7 +2317,22 @@ class Orchestrator:
                 )
                 # Use the first-root model override only when there are
                 # no previous attempts (first decomposition of the root).
-                root_override_key = "agent2_first_root" if not prior_summaries else None
+                root_override_key = None
+                if not prior_summaries:
+                    root_override_key = self._consume_theorem_override_once(
+                        root.theorem_id,
+                        override_key="agent2_first_root",
+                    )
+                root_llm_profile = (
+                    cfg.llm.agent2_first_root
+                    if root_override_key == "agent2_first_root" and cfg.llm.agent2_first_root is not None
+                    else cfg.llm.agent2
+                )
+                root_job_max_attempts = (
+                    max(1, int(root_llm_profile.max_attempts))
+                    if isinstance(getattr(root_llm_profile, "max_attempts", None), int)
+                    else 2
+                )
                 self.worker_jobs.enqueue_if_absent(
                     WorkerJobORM(
                         worker_job_id=decompose_job.job_id,
@@ -2019,6 +2349,7 @@ class Orchestrator:
                         request_source="root_generation",
                         payload=payload.model_dump(),
                         llm_override_key=root_override_key,
+                        max_attempts=root_job_max_attempts,
                     )
                 )
                 generated = True
@@ -2178,6 +2509,40 @@ class Orchestrator:
         cfg: ProblemConfig,
         candidate_scope_ids: set[str] | None = None,
     ) -> bool:
+        if node_kind == NodeKind.LEMMA.value:
+            active = next(
+                (
+                    dec
+                    for dec in self.decompositions.list_by_node(problem.problem_id, node_id)
+                    if dec.controller_status == ControllerStatus.ACTIVE.value
+                    and dec.controller_status != ControllerStatus.FAILED.value
+                ),
+                None,
+            )
+            if active is not None:
+                return True
+
+            candidates = self._unpromoted_lemma_candidates(problem.problem_id, node_id)
+            if candidate_scope_ids is not None:
+                candidates = [row for row in candidates if row.candidate_id in candidate_scope_ids]
+            if not candidates:
+                return False
+            chosen = sorted(candidates, key=self._lemma_candidate_sort_key)[0]
+            chosen.selection_status = "selected"
+            self.decomposition_candidates.save(chosen)
+            promoted = self._promote_lemma_candidate(problem=problem, candidate_row=chosen, cfg=cfg)
+            if promoted is None:
+                return False
+            self.event_logger.transition(
+                problem.problem_id,
+                "decomposition.selected",
+                chosen.candidate_id,
+                promoted.decomposition_id,
+                target_node_id=promoted.decomposition_id,
+                reason=f"selected lemma candidate for node={node_id} by minimum formalization_cost_estimate",
+            )
+            return True
+
         node_decs = self.decompositions.list_by_node(problem.problem_id, node_id)
         accepted = [
             dec
@@ -2234,6 +2599,14 @@ class Orchestrator:
         return True
 
     def _promote_standby_decomposition(self, problem: ProblemORM, node_id: str, node_kind: str) -> bool:
+        if node_kind == NodeKind.LEMMA.value:
+            node_decs = self.decompositions.list_by_node(problem.problem_id, node_id)
+            active = next((d for d in node_decs if d.controller_status == ControllerStatus.ACTIVE.value), None)
+            if active is not None and active.controller_status != ControllerStatus.FAILED.value:
+                active.controller_status = ControllerStatus.FAILED.value
+                self.decompositions.save(active)
+            return self._select_active_decomposition_for_node(problem, node_id, node_kind, ProblemConfig.model_validate(problem.config))
+
         node_decs = self.decompositions.list_by_node(problem.problem_id, node_id)
         active = next((d for d in node_decs if d.controller_status == ControllerStatus.ACTIVE.value), None)
         if active:
@@ -2286,7 +2659,19 @@ class Orchestrator:
         cfg: ProblemConfig,
     ) -> bool:
         node_decs = self.decompositions.list_by_node(problem.problem_id, lemma.lemma_id)
+        candidate_rows = self.decomposition_candidates.list_by_node(problem.problem_id, lemma.lemma_id)
         if not node_decs:
+            false_candidate = next((row for row in candidate_rows if row.failure_origin == "agent3:false_lemma"), None)
+            if false_candidate is not None:
+                self._invalidate_parent_decomposition(
+                    problem,
+                    lemma,
+                    cfg,
+                    reason=false_candidate.failure_reason or "child decomposition candidate determined lemma is false",
+                )
+                return True
+            if candidate_rows and self._select_active_decomposition_for_node(problem, lemma.lemma_id, NodeKind.LEMMA.value, cfg):
+                return True
             if lemma.proof_status == ProofStatus.PROOF_EXHAUSTED.value and lemma.routing_status == RoutingStatus.BLOCKED.value:
                 remaining_slots = self._remaining_decomposition_slots(
                     problem.problem_id,
@@ -2327,6 +2712,16 @@ class Orchestrator:
             return False
 
         false_child = next((d for d in node_decs if d.failure_origin == "agent3:false_lemma"), None)
+        if false_child is None:
+            false_candidate = next((row for row in candidate_rows if row.failure_origin == "agent3:false_lemma"), None)
+            if false_candidate is not None:
+                self._invalidate_parent_decomposition(
+                    problem,
+                    lemma,
+                    cfg,
+                    reason=false_candidate.failure_reason or "child decomposition candidate determined lemma is false",
+                )
+                return True
         if false_child is not None:
             self._invalidate_parent_decomposition(
                 problem,
@@ -2340,7 +2735,9 @@ class Orchestrator:
         if not active:
             if self._select_active_decomposition_for_node(problem, lemma.lemma_id, NodeKind.LEMMA.value, cfg):
                 return True
-            has_accepted_child = any(d.llm_vetting_status == "accepted" for d in node_decs)
+            has_accepted_child = any(d.llm_vetting_status == "accepted" for d in node_decs) or any(
+                row.llm_vetting_status == "accepted" for row in candidate_rows
+            )
             if not cfg.mode.nl_only_mode and any(self._decomposition_pending_for_selection(d, cfg) for d in node_decs):
                 return False
             if has_accepted_child:
@@ -2687,6 +3084,10 @@ class Orchestrator:
             lemma.last_terminal_worker_result = terminal_worker_result
         if reason is not None:
             lemma.last_transition_reason = reason
+        candidate_rows = self.decomposition_candidates.list_by_node(lemma.problem_id, lemma.lemma_id)
+        if candidate_rows:
+            lemma.materialized_candidate_count = len(candidate_rows)
+            lemma.promoted_decomposition_count = sum(1 for row in candidate_rows if row.promoted_decomposition_id)
         self.lemmas.save(lemma)
 
     def _statement_fingerprint(self, statement_nl: str, semantic_sketch: dict[str, Any]) -> str:
@@ -3106,6 +3507,17 @@ class Orchestrator:
         return None
 
     def _consecutive_fatal_decomposition_rejections(self, problem_id: str, node_id: str) -> int:
+        candidate_rows = self.decomposition_candidates.list_by_node(problem_id, node_id)
+        if candidate_rows:
+            streak = 0
+            for row in candidate_rows:
+                if row.llm_vetting_status == "rejected_fatal":
+                    streak += 1
+                    continue
+                if row.llm_vetting_status in {"rejected_minor", "accepted"}:
+                    streak = 0
+            return streak
+
         streak = 0
         for dec in self.decompositions.list_by_node(problem_id, node_id):
             if dec.llm_vetting_status == "rejected_fatal":
@@ -3141,8 +3553,9 @@ class Orchestrator:
             )
 
         existing = self.decompositions.list_by_node(problem.problem_id, lemma.lemma_id)
-        if existing:
-            if not cfg.mode.nl_only_mode:
+        existing_candidates = self.decomposition_candidates.list_by_node(problem.problem_id, lemma.lemma_id)
+        if existing or existing_candidates:
+            if not cfg.mode.nl_only_mode and existing:
                 self._ensure_assembly_jobs_for_node(
                     problem,
                     node_id=lemma.lemma_id,
@@ -3157,7 +3570,7 @@ class Orchestrator:
                     proof_status=ProofStatus.PROOF_FLAWED.value,
                     routing_status=RoutingStatus.BLOCKED.value,
                     next_action="process_child_decomposition",
-                    reason="reusing previously generated decomposition",
+                    reason="reusing previously generated decomposition candidate",
                     clear_solver_series=True,
                 )
                 self.event_logger.transition(
@@ -3166,29 +3579,24 @@ class Orchestrator:
                     None,
                     "existing_decomposition_selected",
                     target_node_id=lemma.lemma_id,
-                    reason="reusing previously generated decomposition",
+                    reason="reusing previously generated decomposition candidate",
                 )
                 return self._DECOMPOSE_OUTCOME_CHILD_SELECTED, "existing decomposition selected"
-            if any(dec.llm_vetting_status == "accepted" for dec in existing) and self._remaining_decomposition_slots(
+            if any(row.llm_vetting_status == "accepted" for row in existing_candidates) and self._remaining_decomposition_slots(
                 problem.problem_id,
                 lemma.lemma_id,
                 NodeKind.LEMMA.value,
                 cfg,
             ) <= 0:
-                if not cfg.mode.nl_only_mode and any(
-                    self._decomposition_pending_for_selection(dec, cfg)
-                    for dec in existing
-                ):
-                    return self._DECOMPOSE_OUTCOME_CANNOT_DECOMPOSE, "accepted child decomposition pending Lean preparation"
                 self._save_lemma_transition(
                     lemma,
                     proof_status=ProofStatus.PROOF_FLAWED.value,
                     routing_status=RoutingStatus.BLOCKED.value,
                     next_action="wait_on_child_decomposition",
-                    reason="accepted child decomposition pending selection",
+                    reason="accepted child decomposition candidate pending promotion",
                     clear_solver_series=True,
                 )
-                return self._DECOMPOSE_OUTCOME_CHILD_PENDING, "accepted child decomposition pending selection"
+                return self._DECOMPOSE_OUTCOME_CHILD_PENDING, "accepted child decomposition candidate pending promotion"
             if self._remaining_decomposition_slots(
                 problem.problem_id,
                 lemma.lemma_id,
@@ -3204,13 +3612,18 @@ class Orchestrator:
             theorem_nl=lemma.statement_nl,
             theorem_semantic_sketch=lemma.statement_semantic_sketch,
             parent_depth=lemma.depth,
-            artifact_prefix=f"problems/{problem.problem_id}/lemma_decomposer/{lemma.lemma_id}/attempt_{lemma.decomposition_count + 1}",
+            artifact_prefix=f"problems/{problem.problem_id}/lemma_decomposer/{lemma.lemma_id}/attempt_{lemma.decomposition_round_count + 1}",
             cfg=cfg,
         )
         if not generated:
             return self._DECOMPOSE_OUTCOME_CANNOT_DECOMPOSE, "decomposition cap or depth reached"
-        lemma.decomposition_count = len(self.decompositions.list_by_node(problem.problem_id, lemma.lemma_id))
         lemma.decomposition_round_count = int(lemma.decomposition_round_count) + 1
+        lemma.materialized_candidate_count = len(self.decomposition_candidates.list_by_node(problem.problem_id, lemma.lemma_id))
+        lemma.promoted_decomposition_count = sum(
+            1
+            for row in self.decomposition_candidates.list_by_node(problem.problem_id, lemma.lemma_id)
+            if row.promoted_decomposition_id
+        )
         self._save_lemma_transition(
             lemma,
             next_action="evaluate_child_decompositions",
@@ -3548,7 +3961,12 @@ class Orchestrator:
             previous_proof_nl=previous_proof_nl,
             attempt_number=attempt_number,
         )
-        solver_override_key = "agent4_first" if attempt_number == 1 else None
+        solver_override_key = None
+        if attempt_number == 1:
+            solver_override_key = self._consume_lemma_override_once(
+                lemma_id,
+                override_key="agent4_first",
+            )
         solved = self.workers.run_lemma_solver(
             WorkerJob(
                 job_id=solve_job_id,
@@ -3972,7 +4390,22 @@ class Orchestrator:
             previous_proof_nl=lemma.latest_nl_proof,
             attempt_number=attempt_number,
         )
-        override_key = "agent4_first" if attempt_number == 1 else None
+        override_key = None
+        if attempt_number == 1:
+            override_key = self._consume_lemma_override_once(
+                lemma.lemma_id,
+                override_key="agent4_first",
+            )
+        solver_llm_profile = (
+            cfg.llm.agent4_first
+            if override_key == "agent4_first" and cfg.llm.agent4_first is not None
+            else cfg.llm.agent4
+        )
+        solver_job_max_attempts = (
+            max(1, int(solver_llm_profile.max_attempts))
+            if isinstance(getattr(solver_llm_profile, "max_attempts", None), int)
+            else 2
+        )
         self.worker_jobs.enqueue_if_absent(
             WorkerJobORM(
                 worker_job_id=job_id,
@@ -3989,6 +4422,7 @@ class Orchestrator:
                 request_source="lemma_solver",
                 payload=payload.model_dump(),
                 llm_override_key=override_key,
+                max_attempts=solver_job_max_attempts,
             )
         )
         self.event_logger.transition(
@@ -4006,6 +4440,9 @@ class Orchestrator:
             reason=f"solver attempt {attempt_number} submitted",
             ensure_solver_series=True,
         )
+        lemma.last_submitted_solver_job_id = job_id
+        lemma.last_submitted_solver_attempt_number = attempt_number
+        self.lemmas.save(lemma)
         return True
 
     def _ensure_lemma_vetter_job(
@@ -4575,6 +5012,8 @@ class Orchestrator:
             return False, False
         consumed_attempt = self._solver_attempt_number_from_worker_row(consumed_row, next_attempt)
         attempt_bumped = False
+        lemma.last_submitted_solver_job_id = None
+        lemma.last_submitted_solver_attempt_number = None
         if lemma.solver_attempt_count < consumed_attempt:
             lemma.solver_attempt_count = consumed_attempt
             attempt_bumped = True

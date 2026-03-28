@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-03-28T00:21:02.717307Z",
+  "graph_node_id": "pnode_20260328002102_d00cfd4f",
+  "metadata": {
+    "parent_id": "lem_20260327230124_caed970a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "6fb7b3ca23c79a34a20d0e9d6e5309da963de6646c28885452e65b8301070510",
+  "owner_id": "lem_20260328001918_dfdefb83",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is a positive integer",
+      "j is an integer satisfying 0 <= j <= n - 1 (so n - 1 >= 0 and the interval for j is nonempty for n >= 1)",
+      "F_n is differentiable on I_{n,j}",
+      "the derivative statement for H_{n,j} is asserted for all t in (0,1)",
+      "implicit: T_{n,j}(t) must lie in I_{n,j} for every t in (0,1) so that F_n'(T_{n,j}(t)) is defined"
+    ],
+    "normalized_claim": "For every positive integer n and every integer j with 0 <= j <= n - 1, if F_n is differentiable on I_{n,j}, then H_{n,j} is differentiable on (0,1) and for every real t in (0,1), the derivative satisfies H'_{n,j}(t) equals F_n'(T_{n,j}(t)) divided by n.",
+    "quantifier_order": [
+      "for all positive integers n",
+      "for all integers j with 0 <= j <= n - 1",
+      "for all functions F_n that are differentiable on I_{n,j}",
+      "for all real t with t in (0,1)"
+    ],
+    "variables": [
+      {
+        "domain": "subset of integers",
+        "name": "n",
+        "role": "fixed parameter; normalization divisor",
+        "type": "positive integer"
+      },
+      {
+        "domain": "subset of integers satisfying 0 <= j <= n - 1",
+        "name": "j",
+        "role": "fixed parameter indexing the intervals and maps",
+        "type": "integer"
+      },
+      {
+        "domain": "open interval (0,1)",
+        "name": "t",
+        "role": "variable point where the derivative of H_{n,j} is evaluated",
+        "type": "real number"
+      },
+      {
+        "domain": "domain includes I_{n,j}",
+        "name": "F_n",
+        "role": "given differentiable function used to define H_{n,j}",
+        "type": "real-valued function of a real variable"
+      },
+      {
+        "domain": "at least (0,1)",
+        "name": "H_{n,j}",
+        "role": "target function whose differentiability and derivative formula are asserted",
+        "type": "real-valued function of a real variable"
+      },
+      {
+        "domain": "subset of the reals",
+        "name": "I_{n,j}",
+        "role": "domain on which F_n is assumed differentiable",
+        "type": "subset of real numbers (interval, implicitly)"
+      },
+      {
+        "domain": "at least (0,1)",
+        "name": "T_{n,j}",
+        "role": "input transformation used inside F_n' in the derivative formula",
+        "type": "real-valued function of a real variable"
+      }
+    ],
+    "witness_dependencies": [
+      "H'_{n,j}(t) depends on t only through the value T_{n,j}(t) used as the input to F_n'",
+      "the divisor n appears in the scaling factor 1/n and is fixed by the outer parameters (n, j)",
+      "the existence of H'_{n,j}(t) implicitly depends on differentiability of F_n at T_{n,j}(t) and on the regularity of T_{n,j} as used in the construction of H_{n,j} (not stated explicitly)"
+    ]
+  },
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. Assume F_n is differentiable on I_{n,j}. Then H_{n,j} is differentiable on (0,1), and for each real t in (0,1), H'_{n,j}(t) = F_n'(T_{n,j}(t)) / n.",
+  "updated_at": "2026-03-28T00:21:02.717307Z"
+}

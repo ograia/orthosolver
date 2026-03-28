@@ -1,7 +1,6 @@
 from fastapi.testclient import TestClient
 
 from nl_engine.api.main import app
-from nl_engine.domain.contracts import Agent1Output, SemanticSketch
 
 
 def test_create_and_run_problem_nl_only_to_terminal() -> None:
@@ -138,37 +137,7 @@ def test_run_is_compatibility_alias_for_durable_start() -> None:
     assert execution.status_code == 200
     assert execution.json()["execution"]["execution_id"] == body["execution_id"]
 
-
-def test_create_problem_applies_per_agent_llm_overrides(monkeypatch) -> None:
-    from nl_engine.api import main as api_main
-
-    captured: dict[str, object] = {}
-
-    class _CaptureAgentService:
-        def __init__(self, *args, **kwargs) -> None:
-            captured["init_kwargs"] = dict(kwargs)
-            captured["set_llm_overrides"] = None
-
-        def set_llm_overrides(self, llm_overrides) -> None:
-            captured["set_llm_overrides"] = llm_overrides
-
-        def semantic_sketch(self, statement_nl: str, artifact_prefix: str) -> Agent1Output:
-            return Agent1Output(
-                status="completed",
-                statement_nl_received=statement_nl,
-                semantic_sketch=SemanticSketch(
-                    variables=[],
-                    quantifier_order=[],
-                    domain_restrictions=[],
-                    witness_dependencies=[],
-                    normalized_claim=statement_nl,
-                ),
-                implicit_assumptions_surfaced=[],
-                ambiguities=[],
-            )
-
-    monkeypatch.setattr(api_main, "AgentService", _CaptureAgentService)
-
+def test_create_problem_persists_per_agent_llm_overrides() -> None:
     client = TestClient(app)
     create = client.post(
         "/v1/problems",
@@ -178,16 +147,19 @@ def test_create_problem_applies_per_agent_llm_overrides(monkeypatch) -> None:
             "config": {
                 "mode": {"nl_only_mode": True},
                 "llm": {
-                    "agent1": {"model": "gpt-5-mini", "thinking_level": "high"},
+                    "agent1": {"model": "gpt-5.4-mini", "thinking_level": "high"},
                     "agent2": {"model": "gpt-5.4", "thinking_level": "low"},
                 },
             },
         },
     )
     assert create.status_code == 200
-    init_kwargs = captured.get("init_kwargs")
-    assert isinstance(init_kwargs, dict)
-    assert init_kwargs["llm_overrides"]["agent1"]["model"] == "gpt-5-mini"
-    assert init_kwargs["llm_overrides"]["agent1"]["thinking_level"] == "high"
-    # llm_overrides passed directly in constructor; set_llm_overrides no longer called separately
-    assert init_kwargs["db_session"] is not None
+    problem_id = create.json()["problem_id"]
+
+    problem_input = client.get(f"/v1/debug/problems/{problem_id}/input-json")
+    assert problem_input.status_code == 200
+    llm = problem_input.json()["input_json"]["config"]["llm"]
+    assert llm["agent1"]["model"] == "gpt-5.4-mini"
+    assert llm["agent1"]["thinking_level"] == "high"
+    assert llm["agent2"]["model"] == "gpt-5.4"
+    assert llm["agent2"]["thinking_level"] == "low"

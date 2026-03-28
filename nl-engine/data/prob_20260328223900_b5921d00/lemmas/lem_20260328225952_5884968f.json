@@ -1,0 +1,85 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328230056_2540d814",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T22:59:55.292711Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T23:01:29.620194Z",
+  "last_dependency_check_id": "depchk_20260328230129_a6125d7c",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof directly establishes the standard floor-function characterization: if m is an integer and m <= x < m+1, then floor(x)=m. This matches the lemma statement exactly, with no semantic drift and no dependency issues.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Assume m is an integer and m <= x < m + 1. By the defining property of the floor function, floor(x) is the unique integer r such that r <= x < r + 1. Since m itself is an integer satisfying m <= x < m + 1, it follows that m is exactly that unique integer. Therefore floor(x) = m.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260328230129_793522c8",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328225952_5884968f",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "lem_20260328225601_f19c6e91",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260328223900_b5921d00",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/lemmas/lem_20260328225952_5884968f.json",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Turn the scaled inequality from the previous step into the exact identity floor(n * t) = m.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let x be a real number and let m be an integer. If m <= x < m + 1, then floor(x) = m.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "premise condition: m <= x",
+      "premise condition: x < m + 1",
+      "m is an integer (used as the comparison endpoints)",
+      "x is real (so the comparisons and floor are defined)"
+    ],
+    "normalized_claim": "For every real number x and every integer m, if m is less than or equal to x and x is strictly less than m plus 1, then the greatest integer less than or equal to x equals m.",
+    "quantifier_order": [
+      "there exist m and x satisfying the premises",
+      "for all x and for all m, if the premise holds then the conclusion holds"
+    ],
+    "variables": [
+      {
+        "domain": "all real numbers",
+        "name": "x",
+        "role": "input to the floor function",
+        "type": "real number"
+      },
+      {
+        "domain": "all integers",
+        "name": "m",
+        "role": "candidate value equal to floor(x)",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "m is a universally quantified parameter determined by the premise; the value floor(x) is forced to equal that same m (no independent existential witness)."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T23:01:29.620194Z"
+}

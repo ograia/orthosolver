@@ -1,0 +1,229 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260327230112_3abd729f/vetter_attempt_4",
+  "attempt_count": 1,
+  "attempt_number": 4,
+  "completed_at": "2026-03-28T00:21:57.671806Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:22:05.263039Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:21:52.266890Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n greater than 1",
+            "k ranges over integers from 1 through n inclusive",
+            "x ranges over all real numbers",
+            "y ranges over all real numbers",
+            "floor(t) denotes the greatest integer less than or equal to t"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+          "quantifier_order": [
+            "for all integers n with n greater than 1",
+            "there exists a real number x that maximizes the expression",
+            "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+          ],
+          "variables": [
+            {
+              "domain": "integers greater than 1",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 1 <= k <= n",
+              "name": "k",
+              "role": "summation index",
+              "type": "integer"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "argument to be maximized over",
+              "type": "real number"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "y",
+              "role": "comparison point for defining maximality of x",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "m",
+              "role": "maximal value of the expression",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizing x may depend on n",
+            "the maximal value m may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 4,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327230112_3abd729f",
+    "proof_nl": "Let n be an integer with n > 1, and let x satisfy (n-1)/n <= x < 1. We prove the two asserted floor identities.\n\nFirst, fix an integer k with 1 <= k <= n-1. Since x < 1, multiplying by the positive integer k gives kx < k. Also, from x >= (n-1)/n we get\n\nkx >= k(n-1)/n = k - k/n.\n\nBecause k <= n-1 < n, we have k/n < 1, hence k - k/n >= k - 1. Therefore\n\nk - 1 <= kx < k.\n\nBy the definition of the floor function, the unique integer in the half-open interval [k-1, k) is k-1, so floor(kx) = k - 1.\n\nNow take k = n. From x < 1 we obtain nx < n, and from x >= (n-1)/n we obtain nx >= n-1. Hence\n\nn - 1 <= nx < n.\n\nAgain by the definition of the floor function, floor(nx) = n - 1.\n\nThus for every integer k with 1 <= k <= n-1 we have floor(kx) = k - 1, and also floor(nx) = n - 1, exactly as claimed.",
+    "role_in_assembly": "Provides the explicit floor values on the candidate maximizing interval.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2 (so that n-1 >= 1 and division by n is valid)",
+        "x is real",
+        "x satisfies (n-1)/n <= x and x < 1",
+        "k is an integer",
+        "k satisfies 1 <= k <= n-1"
+      ],
+      "normalized_claim": "For every integer n at least 2 and every real x with (n-1)/n <= x < 1: for every integer k with 1 <= k <= n-1, floor of (k times x) equals k minus 1, and floor of (n times x) equals n minus 1.",
+      "quantifier_order": [
+        "for all integers n with n at least 2",
+        "for all real numbers x with (n-1)/n <= x < 1",
+        "for all integers k with 1 <= k <= n-1"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "fixed parameter appearing in bounds for x and k",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable constrained by an interval",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "quantified variable indexing the first floor identity",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The value k is independent of x beyond the fact that the conclusion uses the same n and x; k only ranges over integers with 1 <= k <= n-1.",
+        "The second conclusion floor(n x) = n - 1 depends only on the same n and x; it is not an additional existential choice."
+      ]
+    },
+    "statement_nl": "If (n-1)/n <= x < 1, then floor(k x) = k - 1 for every integer k with 1 <= k <= n - 1, and floor(n x) = n - 1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "legal_dependencies_only": true,
+      "notes": "Uses only elementary arithmetic and the definition of floor; no forbidden theorem dependency is invoked."
+    },
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327230112_3abd729f",
+    "proof_status": "complete",
+    "reason": "The proof correctly establishes the two required floor identities on the interval [(n-1)/n, 1). It handles both cases 1<=k<=n-1 and k=n with valid inequalities and the floor definition. No semantic drift from the lemma or root sketch is detected, and no dependency issues arise.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T00:21:52.711433Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327230112_3abd729f",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:22:05.263043Z",
+  "worker_job_id": "wrk_lem_20260327230112_3abd729f_g0_vet_4",
+  "worker_kind": "lemma_vetter"
+}

@@ -1,0 +1,151 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328021502_b64c8ed1/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T02:15:41.907564Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T02:15:56.565502Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T02:15:35.577634Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+        "item_id": "pnode_20260328015341_a57d9401",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260328015332_8df06097",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260328015332_1d0bbeff",
+        "label": "lem_20260328015226_ec8a277f",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For every real number x, x = floor(x) + frac(x), and 0 <= frac(x) < 1."
+      }
+    ],
+    "lemma_id": "lem_20260328021502_b64c8ed1",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328021535_1a3d1e98",
+    "role_in_assembly": "Supplies the upper-bound part of the fractional-part estimate before rewriting the difference as frac(x).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "x is a real number",
+        "floor(x) is the greatest integer less than or equal to x"
+      ],
+      "normalized_claim": "For all real numbers x, if m equals floor(x) (the greatest integer less than or equal to x), then x minus m is less than 1.",
+      "quantifier_order": [
+        "for all real numbers x"
+      ],
+      "variables": [
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "input to floor function and expression whose difference is bounded",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced; floor(x) is a deterministic function of x"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every real number x, x - floor(x) < 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "used_definition_of_floor": true,
+      "used_forbidden_ancestor_claims": false,
+      "used_root_theorem_claim": false
+    },
+    "lemma_id": "lem_20260328021502_b64c8ed1",
+    "proof_nl": "Let x be any real number, and set m = floor(x). By the defining property of the floor function, m is an integer with m <= x, and m is the greatest integer with this property. Therefore m + 1 is an integer strictly larger than m, so it cannot also satisfy m + 1 <= x; hence x < m + 1. Combining these inequalities gives m <= x < m + 1. Subtracting m throughout yields 0 <= x - m < 1. In particular, x - floor(x) < 1. Since x was arbitrary, this holds for every real number x.",
+    "proof_summary": "Use the defining property of the floor function: if m = floor(x), then m <= x < m+1. Subtracting m gives 0 <= x-floor(x) < 1, hence x-floor(x) < 1.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Definition of floor as the greatest integer less than or equal to a real number."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T02:15:36.267271Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328021502_b64c8ed1",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:15:56.565507Z",
+  "worker_job_id": "wrk_lem_20260328021502_b64c8ed1_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

@@ -1,0 +1,109 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328225700_77dae566",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T22:56:22.412807Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.87,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T23:02:52.489974Z",
+  "last_dependency_check_id": "depchk_20260328230252_8b951aec",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly establishes the discrete bound g_n(m) <= H_n - 1 for integers 0 <= m <= n-1, using a valid remainder decomposition, a correct counting of residue multiplicities, and a standard rearrangement/adjacent-swap argument. The equality characterization m = n - 1 is also justified. No dependency issues or semantic drift relative to the discrete lemma are present.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let s_k be the remainder of k m upon division by n, so 0 <= s_k <= n-1 and\nk m = n floor(km/n) + s_k.\nThen\nfloor(km/n)/k = m/n - s_k/(n k),\nso summing over k = 1,...,n gives\n\ng_n(m) = m - sum_{k=1}^n floor(km/n)/k = (1/n) sum_{k=1}^n s_k/k.\n\nNow let d = gcd(m,n), and write n = d q and m = d u, with gcd(u,q)=1.\nFor k = a q + b with 0 <= a <= d-1 and 1 <= b <= q, we have\nk m = d(auq + bu),\nso modulo n = d q the remainder is d times the remainder of b u modulo q.\nBecause u is invertible mod q, as b runs through 1,...,q, the residues b u mod q run through 0,1,...,q-1 exactly once. Therefore the multiset {s_1,...,s_n} consists of each multiple\n0, d, 2d, ..., (q-1)d\nappearing exactly d times.\n\nLet a_1 >= a_2 >= ... >= a_n be these remainders in nonincreasing order. Since the weights 1/k are strictly decreasing, the sum sum s_k/k is maximized when the larger remainders are paired with the smaller denominators; this is the standard adjacent-swap argument: if i<j but x_i < x_j, swapping x_i and x_j increases the sum by (x_j-x_i)(1/i - 1/j) >= 0. Hence\n\nsum_{k=1}^n s_k/k <= sum_{k=1}^n a_k/k.\n\nThe sequence (a_k) is explicit: each value d(q-1), d(q-2), ..., d, 0 occurs d times. In particular\n\na_k = d (q - ceil(k/d))\nfor 1 <= k <= n,\nso d ceil(k/d) >= k implies\n\na_k <= d q - k = n - k.\nThus\n\ng_n(m) <= (1/n) sum_{k=1}^n (n-k)/k = (1/n)(n H_n - n) = H_n - 1,\nwhere H_n = sum_{k=1}^n 1/k.\nThis proves the upper bound.\n\nFor equality, note first that if d > 1 then a_1 = n-d < n-1, so a_k < n-k for at least one k; since all weights are positive, the inequality is then strict. Hence equality forces d = 1.\nWhen d = 1, the remainders s_1,...,s_n are a permutation of 0,1,...,n-1. Equality in the adjacent-swap step forces them to be already arranged in nonincreasing order, so necessarily\ns_k = n-k  for all k = 1,...,n.\nIn particular s_1 = m = n-1. Conversely, if m = n-1 then km mod n = n-k for 1 <= k <= n, so\n\ng_n(n-1) = (1/n) sum_{k=1}^n (n-k)/k = H_n - 1.\nTherefore g_n(m) <= H_n - 1 for all 0 <= m <= n-1, with equality if and only if m = n-1.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260328230252_00b73fa4",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328225614_291f7249",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260328223900_ac5193ce",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260328223900_b5921d00",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/lemmas/lem_20260328225614_291f7249.json",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Supplies the finite global upper bound and the unique equality case for the discrete surrogate.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every integer m with 0 <= m <= n-1, if g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k and H_n = sum_{k=1}^n 1/k, then g_n(m) <= H_n - 1, and equality holds if and only if m = n - 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "m is an integer and 0 <= m <= n - 1",
+      "summation index k is an integer with 1 <= k <= n",
+      "division by k is valid because k is at least 1"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every integer m with 0 <= m <= n - 1, define H_n = sum from k = 1 to n of 1/k and define g_n(m) = m minus sum from k = 1 to n of floor((k*m)/n) divided by k. Then g_n(m) <= H_n - 1. Moreover, g_n(m) = H_n - 1 holds if and only if m = n - 1.",
+    "quantifier_order": [
+      "for all n in integers with n greater than 1",
+      "for all m in integers with 0 less than or equal to m and m less than or equal to n minus 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer parameter; defines the index range of sums and the harmonic-like quantity H_n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "input to g_n(m); restricted to the integer interval 0 <= m <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index running from 1 to n",
+        "type": "integer"
+      },
+      {
+        "domain": "values of the finite sum of real numbers 1/k for k from 1 to n",
+        "name": "H_n",
+        "role": "defined by H_n = sum_{k=1}^n 1/k",
+        "type": "rational number"
+      },
+      {
+        "domain": "values of m minus sum_{k=1}^n floor((k*m)/n) divided by k (as a real/rational expression)",
+        "name": "g_n(m)",
+        "role": "defined expression involving floor((k*m)/n) and division by k",
+        "type": "rational number"
+      },
+      {
+        "domain": "real numbers to integers",
+        "name": "floor",
+        "role": "integer-valued floor function applied to the rational number (k*m)/n",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential quantifiers are present; the equality characterization is explicit: g_n(m) equals H_n minus 1 exactly when m equals n minus 1"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T23:02:52.489974Z"
+}

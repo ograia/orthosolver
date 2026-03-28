@@ -1,0 +1,90 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328015332_9ef40eeb",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T01:52:36.711904Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.3,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T02:34:25.786100Z",
+  "last_dependency_check_id": "depchk_20260328015357_bf9f9fb0",
+  "last_submitted_lean_job_id": "lean_job_lem_20260328015230_76f78c29_formalize_lemma_from_nl_1",
+  "last_submitted_lean_proof_fingerprint": "a88b1c4a257a306edbc36e98d51a4f51113d63a1e85eb1098864a0c671c1a4ea",
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "split_existing_proof attempt 1 submitted",
+  "latest_lean_issue_class": "checker_mismatch",
+  "latest_lean_issue_kind": "lean_issue",
+  "latest_lean_result_id": "lean_res_20260328023422_4e53b1df",
+  "latest_nl_proof": "Fix an integer n > 1 and let x be a real number with 0 <= x < 1. Set m = floor(n x). Then m is an integer and, by definition of the floor function,\n\nm/n <= x < (m+1)/n.\n\nWe compare E(n,x) with E(n,m/n). First, since m/n is rational with n(m/n)=m, we have floor(n(m/n)) = m. So\n\nE(n,m/n) = m - sum_{k=1}^n floor(km/n)/k.\n\nNow let 1 <= k <= n. Because x >= m/n and the map t -> floor(t) is nondecreasing, we get\n\nfloor(kx) >= floor(km/n).\n\nTherefore, term by term,\n\nfloor(kx)/k >= floor(km/n)/k.\n\nSumming over k = 1, ..., n gives\n\nsum_{k=1}^n floor(kx)/k >= sum_{k=1}^n floor(km/n)/k.\n\nSince floor(nx) = m, it follows that\n\nE(n,x) = m - sum_{k=1}^n floor(kx)/k <= m - sum_{k=1}^n floor(km/n)/k = E(n,m/n).\n\nThis is exactly the desired inequality.",
+  "latest_vetted_proof_fingerprint": "a88b1c4a257a306edbc36e98d51a4f51113d63a1e85eb1098864a0c671c1a4ea",
+  "latest_vetter_report_id": "rep_20260328015357_65dbd81c",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328015230_76f78c29",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_split_existing_proof",
+  "parent_id": "thm_root_20260328014833_a00b1667",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328014833_becb1bc2/proof_bundles/lemmas/lem_20260328015230_76f78c29.json",
+  "proof_graph_id": "pgraph_20260328015332_d1814f25",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Compare any point in [0,1) to the left endpoint of the n-adic interval containing it.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": "2026-03-28T02:34:25.781311Z",
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1. If x is a real number with 0 <= x < 1 and m = floor(n*x), then E(n, x) <= E(n, m/n).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n > 1",
+      "x is real and satisfies 0 <= x < 1",
+      "m is defined as floor of n times x, hence m is an integer",
+      "m divided by n is defined (requires n not equal to 0, satisfied by n > 1)"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every real x with 0 <= x < 1, if m is the floor of n times x, then E(n, x) is less than or equal to E(n, m divided by n).",
+    "quantifier_order": [
+      "for all integers n greater than 1",
+      "for all real numbers x with 0 <= x < 1"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "outer parameter in E; also input to floor",
+        "type": "integer"
+      },
+      {
+        "domain": "real interval from 0 inclusive to 1 exclusive",
+        "name": "x",
+        "role": "argument to E(n, x); also used to define m",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "defined as floor(n*x); used to form m/n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "m depends on n and x via m = floor(n*x)",
+      "the comparison target m/n depends on n and x through m"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T02:34:25.786100Z"
+}

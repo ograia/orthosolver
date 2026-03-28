@@ -1,0 +1,90 @@
+{
+  "assembly_plan_id": "asm_20260328225213_ceb1ecf0",
+  "created_at": "2026-03-28T22:53:29.903551Z",
+  "decomposition_id": "dec_20260328225213_1c38b005",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260328223900_b5921d00",
+  "proof_skeleton_nl": "Use periodicity to reduce an arbitrary real x to its fractional part t in [0,1). Let m = floor(n*t). The floor characterization places t in the interval [m/n,(m+1)/n), and on that interval the expression is bounded above by the discrete surrogate g_n(m). The finite bottleneck lemma shows g_n(m) <= H_n - 1 for all m, so f_n(x) <= H_n - 1 for every x. On the other hand, if t is in the top interval [1 - 1/n,1), then every floor(k*t) equals k - 1, so f_n(t) = H_n - 1. The strict part of the discrete bottleneck excludes all other intervals. Therefore the maximum is H_n - 1, achieved exactly when the fractional part of x lies in [1 - 1/n,1).",
+  "root_node_id": "thm_root_20260328223900_ac5193ce",
+  "steps": [
+    {
+      "derives": "For an arbitrary real x, replace x by its fractional part t = x - floor(x); then t lies in [0,1) and f_n(x) = f_n(t).",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This is a direct application of integer-shift periodicity together with the standard decomposition x = floor(x) + (x - floor(x)).",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If m = floor(n*t), then t lies in the half-open interval [m/n, (m+1)/n).",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is exactly the floor-interval characterization stated in the lemma.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For that m, the reduced value f_n(t) is at most g_n(m).",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "The lemma directly gives the interval-wise upper bound.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "Since g_n(m) <= H_n - 1 for every admissible m, it follows that f_n(x) <= H_n - 1 for every real x.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is a direct substitution of the discrete bound into the interval bound, together with the reduction from A1.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Every real x whose fractional part lies in [1 - 1/n, 1) satisfies f_n(x) = H_n - 1.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "Apply the explicit evaluation on the top interval to the fractional part of x, using periodicity from A1.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If the fractional part t of x satisfies t < 1 - 1/n, then m = floor(n*t) is at most n - 2, so the equality case in L5 does not occur and f_n(x) < H_n - 1.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "This combines the interval description of floor(n*t) with the strict part of the discrete maximization lemma.",
+      "uses_lemmas": [
+        "L2",
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The global maximum of f_n is H_n - 1, and the maximizers are exactly the real numbers x whose fractional part lies in [1 - 1/n, 1), equivalently x in Z + [1 - 1/n, 1).",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "A4 gives the global upper bound, A5 gives attainment on the stated interval, and A6 rules out all other fractional parts.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4",
+        "A5",
+        "A6"
+      ]
+    }
+  ]
+}

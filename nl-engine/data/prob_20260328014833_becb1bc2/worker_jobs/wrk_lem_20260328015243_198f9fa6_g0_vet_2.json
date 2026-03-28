@@ -1,0 +1,189 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328015243_198f9fa6/vetter_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-28T02:00:46.231910Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T02:00:55.809603Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T01:59:57.649599Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+        "item_id": "pnode_20260328015341_a57d9401",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328015243_198f9fa6",
+    "proof_nl": "Let H_n = sum_{j=1}^n 1/j. We prove that for x = m/n, with 0 <= m <= n-1,\nE(n,m/n) <= H_n - 1, and that equality holds exactly when m = n-1.\n\nIf m = 0, then every floor(km/n) is 0, so E(n,0) = 0 < H_n - 1. Hence assume 1 <= m <= n-1.\n\nWrite\nE(n,m/n) = floor(m) - sum_{k=1}^n floor(km/n)/k.\nSince floor(m) = m and floor(km/n) = km/n - {km/n}, where {y} is the fractional part, we get\nE(n,m/n) = m - sum_{k=1}^n (m/n - {km/n}/k) = sum_{k=1}^n {km/n}/k.\nThe term k = n contributes 0, so\nE(n,m/n) = sum_{k=1}^{n-1} {km/n}/k.\n\nNow let d = gcd(m,n), and write n = ds, m = dt with gcd(t,s) = 1. Then\n{km/n} = {kt/s}.\nAs k runs through 1,2,...,ds-1, each residue j/s (1 <= j <= s-1) occurs exactly d times, and 0 occurs d-1 times. Therefore the multiset of fractional parts consists of d copies of each of\n(s-1)/s, (s-2)/s, ..., 1/s,\nplus d-1 zeros.\nLet a_1 >= a_2 >= ... >= a_{n-1} be these numbers in decreasing order. Then a consists of blocks\n(s-1)/s repeated d times,\n(s-2)/s repeated d times,\n...,\n1/s repeated d times,\nfollowed by d-1 zeros.\n\nBecause the weights 1, 1/2, ..., 1/(n-1) are decreasing, the rearrangement inequality gives\nE(n,m/n) <= sum_{i=1}^{n-1} a_i/i.\n\nNext compare a with the decreasing sequence b_i = (n-i)/n = 1 - i/n, which is exactly the sorted list for the case m = n-1. We claim that every prefix sum of a is at most the corresponding prefix sum of b.\n\nIndeed, group the entries of a into blocks of size d. For the j-th positive block (1 <= j <= s-1), the block sum of a is\nd * (s-j)/s.\nThe corresponding block of b consists of the d consecutive terms\n(n-(j-1)d-1)/n, (n-(j-1)d-2)/n, ..., (n-jd)/n,\nwhose sum is\nd * (s-j)/s + d(d-1)/(2n),\nwhich is at least the block sum of a. If a prefix ends in a partial block of size r < d, then the corresponding r terms of b are each at least (n-(q+1)d)/n = (s-q-1)/s, which is exactly the value of the corresponding terms of a. Hence every prefix sum of a is at most the corresponding prefix sum of b.\n\nNow apply Abel summation to the decreasing weights 1/i. If A_t and B_t are the prefix sums of a and b, then\nsum_{i=1}^{n-1} a_i/i = sum_{t=1}^{n-1} A_t(1/t - 1/(t+1))\n(with the convention 1/n = 0 at the end), and since A_t <= B_t for all t, we obtain\nsum_{i=1}^{n-1} a_i/i <= sum_{i=1}^{n-1} b_i/i.\nTherefore\nE(n,m/n) <= sum_{i=1}^{n-1} (n-i)/(ni) = sum_{i=1}^{n-1} (1/i - 1/n) = H_n - 1.\nThis proves the desired inequality.\n\nFor m = n-1, we have {k(n-1)/n} = (n-k)/n for 1 <= k <= n-1, so every inequality above is an equality and E(n,(n-1)/n) = H_n - 1.\nConversely, if d > 1 then the largest fractional part is (s-1)/s < (n-1)/n, so the comparison with b is already strict. If d = 1, then the fractional parts are exactly the distinct set {1/n,2/n,...,(n-1)/n}; equality in the rearrangement inequality forces them to appear in decreasing order, so the first term must be (n-1)/n. But the first term is {m/n} = m/n, hence m = n-1. Thus equality holds if and only if m = n-1.",
+    "role_in_assembly": "This is the finite discrete optimization bottleneck after reduction to the n-adic grid.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "m is an integer",
+        "m satisfies 0 <= m <= n - 1",
+        "the expression m/n is formed as a rational number using integer division semantics interpreted as real/rational division (so m/n is in the interval 0 <= m/n <= (n-1)/n)"
+      ],
+      "normalized_claim": "For every integer n greater than 1 and for every integer m with 0 <= m <= n - 1, the inequality E(n, m divided by n) <= H_n minus 1 holds; moreover, E(n, m divided by n) equals H_n minus 1 if and only if m equals n minus 1.",
+      "quantifier_order": [
+        "for all n in integers with n > 1",
+        "for all m in integers with 0 <= m <= n - 1"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "outer parameter; also indexes H_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "inner parameter constrained by n; determines the second argument of E as m/n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced; the equality condition is a direct equivalence to the constraint m = n - 1"
+      ]
+    },
+    "statement_nl": "Let n be an integer greater than 1, and let m be an integer with 0 <= m <= n-1. Then E(n, m/n) <= H_n - 1, with equality if and only if m = n-1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.9,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328015243_198f9fa6",
+    "proof_status": "complete",
+    "reason": "The proof matches the discrete lemma statement, derives the value E(n,m/n)=sum_{k=1}^{n-1}{km/n}/k, identifies the fractional-part multiset correctly via gcd decomposition, and uses a valid majorization/rearrangement argument to obtain the upper bound H_n-1. The equality case is also correctly isolated at m=n-1. No semantic drift is present.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T01:59:59.065432Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328015243_198f9fa6",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:00:55.809606Z",
+  "worker_job_id": "wrk_lem_20260328015243_198f9fa6_g0_vet_2",
+  "worker_kind": "lemma_vetter"
+}

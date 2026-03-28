@@ -1,0 +1,339 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328015220_49341677/split_existing_proof_attempt_4",
+  "attempt_count": 2,
+  "attempt_number": 4,
+  "completed_at": "2026-03-28T02:44:22.250017Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-28T02:35:07.633488Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent7_split_existing_proof",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lean_failure": {
+      "artifact_keys": {},
+      "confidence": 0.9,
+      "error_class": "service_execution_error",
+      "fatality": "fatal",
+      "issue_kind": "lean_issue",
+      "job_id": "lean_job_lem_20260328015220_49341677_formalize_lemma_from_nl_4",
+      "recommended_next_step": null
+    },
+    "lemma_id": "lem_20260328015220_49341677",
+    "parent_proof_nl": "Fix an integer n>1, a real number x, and an integer z. By definition,\nE(n,t)=\\lfloor nt\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor kt\\rfloor}{k}.\nWe compute E(n,x+z). Since nz is an integer, the floor-translation identity gives\n\\lfloor n(x+z)\\rfloor=\\lfloor nx+nz\\rfloor=\\lfloor nx\\rfloor+nz.\nLikewise, for each k=1,2,\\dots,n, the number kz is an integer, so\n\\lfloor k(x+z)\\rfloor=\\lfloor kx+kz\\rfloor=\\lfloor kx\\rfloor+kz.\nSubstituting these into the definition of E(n,x+z) yields\nE(n,x+z)=\\bigl(\\lfloor nx\\rfloor+nz\\bigr)-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor+kz}{k}.\nSplitting the sum,\nE(n,x+z)=\\lfloor nx\\rfloor+nz-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}-\\sum_{k=1}^n \\frac{kz}{k}.\nSince \\frac{kz}{k}=z for every k, the last sum equals \\sum_{k=1}^n z=nz. Therefore the added nz terms cancel, and we get\nE(n,x+z)=\\lfloor nx\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}=E(n,x).\nHence E(n,x+z)=E(n,x) for every real x and every integer z.",
+    "parent_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "x is a real number",
+        "z is an integer",
+        "E(n, t) is well-defined for integer n with n > 1 and for real inputs t"
+      ],
+      "normalized_claim": "For every integer n with n > 1, and for every real number x and every integer z, the function value E(n, x plus z) equals E(n, x).",
+      "quantifier_order": [
+        "for all n in integers with n > 1",
+        "for all x in reals",
+        "for all z in integers"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "parameter of the function E; constrained by n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "reals",
+          "name": "x",
+          "role": "real input to the second argument of E",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "z",
+          "role": "integer shift added to x",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "parent_statement_nl": "Let n be an integer greater than 1. For every real number x and every integer z, E(n, x + z) = E(n, x).",
+    "previous_attempt_summaries": [],
+    "role_in_parent": "Remove the integer part of x without changing the objective function.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "root_theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "split_existing_proof_generation",
+  "result_payload": {
+    "assembly_plan": {
+      "final_step_yields_exact_root": true,
+      "proof_skeleton_nl": "First expand E(n, x+z) using the shifted-floor identity. This produces the unshifted floor-sum expression plus a correction sum. Then evaluate that correction sum as nz. After substitution, the added nz from floor(n(x+z)) cancels with the correction nz coming from the sum, leaving exactly E(n, x).",
+      "steps": [
+        {
+          "derives": "Apply lem_expand_E_shift to rewrite E(n, x+z) as floor(nx) + nz - sum_{k=1}^n floor(kx)/k - sum_{k=1}^n (kz)/k.",
+          "is_trivial": true,
+          "step_id": "S1",
+          "trivial_justification": "normalized from textual assembly step",
+          "uses_lemmas": [],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "Apply lem_sum_kz_over_k to replace sum_{k=1}^n (kz)/k by nz.",
+          "is_trivial": true,
+          "step_id": "S2",
+          "trivial_justification": "normalized from textual assembly step",
+          "uses_lemmas": [],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "Cancel the +nz and -nz terms to obtain floor(nx) - sum_{k=1}^n floor(kx)/k, which is exactly E(n, x).",
+          "is_trivial": true,
+          "step_id": "S3",
+          "trivial_justification": "normalized from textual assembly step",
+          "uses_lemmas": [],
+          "uses_prior_steps": []
+        }
+      ]
+    },
+    "confidence": 0.96,
+    "context_items": [
+      {
+        "content": "When z is an integer, both nz and kz are integers for every integer k.",
+        "kind": "definition",
+        "label": "context_1"
+      },
+      {
+        "content": "The sum from k=1 to n has exactly n terms.",
+        "kind": "definition",
+        "label": "context_2"
+      }
+    ],
+    "decision": "split",
+    "lemmas": [
+      {
+        "bottleneck_reason": null,
+        "formalization_cost_estimate": 0.08,
+        "lemma_relation_to_parent": "strictly_weaker",
+        "local_id": "lem_floor_translate_int",
+        "proof_nl": "Let r = floor(u). By definition of floor, r is an integer and r <= u < r+1. Adding the integer m to all parts of the inequality gives r+m <= u+m < r+m+1. Since r+m is an integer satisfying the defining property of the floor of u+m, we conclude floor(u+m) = r+m = floor(u)+m.",
+        "role_in_assembly": "Used to rewrite floor(n(x+z)) and each floor(k(x+z)) in terms of floor(nx) and floor(kx).",
+        "self_check_notes": "Immediate from the characterization of floor: if r = floor(u), then r <= u < r+1, so r+m <= u+m < r+m+1.",
+        "self_check_true": true,
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "u is a real number",
+            "m is an integer"
+          ],
+          "normalized_claim": "Adding an integer to a real number shifts its floor by exactly that integer.",
+          "quantifier_order": [
+            "for all real u",
+            "for all integers m"
+          ],
+          "variables": [
+            {
+              "name": "u"
+            },
+            {
+              "name": "m"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For any real number u and any integer m, floor(u + m) = floor(u) + m.",
+        "strictly_easier_reason": "This is a standard one-variable floor identity, while the parent statement combines many such identities with a sum cancellation."
+      },
+      {
+        "bottleneck_reason": null,
+        "formalization_cost_estimate": 0.22,
+        "lemma_relation_to_parent": "strictly_weaker",
+        "local_id": "lem_expand_E_shift",
+        "proof_nl": "Start from the definition of E: E(n,x+z) = floor(n(x+z)) - sum_{k=1}^n floor(k(x+z))/k. Since n z is an integer, we have n(x+z) = nx + nz, so by the floor-translation identity, floor(n(x+z)) = floor(nx) + nz. Likewise, for each k from 1 to n, k z is an integer, so floor(k(x+z)) = floor(kx + kz) = floor(kx) + kz. Substituting these formulas into the definition gives E(n,x+z) = floor(nx) + nz - sum_{k=1}^n (floor(kx) + kz)/k. Splitting the sum into two parts yields E(n,x+z) = floor(nx) + nz - sum_{k=1}^n floor(kx)/k - sum_{k=1}^n (kz)/k, which is the stated identity.",
+        "role_in_assembly": "Provides the exact expanded form of E(n,x+z) before the final correction sum is simplified.",
+        "self_check_notes": "This is just the definition of E together with floor(u+m)=floor(u)+m applied to n(x+z) and each k(x+z), followed by linearity of subtraction over the sum.",
+        "self_check_true": true,
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "x is a real number",
+            "z is an integer",
+            "E(n,t) is defined as floor(nt) - sum_{k=1}^n floor(kt)/k"
+          ],
+          "normalized_claim": "After shifting x by an integer z, the expression E expands into the unshifted floor-sum part plus an extra correction sum sum_{k=1}^n (kz)/k.",
+          "quantifier_order": [
+            "for all integers n > 1",
+            "for all real x",
+            "for all integers z"
+          ],
+          "variables": [
+            {
+              "name": "n"
+            },
+            {
+              "name": "x"
+            },
+            {
+              "name": "z"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let n be an integer greater than 1, let x be a real number, and let z be an integer. If E(n,t) = floor(nt) - sum_{k=1}^n floor(kt)/k, then E(n,x+z) = floor(nx) + nz - sum_{k=1}^n floor(kx)/k - sum_{k=1}^n (kz)/k.",
+        "strictly_easier_reason": "This only rewrites the definition after applying the floor-translation identity; it does not yet perform the final cancellation needed for the parent statement."
+      },
+      {
+        "bottleneck_reason": null,
+        "formalization_cost_estimate": 0.06,
+        "lemma_relation_to_parent": "strictly_weaker",
+        "local_id": "lem_sum_kz_over_k",
+        "proof_nl": "For each k with 1 <= k <= n, the integer k is nonzero, so (kz)/k = z. Therefore every summand in the sum is equal to z. Since the sum runs over exactly n values of k, the total is the sum of n copies of z, which equals nz.",
+        "role_in_assembly": "Evaluates the extra correction term in the expanded expression for E(n,x+z).",
+        "self_check_notes": "For each k in 1..n, k is nonzero, so (kz)/k = z; there are exactly n such terms, hence the sum is nz.",
+        "self_check_true": true,
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "z is an integer",
+            "k ranges over integers from 1 to n"
+          ],
+          "normalized_claim": "The correction sum is just n copies of z, so its value is nz.",
+          "quantifier_order": [
+            "for all integers n > 1",
+            "for all integers z"
+          ],
+          "variables": [
+            {
+              "name": "n"
+            },
+            {
+              "name": "z"
+            },
+            {
+              "name": "k"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "For any integer n greater than 1 and any integer z, sum_{k=1}^n (kz)/k = nz.",
+        "strictly_easier_reason": "This is a direct arithmetic simplification of a finite sum of identical terms, much simpler than the full shift-invariance statement."
+      }
+    ],
+    "parent_reassembly_explanation": "The parent proof is recovered by combining the three child lemmas in the same order as the informal argument: rewrite each shifted floor using the integer-translation law, collect the resulting correction terms into the explicit sum sum_{k=1}^n (kz)/k, evaluate that sum as nz, and cancel the matching +nz and -nz terms. What remains is precisely floor(nx) - sum_{k=1}^n floor(kx)/k, i.e. E(n,x).",
+    "shared_context": [
+      {
+        "content": "For fixed n>1, E(n,t) = floor(nt) - sum_{k=1}^n floor(kt)/k.",
+        "kind": "definition",
+        "label": "context_1"
+      },
+      {
+        "content": "If m is an integer and u is real, then floor(u + m) = floor(u) + m.",
+        "kind": "definition",
+        "label": "context_2"
+      }
+    ],
+    "status": "completed",
+    "strategy_summary": "Split the invariance proof into three reusable ingredients: a standard floor-translation lemma for integer shifts, an expansion of E(n, x+z) after applying that floor identity termwise, and an arithmetic lemma evaluating the correction sum sum_{k=1}^n (kz)/k as nz. These pieces reassemble directly into E(n, x+z) = E(n, x) by cancellation.",
+    "summary": "The proof splits cleanly into a floor-translation lemma, an expansion of the shifted objective, and a finite-sum evaluation. These three lemmas are enough to reconstruct the original invariance argument exactly."
+  },
+  "started_at": "2026-03-28T02:35:11.660627Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328015220_49341677",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:44:22.250017Z",
+  "worker_job_id": "wrk_lem_20260328015220_49341677_g0_split_4",
+  "worker_kind": "proof_split_generation"
+}

@@ -1,0 +1,61 @@
+{
+  "created_at": "2026-03-28T00:28:52.918281Z",
+  "graph_node_id": "pnode_20260328002852_0f3c2992",
+  "metadata": {
+    "parent_id": "lem_20260327230124_caed970a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "28cd68a51d471c0a8624caa4c0d383ea9f625d180be60dc061137f5c72f98f55",
+  "owner_id": "lem_20260328002742_fbc37130",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is a positive integer",
+      "j is an integer satisfying 0 <= j <= n - 1",
+      "x is a real number with x in I_{n,j}",
+      "d is a real number satisfying 0 <= d < 1/n",
+      "the claimed witness satisfies d = x - j/n, so x - j/n must lie in [0, 1/n)"
+    ],
+    "normalized_claim": "For every positive integer n and every integer j with 0 <= j <= n - 1, for every real x in I_{n,j}, there exists a unique real d such that 0 <= d < 1/n, x equals J_{n,j}(d), and this unique d is exactly x - j/n.",
+    "quantifier_order": [
+      "for all positive integers n",
+      "for all integers j with 0 <= j <= n - 1",
+      "for all real x in I_{n,j}",
+      "there exists exactly one real d in [0, 1/n) such that x = J_{n,j}(d) and d = x - j/n"
+    ],
+    "variables": [
+      {
+        "domain": "set of positive integers",
+        "name": "n",
+        "role": "fixed parameter determining the interval length 1/n and the indexing of sets/functions",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "j",
+        "role": "index parameter with constraint 0 <= j <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "point in the set I_{n,j}",
+        "type": "real"
+      },
+      {
+        "domain": "real numbers",
+        "name": "d",
+        "role": "witness in the half-open interval [0, 1/n), uniquely determined by x via d = x - j/n",
+        "type": "real"
+      }
+    ],
+    "witness_dependencies": [
+      "The unique witness d depends on x and j by the explicit formula d = x - j/n",
+      "The fact that d lies in [0, 1/n) imposes the implicit requirement x in I_{n,j} implies 0 <= x - j/n < 1/n"
+    ]
+  },
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. For every real x in I_{n,j}, there is exactly one real d in [0, 1/n) such that x = J_{n,j}(d), namely d = x - j/n.",
+  "updated_at": "2026-03-28T00:28:52.918282Z"
+}

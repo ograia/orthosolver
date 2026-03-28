@@ -1,0 +1,69 @@
+{
+  "created_at": "2026-03-28T22:57:00.271107Z",
+  "graph_node_id": "pnode_20260328225700_77dae566",
+  "metadata": {
+    "parent_id": "thm_root_20260328223900_ac5193ce"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "37152486b4b8c38ecd2b3435bdcb39c37bc847b5ed3a091084c96cabcd25d3ac",
+  "owner_id": "lem_20260328225614_291f7249",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "m is an integer and 0 <= m <= n - 1",
+      "summation index k is an integer with 1 <= k <= n",
+      "division by k is valid because k is at least 1"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every integer m with 0 <= m <= n - 1, define H_n = sum from k = 1 to n of 1/k and define g_n(m) = m minus sum from k = 1 to n of floor((k*m)/n) divided by k. Then g_n(m) <= H_n - 1. Moreover, g_n(m) = H_n - 1 holds if and only if m = n - 1.",
+    "quantifier_order": [
+      "for all n in integers with n greater than 1",
+      "for all m in integers with 0 less than or equal to m and m less than or equal to n minus 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer parameter; defines the index range of sums and the harmonic-like quantity H_n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "input to g_n(m); restricted to the integer interval 0 <= m <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index running from 1 to n",
+        "type": "integer"
+      },
+      {
+        "domain": "values of the finite sum of real numbers 1/k for k from 1 to n",
+        "name": "H_n",
+        "role": "defined by H_n = sum_{k=1}^n 1/k",
+        "type": "rational number"
+      },
+      {
+        "domain": "values of m minus sum_{k=1}^n floor((k*m)/n) divided by k (as a real/rational expression)",
+        "name": "g_n(m)",
+        "role": "defined expression involving floor((k*m)/n) and division by k",
+        "type": "rational number"
+      },
+      {
+        "domain": "real numbers to integers",
+        "name": "floor",
+        "role": "integer-valued floor function applied to the rational number (k*m)/n",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential quantifiers are present; the equality characterization is explicit: g_n(m) equals H_n minus 1 exactly when m equals n minus 1"
+    ]
+  },
+  "statement_nl": "For every integer n>1 and every integer m with 0 <= m <= n-1, if g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k and H_n = sum_{k=1}^n 1/k, then g_n(m) <= H_n - 1, and equality holds if and only if m = n - 1.",
+  "updated_at": "2026-03-28T22:57:00.271108Z"
+}

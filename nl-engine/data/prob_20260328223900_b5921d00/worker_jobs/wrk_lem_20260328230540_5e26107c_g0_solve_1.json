@@ -1,0 +1,171 @@
+{
+  "artifact_prefix": "problems/prob_20260328223900_b5921d00/lemmas/lem_20260328230540_5e26107c/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T23:07:25.904959Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T23:07:31.060539Z",
+  "controller_consumed_by_execution_id": "exec_20260328223900_1ee928ca",
+  "created_at": "2026-03-28T23:07:14.141446Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328223900_1ee928ca",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+        "item_id": "pnode_20260328225700_c972257c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260328225659_f782c9e3",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260328230056_1e721916",
+        "label": "lem_20260328230002_b3e008db",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "Let n be an integer with n > 1. For every real number t with 0 <= t < 1, one has f_n(t) <= g_n(floor(n * t))."
+      },
+      {
+        "item_id": "pnode_20260328225700_444129b1",
+        "label": "lem_20260328225601_f19c6e91",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For every integer n>1, every integer m with 0 <= m <= n-1, and every real t with m/n <= t < (m+1)/n, one has f_n(t) <= g_n(m)."
+      }
+    ],
+    "lemma_id": "lem_20260328230540_5e26107c",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328230713_ceba0902",
+    "role_in_assembly": "Converts the strict inequality floor(n*t) < n into the desired upper bound floor(n*t) \u2264 n\u22121.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+        "floor is applied to real numbers and returns an integer"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+      "quantifier_order": [
+        "For a fixed integer n with n > 1",
+        "For real x (x ranges over all real numbers)",
+        "Choose x that achieves the maximum of the given expression over all real x",
+        "Determine the maximal value M"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "decision variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M",
+          "role": "the maximal value of the expression as a function of n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "An optimal x (or the set of optimal x values) may depend on n",
+        "The maximal value M may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "z and N are integers",
+        "the inequality z < N is assumed when concluding z <= N - 1"
+      ],
+      "normalized_claim": "For all integers z and N, if z is less than N, then z is less than or equal to N minus 1.",
+      "quantifier_order": [
+        "for all z in integers",
+        "for all N in integers"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "z",
+          "role": "an arbitrary integer used in the inequality",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "N",
+          "role": "an arbitrary integer compared against z",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "shared_context": [],
+    "statement_nl": "For every integers z and N, if z < N, then z \u2264 N - 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328223900_b5921d00",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "did_not_use_forbidden_claims": true,
+      "self_contained": true,
+      "used_only_allowed_dependency_manifest": true
+    },
+    "lemma_id": "lem_20260328230540_5e26107c",
+    "proof_nl": "Let z and N be integers, and assume z < N. Then N - z is an integer and N - z > 0, so N - z is a positive integer. Hence N - z >= 1. Rearranging gives z <= N - 1. Therefore, if z < N, then z <= N - 1.",
+    "proof_summary": "Use the integer difference N-z: it is a positive integer, hence at least 1, which rearranges to z <= N-1.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "A positive integer is at least 1.",
+        "Basic closure of integers under subtraction."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T23:07:19.460473Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328230540_5e26107c",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T23:07:31.060543Z",
+  "worker_job_id": "wrk_lem_20260328230540_5e26107c_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

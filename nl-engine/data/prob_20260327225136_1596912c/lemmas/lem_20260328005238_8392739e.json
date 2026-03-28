@@ -1,0 +1,101 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328005414_38dfa3db",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T00:52:46.846330Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.11,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T00:54:19.394288Z",
+  "last_dependency_check_id": null,
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": null,
+  "last_transition_reason": null,
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328005238_8392739e",
+  "minor_rejection_count": 0,
+  "next_action": null,
+  "parent_id": "lem_20260327230124_caed970a",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260327225136_1596912c",
+  "proof_bundle_artifact_id": null,
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "proof_status": "open",
+  "role_in_parent": "Extracts the normalized coordinate from x and reconstructs x from it.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 0,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If x is a real number with j/n <= x < (j + 1)/n, and t = n * x - j, then 0 <= t < 1 and x = T_{n,j}(t), where T_{n,j}(t) = (j + t)/n.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is a positive integer (so n is at least 1 and division by n is valid)",
+      "j is an integer satisfying 0 <= j <= n - 1",
+      "x is a real number satisfying j divided by n <= x < (j + 1) divided by n",
+      "t is computed as n times x minus j and is therefore a real number"
+    ],
+    "normalized_claim": "For all positive integers n and all integers j with 0 <= j <= n - 1, for every real x with j divided by n <= x < (j + 1) divided by n, if t is defined by t = n times x minus j, then t satisfies 0 <= t < 1 and x equals (j + t) divided by n (equivalently x = T_{n,j}(t) where T_{n,j}(t) is defined as (j + t) divided by n).",
+    "quantifier_order": [
+      "for all positive integers n",
+      "for all integers j such that 0 <= j <= n - 1",
+      "for all real numbers x such that j divided by n <= x < (j + 1) divided by n",
+      "define t as n times x minus j"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "index and scaling parameter; divisor and multiplier",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "j",
+        "role": "interval index for splitting [0,1) into n parts; also used to shift",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input point constrained to a specific half-open interval",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "derived parameter computed from x, constrained to [0,1)",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers to real numbers (implicitly used on t)",
+        "name": "T_{n,j}",
+        "role": "reconstruction map from t to x for fixed n and j",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "t depends on n and x and j via the definition t = n times x minus j",
+      "the identity x = T_{n,j}(t) depends on substituting this t into T_{n,j}(t) = (j + t) divided by n"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T00:54:19.394288Z"
+}

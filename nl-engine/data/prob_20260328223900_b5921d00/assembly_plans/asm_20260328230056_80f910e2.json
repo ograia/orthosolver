@@ -1,0 +1,66 @@
+{
+  "assembly_plan_id": "asm_20260328230056_80f910e2",
+  "created_at": "2026-03-28T23:00:56.097561Z",
+  "decomposition_id": "dec_20260328230056_1ed3a652",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260328223900_b5921d00",
+  "proof_skeleton_nl": "First normalize the interval hypothesis by multiplying through by the positive integer n, which yields m <= n * t < m + 1. The floor lemma then identifies floor(n * t) with m. Separately, the bounds 0 <= m <= n - 1 force t to lie in [0, 1), so the canonical comparison lemma applies and gives f_n(t) <= g_n(floor(n * t)). Finally, substitute floor(n * t) = m to conclude f_n(t) <= g_n(m).",
+  "root_node_id": "lem_20260328225601_f19c6e91",
+  "steps": [
+    {
+      "derives": "From n > 1, 0 <= m <= n - 1, and m / n <= t < (m + 1) / n, conclude m <= n * t < m + 1.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This is an application of the interval-scaling equivalence after noting that n > 1 gives a positive denominator.",
+      "uses_lemmas": [
+        "lem_20260328225948_38012c70"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "From m <= n * t < m + 1, conclude floor(n * t) = m.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "Direct application of the floor characterization lemma with x = n * t.",
+      "uses_lemmas": [
+        "lem_20260328225952_5884968f"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "From n > 1, 0 <= m <= n - 1, and m / n <= t < (m + 1) / n, conclude 0 <= t < 1.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "Direct application of the interval-endpoint bound lemma.",
+      "uses_lemmas": [
+        "lem_20260328225955_50174415"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "From 0 <= t < 1, conclude f_n(t) <= g_n(floor(n * t)).",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Direct application of the canonical bound lemma.",
+      "uses_lemmas": [
+        "lem_20260328230002_b3e008db"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Rewrite floor(n * t) as m in the inequality f_n(t) <= g_n(floor(n * t)) to obtain f_n(t) <= g_n(m).",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is a single substitution using the equality from A2.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A4"
+      ]
+    }
+  ]
+}

@@ -31,6 +31,7 @@ def test_child_decomposition_frontier_retries_while_slots_remain() -> None:
             )
         ]
     )
+    orch.decomposition_candidates = SimpleNamespace(list_by_node=lambda problem_id, node_id: [])
     orch.event_logger = SimpleNamespace(transition=lambda *args, **kwargs: None)
     orch._select_active_decomposition_for_node = lambda *args, **kwargs: False
     orch._remaining_decomposition_slots = lambda *args, **kwargs: 4

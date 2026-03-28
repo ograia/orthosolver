@@ -12,6 +12,7 @@ def test_config_defaults_and_caps_present() -> None:
     assert cfg.decomposition.parallel_root_take_k >= 1
     assert cfg.decomposition.parallel_root_join_timeout_seconds >= 1
     assert cfg.decomposition.root_solutions_required_for_termination >= 1
+    assert cfg.decomposition.lemma_decomposition_candidates_n == 1
     assert cfg.decomposition.max_consecutive_fatal_rejections_per_node >= 1
     assert cfg.decomposition.max_decompositions_per_failed_lemma >= 1
     assert cfg.lemma_solving.max_recursive_decomposition_depth > 0
@@ -121,13 +122,13 @@ def test_llm_reasoning_effort_input_alias_maps_to_thinking_level() -> None:
         {
             "llm": {
                 "agent2": {
-                    "model": "gpt-5-mini",
+                    "model": "gpt-5.4-mini",
                     "reasoning_effort": "high",
                 }
             }
         }
     )
-    assert cfg.llm.agent2.model == "gpt-5-mini"
+    assert cfg.llm.agent2.model == "gpt-5.4-mini"
     assert cfg.llm.agent2.thinking_level == "high"
 
 
@@ -193,6 +194,15 @@ def test_legacy_solver_retry_alias_maps_to_fatal_counter() -> None:
 def test_legacy_no_accept_alias_maps_to_lemma_decomposition_slots() -> None:
     cfg = ProblemConfig.model_validate({"decomposition": {"max_no_accept_rounds_per_lemma": 4}})
     assert cfg.decomposition.max_decompositions_per_failed_lemma == 4
+
+
+def test_lemma_decomposition_candidate_count_validation_and_round_trip() -> None:
+    cfg = ProblemConfig.model_validate({"decomposition": {"lemma_decomposition_candidates_n": 3}})
+    assert cfg.decomposition.lemma_decomposition_candidates_n == 3
+    assert cfg.model_dump()["decomposition"]["lemma_decomposition_candidates_n"] == 3
+
+    with pytest.raises(Exception):
+        ProblemConfig.model_validate({"decomposition": {"lemma_decomposition_candidates_n": 0}})
 
 
 def test_final_check_policy_config_round_trips() -> None:

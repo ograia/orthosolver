@@ -1,0 +1,255 @@
+{
+  "artifact_prefix": "problems/prob_20260328223900_b5921d00/lemmas/lem_20260328225948_38012c70/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T23:01:23.358552Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T23:01:29.417787Z",
+  "controller_consumed_by_execution_id": "exec_20260328223900_1ee928ca",
+  "created_at": "2026-03-28T23:01:19.682874Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328223900_1ee928ca",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+        "item_id": "pnode_20260328225700_c972257c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328223900_ac5193ce",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260328225601_f19c6e91",
+        "role_in_parent": "Transfers the continuous expression on one interval to the discrete surrogate g_n(m).",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "m is an integer satisfying 0 <= m <= n-1",
+            "t is a real number satisfying m divided by n <= t and t < (m+1) divided by n",
+            "division m/n and (m+1)/n is interpreted in the reals (so the interval endpoints are real numbers)"
+          ],
+          "normalized_claim": "For all integers n with n greater than 1, for all integers m with 0 <= m <= n minus 1, and for all real t with m divided by n <= t and t < (m plus 1) divided by n, it holds that f sub n applied to t is less than or equal to g sub n applied to m.",
+          "quantifier_order": [
+            "for all integer n",
+            "for all integer m",
+            "for all real t"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index for the functions f_n and g_n; also sets the range for m and the partition points for t",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "m",
+              "role": "discrete bin index constrained by 0 <= m <= n-1; input to g_n",
+              "type": "integer"
+            },
+            {
+              "domain": "reals",
+              "name": "t",
+              "role": "continuous variable constrained to a half-open interval [m/n, (m+1)/n); input to f_n",
+              "type": "real"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are introduced; all quantified variables are universally quantified and therefore independent of any existential choice"
+          ]
+        },
+        "statement_nl": "For every integer n>1, every integer m with 0 <= m <= n-1, and every real t with m/n <= t < (m+1)/n, one has f_n(t) <= g_n(m)."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328223900_ac5193ce",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is greater than 1",
+            "x is any real number",
+            "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+            "floor is applied to real numbers and returns an integer"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+          "quantifier_order": [
+            "For a fixed integer n with n > 1",
+            "For real x (x ranges over all real numbers)",
+            "Choose x that achieves the maximum of the given expression over all real x",
+            "Determine the maximal value M"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "decision variable over which the expression is maximized",
+              "type": "real number"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "M",
+              "role": "the maximal value of the expression as a function of n",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "An optimal x (or the set of optimal x values) may depend on n",
+            "The maximal value M may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328225948_38012c70",
+    "proof_nl": "Let n > 1 be an integer, m an integer, and t a real number. Since n > 1, we have n > 0. Therefore multiplication and division by n preserve strict and non-strict inequalities.\n\nFirst, assume m/n <= t < (m+1)/n. Multiplying every part by the positive number n gives m <= nt < m+1.\n\nConversely, assume m <= nt < m+1. Dividing every part by the positive number n gives m/n <= t < (m+1)/n.\n\nThus m/n <= t < (m+1)/n if and only if m <= nt < m+1, as claimed.",
+    "role_in_assembly": "Convert the interval hypothesis into an inequality involving n * t, which is the form needed for the floor argument.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+        "floor is applied to real numbers and returns an integer"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+      "quantifier_order": [
+        "For a fixed integer n with n > 1",
+        "For real x (x ranges over all real numbers)",
+        "Choose x that achieves the maximum of the given expression over all real x",
+        "Determine the maximal value M"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "decision variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M",
+          "role": "the maximal value of the expression as a function of n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "An optimal x (or the set of optimal x values) may depend on n",
+        "The maximal value M may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1 (so n is positive and nonzero)",
+        "m is an integer",
+        "t is a real number",
+        "division by n is well-defined due to n > 1"
+      ],
+      "normalized_claim": "For all integers n with n > 1, for all integers m, and for all real numbers t: (m divided by n is at most t and t is strictly less than (m plus 1) divided by n) if and only if (m is at most n multiplied by t and n multiplied by t is strictly less than (m plus 1)).",
+      "quantifier_order": [
+        "for all n (integer, n > 1)",
+        "for all m (integer)",
+        "for all t (real)"
+      ],
+      "variables": [
+        {
+          "domain": "all integers with n > 1",
+          "name": "n",
+          "role": "scaling denominator",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers",
+          "name": "m",
+          "role": "interval index / left endpoint numerator",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "t",
+          "role": "point tested for interval membership",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "none (the statement is an equivalence for all n, m, t with no existential witnesses)"
+      ]
+    },
+    "statement_nl": "Let n be an integer with n > 1, let m be an integer, and let t be a real number. Then the half-open interval condition m / n <= t < (m + 1) / n is equivalent to the scaled inequality m <= n * t < m + 1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260328223900_b5921d00",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328225948_38012c70",
+    "proof_status": "complete",
+    "reason": "The proof correctly establishes the equivalence by using positivity of n to preserve inequalities under multiplication and division. It matches the lemma statement exactly and uses only allowed dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T23:01:19.525009Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328225948_38012c70",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T23:01:29.417794Z",
+  "worker_job_id": "wrk_lem_20260328225948_38012c70_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

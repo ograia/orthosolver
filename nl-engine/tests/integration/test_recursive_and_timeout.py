@@ -273,7 +273,7 @@ def test_solver_cap_decomposes_immediately_when_third_fatal_is_consumed(monkeypa
             row = body["lemma_by_id"][root_lemma_id]
             if row["solver_attempt_count"] >= 3:
                 assert row["routing_status"] != "retry_solver"
-                assert row["decomposition_count"] > 0
+                assert row["promoted_decomposition_count"] > 0
                 saw_immediate_decomposition = True
         if terminal in {"succeeded", "failed"}:
             break

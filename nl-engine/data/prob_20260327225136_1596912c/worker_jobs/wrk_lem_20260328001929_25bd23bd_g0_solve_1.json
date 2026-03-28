@@ -1,0 +1,169 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260328001929_25bd23bd/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T00:21:38.682412Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:21:38.773052Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:21:29.500794Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327230243_146498d5",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327230243_7431629c",
+        "label": "lem_20260327230124_caed970a",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For any integer j with 0 <= j <= n - 1 and any real number x with j/n <= x < (j+1)/n, one has F_n(x) <= F_n(j/n)."
+      }
+    ],
+    "lemma_id": "lem_20260328001929_25bd23bd",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328002129_8441b8df",
+    "role_in_assembly": "Converts a derivative sign condition into a pointwise bound at the left endpoint.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "h is defined on the closed interval [0,1].",
+        "differentiability of h is assumed only on the open interval (0,1).",
+        "the condition h'(u) <= 0 is required for all u strictly between 0 and 1.",
+        "the conclusion is required for all u in the half-open interval [0,1)."
+      ],
+      "normalized_claim": "If h is differentiable on (0,1) and maps [0,1] to real numbers, and if for all u in (0,1) the derivative satisfies h'(u) is less than or equal to 0, then for all u in [0,1) the value h(u) is less than or equal to h(0).",
+      "quantifier_order": [
+        "There exists a function h mapping [0,1] to real numbers, differentiable on (0,1).",
+        "For every real u with u in (0,1), assume h'(u) <= 0.",
+        "For every real u with 0 <= u < 1, conclude h(u) <= h(0)."
+      ],
+      "variables": [
+        {
+          "domain": "all real x in the interval [0,1]",
+          "name": "h",
+          "role": "subject function; differentiable on the open interval (0,1)",
+          "type": "function from real numbers to real numbers"
+        },
+        {
+          "domain": "open interval (0,1) when used in the derivative hypothesis; domain [0,1) when used in the conclusion",
+          "name": "u",
+          "role": "point where the derivative inequality is evaluated; point where the function value comparison is asserted",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "shared_context": [],
+    "statement_nl": "Let h : [0,1] -> R be differentiable on (0,1). If h'(u) <= 0 for every u in (0,1), then h(u) <= h(0) for every u with 0 <= u < 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": "Define h:[0,1]\u2192R by h(0)=0 and h(x)=1 for every x in (0,1]. Then h is differentiable on (0,1) with h'(u)=0\u22640 for all u in (0,1), but for any u in (0,1), h(u)=1>0=h(0).",
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {},
+    "lemma_id": "lem_20260328001929_25bd23bd",
+    "proof_nl": null,
+    "proof_summary": null,
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [
+        "The lemma omits any continuity assumption at 0, so the conclusion need not follow from h'(u) <= 0 on (0,1)."
+      ],
+      "used_external_facts": []
+    },
+    "status": "possibly_false",
+    "stuck_point": "The statement is false as written: differentiability on (0,1) does not control the value at 0.",
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T00:21:31.183995Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328001929_25bd23bd",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:21:38.773057Z",
+  "worker_job_id": "wrk_lem_20260328001929_25bd23bd_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

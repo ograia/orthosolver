@@ -1,0 +1,193 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328015236_05d35538/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T01:54:13.461913Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T01:54:15.044064Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T01:54:05.447715Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+        "item_id": "pnode_20260328015341_a57d9401",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328015236_05d35538",
+    "proof_nl": "Let H_m := \\sum_{j=1}^m \\frac1j. Fix an integer n>1 and a real x with \\frac{n-1}{n} \\le x < 1.\n\nFor each k with 1 \\le k \\le n-1, we have\nkx \\ge k\\cdot \\frac{n-1}{n} = k - \\frac{k}{n} > k-1,\nbecause k<n implies \\frac{k}{n}<1. Also kx<k since x<1. Hence k-1 < kx < k, so \\lfloor kx\\rfloor = k-1.\nFor k=n, we get n-1 \\le nx < n, so \\lfloor nx\\rfloor = n-1.\n\nTherefore\nE(n,x)= (n-1)-\\sum_{k=1}^{n-1}\\frac{k-1}{k}-\\frac{n-1}{n}.\nNow \\frac{k-1}{k}=1-\\frac1k, so\n\\sum_{k=1}^{n-1}\\frac{k-1}{k} = (n-1)-\\sum_{k=1}^{n-1}\\frac1k = (n-1)-H_{n-1}.\nSubstituting,\nE(n,x)= (n-1)-\\bigl((n-1)-H_{n-1}\\bigr)-\\frac{n-1}{n} = H_{n-1}-\\frac{n-1}{n}.\nSince H_n = H_{n-1}+\\frac1n, this equals\nH_n-1.\nThus E(n,x)=H_n-1 for every x in \\left[\\frac{n-1}{n},1\\right).",
+    "role_in_assembly": "Exhibit a full family of maximizers and compute the common value on the top interval.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "x is a real number satisfying (n-1)/n <= x",
+        "x is a real number satisfying x < 1",
+        "the expressions (n-1)/n and H_n are assumed to be well-defined for the stated n"
+      ],
+      "normalized_claim": "For every integer n greater than 1, and for every real number x with (n-1)/n <= x < 1, the value E(n, x) equals H_n minus 1.",
+      "quantifier_order": [
+        "for all n in integers with n > 1",
+        "for all x in real numbers with (n-1)/n <= x and x < 1"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "global parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "input variable restricted to an interval depending on n",
+          "type": "real"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses appear; the equation asserts equality for all allowed x"
+      ]
+    },
+    "statement_nl": "Let n be an integer greater than 1. If x is a real number with (n-1)/n <= x < 1, then E(n, x) = H_n - 1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "allowed_dependencies_used": true,
+      "forbidden_dependencies_used": false,
+      "notes": "Only elementary floor arithmetic and the harmonic number notation introduced in the proof are used."
+    },
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328015236_05d35538",
+    "proof_status": "complete",
+    "reason": "The proof correctly identifies the floor values on the interval [(n-1)/n, 1), computes each term exactly, and simplifies the resulting expression to H_n - 1. This matches the lemma statement and the root semantic sketch with no substantive gap or drift.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T01:54:07.992175Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328015236_05d35538",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T01:54:15.044071Z",
+  "worker_job_id": "wrk_lem_20260328015236_05d35538_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

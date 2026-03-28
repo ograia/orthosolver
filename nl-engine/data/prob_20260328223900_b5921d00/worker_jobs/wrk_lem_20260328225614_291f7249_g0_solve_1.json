@@ -1,0 +1,186 @@
+{
+  "artifact_prefix": "problems/prob_20260328223900_b5921d00/lemmas/lem_20260328225614_291f7249/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T23:02:03.610838Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T23:02:06.361673Z",
+  "controller_consumed_by_execution_id": "exec_20260328223900_1ee928ca",
+  "created_at": "2026-03-28T22:57:01.467976Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328223900_1ee928ca",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+        "item_id": "pnode_20260328225700_c972257c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260328225659_f782c9e3",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260328225614_291f7249",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328225701_0bd88109",
+    "role_in_assembly": "Supplies the finite global upper bound and the unique equality case for the discrete surrogate.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+        "floor is applied to real numbers and returns an integer"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+      "quantifier_order": [
+        "For a fixed integer n with n > 1",
+        "For real x (x ranges over all real numbers)",
+        "Choose x that achieves the maximum of the given expression over all real x",
+        "Determine the maximal value M"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "decision variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M",
+          "role": "the maximal value of the expression as a function of n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "An optimal x (or the set of optimal x values) may depend on n",
+        "The maximal value M may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "m is an integer and 0 <= m <= n - 1",
+        "summation index k is an integer with 1 <= k <= n",
+        "division by k is valid because k is at least 1"
+      ],
+      "normalized_claim": "For every integer n with n > 1 and every integer m with 0 <= m <= n - 1, define H_n = sum from k = 1 to n of 1/k and define g_n(m) = m minus sum from k = 1 to n of floor((k*m)/n) divided by k. Then g_n(m) <= H_n - 1. Moreover, g_n(m) = H_n - 1 holds if and only if m = n - 1.",
+      "quantifier_order": [
+        "for all n in integers with n greater than 1",
+        "for all m in integers with 0 less than or equal to m and m less than or equal to n minus 1"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "outer parameter; defines the index range of sums and the harmonic-like quantity H_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "input to g_n(m); restricted to the integer interval 0 <= m <= n-1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        },
+        {
+          "domain": "values of the finite sum of real numbers 1/k for k from 1 to n",
+          "name": "H_n",
+          "role": "defined by H_n = sum_{k=1}^n 1/k",
+          "type": "rational number"
+        },
+        {
+          "domain": "values of m minus sum_{k=1}^n floor((k*m)/n) divided by k (as a real/rational expression)",
+          "name": "g_n(m)",
+          "role": "defined expression involving floor((k*m)/n) and division by k",
+          "type": "rational number"
+        },
+        {
+          "domain": "real numbers to integers",
+          "name": "floor",
+          "role": "integer-valued floor function applied to the rational number (k*m)/n",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential quantifiers are present; the equality characterization is explicit: g_n(m) equals H_n minus 1 exactly when m equals n minus 1"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer n>1 and every integer m with 0 <= m <= n-1, if g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k and H_n = sum_{k=1}^n 1/k, then g_n(m) <= H_n - 1, and equality holds if and only if m = n - 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328223900_b5921d00",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "relied_on_trusted_context": false,
+      "used_allowed_dependency_manifest": true,
+      "used_forbidden_claim": false
+    },
+    "lemma_id": "lem_20260328225614_291f7249",
+    "proof_nl": "Let s_k be the remainder of k m upon division by n, so 0 <= s_k <= n-1 and\nk m = n floor(km/n) + s_k.\nThen\nfloor(km/n)/k = m/n - s_k/(n k),\nso summing over k = 1,...,n gives\n\ng_n(m) = m - sum_{k=1}^n floor(km/n)/k = (1/n) sum_{k=1}^n s_k/k.\n\nNow let d = gcd(m,n), and write n = d q and m = d u, with gcd(u,q)=1.\nFor k = a q + b with 0 <= a <= d-1 and 1 <= b <= q, we have\nk m = d(auq + bu),\nso modulo n = d q the remainder is d times the remainder of b u modulo q.\nBecause u is invertible mod q, as b runs through 1,...,q, the residues b u mod q run through 0,1,...,q-1 exactly once. Therefore the multiset {s_1,...,s_n} consists of each multiple\n0, d, 2d, ..., (q-1)d\nappearing exactly d times.\n\nLet a_1 >= a_2 >= ... >= a_n be these remainders in nonincreasing order. Since the weights 1/k are strictly decreasing, the sum sum s_k/k is maximized when the larger remainders are paired with the smaller denominators; this is the standard adjacent-swap argument: if i<j but x_i < x_j, swapping x_i and x_j increases the sum by (x_j-x_i)(1/i - 1/j) >= 0. Hence\n\nsum_{k=1}^n s_k/k <= sum_{k=1}^n a_k/k.\n\nThe sequence (a_k) is explicit: each value d(q-1), d(q-2), ..., d, 0 occurs d times. In particular\n\na_k = d (q - ceil(k/d))\nfor 1 <= k <= n,\nso d ceil(k/d) >= k implies\n\na_k <= d q - k = n - k.\nThus\n\ng_n(m) <= (1/n) sum_{k=1}^n (n-k)/k = (1/n)(n H_n - n) = H_n - 1,\nwhere H_n = sum_{k=1}^n 1/k.\nThis proves the upper bound.\n\nFor equality, note first that if d > 1 then a_1 = n-d < n-1, so a_k < n-k for at least one k; since all weights are positive, the inequality is then strict. Hence equality forces d = 1.\nWhen d = 1, the remainders s_1,...,s_n are a permutation of 0,1,...,n-1. Equality in the adjacent-swap step forces them to be already arranged in nonincreasing order, so necessarily\ns_k = n-k  for all k = 1,...,n.\nIn particular s_1 = m = n-1. Conversely, if m = n-1 then km mod n = n-k for 1 <= k <= n, so\n\ng_n(n-1) = (1/n) sum_{k=1}^n (n-k)/k = H_n - 1.\nTherefore g_n(m) <= H_n - 1 for all 0 <= m <= n-1, with equality if and only if m = n-1.",
+    "proof_summary": "Rewrite g_n(m) as a weighted sum of remainders modulo n. The remainders form a multiset determined by d = gcd(m,n): each multiple of d appears exactly d times. Sorting these remainders decreasingly and using the rearrangement/adjacent-swap principle gives an upper bound by the sorted remainder sequence, which is coordinatewise bounded by n-k. This yields g_n(m) <= H_n - 1. Equality forces d=1 and the descending remainder pattern n-k, hence m=n-1.",
+    "self_report": {
+      "confidence": 0.98,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Adjacent-swap form of the rearrangement inequality"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T22:57:07.868703Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328225614_291f7249",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T23:02:06.361679Z",
+  "worker_job_id": "wrk_lem_20260328225614_291f7249_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

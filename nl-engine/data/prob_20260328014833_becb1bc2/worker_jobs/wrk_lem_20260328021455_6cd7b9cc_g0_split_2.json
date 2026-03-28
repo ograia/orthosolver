@@ -1,0 +1,201 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328021455_6cd7b9cc/split_existing_proof_attempt_2",
+  "attempt_count": 2,
+  "attempt_number": 2,
+  "completed_at": "2026-03-28T02:26:08.291323Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T02:26:20.374578Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T02:25:10.622807Z",
+  "error_payload": {
+    "agent_key": "agent7",
+    "class": "AgentExecutionError",
+    "error_class": "invalid_agent_output",
+    "message": "agent7 output failed schema validation: 3 validation errors for Agent7Output\nassembly_plan.steps.0\n  Input should be a valid dictionary [type=dict_type, input_value='Use lemma_1 to verify th... for a fractional part.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.1\n  Input should be a valid dictionary [type=dict_type, input_value='Use lemma_2 to identify x as floor(x) + frac(x).', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.2\n  Input should be a valid dictionary [type=dict_type, input_value='Subtract floor(x) from b...s the parent statement.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type"
+  },
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent7_split_existing_proof",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260328015226_ec8a277f",
+        "role_in_parent": "Provide the canonical decomposition of an arbitrary real number into an integer part and a fractional part.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "x is a real number",
+            "frac(x) is constrained by inequality 0 <= frac(x) < 1"
+          ],
+          "normalized_claim": "For every real number x, define n = floor(x) and f = frac(x). Then x = n + f and the fractional part satisfies 0 <= f and f < 1.",
+          "quantifier_order": [
+            "For all real numbers x"
+          ],
+          "variables": [
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "input to floor and fractional part",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "f",
+              "role": "fractional part value of x, equal to frac(x)",
+              "type": "real number"
+            },
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "floor value of x, equal to floor(x)",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The integer n depends on x via n = floor(x)",
+            "The real f depends on x via f = frac(x)",
+            "The equality x = n + f uses the same x-dependent choices n = floor(x) and f = frac(x)"
+          ]
+        },
+        "statement_nl": "For every real number x, x = floor(x) + frac(x), and 0 <= frac(x) < 1."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lean_failure": {
+      "artifact_keys": {},
+      "confidence": 0.9,
+      "error_class": "service_execution_error",
+      "fatality": "fatal",
+      "issue_kind": "lean_issue",
+      "job_id": "lean_job_lem_20260328021455_6cd7b9cc_formalize_lemma_from_nl_2",
+      "recommended_next_step": null
+    },
+    "lemma_id": "lem_20260328021455_6cd7b9cc",
+    "parent_proof_nl": "Let x be any real number. By the definition of the fractional-part function frac, its value at x is x minus the greatest integer less than or equal to x, namely floor(x). Therefore frac(x) = x - floor(x), as claimed.",
+    "parent_semantic_sketch": {
+      "domain_restrictions": [
+        "x is a real number"
+      ],
+      "normalized_claim": "For every real number x, frac of x equals x minus floor of x.",
+      "quantifier_order": [
+        "for all x in real numbers"
+      ],
+      "variables": [
+        {
+          "domain": "set of real numbers",
+          "name": "x",
+          "role": "input to the functions frac and floor",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses"
+      ]
+    },
+    "parent_statement_nl": "For every real number x, frac(x) = x - floor(x).",
+    "previous_attempt_summaries": [],
+    "role_in_parent": "Identifies the fractional part with the floor-remainder expression so that the inequality and equality lemmas can be rewritten into statements about frac(x).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "root_theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "split_existing_proof_generation",
+  "result_payload": null,
+  "started_at": "2026-03-28T02:25:12.734754Z",
+  "status": "failed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328021455_6cd7b9cc",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:26:20.374586Z",
+  "worker_job_id": "wrk_lem_20260328021455_6cd7b9cc_g0_split_2",
+  "worker_kind": "proof_split_generation"
+}

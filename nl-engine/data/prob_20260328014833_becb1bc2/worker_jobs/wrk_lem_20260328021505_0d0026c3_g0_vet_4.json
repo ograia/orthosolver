@@ -1,0 +1,227 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328021505_0d0026c3/vetter_attempt_4",
+  "attempt_count": 1,
+  "attempt_number": 4,
+  "completed_at": "2026-03-28T02:27:11.455087Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T02:27:35.729797Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T02:27:02.581951Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+        "item_id": "pnode_20260328015341_a57d9401",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260328015226_ec8a277f",
+        "role_in_parent": "Provide the canonical decomposition of an arbitrary real number into an integer part and a fractional part.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "x is a real number",
+            "frac(x) is constrained by inequality 0 <= frac(x) < 1"
+          ],
+          "normalized_claim": "For every real number x, define n = floor(x) and f = frac(x). Then x = n + f and the fractional part satisfies 0 <= f and f < 1.",
+          "quantifier_order": [
+            "For all real numbers x"
+          ],
+          "variables": [
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "input to floor and fractional part",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "f",
+              "role": "fractional part value of x, equal to frac(x)",
+              "type": "real number"
+            },
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "floor value of x, equal to floor(x)",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The integer n depends on x via n = floor(x)",
+            "The real f depends on x via f = frac(x)",
+            "The equality x = n + f uses the same x-dependent choices n = floor(x) and f = frac(x)"
+          ]
+        },
+        "statement_nl": "For every real number x, x = floor(x) + frac(x), and 0 <= frac(x) < 1."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 4,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328021505_0d0026c3",
+    "proof_nl": "Let x be an arbitrary real number, and set a = floor(x). Then\n\na + (x - a) = a + (x + (-a))\n\nby the definition of subtraction. By associativity of addition,\n\na + (x + (-a)) = (a + x) + (-a).\n\nBy commutativity of addition, a + x = x + a, so\n\n(a + x) + (-a) = (x + a) + (-a) = x + (a + (-a)).\n\nBy the additive inverse law, a + (-a) = 0, hence\n\nx + (a + (-a)) = x + 0 = x.\n\nTherefore floor(x) + (x - floor(x)) = x. Since x was arbitrary, the identity holds for every real number x.",
+    "role_in_assembly": "Provides the algebraic decomposition that becomes the desired equality after replacing x - floor(x) by frac(x).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "x is any real number",
+        "floor(x) is defined for all real x (by taking the greatest integer less than or equal to x)"
+      ],
+      "normalized_claim": "For every real number x, let n be the floor of x (the greatest integer less than or equal to x). Then x equals n plus (x minus n).",
+      "quantifier_order": [
+        "for all x in real numbers"
+      ],
+      "variables": [
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "input to the floor function",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced; the expression uses only x and floor(x)."
+      ]
+    },
+    "statement_nl": "For every real number x, x = floor(x) + (x - floor(x)).",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [
+      {
+        "finding": "The argument proves the equivalent identity floor(x) + (x - floor(x)) = x; this is sufficient for the stated lemma by symmetry.",
+        "location": "conclusion",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328021505_0d0026c3",
+    "proof_status": "complete",
+    "reason": "The proof correctly derives x = floor(x) + (x - floor(x)) by standard algebraic manipulation. It matches the lemma statement exactly, up to symmetry of equality, and introduces no unsupported claims or external dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T02:27:05.843415Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328021505_0d0026c3",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:27:35.729801Z",
+  "worker_job_id": "wrk_lem_20260328021505_0d0026c3_g0_vet_4",
+  "worker_kind": "lemma_vetter"
+}

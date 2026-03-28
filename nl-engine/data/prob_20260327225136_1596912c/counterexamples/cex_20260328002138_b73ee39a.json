@@ -1,0 +1,18 @@
+{
+  "accepted_by_report_id": "rep_20260328002207_85e87f3b",
+  "confidence": 0.99,
+  "counterexample_id": "cex_20260328002138_b73ee39a",
+  "counterexample_text": "Define h:[0,1]\u2192R by h(0)=0 and h(x)=1 for every x in (0,1]. Then h is differentiable on (0,1) with h'(u)=0\u22640 for all u in (0,1), but for any u in (0,1), h(u)=1>0=h(0).",
+  "created_at": "2026-03-28T00:21:38.809353Z",
+  "lemma_id": "lem_20260328001929_25bd23bd",
+  "parent_decomposition_id": "dec_20260328001912_e3243893",
+  "problem_id": "prob_20260327225136_1596912c",
+  "rejected_by_report_id": null,
+  "source_agent": "agent4",
+  "source_attempt_number": 1,
+  "source_worker_job_id": "wrk_lem_20260328001929_25bd23bd_g0_solve_1",
+  "statement_fingerprint": "Let h : [0,1] -> R be differentiable on (0,1). If h'(u) <= 0 for every u in (0,1), then h(u) <= h(0) for every u with 0 <= u < 1.::{\"domain_restrictions\": [\"h is defined on the closed interval [0,1].\", \"differentiability of h is assumed only on the open interval (0,1).\", \"the condition h'(u) <= 0 is required for all u strictly between 0 and 1.\", \"the conclusion is required for all u in the half-open interval [0,1).\"], \"normalized_claim\": \"If h is differentiable on (0,1) and maps [0,1] to real numbers, and if for all u in (0,1) the derivative satisfies h'(u) is less than or equal to 0, then for all u in [0,1) the value h(u) is less than or equal to h(0).\", \"quantifier_order\": [\"There exists a function h mapping [0,1] to real numbers, differentiable on (0,1).\", \"For every real u with u in (0,1), assume h'(u) <= 0.\", \"For every real u with 0 <= u < 1, conclude h(u) <= h(0).\"], \"variables\": [{\"domain\": \"all real x in the interval [0,1]\", \"name\": \"h\", \"role\": \"subject function; differentiable on the open interval (0,1)\", \"type\": \"function from real numbers to real numbers\"}, {\"domain\": \"open interval (0,1) when used in the derivative hypothesis; domain [0,1) when used in the conclusion\", \"name\": \"u\", \"role\": \"point where the derivative inequality is evaluated; point where the function value comparison is asserted\", \"type\": \"real number\"}], \"witness_dependencies\": []}",
+  "status": "accepted",
+  "summary": "The lemma is false as stated. The hypothesis only assumes differentiability on the open interval (0,1), so it gives no control over the endpoint value h(0). A function can have h'(u) <= 0 on (0,1) and still satisfy h(u) > h(0) for some u in [0,1), so the claimed conclusion fails.",
+  "updated_at": "2026-03-28T00:22:07.793391Z"
+}

@@ -1,0 +1,91 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328230056_a9149101",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T22:59:58.304490Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.15,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T23:01:43.098734Z",
+  "last_dependency_check_id": "depchk_20260328230143_b5ae35a8",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof establishes exactly the lemma claim: from m >= 0 and n > 0 it gets t >= 0, and from m <= n - 1 it gets (m + 1) / n <= 1, hence t < 1. No gaps, drift, or dependency issues are present.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Assume n is an integer with n > 1, m is an integer with 0 <= m <= n - 1, and t is a real number such that m / n <= t < (m + 1) / n.\n\nSince m >= 0 and n > 0, dividing by n preserves the inequality and gives m / n >= 0. Because t >= m / n, it follows that t >= 0.\n\nAlso, from m <= n - 1 we get m + 1 <= n. Since n > 0, dividing by n yields (m + 1) / n <= 1. Because t < (m + 1) / n, we obtain t < 1.\n\nTherefore 0 <= t < 1, as claimed.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260328230142_f6ddbce9",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328225955_50174415",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "lem_20260328225601_f19c6e91",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260328223900_b5921d00",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/lemmas/lem_20260328225955_50174415.json",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provide the domain restriction needed to apply the canonical comparison lemma for f_n and g_n.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer with n > 1, let m be an integer with 0 <= m <= n - 1, and let t be a real number satisfying m / n <= t < (m + 1) / n. Then 0 <= t < 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "m is an integer and 0 <= m <= n - 1",
+      "t is a real number",
+      "m divided by n <= t",
+      "t is strictly less than (m + 1) divided by n"
+    ],
+    "normalized_claim": "Under the assumptions that n is an integer with n > 1, m is an integer with 0 <= m <= n - 1, and t is a real number with m/n <= t and t < (m+1)/n, it follows that t is nonnegative and t is strictly less than 1.",
+    "quantifier_order": [
+      "for given integers n and m and real t satisfying the stated inequalities"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter; defines denominators and bounds for m and t",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "index controlling the interval in which t lies",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "quantity constrained to a half-open interval determined by m and n",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "t is constrained by m and n through the inequalities m/n <= t < (m+1)/n; no other existential witnesses are introduced"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T23:01:43.098734Z"
+}

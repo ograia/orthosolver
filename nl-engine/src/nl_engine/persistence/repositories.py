@@ -9,6 +9,7 @@ from typing import Any
 from nl_engine.domain.models import (
     AssemblyPlanORM,
     CounterexampleORM,
+    DecompositionCandidateORM,
     DecompositionORM,
     EventORM,
     FailureReportORM,
@@ -271,6 +272,14 @@ class RequestRecordRepository:
         target_id: str | None,
         status: str,
         response_id: str | None = None,
+        provider_response_id: str | None = None,
+        provider_status: str | None = None,
+        provider_submitted_at: datetime | None = None,
+        last_provider_contact_at: datetime | None = None,
+        last_retrieve_error: str | None = None,
+        retrieve_attempt_count: int | None = None,
+        provider_submission_count: int | None = None,
+        recovered_from_connection_error_count: int | None = None,
         error_class: str | None = None,
         summary: str | None = None,
         llm_model: str | None = None,
@@ -291,6 +300,17 @@ class RequestRecordRepository:
                 row.target_id = target_id
                 row.status = status
                 row.response_id = response_id
+                row.provider_response_id = provider_response_id
+                row.provider_status = provider_status
+                row.provider_submitted_at = provider_submitted_at
+                row.last_provider_contact_at = last_provider_contact_at
+                row.last_retrieve_error = last_retrieve_error
+                if retrieve_attempt_count is not None:
+                    row.retrieve_attempt_count = retrieve_attempt_count
+                if provider_submission_count is not None:
+                    row.provider_submission_count = provider_submission_count
+                if recovered_from_connection_error_count is not None:
+                    row.recovered_from_connection_error_count = recovered_from_connection_error_count
                 row.error_class = error_class
                 row.summary = summary
                 if llm_model is not None:
@@ -314,6 +334,17 @@ class RequestRecordRepository:
                     target_id=target_id,
                     status=status,
                     response_id=response_id,
+                    provider_response_id=provider_response_id,
+                    provider_status=provider_status,
+                    provider_submitted_at=provider_submitted_at,
+                    last_provider_contact_at=last_provider_contact_at,
+                    last_retrieve_error=last_retrieve_error,
+                    retrieve_attempt_count=max(0, int(retrieve_attempt_count or 0)),
+                    provider_submission_count=max(0, int(provider_submission_count or 0)),
+                    recovered_from_connection_error_count=max(
+                        0,
+                        int(recovered_from_connection_error_count or 0),
+                    ),
                     error_class=error_class,
                     summary=summary,
                     llm_model=llm_model,
@@ -327,6 +358,21 @@ class RequestRecordRepository:
                 )
             self.store.atomic_write(self._path(problem_id, request_record_id), row.model_dump(mode="json"))
         return row
+
+    def find_by_response_id(self, response_id: str) -> RequestRecordORM | None:
+        wanted = str(response_id or "").strip()
+        if not wanted:
+            return None
+        candidates: list[RequestRecordORM] = []
+        for problem_id in self.store.list_problem_ids():
+            for data in self.store.glob_read(self._dir(problem_id)):
+                row = RequestRecordORM.model_validate(data)
+                if (str(row.provider_response_id or "").strip() == wanted) or (str(row.response_id or "").strip() == wanted):
+                    candidates.append(row)
+        if not candidates:
+            return None
+        candidates.sort(key=lambda row: row.updated_at, reverse=True)
+        return candidates[0]
 
     def list_by_problem(self, problem_id: str, *, source: str | None = None, limit: int = 1000) -> list[RequestRecordORM]:
         rows = [RequestRecordORM.model_validate(d) for d in self.store.glob_read(self._dir(problem_id))]
@@ -351,7 +397,7 @@ class RequestRecordRepository:
         with self.store.lock_for(problem_id):
             for data in self.store.glob_read(self._dir(problem_id)):
                 row = RequestRecordORM.model_validate(data)
-                if row.status not in {"queued", "started", "pending"}:
+                if row.status not in {"queued", "started", "pending", "provider_pending", "provider_running"}:
                     continue
                 if row.execution_id not in execution_ids and row.worker_job_id not in worker_job_ids:
                     continue
@@ -441,6 +487,42 @@ class DecompositionRepository:
 
     def list_active_candidates(self, problem_id: str) -> list[DecompositionORM]:
         return [d for d in self.list_by_problem(problem_id) if d.llm_vetting_status == "accepted" and d.lean_assembly_status in {"success", "skipped"}]
+
+
+class DecompositionCandidateRepository:
+    def __init__(self, store: FileStore):
+        self.store = store
+
+    def _dir(self, problem_id: str):
+        return self.store.problem_dir(problem_id) / "decomposition_candidates"
+
+    def _path(self, problem_id: str, candidate_id: str):
+        return self._dir(problem_id) / f"{candidate_id}.json"
+
+    def create(self, candidate: DecompositionCandidateORM) -> DecompositionCandidateORM:
+        _stamp_for_create(candidate)
+        with self.store.lock_for(candidate.problem_id):
+            self.store.atomic_write(self._path(candidate.problem_id, candidate.candidate_id), candidate.model_dump(mode="json"))
+        return candidate
+
+    def save(self, candidate: DecompositionCandidateORM) -> DecompositionCandidateORM:
+        _stamp_for_save(candidate)
+        return self.create(candidate)
+
+    def get(self, candidate_id: str) -> DecompositionCandidateORM | None:
+        for pid in self.store.list_problem_ids():
+            data = self.store.read_json(self._path(pid, candidate_id))
+            if data is not None:
+                return DecompositionCandidateORM.model_validate(data)
+        return None
+
+    def list_by_problem(self, problem_id: str) -> list[DecompositionCandidateORM]:
+        rows = [DecompositionCandidateORM.model_validate(d) for d in self.store.glob_read(self._dir(problem_id))]
+        rows.sort(key=lambda r: (r.created_at, r.candidate_id))
+        return rows
+
+    def list_by_node(self, problem_id: str, node_id: str) -> list[DecompositionCandidateORM]:
+        return [row for row in self.list_by_problem(problem_id) if row.node_id == node_id]
 
 
 class AssemblyPlanRepository:

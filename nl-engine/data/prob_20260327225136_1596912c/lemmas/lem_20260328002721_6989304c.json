@@ -1,0 +1,94 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328002851_244bb2a5",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T00:27:27.951781Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T00:54:28.399544Z",
+  "last_dependency_check_id": "depchk_20260328003010_5f930597",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let I_{n,j} denote the half-open interval [j/n,(j+1)/n). Define J_{n,j}:[0,1/n)\u2192I_{n,j} by J_{n,j}(d)=j/n+d.\n\nFirst, J_{n,j} is well-defined into I_{n,j}: if d\u2208[0,1/n), then 0\u2264d<1/n, so\nj/n \u2264 j/n+d < j/n+1/n = (j+1)/n.\nHence J_{n,j}(d)\u2208[j/n,(j+1)/n)=I_{n,j}.\n\nSecond, J_{n,j} is injective: if J_{n,j}(d_1)=J_{n,j}(d_2), then\nj/n+d_1 = j/n+d_2,\nso d_1=d_2.\n\nThird, J_{n,j} is surjective onto I_{n,j}: given any x\u2208I_{n,j}, set d=x-j/n. Since x\u2208[j/n,(j+1)/n), we have 0\u2264x-j/n<1/n, so d\u2208[0,1/n). Then\nJ_{n,j}(d)=j/n+(x-j/n)=x.\nThus every x in I_{n,j} has a preimage.\n\nTherefore J_{n,j} is a bijection from [0,1/n) onto I_{n,j}. Moreover, the inverse map is exactly x\u21a6x-j/n, because for d\u2208[0,1/n),\n(J_{n,j})^{-1}(J_{n,j}(d))=d,\nand for x\u2208I_{n,j},\nJ_{n,j}((J_{n,j})^{-1}(x))=x.\nSo the inverse function is x\u21a6x-j/n.",
+  "latest_vetted_proof_fingerprint": "1af7a892e571856b9caa172e93fcbe1f92eba032b425c8489f9942cc4c419bbe",
+  "latest_vetter_report_id": "rep_20260328003010_accf52ce",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328002721_6989304c",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "lem_20260327230124_caed970a",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260327225136_1596912c",
+  "proof_bundle_artifact_id": "problems/prob_20260327225136_1596912c/proof_bundles/lemmas/lem_20260328002721_6989304c.json",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Packages the left-endpoint normalization as an explicit affine correspondence.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. The affine map J_{n,j}(d) = j/n + d is a bijection from [0, 1/n) onto I_{n,j}; its inverse is x -> x - j/n.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is a positive integer, so 1/n is well-defined and positive",
+      "j is an integer constrained by 0 <= j <= n minus 1",
+      "the affine map is defined on the half-open interval [0, 1/n)",
+      "the codomain/target is the interval I_{n,j}",
+      "the inverse formula x maps from I_{n,j} back to [0, 1/n)"
+    ],
+    "normalized_claim": "For every positive integer n and every integer j with 0 <= j <= n minus 1, define J_{n,j} from [0, 1/n) to I_{n,j} by J_{n,j}(d) equals j/n plus d. Then J_{n,j} is a bijection onto I_{n,j}, and the inverse function is: given x in I_{n,j}, the corresponding preimage is d equals x minus j/n.",
+    "quantifier_order": [
+      "for a fixed positive integer n",
+      "for a fixed integer j satisfying 0 <= j <= n minus 1"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "parameter of the family of maps and intervals; determines scale 1/n",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "j",
+        "role": "parameter indexing the target interval I_{n,j}; determines translation by j/n",
+        "type": "integer"
+      },
+      {
+        "domain": "interval [0, 1/n)",
+        "name": "d",
+        "role": "input variable to the affine map J_{n,j}",
+        "type": "real number"
+      },
+      {
+        "domain": "target interval I_{n,j}",
+        "name": "x",
+        "role": "input variable to the inverse map",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "the map J_{n,j} depends on both n and j through the translation term j/n",
+      "the claimed inverse x minus j/n depends on j (and implicitly on n via the target interval I_{n,j})"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T00:54:28.399544Z"
+}

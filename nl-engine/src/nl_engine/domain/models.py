@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 def utcnow() -> datetime:
@@ -57,6 +57,7 @@ class TheoremORM(BaseModel):
     status: str = "open"
     active_decomposition_id: str | None = None
     final_decl_name: str | None = None
+    agent2_first_root_consumed: bool = False
     artifact_ids: list[str] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow)
@@ -102,6 +103,33 @@ class DecompositionORM(BaseModel):
     failure_reason: str | None = None
     invalidated_by_lemma_id: str | None = None
     invalidated_by_counterexample_id: str | None = None
+    previous_attempt_summaries: list[dict[str, Any]] = Field(default_factory=list)
+    decomposition_origin: str | None = None
+    decomposition_origin_reason: str | None = None
+    decomposition_origin_job_id: str | None = None
+    created_at: datetime = Field(default_factory=utcnow)
+    updated_at: datetime = Field(default_factory=utcnow)
+
+
+class DecompositionCandidateORM(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    candidate_id: str
+    problem_id: str
+    node_id: str
+    node_kind: str
+    logical_decomposition_id: str | None = None
+    candidate_index: int = 0
+    strategy_summary: str = ""
+    shared_context: list[dict[str, Any]] = Field(default_factory=list)
+    formalization_cost_estimate: float | None = None
+    llm_vetting_status: str = "pending"
+    selection_status: str = "pending_selection"
+    raw_candidate_artifact_id: str | None = None
+    materialization_artifact_id: str | None = None
+    promoted_decomposition_id: str | None = None
+    failure_origin: str | None = None
+    failure_reason: str | None = None
     previous_attempt_summaries: list[dict[str, Any]] = Field(default_factory=list)
     decomposition_origin: str | None = None
     decomposition_origin_reason: str | None = None
@@ -163,18 +191,36 @@ class LemmaORM(BaseModel):
     consecutive_fatal_rejections: int = 0
     minor_rejection_count: int = 0
     drift_retry_used: bool = False
-    decomposition_count: int = 0
     decomposition_round_count: int = 0
+    materialized_candidate_count: int = 0
+    promoted_decomposition_count: int = 0
     lean_attempt_count: int = 0
     lean_identical_fatal_count: int = 0
     consecutive_infrastructure_failures: int = 0
     solver_series_started_at: datetime | None = None
+    last_submitted_solver_job_id: str | None = None
+    last_submitted_solver_attempt_number: int | None = None
+    agent2_first_lemma_consumed: bool = False
+    agent4_first_consumed: bool = False
     next_action: str | None = None
     last_terminal_worker_result: str | None = None
     last_transition_reason: str | None = None
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow)
     last_activity_at: datetime = Field(default_factory=utcnow)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _backfill_decomposition_counters(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        payload = dict(value)
+        legacy_count = payload.get("decomposition_count")
+        if payload.get("materialized_candidate_count") is None and legacy_count is not None:
+            payload["materialized_candidate_count"] = legacy_count
+        if payload.get("promoted_decomposition_count") is None and legacy_count is not None:
+            payload["promoted_decomposition_count"] = legacy_count
+        return payload
 
 
 class VetterReportORM(BaseModel):
@@ -457,6 +503,14 @@ class RequestRecordORM(BaseModel):
     target_id: str | None = None
     status: str = "queued"
     response_id: str | None = None
+    provider_response_id: str | None = None
+    provider_status: str | None = None
+    provider_submitted_at: datetime | None = None
+    last_provider_contact_at: datetime | None = None
+    last_retrieve_error: str | None = None
+    retrieve_attempt_count: int = 0
+    provider_submission_count: int = 0
+    recovered_from_connection_error_count: int = 0
     error_class: str | None = None
     summary: str | None = None
     llm_model: str | None = None

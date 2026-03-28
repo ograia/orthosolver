@@ -27,9 +27,11 @@ def test_cached_input_tokens_from_raw_usage_extracts_nested_value() -> None:
 def test_estimate_cost_usd_uses_model_specific_pricing() -> None:
     base = estimate_cost_usd(1000, 1000, model="gpt-5.4")
     pro = estimate_cost_usd(1000, 1000, model="gpt-5.4-pro")
-    mini = estimate_cost_usd(1000, 1000, model="gpt-5-mini")
+    mini = estimate_cost_usd(1000, 1000, model="gpt-5.4-mini")
+    nano = estimate_cost_usd(1000, 1000, model="gpt-5.4-nano")
     assert pro > base
     assert base > mini
+    assert mini > nano
 
 
 def test_usage_and_rollup_repositories() -> None:

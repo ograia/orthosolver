@@ -37,8 +37,8 @@ const FIRST_ATTEMPT_AGENT_SPECS = [
   { key: "agent4-first", llmKey: "agent4_first", label: "agent4 first" },
 ];
 const REQUEST_CONSOLE_HIDDEN_SOURCES = new Set(["api_create", "api_start", "api_pause", "api_resume", "api_run"]);
-const MODEL_OPTIONS = ["gpt-5.4", "gpt-5.4-pro", "gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"];
-const MINI_MODELS = new Set(["gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"]);
+const MODEL_OPTIONS = ["gpt-5.4", "gpt-5.4-pro", "gpt-5.4-mini", "gpt-5.4-nano"];
+const MINI_MODELS = new Set(["gpt-5.4-mini", "gpt-5.4-nano"]);
 const EXCLUDED_CONFIG_PATHS = new Set([
   "llm",
   "mode.nl_only_mode",
@@ -57,6 +57,8 @@ const CONFIG_FIELD_HELP = {
     "How many vetted root decomposition candidates to keep (active + standby).",
   "decomposition.root_solutions_required_for_termination":
     "How many independent root tracks must finish before the problem is marked succeeded.",
+  "decomposition.lemma_decomposition_candidates_n":
+    "How many Agent2 lemma decomposition candidates to request per failed-lemma decomposition round.",
   "decomposition.max_decompositions_per_failed_lemma":
     "Maximum decomposition attempts allowed for a failed lemma before the whole run fails.",
   "decomposition.max_consecutive_fatal_rejections_per_node":
@@ -394,7 +396,7 @@ function installCopyButtons() {
 
 function normalizeModelSelection(model) {
   const raw = String(model || "").trim().toLowerCase();
-  return MODEL_OPTIONS.includes(raw) ? raw : "gpt-5-mini";
+  return MODEL_OPTIONS.includes(raw) ? raw : "gpt-5.4-nano";
 }
 
 function enforceMiniReasoningConstraint(agentKey) {
@@ -837,6 +839,7 @@ function initialPayloadFromTemplate() {
         parallel_root_decompositions_n: 2,
         parallel_root_take_k: 1,
         root_solutions_required_for_termination: 1,
+        lemma_decomposition_candidates_n: 1,
         max_decompositions_per_failed_lemma: 10,
         max_consecutive_fatal_rejections_per_node: 5,
       },
@@ -847,7 +850,7 @@ function initialPayloadFromTemplate() {
       },
       mode: { nl_only_mode: true },
       llm: {
-        agent1: { model: "gpt-5-mini", thinking_level: "medium", verbosity: "medium", timeout_seconds: 600 },
+        agent1: { model: "gpt-5.4-nano", thinking_level: "medium", verbosity: "medium", timeout_seconds: 600 },
         agent2: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
         agent3: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 600 },
         agent4: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
@@ -1251,7 +1254,7 @@ function renderOverview() {
   }
 
   const usageTotals = state.llmUsage?.totals || null;
-  const pricing = state.llmUsage?.pricing_usd_per_1m || null;
+  const pricingByModel = state.llmUsage?.pricing_by_model_usd_per_1m || null;
   if (usageTotals) {
     items.push(["llm_calls", fmtInt(usageTotals.call_count || 0)]);
     items.push(["input_tokens", fmtInt(usageTotals.input_tokens || 0)]);
@@ -1264,10 +1267,13 @@ function renderOverview() {
     items.push(["output_tokens", fmtInt(state.costSummary.total_output_tokens || 0)]);
     items.push(["estimated_cost_usd", fmtUsd(state.costSummary.total_estimated_cost_usd || 0)]);
   }
-  if (pricing) {
-    items.push(["price_input_per_1m", `$${Number(pricing.input || 0).toFixed(2)}`]);
-    items.push(["price_cached_input_per_1m", `$${Number(pricing.cached_input || 0).toFixed(2)}`]);
-    items.push(["price_output_per_1m", `$${Number(pricing.output || 0).toFixed(2)}`]);
+  if (pricingByModel) {
+    Object.entries(pricingByModel).forEach(([model, pricing]) => {
+      items.push([
+        `${model}_pricing_per_1m`,
+        `in ${fmtUsd(pricing.input || 0)}, cached ${fmtUsd(pricing.cached_input || 0)}, out ${fmtUsd(pricing.output || 0)}`,
+      ]);
+    });
   }
   items.forEach(([key, value]) => {
     const div = document.createElement("div");
@@ -1461,12 +1467,15 @@ function statusJsonForNode(nodeId) {
       solver_attempt_count: row.solver_attempt_count,
       consecutive_fatal_rejections: row.consecutive_fatal_rejections,
       minor_rejection_count: row.minor_rejection_count,
-      decomposition_count: row.decomposition_count,
       decomposition_round_count: row.decomposition_round_count,
+      materialized_candidate_count: row.materialized_candidate_count,
+      promoted_decomposition_count: row.promoted_decomposition_count,
       lean_attempt_count: row.lean_attempt_count,
       lean_identical_fatal_count: row.lean_identical_fatal_count,
       consecutive_infrastructure_failures: row.consecutive_infrastructure_failures,
       solver_series_started_at: row.solver_series_started_at,
+      last_submitted_solver_job_id: row.last_submitted_solver_job_id,
+      last_submitted_solver_attempt_number: row.last_submitted_solver_attempt_number,
       next_action: row.next_action,
       last_terminal_worker_result: row.last_terminal_worker_result,
       last_transition_reason: row.last_transition_reason,

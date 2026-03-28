@@ -6,7 +6,7 @@ from nl_engine.domain.contracts import Agent2AssemblyPlan, Agent2Candidate, Agen
 from nl_engine.domain.enums import ControllerStatus, ProofStatus, RoutingStatus
 from nl_engine.domain.models import DecompositionORM, LeanJobORM, LeanResultORM, LemmaORM, ProblemORM, TheoremORM, WorkerJobORM
 from nl_engine.persistence.db import FileStore
-from nl_engine.persistence.repositories import DecompositionRepository, LeanResultRepository, LemmaRepository, ProblemRepository, TheoremRepository, WorkerJobRepository
+from nl_engine.persistence.repositories import DecompositionCandidateRepository, DecompositionRepository, LeanResultRepository, LemmaRepository, ProblemRepository, TheoremRepository, WorkerJobRepository
 
 
 def _store(tmp_path) -> FileStore:
@@ -116,6 +116,70 @@ def test_materialized_accepted_decomposition_immediately_submits_prepare_track(t
     assert generated is True
     assert accepted == 1
     assert len(submitted) == 1
+
+
+def test_lemma_candidates_stay_lightweight_until_promotion(tmp_path) -> None:
+    store = _store(tmp_path)
+    problem, theorem = _problem_and_root(store)
+    parent = LemmaORM(
+        lemma_id="lem_parent",
+        problem_id=problem.problem_id,
+        parent_id=theorem.theorem_id,
+        parent_kind="theorem",
+        depth=1,
+        statement_nl="Parent lemma",
+        statement_semantic_sketch=theorem.statement_semantic_sketch,
+        proof_status=ProofStatus.PROOF_FLAWED.value,
+        routing_status=RoutingStatus.DECOMPOSE_FURTHER.value,
+    )
+    LemmaRepository(store).create(parent)
+
+    orch = Orchestrator(store, execution_id="exec_prepare_lemma")
+    orch.proof_graphs.validate_decomposition_context_purity = lambda *_args, **_kwargs: []
+    orch.proof_graphs.validate_decomposition_reduction = lambda *_args, **_kwargs: []
+
+    submitted: list[str] = []
+    orch._submit_prepare_track_if_v2 = lambda problem_arg, dec, cfg: submitted.append(dec.decomposition_id) or True
+
+    cfg = ProblemConfig.model_validate({"decomposition": {"lemma_decomposition_candidates_n": 2}})
+    payload = Agent2Input(
+        theorem_nl=parent.statement_nl,
+        root_semantic_sketch=parent.statement_semantic_sketch,
+        num_candidates=2,
+    )
+    generated, accepted = orch._materialize_decomposition_candidates(
+        problem=problem,
+        node_id=parent.lemma_id,
+        node_kind="lemma",
+        request_tag="req_prepare_lemma",
+        theorem_nl=parent.statement_nl,
+        theorem_semantic_sketch=parent.statement_semantic_sketch,
+        parent_depth=parent.depth,
+        payload=payload,
+        decompose_job_id="wrk_lemma_gen",
+        candidates=[_candidate().model_copy(deep=True), _candidate().model_copy(deep=True)],
+        max_candidates=2,
+        cfg=cfg,
+    )
+
+    assert generated is True
+    assert accepted == 2
+    assert submitted == []
+    assert DecompositionRepository(store).list_by_node(problem.problem_id, parent.lemma_id) == []
+
+    candidate_rows = DecompositionCandidateRepository(store).list_by_node(problem.problem_id, parent.lemma_id)
+    assert len(candidate_rows) == 2
+    assert all(row.llm_vetting_status == "accepted" for row in candidate_rows)
+    assert all(row.promoted_decomposition_id is None for row in candidate_rows)
+
+    assert orch._select_active_decomposition_for_node(problem, parent.lemma_id, "lemma", cfg) is True
+
+    promoted_rows = DecompositionCandidateRepository(store).list_by_node(problem.problem_id, parent.lemma_id)
+    promoted = [row for row in promoted_rows if row.promoted_decomposition_id]
+    assert len(promoted) == 1
+    assert len(submitted) == 1
+    dec_rows = DecompositionRepository(store).list_by_node(problem.problem_id, parent.lemma_id)
+    assert len(dec_rows) == 1
 
 
 def test_agent3_acceptance_is_not_overridden_by_controller_context_purity(tmp_path) -> None:

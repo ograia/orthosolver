@@ -94,6 +94,27 @@ class _FakeResponsesBackgroundTerminalFail:
         return None
 
 
+class _FakeResponsesBackgroundPollConnectionError:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def create(self, **kwargs):  # noqa: ANN003
+        self.calls += 1
+        response_id = f"resp_bg_poll_{self.calls}"
+
+        class _Resp:
+            id = response_id
+            status = "queued"
+
+        return _Resp()
+
+    def retrieve(self, response_id):  # noqa: ANN001
+        raise _APIConnectionError("temporary poll connection issue")
+
+    def cancel(self, response_id):  # noqa: ANN001
+        return None
+
+
 def _service_with_fake_client(tmp_path: Path, *, failing: bool) -> AgentService:
     get_settings.cache_clear()
     service = AgentService()
@@ -356,5 +377,90 @@ def test_request_record_persists_resolved_llm_config(monkeypatch, tmp_path: Path
     assert latest.llm_reasoning_effort == "xhigh"
     assert latest.llm_text_verbosity == "medium"
     assert latest.llm_timeout_seconds == 3600
+
+    get_settings.cache_clear()
+
+
+def test_background_poll_connection_error_preserves_response_id(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("ARTIFACT_STORE_DIR", str(tmp_path))
+    get_settings.cache_clear()
+    db = FileStore(str(tmp_path / "data"))
+    service = AgentService(db_session=db)
+    service.openai_package_available = True
+    service.settings.openai_api_key = "test-key"
+    service.client = type("_FakeClient", (), {"responses": _FakeResponsesBackgroundPollConnectionError()})()
+    service._BACKGROUND_POLL_INTERVAL = 0
+    service.set_runtime_context(
+        worker_job_id="wrk_bg_poll",
+        execution_id="exec_bg_poll",
+        worker_attempt_count=1,
+    )
+
+    with pytest.raises(AgentExecutionError) as exc_info:
+        service._run_json_agent(
+            agent_key="agent2",
+            model="gpt-5.4-pro",
+            reasoning_effort="xhigh",
+            text_verbosity="medium",
+            timeout_seconds=1,
+            payload={"theorem_nl": "For all n, n = n"},
+            artifact_prefix="problems/prob_poll/decomposer/attempt_1",
+        )
+    assert exc_info.value.error_class == "infrastructure_transient"
+
+    state = json.loads((tmp_path / "problems/prob_poll/decomposer/attempt_1/agent2_request_state_attempt_1.json").read_text())
+    assert state["status"] == "provider_pending"
+    assert state["response_id"] == "resp_bg_poll_1"
+    assert state["provider_status"] == "unreachable"
+    assert state["worker_attempt_count"] == 1
+
+    error_payload = json.loads((tmp_path / "problems/prob_poll/decomposer/attempt_1/agent2_request_error_attempt_1.json").read_text())
+    assert error_payload["response_id"] == "resp_bg_poll_1"
+
+    request_rows = RequestRecordRepository(db).list_by_problem("prob_poll", source="agent2", limit=20)
+    assert len(request_rows) == 1
+    assert request_rows[0].response_id == "resp_bg_poll_1"
+    assert request_rows[0].status == "provider_pending"
+
+    get_settings.cache_clear()
+
+
+def test_worker_retry_attempts_get_distinct_request_records_and_artifacts(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("ARTIFACT_STORE_DIR", str(tmp_path))
+    get_settings.cache_clear()
+    db = FileStore(str(tmp_path / "data"))
+    service = AgentService(db_session=db)
+    service.openai_package_available = True
+    service.settings.openai_api_key = "test-key"
+    service.client = type("_FakeClient", (), {"responses": _FakeResponsesBackgroundPollConnectionError()})()
+    service._BACKGROUND_POLL_INTERVAL = 0
+
+    for worker_attempt_count in (1, 2):
+        service.set_runtime_context(
+            worker_job_id="wrk_retry",
+            execution_id="exec_retry",
+            worker_attempt_count=worker_attempt_count,
+        )
+        with pytest.raises(AgentExecutionError):
+            service._run_json_agent(
+                agent_key="agent2",
+                model="gpt-5.4-pro",
+                reasoning_effort="xhigh",
+                text_verbosity="medium",
+                timeout_seconds=1,
+                payload={"theorem_nl": "For all n, n = n"},
+                artifact_prefix="problems/prob_retry/decomposer/attempt_1",
+            )
+
+    request_rows = RequestRecordRepository(db).list_by_problem("prob_retry", source="agent2", limit=20)
+    assert len(request_rows) == 2
+    assert [row.response_id for row in request_rows] == ["resp_bg_poll_1", "resp_bg_poll_1"]
+    assert all(row.response_artifact_key for row in request_rows)
+    assert request_rows[0].response_artifact_key != request_rows[1].response_artifact_key
+
+    scoped_state_1 = tmp_path / "problems/prob_retry/decomposer/attempt_1/agent2_request_state_attempt_1_worker_attempt_1_request_attempt_1.json"
+    scoped_state_2 = tmp_path / "problems/prob_retry/decomposer/attempt_1/agent2_request_state_attempt_1_worker_attempt_2_request_attempt_1.json"
+    assert scoped_state_1.exists()
+    assert scoped_state_2.exists()
 
     get_settings.cache_clear()

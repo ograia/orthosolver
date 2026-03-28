@@ -1,0 +1,89 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328225700_87549ba6",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T22:55:57.114155Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.06,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T22:57:24.809962Z",
+  "last_dependency_check_id": "depchk_20260328225724_4856110a",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof directly establishes the lemma: for arbitrary real x, defining t = x - floor(x) gives x = floor(x) + t, and the floor inequalities imply 0 <= t < 1. No unsupported steps or semantic drift are present.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let x be any real number, and define t = x - \\lfloor x \\rfloor. Then the identity x = \\lfloor x \\rfloor + t is immediate by rearranging the definition of t.\n\nIt remains to show that 0 \\le t < 1. By the defining property of the floor function, \\lfloor x \\rfloor is the greatest integer less than or equal to x, so in particular\n\\[\n\\lfloor x \\rfloor \\le x < \\lfloor x \\rfloor + 1.\n\\]\nSubtracting \\lfloor x \\rfloor from all three terms gives\n\\[\n0 \\le x - \\lfloor x \\rfloor < 1.\n\\]\nSince t = x - \\lfloor x \\rfloor, we conclude that 0 \\le t < 1.\n\nThus for every real x, if t = x - \\lfloor x \\rfloor, then x = \\lfloor x \\rfloor + t and 0 \\le t < 1.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260328225724_457c8019",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328225553_96a0f517",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260328223900_ac5193ce",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260328223900_b5921d00",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/lemmas/lem_20260328225553_96a0f517.json",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Supplies the unit-interval representative t of an arbitrary real x.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every real x, if t = x - floor(x), then x = floor(x) + t and 0 <= t < 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "x is a real number",
+      "t is defined as x minus floor(x)",
+      "floor(x) is an integer defined for every real x"
+    ],
+    "normalized_claim": "For all real x, letting t be equal to x minus floor(x), we have both (1) x equals floor(x) plus t and (2) t is real with 0 <= t and t < 1.",
+    "quantifier_order": [
+      "For all real x"
+    ],
+    "variables": [
+      {
+        "domain": "all real numbers",
+        "name": "x",
+        "role": "input variable",
+        "type": "real number"
+      },
+      {
+        "domain": "implicitly defined from x by t = x minus floor(x)",
+        "name": "t",
+        "role": "derived quantity (witness determined by x)",
+        "type": "real number"
+      },
+      {
+        "domain": "integer closest below x (greatest integer less than or equal to x)",
+        "name": "floor(x)",
+        "role": "auxiliary function value",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "t depends on x via the definition t = x minus floor(x)"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T22:57:24.809962Z"
+}

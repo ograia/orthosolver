@@ -81,9 +81,10 @@ class BackgroundResponseFailed(RuntimeError):
 
 
 class AgentService:
-    _SUPPORTED_MODELS = {"gpt-5.4", "gpt-5.4-pro", "gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"}
+    _SUPPORTED_MODELS = {"gpt-5.4", "gpt-5.4-pro", "gpt-5.4-mini", "gpt-5.4-nano"}
     _BACKGROUND_ELIGIBLE_MODELS = {"gpt-5.4", "gpt-5.4-pro"}
     _BACKGROUND_POLL_INTERVAL = 3  # seconds between polls
+    _BACKGROUND_POLL_INTERVALS = (15, 30, 60)
     _REQUEST_MAX_ATTEMPTS = 2
     _VALID_JSON_ESCAPE_CHARS = {'"', "\\", "/", "b", "f", "n", "r", "t", "u"}
     _RETRYABLE_REQUEST_EXCEPTION_NAMES = {
@@ -125,6 +126,7 @@ class AgentService:
         self.usage_buffer_lock = usage_buffer_lock
         self.runtime_worker_job_id: str | None = None
         self.runtime_execution_id: str | None = None
+        self.runtime_worker_attempt_count: int | None = None
 
         repo_root = Path(__file__).resolve().parents[3]
         self.prompt_files = {
@@ -199,14 +201,55 @@ class AgentService:
     def set_llm_overrides(self, llm_overrides: LlmConfig | dict[str, Any] | None) -> None:
         self.llm_overrides = self._coerce_llm_overrides(llm_overrides)
 
-    def set_runtime_context(self, *, worker_job_id: str | None = None, execution_id: str | None = None) -> None:
+    def set_runtime_context(
+        self,
+        *,
+        worker_job_id: str | None = None,
+        execution_id: str | None = None,
+        worker_attempt_count: int | None = None,
+    ) -> None:
         self.runtime_worker_job_id = worker_job_id
         self.runtime_execution_id = execution_id
+        self.runtime_worker_attempt_count = (
+            max(1, int(worker_attempt_count))
+            if worker_attempt_count is not None
+            else None
+        )
 
     @staticmethod
     def _request_record_id(*, artifact_prefix: str, agent_key: str, attempt_no: int) -> str:
         safe_prefix = artifact_prefix.replace("/", "_")
         return f"reqrec_{agent_key}_{safe_prefix}_{attempt_no}"
+
+    def _request_record_id_for_runtime(self, *, artifact_prefix: str, agent_key: str, attempt_no: int) -> str:
+        record_id = self._request_record_id(
+            artifact_prefix=artifact_prefix,
+            agent_key=agent_key,
+            attempt_no=attempt_no,
+        )
+        worker_attempt_count = self.runtime_worker_attempt_count
+        if worker_attempt_count is not None and worker_attempt_count > 0:
+            return f"{record_id}_w{worker_attempt_count}"
+        return record_id
+
+    def _attempt_scoped_artifact_key(
+        self,
+        *,
+        artifact_prefix: str,
+        filename: str,
+        attempt_no: int,
+    ) -> str | None:
+        worker_attempt_count = self.runtime_worker_attempt_count
+        if worker_attempt_count is None or worker_attempt_count <= 0:
+            return None
+        stem, dot, suffix = filename.partition(".")
+        if not dot:
+            scoped_filename = f"{filename}_worker_attempt_{worker_attempt_count}_request_attempt_{attempt_no}"
+        else:
+            scoped_filename = (
+                f"{stem}_worker_attempt_{worker_attempt_count}_request_attempt_{attempt_no}.{suffix}"
+            )
+        return f"{artifact_prefix}/{scoped_filename}"
 
     @staticmethod
     def _request_summary(agent_key: str, payload: dict[str, Any]) -> str | None:
@@ -236,6 +279,14 @@ class AgentService:
         request_artifact_key: str | None,
         response_artifact_key: str | None = None,
         response_id: str | None = None,
+        provider_response_id: str | None = None,
+        provider_status: str | None = None,
+        provider_submitted_at: datetime | None = None,
+        last_provider_contact_at: datetime | None = None,
+        last_retrieve_error: str | None = None,
+        retrieve_attempt_count: int | None = None,
+        provider_submission_count: int | None = None,
+        recovered_from_connection_error_count: int | None = None,
         error_class: str | None = None,
         llm_model: str | None = None,
         llm_reasoning_effort: str | None = None,
@@ -254,6 +305,14 @@ class AgentService:
                 target_id=target_id,
                 status=status,
                 response_id=response_id,
+                provider_response_id=provider_response_id,
+                provider_status=provider_status,
+                provider_submitted_at=provider_submitted_at,
+                last_provider_contact_at=last_provider_contact_at,
+                last_retrieve_error=last_retrieve_error,
+                retrieve_attempt_count=retrieve_attempt_count,
+                provider_submission_count=provider_submission_count,
+                recovered_from_connection_error_count=recovered_from_connection_error_count,
                 error_class=error_class,
                 summary=summary,
                 llm_model=llm_model,
@@ -279,6 +338,14 @@ class AgentService:
                 target_id=target_id,
                 status=status,
                 response_id=response_id,
+                provider_response_id=provider_response_id,
+                provider_status=provider_status,
+                provider_submitted_at=provider_submitted_at,
+                last_provider_contact_at=last_provider_contact_at,
+                last_retrieve_error=last_retrieve_error,
+                retrieve_attempt_count=retrieve_attempt_count,
+                provider_submission_count=provider_submission_count,
+                recovered_from_connection_error_count=recovered_from_connection_error_count,
                 error_class=error_class,
                 summary=summary,
                 llm_model=llm_model,
@@ -304,7 +371,7 @@ class AgentService:
 
     @staticmethod
     def _normalize_effort_for_model(model: str, effort: ReasoningEffort) -> ReasoningEffort:
-        if model in ("gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano") and effort == "xhigh":
+        if model in ("gpt-5.4-mini", "gpt-5.4-nano") and effort == "xhigh":
             return "high"
         return effort
 
@@ -322,7 +389,7 @@ class AgentService:
             profile = getattr(self.llm_overrides, override_key, None)
         if profile is None:
             profile = getattr(self.llm_overrides, agent_key, None)
-        model = self._normalize_model_name(default_model) or "gpt-5-mini"
+        model = self._normalize_model_name(default_model) or "gpt-5.4-nano"
         effort = self.settings.openai_reasoning_effort
         verbosity: TextVerbosity = self.settings.openai_text_verbosity
         timeout_seconds = int(max(0, self.settings.openai_timeout_seconds))
@@ -422,6 +489,67 @@ class AgentService:
         terminal_status = match.group(2).strip().lower() or None
         return response_id, terminal_status
 
+    def _background_poll_delay_seconds(self, retrieve_attempt_count: int) -> float:
+        if self._BACKGROUND_POLL_INTERVAL <= 0:
+            return 0.0
+        if self._BACKGROUND_POLL_INTERVAL != 3:
+            return float(self._BACKGROUND_POLL_INTERVAL)
+        if retrieve_attempt_count >= 6:
+            return float(self._BACKGROUND_POLL_INTERVALS[2])
+        if retrieve_attempt_count >= 2:
+            return float(self._BACKGROUND_POLL_INTERVALS[1])
+        return float(self._BACKGROUND_POLL_INTERVALS[0])
+
+    def _latest_request_state(self, *, artifact_prefix: str, agent_key: str, max_attempts: int) -> dict[str, Any] | None:
+        for attempt_no in range(max(1, max_attempts), 0, -1):
+            key = f"{artifact_prefix}/{agent_key}_request_state_attempt_{attempt_no}.json"
+            if not self.store.exists(key):
+                continue
+            try:
+                payload = self.store.load_json(key)
+            except Exception:
+                continue
+            if isinstance(payload, dict):
+                return dict(payload)
+        return None
+
+    def _recover_background_response_context(
+        self,
+        *,
+        artifact_prefix: str,
+        agent_key: str,
+        max_attempts: int,
+    ) -> dict[str, Any] | None:
+        state = self._latest_request_state(
+            artifact_prefix=artifact_prefix,
+            agent_key=agent_key,
+            max_attempts=max_attempts,
+        )
+        if not isinstance(state, dict):
+            return None
+        response_id = str(state.get("response_id") or "").strip()
+        if not response_id:
+            return None
+        status = str(state.get("status") or "").strip().lower()
+        provider_status = str(state.get("provider_status") or "").strip().lower() or None
+        last_retrieve_error = str(state.get("last_retrieve_error") or "").strip() or None
+        if status not in {"provider_pending", "provider_running"} and not last_retrieve_error:
+            return None
+        return {
+            "response_id": response_id,
+            "status": status or "provider_pending",
+            "provider_status": provider_status or "queued",
+            "provider_submitted_at": state.get("provider_submitted_at"),
+            "last_provider_contact_at": state.get("last_provider_contact_at"),
+            "last_retrieve_error": last_retrieve_error,
+            "retrieve_attempt_count": max(0, int(state.get("retrieve_attempt_count") or 0)),
+            "provider_submission_count": max(1, int(state.get("provider_submission_count") or 1)),
+            "recovered_from_connection_error_count": max(
+                0,
+                int(state.get("recovered_from_connection_error_count") or 0),
+            ),
+        }
+
     def _poll_background_response(
         self,
         response_id: str,
@@ -429,11 +557,14 @@ class AgentService:
         timeout_seconds: int,
         agent_key: str,
         problem_id: str | None = None,
+        retrieve_attempt_count: int = 0,
+        on_status_update: Any | None = None,
+        recovered_from_connection_error_count: int = 0,
     ) -> Any:
         """Poll a background response until it reaches a terminal state."""
         deadline = None if timeout_seconds <= 0 else time.monotonic() + timeout_seconds
         while True:
-            time.sleep(self._BACKGROUND_POLL_INTERVAL)
+            time.sleep(self._background_poll_delay_seconds(retrieve_attempt_count))
             # Check if the problem has been stopped while we're polling
             if problem_id and is_problem_stop_requested(problem_id):
                 try:
@@ -444,15 +575,41 @@ class AgentService:
                     f"Background response {response_id} for {agent_key} "
                     f"cancelled: problem {problem_id} stop requested"
                 )
-            response = self.client.responses.retrieve(response_id)
+            retrieve_attempt_count += 1
+            try:
+                response = self.client.responses.retrieve(response_id)
+            except Exception as exc:
+                if not self._is_retryable_request_exception(exc):
+                    raise
+                if on_status_update is not None:
+                    recovered_from_connection_error_count += 1
+                    on_status_update(
+                        status="provider_pending",
+                        provider_status="unreachable",
+                        last_provider_contact_at=datetime.now(UTC),
+                        last_retrieve_error=f"{type(exc).__name__}: {exc}",
+                        retrieve_attempt_count=retrieve_attempt_count,
+                        recovered_from_connection_error_count=recovered_from_connection_error_count,
+                    )
+                if deadline is not None and time.monotonic() >= deadline:
+                    raise TimeoutError(
+                        f"Background response {response_id} for {agent_key} "
+                        f"remains provider_pending after {timeout_seconds}s"
+                    ) from exc
+                continue
             status = getattr(response, "status", None)
+            if on_status_update is not None:
+                on_status_update(
+                    status="provider_running" if status in ("queued", "in_progress") else "completed",
+                    provider_status=str(status or "").strip().lower() or None,
+                    last_provider_contact_at=datetime.now(UTC),
+                    last_retrieve_error=None,
+                    retrieve_attempt_count=retrieve_attempt_count,
+                    recovered_from_connection_error_count=recovered_from_connection_error_count,
+                )
             if status not in ("queued", "in_progress"):
                 return response
             if deadline is not None and time.monotonic() >= deadline:
-                try:
-                    self.client.responses.cancel(response_id)
-                except Exception:
-                    pass
                 raise TimeoutError(
                     f"Background response {response_id} for {agent_key} "
                     f"did not complete within {timeout_seconds}s"
@@ -554,6 +711,13 @@ class AgentService:
             error_class: str | None = None,
             message: str | None = None,
             response_id: str | None = None,
+            provider_status: str | None = None,
+            provider_submitted_at: str | None = None,
+            last_provider_contact_at: str | None = None,
+            last_retrieve_error: str | None = None,
+            retrieve_attempt_count: int | None = None,
+            provider_submission_count: int | None = None,
+            recovered_from_connection_error_count: int | None = None,
         ) -> None:
             row: dict[str, Any] = {
                 "agent_key": agent_key,
@@ -567,15 +731,41 @@ class AgentService:
             }
             if self.runtime_worker_job_id:
                 row["worker_job_id"] = self.runtime_worker_job_id
+            if self.runtime_worker_attempt_count is not None:
+                row["worker_attempt_count"] = self.runtime_worker_attempt_count
             if error_class:
                 row["error_class"] = error_class
             if message:
                 row["message"] = message
             if response_id:
                 row["response_id"] = response_id
+            if provider_status:
+                row["provider_status"] = provider_status
+            if provider_submitted_at:
+                row["provider_submitted_at"] = provider_submitted_at
+            if last_provider_contact_at:
+                row["last_provider_contact_at"] = last_provider_contact_at
+            if last_retrieve_error:
+                row["last_retrieve_error"] = last_retrieve_error
+            if retrieve_attempt_count is not None:
+                row["retrieve_attempt_count"] = max(0, int(retrieve_attempt_count))
+            if provider_submission_count is not None:
+                row["provider_submission_count"] = max(0, int(provider_submission_count))
+            if recovered_from_connection_error_count is not None:
+                row["recovered_from_connection_error_count"] = max(
+                    0,
+                    int(recovered_from_connection_error_count),
+                )
             self.store.save_json(f"{artifact_prefix}/{agent_key}_request_state_attempt_{attempt_no}.json", row)
+            scoped_state_key = self._attempt_scoped_artifact_key(
+                artifact_prefix=artifact_prefix,
+                filename=f"{agent_key}_request_state_attempt_{attempt_no}.json",
+                attempt_no=attempt_no,
+            )
+            if scoped_state_key is not None:
+                self.store.save_json(scoped_state_key, row)
             self._update_request_record(
-                request_record_id=self._request_record_id(
+                request_record_id=self._request_record_id_for_runtime(
                     artifact_prefix=artifact_prefix,
                     agent_key=agent_key,
                     attempt_no=attempt_no,
@@ -587,6 +777,22 @@ class AgentService:
                 summary=summary,
                 request_artifact_key=input_key,
                 response_id=response_id,
+                provider_response_id=response_id,
+                provider_status=provider_status,
+                provider_submitted_at=(
+                    datetime.fromisoformat(provider_submitted_at)
+                    if provider_submitted_at
+                    else None
+                ),
+                last_provider_contact_at=(
+                    datetime.fromisoformat(last_provider_contact_at)
+                    if last_provider_contact_at
+                    else None
+                ),
+                last_retrieve_error=last_retrieve_error,
+                retrieve_attempt_count=retrieve_attempt_count,
+                provider_submission_count=provider_submission_count,
+                recovered_from_connection_error_count=recovered_from_connection_error_count,
                 error_class=error_class,
                 llm_model=model,
                 llm_reasoning_effort=reasoning_effort,
@@ -612,9 +818,36 @@ class AgentService:
             _log_agent_error(_int_err)
             raise _int_err
 
+        recoverable_background = (
+            model in self._BACKGROUND_ELIGIBLE_MODELS
+            and self._recover_background_response_context(
+                artifact_prefix=artifact_prefix,
+                agent_key=agent_key,
+                max_attempts=max_attempts,
+            )
+        )
+
         for attempt_no in range(1, max_attempts + 1):
             _raise_if_problem_interrupted(attempt_no)
-            _save_request_state(attempt_no, status="started")
+            if recoverable_background and attempt_no == 1:
+                recovered_response_id = str(recoverable_background.get("response_id") or "").strip() or None
+                _save_request_state(
+                    attempt_no,
+                    status=str(recoverable_background.get("status") or "provider_pending"),
+                    response_id=recovered_response_id,
+                    provider_status=str(recoverable_background.get("provider_status") or "queued"),
+                    provider_submitted_at=str(recoverable_background.get("provider_submitted_at") or ""),
+                    last_provider_contact_at=str(recoverable_background.get("last_provider_contact_at") or ""),
+                    last_retrieve_error=str(recoverable_background.get("last_retrieve_error") or ""),
+                    retrieve_attempt_count=int(recoverable_background.get("retrieve_attempt_count") or 0),
+                    provider_submission_count=int(recoverable_background.get("provider_submission_count") or 1),
+                    recovered_from_connection_error_count=int(
+                        recoverable_background.get("recovered_from_connection_error_count") or 0
+                    ),
+                )
+            else:
+                _save_request_state(attempt_no, status="started")
+            background_response_id: str | None = None
             try:
                 _req_kwargs = self._responses_create_kwargs(
                     model=model,
@@ -625,18 +858,130 @@ class AgentService:
                     user_payload=user_payload,
                     temperature=temperature,
                 )
+
+                def _persist_provider_runtime(
+                    *,
+                    status: str,
+                    provider_status: str | None,
+                    response_id: str | None,
+                    provider_submitted_at: str | None,
+                    last_provider_contact_at: datetime | None,
+                    last_retrieve_error: str | None,
+                    retrieve_attempt_count: int,
+                    provider_submission_count: int,
+                    recovered_from_connection_error_count: int,
+                ) -> None:
+                    _save_request_state(
+                        attempt_no,
+                        status=status,
+                        response_id=response_id,
+                        provider_status=provider_status,
+                        provider_submitted_at=provider_submitted_at,
+                        last_provider_contact_at=(
+                            last_provider_contact_at.isoformat()
+                            if last_provider_contact_at is not None
+                            else None
+                        ),
+                        last_retrieve_error=last_retrieve_error,
+                        retrieve_attempt_count=retrieve_attempt_count,
+                        provider_submission_count=provider_submission_count,
+                        recovered_from_connection_error_count=recovered_from_connection_error_count,
+                    )
+
                 if _req_kwargs.get("background"):
-                    # Background mode: submit asynchronously, then poll
-                    # until OpenAI finishes. Resilient to connection drops.
-                    response = self.client.responses.create(**_req_kwargs)
-                    bg_status = getattr(response, "status", None)
-                    if bg_status in ("queued", "in_progress"):
+                    provider_submitted_at = datetime.now(UTC).isoformat()
+                    retrieve_count = 0
+                    provider_submission_count = 0
+                    recovered_connection_errors = 0
+                    if recoverable_background and attempt_no == 1:
+                        background_response_id = str(recoverable_background.get("response_id") or "").strip() or None
+                        provider_submitted_at = str(
+                            recoverable_background.get("provider_submitted_at") or provider_submitted_at
+                        )
+                        retrieve_count = int(recoverable_background.get("retrieve_attempt_count") or 0)
+                        provider_submission_count = int(
+                            recoverable_background.get("provider_submission_count") or 1
+                        )
+                        recovered_connection_errors = int(
+                            recoverable_background.get("recovered_from_connection_error_count") or 0
+                        )
+                        initial_provider_status = str(
+                            recoverable_background.get("provider_status") or "queued"
+                        ).strip().lower() or "queued"
+                        _persist_provider_runtime(
+                            status="provider_pending",
+                            provider_status=initial_provider_status,
+                            response_id=background_response_id,
+                            provider_submitted_at=provider_submitted_at,
+                            last_provider_contact_at=None,
+                            last_retrieve_error=str(recoverable_background.get("last_retrieve_error") or "") or None,
+                            retrieve_attempt_count=retrieve_count,
+                            provider_submission_count=provider_submission_count,
+                            recovered_from_connection_error_count=recovered_connection_errors,
+                        )
                         response = self._poll_background_response(
-                            response.id,
+                            background_response_id or "",
                             timeout_seconds=timeout_seconds,
                             agent_key=agent_key,
                             problem_id=problem_id_for_log,
+                            retrieve_attempt_count=retrieve_count,
+                            recovered_from_connection_error_count=recovered_connection_errors,
+                            on_status_update=lambda **kwargs: _persist_provider_runtime(
+                                status=str(kwargs.get("status") or "provider_pending"),
+                                provider_status=cast(str | None, kwargs.get("provider_status")),
+                                response_id=background_response_id,
+                                provider_submitted_at=provider_submitted_at,
+                                last_provider_contact_at=cast(datetime | None, kwargs.get("last_provider_contact_at")),
+                                last_retrieve_error=cast(str | None, kwargs.get("last_retrieve_error")),
+                                retrieve_attempt_count=int(kwargs.get("retrieve_attempt_count") or retrieve_count),
+                                provider_submission_count=provider_submission_count,
+                                recovered_from_connection_error_count=int(
+                                    kwargs.get("recovered_from_connection_error_count")
+                                    or recovered_connection_errors
+                                ),
+                            ),
                         )
+                    else:
+                        # Background mode: submit asynchronously, then poll
+                        # until OpenAI finishes. Resilient to connection drops.
+                        response = self.client.responses.create(**_req_kwargs)
+                        background_response_id = str(getattr(response, "id", "") or "").strip() or None
+                        provider_submission_count = 1
+                        bg_status = str(getattr(response, "status", "") or "").strip().lower() or None
+                        if background_response_id is not None:
+                            _persist_provider_runtime(
+                                status="provider_running" if bg_status in ("queued", "in_progress") else "started",
+                                provider_status=bg_status,
+                                response_id=background_response_id,
+                                provider_submitted_at=provider_submitted_at,
+                                last_provider_contact_at=datetime.now(UTC),
+                                last_retrieve_error=None,
+                                retrieve_attempt_count=0,
+                                provider_submission_count=provider_submission_count,
+                                recovered_from_connection_error_count=0,
+                            )
+                        if bg_status in ("queued", "in_progress"):
+                            response = self._poll_background_response(
+                                background_response_id or response.id,
+                                timeout_seconds=timeout_seconds,
+                                agent_key=agent_key,
+                                problem_id=problem_id_for_log,
+                                retrieve_attempt_count=0,
+                                recovered_from_connection_error_count=0,
+                                on_status_update=lambda **kwargs: _persist_provider_runtime(
+                                    status=str(kwargs.get("status") or "provider_pending"),
+                                    provider_status=cast(str | None, kwargs.get("provider_status")),
+                                    response_id=background_response_id,
+                                    provider_submitted_at=provider_submitted_at,
+                                    last_provider_contact_at=cast(datetime | None, kwargs.get("last_provider_contact_at")),
+                                    last_retrieve_error=cast(str | None, kwargs.get("last_retrieve_error")),
+                                    retrieve_attempt_count=int(kwargs.get("retrieve_attempt_count") or 0),
+                                    provider_submission_count=provider_submission_count,
+                                    recovered_from_connection_error_count=int(
+                                        kwargs.get("recovered_from_connection_error_count") or 0
+                                    ),
+                                ),
+                            )
                     final_status = getattr(response, "status", None)
                     if final_status and final_status != "completed":
                         raise BackgroundResponseFailed(
@@ -656,9 +1001,15 @@ class AgentService:
             except Exception as exc:
                 raw_message = str(exc)
                 response_id_hint, provider_terminal_status = self._extract_background_terminal_context(raw_message)
+                response_id_hint = response_id_hint or background_response_id
                 retryable = self._is_retryable_request_exception(exc)
                 if provider_terminal_status and provider_terminal_status != "completed":
                     retryable = True
+                provider_pending = (
+                    retryable
+                    and bool(response_id_hint)
+                    and provider_terminal_status in {None, "", "queued", "in_progress", "unreachable"}
+                )
 
                 interrupted_during_poll = (
                     "cancelled: problem" in raw_message.lower()
@@ -669,30 +1020,40 @@ class AgentService:
                 else:
                     error_class = "infrastructure_transient" if retryable else "infrastructure"
 
+                error_payload = {
+                    "error_class": error_class,
+                    "retryable": retryable,
+                    "will_retry": False,
+                    "attempt": attempt_no,
+                    "max_attempts": max_attempts,
+                    "exception_type": type(exc).__name__,
+                    "message": raw_message,
+                    "response_id": response_id_hint,
+                    "provider_terminal_status": provider_terminal_status,
+                    "provider_error_excerpt": raw_message[:500],
+                }
                 error_artifact = self.store.save_json(
                     f"{artifact_prefix}/{agent_key}_request_error_attempt_{attempt_no}.json",
-                    {
-                        "error_class": error_class,
-                        "retryable": retryable,
-                        "will_retry": False,
-                        "attempt": attempt_no,
-                        "max_attempts": max_attempts,
-                        "exception_type": type(exc).__name__,
-                        "message": raw_message,
-                        "response_id": response_id_hint,
-                        "provider_terminal_status": provider_terminal_status,
-                        "provider_error_excerpt": raw_message[:500],
-                    },
+                    error_payload,
                 )
+                scoped_error_key = self._attempt_scoped_artifact_key(
+                    artifact_prefix=artifact_prefix,
+                    filename=f"{agent_key}_request_error_attempt_{attempt_no}.json",
+                    attempt_no=attempt_no,
+                )
+                if scoped_error_key is not None:
+                    error_artifact = self.store.save_json(scoped_error_key, error_payload)
                 _save_request_state(
                     attempt_no,
-                    status="failed",
+                    status="provider_pending" if provider_pending else "failed",
                     error_class=error_class,
                     message=f"{type(exc).__name__}: {exc}",
                     response_id=response_id_hint,
+                    provider_status=provider_terminal_status or ("unreachable" if provider_pending else None),
+                    last_retrieve_error=f"{type(exc).__name__}: {exc}" if provider_pending else None,
                 )
                 self._update_request_record(
-                    request_record_id=self._request_record_id(
+                    request_record_id=self._request_record_id_for_runtime(
                         artifact_prefix=artifact_prefix,
                         agent_key=agent_key,
                         attempt_no=attempt_no,
@@ -700,11 +1061,14 @@ class AgentService:
                     problem_id=problem_id,
                     target_id=target_id,
                     source=agent_key,
-                    status="failed",
+                    status="provider_pending" if provider_pending else "failed",
                     summary=summary,
                     request_artifact_key=input_key,
                     response_artifact_key=error_artifact,
                     response_id=response_id_hint,
+                    provider_response_id=response_id_hint,
+                    provider_status=provider_terminal_status or ("unreachable" if provider_pending else None),
+                    last_retrieve_error=f"{type(exc).__name__}: {exc}" if provider_pending else None,
                     error_class=error_class,
                     llm_model=model,
                     llm_reasoning_effort=reasoning_effort,
@@ -739,17 +1103,32 @@ class AgentService:
                 raw_text = response.output_text
                 raw_output_key = f"{artifact_prefix}/{agent_key}_raw_output_attempt_{attempt_no}.txt"
                 self.store.save_text(raw_output_key, raw_text)
+                scoped_raw_output_key = self._attempt_scoped_artifact_key(
+                    artifact_prefix=artifact_prefix,
+                    filename=f"{agent_key}_raw_output_attempt_{attempt_no}.txt",
+                    attempt_no=attempt_no,
+                )
+                if scoped_raw_output_key is not None:
+                    self.store.save_text(scoped_raw_output_key, raw_text)
                 try:
                     parsed = self._parse_json_with_invalid_backslash_repair(raw_text)
                     parsed_output_key = f"{artifact_prefix}/{agent_key}_parsed_output_attempt_{attempt_no}.json"
                     self.store.save_json(parsed_output_key, parsed)
+                    scoped_parsed_output_key = self._attempt_scoped_artifact_key(
+                        artifact_prefix=artifact_prefix,
+                        filename=f"{agent_key}_parsed_output_attempt_{attempt_no}.json",
+                        attempt_no=attempt_no,
+                    )
+                    if scoped_parsed_output_key is not None:
+                        self.store.save_json(scoped_parsed_output_key, parsed)
                     _save_request_state(
                         attempt_no,
                         status="completed",
                         response_id=str(getattr(response, "id", "") or ""),
+                        provider_status=str(getattr(response, "status", "") or "completed"),
                     )
                     self._update_request_record(
-                        request_record_id=self._request_record_id(
+                        request_record_id=self._request_record_id_for_runtime(
                             artifact_prefix=artifact_prefix,
                             agent_key=agent_key,
                             attempt_no=attempt_no,
@@ -762,6 +1141,9 @@ class AgentService:
                         request_artifact_key=input_key,
                         response_artifact_key=parsed_output_key,
                         response_id=str(getattr(response, "id", "") or ""),
+                        provider_response_id=str(getattr(response, "id", "") or ""),
+                        provider_status=str(getattr(response, "status", "") or "completed"),
+                        last_provider_contact_at=datetime.now(UTC),
                         llm_model=model,
                         llm_reasoning_effort=reasoning_effort,
                         llm_text_verbosity=text_verbosity,
@@ -787,6 +1169,16 @@ class AgentService:
                             f"{artifact_prefix}/{agent_key}_parse_error.json",
                             {"error_class": "invalid_agent_output", "raw_output": raw_text},
                         )
+                        scoped_parse_error_key = self._attempt_scoped_artifact_key(
+                            artifact_prefix=artifact_prefix,
+                            filename=f"{agent_key}_parse_error.json",
+                            attempt_no=attempt_no,
+                        )
+                        if scoped_parse_error_key is not None:
+                            parse_error_artifact = self.store.save_json(
+                                scoped_parse_error_key,
+                                {"error_class": "invalid_agent_output", "raw_output": raw_text},
+                            )
                         _save_request_state(
                             attempt_no,
                             status="failed",
@@ -794,7 +1186,7 @@ class AgentService:
                             message=f"Agent output was not valid JSON after {max_attempts} attempts",
                         )
                         self._update_request_record(
-                            request_record_id=self._request_record_id(
+                            request_record_id=self._request_record_id_for_runtime(
                                 artifact_prefix=artifact_prefix,
                                 agent_key=agent_key,
                                 attempt_no=attempt_no,
@@ -952,6 +1344,31 @@ class AgentService:
             normalized.append({"label": label, "content": content, "kind": kind})
         return normalized
 
+    @staticmethod
+    def _normalize_assembly_plan_steps(raw_steps: Any) -> list[dict[str, Any]]:
+        if not isinstance(raw_steps, list):
+            return []
+
+        normalized: list[dict[str, Any]] = []
+        for idx, item in enumerate(raw_steps):
+            if isinstance(item, dict):
+                normalized.append(dict(item))
+                continue
+            line = str(item).strip()
+            if not line:
+                continue
+            normalized.append(
+                {
+                    "step_id": f"S{idx + 1}",
+                    "uses_lemmas": [],
+                    "uses_prior_steps": [],
+                    "derives": line,
+                    "is_trivial": True,
+                    "trivial_justification": "normalized from textual assembly step",
+                }
+            )
+        return normalized
+
     def _raise_validation_error(
         self,
         *,
@@ -995,7 +1412,7 @@ class AgentService:
                 },
             )
             self._update_request_record(
-                request_record_id=self._request_record_id(
+                request_record_id=self._request_record_id_for_runtime(
                     artifact_prefix=artifact_prefix,
                     agent_key=agent_key,
                     attempt_no=attempt_no,
@@ -1020,10 +1437,10 @@ class AgentService:
 
     def _normalize_agent2_assembly_plan(self, raw_plan: Any, *, theorem_nl: str) -> dict[str, Any]:
         if isinstance(raw_plan, dict):
-            steps = raw_plan.get("steps")
-            if not isinstance(steps, list):
-                steps = []
+            steps = self._normalize_assembly_plan_steps(raw_plan.get("steps"))
             proof_skeleton_nl = str(raw_plan.get("proof_skeleton_nl", ""))
+            if not proof_skeleton_nl and steps:
+                proof_skeleton_nl = "\n".join(str(step.get("derives") or "").strip() for step in steps if str(step.get("derives") or "").strip())
             final_step = bool(raw_plan.get("final_step_yields_exact_root", True))
             return {
                 "steps": steps,
@@ -1037,23 +1454,93 @@ class AgentService:
         elif isinstance(raw_plan, str) and raw_plan.strip():
             lines = [raw_plan.strip()]
 
-        steps = [
-            {
-                "step_id": f"S{idx + 1}",
-                "uses_lemmas": [],
-                "uses_prior_steps": [],
-                "derives": line,
-                "is_trivial": True,
-                "trivial_justification": "normalized from textual assembly plan",
-            }
-            for idx, line in enumerate(lines)
-        ]
+        steps = self._normalize_assembly_plan_steps(lines)
         proof_skeleton_nl = "\n".join(lines) if lines else f"Derive: {theorem_nl}"
         return {
             "steps": steps,
             "proof_skeleton_nl": proof_skeleton_nl,
             "final_step_yields_exact_root": True,
         }
+
+    def _normalize_lemma_payloads(
+        self,
+        raw_lemmas: Any,
+        *,
+        candidate_index: int,
+        default_role: str,
+    ) -> list[dict[str, Any]]:
+        if not isinstance(raw_lemmas, list):
+            return []
+
+        normalized_lemmas: list[dict[str, Any]] = []
+        for lemma_index, raw_lemma in enumerate(raw_lemmas):
+            lemma = self._coerce_dict(raw_lemma)
+            local_id = str(
+                lemma.get("local_id")
+                or lemma.get("name")
+                or lemma.get("id")
+                or f"L{candidate_index + 1}_{lemma_index + 1}"
+            )
+            statement_nl = str(
+                lemma.get("statement_nl")
+                or lemma.get("statement")
+                or lemma.get("claim")
+                or ""
+            )
+            role_in_assembly = str(
+                lemma.get("role_in_assembly")
+                or lemma.get("purpose")
+                or default_role
+            )
+            formalization_cost_estimate = self._coerce_float(
+                lemma.get("formalization_cost_estimate", lemma.get("formalization_cost")),
+                0.5,
+            )
+            self_check_true = bool(lemma.get("self_check_true", True))
+            self_check_notes = str(lemma.get("self_check_notes") or "normalized from alternate Agent2 schema")
+            semantic_sketch = self._normalize_semantic_sketch(lemma.get("semantic_sketch"))
+            relation_raw = str(
+                lemma.get("lemma_relation_to_parent")
+                or ("bottleneck" if lemma.get("bottleneck_reason") else "strictly_weaker")
+            ).strip().lower()
+            if relation_raw not in {"strictly_weaker", "orthogonal", "bottleneck"}:
+                relation_raw = "strictly_weaker"
+
+            normalized_lemma = {
+                "local_id": local_id,
+                "statement_nl": statement_nl,
+                "semantic_sketch": semantic_sketch,
+                "role_in_assembly": role_in_assembly,
+                "lemma_relation_to_parent": relation_raw,
+                "strictly_easier_reason": (
+                    None if lemma.get("strictly_easier_reason") in {None, ""} else str(lemma.get("strictly_easier_reason"))
+                ),
+                "bottleneck_reason": (
+                    None if lemma.get("bottleneck_reason") in {None, ""} else str(lemma.get("bottleneck_reason"))
+                ),
+                "formalization_cost_estimate": formalization_cost_estimate,
+                "self_check_true": self_check_true,
+                "self_check_notes": self_check_notes,
+            }
+            if "proof_nl" in lemma:
+                normalized_lemma["proof_nl"] = None if lemma.get("proof_nl") in {None, ""} else str(lemma.get("proof_nl"))
+            normalized_lemmas.append(normalized_lemma)
+        return normalized_lemmas
+
+    def _normalize_agent7_output(self, parsed: Any, *, theorem_nl: str) -> dict[str, Any]:
+        normalized = self._coerce_dict(parsed)
+        normalized["shared_context"] = self._normalize_shared_context(normalized.get("shared_context"))
+        normalized["context_items"] = self._normalize_shared_context(normalized.get("context_items"))
+        normalized["lemmas"] = self._normalize_lemma_payloads(
+            normalized.get("lemmas"),
+            candidate_index=0,
+            default_role="supports the parent proof assembly",
+        )
+        normalized["assembly_plan"] = self._normalize_agent2_assembly_plan(
+            normalized.get("assembly_plan"),
+            theorem_nl=theorem_nl,
+        )
+        return normalized
 
     def _normalize_agent2_output(self, parsed: Any, *, theorem_nl: str) -> dict[str, Any]:
         envelope = self._coerce_dict(parsed)
@@ -1068,62 +1555,11 @@ class AgentService:
         normalized_candidates: list[dict[str, Any]] = []
         for candidate_index, raw_candidate in enumerate(candidate_rows):
             candidate = self._coerce_dict(raw_candidate)
-            raw_lemmas = candidate.get("lemmas")
-            if not isinstance(raw_lemmas, list):
-                raw_lemmas = []
-
-            normalized_lemmas: list[dict[str, Any]] = []
-            for lemma_index, raw_lemma in enumerate(raw_lemmas):
-                lemma = self._coerce_dict(raw_lemma)
-                local_id = str(
-                    lemma.get("local_id")
-                    or lemma.get("name")
-                    or lemma.get("id")
-                    or f"L{candidate_index + 1}_{lemma_index + 1}"
-                )
-                statement_nl = str(
-                    lemma.get("statement_nl")
-                    or lemma.get("statement")
-                    or lemma.get("claim")
-                    or ""
-                )
-                role_in_assembly = str(
-                    lemma.get("role_in_assembly")
-                    or lemma.get("purpose")
-                    or f"supports candidate {candidate_index + 1} assembly"
-                )
-                formalization_cost_estimate = self._coerce_float(
-                    lemma.get("formalization_cost_estimate", lemma.get("formalization_cost")),
-                    0.5,
-                )
-                self_check_true = bool(lemma.get("self_check_true", True))
-                self_check_notes = str(lemma.get("self_check_notes") or "normalized from alternate Agent2 schema")
-                semantic_sketch = self._normalize_semantic_sketch(lemma.get("semantic_sketch"))
-                relation_raw = str(
-                    lemma.get("lemma_relation_to_parent")
-                    or ("bottleneck" if lemma.get("bottleneck_reason") else "strictly_weaker")
-                ).strip().lower()
-                if relation_raw not in {"strictly_weaker", "orthogonal", "bottleneck"}:
-                    relation_raw = "strictly_weaker"
-
-                normalized_lemmas.append(
-                    {
-                        "local_id": local_id,
-                        "statement_nl": statement_nl,
-                        "semantic_sketch": semantic_sketch,
-                        "role_in_assembly": role_in_assembly,
-                        "lemma_relation_to_parent": relation_raw,
-                        "strictly_easier_reason": (
-                            None if lemma.get("strictly_easier_reason") in {None, ""} else str(lemma.get("strictly_easier_reason"))
-                        ),
-                        "bottleneck_reason": (
-                            None if lemma.get("bottleneck_reason") in {None, ""} else str(lemma.get("bottleneck_reason"))
-                        ),
-                        "formalization_cost_estimate": formalization_cost_estimate,
-                        "self_check_true": self_check_true,
-                        "self_check_notes": self_check_notes,
-                    }
-                )
+            normalized_lemmas = self._normalize_lemma_payloads(
+                candidate.get("lemmas"),
+                candidate_index=candidate_index,
+                default_role=f"supports candidate {candidate_index + 1} assembly",
+            )
 
             if normalized_lemmas:
                 total_cost = sum(lemma["formalization_cost_estimate"] for lemma in normalized_lemmas)
@@ -1337,7 +1773,7 @@ class AgentService:
         user_payload: str,
         temperature: float,
     ) -> dict[str, Any]:
-        normalized_model = self._normalize_model_name(model) or "gpt-5-mini"
+        normalized_model = self._normalize_model_name(model) or "gpt-5.4-nano"
         effort = reasoning_effort or self.settings.openai_reasoning_effort
         effort = self._normalize_effort_for_model(normalized_model, effort)
         verbosity = text_verbosity or self.settings.openai_text_verbosity
@@ -1359,6 +1795,148 @@ class AgentService:
         if effort == "none":
             kwargs["temperature"] = temperature
         return kwargs
+
+    def _validate_agent_output_payload(
+        self,
+        *,
+        agent_key: str,
+        payload: Any,
+        request_payload: dict[str, Any],
+        artifact_prefix: str,
+    ) -> dict[str, Any]:
+        if agent_key == "agent1":
+            payload_dict = self._coerce_dict(payload)
+            statement_nl = str(request_payload.get("statement_nl") or "")
+            if "semantic_sketch" in payload_dict:
+                normalized = {
+                    "status": payload_dict.get("status", "completed"),
+                    "statement_nl_received": payload_dict.get("statement_nl_received", statement_nl),
+                    "semantic_sketch": self._normalize_semantic_sketch(payload_dict.get("semantic_sketch")),
+                    "implicit_assumptions_surfaced": self._coerce_string_list(payload_dict.get("implicit_assumptions_surfaced", [])),
+                    "ambiguities": self._coerce_string_list(payload_dict.get("ambiguities", [])),
+                }
+            else:
+                normalized = {
+                    "status": "completed",
+                    "statement_nl_received": statement_nl,
+                    "semantic_sketch": self._normalize_semantic_sketch(payload),
+                    "implicit_assumptions_surfaced": [],
+                    "ambiguities": [],
+                }
+            return Agent1Output.model_validate(normalized).model_dump()
+        if agent_key == "agent2":
+            theorem_nl = str(request_payload.get("theorem_nl") or "")
+            normalized = self._normalize_agent2_output(payload, theorem_nl=theorem_nl)
+            return Agent2Output.model_validate(normalized).model_dump()
+        if agent_key == "agent3":
+            normalized = self._normalize_agent3_output(payload)
+            return Agent3Output.model_validate(normalized).model_dump()
+        if agent_key == "agent4":
+            return Agent4Output.model_validate(self._coerce_dict(payload)).model_dump()
+        if agent_key == "agent5":
+            return Agent5Output.model_validate(self._coerce_dict(payload)).model_dump()
+        if agent_key == "agent6":
+            return Agent6Output.model_validate(self._coerce_dict(payload)).model_dump()
+        if agent_key == "agent7":
+            theorem_nl = str(request_payload.get("parent_statement_nl") or "")
+            normalized = self._normalize_agent7_output(payload, theorem_nl=theorem_nl)
+            return Agent7Output.model_validate(normalized).model_dump()
+        if agent_key == "agent8":
+            return Agent8Output.model_validate(self._coerce_dict(payload)).model_dump()
+        return self._coerce_dict(payload)
+
+    def finalize_background_request_record(
+        self,
+        request_record: Any,
+        *,
+        response: Any | None = None,
+    ) -> dict[str, Any]:
+        if not self.client:
+            raise RuntimeError("OpenAI client initialization failed")
+        response_id = str(
+            getattr(request_record, "provider_response_id", None)
+            or getattr(request_record, "response_id", None)
+            or ""
+        ).strip()
+        if not response_id:
+            raise ValueError("request record has no provider response id")
+        if response is None:
+            response = self.client.responses.retrieve(response_id)
+
+        artifact_prefix = str(getattr(request_record, "request_artifact_key", "") or "").rsplit("/", 1)[0]
+        agent_key = str(getattr(request_record, "source", "") or "").strip()
+        if not artifact_prefix or not agent_key:
+            raise ValueError("request record is missing artifact routing metadata")
+
+        request_payload: dict[str, Any] = {}
+        request_artifact_key = str(getattr(request_record, "request_artifact_key", "") or "").strip()
+        if request_artifact_key and self.store.exists(request_artifact_key):
+            loaded_payload = self.store.load_json(request_artifact_key)
+            if isinstance(loaded_payload, dict):
+                request_payload = dict(loaded_payload)
+
+        problem_id, lemma_id = self._extract_problem_and_lemma_ids(artifact_prefix)
+        raw_text = str(getattr(response, "output_text", "") or "")
+        parsed = self._parse_json_with_invalid_backslash_repair(raw_text)
+        validated = self._validate_agent_output_payload(
+            agent_key=agent_key,
+            payload=parsed,
+            request_payload=request_payload,
+            artifact_prefix=artifact_prefix,
+        )
+
+        raw_output_key = f"{artifact_prefix}/{agent_key}_raw_output_attempt_1.txt"
+        parsed_output_key = f"{artifact_prefix}/{agent_key}_parsed_output_attempt_1.json"
+        self.store.save_text(raw_output_key, raw_text)
+        self.store.save_json(parsed_output_key, validated)
+        self.store.save_json(
+            f"{artifact_prefix}/{agent_key}_request_state_attempt_1.json",
+            {
+                "agent_key": agent_key,
+                "attempt": 1,
+                "status": "completed",
+                "updated_at": datetime.now(UTC).isoformat(),
+                "response_id": response_id,
+                "provider_status": str(getattr(response, "status", "") or "completed"),
+                "worker_job_id": getattr(request_record, "worker_job_id", None),
+            },
+        )
+
+        if not (problem_id and is_problem_stop_requested(problem_id)):
+            record_llm_usage(
+                problem_id=problem_id,
+                lemma_id=lemma_id,
+                worker_job_id=getattr(request_record, "worker_job_id", None),
+                stage=agent_key,
+                provider="openai",
+                model=str(getattr(request_record, "llm_model", None) or getattr(response, "model", "") or ""),
+                response=response,
+                db_session=self.db_session,
+                usage_persistence_mode=self.usage_persistence_mode_override,
+                usage_buffer=self.usage_buffer,
+                usage_buffer_lock=self.usage_buffer_lock,
+            )
+
+        self._update_request_record(
+            request_record_id=str(getattr(request_record, "request_record_id")),
+            problem_id=problem_id,
+            target_id=getattr(request_record, "target_id", None),
+            source=agent_key,
+            status="completed",
+            summary=getattr(request_record, "summary", None),
+            request_artifact_key=request_artifact_key or None,
+            response_artifact_key=parsed_output_key,
+            response_id=response_id,
+            provider_response_id=response_id,
+            provider_status=str(getattr(response, "status", "") or "completed"),
+            last_provider_contact_at=datetime.now(UTC),
+            error_class=None,
+            llm_model=getattr(request_record, "llm_model", None),
+            llm_reasoning_effort=getattr(request_record, "llm_reasoning_effort", None),
+            llm_text_verbosity=getattr(request_record, "llm_text_verbosity", None),
+            llm_timeout_seconds=getattr(request_record, "llm_timeout_seconds", None),
+        )
+        return validated
 
     def _agent2_retry_prompt_override(self, payload: Agent2Input) -> str | None:
         if not payload.previous_attempt_summaries:
@@ -1740,7 +2318,7 @@ class AgentService:
             artifact_prefix=artifact_prefix,
             temperature=0,
         )
-        normalized = self._coerce_dict(parsed)
+        normalized = self._normalize_agent7_output(parsed, theorem_nl=payload.parent_statement_nl)
         if "status" not in normalized:
             normalized["status"] = "completed"
         try:

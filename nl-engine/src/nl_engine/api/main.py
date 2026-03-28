@@ -293,6 +293,138 @@ def _run_semantic_sketch_background(
             log.exception("Failed to wake execution after sketch failure for %s", problem_id)
 
 
+def _extract_openai_event_type(event: object) -> str | None:
+    if isinstance(event, dict):
+        raw = event.get("type")
+    else:
+        raw = getattr(event, "type", None)
+    if isinstance(raw, str) and raw.strip():
+        return raw.strip()
+    return None
+
+
+def _extract_openai_event_response_id(event: object) -> str | None:
+    if isinstance(event, dict):
+        data = event.get("data")
+        raw = data.get("id") if isinstance(data, dict) else None
+    else:
+        data = getattr(event, "data", None)
+        raw = getattr(data, "id", None)
+    if isinstance(raw, str) and raw.strip():
+        return raw.strip()
+    return None
+
+
+@app.post("/v1/openai/webhook")
+async def openai_webhook(request: Request, db: FileStore = Depends(get_db)) -> JSONResponse:
+    settings = get_settings()
+    payload_text = (await request.body()).decode("utf-8")
+
+    if settings.openai_webhook_secret:
+        verifier = AgentService()
+        if verifier.client is None:
+            raise_api_error(
+                500,
+                code="openai_webhook_unavailable",
+                message="OpenAI webhook verification is unavailable",
+            )
+        try:
+            event: object = verifier.client.webhooks.unwrap(
+                payload_text,
+                request.headers,
+                secret=settings.openai_webhook_secret,
+            )
+        except Exception as exc:
+            raise_api_error(
+                400,
+                code="invalid_openai_webhook",
+                message="webhook signature verification failed",
+                details={"exception": type(exc).__name__},
+            )
+    else:
+        event = json.loads(payload_text)
+
+    event_type = _extract_openai_event_type(event)
+    response_id = _extract_openai_event_response_id(event)
+    if not event_type or not response_id:
+        raise_api_error(
+            400,
+            code="invalid_openai_webhook",
+            message="webhook payload missing type or response id",
+        )
+
+    request_records = RequestRecordRepository(db)
+    record = request_records.find_by_response_id(response_id)
+    if record is None:
+        return JSONResponse(
+            status_code=202,
+            content={"ok": True, "ignored": True, "reason": "unknown_response_id", "response_id": response_id},
+        )
+
+    if event_type == "response.completed":
+        service = AgentService(
+            db_session=db,
+            usage_persistence_mode_override=settings.openai_usage_persistence_mode,
+        )
+        service.set_runtime_context(
+            worker_job_id=record.worker_job_id,
+            execution_id=record.execution_id,
+        )
+        normalized_output = service.finalize_background_request_record(record)
+        if record.worker_job_id:
+            WorkerJobRepository(db).complete(record.worker_job_id, normalized_output)
+        if record.execution_id:
+            ProblemExecutionRepository(db).wake(
+                record.execution_id,
+                current_stage=f"worker.{record.source}.provider_completed",
+            )
+        return JSONResponse(status_code=200, content={"ok": True, "status": "completed", "response_id": response_id})
+
+    if event_type == "response.failed":
+        request_records.upsert(
+            record.request_record_id,
+            problem_id=record.problem_id,
+            execution_id=record.execution_id,
+            worker_job_id=record.worker_job_id,
+            source=record.source,
+            target_id=record.target_id,
+            status="failed",
+            response_id=response_id,
+            provider_response_id=response_id,
+            provider_status="failed",
+            last_provider_contact_at=now_utc(),
+            error_class=record.error_class or "infrastructure_transient",
+            summary=record.summary,
+            llm_model=record.llm_model,
+            llm_reasoning_effort=record.llm_reasoning_effort,
+            llm_text_verbosity=record.llm_text_verbosity,
+            llm_timeout_seconds=record.llm_timeout_seconds,
+            request_artifact_key=record.request_artifact_key,
+            response_artifact_key=record.response_artifact_key,
+        )
+        if record.worker_job_id:
+            WorkerJobRepository(db).fail(
+                record.worker_job_id,
+                {
+                    "message": f"OpenAI background response {response_id} reported failed via webhook",
+                    "class": "BackgroundResponseFailed",
+                    "error_class": "infrastructure_transient",
+                    "agent_key": record.source,
+                },
+            )
+        if record.execution_id:
+            ProblemExecutionRepository(db).wake(
+                record.execution_id,
+                current_stage=f"worker.{record.source}.provider_failed",
+            )
+        return JSONResponse(status_code=200, content={"ok": True, "status": "failed", "response_id": response_id})
+
+    return JSONResponse(
+        status_code=200,
+        content={"ok": True, "ignored": True, "event_type": event_type, "response_id": response_id},
+    )
+
+
 @app.post("/v1/problems", response_model=ProblemCreateResponse)
 def create_problem(payload: ProblemCreateRequest, db: FileStore = Depends(get_db)) -> ProblemCreateResponse:
     log = logging.getLogger("nl_engine.api")

@@ -1,0 +1,92 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328230056_8c69f598",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T23:00:02.820031Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.2,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T23:01:43.252411Z",
+  "last_dependency_check_id": "depchk_20260328230143_87be8cc6",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly derives m <= n t < m+1 from m/n <= t < (m+1)/n using n>0, then applies the defining characterization of floor to conclude floor(n t)=m. This matches the lemma statement exactly and uses only permitted elementary reasoning.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let y = n t. Since n > 1, we have n > 0. The hypothesis m/n \u2264 t < (m+1)/n can therefore be multiplied by n without reversing the inequalities, giving\nm \u2264 n t < m+1.\nThat is,\nm \u2264 y < m+1.\nBy the defining property of the floor function, an integer q satisfies q = floor(y) exactly when q \u2264 y < q+1. Since m is an integer and m \u2264 y < m+1, it follows that floor(y) = m. Substituting back y = n t gives floor(n t) = m.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260328230143_bb241412",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328225958_98361de4",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "lem_20260328225601_f19c6e91",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260328223900_b5921d00",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/lemmas/lem_20260328225958_98361de4.json",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Packages the floor-index identification that can be inserted directly before the final rewrite.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer with n > 1, let m be an integer with 0 <= m <= n - 1, and let t be a real number satisfying m / n <= t < (m + 1) / n. Then floor(n * t) = m.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "m is an integer and 0 <= m <= n - 1",
+      "t is a real number and m / n <= t",
+      "t is a real number and t < (m + 1) / n"
+    ],
+    "normalized_claim": "For all integers n > 1, for all integers m with 0 <= m <= n - 1, and for all real numbers t with m divided by n <= t and t < (m + 1) divided by n, the floor of n times t equals m.",
+    "quantifier_order": [
+      "for all integers n",
+      "for all integers m",
+      "for all real numbers t"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter controlling the scaling in floor(n * t)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "target value of floor(n * t)",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "input constrained to an interval determined by n and m",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses; the statement is purely universal."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T23:01:43.252411Z"
+}

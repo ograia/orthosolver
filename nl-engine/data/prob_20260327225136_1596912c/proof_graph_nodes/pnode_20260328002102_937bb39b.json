@@ -1,0 +1,59 @@
+{
+  "created_at": "2026-03-28T00:21:02.465879Z",
+  "graph_node_id": "pnode_20260328002102_937bb39b",
+  "metadata": {
+    "parent_id": "lem_20260327230124_caed970a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "dd37be23bc4c6b1b05e081e045f5c5a668d5b433cf186a070072fc55af05a7b0",
+  "owner_id": "lem_20260328001912_bc4740c3",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is a positive integer (so n is at least 1, and division by n is valid over reals)",
+      "j is an integer satisfying 0 <= j <= n - 1",
+      "x is a real number satisfying j/n <= x < (j+1)/n"
+    ],
+    "normalized_claim": "For all positive integers n and all integers j with 0 <= j <= n - 1, for all real x with j/n <= x < (j+1)/n, if t is defined by t = n*x - j, then 0 <= t < 1 and x equals T_{n,j}(t) (the reconstruction of x from t in that subinterval).",
+    "quantifier_order": [
+      "for all n in positive integers",
+      "for all j in integers with 0 <= j <= n - 1",
+      "for all x in real numbers with j/n <= x and x < (j+1)/n",
+      "define t as n*x - j"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "mesh parameter; used in interval endpoints and in formula for t",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "j",
+        "role": "index selecting subinterval; constrained by 0 <= j <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "point in the half-open interval [j/n, (j+1)/n)",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "derived parameter defined by t = n*x - j",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "t depends on x (and on n and j) through the definition t = n*x - j",
+      "T_{n,j}(t) depends on n, j, and the derived value t"
+    ]
+  },
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If x is a real number with j/n <= x < (j + 1)/n, then t = n*x - j satisfies 0 <= t < 1 and x = T_{n,j}(t).",
+  "updated_at": "2026-03-28T00:21:02.465880Z"
+}

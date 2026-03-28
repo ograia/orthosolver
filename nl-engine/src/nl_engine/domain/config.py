@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, model_validator
 
 ReasoningEffort = Literal["none", "low", "medium", "high", "xhigh"]
 TextVerbosity = Literal["low", "medium", "high"]
-SupportedModel = Literal["gpt-5.4", "gpt-5.4-pro", "gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"]
+SupportedModel = Literal["gpt-5.4", "gpt-5.4-pro", "gpt-5.4-mini", "gpt-5.4-nano"]
 
 
 class LeanModeConfig(BaseModel):
@@ -59,6 +59,7 @@ class DecompositionConfig(BaseModel):
     parallel_root_take_k: int = Field(default=1, ge=1)
     parallel_root_join_timeout_seconds: int = Field(default=30, ge=1)
     root_solutions_required_for_termination: int = Field(default=1, ge=1)
+    lemma_decomposition_candidates_n: int = Field(default=1, ge=1)
     max_consecutive_fatal_rejections_per_node: int = Field(default=10, ge=1)
     max_decompositions_per_failed_lemma: int = Field(default=10, ge=1)
 
@@ -86,8 +87,7 @@ class DecompositionConfig(BaseModel):
 
     @property
     def max_candidates_generated(self) -> int:
-        # Internal default: one Agent2 call produces up to two candidates.
-        return 2
+        return self.lemma_decomposition_candidates_n
 
     @property
     def assembly_check_repair_rounds(self) -> int:
@@ -276,7 +276,7 @@ class AgentLlmConfig(BaseModel):
 
     @model_validator(mode="after")
     def _enforce_model_reasoning_compatibility(self) -> "AgentLlmConfig":
-        if self.model in ("gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano") and self.thinking_level == "xhigh":
+        if self.model in ("gpt-5.4-mini", "gpt-5.4-nano") and self.thinking_level == "xhigh":
             self.thinking_level = "high"
         return self
 

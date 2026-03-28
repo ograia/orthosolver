@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-03-28T00:28:51.420045Z",
+  "graph_node_id": "pnode_20260328002851_7745dc9f",
+  "metadata": {
+    "parent_id": "lem_20260327230124_caed970a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "12a70fac45374779b0183b091f444bb2f9bccf363aebb181d1cb47f2876c4b45",
+  "owner_id": "lem_20260328002714_36c1f14a",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is a positive integer (so n is nonzero)",
+      "j is an integer satisfying 0 <= j <= n - 1",
+      "x is a real number satisfying j/n <= x and x < (j + 1)/n",
+      "J_{n,j}(d) is evaluated as j/n + d for the given n, j, and real d"
+    ],
+    "normalized_claim": "Given n in positive integers, j in integers with 0 <= j <= n - 1, and x in reals with j/n <= x < (j + 1)/n, let d be defined by d = x - j/n. Then d satisfies 0 <= d < 1/n, and x equals J_{n,j}(d) where J_{n,j}(d) = j/n + d.",
+    "quantifier_order": [
+      "for all positive integers n",
+      "for all integers j with 0 <= j <= n - 1",
+      "for all real numbers x with j/n <= x < (j + 1)/n",
+      "define d as x minus j/n"
+    ],
+    "variables": [
+      {
+        "domain": "subset of integers: {1, 2, 3, ...}",
+        "name": "n",
+        "role": "index and denominator for interval partition",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "j",
+        "role": "subinterval index with restriction 0 <= j <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "point lying in the half-open interval [j/n, (j+1)/n)",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "d",
+        "role": "defined by d = x - j/n and shown to satisfy 0 <= d < 1/n",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "d depends on x, n, and j via the definition d = x - j/n",
+      "the expression J_{n,j}(d) depends on n, j, and d"
+    ]
+  },
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If x is a real number with j/n <= x < (j + 1)/n and d = x - j/n, then 0 <= d < 1/n and x = J_{n,j}(d), where J_{n,j}(d) = j/n + d.",
+  "updated_at": "2026-03-28T00:28:51.420046Z"
+}

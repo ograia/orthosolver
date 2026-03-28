@@ -1,0 +1,91 @@
+{
+  "artifact_prefix": "problems/prob_20260328223900_b5921d00/root_theorem/thm_root_20260328223900_ac5193ce/semantic_sketch",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T22:39:20.267379Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T22:39:24.835587Z",
+  "controller_consumed_by_execution_id": "exec_20260328223900_1ee928ca",
+  "created_at": "2026-03-28T22:39:12.313018Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328223900_1ee928ca",
+  "handler_key": "agent1_root_semantic_sketch",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+  },
+  "problem_id": "prob_20260328223900_b5921d00",
+  "request_source": "root_semantic_sketch",
+  "result_payload": {
+    "ambiguities": [
+      "Whether 'maximal' means global maximum over all real x (most likely) or maximal element in some other restricted class of x (not specified).",
+      "Whether the question asks for a unique x, a set of x, or a description of all x achieving the maximum (wording suggests determining the argmax set).",
+      "Dependence on n is not explicitly stated: the maximum value is presumably a function of n, but the question does not specify whether the answer should be expressed in terms of n."
+    ],
+    "implicit_assumptions_surfaced": [
+      "The phrase 'maximal' is intended to mean global maximum over all real x, not merely a local maximum.",
+      "It is assumed the expression has a finite maximum value over the entire set of real numbers (that max exists rather than only a supremum).",
+      "The floor function behavior on real inputs is assumed to be standard: floor(t) is the greatest integer less than or equal to t."
+    ],
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+        "floor is applied to real numbers and returns an integer"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+      "quantifier_order": [
+        "For a fixed integer n with n > 1",
+        "For real x (x ranges over all real numbers)",
+        "Choose x that achieves the maximum of the given expression over all real x",
+        "Determine the maximal value M"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "decision variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M",
+          "role": "the maximal value of the expression as a function of n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "An optimal x (or the set of optimal x values) may depend on n",
+        "The maximal value M may depend on n"
+      ]
+    },
+    "statement_nl_received": "Let n be an integer greater than 1. For which real numbers x is floor(n x) - sum from k equals 1 to n of floor(k x) divided by k maximal, and what is the maximal value that this expression can take?",
+    "status": "completed"
+  },
+  "started_at": "2026-03-28T22:39:13.322959Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260328223900_ac5193ce",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-28T22:39:24.835592Z",
+  "worker_job_id": "wrk_thm_root_20260328223900_ac5193ce_semantic_sketch_0",
+  "worker_kind": "root_semantic_sketch"
+}

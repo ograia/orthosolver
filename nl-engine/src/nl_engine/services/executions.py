@@ -111,11 +111,11 @@ class ProblemExecutionService:
         except Exception:
             return
         for row in rows:
-            if row.status not in {"queued", "started", "pending"}:
+            if row.status not in {"queued", "started", "pending", "provider_pending", "provider_running"}:
                 continue
             if row.execution_id not in execution_ids and row.worker_job_id not in worker_job_ids:
                 continue
-            response_id = str(row.response_id or "").strip()
+            response_id = str(row.provider_response_id or row.response_id or "").strip()
             if not response_id:
                 continue
             try:

@@ -1,0 +1,166 @@
+{
+  "artifact_prefix": "problems/prob_20260328223900_b5921d00/lemmas/lem_20260328225553_96a0f517/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T22:57:11.713662Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T22:57:16.085156Z",
+  "controller_consumed_by_execution_id": "exec_20260328223900_1ee928ca",
+  "created_at": "2026-03-28T22:57:00.870272Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328223900_1ee928ca",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+        "item_id": "pnode_20260328225700_c972257c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260328225659_f782c9e3",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260328225553_96a0f517",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328225700_f6d7e51a",
+    "role_in_assembly": "Supplies the unit-interval representative t of an arbitrary real x.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+        "floor is applied to real numbers and returns an integer"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+      "quantifier_order": [
+        "For a fixed integer n with n > 1",
+        "For real x (x ranges over all real numbers)",
+        "Choose x that achieves the maximum of the given expression over all real x",
+        "Determine the maximal value M"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "decision variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M",
+          "role": "the maximal value of the expression as a function of n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "An optimal x (or the set of optimal x values) may depend on n",
+        "The maximal value M may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "x is a real number",
+        "t is defined as x minus floor(x)",
+        "floor(x) is an integer defined for every real x"
+      ],
+      "normalized_claim": "For all real x, letting t be equal to x minus floor(x), we have both (1) x equals floor(x) plus t and (2) t is real with 0 <= t and t < 1.",
+      "quantifier_order": [
+        "For all real x"
+      ],
+      "variables": [
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "input variable",
+          "type": "real number"
+        },
+        {
+          "domain": "implicitly defined from x by t = x minus floor(x)",
+          "name": "t",
+          "role": "derived quantity (witness determined by x)",
+          "type": "real number"
+        },
+        {
+          "domain": "integer closest below x (greatest integer less than or equal to x)",
+          "name": "floor(x)",
+          "role": "auxiliary function value",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "t depends on x via the definition t = x minus floor(x)"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every real x, if t = x - floor(x), then x = floor(x) + t and 0 <= t < 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328223900_b5921d00",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "relies_on_hidden_sibling_lemmas": false,
+      "relies_on_root_theorem": false,
+      "uses_only_allowed_manifest": true
+    },
+    "lemma_id": "lem_20260328225553_96a0f517",
+    "proof_nl": "Let x be any real number, and define t = x - \\lfloor x \\rfloor. Then the identity x = \\lfloor x \\rfloor + t is immediate by rearranging the definition of t.\n\nIt remains to show that 0 \\le t < 1. By the defining property of the floor function, \\lfloor x \\rfloor is the greatest integer less than or equal to x, so in particular\n\\[\n\\lfloor x \\rfloor \\le x < \\lfloor x \\rfloor + 1.\n\\]\nSubtracting \\lfloor x \\rfloor from all three terms gives\n\\[\n0 \\le x - \\lfloor x \\rfloor < 1.\n\\]\nSince t = x - \\lfloor x \\rfloor, we conclude that 0 \\le t < 1.\n\nThus for every real x, if t = x - \\lfloor x \\rfloor, then x = \\lfloor x \\rfloor + t and 0 \\le t < 1.",
+    "proof_summary": "Use the definition t = x - floor(x) for the identity, and the defining inequality floor(x) <= x < floor(x)+1 to deduce 0 <= t < 1.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Standard defining property of the floor function: floor(x) <= x < floor(x)+1"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T22:57:04.585814Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328225553_96a0f517",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T22:57:16.085165Z",
+  "worker_job_id": "wrk_lem_20260328225553_96a0f517_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

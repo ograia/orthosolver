@@ -1,0 +1,211 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260328001918_dfdefb83/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T00:21:57.206008Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:22:07.021132Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:21:28.452609Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327230243_146498d5",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327230243_7431629c",
+        "label": "lem_20260327230124_caed970a",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For any integer j with 0 <= j <= n - 1 and any real number x with j/n <= x < (j+1)/n, one has F_n(x) <= F_n(j/n)."
+      }
+    ],
+    "lemma_id": "lem_20260328001918_dfdefb83",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328002128_c63fbfdf",
+    "role_in_assembly": "Computes the derivative of the rescaled function.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a positive integer",
+        "j is an integer satisfying 0 <= j <= n - 1 (so n - 1 >= 0 and the interval for j is nonempty for n >= 1)",
+        "F_n is differentiable on I_{n,j}",
+        "the derivative statement for H_{n,j} is asserted for all t in (0,1)",
+        "implicit: T_{n,j}(t) must lie in I_{n,j} for every t in (0,1) so that F_n'(T_{n,j}(t)) is defined"
+      ],
+      "normalized_claim": "For every positive integer n and every integer j with 0 <= j <= n - 1, if F_n is differentiable on I_{n,j}, then H_{n,j} is differentiable on (0,1) and for every real t in (0,1), the derivative satisfies H'_{n,j}(t) equals F_n'(T_{n,j}(t)) divided by n.",
+      "quantifier_order": [
+        "for all positive integers n",
+        "for all integers j with 0 <= j <= n - 1",
+        "for all functions F_n that are differentiable on I_{n,j}",
+        "for all real t with t in (0,1)"
+      ],
+      "variables": [
+        {
+          "domain": "subset of integers",
+          "name": "n",
+          "role": "fixed parameter; normalization divisor",
+          "type": "positive integer"
+        },
+        {
+          "domain": "subset of integers satisfying 0 <= j <= n - 1",
+          "name": "j",
+          "role": "fixed parameter indexing the intervals and maps",
+          "type": "integer"
+        },
+        {
+          "domain": "open interval (0,1)",
+          "name": "t",
+          "role": "variable point where the derivative of H_{n,j} is evaluated",
+          "type": "real number"
+        },
+        {
+          "domain": "domain includes I_{n,j}",
+          "name": "F_n",
+          "role": "given differentiable function used to define H_{n,j}",
+          "type": "real-valued function of a real variable"
+        },
+        {
+          "domain": "at least (0,1)",
+          "name": "H_{n,j}",
+          "role": "target function whose differentiability and derivative formula are asserted",
+          "type": "real-valued function of a real variable"
+        },
+        {
+          "domain": "subset of the reals",
+          "name": "I_{n,j}",
+          "role": "domain on which F_n is assumed differentiable",
+          "type": "subset of real numbers (interval, implicitly)"
+        },
+        {
+          "domain": "at least (0,1)",
+          "name": "T_{n,j}",
+          "role": "input transformation used inside F_n' in the derivative formula",
+          "type": "real-valued function of a real variable"
+        }
+      ],
+      "witness_dependencies": [
+        "H'_{n,j}(t) depends on t only through the value T_{n,j}(t) used as the input to F_n'",
+        "the divisor n appears in the scaling factor 1/n and is fixed by the outer parameters (n, j)",
+        "the existence of H'_{n,j}(t) implicitly depends on differentiability of F_n at T_{n,j}(t) and on the regularity of T_{n,j} as used in the construction of H_{n,j} (not stated explicitly)"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. Assume F_n is differentiable on I_{n,j}. Then H_{n,j} is differentiable on (0,1), and for each real t in (0,1), H'_{n,j}(t) = F_n'(T_{n,j}(t)) / n.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "relies_on_forbidden_claims": false,
+      "relies_on_unstated_sibling_lemmas": false,
+      "uses_allowed_dependency_manifest": false
+    },
+    "lemma_id": "lem_20260328001918_dfdefb83",
+    "proof_nl": "By the rescaling definition in this construction, T_{n,j}(t) is the affine map t \u21a6 (j+t)/n, and H_{n,j}(t) = F_n(T_{n,j}(t)). For t in (0,1) and 0 <= j <= n-1, we have j/n < (j+t)/n < (j+1)/n, so T_{n,j}(t) lies in I_{n,j}. Since F_n is differentiable on I_{n,j}, it is differentiable at each point T_{n,j}(t). Also, T_{n,j} is differentiable on (0,1) and T_{n,j}'(t) = 1/n. Therefore the chain rule applies, giving H_{n,j}'(t) = F_n'(T_{n,j}(t)) \u00b7 T_{n,j}'(t) = F_n'(T_{n,j}(t))/n for every t in (0,1). Hence H_{n,j} is differentiable on (0,1), and the stated derivative formula holds.",
+    "proof_summary": "Use the standard rescaling definition H_{n,j}(t)=F_n((j+t)/n). The image of (0,1) lies inside I_{n,j}, so the chain rule gives H'_{n,j}(t)=F_n'(T_{n,j}(t))/n.",
+    "self_report": {
+      "confidence": 0.78,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [
+        "The lemma statement itself does not restate the definitions of H_{n,j} and T_{n,j}; the proof uses the standard rescaling interpretation implicit in the setup."
+      ],
+      "used_external_facts": [
+        "Chain rule for differentiable compositions"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T00:21:30.800149Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328001918_dfdefb83",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:22:07.021137Z",
+  "worker_job_id": "wrk_lem_20260328001918_dfdefb83_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

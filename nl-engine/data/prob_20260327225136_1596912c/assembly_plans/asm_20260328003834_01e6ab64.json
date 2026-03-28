@@ -1,0 +1,66 @@
+{
+  "assembly_plan_id": "asm_20260328003834_01e6ab64",
+  "created_at": "2026-03-28T00:39:58.974782Z",
+  "decomposition_id": "dec_20260328003834_b787a4ba",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260327225136_1596912c",
+  "proof_skeleton_nl": "Introduce the auxiliary function H_{n,j}(d)=F_n(J_{n,j}(d)). First prove K_{n,j}(d)=H_{n,j}(d) on the admissible interval, then rewrite H_{n,j}(d) at an auxiliary x satisfying x=J_{n,j}(d). For the endpoint, specialize the interval identity at d=0, unfold H_{n,j}(0), and use J_{n,j}(0)=j/n. Finally conjoin the two resulting equalities.",
+  "root_node_id": "lem_20260328002727_eab03ecf",
+  "steps": [
+    {
+      "derives": "For every real d with 0 <= d < 1/n and every real x with x = J_{n,j}(d), one has K_{n,j}(d) = F_n(x).",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Instantiate L1 to get K_{n,j}(d)=H_{n,j}(d), instantiate L2 with the hypothesis x=J_{n,j}(d) to get H_{n,j}(d)=F_n(x), then use equality transitivity.",
+      "uses_lemmas": [
+        "lem_20260328003834_4dcd1827",
+        "lem_20260328003839_f86a672f"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every positive natural number n and every integer j, one has K_{n,j}(0) = H_{n,j}(0).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Use L3 to verify that d=0 satisfies the hypotheses 0 <= d and d < 1/n, then instantiate L1 at d=0.",
+      "uses_lemmas": [
+        "lem_20260328003846_67dd954c",
+        "lem_20260328003834_4dcd1827"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every positive natural number n and every integer j, one has K_{n,j}(0) = F_n(J_{n,j}(0)).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Combine K_{n,j}(0)=H_{n,j}(0) from A2 with H_{n,j}(0)=F_n(J_{n,j}(0)) from L5 by transitivity of equality.",
+      "uses_lemmas": [
+        "A2",
+        "lem_20260328003855_5dbbec22"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every positive natural number n and every integer j, one has K_{n,j}(0) = F_n(j/n).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "From L4 obtain J_{n,j}(0)=j/n, and rewrite the right-hand side of A3 accordingly using equality substitution.",
+      "uses_lemmas": [
+        "A3",
+        "lem_20260328003850_e3ac44d1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every real d with 0 <= d < 1/n and every real x with x = J_{n,j}(d), one has K_{n,j}(d) = F_n(x), and moreover K_{n,j}(0) = F_n(j/n).",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is exactly the conjunction of the two derived claims, so conjunction introduction applies.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A4"
+      ]
+    }
+  ]
+}

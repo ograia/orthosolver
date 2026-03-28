@@ -1,0 +1,787 @@
+{
+  "assembly_plan_id": "asm_20260328002539_5784e147",
+  "controller_status": "failed",
+  "created_at": "2026-03-28T00:27:14.307268Z",
+  "decomposition_id": "dec_20260328002539_ed058e78",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "none",
+  "failure_origin": "agent3:infrastructure",
+  "failure_reason": "Candidate materialization failed before decomposition vetting because agent3 returned infrastructure. Retry the same candidate before replacing the decomposition strategy. Artifact: problems/prob_20260327225136_1596912c/decomposition_vetter/dec_20260328002539_ed058e78/agent3_request_error_attempt_1.json",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.0,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": null,
+  "latest_prepare_track_job_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "pending",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "logical_decomposition_id": "logdec_lem_20260327230124_caed970a",
+  "node_id": "lem_20260327230124_caed970a",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decomposition_id": "dec_20260328001723_fa43e785",
+      "equivalence_risk": "none",
+      "failure_mode": "rejected_fatal:failed",
+      "failure_origin": "agent3:infrastructure",
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix a positive integer n, an integer j with 0 <= j <= n - 1, and a real x with j/n <= x < (j + 1)/n. By L1, floor(n*x) = j. By L2 with t = n*x - j, we get 0 <= t < 1 and x = T_{n,j}(t). By L5, G_{n,j}(t) <= G_{n,j}(0). By L4, G_{n,j}(t) = F_n(x) and G_{n,j}(0) = F_n(j/n). Therefore F_n(x) <= F_n(j/n). Since n, j, and x were arbitrary under the stated hypotheses, this is exactly the theorem.",
+          "steps": [
+            {
+              "derives": "From j/n <= x < (j+1)/n, obtain floor(n*x) = j, then set t = n*x - j to get 0 <= t < 1 and x = T_{n,j}(t).",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "This combines the floor characterization with the algebraic inversion of the floor statement, so it is not a single inference.",
+              "uses_lemmas": [
+                "L1",
+                "L2"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For the t obtained in A1, conclude G_{n,j}(t) <= G_{n,j}(0).",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "This is a direct application of the local bound to the specific parameter t.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "Rewrite G_{n,j}(t) as F_n(x) and G_{n,j}(0) as F_n(j/n), yielding F_n(x) <= F_n(j/n).",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "This requires rewriting both sides using the translated-coordinate identity and the substitution x = T_{n,j}(t).",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For a positive integer n and an integer j, define I_{n,j} := {x in R | j/n <= x and x < (j + 1)/n}.",
+            "kind": "notation",
+            "label": "I_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define T_{n,j}(t) := (j + t)/n for real t.",
+            "kind": "notation",
+            "label": "T_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define G_{n,j}(t) := F_n(T_{n,j}(t)).",
+            "kind": "notation",
+            "label": "G_{n,j}"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.77,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Identifies the interval cell index from the hypothesis x in [j/n, (j+1)/n).",
+            "self_check_notes": "Only standard floor arithmetic is used; no cross-lemma references.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "j/n <= x",
+                "x < (j + 1)/n"
+              ],
+              "normalized_claim": "floor(n*x) = j.",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real x"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "point in the interval",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If x is a real number with j/n <= x < (j + 1)/n, then floor(n * x) = j.",
+            "strictly_easier_reason": "This is a standard arithmetic consequence of the interval bounds and does not involve F_n."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Converts the integer cell index into the unit-interval parameter used by the translated function.",
+            "self_check_notes": "The statement is self-contained and uses only the notation defined in shared_context.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "floor(n*x) = j"
+              ],
+              "normalized_claim": "The coordinate t = n*x - j lies in [0,1), and x = (j+t)/n.",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real x",
+                "for the real t defined by t = n*x - j"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "original point",
+                  "type": "real"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "unit-interval coordinate",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": [
+                "t = n*x - j"
+              ]
+            },
+            "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If floor(n * x) = j and t = n * x - j, then 0 <= t < 1 and x = T_{n,j}(t), where T_{n,j}(t) = (j + t)/n.",
+            "strictly_easier_reason": "It is a direct algebraic inversion of the floor statement."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Packages the cell geometry as an explicit affine bijection.",
+            "self_check_notes": "No theorem-specific properties of F_n are used; all notation is defined locally.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "0 <= t < 1",
+                "x in I_{n,j}"
+              ],
+              "normalized_claim": "T_{n,j} maps [0,1) bijectively onto I_{n,j}, with inverse x -> n*x - j.",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real t in [0,1)",
+                "for all real x in I_{n,j}"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "unit-interval coordinate",
+                  "type": "real"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "point in the cell",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. The affine map T_{n,j}(t) = (j + t)/n is a bijection from [0,1) onto I_{n,j}; its inverse is x -> n*x - j.",
+            "strictly_easier_reason": "This is a self-contained affine-geometry fact independent of the function F_n."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.06,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Translates the inequality from the rescaled variable t back to x.",
+            "self_check_notes": "It is purely a rewriting lemma using the definitions in shared_context.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "0 <= t < 1",
+                "x = T_{n,j}(t)"
+              ],
+              "normalized_claim": "G_{n,j}(t) = F_n(x) and G_{n,j}(0) = F_n(j/n).",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real t with 0 <= t < 1",
+                "for all real x with x = T_{n,j}(t)"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "translated coordinate",
+                  "type": "real"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "original point",
+                  "type": "real"
+                },
+                {
+                  "domain": "real-valued functions",
+                  "name": "G",
+                  "role": "translated function",
+                  "type": "real -> real"
+                }
+              ],
+              "witness_dependencies": [
+                "x = T_{n,j}(t)"
+              ]
+            },
+            "statement_nl": "For every real t with 0 <= t < 1, if x = T_{n,j}(t), then G_{n,j}(t) = F_n(x), and moreover G_{n,j}(0) = F_n(j/n).",
+            "strictly_easier_reason": "This is a definitional bridge between the translated coordinates and the original function values."
+          },
+          {
+            "bottleneck_reason": "This is the substantive cellwise estimate; all other lemmas are pure arithmetic reparametrization.",
+            "formalization_cost_estimate": 0.95,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Core local estimate on the rescaled interval.",
+            "self_check_notes": "This is the only theorem-specific input; once it is granted, the rest is formal transport.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "0 <= t < 1"
+              ],
+              "normalized_claim": "G_{n,j}(t) <= G_{n,j}(0).",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real t with 0 <= t < 1"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "translated coordinate",
+                  "type": "real"
+                },
+                {
+                  "domain": "real-valued functions",
+                  "name": "G",
+                  "role": "translated function",
+                  "type": "real -> real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every positive integer n, every integer j with 0 <= j <= n - 1, and every real t with 0 <= t < 1, one has G_{n,j}(t) <= G_{n,j}(0).",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For a positive integer n and an integer j, define I_{n,j} := {x in R | j/n <= x and x < (j + 1)/n}.",
+            "kind": "notation",
+            "label": "I_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define T_{n,j}(t) := (j + t)/n for real t.",
+            "kind": "notation",
+            "label": "T_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define G_{n,j}(t) := F_n(T_{n,j}(t)).",
+            "kind": "notation",
+            "label": "G_{n,j}"
+          }
+        ],
+        "strategy_summary": "Purely arithmetic cell decomposition: first identify the interval index via floor(n*x), then reparametrize the half-open interval by t = n*x - j, and finally reduce the theorem to a single local bound for the translated function G_{n,j}(t) = F_n((j+t)/n)."
+      },
+      "lean_assembly_status": "pending",
+      "lean_v2_prepare_status": null,
+      "llm_vetting_status": "rejected_fatal",
+      "rejection_reason": "Candidate materialization failed before decomposition vetting because agent3 returned infrastructure. Retry the same candidate before replacing the decomposition strategy. Artifact: problems/prob_20260327225136_1596912c/decomposition_vetter/dec_20260328001723_fa43e785/agent3_request_error_attempt_1.json",
+      "strategy_summary": "Purely arithmetic cell decomposition: first identify the interval index via floor(n*x), then reparametrize the half-open interval by t = n*x - j, and finally reduce the theorem to a single local bound for the translated function G_{n,j}(t) = F_n((j+t)/n)."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "accepted",
+      "decomposition_id": "dec_20260328001912_e3243893",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "accepted",
+      "failure_origin": "child_lemma_false",
+      "fixes_required": [],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix n, j, and x satisfying the hypotheses of the theorem. By L1, write x = T_{n,j}(t) with t = n*x - j in [0,1). By L2 and L4, H'_{n,j}(u) = F_n'(T_{n,j}(u))/n <= 0 for every u in (0,1). Then L3 gives H_{n,j}(t) <= H_{n,j}(0). Finally, L5 rewrites this as F_n(x) <= F_n(j/n). Since n, j, and x were arbitrary under the stated restrictions, this is exactly the theorem.",
+          "steps": [
+            {
+              "derives": "From the hypothesis on x, obtain t = n*x - j in [0,1) and x = T_{n,j}(t).",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "This is a direct application of the parameterization lemma.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For the t from A1, conclude H'_{n,j}(u) <= 0 for all u in (0,1) by the chain rule and the derivative-sign lemma.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "One must combine the chain-rule formula with the sign of F_n' and use that n > 0 to preserve the inequality after dividing by n.",
+              "uses_lemmas": [
+                "L2",
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "Apply the monotonicity theorem to H_{n,j} to get H_{n,j}(t) <= H_{n,j}(0).",
+              "is_trivial": true,
+              "step_id": "A3",
+              "trivial_justification": "This is a direct instance of the standard derivative-to-monotonicity principle.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "Rewrite H_{n,j}(t) as F_n(x) and H_{n,j}(0) as F_n(j/n), concluding F_n(x) <= F_n(j/n).",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "This step requires rewriting both sides using the translated-function identity and the x = T_{n,j}(t) relation.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A3"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 1,
+        "context_items": [
+          {
+            "content": "For a positive integer n and an integer j, define I_{n,j} := {x in R | j/n <= x and x < (j + 1)/n}.",
+            "kind": "notation",
+            "label": "I_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define T_{n,j}(t) := (j + t)/n for real t.",
+            "kind": "notation",
+            "label": "T_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define H_{n,j}(t) := F_n(T_{n,j}(t)).",
+            "kind": "notation",
+            "label": "H_{n,j}"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.84,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Affine parameterization of the cell.",
+            "self_check_notes": "All symbols are standard or defined in shared_context; no cross-lemma references appear.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "j/n <= x",
+                "x < (j + 1)/n"
+              ],
+              "normalized_claim": "The unique unit-interval coordinate of x is t = n*x - j, and x = (j+t)/n.",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real x with j/n <= x < (j + 1)/n"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "original point",
+                  "type": "real"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "unit-interval coordinate",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": [
+                "t = n*x - j"
+              ]
+            },
+            "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If x is a real number with j/n <= x < (j + 1)/n, then t = n*x - j satisfies 0 <= t < 1 and x = T_{n,j}(t).",
+            "strictly_easier_reason": "This is a straightforward change of variables from the interval bounds."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.22,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Computes the derivative of the rescaled function.",
+            "self_check_notes": "The only special notation is H_{n,j}, defined in shared_context.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "F_n is differentiable on I_{n,j}",
+                "0 < t < 1"
+              ],
+              "normalized_claim": "H_{n,j} is differentiable on (0,1), and H'_{n,j}(t)=F_n'(T_{n,j}(t))/n.",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real t with 0 < t < 1"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "translated coordinate",
+                  "type": "real"
+                },
+                {
+                  "domain": "real-valued functions",
+                  "name": "H",
+                  "role": "translated function",
+                  "type": "real -> real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. Assume F_n is differentiable on I_{n,j}. Then H_{n,j} is differentiable on (0,1), and for each real t in (0,1), H'_{n,j}(t) = F_n'(T_{n,j}(t)) / n.",
+            "strictly_easier_reason": "This is a standard chain-rule computation for an affine change of variables."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Converts a derivative sign condition into a pointwise bound at the left endpoint.",
+            "self_check_notes": "No dependence on F_n or the specific interval structure.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "h is differentiable on (0,1)",
+                "h'(u) <= 0 for all u in (0,1)",
+                "0 <= u < 1"
+              ],
+              "normalized_claim": "A differentiable function with nonpositive derivative on (0,1) satisfies h(u) <= h(0) for u in [0,1).",
+              "quantifier_order": [
+                "for every differentiable h : [0,1] -> R",
+                "for every real u with 0 <= u < 1"
+              ],
+              "variables": [
+                {
+                  "domain": "real-valued functions on [0,1]",
+                  "name": "h",
+                  "role": "generic function",
+                  "type": "real -> real"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "u",
+                  "role": "point in the unit interval",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let h : [0,1] -> R be differentiable on (0,1). If h'(u) <= 0 for every u in (0,1), then h(u) <= h(0) for every u with 0 <= u < 1.",
+            "strictly_easier_reason": "This is a standard monotonicity theorem from elementary calculus."
+          },
+          {
+            "bottleneck_reason": "This is the substantive theorem-specific analytic input; once it is known, the rest is standard calculus and affine change-of-variables.",
+            "formalization_cost_estimate": 0.95,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Analytic bottleneck: the derivative sign on the rescaled cell.",
+            "self_check_notes": "This is the only hard analytic step; the other lemmas are standard calculus or change-of-variable facts.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "0 < t < 1"
+              ],
+              "normalized_claim": "F_n'(T_{n,j}(t)) <= 0.",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real t with 0 < t < 1"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "translated coordinate",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every positive integer n, every integer j with 0 <= j <= n - 1, and every real t with 0 < t < 1, one has F_n'(T_{n,j}(t)) <= 0.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Rewrites the translated inequality in the original x-variable.",
+            "self_check_notes": "It only unwinds the notation H_{n,j} and the affine map T_{n,j}.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 0",
+                "0 <= j <= n - 1",
+                "0 <= t < 1",
+                "x = T_{n,j}(t)"
+              ],
+              "normalized_claim": "H_{n,j}(t) = F_n(x) and H_{n,j}(0) = F_n(j/n).",
+              "quantifier_order": [
+                "for all positive integers n",
+                "for all integers j with 0 <= j <= n - 1",
+                "for all real t with 0 <= t < 1",
+                "for all real x with x = T_{n,j}(t)"
+              ],
+              "variables": [
+                {
+                  "domain": "positive integers",
+                  "name": "n",
+                  "role": "index parameter",
+                  "type": "nat"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "cell index",
+                  "type": "int"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "t",
+                  "role": "translated coordinate",
+                  "type": "real"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "original point",
+                  "type": "real"
+                },
+                {
+                  "domain": "real-valued functions",
+                  "name": "H",
+                  "role": "translated function",
+                  "type": "real -> real"
+                }
+              ],
+              "witness_dependencies": [
+                "x = T_{n,j}(t)"
+              ]
+            },
+            "statement_nl": "For every positive integer n, every integer j with 0 <= j <= n - 1, every real t with 0 <= t < 1, and every real x with x = T_{n,j}(t), one has H_{n,j}(t) = F_n(x) and H_{n,j}(0) = F_n(j/n).",
+            "strictly_easier_reason": "This is a direct definitional bridge between the translated and original variables."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For a positive integer n and an integer j, define I_{n,j} := {x in R | j/n <= x and x < (j + 1)/n}.",
+            "kind": "notation",
+            "label": "I_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define T_{n,j}(t) := (j + t)/n for real t.",
+            "kind": "notation",
+            "label": "T_{n,j}"
+          },
+          {
+            "content": "For the same n and j, define H_{n,j}(t) := F_n(T_{n,j}(t)).",
+            "kind": "notation",
+            "label": "H_{n,j}"
+          }
+        ],
+        "strategy_summary": "Analytic monotonicity: define the translated function H_{n,j}(t) = F_n((j+t)/n), compute its derivative by the chain rule, prove that derivative is nonpositive on the unit interval, and then pull the inequality back to the original x-variable."
+      },
+      "lean_assembly_status": "pending",
+      "lean_v2_prepare_status": "running",
+      "llm_vetting_status": "accepted",
+      "missing_coverage": [],
+      "rejection_reason": "The lemma is false as stated. The hypothesis only assumes differentiability on the open interval (0,1), so it gives no control over the endpoint value h(0). A function can have h'(u) <= 0 on (0,1) and still satisfy h(u) > h(0) for some u in [0,1), so the claimed conclusion fails.",
+      "strategy_summary": "Analytic monotonicity: define the translated function H_{n,j}(t) = F_n((j+t)/n), compute its derivative by the chain rule, prove that derivative is nonpositive on the unit interval, and then pull the inequality back to the original x-variable.",
+      "vet_summary": "The decomposition is logically coherent: L1 provides the affine reparameterization, L2 and L4 give the derivative sign needed for monotonicity, L3 yields the endpoint comparison, and L5 translates back to the original variable. No self-containment violations or hidden triviality errors were found. L4 is the substantive bottleneck lemma, but it is clearly identified and not equivalent to the root theorem."
+    }
+  ],
+  "problem_id": "prob_20260327225136_1596912c",
+  "proof_bundle_artifact_id": "problems/prob_20260327225136_1596912c/proof_bundles/decompositions/dec_20260328002539_ed058e78.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260327225136_1596912c/decomposition_candidates/dec_20260328002539_ed058e78/agent2_candidate.json",
+  "revision_number": 3,
+  "shared_context": [],
+  "strategy_summary": "Corrected arithmetic cell decomposition: use the floor of n*x only to locate the cell, then convert to the unit-interval coordinate t = n*x - j; unlike the rejected analytic attempt, no derivative or endpoint-monotonicity lemma is introduced, and the local inequality on G_{n,j} is kept as the explicit bottleneck.",
+  "updated_at": "2026-03-28T00:28:57.846478Z"
+}

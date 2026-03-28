@@ -25,6 +25,7 @@ class WorkerJob(BaseModel):
     payload: dict[str, Any]
     execution_id: str | None = None
     llm_overrides: dict[str, Any] | None = None
+    worker_attempt_count: int | None = None
 
 
 class WorkerResult(BaseModel):

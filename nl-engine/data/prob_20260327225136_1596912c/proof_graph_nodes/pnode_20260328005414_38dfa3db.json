@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-03-28T00:54:14.675485Z",
+  "graph_node_id": "pnode_20260328005414_38dfa3db",
+  "metadata": {
+    "parent_id": "lem_20260327230124_caed970a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "fe391892536355431e25ce63ea7bb89eb0b874456411b7ae23a3e7e4b52c3022",
+  "owner_id": "lem_20260328005238_8392739e",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is a positive integer (so n is at least 1 and division by n is valid)",
+      "j is an integer satisfying 0 <= j <= n - 1",
+      "x is a real number satisfying j divided by n <= x < (j + 1) divided by n",
+      "t is computed as n times x minus j and is therefore a real number"
+    ],
+    "normalized_claim": "For all positive integers n and all integers j with 0 <= j <= n - 1, for every real x with j divided by n <= x < (j + 1) divided by n, if t is defined by t = n times x minus j, then t satisfies 0 <= t < 1 and x equals (j + t) divided by n (equivalently x = T_{n,j}(t) where T_{n,j}(t) is defined as (j + t) divided by n).",
+    "quantifier_order": [
+      "for all positive integers n",
+      "for all integers j such that 0 <= j <= n - 1",
+      "for all real numbers x such that j divided by n <= x < (j + 1) divided by n",
+      "define t as n times x minus j"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "index and scaling parameter; divisor and multiplier",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "j",
+        "role": "interval index for splitting [0,1) into n parts; also used to shift",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input point constrained to a specific half-open interval",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "derived parameter computed from x, constrained to [0,1)",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers to real numbers (implicitly used on t)",
+        "name": "T_{n,j}",
+        "role": "reconstruction map from t to x for fixed n and j",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "t depends on n and x and j via the definition t = n times x minus j",
+      "the identity x = T_{n,j}(t) depends on substituting this t into T_{n,j}(t) = (j + t) divided by n"
+    ]
+  },
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If x is a real number with j/n <= x < (j + 1)/n, and t = n * x - j, then 0 <= t < 1 and x = T_{n,j}(t), where T_{n,j}(t) = (j + t)/n.",
+  "updated_at": "2026-03-28T00:54:14.675486Z"
+}

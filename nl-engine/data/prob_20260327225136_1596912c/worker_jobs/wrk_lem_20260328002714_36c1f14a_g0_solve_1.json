@@ -1,0 +1,189 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260328002714_36c1f14a/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T00:29:28.639315Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:29:44.385622Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:29:21.449337Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327230243_146498d5",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327230243_7431629c",
+        "label": "lem_20260327230124_caed970a",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For any integer j with 0 <= j <= n - 1 and any real number x with j/n <= x < (j+1)/n, one has F_n(x) <= F_n(j/n)."
+      }
+    ],
+    "lemma_id": "lem_20260328002714_36c1f14a",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328002921_7339028b",
+    "role_in_assembly": "Extracts the additive offset coordinate from the interval hypothesis.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a positive integer (so n is nonzero)",
+        "j is an integer satisfying 0 <= j <= n - 1",
+        "x is a real number satisfying j/n <= x and x < (j + 1)/n",
+        "J_{n,j}(d) is evaluated as j/n + d for the given n, j, and real d"
+      ],
+      "normalized_claim": "Given n in positive integers, j in integers with 0 <= j <= n - 1, and x in reals with j/n <= x < (j + 1)/n, let d be defined by d = x - j/n. Then d satisfies 0 <= d < 1/n, and x equals J_{n,j}(d) where J_{n,j}(d) = j/n + d.",
+      "quantifier_order": [
+        "for all positive integers n",
+        "for all integers j with 0 <= j <= n - 1",
+        "for all real numbers x with j/n <= x < (j + 1)/n",
+        "define d as x minus j/n"
+      ],
+      "variables": [
+        {
+          "domain": "subset of integers: {1, 2, 3, ...}",
+          "name": "n",
+          "role": "index and denominator for interval partition",
+          "type": "positive integer"
+        },
+        {
+          "domain": "integers",
+          "name": "j",
+          "role": "subinterval index with restriction 0 <= j <= n - 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "point lying in the half-open interval [j/n, (j+1)/n)",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "d",
+          "role": "defined by d = x - j/n and shown to satisfy 0 <= d < 1/n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "d depends on x, n, and j via the definition d = x - j/n",
+        "the expression J_{n,j}(d) depends on n, j, and d"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. If x is a real number with j/n <= x < (j + 1)/n and d = x - j/n, then 0 <= d < 1/n and x = J_{n,j}(d), where J_{n,j}(d) = j/n + d.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "definition_used": "d = x - j/n",
+      "derived": "0 <= d < 1/n and x = J_{n,j}(d)",
+      "no_extra_assumptions": true
+    },
+    "lemma_id": "lem_20260328002714_36c1f14a",
+    "proof_nl": "Let d = x - j/n. Since x \\ge j/n, subtracting j/n from both sides gives d \\ge 0. Also, since x < (j+1)/n = j/n + 1/n, subtracting j/n gives d < 1/n. Hence 0 \\le d < 1/n.\n\nBy the definition of d, we have x = j/n + d. Since J_{n,j}(d) is defined to be j/n + d, it follows that x = J_{n,j}(d).\n\nThis proves the statement.",
+    "proof_summary": "From d = x - j/n, the interval condition on x immediately gives 0 <= d < 1/n by subtraction, and the definition of d gives x = j/n + d = J_{n,j}(d).",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Basic order properties of real numbers under subtraction"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T00:29:23.195815Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328002714_36c1f14a",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:29:44.385628Z",
+  "worker_job_id": "wrk_lem_20260328002714_36c1f14a_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

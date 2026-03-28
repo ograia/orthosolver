@@ -156,6 +156,34 @@ def test_root_agent_started_state_wins_over_earlier_request_error(tmp_path: Path
     assert detail == "agent request in progress (timeout=600s)"
 
 
+def test_provider_pending_state_is_reported_as_recovery_in_progress(tmp_path: Path) -> None:
+    browser = ArtifactBrowser(str(tmp_path))
+    input_key = "problems/p/decomposer/attempt_1/agent2_input.json"
+    _write(tmp_path / input_key)
+    _write(
+        tmp_path / "problems/p/decomposer/attempt_1/agent2_request_state_attempt_1.json",
+        (
+            '{"status": "provider_pending", "provider_status": "unreachable", '
+            '"last_retrieve_error": "APIConnectionError: Connection error."}'
+        ),
+    )
+
+    status, detail = _request_completion_status(
+        browser=browser,
+        source="agent2",
+        artifact_key=input_key,
+        problem_id="p",
+        key_set={input_key},
+        problem_running=False,
+    )
+
+    assert status == "pending"
+    assert detail == (
+        "local retrieval failed, recovery in progress (provider_status=unreachable): "
+        "APIConnectionError: Connection error."
+    )
+
+
 def test_root_agent_started_state_uses_worker_failure_result(tmp_path: Path) -> None:
     browser = ArtifactBrowser(str(tmp_path))
     input_key = "problems/p/decomposer/attempt_1/agent2_input.json"

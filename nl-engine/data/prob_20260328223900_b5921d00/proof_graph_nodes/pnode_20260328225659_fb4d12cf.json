@@ -1,0 +1,58 @@
+{
+  "created_at": "2026-03-28T22:56:59.980477Z",
+  "graph_node_id": "pnode_20260328225659_fb4d12cf",
+  "metadata": {
+    "parent_id": "thm_root_20260328223900_ac5193ce"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "a7f225e9878c89dce195c0422d05b5adbb7b35152cf0f890910364838cac53c1",
+  "owner_id": "lem_20260328225548_9e6bed81",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer greater than 1 (so that the finite sum from k = 1 to k = n is nonempty and denominators k are positive integers)",
+      "x is any real number",
+      "z is any integer",
+      "k ranges over integers in the closed interval from 1 to n"
+    ],
+    "normalized_claim": "For every integer n greater than 1, define f_n of a real input x as floor of n times x minus the sum over integers k from 1 to n of floor of k times x divided by k. Then for every real x and every integer z, f_n of x plus z equals f_n of x.",
+    "quantifier_order": [
+      "for all integer n with n > 1",
+      "for all real x",
+      "for all integer z"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter indexing the function f_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input to the function f_n",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "z",
+        "role": "integer shift amount applied to x",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "summation index inside the definition of f_n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "none (the claim is an equality for all choices of n, x, z; no existential witnesses are introduced)"
+    ]
+  },
+  "statement_nl": "For every integer n>1, every real x, and every integer z, the function f_n defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k satisfies f_n(x+z) = f_n(x).",
+  "updated_at": "2026-03-28T22:56:59.980478Z"
+}

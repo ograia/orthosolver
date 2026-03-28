@@ -1,0 +1,87 @@
+{
+  "artifact_prefix": "problems/prob_20260328025045_10062874/decomposer/attempt_20260328025131_c27fbafd_track_1",
+  "attempt_count": 5,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T03:43:28.254151Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-28T02:51:31.119019Z",
+  "error_payload": {
+    "agent_key": "agent2",
+    "class": "AgentExecutionError",
+    "error_class": "infrastructure_transient",
+    "message": "OpenAI request failed for agent2: APIConnectionError: Connection error."
+  },
+  "execution_id": "exec_20260328025045_7442f929",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 5,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, and l are integers.",
+        "The bounds 0 <= k and 0 <= l and k <= n and l <= n are assumed.",
+        "The symbol [n choose k]_q refers to the Gaussian q-binomial coefficient.",
+        "The quotient is assumed to simplify to an actual polynomial in q, not merely a rational function.",
+        "Coefficients are interpreted in the usual expansion in powers of q."
+      ],
+      "normalized_claim": "For every integer n and integers k and l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient for n choose k by the Gaussian q-binomial coefficient for n choose l is a polynomial in q, then all coefficients of that polynomial are nonnegative.",
+      "quantifier_order": [
+        "For every integer triple n, k, l.",
+        "Assume 0 <= k, l <= n.",
+        "If the quotient of the Gaussian q-binomial coefficient for n choose k by the Gaussian q-binomial coefficient for n choose l is a polynomial in q, then every coefficient of that polynomial is nonnegative."
+      ],
+      "variables": [
+        {
+          "domain": "all integers, with the stated bounds implying n is at least 0",
+          "name": "n",
+          "role": "parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "integers satisfying 0 <= k <= n",
+          "name": "k",
+          "role": "parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "integers satisfying 0 <= l <= n",
+          "name": "l",
+          "role": "parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "the variable of the polynomial expression",
+          "name": "q",
+          "role": "polynomial variable",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": [
+        "There are no existential witnesses in the statement.",
+        "The conclusion depends only on the parameters n, k, and l, together with the assumption that the quotient is polynomial in q."
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328025045_10062874",
+  "request_source": "root_generation",
+  "result_payload": null,
+  "started_at": "2026-03-28T02:51:28.708579Z",
+  "status": "failed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260328025045_226e549b",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-28T03:43:28.254151Z",
+  "worker_job_id": "wrk_thm_root_20260328025045_226e549b_decompose_0_track_1_req_20260328025131_8c73df82",
+  "worker_kind": "decomposition_generation"
+}

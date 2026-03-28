@@ -1,0 +1,194 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328015220_49341677/vetter_attempt_3",
+  "attempt_count": 1,
+  "attempt_number": 3,
+  "completed_at": "2026-03-28T02:26:59.614002Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T02:27:23.054432Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T02:26:55.553607Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+        "item_id": "pnode_20260328015341_a57d9401",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 3,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328015220_49341677",
+    "proof_nl": "Fix an integer n>1, a real number x, and an integer z. We will show that E(n,x+z)=E(n,x).\n\nBy definition,\nE(n,x+z)=\\lfloor n(x+z)\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor k(x+z)\\rfloor}{k}.\nFor each integer k with 1\\le k\\le n, both nz and kz are integers. Using the standard floor translation identity \\lfloor t+m\\rfloor=\\lfloor t\\rfloor+m for every real t and integer m, we get\n\\lfloor n(x+z)\\rfloor=\\lfloor nx+nz\\rfloor=\\lfloor nx\\rfloor+nz,\nand similarly\n\\lfloor k(x+z)\\rfloor=\\lfloor kx+kz\\rfloor=\\lfloor kx\\rfloor+kz.\nSubstituting these into the definition of E(n,x+z) gives\nE(n,x+z)=\\bigl(\\lfloor nx\\rfloor+nz\\bigr)-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor+kz}{k}.\nDistributing the sum,\nE(n,x+z)=\\lfloor nx\\rfloor+nz-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}-\\sum_{k=1}^n \\frac{kz}{k}.\nSince \\frac{kz}{k}=z for each k, the last sum equals \\sum_{k=1}^n z=nz. Therefore the added nz terms cancel:\nE(n,x+z)=\\lfloor nx\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}=E(n,x).\nHence E(n,x+z)=E(n,x) for every real x and every integer z.",
+    "role_in_assembly": "Remove the integer part of x without changing the objective function.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "x is a real number",
+        "z is an integer",
+        "E(n, t) is well-defined for integer n with n > 1 and for real inputs t"
+      ],
+      "normalized_claim": "For every integer n with n > 1, and for every real number x and every integer z, the function value E(n, x plus z) equals E(n, x).",
+      "quantifier_order": [
+        "for all n in integers with n > 1",
+        "for all x in reals",
+        "for all z in integers"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "parameter of the function E; constrained by n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "reals",
+          "name": "x",
+          "role": "real input to the second argument of E",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "z",
+          "role": "integer shift added to x",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "statement_nl": "Let n be an integer greater than 1. For every real number x and every integer z, E(n, x + z) = E(n, x).",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328015220_49341677",
+    "proof_status": "complete",
+    "reason": "The proof correctly establishes translation invariance under integer shifts: floor(t+m)=floor(t)+m is applied appropriately to both terms, and the added nz terms cancel exactly in the sum. The lemma matches the assembly role and does not drift from the root objective structure.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T02:26:54.527473Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328015220_49341677",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:27:23.054437Z",
+  "worker_job_id": "wrk_lem_20260328015220_49341677_g0_vet_3",
+  "worker_kind": "lemma_vetter"
+}

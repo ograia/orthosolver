@@ -1,0 +1,98 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328225659_fb4d12cf",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T22:55:53.894065Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T23:01:19.316003Z",
+  "last_dependency_check_id": "depchk_20260328230119_630e629b",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly establishes integer-shift invariance of f_n by applying floor(t+m)=floor(t)+m to each term, then cancelling the added nz contribution against the sum of z over k=1..n. The argument is complete and matches the lemma and semantic sketch exactly.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n>1, a real number x, and an integer z. We prove that f_n(x+z)=f_n(x).\n\nRecall the standard floor identity: for every real t and every integer m, floor(t+m)=floor(t)+m. Indeed, if floor(t)=a, then a<=t<a+1, so a+m<=t+m<a+m+1, hence floor(t+m)=a+m.\n\nNow for each k in {1,2,...,n}, since kz is an integer, we have\nfloor(k(x+z))=floor(kx+kz)=floor(kx)+kz.\nAlso, for k=n,\nfloor(n(x+z))=floor(nx+nz)=floor(nx)+nz.\nTherefore\nf_n(x+z)=floor(n(x+z)) - sum_{k=1}^n floor(k(x+z))/k\n= floor(nx)+nz - sum_{k=1}^n (floor(kx)+kz)/k\n= floor(nx)+nz - sum_{k=1}^n floor(kx)/k - sum_{k=1}^n z\n= floor(nx)+nz - sum_{k=1}^n floor(kx)/k - nz\n= floor(nx) - sum_{k=1}^n floor(kx)/k\n= f_n(x).\nSo f_n is invariant under integer shifts: f_n(x+z)=f_n(x) for all real x and all integers z.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260328230119_701c7b34",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328225548_9e6bed81",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260328223900_ac5193ce",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260328223900_b5921d00",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/lemmas/lem_20260328225548_9e6bed81.json",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides the structural periodicity needed to reduce the problem to the fractional part of x.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 2,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1, every real x, and every integer z, the function f_n defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k satisfies f_n(x+z) = f_n(x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer greater than 1 (so that the finite sum from k = 1 to k = n is nonempty and denominators k are positive integers)",
+      "x is any real number",
+      "z is any integer",
+      "k ranges over integers in the closed interval from 1 to n"
+    ],
+    "normalized_claim": "For every integer n greater than 1, define f_n of a real input x as floor of n times x minus the sum over integers k from 1 to n of floor of k times x divided by k. Then for every real x and every integer z, f_n of x plus z equals f_n of x.",
+    "quantifier_order": [
+      "for all integer n with n > 1",
+      "for all real x",
+      "for all integer z"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter indexing the function f_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input to the function f_n",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "z",
+        "role": "integer shift amount applied to x",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "summation index inside the definition of f_n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "none (the claim is an equality for all choices of n, x, z; no existential witnesses are introduced)"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T23:01:19.316003Z"
+}

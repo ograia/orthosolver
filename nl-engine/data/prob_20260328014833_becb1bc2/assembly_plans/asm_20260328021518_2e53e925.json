@@ -1,0 +1,90 @@
+{
+  "assembly_plan_id": "asm_20260328021518_2e53e925",
+  "created_at": "2026-03-28T02:15:18.371714Z",
+  "decomposition_id": "dec_20260328021518_931712a0",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "proof_skeleton_nl": "Fix an arbitrary real number x. The proof splits into three pieces: an equality statement and two bounds. The equality comes from the algebraic decomposition x = floor(x) + (x - floor(x)) together with the identification frac(x) = x - floor(x). The lower and upper bounds come from the standard floor inequalities floor(x) \u2264 x and x < floor(x) + 1, translated into statements about x - floor(x), and then rewritten using frac(x) = x - floor(x). After proving the equality and both bounds for the arbitrary x, conjoin them and generalize to all real numbers.",
+  "root_node_id": "lem_20260328015226_ec8a277f",
+  "steps": [
+    {
+      "derives": "Fix an arbitrary real number x and reduce the goal to proving the conjunction for this particular x.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "Universal quantification is handled by introducing an arbitrary element.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For the fixed x, x = floor(x) + frac(x).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Use the algebraic identity from L6 and rewrite x - floor(x) as frac(x) using L3.",
+      "uses_lemmas": [
+        "lem_20260328021505_0d0026c3",
+        "lem_20260328021455_6cd7b9cc"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For the fixed x, 0 \u2264 frac(x).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Use the nonnegativity of the floor remainder from L4 and rewrite the remainder as frac(x) via L3.",
+      "uses_lemmas": [
+        "lem_20260328021459_c0982ce5",
+        "lem_20260328021455_6cd7b9cc"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For the fixed x, frac(x) < 1.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Use the upper bound on the floor remainder from L5 and rewrite the remainder as frac(x) via L3.",
+      "uses_lemmas": [
+        "lem_20260328021502_b64c8ed1",
+        "lem_20260328021455_6cd7b9cc"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For the fixed x, 0 \u2264 frac(x) \u2227 frac(x) < 1.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is direct conjunction introduction from the two bounds.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "For the fixed x, x = floor(x) + frac(x) \u2227 0 \u2264 frac(x) \u2227 frac(x) < 1.",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "Conjoin the equality from A2 with the bounds from A5, using the standard right-associative shape of conjunctions.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A5"
+      ]
+    },
+    {
+      "derives": "For every real number x, x = floor(x) + frac(x) \u2227 0 \u2264 frac(x) \u2227 frac(x) < 1.",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "Since x was arbitrary, universal generalization yields the quantified theorem.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    }
+  ]
+}

@@ -45,10 +45,11 @@ from nl_engine.domain.enums import NodeKind, ProblemStatus, ProofStatus, Routing
 from nl_engine.domain.models import EventORM, LlmUsageRecordORM, ProblemORM, TheoremORM, WorkerJobORM
 from nl_engine.execution.runtime import start_embedded_supervisor_if_enabled
 from nl_engine.lean_client.sessions import LeanSessionManager
-from nl_engine.observability.costs import cached_input_tokens_from_raw_usage
+from nl_engine.observability.costs import MODEL_PRICING_USD_PER_1M, cached_input_tokens_from_raw_usage
 from nl_engine.persistence.repositories import (
     AssemblyPlanRepository,
     CounterexampleRepository,
+    DecompositionCandidateRepository,
     DecompositionRepository,
     EventRepository,
     FailureReportRepository,
@@ -925,6 +926,15 @@ def _request_completion_status(
             if problem_running or is_root_agent2_track:
                 return "pending", f"agent request in progress{timeout_detail}"
             return "failed", f"agent request interrupted{timeout_detail}"
+        if latest_state in {"provider_pending", "provider_running"}:
+            provider_status = str(latest_state_payload.get("provider_status", "")).strip()
+            last_retrieve_error = str(latest_state_payload.get("last_retrieve_error", "")).strip()
+            detail = "provider job still running" if latest_state == "provider_running" else "local retrieval failed, recovery in progress"
+            if provider_status:
+                detail = f"{detail} (provider_status={provider_status})"
+            if last_retrieve_error:
+                detail = f"{detail}: {last_retrieve_error}"
+            return "pending", f"{detail}{timeout_detail}"
         if latest_state == "queued":
             return "pending", f"agent request queued{timeout_detail}"
         if latest_state == "deferred":
@@ -1257,7 +1267,7 @@ def _collect_request_log_entries(
         for index, record in enumerate(request_records[-limit:]):
             completion_status = "pending"
             completion_detail: str | None = record.error_class
-            response_id: str | None = record.response_id
+            response_id: str | None = record.provider_response_id or record.response_id
             provider_terminal_status: str | None = None
             llm_model: str | None = record.llm_model
             llm_reasoning_effort: str | None = record.llm_reasoning_effort
@@ -1267,6 +1277,19 @@ def _collect_request_log_entries(
                 completion_status = "completed"
             elif record.status in {"failed", "cancelled"}:
                 completion_status = "failed"
+            elif record.status in {"provider_pending", "provider_running"}:
+                completion_status = "pending"
+                provider_status = str(record.provider_status or "").strip()
+                last_retrieve_error = str(record.last_retrieve_error or "").strip()
+                completion_detail = (
+                    "provider job still running"
+                    if record.status == "provider_running"
+                    else "local retrieval failed, recovery in progress"
+                )
+                if provider_status:
+                    completion_detail = f"{completion_detail} (provider_status={provider_status})"
+                if last_retrieve_error:
+                    completion_detail = f"{completion_detail}: {last_retrieve_error}"
             elif record.status == "superseded":
                 completion_status = "failed"
                 completion_detail = "superseded by newer continuation generation"
@@ -1661,6 +1684,7 @@ def get_problem_create_template() -> DebugProblemCreateTemplateResponse:
                 "parallel_root_decompositions_n": cfg.decomposition.parallel_root_decompositions_n,
                 "parallel_root_take_k": cfg.decomposition.parallel_root_take_k,
                 "root_solutions_required_for_termination": cfg.decomposition.root_solutions_required_for_termination,
+                "lemma_decomposition_candidates_n": cfg.decomposition.lemma_decomposition_candidates_n,
                 "max_consecutive_fatal_rejections_per_node": cfg.decomposition.max_consecutive_fatal_rejections_per_node,
                 "max_decompositions_per_failed_lemma": cfg.decomposition.max_decompositions_per_failed_lemma,
             },
@@ -1795,6 +1819,7 @@ def get_debug_problem_snapshot(
     theorems = TheoremRepository(db)
     lemmas = LemmaRepository(db)
     decompositions = DecompositionRepository(db)
+    decomposition_candidates = DecompositionCandidateRepository(db)
     assembly_plans = AssemblyPlanRepository(db)
     lean_jobs = LeanJobRepository(db)
     trusted_context = TrustedContextRepository(db)
@@ -1813,6 +1838,7 @@ def get_debug_problem_snapshot(
 
     lemma_rows = lemmas.list_by_problem(problem_id)
     decomposition_rows = decompositions.list_by_problem(problem_id)
+    decomposition_candidate_rows = decomposition_candidates.list_by_problem(problem_id)
     counterexamples = CounterexampleRepository(db)
     proof_attempts = LemmaProofAttemptRepository(db)
     job_rows = lean_jobs.list_by_problem(problem_id)
@@ -1970,6 +1996,38 @@ def get_debug_problem_snapshot(
             if current is None or (job_payload.get("created_at") or datetime.min.replace(tzinfo=UTC)) > (current.get("created_at") or datetime.min.replace(tzinfo=UTC)):
                 formalize_job_by_lemma[target_id] = job_payload
 
+    candidate_payload_by_lemma: dict[str, list[dict[str, Any]]] = {}
+    decomposition_candidates_payload: list[dict[str, Any]] = []
+    for row in decomposition_candidate_rows:
+        if row.raw_candidate_artifact_id:
+            artifact_refs.add(row.raw_candidate_artifact_id)
+        if row.materialization_artifact_id:
+            artifact_refs.add(row.materialization_artifact_id)
+        payload = {
+            "candidate_id": row.candidate_id,
+            "node_id": row.node_id,
+            "node_kind": row.node_kind,
+            "logical_decomposition_id": row.logical_decomposition_id,
+            "candidate_index": row.candidate_index,
+            "strategy_summary": row.strategy_summary,
+            "shared_context": row.shared_context,
+            "formalization_cost_estimate": row.formalization_cost_estimate,
+            "llm_vetting_status": row.llm_vetting_status,
+            "selection_status": row.selection_status,
+            "raw_candidate_artifact_id": row.raw_candidate_artifact_id,
+            "materialization_artifact_id": row.materialization_artifact_id,
+            "promoted_decomposition_id": row.promoted_decomposition_id,
+            "failure_origin": row.failure_origin,
+            "failure_reason": row.failure_reason,
+            "decomposition_origin": row.decomposition_origin,
+            "decomposition_origin_reason": row.decomposition_origin_reason,
+            "decomposition_origin_job_id": row.decomposition_origin_job_id,
+            "created_at": row.created_at,
+            "updated_at": row.updated_at,
+        }
+        decomposition_candidates_payload.append(payload)
+        candidate_payload_by_lemma.setdefault(row.node_id, []).append(payload)
+
     lemmas_payload: list[dict[str, Any]] = []
     for lemma in lemma_rows:
         latest_report = vetter_reports.get(lemma.latest_vetter_report_id) if lemma.latest_vetter_report_id else None
@@ -2011,12 +2069,15 @@ def get_debug_problem_snapshot(
                 "solver_attempt_count": lemma.solver_attempt_count,
                 "consecutive_fatal_rejections": lemma.consecutive_fatal_rejections,
                 "minor_rejection_count": lemma.minor_rejection_count,
-                "decomposition_count": lemma.decomposition_count,
                 "decomposition_round_count": lemma.decomposition_round_count,
+                "materialized_candidate_count": lemma.materialized_candidate_count,
+                "promoted_decomposition_count": lemma.promoted_decomposition_count,
                 "lean_attempt_count": lemma.lean_attempt_count,
                 "lean_identical_fatal_count": lemma.lean_identical_fatal_count,
                 "consecutive_infrastructure_failures": lemma.consecutive_infrastructure_failures,
                 "solver_series_started_at": lemma.solver_series_started_at,
+                "last_submitted_solver_job_id": lemma.last_submitted_solver_job_id,
+                "last_submitted_solver_attempt_number": lemma.last_submitted_solver_attempt_number,
                 "next_action": lemma.next_action,
                 "last_terminal_worker_result": lemma.last_terminal_worker_result,
                 "last_transition_reason": lemma.last_transition_reason,
@@ -2150,6 +2211,7 @@ def get_debug_problem_snapshot(
                     if latest_formalize_job
                     else []
                 ),
+                "decomposition_candidates": candidate_payload_by_lemma.get(lemma.lemma_id, []),
             }
         )
 
@@ -2343,6 +2405,7 @@ def get_debug_problem_snapshot(
 
     lemma_by_id = {row["lemma_id"]: row for row in lemmas_payload}
     decomposition_by_id = {row["decomposition_id"]: row for row in decompositions_payload}
+    decomposition_candidate_by_id = {row["candidate_id"]: row for row in decomposition_candidates_payload}
     logical_decompositions_payload, logical_decomposition_by_id = _build_logical_decompositions(decompositions_payload)
     lean_job_by_id = {row["job_id"]: row for row in lean_jobs_payload}
     final_check_by_id: dict[str, Any] = {}
@@ -2446,11 +2509,13 @@ def get_debug_problem_snapshot(
         nl_only_final_output=nl_only_final_output,
         lemma_by_id=lemma_by_id,
         decomposition_by_id=decomposition_by_id,
+        decomposition_candidate_by_id=decomposition_candidate_by_id,
         logical_decomposition_by_id=logical_decomposition_by_id,
         lean_job_by_id=lean_job_by_id,
         final_check_by_id=final_check_by_id,
         lemmas=lemmas_payload,
         decompositions=decompositions_payload,
+        decomposition_candidates=decomposition_candidates_payload,
         logical_decompositions=logical_decompositions_payload,
         lean_jobs=lean_jobs_payload,
         trusted_context=context_payload,
@@ -2774,18 +2839,11 @@ def get_problem_llm_usage(
 
     usage_rows = [row for row in LlmUsageRepository(db).list_by_problem(problem_id) if row.provider == "openai"]
     totals, by_stage = _build_llm_usage_summary(usage_rows)
-    settings = get_settings()
-    pricing_usd_per_1m = {
-        "input": round(settings.openai_price_input_per_1k * 1000.0, 6),
-        "cached_input": round(settings.openai_price_cached_input_per_1k * 1000.0, 6),
-        "output": round(settings.openai_price_output_per_1k * 1000.0, 6),
-    }
-
     return DebugLlmUsageSummaryResponse(
         request_id=new_id("req"),
         server_time=_now_utc(),
         problem_id=problem_id,
-        pricing_usd_per_1m=pricing_usd_per_1m,
+        pricing_by_model_usd_per_1m=MODEL_PRICING_USD_PER_1M,
         totals=totals,
         by_stage=by_stage,
     )

@@ -1,0 +1,274 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260328002721_6989304c/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T00:29:54.742657Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:30:10.196758Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:29:46.142273Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260327230124_caed970a",
+        "role_in_parent": "Reduces the continuum problem on [0,1) to the discrete grid points j/n.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is a positive integer (implicit, needed so that j/n and (j+1)/n are well-defined and intervals make sense)",
+            "j is an integer satisfying 0 <= j <= n - 1",
+            "x is a real number satisfying j/n <= x < (j+1)/n",
+            "F_n is defined at every real x considered, and in particular at x equal to j/n"
+          ],
+          "normalized_claim": "For every positive integer n, for every integer j with 0 <= j <= n - 1, and for every real number x with j/n <= x and x < (j+1)/n, the inequality F_n(x) <= F_n(j/n) holds.",
+          "quantifier_order": [
+            "for all n",
+            "for all j",
+            "for all x"
+          ],
+          "variables": [
+            {
+              "domain": "positive integers",
+              "name": "n",
+              "role": "index parameter for the function F_n and for defining interval endpoints j/n and (j+1)/n",
+              "type": "natural number"
+            },
+            {
+              "domain": "integers",
+              "name": "j",
+              "role": "cell index that selects the interval [j/n, (j+1)/n)",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "argument of the function F_n within the interval associated to j",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "none (the claim is universally quantified; no existential witnesses are introduced)"
+          ]
+        },
+        "statement_nl": "For any integer j with 0 <= j <= n - 1 and any real number x with j/n <= x < (j+1)/n, one has F_n(x) <= F_n(j/n)."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n greater than 1",
+            "k ranges over integers from 1 through n inclusive",
+            "x ranges over all real numbers",
+            "y ranges over all real numbers",
+            "floor(t) denotes the greatest integer less than or equal to t"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+          "quantifier_order": [
+            "for all integers n with n greater than 1",
+            "there exists a real number x that maximizes the expression",
+            "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+          ],
+          "variables": [
+            {
+              "domain": "integers greater than 1",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 1 <= k <= n",
+              "name": "k",
+              "role": "summation index",
+              "type": "integer"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "argument to be maximized over",
+              "type": "real number"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "y",
+              "role": "comparison point for defining maximality of x",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "m",
+              "role": "maximal value of the expression",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizing x may depend on n",
+            "the maximal value m may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328002721_6989304c",
+    "proof_nl": "Let I_{n,j} denote the half-open interval [j/n,(j+1)/n). Define J_{n,j}:[0,1/n)\u2192I_{n,j} by J_{n,j}(d)=j/n+d.\n\nFirst, J_{n,j} is well-defined into I_{n,j}: if d\u2208[0,1/n), then 0\u2264d<1/n, so\nj/n \u2264 j/n+d < j/n+1/n = (j+1)/n.\nHence J_{n,j}(d)\u2208[j/n,(j+1)/n)=I_{n,j}.\n\nSecond, J_{n,j} is injective: if J_{n,j}(d_1)=J_{n,j}(d_2), then\nj/n+d_1 = j/n+d_2,\nso d_1=d_2.\n\nThird, J_{n,j} is surjective onto I_{n,j}: given any x\u2208I_{n,j}, set d=x-j/n. Since x\u2208[j/n,(j+1)/n), we have 0\u2264x-j/n<1/n, so d\u2208[0,1/n). Then\nJ_{n,j}(d)=j/n+(x-j/n)=x.\nThus every x in I_{n,j} has a preimage.\n\nTherefore J_{n,j} is a bijection from [0,1/n) onto I_{n,j}. Moreover, the inverse map is exactly x\u21a6x-j/n, because for d\u2208[0,1/n),\n(J_{n,j})^{-1}(J_{n,j}(d))=d,\nand for x\u2208I_{n,j},\nJ_{n,j}((J_{n,j})^{-1}(x))=x.\nSo the inverse function is x\u21a6x-j/n.",
+    "role_in_assembly": "Packages the left-endpoint normalization as an explicit affine correspondence.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a positive integer, so 1/n is well-defined and positive",
+        "j is an integer constrained by 0 <= j <= n minus 1",
+        "the affine map is defined on the half-open interval [0, 1/n)",
+        "the codomain/target is the interval I_{n,j}",
+        "the inverse formula x maps from I_{n,j} back to [0, 1/n)"
+      ],
+      "normalized_claim": "For every positive integer n and every integer j with 0 <= j <= n minus 1, define J_{n,j} from [0, 1/n) to I_{n,j} by J_{n,j}(d) equals j/n plus d. Then J_{n,j} is a bijection onto I_{n,j}, and the inverse function is: given x in I_{n,j}, the corresponding preimage is d equals x minus j/n.",
+      "quantifier_order": [
+        "for a fixed positive integer n",
+        "for a fixed integer j satisfying 0 <= j <= n minus 1"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "parameter of the family of maps and intervals; determines scale 1/n",
+          "type": "positive integer"
+        },
+        {
+          "domain": "integers",
+          "name": "j",
+          "role": "parameter indexing the target interval I_{n,j}; determines translation by j/n",
+          "type": "integer"
+        },
+        {
+          "domain": "interval [0, 1/n)",
+          "name": "d",
+          "role": "input variable to the affine map J_{n,j}",
+          "type": "real number"
+        },
+        {
+          "domain": "target interval I_{n,j}",
+          "name": "x",
+          "role": "input variable to the inverse map",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the map J_{n,j} depends on both n and j through the translation term j/n",
+        "the claimed inverse x minus j/n depends on j (and implicitly on n via the target interval I_{n,j})"
+      ]
+    },
+    "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. The affine map J_{n,j}(d) = j/n + d is a bijection from [0, 1/n) onto I_{n,j}; its inverse is x -> x - j/n.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328002721_6989304c",
+    "proof_status": "complete",
+    "reason": "The proof correctly establishes well-definedness, injectivity, surjectivity, and the inverse formula for the affine map J_{n,j}(d)=j/n+d on [0,1/n), matching the lemma exactly. No semantic drift or dependency issues are present.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T00:29:48.274326Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328002721_6989304c",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:30:10.196762Z",
+  "worker_job_id": "wrk_lem_20260328002721_6989304c_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

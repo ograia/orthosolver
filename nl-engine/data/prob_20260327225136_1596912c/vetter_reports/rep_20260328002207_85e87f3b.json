@@ -1,0 +1,26 @@
+{
+  "confidence": 0.99,
+  "created_at": "2026-03-28T00:22:07.769126Z",
+  "detailed_findings": [
+    {
+      "finding": "Counterexample shows the conclusion fails despite the derivative condition on (0,1).",
+      "location": "statement",
+      "severity": "high"
+    }
+  ],
+  "drift_assessment": {
+    "drift_description": null,
+    "drift_detected": false,
+    "drift_severity": "none",
+    "drift_type": null
+  },
+  "feedback_for_solver": "Do not attempt a proof in the current form. The statement needs an added hypothesis connecting h(0) to values on (0,1), for example continuity at 0 plus a one-sided derivative/integral argument, or a different conclusion that only compares points \u062f\u0627\u062e\u0644 (0,1).",
+  "problem_id": "prob_20260327225136_1596912c",
+  "proof_status": "wrong_strategy",
+  "reason": "The lemma is false as stated. The hypothesis only assumes differentiability on the open interval (0,1), so it gives no control over the endpoint value h(0). A function can have h'(u) <= 0 on (0,1) and still satisfy h(u) > h(0) for some u in [0,1), so the claimed conclusion fails.",
+  "recommended_action": "flag_suspected_false",
+  "report_id": "rep_20260328002207_85e87f3b",
+  "statement_status": "false",
+  "target_id": "lem_20260328001929_25bd23bd",
+  "target_kind": "lemma"
+}

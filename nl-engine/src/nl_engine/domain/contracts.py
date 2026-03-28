@@ -370,7 +370,7 @@ class DebugLlmUsageStage(BaseModel):
 
 class DebugLlmUsageSummaryResponse(ApiEnvelope):
     problem_id: str
-    pricing_usd_per_1m: dict[str, float]
+    pricing_by_model_usd_per_1m: dict[str, dict[str, float]]
     totals: dict[str, float | int]
     by_stage: list[DebugLlmUsageStage]
 
@@ -399,11 +399,13 @@ class DebugProblemSnapshotResponse(ApiEnvelope):
     nl_only_final_output: dict[str, Any] | None
     lemma_by_id: dict[str, dict[str, Any]]
     decomposition_by_id: dict[str, dict[str, Any]]
+    decomposition_candidate_by_id: dict[str, dict[str, Any]] = Field(default_factory=dict)
     logical_decomposition_by_id: dict[str, dict[str, Any]] = Field(default_factory=dict)
     lean_job_by_id: dict[str, dict[str, Any]]
     final_check_by_id: dict[str, dict[str, Any]] = Field(default_factory=dict)
     lemmas: list[dict[str, Any]]
     decompositions: list[dict[str, Any]]
+    decomposition_candidates: list[dict[str, Any]] = Field(default_factory=list)
     logical_decompositions: list[dict[str, Any]] = Field(default_factory=list)
     lean_jobs: list[dict[str, Any]]
     trusted_context: list[dict[str, Any]]
@@ -503,7 +505,7 @@ class Agent2Input(BaseModel):
     theorem_nl: str
     root_semantic_sketch: dict[str, Any]
     shared_context: list[dict[str, Any]] = Field(default_factory=list)
-    num_candidates: int = 2
+    num_candidates: int = 1
     previous_attempt_summaries: list[dict[str, Any]] = Field(default_factory=list)
     trusted_context_summaries: list[dict[str, Any]] = Field(default_factory=list)
 

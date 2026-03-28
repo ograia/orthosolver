@@ -1,0 +1,279 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260328002742_fbc37130/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T00:30:24.813436Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:30:34.342197Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:30:13.582033Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260327230124_caed970a",
+        "role_in_parent": "Reduces the continuum problem on [0,1) to the discrete grid points j/n.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is a positive integer (implicit, needed so that j/n and (j+1)/n are well-defined and intervals make sense)",
+            "j is an integer satisfying 0 <= j <= n - 1",
+            "x is a real number satisfying j/n <= x < (j+1)/n",
+            "F_n is defined at every real x considered, and in particular at x equal to j/n"
+          ],
+          "normalized_claim": "For every positive integer n, for every integer j with 0 <= j <= n - 1, and for every real number x with j/n <= x and x < (j+1)/n, the inequality F_n(x) <= F_n(j/n) holds.",
+          "quantifier_order": [
+            "for all n",
+            "for all j",
+            "for all x"
+          ],
+          "variables": [
+            {
+              "domain": "positive integers",
+              "name": "n",
+              "role": "index parameter for the function F_n and for defining interval endpoints j/n and (j+1)/n",
+              "type": "natural number"
+            },
+            {
+              "domain": "integers",
+              "name": "j",
+              "role": "cell index that selects the interval [j/n, (j+1)/n)",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "argument of the function F_n within the interval associated to j",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "none (the claim is universally quantified; no existential witnesses are introduced)"
+          ]
+        },
+        "statement_nl": "For any integer j with 0 <= j <= n - 1 and any real number x with j/n <= x < (j+1)/n, one has F_n(x) <= F_n(j/n)."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n greater than 1",
+            "k ranges over integers from 1 through n inclusive",
+            "x ranges over all real numbers",
+            "y ranges over all real numbers",
+            "floor(t) denotes the greatest integer less than or equal to t"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+          "quantifier_order": [
+            "for all integers n with n greater than 1",
+            "there exists a real number x that maximizes the expression",
+            "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+          ],
+          "variables": [
+            {
+              "domain": "integers greater than 1",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 1 <= k <= n",
+              "name": "k",
+              "role": "summation index",
+              "type": "integer"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "argument to be maximized over",
+              "type": "real number"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "y",
+              "role": "comparison point for defining maximality of x",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "m",
+              "role": "maximal value of the expression",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizing x may depend on n",
+            "the maximal value m may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328002742_fbc37130",
+    "proof_nl": "Let x \\in I_{n,j}. By the intended meaning of the notation in this lemma, I_{n,j} is the half-open cell indexed by j, so x-j/n \\in [0,1/n). Define d := x - j/n. Then d is a real number with 0 \\le d < 1/n. Also, by the definition of the coordinate map J_{n,j}, we have J_{n,j}(d) = j/n + d = x, so d is a valid witness.\n\nTo prove uniqueness, suppose d' \\in [0,1/n) also satisfies x = J_{n,j}(d'). Then x = j/n + d', hence d' = x - j/n = d. Therefore no other choice of d is possible.\n\nSo there is exactly one real d \\in [0,1/n) such that x = J_{n,j}(d), namely d = x - j/n.",
+    "role_in_assembly": "Records uniqueness of the additive coordinate on the half-open cell.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a positive integer",
+        "j is an integer satisfying 0 <= j <= n - 1",
+        "x is a real number with x in I_{n,j}",
+        "d is a real number satisfying 0 <= d < 1/n",
+        "the claimed witness satisfies d = x - j/n, so x - j/n must lie in [0, 1/n)"
+      ],
+      "normalized_claim": "For every positive integer n and every integer j with 0 <= j <= n - 1, for every real x in I_{n,j}, there exists a unique real d such that 0 <= d < 1/n, x equals J_{n,j}(d), and this unique d is exactly x - j/n.",
+      "quantifier_order": [
+        "for all positive integers n",
+        "for all integers j with 0 <= j <= n - 1",
+        "for all real x in I_{n,j}",
+        "there exists exactly one real d in [0, 1/n) such that x = J_{n,j}(d) and d = x - j/n"
+      ],
+      "variables": [
+        {
+          "domain": "set of positive integers",
+          "name": "n",
+          "role": "fixed parameter determining the interval length 1/n and the indexing of sets/functions",
+          "type": "positive integer"
+        },
+        {
+          "domain": "integers",
+          "name": "j",
+          "role": "index parameter with constraint 0 <= j <= n - 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "point in the set I_{n,j}",
+          "type": "real"
+        },
+        {
+          "domain": "real numbers",
+          "name": "d",
+          "role": "witness in the half-open interval [0, 1/n), uniquely determined by x via d = x - j/n",
+          "type": "real"
+        }
+      ],
+      "witness_dependencies": [
+        "The unique witness d depends on x and j by the explicit formula d = x - j/n",
+        "The fact that d lies in [0, 1/n) imposes the implicit requirement x in I_{n,j} implies 0 <= x - j/n < 1/n"
+      ]
+    },
+    "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. For every real x in I_{n,j}, there is exactly one real d in [0, 1/n) such that x = J_{n,j}(d), namely d = x - j/n.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.95,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "notes": "No undeclared or forbidden citations were used.",
+      "uses_allowed_dependencies_only": true
+    },
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328002742_fbc37130",
+    "proof_status": "complete",
+    "reason": "The proof directly matches the lemma sketch: it defines the candidate witness d = x - j/n, uses the half-open cell condition to place d in [0,1/n), identifies x = J_{n,j}(d), and proves uniqueness by cancellation. There is no meaningful drift from the lemma or root sketch, and no dependency issues are present.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T00:30:13.505442Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328002742_fbc37130",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:30:34.342201Z",
+  "worker_job_id": "wrk_lem_20260328002742_fbc37130_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

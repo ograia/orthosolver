@@ -1,0 +1,59 @@
+{
+  "created_at": "2026-03-28T00:28:51.654629Z",
+  "graph_node_id": "pnode_20260328002851_244bb2a5",
+  "metadata": {
+    "parent_id": "lem_20260327230124_caed970a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "a3fefa97bdf8fffba8d9f321d2bbb41811d86a38027d0695756ae0b7355d2911",
+  "owner_id": "lem_20260328002721_6989304c",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is a positive integer, so 1/n is well-defined and positive",
+      "j is an integer constrained by 0 <= j <= n minus 1",
+      "the affine map is defined on the half-open interval [0, 1/n)",
+      "the codomain/target is the interval I_{n,j}",
+      "the inverse formula x maps from I_{n,j} back to [0, 1/n)"
+    ],
+    "normalized_claim": "For every positive integer n and every integer j with 0 <= j <= n minus 1, define J_{n,j} from [0, 1/n) to I_{n,j} by J_{n,j}(d) equals j/n plus d. Then J_{n,j} is a bijection onto I_{n,j}, and the inverse function is: given x in I_{n,j}, the corresponding preimage is d equals x minus j/n.",
+    "quantifier_order": [
+      "for a fixed positive integer n",
+      "for a fixed integer j satisfying 0 <= j <= n minus 1"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "parameter of the family of maps and intervals; determines scale 1/n",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "j",
+        "role": "parameter indexing the target interval I_{n,j}; determines translation by j/n",
+        "type": "integer"
+      },
+      {
+        "domain": "interval [0, 1/n)",
+        "name": "d",
+        "role": "input variable to the affine map J_{n,j}",
+        "type": "real number"
+      },
+      {
+        "domain": "target interval I_{n,j}",
+        "name": "x",
+        "role": "input variable to the inverse map",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "the map J_{n,j} depends on both n and j through the translation term j/n",
+      "the claimed inverse x minus j/n depends on j (and implicitly on n via the target interval I_{n,j})"
+    ]
+  },
+  "statement_nl": "Let n be a positive integer and j an integer with 0 <= j <= n - 1. The affine map J_{n,j}(d) = j/n + d is a bijection from [0, 1/n) onto I_{n,j}; its inverse is x -> x - j/n.",
+  "updated_at": "2026-03-28T00:28:51.654629Z"
+}

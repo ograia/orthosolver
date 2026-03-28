@@ -1,0 +1,61 @@
+{
+  "assembly_plan_id": "asm_20260328225213_ceb1ecf0",
+  "controller_status": "failed",
+  "created_at": "2026-03-28T22:53:29.903536Z",
+  "decomposition_id": "dec_20260328225213_1c38b005",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "none",
+  "failure_origin": "agent3:minor_fix",
+  "failure_reason": "The decomposition is mathematically coherent and appears correct: the supporting lemmas match the intended periodicity, interval reduction, top-interval evaluation, and discrete bottleneck bound, and the final conclusion matches the root theorem. The only audit issue is proof compression: steps A4 and A5 are marked trivial even though each bundles multiple nontrivial deductions.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 1.3,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": null,
+  "latest_prepare_track_job_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "pending",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_minor",
+  "logical_decomposition_id": "logdec_thm_root_20260328223900_ac5193ce_track_1",
+  "node_id": "thm_root_20260328223900_ac5193ce",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260328223900_b5921d00",
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/decompositions/dec_20260328225213_1c38b005.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260328223900_b5921d00/decomposition_candidates/dec_20260328225213_1c38b005/agent2_candidate.json",
+  "revision_number": 1,
+  "shared_context": [
+    {
+      "content": "For an integer n>1 and a real number x, define f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+      "kind": "definition",
+      "label": "f_n"
+    },
+    {
+      "content": "For an integer n>1, let H_n = sum_{k=1}^n 1/k.",
+      "kind": "notation",
+      "label": "H_n"
+    },
+    {
+      "content": "For an integer n>1 and an integer m, define g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k, where the floor is taken of the real number (k*m)/n.",
+      "kind": "definition",
+      "label": "g_n"
+    }
+  ],
+  "strategy_summary": "Reduce the problem modulo 1, freeze the value of floor(nx) on each interval [m/n,(m+1)/n), compare the expression to a discrete surrogate g_n(m), and then solve the finite maximization problem over m=0,1,...,n-1. The only hard step is the discrete inequality for g_n(m), whose equality case identifies the maximizing interval.",
+  "updated_at": "2026-03-28T22:53:35.638087Z"
+}

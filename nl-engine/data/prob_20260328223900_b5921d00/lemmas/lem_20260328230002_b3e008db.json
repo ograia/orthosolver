@@ -1,0 +1,93 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328230056_1e721916",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T23:00:08.637342Z",
+  "decomposition_round_count": 1,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.85,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T23:08:03.659591Z",
+  "last_dependency_check_id": "depchk_20260328230337_046d918f",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent4:failed",
+  "last_transition_reason": "child decomposition invalidated by false lemma lem_20260328230542_026d0fc6",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328230002_b3e008db",
+  "materialized_candidate_count": 1,
+  "minor_rejection_count": 0,
+  "next_action": "retry_decomposition",
+  "parent_id": "lem_20260328225601_f19c6e91",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260328223900_b5921d00",
+  "promoted_decomposition_count": 1,
+  "proof_bundle_artifact_id": "problems/prob_20260328223900_b5921d00/proof_bundles/lemmas/lem_20260328230002_b3e008db.json",
+  "proof_graph_id": "pgraph_20260328225659_6804d6eb",
+  "proof_status": "proof_flawed",
+  "role_in_parent": "This is the substantive comparison lemma; once t is known to lie in [0,1), the final bound follows after replacing floor(n * t) by m.",
+  "routing_status": "decompose_further",
+  "shared_context_refs": [],
+  "solver_attempt_count": 4,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer with n > 1. For every real number t with 0 <= t < 1, one has f_n(t) <= g_n(floor(n * t)).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "t is a real number and 0 <= t < 1",
+      "k = floor(n * t) is an integer",
+      "f_n(t) is defined for every such t",
+      "g_n(k) is defined for every such k produced as floor(n * t)",
+      "f_n(t) and g_n(floor(n * t)) lie in an ordered set where <= is defined (presumably real numbers)"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every real t with 0 <= t < 1, letting k = floor(n * t), the inequality f_n(t) <= g_n(k) holds.",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all real numbers t with 0 <= t < 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "function index parameter for f_n and g_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "input to f_n",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "intermediate value defined by k = floor(n * t), input to g_n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "k depends on n and t via k = floor(n * t)"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T23:08:03.659591Z"
+}

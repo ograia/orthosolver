@@ -1,0 +1,83 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260328015332_7deb486f",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-28T01:52:49.739826Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.9,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-28T02:00:55.948196Z",
+  "last_dependency_check_id": "depchk_20260328020055_9980cd72",
+  "last_submitted_lean_job_id": "lean_job_lem_20260328015243_198f9fa6_formalize_lemma_from_nl_1",
+  "last_submitted_lean_proof_fingerprint": "ea7fff9a0fbdaf95f1c82f83a52081aad36b602c484777da86754d21613509f0",
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let H_n = sum_{j=1}^n 1/j. We prove that for x = m/n, with 0 <= m <= n-1,\nE(n,m/n) <= H_n - 1, and that equality holds exactly when m = n-1.\n\nIf m = 0, then every floor(km/n) is 0, so E(n,0) = 0 < H_n - 1. Hence assume 1 <= m <= n-1.\n\nWrite\nE(n,m/n) = floor(m) - sum_{k=1}^n floor(km/n)/k.\nSince floor(m) = m and floor(km/n) = km/n - {km/n}, where {y} is the fractional part, we get\nE(n,m/n) = m - sum_{k=1}^n (m/n - {km/n}/k) = sum_{k=1}^n {km/n}/k.\nThe term k = n contributes 0, so\nE(n,m/n) = sum_{k=1}^{n-1} {km/n}/k.\n\nNow let d = gcd(m,n), and write n = ds, m = dt with gcd(t,s) = 1. Then\n{km/n} = {kt/s}.\nAs k runs through 1,2,...,ds-1, each residue j/s (1 <= j <= s-1) occurs exactly d times, and 0 occurs d-1 times. Therefore the multiset of fractional parts consists of d copies of each of\n(s-1)/s, (s-2)/s, ..., 1/s,\nplus d-1 zeros.\nLet a_1 >= a_2 >= ... >= a_{n-1} be these numbers in decreasing order. Then a consists of blocks\n(s-1)/s repeated d times,\n(s-2)/s repeated d times,\n...,\n1/s repeated d times,\nfollowed by d-1 zeros.\n\nBecause the weights 1, 1/2, ..., 1/(n-1) are decreasing, the rearrangement inequality gives\nE(n,m/n) <= sum_{i=1}^{n-1} a_i/i.\n\nNext compare a with the decreasing sequence b_i = (n-i)/n = 1 - i/n, which is exactly the sorted list for the case m = n-1. We claim that every prefix sum of a is at most the corresponding prefix sum of b.\n\nIndeed, group the entries of a into blocks of size d. For the j-th positive block (1 <= j <= s-1), the block sum of a is\nd * (s-j)/s.\nThe corresponding block of b consists of the d consecutive terms\n(n-(j-1)d-1)/n, (n-(j-1)d-2)/n, ..., (n-jd)/n,\nwhose sum is\nd * (s-j)/s + d(d-1)/(2n),\nwhich is at least the block sum of a. If a prefix ends in a partial block of size r < d, then the corresponding r terms of b are each at least (n-(q+1)d)/n = (s-q-1)/s, which is exactly the value of the corresponding terms of a. Hence every prefix sum of a is at most the corresponding prefix sum of b.\n\nNow apply Abel summation to the decreasing weights 1/i. If A_t and B_t are the prefix sums of a and b, then\nsum_{i=1}^{n-1} a_i/i = sum_{t=1}^{n-1} A_t(1/t - 1/(t+1))\n(with the convention 1/n = 0 at the end), and since A_t <= B_t for all t, we obtain\nsum_{i=1}^{n-1} a_i/i <= sum_{i=1}^{n-1} b_i/i.\nTherefore\nE(n,m/n) <= sum_{i=1}^{n-1} (n-i)/(ni) = sum_{i=1}^{n-1} (1/i - 1/n) = H_n - 1.\nThis proves the desired inequality.\n\nFor m = n-1, we have {k(n-1)/n} = (n-k)/n for 1 <= k <= n-1, so every inequality above is an equality and E(n,(n-1)/n) = H_n - 1.\nConversely, if d > 1 then the largest fractional part is (s-1)/s < (n-1)/n, so the comparison with b is already strict. If d = 1, then the fractional parts are exactly the distinct set {1/n,2/n,...,(n-1)/n}; equality in the rearrangement inequality forces them to appear in decreasing order, so the first term must be (n-1)/n. But the first term is {m/n} = m/n, hence m = n-1. Thus equality holds if and only if m = n-1.",
+  "latest_vetted_proof_fingerprint": "ea7fff9a0fbdaf95f1c82f83a52081aad36b602c484777da86754d21613509f0",
+  "latest_vetter_report_id": "rep_20260328020055_e963346c",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260328015243_198f9fa6",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_lean_formalization",
+  "parent_id": "thm_root_20260328014833_a00b1667",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260328014833_becb1bc2/proof_bundles/lemmas/lem_20260328015243_198f9fa6.json",
+  "proof_graph_id": "pgraph_20260328015332_d1814f25",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "This is the finite discrete optimization bottleneck after reduction to the n-adic grid.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 2,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1, and let m be an integer with 0 <= m <= n-1. Then E(n, m/n) <= H_n - 1, with equality if and only if m = n-1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "m is an integer",
+      "m satisfies 0 <= m <= n - 1",
+      "the expression m/n is formed as a rational number using integer division semantics interpreted as real/rational division (so m/n is in the interval 0 <= m/n <= (n-1)/n)"
+    ],
+    "normalized_claim": "For every integer n greater than 1 and for every integer m with 0 <= m <= n - 1, the inequality E(n, m divided by n) <= H_n minus 1 holds; moreover, E(n, m divided by n) equals H_n minus 1 if and only if m equals n minus 1.",
+    "quantifier_order": [
+      "for all n in integers with n > 1",
+      "for all m in integers with 0 <= m <= n - 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer parameter; also indexes H_n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "inner parameter constrained by n; determines the second argument of E as m/n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses are introduced; the equality condition is a direct equivalence to the constraint m = n - 1"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-28T02:00:55.948196Z"
+}

@@ -1,0 +1,212 @@
+{
+  "artifact_prefix": "problems/prob_20260328223900_b5921d00/lemmas/lem_20260328225557_7a03c3ad/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T22:57:30.678005Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T22:57:34.232008Z",
+  "controller_consumed_by_execution_id": "exec_20260328223900_1ee928ca",
+  "created_at": "2026-03-28T22:57:24.952779Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328223900_1ee928ca",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+        "item_id": "pnode_20260328225700_c972257c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328223900_ac5193ce",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328223900_ac5193ce",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is greater than 1",
+            "x is any real number",
+            "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+            "floor is applied to real numbers and returns an integer"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+          "quantifier_order": [
+            "For a fixed integer n with n > 1",
+            "For real x (x ranges over all real numbers)",
+            "Choose x that achieves the maximum of the given expression over all real x",
+            "Determine the maximal value M"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "decision variable over which the expression is maximized",
+              "type": "real number"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "M",
+              "role": "the maximal value of the expression as a function of n",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "An optimal x (or the set of optimal x values) may depend on n",
+            "The maximal value M may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260328225557_7a03c3ad",
+    "proof_nl": "Fix an integer n>1, an integer m with 0<=m<=n-1, and a real t with 0<=t<1. We prove that floor(n t)=m if and only if m/n<=t<(m+1)/n.\n\nBy the defining property of the floor function, for any real y and any integer m one has floor(y)=m exactly when m<=y<m+1. Apply this with y=n t. Then\nfloor(n t)=m  iff  m<=n t<m+1.\n\nSince n>1, in particular n>0. Dividing the displayed inequalities by the positive number n preserves their directions, so\nm<=n t<m+1  iff  m/n<=t<(m+1)/n.\n\nCombining the two equivalences gives\nfloor(n t)=m  iff  m/n<=t<(m+1)/n.\nThis is exactly the claimed statement.",
+    "role_in_assembly": "Identifies the discrete interval index m associated to a reduced variable t.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+        "floor is applied to real numbers and returns an integer"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+      "quantifier_order": [
+        "For a fixed integer n with n > 1",
+        "For real x (x ranges over all real numbers)",
+        "Choose x that achieves the maximum of the given expression over all real x",
+        "Determine the maximal value M"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "decision variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M",
+          "role": "the maximal value of the expression as a function of n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "An optimal x (or the set of optimal x values) may depend on n",
+        "The maximal value M may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "m is an integer with 0 less than or equal to m and m less than or equal to n minus 1",
+        "t is a real with 0 less than or equal to t and t less than 1",
+        "floor is applied to the real number n times t"
+      ],
+      "normalized_claim": "For all integers n with n greater than 1, for all integers m with 0 <= m <= n minus 1, and for all real t with 0 <= t and t < 1: the statement 'floor of (n times t) equals m' is logically equivalent to the statement 'm divided by n is less than or equal to t and t is strictly less than (m plus 1) divided by n'.",
+      "quantifier_order": [
+        "for all integers n",
+        "for all integers m",
+        "for all real t"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "outer parameter; also determines scaling by n and the allowed range of m",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "target value of the floor of n*t",
+          "type": "integer"
+        },
+        {
+          "domain": "reals",
+          "name": "t",
+          "role": "input to the floor function after scaling by n",
+          "type": "real"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses appear; there is no dependence of an existential quantity on universally quantified variables"
+      ]
+    },
+    "statement_nl": "For every integer n>1, every integer m with 0 <= m <= n-1, and every real t with 0 <= t < 1, one has floor(n*t) = m if and only if m/n <= t < (m+1)/n.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260328223900_b5921d00",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260328225557_7a03c3ad",
+    "proof_status": "complete",
+    "reason": "The proof correctly establishes the standard floor characterization and derives the stated interval equivalence under the given assumptions. It matches the lemma statement exactly, with no semantic drift and no dependency issues.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-28T22:57:27.202324Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328225557_7a03c3ad",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T22:57:34.232017Z",
+  "worker_job_id": "wrk_lem_20260328225557_7a03c3ad_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

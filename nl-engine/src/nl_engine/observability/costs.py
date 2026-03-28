@@ -11,10 +11,9 @@ from nl_engine.services.ids import new_id
 from nl_engine.settings import get_settings
 from nl_engine.observability.metrics import MetricsExporter
 
-_MODEL_PRICING_PER_1M: dict[str, dict[str, float]] = {
+MODEL_PRICING_USD_PER_1M: dict[str, dict[str, float]] = {
     "gpt-5.4": {"input": 2.50, "cached_input": 0.25, "output": 15.00},
     "gpt-5.4-pro": {"input": 30.00, "cached_input": 30.00, "output": 180.00},
-    "gpt-5-mini": {"input": 0.25, "cached_input": 0.025, "output": 2.00},
     "gpt-5.4-mini": {"input": 0.75, "cached_input": 0.075, "output": 4.50},
     "gpt-5.4-nano": {"input": 0.20, "cached_input": 0.020, "output": 1.25},
 }
@@ -60,7 +59,7 @@ def cached_input_tokens_from_raw_usage(raw_usage: dict[str, Any] | None) -> int:
 def _pricing_per_1k(model: str | None) -> tuple[float, float, float]:
     settings = get_settings()
     normalized = str(model or "").strip().lower()
-    model_pricing = _MODEL_PRICING_PER_1M.get(normalized)
+    model_pricing = MODEL_PRICING_USD_PER_1M.get(normalized)
     if not model_pricing:
         return (
             settings.openai_price_input_per_1k,

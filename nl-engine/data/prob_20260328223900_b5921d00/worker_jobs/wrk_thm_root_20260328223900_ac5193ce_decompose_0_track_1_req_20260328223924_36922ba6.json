@@ -1,0 +1,452 @@
+{
+  "artifact_prefix": "problems/prob_20260328223900_b5921d00/decomposer/attempt_20260328223924_8f8e5b3f_track_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-28T22:52:11.027644Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-28T22:39:24.897020Z",
+  "error_payload": null,
+  "execution_id": "exec_20260328223900_1ee928ca",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 2,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "k is an integer satisfying 1 <= k <= n (so the sum is over n terms)",
+        "floor is applied to real numbers and returns an integer"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Let f_n(x) = floor(n times x) minus the sum for integer k from 1 to n of floor(k times x) divided by k. Consider f_n as a function on all real numbers x. Determine all real x values at which f_n(x) is globally maximal, and determine the corresponding maximal value M(n) = max over real x of f_n(x).",
+      "quantifier_order": [
+        "For a fixed integer n with n > 1",
+        "For real x (x ranges over all real numbers)",
+        "Choose x that achieves the maximum of the given expression over all real x",
+        "Determine the maximal value M"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter of the optimization problem; also upper limit of the sum",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "decision variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy index in the finite sum, constrained by 1 <= k <= n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M",
+          "role": "the maximal value of the expression as a function of n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "An optimal x (or the set of optimal x values) may depend on n",
+        "The maximal value M may depend on n"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328223900_b5921d00",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Use periodicity to reduce an arbitrary real x to its fractional part t in [0,1). Let m = floor(n*t). The floor characterization places t in the interval [m/n,(m+1)/n), and on that interval the expression is bounded above by the discrete surrogate g_n(m). The finite bottleneck lemma shows g_n(m) <= H_n - 1 for all m, so f_n(x) <= H_n - 1 for every x. On the other hand, if t is in the top interval [1 - 1/n,1), then every floor(k*t) equals k - 1, so f_n(t) = H_n - 1. The strict part of the discrete bottleneck excludes all other intervals. Therefore the maximum is H_n - 1, achieved exactly when the fractional part of x lies in [1 - 1/n,1).",
+          "steps": [
+            {
+              "derives": "For an arbitrary real x, replace x by its fractional part t = x - floor(x); then t lies in [0,1) and f_n(x) = f_n(t).",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "This is a direct application of integer-shift periodicity together with the standard decomposition x = floor(x) + (x - floor(x)).",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "If m = floor(n*t), then t lies in the half-open interval [m/n, (m+1)/n).",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "This is exactly the floor-interval characterization stated in the lemma.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For that m, the reduced value f_n(t) is at most g_n(m).",
+              "is_trivial": true,
+              "step_id": "A3",
+              "trivial_justification": "The lemma directly gives the interval-wise upper bound.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "Since g_n(m) <= H_n - 1 for every admissible m, it follows that f_n(x) <= H_n - 1 for every real x.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "This is a direct substitution of the discrete bound into the interval bound, together with the reduction from A1.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "Every real x whose fractional part lies in [1 - 1/n, 1) satisfies f_n(x) = H_n - 1.",
+              "is_trivial": true,
+              "step_id": "A5",
+              "trivial_justification": "Apply the explicit evaluation on the top interval to the fractional part of x, using periodicity from A1.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "If the fractional part t of x satisfies t < 1 - 1/n, then m = floor(n*t) is at most n - 2, so the equality case in L5 does not occur and f_n(x) < H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "This combines the interval description of floor(n*t) with the strict part of the discrete maximization lemma.",
+              "uses_lemmas": [
+                "L2",
+                "L5"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The global maximum of f_n is H_n - 1, and the maximizers are exactly the real numbers x whose fractional part lies in [1 - 1/n, 1), equivalently x in Z + [1 - 1/n, 1).",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "A4 gives the global upper bound, A5 gives attainment on the stated interval, and A6 rules out all other fractional parts.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A4",
+                "A5",
+                "A6"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer n>1 and a real number x, define f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "f_n"
+          },
+          {
+            "content": "For an integer n>1, let H_n = sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For an integer n>1 and an integer m, define g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k, where the floor is taken of the real number (k*m)/n.",
+            "kind": "definition",
+            "label": "g_n"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.3,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Used to reduce the maximization over all real x to the case where x lies in [0,1).",
+            "self_check_notes": "Self-contained periodicity statement with the full definition of f_n included locally via shared_context.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "x is real",
+                "z is an integer"
+              ],
+              "normalized_claim": "Integer shifts do not change the value of f_n because floor(n(x+z)) = floor(nx) + nz and floor(k(x+z)) = floor(kx) + kz for each k, so the extra linear terms cancel in the defining difference.",
+              "quantifier_order": [
+                "Fix an integer n>1",
+                "For every real x",
+                "For every integer z"
+              ],
+              "variables": [
+                {
+                  "domain": "n>1",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "all real numbers",
+                  "name": "x",
+                  "role": "input variable",
+                  "type": "real number"
+                },
+                {
+                  "domain": "all integers",
+                  "name": "z",
+                  "role": "integer shift",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every real x, and every integer z, the function f_n defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k satisfies f_n(x+z) = f_n(x).",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Turns the reduced variable t into a discrete interval label m = floor(n*t).",
+            "self_check_notes": "A standard floor/interval equivalence, stated with all bounds explicitly.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "0 <= m <= n-1",
+                "t in [0,1)"
+              ],
+              "normalized_claim": "The standard floor characterization on an interval of length 1/n: floor(n*t) equals m exactly when t lies in the half-open interval [m/n,(m+1)/n).",
+              "quantifier_order": [
+                "Fix an integer n>1",
+                "For every integer m with 0 <= m <= n-1",
+                "For every real t in [0,1)"
+              ],
+              "variables": [
+                {
+                  "domain": "n>1",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "0 <= m <= n-1",
+                  "name": "m",
+                  "role": "interval index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "t in [0,1)",
+                  "name": "t",
+                  "role": "point in the unit interval",
+                  "type": "real number"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every integer m with 0 <= m <= n-1, and every real t in [0,1), one has floor(n*t) = m if and only if m/n <= t < (m+1)/n.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.15,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Provides the comparison from the continuous problem to the discrete surrogate g_n(m).",
+            "self_check_notes": "The statement is local and independent: it defines g_n(m) and only uses floor monotonicity on one interval.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "0 <= m <= n-1",
+                "m/n <= t < (m+1)/n",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "On a fixed interval [m/n,(m+1)/n), the value floor(n*t) is constant and equal to m, while floor(k*t) is at least floor((k*m)/n) for each k; subtracting term-by-term gives f_n(t) <= g_n(m).",
+              "quantifier_order": [
+                "Fix an integer n>1",
+                "For every integer m with 0 <= m <= n-1",
+                "For every real t with m/n <= t < (m+1)/n",
+                "For each integer k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "n>1",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "0 <= m <= n-1",
+                  "name": "m",
+                  "role": "interval label",
+                  "type": "integer"
+                },
+                {
+                  "domain": "m/n <= t < (m+1)/n",
+                  "name": "t",
+                  "role": "point in the interval",
+                  "type": "real number"
+                },
+                {
+                  "domain": "1 <= k <= n",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every integer m with 0 <= m <= n-1, and every real t with m/n <= t < (m+1)/n, if g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k, then f_n(t) <= g_n(m).",
+            "strictly_easier_reason": "It only proves an upper bound on one fixed subinterval by freezing floor(n*t) and comparing floor(k*t) to floor((k*m)/n)."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Shows that the conjectured maximizing interval actually attains the candidate maximum value.",
+            "self_check_notes": "This is a direct computation on a specific interval, with no global optimization involved.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "1 - 1/n <= t < 1",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "On the top interval, each product k*t lies in [k-1,k), so every floor(k*t) equals k-1; substituting these values into the definition of f_n gives H_n - 1.",
+              "quantifier_order": [
+                "Fix an integer n>1",
+                "For every real t in [1 - 1/n, 1)",
+                "For every integer k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "n>1",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "1 - 1/n <= t < 1",
+                  "name": "t",
+                  "role": "point in the top interval",
+                  "type": "real number"
+                },
+                {
+                  "domain": "1 <= k <= n",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real t with 1 - 1/n <= t < 1, one has floor(k*t) = k - 1 for every integer k with 1 <= k <= n. Consequently, f_n(t) = H_n - 1.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": "This is the core finite optimization step: it reduces the original real-variable problem to a discrete inequality with a sharp equality case.",
+            "formalization_cost_estimate": 0.85,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Supplies the finite global upper bound and the uniqueness of the maximizing discrete interval.",
+            "self_check_notes": "The statement is a precise finite analogue of the parent theorem, with the unique equality case explicitly isolated.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "0 <= m <= n-1"
+              ],
+              "normalized_claim": "The discrete surrogate values g_n(m) are all at most H_n - 1, and the unique maximizer is m = n - 1. This is the finite bottleneck of the argument.",
+              "quantifier_order": [
+                "Fix an integer n>1",
+                "For every integer m with 0 <= m <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "n>1",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "0 <= m <= n-1",
+                  "name": "m",
+                  "role": "discrete candidate",
+                  "type": "integer"
+                },
+                {
+                  "domain": "1 <= k <= n",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every integer m with 0 <= m <= n-1, if g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k and H_n = sum_{k=1}^n 1/k, then g_n(m) <= H_n - 1, and equality holds if and only if m = n - 1.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer n>1 and a real number x, define f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "f_n"
+          },
+          {
+            "content": "For an integer n>1, let H_n = sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For an integer n>1 and an integer m, define g_n(m) = m - sum_{k=1}^n floor((k*m)/n)/k, where the floor is taken of the real number (k*m)/n.",
+            "kind": "definition",
+            "label": "g_n"
+          }
+        ],
+        "strategy_summary": "Reduce the problem modulo 1, freeze the value of floor(nx) on each interval [m/n,(m+1)/n), compare the expression to a discrete surrogate g_n(m), and then solve the finite maximization problem over m=0,1,...,n-1. The only hard step is the discrete inequality for g_n(m), whose equality case identifies the maximizing interval."
+      }
+    ],
+    "status": "completed"
+  },
+  "started_at": "2026-03-28T22:39:26.877291Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260328223900_ac5193ce",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-28T22:52:11.027644Z",
+  "worker_job_id": "wrk_thm_root_20260328223900_ac5193ce_decompose_0_track_1_req_20260328223924_36922ba6",
+  "worker_kind": "decomposition_generation"
+}

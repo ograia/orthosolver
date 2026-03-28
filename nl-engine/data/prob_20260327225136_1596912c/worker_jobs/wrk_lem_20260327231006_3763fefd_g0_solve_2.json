@@ -1,0 +1,183 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260327231006_3763fefd/solver_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-28T00:21:46.014928Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:21:51.997930Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:21:24.560251Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 2,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327230243_146498d5",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327230243_386f3965",
+        "label": "lem_20260327230106_ecdda6c8",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For every real number x and every integer z, F_n(x + z) = F_n(x)."
+      }
+    ],
+    "lemma_id": "lem_20260327231006_3763fefd",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328002124_08a7ba09",
+    "role_in_assembly": "Handles the case z \u2265 0 after the unit-shift identity is established.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "f is defined for all real numbers",
+        "x ranges over all real numbers",
+        "m ranges over all natural numbers",
+        "the expression (m : \u211d) means m is viewed as a real number, so x + (m : \u211d) is a real number input to f"
+      ],
+      "normalized_claim": "Assume f satisfies f(x + 1) equals f(x) for all real x. Then for all real x and all natural m (coerced to a real number), f(x + m) equals f(x).",
+      "quantifier_order": [
+        "for every real number x",
+        "therefore for every real number x and for every natural number m"
+      ],
+      "variables": [
+        {
+          "domain": "set of real numbers",
+          "name": "x",
+          "role": "input argument to f in both premise and conclusion",
+          "type": "real number"
+        },
+        {
+          "domain": "set of natural numbers (unspecified whether includes 0)",
+          "name": "m",
+          "role": "integer shift amount in the conclusion",
+          "type": "natural number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "f",
+          "role": "maps real inputs to values in a codomain where equality is defined",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential quantifiers; no witnesses are introduced",
+        "the conclusion depends only on the given universal period-1 condition, not on any additional parameters"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "If for every real number x one has f(x + 1) = f(x), then for every real number x and every natural number m, f(x + (m : \u211d)) = f(x).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": "No previous feedback was provided; the proof is a direct induction argument from the unit-shift hypothesis.",
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "conclusion_target": "for every real x and every natural number m, f(x+(m:\u211d))=f(x)",
+      "no_forbidden_claims_used": true,
+      "premise_used": "for every real x, f(x+1)=f(x)"
+    },
+    "lemma_id": "lem_20260327231006_3763fefd",
+    "proof_nl": "Let P(m) be the statement that for every real number x, f(x + (m:\u211d)) = f(x). We prove P(m) for all natural numbers m by induction.\n\nIf 0 is included among the natural numbers, then P(0) is immediate since x + (0:\u211d) = x. If the convention is that natural numbers start at 1, then the base case m = 1 is exactly the given hypothesis.\n\nNow assume P(m) holds for some natural number m. For any real x, apply the hypothesis f(t + 1) = f(t) to the real number t = x + (m:\u211d). This gives f((x + (m:\u211d)) + 1) = f(x + (m:\u211d)). By the induction hypothesis, f(x + (m:\u211d)) = f(x). Also, (x + (m:\u211d)) + 1 = x + ((m+1):\u211d). Therefore f(x + ((m+1):\u211d)) = f(x) for every real x, so P(m+1) holds.\n\nThus P(m) holds for every natural number m. Hence for every real x and every natural number m, f(x + (m:\u211d)) = f(x).",
+    "proof_summary": "Use induction on the natural shift m: the case m=1 is the hypothesis, and the step m\u2192m+1 follows by applying the hypothesis at x+(m:\u211d).",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Principle of mathematical induction",
+        "Associativity of addition in \u211d",
+        "Coercion of natural numbers into \u211d respects successor: (m+1:\u211d)=(m:\u211d)+1"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T00:21:26.052923Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327231006_3763fefd",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:21:51.997934Z",
+  "worker_job_id": "wrk_lem_20260327231006_3763fefd_g0_solve_2",
+  "worker_kind": "lemma_solver"
+}

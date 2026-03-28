@@ -1,0 +1,172 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260327231004_c8b0b174/solver_attempt_7",
+  "attempt_count": 1,
+  "attempt_number": 7,
+  "completed_at": "2026-03-28T00:31:04.254822Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:31:21.995087Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-28T00:30:56.003242Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 7,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327230243_146498d5",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327230243_386f3965",
+        "label": "lem_20260327230106_ecdda6c8",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For every real number x and every integer z, F_n(x + z) = F_n(x)."
+      }
+    ],
+    "lemma_id": "lem_20260327231004_c8b0b174",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260328003055_e92af6ca",
+    "role_in_assembly": "Provides the base unit-shift identity from which all integer-shift cases are built.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "x is any real number",
+        "f is defined on all real numbers (at least on all values of the form x and x + 1)"
+      ],
+      "normalized_claim": "For all real numbers x, f applied to (x plus 1) equals f applied to x.",
+      "quantifier_order": [
+        "for all real number x"
+      ],
+      "variables": [
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "input variable for the equality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers to unspecified codomain",
+          "name": "f",
+          "role": "function whose shift-invariance is claimed",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "none (no existential witnesses present)"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every real number x, f(x + 1) = f(x).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 7,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "notes": "The proof only uses the definition of f from the allowed semantic anchor and a standard floor identity.",
+      "relies_on_forbidden_claims": false,
+      "statement_matched_exactly": true,
+      "uses_only_allowed_manifest_content": true
+    },
+    "lemma_id": "lem_20260327231004_c8b0b174",
+    "proof_nl": "Let n>1 be fixed, and define f(x)=\\lfloor nx\\rfloor-\\sum_{k=1}^{n}\\frac{\\lfloor kx\\rfloor}{k}. We show that f(x+1)=f(x) for every real x.\n\nFor each integer k with 1\\le k\\le n, since k is an integer we have\n\\[\n\\lfloor k(x+1)\\rfloor=\\lfloor kx+k\\rfloor=\\lfloor kx\\rfloor+k,\n\\]\nbecause adding an integer shifts the floor by the same integer.\nAlso,\n\\[\n\\lfloor n(x+1)\\rfloor=\\lfloor nx+n\\rfloor=\\lfloor nx\\rfloor+n.\n\\]\nTherefore\n\\[\n\\begin{aligned}\nf(x+1)\n&=\\lfloor n(x+1)\\rfloor-\\sum_{k=1}^{n}\\frac{\\lfloor k(x+1)\\rfloor}{k} \\\\\n&=(\\lfloor nx\\rfloor+n)-\\sum_{k=1}^{n}\\frac{\\lfloor kx\\rfloor+k}{k} \\\\\n&=(\\lfloor nx\\rfloor+n)-\\sum_{k=1}^{n}\\frac{\\lfloor kx\\rfloor}{k}-\\sum_{k=1}^{n}1 \\\\\n&=\\lfloor nx\\rfloor-\\sum_{k=1}^{n}\\frac{\\lfloor kx\\rfloor}{k} \\\\\n&=f(x),\n\\end{aligned}\n\\]\nsince \\(\\sum_{k=1}^{n}1=n\\). Hence f(x+1)=f(x) for all real x.",
+    "proof_summary": "Use the floor shift identity \\(\\lfloor t+m\\rfloor=\\lfloor t\\rfloor+m\\) for integers m. Apply it to each term with m=k and m=n, then the added integers cancel in the definition of f.",
+    "self_report": {
+      "confidence": 0.999,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "For any real t and integer m, \\(\\lfloor t+m\\rfloor=\\lfloor t\\rfloor+m\\)."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-28T00:30:55.461004Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327231004_c8b0b174",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:31:21.995092Z",
+  "worker_job_id": "wrk_lem_20260327231004_c8b0b174_g0_solve_7",
+  "worker_kind": "lemma_solver"
+}

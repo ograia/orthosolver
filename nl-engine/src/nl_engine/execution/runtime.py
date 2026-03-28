@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 import logging
+import os
 import threading
 import time
 from typing import Any
@@ -299,6 +300,7 @@ class StageWorkerRuntime:
         llm_override_key: str | None = None,
         continuation_generation: int | None = None,
         attempt_number: int | None = None,
+        worker_attempt_count: int | None = None,
     ) -> dict[str, Any]:
         resolved_artifact_prefix = artifact_prefix or f"worker_jobs/{worker_job_id}"
         llm_overrides = self._problem_llm_overrides(problem_id)
@@ -309,6 +311,7 @@ class StageWorkerRuntime:
             payload=payload,
             execution_id=execution_id,
             llm_overrides=llm_overrides,
+            worker_attempt_count=worker_attempt_count,
         )
         if worker_kind == "decomposition_generation":
             output = self.facade.run_decomposition_generation(job, Agent2Input.model_validate(payload), resolved_artifact_prefix, override_key=llm_override_key)
@@ -364,6 +367,7 @@ class StageWorkerRuntime:
                 "continuation_generation": _int_generation(row.continuation_generation),
                 "artifact_prefix": row.artifact_prefix,
                 "llm_override_key": row.llm_override_key,
+                "worker_attempt_count": int(row.attempt_count or 0),
             }
 
             if claimed is None:
@@ -525,6 +529,14 @@ class WorkerSupervisor:
             if not did_work:
                 time.sleep(poll_sleep)
 
+    def _pump_execution_now(self, execution_id: str, problem_id: str) -> bool:
+        if not acquire_problem_run(problem_id):
+            return False
+        try:
+            return self.execution_driver.advance_until_blocked(execution_id)
+        finally:
+            release_problem_run(problem_id)
+
     def _reconcile_external_progress(self) -> bool:
         store = get_file_store()
         executions = ProblemExecutionRepository(store)
@@ -566,11 +578,13 @@ class WorkerSupervisor:
                 continue
 
             if execution.status in {"waiting", "queued", "cancel_requested"}:
-                executions.wake(
+                woken = executions.wake(
                     execution.execution_id,
                     current_stage="execution.external_progress_reconciled",
                 )
-                changed = True
+                if woken is not None:
+                    changed = True
+                    changed |= self._pump_execution_now(woken.execution_id, problem_id)
 
         return changed
 
@@ -611,11 +625,18 @@ def get_worker_supervisor() -> WorkerSupervisor:
 
 
 def start_embedded_supervisor_if_enabled() -> None:
+    if os.environ.get("NL_ENGINE_NO_AUTO_SUPERVISOR") == "1":
+        return
     settings = get_settings()
     if not settings.worker_enable_embedded_supervisor:
         return
     LeanSessionManager(get_file_store()).recover_active_problem_sessions()
-    get_worker_supervisor().start()
+    supervisor = get_worker_supervisor()
+    # Refresh runtimes on each startup so tests that monkeypatch AgentService
+    # get a fresh worker facade without needing process-wide supervisor teardown.
+    supervisor.execution_driver = ExecutionDriver()
+    supervisor.stage_runtime = StageWorkerRuntime()
+    supervisor.start()
 
 
 def is_embedded_supervisor_running() -> bool:

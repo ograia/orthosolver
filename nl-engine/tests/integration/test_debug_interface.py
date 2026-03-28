@@ -39,6 +39,7 @@ def test_debug_problem_template_list_and_limit() -> None:
     assert t["config"]["llm"]["agent1"]["timeout_seconds"] == 600
     assert "parallel_root_decompositions_n" in t["config"]["decomposition"]
     assert "parallel_root_take_k" in t["config"]["decomposition"]
+    assert t["config"]["decomposition"]["lemma_decomposition_candidates_n"] == 1
     assert "max_consecutive_fatal_rejections_per_lemma" in t["config"]["lemma_solving"]
     assert "max_minor_rejections_per_lemma" in t["config"]["lemma_solving"]
     assert "max_total_lemma_nodes" in t["config"]["lemma_solving"]
@@ -148,6 +149,7 @@ def test_debug_snapshot_contains_graph_and_lookup_maps() -> None:
     assert body["final_proof"] is not None
     assert isinstance(body["lemma_by_id"], dict)
     assert isinstance(body["decomposition_by_id"], dict)
+    assert isinstance(body["decomposition_candidate_by_id"], dict)
     assert isinstance(body["logical_decomposition_by_id"], dict)
     assert isinstance(body["lean_job_by_id"], dict)
     lemma_row = body["lemmas"][0]
@@ -155,10 +157,14 @@ def test_debug_snapshot_contains_graph_and_lookup_maps() -> None:
     assert "counterexample_status" in lemma_row
     assert "proof_attempts" in lemma_row
     assert "decomposition_round_count" in lemma_row
+    assert "materialized_candidate_count" in lemma_row
+    assert "promoted_decomposition_count" in lemma_row
     assert "next_action" in lemma_row
     assert "last_terminal_worker_result" in lemma_row
     assert "last_transition_reason" in lemma_row
     assert "last_activity_at" in lemma_row
+    assert "decomposition_candidates" in lemma_row
+    assert isinstance(body["decomposition_candidates"], list)
     if body["logical_decompositions"]:
         logical_row = body["logical_decompositions"][0]
         assert "logical_decomposition_id" in logical_row
@@ -211,7 +217,12 @@ def test_debug_request_log_and_artifact_content_standard_mode(monkeypatch) -> No
     assert usage.status_code == 200
     usage_body = usage.json()
     assert usage_body["problem_id"] == problem_id
-    assert set(usage_body["pricing_usd_per_1m"].keys()) == {"input", "cached_input", "output"}
+    assert set(usage_body["pricing_by_model_usd_per_1m"].keys()) == {
+        "gpt-5.4",
+        "gpt-5.4-pro",
+        "gpt-5.4-mini",
+        "gpt-5.4-nano",
+    }
     assert "totals" in usage_body
     assert "by_stage" in usage_body
 

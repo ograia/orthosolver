@@ -1,0 +1,175 @@
+{
+  "artifact_prefix": "problems/prob_20260328014833_becb1bc2/lemmas/lem_20260328015220_49341677/split_existing_proof_attempt_2",
+  "attempt_count": 2,
+  "attempt_number": 2,
+  "completed_at": "2026-03-28T02:29:21.045728Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T02:29:34.810148Z",
+  "controller_consumed_by_execution_id": "exec_20260328014833_1811dcb8",
+  "created_at": "2026-03-28T02:28:29.733911Z",
+  "error_payload": {
+    "agent_key": "agent7",
+    "class": "AgentExecutionError",
+    "error_class": "invalid_agent_output",
+    "message": "agent7 output failed schema validation: 10 validation errors for Agent7Output\nshared_context.0\n  Input should be a valid dictionary [type=dict_type, input_value='E(n,t) = floor(n t) - sum_{k=1}^n floor(k t) / k', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nshared_context.1\n  Input should be a valid dictionary [type=dict_type, input_value='For an integer m and a r...r(t + m) = floor(t) + m', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nshared_context.2\n  Input should be a valid dictionary [type=dict_type, input_value='For each k with 1 <= k <... nonzero, so (kz)/k = z', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\ncontext_items.0\n  Input should be a valid dictionary [type=dict_type, input_value='The shift variable z is an integer.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\ncontext_items.1\n  Input should be a valid dictionary [type=dict_type, input_value='The proof uses only subs... integer contributions.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.0\n  Input should be a valid dictionary [type=dict_type, input_value='Use floor_shift_by_integ... z)) as floor(nx) + nz.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.1\n  Input should be a valid dictionary [type=dict_type, input_value='Use floor_shift_by_integ... z)) as floor(kx) + kz.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.2\n  Input should be a valid dictionary [type=dict_type, input_value='Substitute these identit... z) and expand the sum.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.3\n  Input should be a valid dictionary [type=dict_type, input_value='Apply sum_shift_terms_ca...ting +nz and -nz terms.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.4\n  Input should be a valid dictionary [type=dict_type, input_value='The remaining expression... E(n, x + z) = E(n, x).', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type"
+  },
+  "execution_id": "exec_20260328014833_1811dcb8",
+  "handler_key": "agent7_split_existing_proof",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260328014833_a00b1667",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "floor is the greatest integer less than or equal to its real argument"
+          ],
+          "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+          "quantifier_order": [
+            "Let n be an integer greater than 1 (fixed parameter)",
+            "For all real x (candidate values)",
+            "There exists a real x* (maximizer) depending on n"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter in the optimization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index running from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number x* may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lean_failure": {
+      "artifact_keys": {},
+      "confidence": 0.9,
+      "error_class": "service_execution_error",
+      "fatality": "fatal",
+      "issue_kind": "lean_issue",
+      "job_id": "lean_job_lem_20260328015220_49341677_formalize_lemma_from_nl_2",
+      "recommended_next_step": null
+    },
+    "lemma_id": "lem_20260328015220_49341677",
+    "parent_proof_nl": "Fix an integer n>1, a real number x, and an integer z. We will show that E(n,x+z)=E(n,x).\n\nBy definition,\nE(n,x+z)=\\lfloor n(x+z)\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor k(x+z)\\rfloor}{k}.\nFor each integer k with 1\\le k\\le n, both nz and kz are integers. Using the standard floor translation identity \\lfloor t+m\\rfloor=\\lfloor t\\rfloor+m for every real t and integer m, we get\n\\lfloor n(x+z)\\rfloor=\\lfloor nx+nz\\rfloor=\\lfloor nx\\rfloor+nz,\nand similarly\n\\lfloor k(x+z)\\rfloor=\\lfloor kx+kz\\rfloor=\\lfloor kx\\rfloor+kz.\nSubstituting these into the definition of E(n,x+z) gives\nE(n,x+z)=\\bigl(\\lfloor nx\\rfloor+nz\\bigr)-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor+kz}{k}.\nDistributing the sum,\nE(n,x+z)=\\lfloor nx\\rfloor+nz-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}-\\sum_{k=1}^n \\frac{kz}{k}.\nSince \\frac{kz}{k}=z for each k, the last sum equals \\sum_{k=1}^n z=nz. Therefore the added nz terms cancel:\nE(n,x+z)=\\lfloor nx\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor kx\\rfloor}{k}=E(n,x).\nHence E(n,x+z)=E(n,x) for every real x and every integer z.",
+    "parent_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "x is a real number",
+        "z is an integer",
+        "E(n, t) is well-defined for integer n with n > 1 and for real inputs t"
+      ],
+      "normalized_claim": "For every integer n with n > 1, and for every real number x and every integer z, the function value E(n, x plus z) equals E(n, x).",
+      "quantifier_order": [
+        "for all n in integers with n > 1",
+        "for all x in reals",
+        "for all z in integers"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "parameter of the function E; constrained by n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "reals",
+          "name": "x",
+          "role": "real input to the second argument of E",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "z",
+          "role": "integer shift added to x",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "parent_statement_nl": "Let n be an integer greater than 1. For every real number x and every integer z, E(n, x + z) = E(n, x).",
+    "previous_attempt_summaries": [],
+    "role_in_parent": "Remove the integer part of x without changing the objective function.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "floor is the greatest integer less than or equal to its real argument"
+      ],
+      "normalized_claim": "For each integer n greater than 1, consider the function E(n,x) = floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k. Determine all real x that maximize E(n,x) among all real x, and determine the maximal value M(n) such that E(n,x) is less than or equal to M(n) for all real x, with equality for the maximizing x.",
+      "quantifier_order": [
+        "Let n be an integer greater than 1 (fixed parameter)",
+        "For all real x (candidate values)",
+        "There exists a real x* (maximizer) depending on n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter in the optimization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number x* may depend on n"
+      ]
+    },
+    "root_theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260328014833_becb1bc2",
+  "request_source": "split_existing_proof_generation",
+  "result_payload": null,
+  "started_at": "2026-03-28T02:28:29.318834Z",
+  "status": "failed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260328015220_49341677",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T02:29:34.810159Z",
+  "worker_job_id": "wrk_lem_20260328015220_49341677_g0_split_2",
+  "worker_kind": "proof_split_generation"
+}
