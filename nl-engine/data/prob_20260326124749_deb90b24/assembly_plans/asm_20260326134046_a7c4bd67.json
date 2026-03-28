@@ -1,0 +1,151 @@
+{
+  "assembly_plan_id": "asm_20260326134046_a7c4bd67",
+  "created_at": "2026-03-26T13:44:27.694072Z",
+  "decomposition_id": "dec_20260326134046_4d8f8df9",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260326124749_deb90b24",
+  "proof_skeleton_nl": "Work with the extended counts F_m so that subproblems of sizes 0 and 1 are allowed. Introduce E_m as the number of alternating permutations with comparison pattern <,>,<,>.... By direct definition, altPlus_m has count E_m, and by sign-negation symmetry altMinus_m also has count E_m. Prove by strong induction on n that every sign sequence s of length n-1 satisfies F_n(s) <= E_n, with equality exactly for alternating s. For the induction step, decompose F_n(s) by the position of the minimum entry 1 using L1; the admissible positions are exactly the valley set Val(s). By L2 this valley set is sparse. Apply the induction hypothesis to the left and right subpatterns arising in each summand to bound F_n(s) by a weighted sum over Val(s), with weights w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}. Lemma L5 is the explicit bottleneck: among all sparse subsets, such a weighted sum is bounded by the larger of the odd-parity and even-parity totals. Lemma L4 evaluates both parity totals as E_n. Hence F_n(s) <= E_n. If equality holds, then the sparse-set inequality of L5 is also an equality, so Val(s) must be a parity class; L2 then forces s to be alternating. Conversely, if s is alternating, then L2 shows s is altPlus_n or altMinus_n, and the initial benchmark steps give F_n(s) = E_n. Therefore the maximizing sign sequences are exactly the alternating ones.",
+  "root_node_id": "thm_root_20260326124749_c952dad1",
+  "steps": [
+    {
+      "derives": "Define E_0 = 1 and E_1 = 1. For every integer m >= 2, let E_m be the number of permutations b = (b_1,...,b_m) of {1,2,...,m} satisfying b_1 < b_2 > b_3 < b_4 > ... with alternating inequalities starting with <. Then for every integer m >= 2, F_m(altPlus_m) = E_m.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "By the definitions of F_m, altPlus_m, and E_m, both sides count exactly the same permutations: those whose adjacent comparisons are <, >, <, >, ... .",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every integer m >= 2, F_m(altMinus_m) = E_m.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Fix m >= 2. The sequence altMinus_m is the entrywise negation of altPlus_m. Applying L3 with n = m and s = altPlus_m gives F_m(altMinus_m) = F_m(altPlus_m). Step A1 identifies F_m(altPlus_m) with E_m, so F_m(altMinus_m) = E_m.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Fix an integer n >= 2. For each j with 1 <= j <= n, define w_j = binomial(n - 1, j - 1) * E_{j-1} * E_{n-j}. Then the odd-index total satisfies sum over odd j with 1 <= j <= n of w_j = E_n, and the even-index total satisfies sum over even j with 1 <= j <= n of w_j = E_n.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly L4 applied to the sequence E defined in A1, after rewriting its two recurrences using the notation w_j.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For each integer m >= 2, let P(m) be the assertion: every sign sequence t of length m - 1 satisfies F_m(t) <= E_m, and equality holds if and only if t is alternating. The base case P(2) is true.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "The only sign sequences of length 1 are altPlus_2 and altMinus_2. Both are alternating because there is no index i with 1 <= i <= 0 to check. By A1 and A2, both have count E_2. Hence every length-1 sign pattern satisfies the desired bound, and equality holds exactly for the alternating patterns.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "Fix an integer n >= 3, and assume P(m) holds for every integer m with 2 <= m < n. Let s = (s_1,...,s_{n-1}) be any sign sequence with entries in {+1,-1}. Define V = Val(s). For each j in V, define s^L_j to be (s_1,...,s_{j-2}) if j >= 2 and the empty sequence if j = 1, and define s^R_j to be (s_{j+1},...,s_{n-1}) if j <= n - 1 and the empty sequence if j = n. Then F_n(s) = sum over j in V of binomial(n - 1, j - 1) * F_{j-1}(s^L_j) * F_{n-j}(s^R_j).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "This is the exact decomposition from L1, obtained by partitioning the counted permutations according to the position of the minimum value 1.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "With n, s, V, s^L_j, and s^R_j as in A5, the set V has no two consecutive integers. Also, for each j in V, both sizes j - 1 and n - j are strictly smaller than n. If j - 1 >= 2, the induction hypothesis P(j - 1) gives F_{j-1}(s^L_j) <= E_{j-1}; if j - 1 is 0 or 1, then F_{j-1}(s^L_j) = E_{j-1} by the definitions F_0(empty) = 1, F_1(empty) = 1, E_0 = 1, and E_1 = 1. The same reasoning gives F_{n-j}(s^R_j) <= E_{n-j}. Therefore, for every j in V, binomial(n - 1, j - 1) * F_{j-1}(s^L_j) * F_{n-j}(s^R_j) <= w_j, where w_j = binomial(n - 1, j - 1) * E_{j-1} * E_{n-j}. Summing the termwise inequalities in the recurrence of A5 yields F_n(s) <= sum over j in V of w_j.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "L2 gives the sparsity of V. The induction hypothesis bounds every nontrivial left or right subproblem, while the size-0 and size-1 cases are handled directly from the definitions. Since all factors are nonnegative counts, the bounds multiply termwise and then sum over j in V.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    },
+    {
+      "derives": "Because V has no two consecutive integers by A6, L5 applies to V and the weights w_j. Hence sum over j in V of w_j is at most max( sum over odd j with 1 <= j <= n of w_j, sum over even j with 1 <= j <= n of w_j ). Step A3 identifies both parity sums with E_n. Therefore sum over j in V of w_j <= E_n, and combining this with A6 gives F_n(s) <= E_n.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "A6 reduces the permutation problem to a weighted sparse-subset sum. L5 bounds that sparse-set sum by the larger parity-class total, and A3 evaluates each parity-class total as E_n.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A6"
+      ]
+    },
+    {
+      "derives": "Assume in addition that F_n(s) = E_n. Step A6 gives F_n(s) <= sum over j in V of w_j, and step A7 gives sum over j in V of w_j <= E_n. Since the leftmost and rightmost quantities are equal, both inequalities must be equalities. Thus sum over j in V of w_j = max( sum over odd j of w_j, sum over even j of w_j ). The equality clause in L5 therefore implies that V is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "The chain F_n(s) <= sum_{j in V} w_j <= E_n collapses to equality because the endpoints agree. L5 then characterizes the only sparse subsets that can attain the parity-class maximum.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A6",
+        "A7"
+      ]
+    },
+    {
+      "derives": "Under the equality hypothesis F_n(s) = E_n, the sign sequence s is alternating.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "Step A8 shows that Val(s) is one of the two parity classes. The final characterization in L2 states exactly that this happens if and only if s_i s_{i+1} = -1 for every 1 <= i <= n - 2, which is the definition of an alternating sign sequence.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    },
+    {
+      "derives": "Conversely, if s is alternating, then s is either altPlus_n or altMinus_n. Therefore F_n(s) = E_n.",
+      "is_trivial": false,
+      "step_id": "A10",
+      "trivial_justification": "If s is alternating, then by L2 its valley set is a parity class, and the explicit parity-class descriptions in L2 force s to be exactly altPlus_n or altMinus_n. Step A1 gives F_n(altPlus_n) = E_n and step A2 gives F_n(altMinus_n) = E_n, so in either case F_n(s) = E_n.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "For the arbitrary integer n >= 3 fixed in A5, every sign sequence s of length n - 1 satisfies F_n(s) <= E_n by A7, equality implies that s is alternating by A9, and every alternating s attains equality by A10. Hence P(n) holds. Since A4 proved P(2), strong induction yields P(n) for every integer n >= 2.",
+      "is_trivial": false,
+      "step_id": "A11",
+      "trivial_justification": "A7, A9, and A10 together establish the full induction step P(n) from the hypothesis that all smaller P(m) hold. A4 supplies the base case, so strong induction closes the argument for all n >= 2.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4",
+        "A7",
+        "A9",
+        "A10"
+      ]
+    },
+    {
+      "derives": "Let n be an integer with n >= 2. For a sequence s = (s_1,...,s_{n-1}) where each s_i = +/- 1, let f(s) be the number of permutations (a_1,...,a_n) of {1,2,...,n} such that s_i(a_{i+1} - a_i) > 0 for all i. Then f(s) is maximal exactly for the alternating sign sequences, equivalently exactly for those s satisfying s_i s_{i+1} = -1 for every 1 <= i <= n - 2.",
+      "is_trivial": false,
+      "step_id": "A12",
+      "trivial_justification": "By shared_context, the theorem's f(s) is exactly F_n(s). Step A11 says that for every n >= 2, all sign sequences satisfy F_n(s) <= E_n and equality holds exactly for alternating s. Therefore the maximizers of f are precisely the alternating sign sequences.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A11"
+      ]
+    }
+  ]
+}

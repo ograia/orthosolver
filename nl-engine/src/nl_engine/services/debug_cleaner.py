@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from nl_engine.artifacts.store import ArtifactStore
 from nl_engine.persistence.db import FileStore
 
 
@@ -31,9 +32,11 @@ class DebugDataCleaner:
         self.store = store
         self.artifact_root = Path(artifact_root).resolve()
         self.artifact_root.mkdir(parents=True, exist_ok=True)
+        self.artifacts = ArtifactStore(str(self.artifact_root))
 
     def _count_data_files(self, problem_id: str) -> dict[str, int]:
         """Count data files by type for backward-compatible deleted_rows report."""
+        self.store.sync_problem(problem_id)
         pd = self.store.root / problem_id
         if not pd.exists():
             return {}
@@ -62,41 +65,41 @@ class DebugDataCleaner:
         ]:
             if (pd / name).exists():
                 counts[table_name] = 1
-        # Count JSONL files
-        for name, table_name in [
-            ("events.jsonl", "events"),
-            ("llm_usage.jsonl", "llm_usage_records"),
-        ]:
+        counts["events"] = len(list((pd / "events").glob("*.json"))) if (pd / "events").exists() else 0
+        counts["llm_usage_records"] = len(list((pd / "llm_usage").glob("*.json"))) if (pd / "llm_usage").exists() else 0
+
+        # Count legacy JSONL files for backward compatibility.
+        for name, table_name in [("events.jsonl", "events"), ("llm_usage.jsonl", "llm_usage_records")]:
             p = pd / name
-            counts[table_name] = sum(1 for line in p.read_text().splitlines() if line.strip()) if p.exists() else 0
+            if p.exists():
+                counts[table_name] = counts.get(table_name, 0) + sum(1 for line in p.read_text().splitlines() if line.strip())
         # Cost rollup
         counts["run_cost_rollups"] = 1 if (pd / "cost_rollup.json").exists() else 0
         return counts
 
     def _remove_tree(self, rel_dir: str) -> int:
-        if not rel_dir:
+        prefix = rel_dir.strip("/")
+        if not prefix:
             return 0
-        path = (self.artifact_root / rel_dir).resolve()
-        if path != self.artifact_root and self.artifact_root not in path.parents:
-            return 0
-        if not path.exists():
-            return 0
-        files = [p for p in path.rglob("*") if p.is_file()]
-        shutil.rmtree(path, ignore_errors=True)
-        return len(files)
+        keys = self.artifacts.list_keys(prefix=prefix)
+        for key in keys:
+            self.artifacts.delete(key)
+        path = (self.artifact_root / prefix).resolve()
+        if path.exists():
+            shutil.rmtree(path, ignore_errors=True)
+        return len(keys)
 
     def delete_problem(self, problem_id: str) -> CleanupResult:
         deleted_artifacts: dict[str, int] = {}
         deleted_artifacts["problems"] = self._remove_tree(f"problems/{problem_id}")
 
         # Remove worker job artifacts for this problem
-        worker_dir = self.artifact_root / "worker_jobs"
         worker_deleted = 0
-        if worker_dir.exists():
-            for child in worker_dir.iterdir():
-                if child.is_dir() and problem_id in child.name:
-                    worker_deleted += len([p for p in child.rglob("*") if p.is_file()])
-                    shutil.rmtree(child, ignore_errors=True)
+        for key in list(self.artifacts.list_keys(prefix="worker_jobs")):
+            if problem_id not in key:
+                continue
+            self.artifacts.delete(key)
+            worker_deleted += 1
         deleted_artifacts["worker_jobs"] = worker_deleted
 
         # Count data files by type before deletion

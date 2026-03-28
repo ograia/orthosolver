@@ -18,7 +18,8 @@ from lean_engine.lean_checks import (
     run_phase02_checks,
 )
 from lean_engine.normalize import normalize_problem_artifact
-from lean_engine.workspace import create_workspace_from_template, write_project_mcp_config
+from lean_engine.timeout_policy import PhaseTimeoutPolicy, runtime_config_for_phase
+from lean_engine.workspace import compute_cache_key, create_workspace_from_template, write_project_mcp_config
 
 
 def test_template_workspace_copies(tmp_path: Path) -> None:
@@ -61,6 +62,29 @@ def test_create_workspace_rejects_unpinned_template(tmp_path: Path) -> None:
     assert "must pin an explicit Lean version" in str(exc.value)
 
 
+def test_workspace_cache_uses_repo_local_seed_only(tmp_path: Path) -> None:
+    from lean_engine.config import default_runtime_config_dict, parse_runtime_config, default_template_dir
+
+    template_dir = default_template_dir()
+    cache_key = compute_cache_key(template_dir)
+    cfg = default_runtime_config_dict()
+    cfg["artifacts"]["root"] = str(tmp_path / "artifacts")
+    cfg["workspace_cache"]["cache_dir"] = str(tmp_path / "artifacts" / "_lake_cache")
+    runtime_config = parse_runtime_config(cfg)
+    local_lake_dir = runtime_config.workspace_cache.cache_dir / cache_key / ".lake"
+    local_lake_dir.mkdir(parents=True, exist_ok=True)
+    (local_lake_dir / "seed_marker.txt").write_text("warm cache\n", encoding="utf-8")
+    run_paths = create_run_paths("prob_seeded_cache", artifacts_root=runtime_config.artifacts.root)
+
+    workspace_result = create_workspace_from_template(
+        run_paths.workspace_dir,
+        runtime_config=runtime_config,
+    )
+
+    assert workspace_result.cache_hit is True
+    assert (run_paths.workspace_dir / ".lake" / "seed_marker.txt").exists()
+
+
 def test_classify_preparation_failure_detects_toolchain_mismatch() -> None:
     diagnostics = [
         "warning: toolchain not updated; multiple toolchain candidates:",
@@ -86,6 +110,114 @@ def test_mcp_config_is_emitted_correctly(tmp_path: Path) -> None:
     assert server["args"] == []
     assert server["env"]["MCP_LOG_DIR"] == str((tmp_path / "mcp_logs").resolve())
     assert server["env"]["MCP_LOG_NAME"] == runtime_config.mcp.log_name
+
+
+def test_runtime_config_defaults_to_128k_output_budget(tmp_path: Path) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+    assert runtime_config.claude.max_output_tokens == 131072
+
+
+def test_phase_runtime_config_preserves_output_budget(tmp_path: Path) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+    phase_policy = PhaseTimeoutPolicy(
+        agent_hard_seconds=11,
+        agent_idle_seconds=22,
+        tool_wait_seconds=33,
+        init_silence_seconds=44,
+        lean_check_seconds=55,
+        lean_build_seconds=66,
+    )
+    phase_runtime = runtime_config_for_phase(runtime_config, phase_policy)
+    assert phase_runtime.claude.max_output_tokens == 131072
+
+
+def test_runtime_config_explicit_output_budget_override_wins(tmp_path: Path) -> None:
+    config_path = tmp_path / "runtime_override.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "claude": {
+                    "model": "claude-sonnet-4-6",
+                    "fallback_model": "claude-sonnet-4-6",
+                    "timeout_seconds": 10,
+                    "max_output_tokens": 2048,
+                    "command": "claude",
+                },
+                "lean": {"imports": ["Mathlib"]},
+                "artifacts": {"root": str(tmp_path / "artifacts")},
+                "mcp": {
+                    "enabled": True,
+                    "config_filename": ".mcp.json",
+                    "server_name": "lean-lsp",
+                    "command": "/tmp/lean-mcp.sh",
+                    "args": [],
+                    "log_name": "lean_lsp_mcp",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    runtime_config = load_runtime_config(config_path)
+    assert runtime_config.claude.max_output_tokens == 2048
+
+
+def test_runtime_config_preserves_exact_model_string(tmp_path: Path) -> None:
+    config_path = tmp_path / "runtime_exact_model.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "claude": {
+                    "model": "claude-sonnet-4-6",
+                    "timeout_seconds": 10,
+                    "command": "claude",
+                },
+                "lean": {"imports": ["Mathlib"]},
+                "artifacts": {"root": str(tmp_path / "artifacts")},
+                "mcp": {
+                    "enabled": True,
+                    "config_filename": ".mcp.json",
+                    "server_name": "lean-lsp",
+                    "command": "/tmp/lean-mcp.sh",
+                    "args": [],
+                    "log_name": "lean_lsp_mcp",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    runtime_config = load_runtime_config(config_path)
+    assert runtime_config.claude.model == "claude-sonnet-4-6"
+    assert runtime_config.claude.fallback_model is None
+
+
+def test_runtime_config_accepts_matching_deprecated_fallback_model(tmp_path: Path) -> None:
+    config_path = tmp_path / "runtime_matching_fallback.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "claude": {
+                    "model": "claude-sonnet-4-6[1m]",
+                    "fallback_model": "claude-sonnet-4-6[1m]",
+                    "timeout_seconds": 10,
+                    "command": "claude",
+                },
+                "lean": {"imports": ["Mathlib"]},
+                "artifacts": {"root": str(tmp_path / "artifacts")},
+                "mcp": {
+                    "enabled": True,
+                    "config_filename": ".mcp.json",
+                    "server_name": "lean-lsp",
+                    "command": "/tmp/lean-mcp.sh",
+                    "args": [],
+                    "log_name": "lean_lsp_mcp",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    runtime_config = load_runtime_config(config_path)
+    assert runtime_config.claude.model == "claude-sonnet-4-6[1m]"
+    assert runtime_config.claude.fallback_model == "claude-sonnet-4-6[1m]"
 
 
 def test_deterministic_check_command_wiring_uses_expected_commands(tmp_path: Path) -> None:
@@ -200,6 +332,61 @@ def test_claude_runner_writes_prompt_raw_and_summary_artifacts(tmp_path: Path, m
     summary = json.loads(result.summary_path.read_text(encoding="utf-8"))
     assert summary["command"][3:5] == ["--output-format", "stream-json"]
     assert summary["result_event"]["type"] == "result"
+
+
+def test_claude_runner_uses_exact_model_string(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+    runtime_config = runtime_config_for_phase(
+        runtime_config,
+        PhaseTimeoutPolicy(
+            agent_hard_seconds=11,
+            agent_idle_seconds=22,
+            tool_wait_seconds=33,
+            init_silence_seconds=44,
+            lean_check_seconds=55,
+            lean_build_seconds=66,
+        ),
+    )
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    run_paths = create_run_paths("prob_runner_exact_model", artifacts_root=runtime_config.artifacts.root)
+    seen_commands: list[tuple[str, ...]] = []
+
+    class FakePopen:
+        def __init__(self, command, stdout, stderr, text, cwd, env, **kwargs):
+            _ = (stderr, text, cwd, env, kwargs)
+            seen_commands.append(tuple(command))
+            self.stdin = io.StringIO()
+            self.stdout_target = stdout
+            self.returncode = 0
+            self.stdout_target.write('{"type":"result","result":"done"}\n')
+            self.stdout_target.flush()
+
+        def wait(self, timeout=None):
+            _ = timeout
+            return self.returncode
+
+        def kill(self):
+            self.returncode = -9
+
+    monkeypatch.setattr("lean_engine.claude_runner.subprocess.Popen", FakePopen)
+
+    runner = ClaudeRunner(runtime_config)
+    runner.run_prompt(
+        run_paths=run_paths,
+        prompt="Phase 02 exact model control",
+        phase_name="phase02_exact_model",
+        model="claude-sonnet-4-6",
+    )
+    runner.run_prompt(
+        run_paths=run_paths,
+        prompt="Phase 02 exact model control [1m]",
+        phase_name="phase02_exact_model_1m",
+        model="claude-sonnet-4-6[1m]",
+    )
+
+    assert "--model" in seen_commands[0]
+    assert seen_commands[0][seen_commands[0].index("--model") + 1] == "claude-sonnet-4-6"
+    assert seen_commands[1][seen_commands[1].index("--model") + 1] == "claude-sonnet-4-6[1m]"
 
 
 def test_claude_runner_allows_cli_auth_without_api_key(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -343,7 +530,7 @@ def test_config_model_selection_constraints(tmp_path: Path) -> None:
     valid_payload = {
         "claude": {
             "model": "claude-opus-4-6",
-            "fallback_model": "claude-sonnet-4-6",
+            "fallback_model": "claude-opus-4-6",
             "timeout_seconds": 120,
             "command": "claude",
         },
@@ -376,11 +563,37 @@ def test_config_model_selection_constraints(tmp_path: Path) -> None:
         load_runtime_config(invalid_config_path)
 
 
-def test_config_rejects_non_boolean_mcp_enabled(tmp_path: Path) -> None:
+def test_config_rejects_mismatched_deprecated_fallback_model(tmp_path: Path) -> None:
     payload = {
         "claude": {
             "model": "claude-opus-4-6",
             "fallback_model": "claude-sonnet-4-6",
+            "timeout_seconds": 120,
+            "command": "claude",
+        },
+        "lean": {"imports": ["Mathlib"]},
+        "artifacts": {"root": str(tmp_path / "artifacts")},
+        "mcp": {
+            "enabled": True,
+            "config_filename": ".mcp.json",
+            "server_name": "lean-lsp",
+            "command": "/tmp/lean-mcp.sh",
+            "args": [],
+            "log_name": "lean_lsp_mcp",
+        },
+    }
+
+    config_path = tmp_path / "runtime_invalid_fallback.json"
+    config_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="claude\\.fallback_model is deprecated"):
+        load_runtime_config(config_path)
+
+
+def test_config_rejects_non_boolean_mcp_enabled(tmp_path: Path) -> None:
+    payload = {
+        "claude": {
+            "model": "claude-opus-4-6",
             "timeout_seconds": 120,
             "command": "claude",
         },

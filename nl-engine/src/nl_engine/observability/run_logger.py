@@ -12,10 +12,9 @@ from __future__ import annotations
 import json
 import threading
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 
-from nl_engine.settings import get_settings
+from nl_engine.artifacts.store import ArtifactStore
 
 
 class RunLogger:
@@ -24,19 +23,15 @@ class RunLogger:
     _lock = threading.Lock()
 
     def __init__(self) -> None:
-        settings = get_settings()
-        self.root = Path(settings.artifact_store_dir)
+        self.store = ArtifactStore()
 
-    def _log_path(self, problem_id: str) -> Path:
-        return self.root / "problems" / problem_id / "run_log.jsonl"
+    def _log_key(self, problem_id: str) -> str:
+        return f"problems/{problem_id}/run_log.jsonl"
 
     def _append(self, problem_id: str, entry: dict[str, Any]) -> None:
-        path = self._log_path(problem_id)
-        path.parent.mkdir(parents=True, exist_ok=True)
         line = json.dumps(entry, default=str) + "\n"
         with self._lock:
-            with open(path, "a") as f:
-                f.write(line)
+            self.store.append_text(self._log_key(problem_id), line)
 
     def agent_start(
         self,

@@ -1,0 +1,189 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/lemmas/lem_20260327170001_d15ce1b7/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T17:02:42.126913Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-27T17:00:55.497334Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+        "item_id": "pnode_20260327170055_d6318f3f",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327170047_8c82edc2",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260327170001_d15ce1b7",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327170055_60b86064",
+    "role_in_assembly": "This is the sharp global upper bound at the discrete endpoints a/n; it is the main frontier/bottleneck step.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n > 1",
+        "0 <= a <= n - 1",
+        "a divided by n is in the rational numbers (input to E_n), and lies in the interval from 0 to 1 inclusive of 0 and exclusive of 1 when a < n"
+      ],
+      "normalized_claim": "For every integer n with n > 1 and every integer a with 0 <= a <= n - 1, the real value E_n evaluated at (a divided by n) satisfies E_n(a/n) <= H_n minus 1; moreover, E_n(a/n) equals H_n minus 1 if and only if a equals n - 1.",
+      "quantifier_order": [
+        "for all integers n",
+        "for all integers a"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "common parameter indexing the quantities E_n and H_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "a",
+          "role": "index controlling the input a/n to E_n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced; the equality condition is a universal conditional about the given a"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) <= H_n - 1, and equality holds if and only if a = n-1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "definitions_used": [
+        "E_n(x)=floor(nx)-sum_{k=1}^n floor(kx)/k",
+        "H_n=sum_{k=1}^n 1/k"
+      ],
+      "equality_conditions": [
+        "equality at the final bound forces d=1",
+        "equality in rearrangement then forces a=n-1"
+      ],
+      "key_reductions": [
+        "E_n(a/n)=sum_{k=1}^n {ka/n}/k",
+        "for a=db,n=dm the fractional parts repeat d times"
+      ]
+    },
+    "lemma_id": "lem_20260327170001_d15ce1b7",
+    "proof_nl": "Let H_n := \\sum_{k=1}^n 1/k and write \\{t\\} for the fractional part of t. Fix n>1 and an integer a with 0\\le a\\le n-1.\n\nIf a=0, then E_n(0)=0<H_n-1, so the claim is immediate. Assume now a>0. Since a<n,\nE_n(a/n)=\\lfloor na/n\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor ka/n\\rfloor}{k}\n= a-\\sum_{k=1}^n \\frac{ka/n-\\{ka/n\\}}{k}\n= \\sum_{k=1}^n \\frac{\\{ka/n\\}}{k},\nbecause \\sum_{k=1}^n (ka/n)/k = a.\n\nSet d=\\gcd(a,n) and m=n/d. Write a=db with \\gcd(b,m)=1. For k=jm+r with 0\\le j\\le d-1 and 1\\le r\\le m, we have\n\\{ka/n\\}=\\{(jm+r)b/m\\}=\\{rb/m\\},\nsince jb is an integer. As r runs from 1 to m, the values \\{rb/m\\} are a permutation of\n0,1/m,2/m,\\dots,(m-1)/m,\nbecause multiplication by b permutes the residue classes mod m. Hence the multiset of the n numbers \\{ka/n\\} (k=1,\\dots,n) consists of d copies of each of these m values.\n\nNow the weights 1,1/2,\\dots,1/n are strictly decreasing, so by the rearrangement inequality the sum \\sum_{k=1}^n \\{ka/n\\}/k is at most the same weights paired with the fractional parts in nonincreasing order. Denote this decreasing rearrangement by c_1\\ge c_2\\ge\\cdots\\ge c_n. Then\nE_n(a/n)\\le \\sum_{k=1}^n \\frac{c_k}{k}.\n\nThe rearranged sequence is explicit: for s=1,\\dots,m-1, the value (m-s)/m occurs exactly d times, and 0 occurs exactly d times. Thus for k=(s-1)d+t with 1\\le t\\le d,\n c_k=\\frac{m-s}{m}.\nBut\n\\frac{n-k}{n}=\\frac{dm-(s-1)d-t}{dm}=\\frac{m-s}{m}+\\frac{d-t}{dm}\\ge \\frac{m-s}{m}=c_k.\nTherefore c_k\\le (n-k)/n for every k, and so\nE_n(a/n)\\le \\sum_{k=1}^n \\frac{n-k}{nk}\n=\\sum_{k=1}^{n-1}\\left(\\frac1k-\\frac1n\\right)\n=H_{n-1}-\\frac{n-1}{n}\n=H_n-1.\nThis proves the inequality.\n\nFor equality, first note that if d>1 then already c_1=(m-1)/m<(n-1)/n, so the comparison c_k\\le (n-k)/n is strict at k=1; hence equality is impossible. Thus equality forces d=1, i.e. \\gcd(a,n)=1.\n\nWhen d=1, the multiset of fractional parts is exactly \\{0,1/n,\\dots,(n-1)/n\\}, and the rearrangement inequality is sharp only when the sequence \\{a/n\\},\\{2a/n\\},\\dots,\\{na/n\\} is itself nonincreasing. Since its first term is \\{a/n\\}=a/n, the first term must be the largest value (n-1)/n. Hence a=n-1.\n\nConversely, if a=n-1 then \\{ka/n\\}=(n-k)/n for 1\\le k\\le n-1 and \\{na/n\\}=0, so\nE_n((n-1)/n)=\\sum_{k=1}^{n-1} \\frac{n-k}{nk}=H_n-1.\n\nTherefore E_n(a/n)\\le H_n-1 for all integers 0\\le a\\le n-1, with equality iff a=n-1.",
+    "proof_summary": "Rewrite E_n(a/n) as a weighted sum of fractional parts, use the multiset structure of \\{ka/n\\} when a/n is reduced, apply rearrangement to maximize against decreasing weights 1/k, then compare the sorted fractional-part sequence termwise with (n-k)/n. Equality is forced only at a=n-1.",
+    "self_report": {
+      "confidence": 0.97,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Rearrangement inequality for a decreasing weight sequence."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T17:00:58.925756Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327170001_d15ce1b7",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T17:02:42.126913Z",
+  "worker_job_id": "wrk_lem_20260327170001_d15ce1b7_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

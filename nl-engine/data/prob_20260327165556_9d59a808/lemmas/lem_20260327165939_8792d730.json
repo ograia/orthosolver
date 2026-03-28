@@ -1,0 +1,87 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327170047_85accc9b",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T16:59:47.153320Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:01:19.695902Z",
+  "last_dependency_check_id": "depchk_20260327170119_7ddf82eb",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly establishes that for any integer k with 1 <= k <= n and any t in [(n-1)/n, 1), one has k-1 <= kt < k, hence floor(k*t)=k-1. The quantifiers match the lemma statement and there is no semantic drift.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n>1 and a real number t with (n-1)/n <= t < 1. Let k be any integer with 1 <= k <= n.\n\nFrom t >= (n-1)/n, multiplying by the positive integer k gives\nkt >= k(n-1)/n = k - k/n.\nBecause k <= n, we have k/n <= 1, so k - k/n >= k - 1. Hence kt >= k - 1.\n\nAlso, since t < 1 and k > 0, multiplying by k yields kt < k.\n\nTherefore k - 1 <= kt < k. Since k - 1 is an integer, the definition of the floor function implies\nfloor(kt) = k - 1.\n\nThis holds for every integer k with 1 <= k <= n, as required.",
+  "latest_vetted_proof_fingerprint": "60e67f2c6a3becc89a7f78f73f8a058a8b2be6ee3991fd9855de2a5a78fb7f75",
+  "latest_vetter_report_id": "rep_20260327170119_f83ea148",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327165939_8792d730",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327165939_8792d730.json",
+  "proof_graph_id": "pgraph_20260327170047_9e8a6c61",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Identify all floor values on the candidate maximizing interval.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "t is real and (n-1)/n <= t",
+      "t is real and t < 1",
+      "k is an integer and 1 <= k",
+      "k is an integer and k <= n",
+      "floor refers to the greatest-integer function applied to the real number k*t"
+    ],
+    "normalized_claim": "For all integers n with n > 1, for all real numbers t with (n-1)/n <= t < 1, and for all integers k with 1 <= k <= n, it holds that floor(k*t) equals k-1.",
+    "quantifier_order": [
+      "for every integer n such that n > 1",
+      "for every real number t such that (n-1)/n <= t and t < 1",
+      "for every integer k such that 1 <= k and k <= n"
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "n",
+        "role": "outer universally quantified parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all real numbers",
+        "name": "t",
+        "role": "real-valued parameter constrained by inequalities involving n",
+        "type": "real number"
+      },
+      {
+        "domain": "all integers",
+        "name": "k",
+        "role": "universally quantified index constrained by 1 <= k <= n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:01:19.695902Z"
+}

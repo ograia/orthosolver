@@ -1,0 +1,98 @@
+{
+  "created_at": "2026-03-27T04:18:32.070772Z",
+  "graph_node_id": "pnode_20260327041832_4ab58843",
+  "metadata": {
+    "parent_id": "thm_root_20260327040158_5065188f"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "e42947bd716eed222a02fd54a41d977a96a6493c8f67c5533830bdf03dd910b3",
+  "owner_id": "lem_20260327041325_fd93be4e",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "The parameter n is an integer and n is at least 2.",
+      "Each sign entry s_i is exactly plus one or minus one.",
+      "For the definition of v at stage k, b must be a permutation of 1 through k, so its entries are distinct and each of 1 through k appears exactly once.",
+      "The sign condition for v at stage k uses indices i from 1 to k minus 1.",
+      "The phrase that b_k is the j-th smallest element means the rank of the final value among the k distinct entries of b.",
+      "The recurrence is only stated for k from 1 to n minus 1, so s_k is always available there.",
+      "Empty sums are interpreted as 0.",
+      "In the final count f of s, a must be a permutation of 1 through n and the sign condition runs over all i from 1 to n minus 1."
+    ],
+    "normalized_claim": "The statement gives a recursive rank-refined counting scheme for permutations whose adjacent differences follow a prescribed sign pattern, starting from the base case v at stage 1 equal to 1, updating by prefix sums when the current sign is plus one and by suffix sums when it is minus one, and concluding that the total number of full-length matching permutations equals the sum of the final vector entries.",
+    "quantifier_order": [
+      "Choose an integer n at least 2.",
+      "Choose a sign sequence s of length n minus 1 with entries plus one or minus one.",
+      "For each k from 1 to n, define the vector v at stage k by counting permutations b of 1 through k with the sign constraints and with final entry rank j.",
+      "For each k from 1 to n minus 1 and each j from 1 to k plus 1, compute the next vector from the current vector using the current sign s_k and the stated prefix or suffix sum rule.",
+      "Finally, define f of s as the number of length n permutations satisfying all sign constraints, and assert that it equals the sum of the entries of v at stage n."
+    ],
+    "variables": [
+      {
+        "domain": "integers at least 2",
+        "name": "n",
+        "role": "global size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length n minus 1 with each entry equal to plus one or minus one",
+        "name": "s",
+        "role": "input sign pattern",
+        "type": "finite sign sequence"
+      },
+      {
+        "domain": "integers from 1 to n for the definition and from 1 to n minus 1 for the recurrence",
+        "name": "k",
+        "role": "stage index for the recursive construction",
+        "type": "integer index"
+      },
+      {
+        "domain": "for the vector definition, integers from 1 to k; for the recurrence, integers from 1 to k plus 1",
+        "name": "j",
+        "role": "component index and rank of the final entry",
+        "type": "integer index"
+      },
+      {
+        "domain": "summation index ranging over the stated intervals",
+        "name": "i",
+        "role": "dummy index in the recursive sums and in the sign constraints",
+        "type": "integer index"
+      },
+      {
+        "domain": "all permutations of the set {1,...,k}",
+        "name": "b",
+        "role": "counted permutation in the definition of the vector entries",
+        "type": "permutation of 1 through k"
+      },
+      {
+        "domain": "all permutations of the set {1,...,n}",
+        "name": "a",
+        "role": "counted permutation in the final counting function",
+        "type": "permutation of 1 through n"
+      },
+      {
+        "domain": "vectors whose j-th entry counts permutations satisfying the first k minus 1 sign conditions and final rank j",
+        "name": "v_k",
+        "role": "recursive count vector",
+        "type": "integer vector of length k"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "f_of_s",
+        "role": "total number of permutations matching the full sign pattern",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "Each entry of v at stage k depends only on the prefix s_1 through s_{k-1} and on permutations of 1 through k satisfying those prefix constraints.",
+      "The recurrence for v at stage k plus 1 depends only on the current vector v at stage k and on the single sign s_k; it does not depend on later signs.",
+      "The counted permutation b serves as the witness for each entry of v at stage k, with the witness condition split by the final entry rank j.",
+      "The permutation a counted by f of s depends on the full sign sequence s_1 through s_{n-1}.",
+      "The total count f of s is recovered by summing all rank-refined counts in v at stage n."
+    ]
+  },
+  "statement_nl": "Let n be an integer at least 2, let s=(s_1,...,s_{n-1}) with each s_i in {+1,-1}, and for each k with 1 <= k <= n define a vector v^(k)=(v^(k)_1,...,v^(k)_k) by declaring v^(k)_j to be the number of permutations b=(b_1,...,b_k) of {1,...,k} such that s_i(b_{i+1}-b_i)>0 for every 1 <= i < k and b_k is the j-th smallest element of {b_1,...,b_k}. Then v^(1)=(1). Moreover, for each k with 1 <= k <= n-1 and each j with 1 <= j <= k+1, with empty sums interpreted as 0, if s_k=+1 then v^(k+1)_j = sum_{i=1}^{j-1} v^(k)_i, while if s_k=-1 then v^(k+1)_j = sum_{i=j}^{k} v^(k)_i. In particular, if f(s) denotes the number of permutations a=(a_1,...,a_n) of {1,...,n} with s_i(a_{i+1}-a_i)>0 for all 1 <= i <= n-1, then f(s)=sum_{j=1}^n v^(n)_j.",
+  "updated_at": "2026-03-27T04:18:32.070773Z"
+}

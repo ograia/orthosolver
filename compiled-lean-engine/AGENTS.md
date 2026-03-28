@@ -2,7 +2,7 @@
 
 This file gives project-specific instructions to Codex agents working in:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine`
+- `compiled-lean-engine/`
 
 Read this file before making changes.
 
@@ -10,7 +10,7 @@ Read this file before making changes.
 
 Build and maintain a narrow NL-proof-to-Lean compiler in:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine`
+- `compiled-lean-engine/lean-engine/`
 
 The product goal is practical and scoped:
 
@@ -24,23 +24,23 @@ This is not a general theorem prover and not a "solve from scratch" agent.
 
 Before substantial implementation work, read these existing docs:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/CLAUDE.md`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/architecture.md`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine/README.md`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/PLAN.md`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/plan-3-19.md`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine/docs/runbook_phase07.md`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine/docs/runbook_phase08.md`
+- `compiled-lean-engine/CLAUDE.md`
+- `compiled-lean-engine/architecture.md`
+- `compiled-lean-engine/lean-engine/README.md`
+- `compiled-lean-engine/PLAN.md`
+- `compiled-lean-engine/plan-3-19.md`
+- `compiled-lean-engine/lean-engine/docs/runbook_phase07.md`
+- `compiled-lean-engine/lean-engine/docs/runbook_phase08.md`
 
 Input corpus examples live under:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/docs/putnam-nl/`
+- `compiled-lean-engine/docs/putnam-nl/`
 
 ## Where To Build
 
 All engine implementation belongs in:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine`
+- `compiled-lean-engine/lean-engine/`
 
 Do not scatter core runtime logic into external repositories.
 
@@ -52,7 +52,7 @@ Only these external repos are integrated in the main lean-engine runtime:
 
 Path:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-lsp-mcp-main`
+- `compiled-lean-engine/lean-lsp-mcp-main/`
 
 Runtime role:
 
@@ -61,14 +61,14 @@ Runtime role:
 
 Key files:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-lsp-mcp-main/numina-lean-mcp.sh`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine/src/lean_engine/integrations/lean_lsp_mcp.py`
+- `compiled-lean-engine/lean-lsp-mcp-main/numina-lean-mcp.sh`
+- `compiled-lean-engine/lean-engine/src/lean_engine/integrations/lean_lsp_mcp.py`
 
 ### 2. `lean4-skills-main`
 
 Path:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean4-skills-main`
+- `compiled-lean-engine/lean4-skills-main/`
 
 Runtime role:
 
@@ -77,8 +77,8 @@ Runtime role:
 
 Key files:
 
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine/src/lean_engine/lean4_skills_refs.py`
-- `/home/admin_hgraia_altostrat_com/compiled-lean-engine/lean-engine/src/lean_engine/lean4_skills_scripts.py`
+- `compiled-lean-engine/lean-engine/src/lean_engine/lean4_skills_refs.py`
+- `compiled-lean-engine/lean-engine/src/lean_engine/lean4_skills_scripts.py`
 
 ## Non-Integrated Workspace Repos
 
@@ -136,4 +136,3 @@ A strong end-to-end run should:
 3. prove lemmas against pinned signatures
 4. reject major proof gaps with structured fatal output
 5. assemble a compiling self-contained final Lean output on success
-

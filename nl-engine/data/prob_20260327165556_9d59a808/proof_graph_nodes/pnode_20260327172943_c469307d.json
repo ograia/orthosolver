@@ -1,0 +1,79 @@
+{
+  "created_at": "2026-03-27T17:29:43.865864Z",
+  "graph_node_id": "pnode_20260327172943_c469307d",
+  "metadata": {
+    "label": "root_semantic_sketch"
+  },
+  "node_kind": "semantic_anchor",
+  "node_status": "available",
+  "normalized_claim_hash": "7b82a3616e0767bd8a23fa649446d850d63591fb4160ba66df1ac139fd8a65c6",
+  "owner_id": "thm_root_20260327165556_b210f785",
+  "owner_kind": "theorem",
+  "proof_graph_id": "pgraph_20260327172936_9fcd13e5",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer",
+      "n greater than 1",
+      "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+      "x is a real number",
+      "floor is the greatest integer less than or equal to its real input"
+    ],
+    "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+    "quantifier_order": [
+      "for all integers n with n greater than 1",
+      "there exists a real number x_star",
+      "for all real numbers y",
+      "E_n(x_star) is at least E_n(y)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "fixed parameter with constraint n greater than 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index, restricted to k from 1 through n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "variable over which the expression is maximized",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "y",
+        "role": "arbitrary competitor value to define maximality",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "E_n(x)",
+        "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "M(n)",
+        "role": "the maximal value of E_n(x) over all real x, depends on n",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x_star",
+        "role": "a real number where the maximum is achieved; may depend on n",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+      "M(n) depends on n"
+    ]
+  },
+  "statement_nl": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+  "updated_at": "2026-03-27T17:54:24.600238Z"
+}

@@ -1,0 +1,102 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327183833_f9059792",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T18:37:13.031417Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.75,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T20:41:02.981100Z",
+  "last_dependency_check_id": "depchk_20260327184748_8c270cda",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n > 1, and define f_n(x) = floor(nx) - sum_{j=1}^n floor(jx)/j.\n\nLet k be an integer with 0 <= k < n, and let x,y be real numbers such that k/n <= x <= y < (k+1)/n. We must show that f_n(y) <= f_n(x).\n\nBecause y < (k+1)/n, we have ny < k+1, and since also ny >= k, it follows that floor(ny) = k. Similarly, nx >= k and nx < k+1, so floor(nx) = k. Thus on the whole interval [k/n, (k+1)/n), the term floor(nx) is constant and equal to k.\n\nNow fix any j in {1,2,...,n}. Since x <= y, we have jx <= jy. The floor function is nondecreasing on the real line, so floor(jx) <= floor(jy). Dividing by the positive integer j preserves the inequality:\n\nfloor(jx)/j <= floor(jy)/j.\n\nSumming these inequalities over j = 1,2,...,n gives\n\nsum_{j=1}^n floor(jx)/j <= sum_{j=1}^n floor(jy)/j.\n\nUsing the constancy of floor(nx) and floor(ny), we obtain\n\nf_n(x) = k - sum_{j=1}^n floor(jx)/j,\n\nf_n(y) = k - sum_{j=1}^n floor(jy)/j.\n\nTherefore\n\nf_n(y) <= f_n(x).\n\nHence f_n is nonincreasing on the half-open interval [k/n, (k+1)/n), as claimed.",
+  "latest_vetted_proof_fingerprint": "7106993399db235619e11d2af585f1abecfdb132778863aa1c0bc917ba5373e3",
+  "latest_vetter_report_id": "rep_20260327184748_8fa60432",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327183705_dca565ff",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "lem_20260327182037_d1cd11e0",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_bundle_artifact_id": "problems/prob_20260327181454_d8c7a304/proof_bundles/lemmas/lem_20260327183705_dca565ff.json",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Supplies the function-specific comparison on the grid cell containing m/n and r.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 5,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer k with 0 <= k < n, the function f_n is nonincreasing on the half-open interval [k/n, (k + 1)/n): whenever x and y are real numbers with k/n <= x <= y < (k + 1)/n, one has f_n(y) <= f_n(x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "k is an integer",
+      "k satisfies 0 <= k and k < n",
+      "division is well-defined: n is not 0",
+      "x and y are real numbers",
+      "x satisfies k/n <= x",
+      "y satisfies x <= y",
+      "y satisfies y < (k + 1)/n",
+      "the monotonicity condition is only required when both x and y lie in the half-open interval [k/n, (k + 1)/n)"
+    ],
+    "normalized_claim": "Fix an index n (so f_n is fixed). For every integer k with 0 <= k < n, and for all real numbers x and y with k/n <= x <= y < (k + 1)/n, it holds that f_n(y) <= f_n(x).",
+    "quantifier_order": [
+      "for all n (implicitly)",
+      "for every integer k",
+      "for all real x",
+      "for all real y"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "index of the function f_n; also determines subinterval endpoints via division",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "subinterval selector",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "x",
+        "role": "left point in the monotonicity comparison within a subinterval",
+        "type": "real"
+      },
+      {
+        "domain": "reals",
+        "name": "y",
+        "role": "right point in the monotonicity comparison within a subinterval",
+        "type": "real"
+      },
+      {
+        "domain": "reals",
+        "name": "f_n",
+        "role": "maps real inputs to real outputs; property asserted on each subinterval",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T20:41:02.981100Z"
+}

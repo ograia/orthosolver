@@ -1,0 +1,88 @@
+{
+  "created_at": "2026-03-26T15:00:02.888709Z",
+  "graph_node_id": "pnode_20260326150002_00845bd9",
+  "metadata": {
+    "parent_id": "thm_root_20260326142247_6714b56a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "c8aefa4e1ae3e1152436744d6ee0371b66fe02d53ea59fbbcc3ed6a73c486106",
+  "owner_id": "lem_20260326145538_1a43ddff",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326150002_c70d2559",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m is an integer and m is at least 1",
+      "t has length m minus 1",
+      "Each entry t_i is either plus 1 or minus 1",
+      "If m equals 1, t is the empty sequence",
+      "b is a permutation of 1 through m, so its entries are distinct and each lies in 1 through m",
+      "The inequality t_i times the difference b_{i+1} minus b_i greater than 0 is required for every i from 1 to m minus 1"
+    ],
+    "normalized_claim": "For every integer m at least 1 and every sign sequence t of length m minus 1 with entries plus 1 or minus 1, the number of permutations b of 1 through m such that t_i times the difference b_{i+1} minus b_i is positive for every i from 1 to m minus 1 is unchanged when every sign in t is flipped. Equivalently, F(t) equals F(-t). In particular, the same holds for the alternating sequence starting with plus 1 and its negation.",
+    "quantifier_order": [
+      "For every integer m at least 1",
+      "For every sign sequence t of length m minus 1 with each entry plus 1 or minus 1",
+      "For every permutation b of 1 through m, define admissibility by requiring t_i times the difference b_{i+1} minus b_i to be positive for every index i from 1 to m minus 1",
+      "F(t) is the number of admissible permutations b",
+      "The theorem asserts that F(t) equals F(-t) for all admissible m and t",
+      "In particular, the same equality holds for Alt_m^+ and Alt_m^-"
+    ],
+    "variables": [
+      {
+        "domain": "integers at least 1",
+        "name": "m",
+        "role": "length parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length m minus 1 with entries plus 1 or minus 1; empty when m equals 1",
+        "name": "t",
+        "role": "input sign sequence",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "permutations of 1 through m",
+        "name": "b",
+        "role": "sequence being counted",
+        "type": "permutation sequence"
+      },
+      {
+        "domain": "integers from 1 to m minus 1",
+        "name": "i",
+        "role": "index in adjacent comparisons",
+        "type": "integer index"
+      },
+      {
+        "domain": "count of admissible permutations for t",
+        "name": "F(t)",
+        "role": "counting value",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "count of admissible permutations for the negated sign sequence",
+        "name": "F(-t)",
+        "role": "comparison value",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "the length m minus 1 alternating sequence starting with plus 1",
+        "name": "Alt_m^+",
+        "role": "special case sign sequence",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "the signwise negation of Alt_m^+",
+        "name": "Alt_m^-",
+        "role": "special case sign sequence",
+        "type": "sign sequence"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are present; the statement compares two finite counts",
+      "The definition of F(t) depends on the full permutation b and requires one inequality for each adjacent index i"
+    ]
+  },
+  "statement_nl": "Let m be an integer with m at least 1, and let t=(t_1,...,t_{m-1}) be a sign sequence with each t_i equal to plus 1 or minus 1; when m=1, t is the empty sequence. Let F(t) be the number of permutations b=(b_1,...,b_m) of {1,...,m} such that t_i(b_{i+1}-b_i) > 0 for every i=1,...,m-1. Let -t denote the sign sequence (-t_1,...,-t_{m-1}). Then F(t)=F(-t). In particular, if Alt_m^+ is the alternating sign sequence plus 1, minus 1, plus 1, minus 1, ... and Alt_m^- = -Alt_m^+, then F(Alt_m^+)=F(Alt_m^-).",
+  "updated_at": "2026-03-26T15:00:02.888710Z"
+}

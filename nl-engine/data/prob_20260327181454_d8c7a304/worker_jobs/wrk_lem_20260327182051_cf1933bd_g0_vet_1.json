@@ -1,0 +1,215 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182051_cf1933bd/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T18:22:41.598471Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:22:48.499651Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:22:38.081936Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n greater than 1",
+            "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "the floor function is applied to real numbers (so it is always defined)"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+          "quantifier_order": [
+            "for a given integer n greater than 1",
+            "find real x such that for all real y, expression at x is at least the expression at y",
+            "and there exists at least one real x achieving that maximal value"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index in the expression, ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizer x (if it exists) may depend on the fixed parameter n",
+            "the maximal value may depend on the fixed parameter n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327182051_cf1933bd",
+    "proof_nl": "Let n>1 and let r be real with (n-1)/n <= r < 1. We show that every floor term in the definition of f_n(r) is determined explicitly.\n\nFix k with 1 <= k <= n. From r >= (n-1)/n we get kr >= k(n-1)/n. Since k <= n, we have k(n-1)/n >= k-1. Also r < 1 implies kr < k. Therefore\nk-1 <= kr < k.\nHence floor(k r) = k-1 for every k=1,2,...,n.\n\nIn particular, floor(nr)=n-1, and\nsum_{k=1}^n floor(k r)/k = sum_{k=1}^n (k-1)/k = sum_{k=1}^n (1 - 1/k) = n - H_n,\nwhere H_n = sum_{k=1}^n 1/k.\nTherefore\nf_n(r) = floor(nr) - sum_{k=1}^n floor(k r)/k = (n-1) - (n - H_n) = H_n - 1.\nThis is exactly the desired identity.",
+    "role_in_assembly": "Turns the floor pattern into the exact maximal value.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "in the definition of H_n, k ranges over integers from 1 to n",
+        "in the definition of f_n(x), x is a real number so that floor(n*x) and floor(k*x) are well-defined",
+        "r satisfies (n-1)/n <= r and r < 1"
+      ],
+      "normalized_claim": "For every natural number n greater than 1, define H_n as the sum from k = 1 to n of 1 divided by k, and define f_n on real numbers by f_n(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Then for every real number r with (n minus 1) divided by n less than or equal to r and r less than 1, it holds that f_n(r) equals H_n minus 1.",
+      "quantifier_order": [
+        "for all natural numbers n with n > 1",
+        "for all real numbers r with (n-1)/n <= r and r < 1"
+      ],
+      "variables": [
+        {
+          "domain": "natural numbers",
+          "name": "n",
+          "role": "parameter for the definitions of H_n and f_n; also bounds the index set for k",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "argument of the function f_n used in its definition",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "r",
+          "role": "input at which the equality f_n(r) = H_n - 1 is asserted",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "H_n",
+          "role": "harmonic-sum quantity defined from n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "f_n",
+          "role": "function defined from n, using floor and a weighted sum",
+          "type": "function from real to real"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced; the statement is a universal implication from the condition on r to the equality"
+      ]
+    },
+    "statement_nl": "Let n > 1, define H_n = sum_{k=1}^n 1/k, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. If r is a real number with (n-1)/n <= r < 1, then f_n(r) = H_n - 1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327182051_cf1933bd",
+    "proof_status": "complete",
+    "reason": "The proof directly establishes the universal statement: for any real r with (n-1)/n <= r < 1, one has floor(kr)=k-1 for all 1<=k<=n, hence floor(nr)=n-1 and f_n(r)=H_n-1. This matches the lemma exactly, with no gaps or dependency issues.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T18:22:37.901726Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182051_cf1933bd",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:22:48.499656Z",
+  "worker_job_id": "wrk_lem_20260327182051_cf1933bd_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

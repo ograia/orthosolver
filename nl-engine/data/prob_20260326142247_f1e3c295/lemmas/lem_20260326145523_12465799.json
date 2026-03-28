@@ -1,0 +1,123 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260326150002_ed61caef",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-26T14:55:38.331141Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.46,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-26T15:00:03.392458Z",
+  "last_dependency_check_id": null,
+  "last_terminal_worker_result": null,
+  "last_transition_reason": null,
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260326145523_12465799",
+  "minor_rejection_count": 0,
+  "next_action": null,
+  "parent_id": "thm_root_20260326142247_6714b56a",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260326142247_f1e3c295",
+  "proof_bundle_artifact_id": "problems/prob_20260326142247_f1e3c295/proof_bundles/lemmas/lem_20260326145523_12465799.json",
+  "proof_graph_id": "pgraph_20260326150002_c70d2559",
+  "proof_status": "open",
+  "role_in_parent": "Provides the exact smallest-element recursion that reduces the problem to smaller sign-pattern counts.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 0,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer with n at least 2, and let s=(s_1,...,s_{n-1}) be a sign sequence with each s_i equal to plus 1 or minus 1. Let F(s) be the number of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i) > 0 for every i=1,...,n-1. Define the valley set V(s) subset of {1,...,n} by: 1 belongs to V(s) exactly when s_1 = plus 1; n belongs to V(s) exactly when s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to V(s) exactly when s_{j-1} = minus 1 and s_j = plus 1. For each j in V(s), define left_count(j) as follows: if j=1 then left_count(j)=1; if j>=2 then left_count(j) is the number of permutations b=(b_1,...,b_{j-1}) of {1,...,j-1} satisfying s_i(b_{i+1}-b_i) > 0 for every i=1,...,j-2. Define right_count(j) as follows: if j=n then right_count(j)=1; if j<=n-1 then right_count(j) is the number of permutations c=(c_1,...,c_{n-j}) of {1,...,n-j} satisfying s_{j+i}(c_{i+1}-c_i) > 0 for every i=1,...,n-j-1. Then F(s) = sum over j in V(s) of binomial(n-1,j-1) times left_count(j) times right_count(j).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is at least 2.",
+      "Each entry s_i is either plus 1 or minus 1.",
+      "The sequence a is a permutation of the set {1 through n}, so every number from 1 through n appears exactly once.",
+      "For j = 1, the left_count definition uses the base value 1.",
+      "For j greater than or equal to 2, left_count(j) counts permutations of 1 through j minus 1, and the sign conditions run over i from 1 to j minus 2; this range is empty when j = 2.",
+      "For j = n, the right_count definition uses the base value 1.",
+      "For j less than or equal to n minus 1, right_count(j) counts permutations of 1 through n minus j, and the sign conditions run over i from 1 to n minus j minus 1; this range is empty when j = n minus 1.",
+      "The valley set V(s) is a subset of 1 through n and is determined only by the local sign pattern around each index.",
+      "The binomial coefficient uses n minus 1 choose j minus 1, so j must lie between 1 and n inclusive."
+    ],
+    "normalized_claim": "For every integer n at least 2 and every sign sequence s of length n minus 1 with entries plus 1 or minus 1, the number of permutations of 1 through n whose adjacent differences match the signs in s equals the sum over all valley positions j of the product of three factors: the binomial coefficient n minus 1 choose j minus 1, the number of valid left permutations up to j, and the number of valid right permutations from j onward.",
+    "quantifier_order": [
+      "Assume n is an integer with n at least 2.",
+      "Assume s is a sign sequence of length n minus 1, with each entry equal to plus 1 or minus 1.",
+      "Define F(s) as the number of permutations a of 1 through n such that for every i from 1 to n minus 1, the sign condition s_i times the difference a_{i+1} minus a_i is positive.",
+      "Define V(s) by endpoint rules at 1 and n and by the interior rule for each j between 2 and n minus 1.",
+      "For each j in V(s), define left_count(j) by a base case at j = 1 and otherwise by counting permutations b of 1 through j minus 1 satisfying the analogous sign conditions for indices 1 through j minus 2.",
+      "For each j in V(s), define right_count(j) by a base case at j = n and otherwise by counting permutations c of 1 through n minus j satisfying the analogous sign conditions for indices j plus 1 through n minus 1.",
+      "Claim that F(s) equals the sum over j in V(s) of binomial n minus 1 choose j minus 1 times left_count(j) times right_count(j)."
+    ],
+    "variables": [
+      {
+        "domain": "integers with n at least 2",
+        "name": "n",
+        "role": "global size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length n minus 1 with entries plus 1 or minus 1",
+        "name": "s",
+        "role": "global input sequence",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "permutations of 1 through n",
+        "name": "a",
+        "role": "counted object in the definition of F(s)",
+        "type": "permutation sequence"
+      },
+      {
+        "domain": "subset of 1 through n",
+        "name": "V(s)",
+        "role": "valley positions determined by s",
+        "type": "subset of integers"
+      },
+      {
+        "domain": "element of V(s), hence between 1 and n",
+        "name": "j",
+        "role": "summation index and splitting point",
+        "type": "integer"
+      },
+      {
+        "domain": "permutations of 1 through j minus 1",
+        "name": "b",
+        "role": "left-side counted object",
+        "type": "permutation sequence"
+      },
+      {
+        "domain": "permutations of 1 through n minus j",
+        "name": "c",
+        "role": "right-side counted object",
+        "type": "permutation sequence"
+      }
+    ],
+    "witness_dependencies": [
+      "The counted permutation a in F(s) depends only on the full sign sequence s.",
+      "The set V(s) depends only on s.",
+      "For each j in V(s), left_count(j) depends on j and on the prefix of s needed to evaluate the sign conditions up to index j minus 2.",
+      "For each j in V(s), right_count(j) depends on j and on the suffix of s needed to evaluate the sign conditions from index j plus 1 onward.",
+      "The witness permutation b for left_count(j) is local to the interval 1 through j minus 1 and does not depend on any choices outside that interval.",
+      "The witness permutation c for right_count(j) is local to the interval 1 through n minus j and does not depend on any choices outside that interval.",
+      "No existential witness is shared across different j values in the sum."
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-26T15:00:03.392458Z"
+}

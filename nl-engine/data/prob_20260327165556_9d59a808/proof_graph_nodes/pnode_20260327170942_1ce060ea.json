@@ -1,0 +1,58 @@
+{
+  "created_at": "2026-03-27T17:09:42.181741Z",
+  "graph_node_id": "pnode_20260327170942_1ce060ea",
+  "metadata": {
+    "parent_id": "thm_root_20260327165556_b210f785"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "d688a5d537216049bd5a2760b98929c90732f957e300777623e32fe5bc5ac2f3",
+  "owner_id": "lem_20260327170742_2a0e373a",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "a is an integer and 0 <= a <= n - 1",
+      "the summation index k is an integer with 1 <= k <= n - 1",
+      "division by n and division by k are defined (implicitly requiring n != 0 and k != 0, ensured by n > 1 and k >= 1)"
+    ],
+    "normalized_claim": "For all integers n with n > 1 and for all integers a with 0 <= a <= n - 1, letting x be the rational a divided by n, we have: E_n of x equals (1 divided by n) times the sum over integers k from 1 to n - 1 of Res_n of (a,k) divided by k.",
+    "quantifier_order": [
+      "for all integer n with n > 1",
+      "for all integer a with 0 <= a <= n - 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer parameter for the identity",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "inner parameter to the functions E_n and Res_n; constrained by 0 <= a <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index with range 1 <= k <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "rationals of the form a divided by n",
+        "name": "input_x",
+        "role": "argument to E_n, defined as x = a/n",
+        "type": "rational"
+      }
+    ],
+    "witness_dependencies": [
+      "k is not a free witness; it is a bound summation index depending on n through the range 1 <= k <= n - 1",
+      "the value Res_n(a,k) depends on both n and a, and also on the summation index k"
+    ]
+  },
+  "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) = (1/n) * sum_{k=1}^{n-1} Res_n(a,k)/k.",
+  "updated_at": "2026-03-27T17:09:42.181742Z"
+}

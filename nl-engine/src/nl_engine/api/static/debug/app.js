@@ -14,6 +14,7 @@ const state = {
   selectedTreeNodeId: null,
   selectedTreeDetailTab: "proof",
   selectedRootTrackId: "all",
+  leanFileCache: {},
   selectedRequestEntryId: null,
   selectedRequestArtifactKey: null,
   requestInspector: null,
@@ -29,7 +30,7 @@ const state = {
   refreshScheduled: false,
   eventsLimit: 250,
 };
-const AGENT_KEYS = ["agent1", "agent2", "agent3", "agent4", "agent5", "agent6"];
+const AGENT_KEYS = ["agent1", "agent2", "agent3", "agent4", "agent5", "agent6", "agent7", "agent8"];
 const FIRST_ATTEMPT_AGENT_SPECS = [
   { key: "agent2-first-root", llmKey: "agent2_first_root", label: "agent2 first root" },
   { key: "agent2-first-lemma", llmKey: "agent2_first_lemma", label: "agent2 first lemma" },
@@ -38,7 +39,17 @@ const FIRST_ATTEMPT_AGENT_SPECS = [
 const REQUEST_CONSOLE_HIDDEN_SOURCES = new Set(["api_create", "api_start", "api_pause", "api_resume", "api_run"]);
 const MODEL_OPTIONS = ["gpt-5.4", "gpt-5.4-pro", "gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"];
 const MINI_MODELS = new Set(["gpt-5-mini", "gpt-5.4-mini", "gpt-5.4-nano"]);
-const EXCLUDED_CONFIG_PATHS = new Set(["llm", "mode.nl_only_mode", "mode.lean_mode"]);
+const EXCLUDED_CONFIG_PATHS = new Set([
+  "llm",
+  "mode.nl_only_mode",
+  "mode.lean_mode",
+  "mode.lean.enabled",
+  "mode.lean.use_v2_endpoints",
+  "mode.lean.use_v2_prepare_track",
+  "mode.lean.fallback_to_v1_on_error",
+  "mode.lean.stream_progress_payloads",
+  "lean_engine.repair_context_token_budget",
+]);
 const CONFIG_FIELD_HELP = {
   "decomposition.parallel_root_decompositions_n":
     "How many root decomposition candidates can run in parallel.",
@@ -58,14 +69,18 @@ const CONFIG_FIELD_HELP = {
     "Global cap on total lemma nodes created for this problem.",
   "lean_engine.model":
     "Optional Lean-engine model override used for assembly checks, lemma formalization, plausibility checks, and root assembly.",
-  "lean_engine.assembly_check_timeout_seconds":
-    "Timeout for Lean check_assembly jobs generated from decomposition candidates.",
+  "lean_engine.no_lean4_refs":
+    "If true, skip injecting the large lean4-skills reference library into Lean prompts. This makes prompts much smaller and is useful when you want shorter first-turn context.",
+  "lean_engine.max_workers":
+    "How many Lean jobs this problem is allowed to run in parallel. This is the single concurrency knob for Lean work.",
   "lean_engine.lean_job_timeout_seconds":
-    "Timeout for formalize_lemma jobs for individual lemma attempts.",
-  "lean_engine.plausibility_check_timeout_seconds":
-    "Timeout for check_statement_plausibility jobs when false-lemma suspicion is raised.",
+    "Shared timeout for normal Lean jobs like prepare-track, formalize-lemma, and plausibility checks. Use 0 for no limit.",
   "lean_engine.assemble_root_timeout_seconds":
-    "Timeout for final assemble_root jobs once a winning decomposition is selected.",
+    "Timeout for the final assemble_root job once a winning decomposition is selected. Use 0 for no limit.",
+  "lean_engine.claude_activity_timeout_seconds":
+    "Shared Claude idle/tool-wait timeout inside Lean jobs. Use 0 for no limit.",
+  "lean_engine.claude_init_timeout_seconds":
+    "Claude first-token/startup timeout inside Lean jobs. Use 0 for no limit.",
   "final_check.fail_problem_on_fatal":
     "If true, any fatal Agent 6 finding fails the whole problem instead of reopening only the cited lemmas.",
 };
@@ -248,6 +263,23 @@ function fmtInt(value) {
 function fmtUsd(value) {
   const n = Number.isFinite(Number(value)) ? Number(value) : 0;
   return `$${n.toFixed(6)}`;
+}
+
+function fmtDurationSeconds(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) {
+    return "-";
+  }
+  if (n < 60) {
+    return `${n.toFixed(n >= 10 ? 1 : 2)}s`;
+  }
+  const hours = Math.floor(n / 3600);
+  const minutes = Math.floor((n % 3600) / 60);
+  const seconds = Math.round(n % 60);
+  if (hours > 0) {
+    return `${hours}h ${String(minutes).padStart(2, "0")}m ${String(seconds).padStart(2, "0")}s`;
+  }
+  return `${minutes}m ${String(seconds).padStart(2, "0")}s`;
 }
 
 function safeJsonParse(text, fallback = null) {
@@ -813,13 +845,16 @@ function initialPayloadFromTemplate() {
         max_minor_rejections_per_lemma: 10,
         max_total_lemma_nodes: 5000,
       },
-      mode: { nl_only_mode: true, lean_mode: false },
+      mode: { nl_only_mode: true },
       llm: {
-        agent1: { model: "gpt-5-mini", thinking_level: "medium", verbosity: "medium", timeout_seconds: 60000 },
-        agent2: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 60000 },
-        agent3: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 60000 },
-        agent4: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 60000 },
-        agent5: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 60000 },
+        agent1: { model: "gpt-5-mini", thinking_level: "medium", verbosity: "medium", timeout_seconds: 600 },
+        agent2: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
+        agent3: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 600 },
+        agent4: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
+        agent5: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 600 },
+        agent6: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
+        agent7: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
+        agent8: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 600 },
       },
     },
   };
@@ -834,9 +869,7 @@ function initialPayloadFromTemplate() {
   if (typeof payload.config.mode.nl_only_mode !== "boolean") {
     payload.config.mode.nl_only_mode = true;
   }
-  if (typeof payload.config.mode.lean_mode !== "boolean") {
-    payload.config.mode.lean_mode = !payload.config.mode.nl_only_mode;
-  }
+  delete payload.config.mode.lean_mode;
   return payload;
 }
 
@@ -884,7 +917,6 @@ function payloadFromForm() {
   base.config.mode = {
     ...(base.config.mode || {}),
     nl_only_mode: nlOnlyMode,
-    lean_mode: !nlOnlyMode,
   };
 
   const llmOverrides = llmOverridesFromForm();
@@ -1208,8 +1240,15 @@ function renderOverview() {
     ["standby_decomposition", p.standby_decomposition_id || "-"],
     ["lemma_count", (state.snapshot.visible_lemma_ids || []).length],
     ["decomposition_count", state.snapshot.decompositions.length],
+    ["ready_for_lean_count", p.ready_for_lean_count ?? 0],
     ["latest_stage", latestEvent ? latestEvent.stage : "-"],
   ];
+  if (p.lean_session) {
+    items.push(["lean_session_status", p.lean_session.status || "-"]);
+    items.push(["lean_session_max_workers", p.lean_session.max_workers ?? "-"]);
+    items.push(["lean_session_active_jobs", p.lean_session.active_jobs ?? "-"]);
+    items.push(["lean_session_queue_depth", p.lean_session.queue_depth ?? "-"]);
+  }
 
   const usageTotals = state.llmUsage?.totals || null;
   const pricing = state.llmUsage?.pricing_usd_per_1m || null;
@@ -1238,20 +1277,27 @@ function renderOverview() {
   });
 
   const logicalDecompositions = state.snapshot.logical_decompositions || state.snapshot.decompositions || [];
+  const autoSplitEnabled = !!state.snapshot.problem?.config?.mode?.lean?.auto_split_sublemmas;
   logicalDecompositions.forEach((row) => {
     const div = document.createElement("div");
     div.className = "list-row";
     const runDir = row.lean_run_dir ? "run_dir=present" : "run_dir=-";
     const trackId = row.lean_v2_track_id || "-";
     const prepareStatus = row.lean_v2_prepare_status || "-";
+    const prepareIssue = row.lean_prepare_issue_kind || row.lean_prepare_error_class || "-";
+    const bottleneckCount = Array.isArray(row.lean_bottlenecks) ? row.lean_bottlenecks.length : 0;
     const handleCount = row.lean_v2_lemma_handles && typeof row.lean_v2_lemma_handles === "object"
       ? Object.keys(row.lean_v2_lemma_handles).length
       : 0;
+    const blockedReason = row.blocked_reason || "-";
+    const readyForLean = row.ready_for_lean_count ?? 0;
     div.innerHTML = `
       <strong>${row.logical_decomposition_id || row.decomposition_id}</strong><br />
       node=${row.node_id} controller=${row.controller_status} rev=${row.current_revision_number || row.revision_number || 1}/${row.revision_count || 1}<br />
       llm=${row.llm_vetting_status} lean=${row.lean_assembly_status} ${runDir}<br />
-      v2_track=${trackId} prepare=${prepareStatus} handles=${handleCount}
+      v2_track=${trackId} prepare=${prepareStatus} prepare_issue=${prepareIssue} handles=${handleCount}<br />
+      ready_for_lean=${readyForLean} blocked_reason=${blockedReason}<br />
+      auto_split=${autoSplitEnabled ? "enabled" : "disabled"} bottlenecks=${bottleneckCount}
     `;
     decList.appendChild(div);
   });
@@ -1266,11 +1312,15 @@ function renderOverview() {
     div.className = "list-row";
     const owner = state.snapshot.lemma_owner_decomposition?.[row.lemma_id] || "-";
     const leanIssue = row.latest_lean_issue_kind || row.latest_lean_issue_class || "-";
+    const leanWait = row.lean_wait_reason || "-";
+    const confidence = row.latest_lean_result_id && state.snapshot.lean_job_by_id
+      ? Object.values(state.snapshot.lean_job_by_id).find((job) => job.target_id === row.lemma_id)?.result?.confidence
+      : null;
     div.innerHTML = `
       <strong>${row.lemma_id}</strong><br />
       parent=${row.parent_id} owner_decomposition=${owner}<br />
       proof=${row.proof_status} truth=${row.truth_status || "-"} routing=${row.routing_status} next=${row.next_action || "-"} attempts=${row.solver_attempt_count}<br />
-      lean_issue=${leanIssue}
+      lean_issue=${leanIssue} lean_wait=${leanWait} confidence=${confidence ?? "-"}
     `;
     lemList.appendChild(div);
   });
@@ -1426,6 +1476,7 @@ function statusJsonForNode(nodeId) {
       latest_lean_result_summary: summarizeLeanResult(row.latest_lean_result),
       latest_lean_issue_class: row.latest_lean_issue_class,
       latest_lean_issue_kind: row.latest_lean_issue_kind,
+      lean_wait_reason: row.lean_wait_reason,
       proof_attempts: row.proof_attempts,
       created_at: row.created_at,
       updated_at: row.updated_at,
@@ -1467,6 +1518,8 @@ function statusJsonForNode(nodeId) {
       lean_v2_track_id: row.lean_v2_track_id,
       lean_v2_prepare_status: row.lean_v2_prepare_status,
       lean_v2_lemma_handles: row.lean_v2_lemma_handles,
+      ready_for_lean_count: row.ready_for_lean_count,
+      blocked_reason: row.blocked_reason,
       final_check_passed: row.final_check_passed,
       final_check_job_id: row.final_check_job_id,
       proof_bundle_artifact_id: row.proof_bundle_artifact_id,
@@ -1505,15 +1558,174 @@ function statusJsonForNode(nodeId) {
   return nodeDetailFor(nodeId);
 }
 
+function leanMetadataForNode(nodeId) {
+  if (!state.snapshot) {
+    return null;
+  }
+  if (state.snapshot.lemma_by_id[nodeId]) {
+    const row = state.snapshot.lemma_by_id[nodeId];
+    return {
+      node_kind: "lemma",
+      node_id: row.lemma_id,
+      latest_job: row.latest_formalize_job || null,
+      lean_compile_summary: row.lean_compile_summary || null,
+      timing_summary: row.timing_summary || null,
+      blocked_reason: row.lean_wait_reason || null,
+    };
+  }
+  if (state.snapshot.decomposition_by_id[nodeId]) {
+    const row = state.snapshot.decomposition_by_id[nodeId];
+    return {
+      node_kind: "decomposition",
+      node_id: row.decomposition_id,
+      latest_job: row.latest_prepare_track_job || null,
+      lean_compile_summary: row.lean_compile_summary || null,
+      timing_summary: row.timing_summary || null,
+      blocked_reason: row.blocked_reason || null,
+      ready_for_lean_count: row.ready_for_lean_count || 0,
+    };
+  }
+  if (state.snapshot.lean_job_by_id && state.snapshot.lean_job_by_id[nodeId]) {
+    const row = state.snapshot.lean_job_by_id[nodeId];
+    return {
+      node_kind: "lean_job",
+      node_id: row.job_id,
+      latest_job: row,
+      lean_compile_summary: row.lean_compile_summary || null,
+      timing_summary: row.timing_summary || null,
+    };
+  }
+  return null;
+}
+
+function leanCacheKey(nodeId) {
+  return [
+    state.currentProblemId || "",
+    nodeId || "",
+    state.snapshot?.problem?.updated_at || state.snapshot?.problem?.problem_id || "",
+  ].join(":");
+}
+
+async function fetchLeanFilesForNode(nodeId) {
+  if (!state.currentProblemId || !nodeId) {
+    return null;
+  }
+  const cacheKey = leanCacheKey(nodeId);
+  if (state.leanFileCache[cacheKey]) {
+    return state.leanFileCache[cacheKey];
+  }
+  state.leanFileCache[cacheKey] = { loading: true, problem_id: state.currentProblemId, node_id: nodeId, entries: [] };
+  try {
+    const payload = await api(`/v1/debug/problems/${state.currentProblemId}/lean-files/${encodeURIComponent(nodeId)}`);
+    state.leanFileCache[cacheKey] = payload;
+  } catch (error) {
+    state.leanFileCache[cacheKey] = {
+      error: error.message,
+      problem_id: state.currentProblemId,
+      node_id: nodeId,
+      entries: [],
+    };
+  }
+  return state.leanFileCache[cacheKey];
+}
+
+function formatLeanEntry(entry) {
+  const lines = [];
+  lines.push(`${entry.label} [${entry.kind}]`);
+  lines.push(`path: ${entry.path || "-"}`);
+  lines.push(`exists: ${entry.exists ? "yes" : "no"}`);
+  lines.push(`compile_status: ${entry.compile_status || "-"}`);
+  lines.push(`source_job_id: ${entry.source_job_id || "-"}`);
+  lines.push(`updated_at: ${entry.updated_at || "-"}`);
+  if (Array.isArray(entry.compile_diagnostics) && entry.compile_diagnostics.length) {
+    lines.push("compile_diagnostics:");
+    entry.compile_diagnostics.forEach((item) => {
+      lines.push(`- ${JSON.stringify(item)}`);
+    });
+  }
+  lines.push("");
+  lines.push(entry.content || "<file content unavailable>");
+  return lines.join("\n");
+}
+
+function formatLeanDetail(nodeId, leanPayload) {
+  const meta = leanMetadataForNode(nodeId);
+  const lines = [];
+  if (meta) {
+    lines.push(`node_kind: ${meta.node_kind}`);
+    lines.push(`node_id: ${meta.node_id}`);
+    if (meta.latest_job) {
+      lines.push(`latest_job_id: ${meta.latest_job.job_id || "-"}`);
+      lines.push(`latest_job_status: ${meta.latest_job.status || "-"}`);
+      lines.push(`latest_job_operation: ${meta.latest_job.operation || meta.latest_job.mode || "-"}`);
+    }
+    const compile = meta.lean_compile_summary || {};
+    lines.push(`artifact_check_status: ${compile.artifact_check_status || "-"}`);
+    lines.push(`integration_check_status: ${compile.integration_check_status || "-"}`);
+    const timing = meta.timing_summary || {};
+    lines.push(`queue_duration: ${fmtDurationSeconds(timing.queue_duration_seconds)}`);
+    lines.push(`service_run_duration: ${fmtDurationSeconds(timing.service_run_duration_seconds)}`);
+    lines.push(`controller_handoff_lag: ${fmtDurationSeconds(timing.controller_handoff_lag_seconds)}`);
+    lines.push(`end_to_end_duration: ${fmtDurationSeconds(timing.end_to_end_duration_seconds)}`);
+    if (meta.blocked_reason) {
+      lines.push(`blocked_reason: ${meta.blocked_reason}`);
+    }
+    if (meta.ready_for_lean_count !== undefined) {
+      lines.push(`ready_for_lean_count: ${meta.ready_for_lean_count}`);
+    }
+  }
+  if (leanPayload?.error) {
+    lines.push("");
+    lines.push(`lean_file_load_error: ${leanPayload.error}`);
+  }
+  const entries = Array.isArray(leanPayload?.entries) ? leanPayload.entries : [];
+  if (!entries.length) {
+    lines.push("");
+    lines.push("No Lean files available for this node.");
+    return lines.join("\n");
+  }
+  entries.forEach((entry, index) => {
+    lines.push("");
+    lines.push(`=== File ${index + 1} ===`);
+    lines.push(formatLeanEntry(entry));
+  });
+  return lines.join("\n");
+}
+
 function renderSelectedTreeNodeDetail() {
   const detailHost = byId("tree-node-detail");
   const proofTab = byId("tree-detail-proof-tab");
   const statusTab = byId("tree-detail-status-tab");
-  const activeTab = state.selectedTreeDetailTab === "status" ? "status" : "proof";
+  const leanTab = byId("tree-detail-lean-tab");
+  const activeTab = state.selectedTreeDetailTab === "status"
+    ? "status"
+    : state.selectedTreeDetailTab === "lean"
+      ? "lean"
+      : "proof";
   proofTab.classList.toggle("primary", activeTab === "proof");
   statusTab.classList.toggle("primary", activeTab === "status");
+  leanTab.classList.toggle("primary", activeTab === "lean");
   if (!state.selectedTreeNodeId) {
     detailHost.textContent = "Select a node.";
+    return;
+  }
+  if (activeTab === "lean") {
+    const cacheKey = leanCacheKey(state.selectedTreeNodeId);
+    const payload = state.leanFileCache[cacheKey];
+    if (!payload) {
+      detailHost.textContent = "Loading Lean files...";
+      void fetchLeanFilesForNode(state.selectedTreeNodeId).then(() => {
+        if (state.selectedTreeDetailTab === "lean" && state.selectedTreeNodeId) {
+          renderSelectedTreeNodeDetail();
+        }
+      });
+      return;
+    }
+    if (payload.loading) {
+      detailHost.textContent = "Loading Lean files...";
+      return;
+    }
+    detailHost.textContent = formatLeanDetail(state.selectedTreeNodeId, payload);
     return;
   }
   const detail = activeTab === "status"
@@ -1703,6 +1915,12 @@ function renderTreeExplorer() {
     const btn = document.createElement("button");
     btn.type = "button";
     let label = `${node.kind} ${node.id} [${node.status}]`;
+    if (node.kind === "decomposition") {
+      const origin = node.metadata?.decomposition_origin;
+      if (origin) {
+        label += ` <${origin}>`;
+      }
+    }
     if (node.kind === "lean_job") {
       const issue = node.metadata?.issue_kind;
       const fatality = node.metadata?.fatality;
@@ -2228,6 +2446,7 @@ async function refreshCurrentProblem() {
     state.requestLog = [];
     state.requestArtifacts = [];
     state.selectedRootTrackId = "all";
+    state.leanFileCache = {};
     state.requestInspector = null;
     state.requestArtifactContentCache = {};
     state.artifacts = [];
@@ -2266,6 +2485,7 @@ async function loadProblem(problemId, pageName = "problem") {
   state.selectedTreeNodeId = null;
   state.selectedTreeDetailTab = "proof";
   state.selectedRootTrackId = "all";
+  state.leanFileCache = {};
   state.selectedRequestEntryId = null;
   state.selectedRequestArtifactKey = null;
   state.requestInspector = null;
@@ -2490,6 +2710,7 @@ async function resetLocalData() {
   state.selectedTreeNodeId = null;
   state.selectedTreeDetailTab = "proof";
   state.selectedRootTrackId = "all";
+  state.leanFileCache = {};
   state.selectedRequestEntryId = null;
   state.selectedRequestArtifactKey = null;
   state.requestInspector = null;
@@ -2565,6 +2786,10 @@ function installControlListeners() {
   });
   byId("tree-detail-status-tab").addEventListener("click", () => {
     state.selectedTreeDetailTab = "status";
+    renderSelectedTreeNodeDetail();
+  });
+  byId("tree-detail-lean-tab").addEventListener("click", () => {
+    state.selectedTreeDetailTab = "lean";
     renderSelectedTreeNodeDetail();
   });
 

@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-03-26T19:07:50.659126Z",
+  "graph_node_id": "pnode_20260326190750_084d5abc",
+  "metadata": {
+    "parent_id": "thm_root_20260326184616_b94d02f6"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "56789a38b60c80e554a673ef0a0aaaf125a39e60761d21d8fafaa181ca0bd7d7",
+  "owner_id": "lem_20260326190416_2b9e7f17",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m must be a nonnegative integer.",
+      "u has length m minus 1.",
+      "Each entry of u and v must be either plus one or minus one.",
+      "When m is 0 or 1, the sequence u is empty.",
+      "v must have the same length as u.",
+      "b must be a permutation of 1 through m, meaning it lists each integer from 1 to m exactly once.",
+      "The inequality constraint is required for every i from 1 to m minus 1.",
+      "The definition includes the special value U_0 of the empty sequence equal to 1."
+    ],
+    "normalized_claim": "For every nonnegative integer m and every sign sequence u of length m minus 1, the number of permutations of {1,...,m} whose adjacent differences match the sign pattern u is unchanged when every sign in the pattern is flipped. Equivalently, the count for u equals the count for -u. As a special case, the two alternating sign patterns of length m minus 1 give the same count.",
+    "quantifier_order": [
+      "Fix a nonnegative integer m.",
+      "Fix a sign sequence u of length m minus 1 with entries plus one or minus one; if m is 0 or 1, this sequence is empty.",
+      "For any sign sequence v of the same length, define U_m(v) as the number of permutations b of {1,...,m} such that for every index i from 1 to m minus 1, v_i times the difference b_{i+1} minus b_i is positive.",
+      "The theorem asserts that U_m(u) equals U_m of the sign-flipped sequence -u.",
+      "In particular, the same equality holds for the two alternating sign sequences alt_m^+ and alt_m^- of length m minus 1."
+    ],
+    "variables": [
+      {
+        "domain": "nonnegative integers",
+        "name": "m",
+        "role": "fixed length parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length m minus 1 with entries plus one or minus one",
+        "name": "u",
+        "role": "fixed input sign pattern",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "sequences of the same length as u with entries plus one or minus one",
+        "name": "v",
+        "role": "arbitrary sign pattern used in the definition of U_m",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "permutations of the set {1,...,m}",
+        "name": "b",
+        "role": "counted object in the definition of U_m",
+        "type": "permutation sequence"
+      },
+      {
+        "domain": "integers from 1 to m minus 1",
+        "name": "i",
+        "role": "adjacency index in the inequality constraints",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "There is no existential witness in the theorem statement itself; the only existentially quantified objects are the permutations counted in the definition of U_m(v).",
+      "Any counted permutation b depends on both m and the chosen sign sequence v.",
+      "The sign-flipped sequence -u is determined componentwise by u and has the same length as u."
+    ]
+  },
+  "statement_nl": "Let m be an integer with m >= 0, and let u = (u_1,...,u_{m-1}) be a sign sequence with each u_i in {+1,-1}; when m <= 1 this sequence is empty. For any sign sequence v of the same length, define U_m(v) to be the number of permutations (b_1,...,b_m) of {1,...,m} satisfying v_i * (b_{i+1} - b_i) > 0 for all 1 <= i <= m-1, and set U_0(empty) = 1. Let -u denote the sign sequence (-u_1,...,-u_{m-1}). Then U_m(u) = U_m(-u). In particular, if alt_m^+ = (+1,-1,+1,-1,...) and alt_m^- = (-1,+1,-1,+1,...) are the two alternating sign sequences of length m-1, then U_m(alt_m^+) = U_m(alt_m^-).",
+  "updated_at": "2026-03-26T19:07:50.659126Z"
+}

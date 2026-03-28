@@ -1,0 +1,86 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327171612_44abb981",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:15:10.215616Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:16:32.581449Z",
+  "last_dependency_check_id": "depchk_20260327171632_6dd308ec",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly shows integer-shift invariance of E_n using floor(t+z)=floor(t)+z for integer z, and the algebraic cancellation is complete. No semantic drift or dependency violation is present.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n > 1, a real number x, and an integer m. By the definition of E_n,\n\nE_n(x+m) = floor(n(x+m)) - sum_{k=1}^n floor(k(x+m))/k.\n\nSince m is an integer, nm is an integer and km is an integer for every integer k. Therefore, using floor(t+z)=floor(t)+z whenever z is an integer,\n\nfloor(n(x+m)) = floor(nx+nm) = floor(nx) + nm,\n\nand for each k = 1, ..., n,\n\nfloor(k(x+m)) = floor(kx+km) = floor(kx) + km.\n\nHence\n\nfloor(k(x+m))/k = floor(kx)/k + m.\n\nSubstituting these identities into the definition gives\n\nE_n(x+m) = (floor(nx)+nm) - sum_{k=1}^n (floor(kx)/k + m).\n\nBecause there are n terms in the sum,\n\nE_n(x+m) = floor(nx) + nm - sum_{k=1}^n floor(kx)/k - nm = E_n(x).\n\nThus E_n(x+m) = E_n(x) for every real x and every integer m.",
+  "latest_vetted_proof_fingerprint": "d9b6b88596ef685598ddea5076594a4d6244ee65de08158ac5c691f055d5fd8f",
+  "latest_vetter_report_id": "rep_20260327171632_cf2c56dc",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327171506_88f0a500",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327171506_88f0a500.json",
+  "proof_graph_id": "pgraph_20260327171612_d6601d07",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Reduce an arbitrary real x to its fractional part frac(x).",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n greater than 1",
+      "x ranges over all real numbers",
+      "m ranges over all integers"
+    ],
+    "normalized_claim": "For every integer n with n greater than 1, the function En has period 1 with respect to integer shifts: for all real x and all integers m, En(x plus m) equals En(x).",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all real numbers x",
+      "for all integers m"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "period parameter (fixed for the equality)",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input real argument",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "integer shift of the argument",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses: the statement is purely universal"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:16:32.581449Z"
+}

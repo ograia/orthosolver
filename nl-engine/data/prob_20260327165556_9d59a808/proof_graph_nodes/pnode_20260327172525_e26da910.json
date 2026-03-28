@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-03-27T17:25:25.258165Z",
+  "graph_node_id": "pnode_20260327172525_e26da910",
+  "metadata": {
+    "parent_id": "thm_root_20260327165556_b210f785"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "853372c60acf25df377acbab7a3e9149c6d33320d200e6edf47912996507ecbf",
+  "owner_id": "lem_20260327172422_2c8f5439",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327172523_80961515",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "t is a real number with 0 <= t and t < 1",
+      "a is defined as floor(n times t), hence a is an integer and satisfies a <= n times t and n times t < a + 1",
+      "t is within the intended input domain of E_n",
+      "a divided by n is within the intended input domain of E_n"
+    ],
+    "normalized_claim": "For all integers n with n > 1 and for all real numbers t with 0 <= t < 1, letting a be floor of n times t, it holds that E_n(t) <= E_n(a divided by n).",
+    "quantifier_order": [
+      "for all n: integer with n greater than 1",
+      "for all t: real with 0 less than or equal to t and t less than 1",
+      "define a as floor of n times t"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer universal parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "inner universal parameter",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "auxiliary value defined by floor of n times t",
+        "type": "integer"
+      },
+      {
+        "domain": "unspecified (at least defined on inputs t and a divided by n)",
+        "name": "E_n",
+        "role": "real-valued (or orderable) quantity indexed by n",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "a depends on both n and t via a = floor(n times t)",
+      "the argument a divided by n depends on n and t through a"
+    ]
+  },
+  "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+  "updated_at": "2026-03-27T17:25:25.258166Z"
+}

@@ -1,0 +1,62 @@
+{
+  "created_at": "2026-03-27T04:18:32.261873Z",
+  "graph_node_id": "pnode_20260327041832_20e20de1",
+  "metadata": {
+    "parent_id": "thm_root_20260327040158_5065188f"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "7d03d71ba441cfcd5c38b9e30fe4433fcbcd9fb1f9284f0dfb6502251512c8ce",
+  "owner_id": "lem_20260327041528_ad159b87",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n is at least 2",
+      "s has exactly n minus 1 components",
+      "Each component of s is either plus 1 or minus 1",
+      "The negated sequence -s is formed entry by entry",
+      "a is a permutation of the integers from 1 through n",
+      "The inequality is strict: the product must be greater than 0 for every index i from 1 to n minus 1",
+      "The index i ranges over all integers from 1 to n minus 1"
+    ],
+    "normalized_claim": "For every integer n at least 2 and every sign sequence s of length n minus 1, the number of permutations a of 1 through n for which each adjacent difference has the sign prescribed by s is equal to the number of permutations counted using the coordinatewise negated sign sequence -s.",
+    "quantifier_order": [
+      "For every integer n at least 2",
+      "For every sign sequence s of length n minus 1 with entries plus 1 or minus 1",
+      "For the count defining f(s), consider all permutations a of 1 through n",
+      "For each index i from 1 to n minus 1, require that the i-th sign times the difference between the next two entries of a is positive"
+    ],
+    "variables": [
+      {
+        "domain": "integers with n at least 2",
+        "name": "n",
+        "role": "size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length n minus 1 with each entry equal to plus 1 or minus 1",
+        "name": "s",
+        "role": "input parameter for the counting function",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "ordered n-tuples whose entries are exactly the integers from 1 through n, each used once",
+        "name": "a",
+        "role": "object being counted",
+        "type": "permutation tuple"
+      },
+      {
+        "domain": "integers from 1 through n minus 1",
+        "name": "i",
+        "role": "index for the adjacency condition",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses appear in the statement; the only object being quantified over inside the definition of f(s) is the counted permutation a."
+    ]
+  },
+  "statement_nl": "Let n be an integer at least 2, and let s=(s_1,...,s_{n-1}) with each s_i in {+1,-1}. Define -s=(-s_1,...,-s_{n-1}). Let f(s) be the number of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i)>0 for every 1 <= i <= n-1. Then f(s)=f(-s).",
+  "updated_at": "2026-03-27T04:18:32.261874Z"
+}

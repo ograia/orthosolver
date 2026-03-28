@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -55,7 +54,7 @@ def _case_config(case: EvalCase) -> dict[str, Any]:
     return base
 
 
-def _fetch_problem_cost(database_url: str | None, problem_id: str) -> float | None:
+def _fetch_problem_cost(problem_id: str) -> float | None:
     try:
         store = get_file_store()
         rows = RunCostRollupRepository(store).list_by_problem(problem_id)
@@ -64,7 +63,7 @@ def _fetch_problem_cost(database_url: str | None, problem_id: str) -> float | No
         return None
 
 
-def run_case(client: httpx.Client, case: EvalCase, tick_limit: int, poll_sleep: float, database_url: str | None) -> dict[str, Any]:
+def run_case(client: httpx.Client, case: EvalCase, tick_limit: int, poll_sleep: float) -> dict[str, Any]:
     create = client.post(
         "/v1/problems",
         json={
@@ -76,8 +75,7 @@ def run_case(client: httpx.Client, case: EvalCase, tick_limit: int, poll_sleep: 
     create.raise_for_status()
     problem_id = create.json()["problem_id"]
 
-    # Brief pause to allow background semantic sketch thread to complete.
-    time.sleep(max(0.2, poll_sleep))
+    time.sleep(max(0.05, poll_sleep))
 
     started = time.perf_counter()
     ticks = 0
@@ -119,7 +117,7 @@ def run_case(client: httpx.Client, case: EvalCase, tick_limit: int, poll_sleep: 
     decomposition_churn = sum(
         1 for stage in event_stages if stage in {"decomposition.generated", "decomposition.invalidated", "decomposition.promoted"}
     )
-    estimated_cost_usd = _fetch_problem_cost(database_url, problem_id)
+    estimated_cost_usd = _fetch_problem_cost(problem_id)
 
     return {
         "case_id": case.case_id,
@@ -190,10 +188,8 @@ def main() -> None:
     args = parser.parse_args()
 
     cases = _load_cases(Path(args.cases))
-    database_url = os.getenv("DATABASE_URL")
-
     with httpx.Client(base_url=args.api_base_url, timeout=60) as client:
-        results = [run_case(client, case, args.tick_limit, args.poll_sleep, database_url) for case in cases]
+        results = [run_case(client, case, args.tick_limit, args.poll_sleep) for case in cases]
 
     summary = _build_summary(results)
     out = {"summary": summary, "results": results}

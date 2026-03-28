@@ -1,0 +1,215 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182104_d854ce9c/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T18:26:12.641415Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:26:13.699513Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:25:47.720566Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n greater than 1",
+            "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "the floor function is applied to real numbers (so it is always defined)"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+          "quantifier_order": [
+            "for a given integer n greater than 1",
+            "find real x such that for all real y, expression at x is at least the expression at y",
+            "and there exists at least one real x achieving that maximal value"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index in the expression, ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizer x (if it exists) may depend on the fixed parameter n",
+            "the maximal value may depend on the fixed parameter n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327182104_d854ce9c",
+    "proof_nl": "Let r_k = {km/n} be the fractional part of km/n. Since floor(km/n) = km/n - r_k, we get\nsum_{k=1}^n floor(km/n)/k = sum_{k=1}^n (m/n - r_k/k) = m - sum_{k=1}^n r_k/k,\nso f_n(m/n) = sum_{k=1}^n r_k/k.\n\nIf m = 0, then every r_k = 0, hence f_n(0) = 0 < H_n - 1 because H_n > 1 for n > 1.\n\nAssume m > 0 and set d = gcd(m,n). Write n = db and m = da with gcd(a,b) = 1. For k = qb + r with 0 <= q <= d - 1 and 1 <= r <= b - 1, we have r_k = {ra/b}. As r runs from 1 to b - 1, multiplication by a permutes the residues mod b, so the nonzero r_k consist of d copies of each number 1/b, 2/b, ..., (b - 1)/b. The remaining d values are 0, namely for k = b, 2b, ..., db = n.\n\nNow order the r_k in nonincreasing order as r_1^* >= ... >= r_n^*. Then r_1^*, ..., r_n^* are exactly (b - 1)/b repeated d times, then (b - 2)/b repeated d times, and so on down to 1/b repeated d times, followed by d zeros. Since the weights 1, 1/2, ..., 1/n are decreasing, the usual exchange argument (rearrangement inequality) shows that f_n(m/n) is at most the sum obtained from this nonincreasing rearrangement. Hence\nf_n(m/n) <= sum_{i=1}^n r_i^*/i = sum_{i=1}^{n-d} r_i^*/i.\nFor 1 <= i <= n-d, we have r_i^* = (b - ceil(i/d))/b <= 1 - i/n = (n - i)/n, because ceil(i/d) >= i/d. Therefore\nf_n(m/n) <= sum_{i=1}^{n-d} (n - i)/(n i).\n\nIf d > 1, then n - d <= n - 2, so this is strictly smaller than\nsum_{i=1}^{n-1} (n - i)/(n i) = sum_{i=1}^{n-1} (1/i - 1/n) = H_n - 1.\nIf d = 1, then the rearrangement bound is exactly H_n - 1, but equality would require the original sequence (r_k) to already be nonincreasing in k. That is impossible here, because r_1 = m/n < (n - 1)/n, so the largest value (n - 1)/n is not in the first position. Thus equality cannot occur.\n\nIn all cases, f_n(m/n) < H_n - 1.",
+    "role_in_assembly": "Excludes every lower discrete endpoint; this is the main bottleneck.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and satisfies n > 1",
+        "m is an integer and satisfies 0 <= m <= n - 2",
+        "x is a real number whenever f_n(x) is evaluated",
+        "the sums use integer index k with k between 1 and n inclusive"
+      ],
+      "normalized_claim": "For each integer n > 1, if H_n is defined as the sum from k = 1 to n of 1 divided by k, and f_n is defined by f_n(x) equals the floor of n times x minus the sum from k = 1 to n of (the floor of k times x) divided by k, then for every integer m with 0 <= m <= n - 2, f_n of (m divided by n) is strictly less than H_n minus 1.",
+      "quantifier_order": [
+        "for each integer n with n > 1",
+        "for every integer m with 0 <= m <= n - 2"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "global parameter used to define H_n and the function f_n",
+          "type": "integer"
+        },
+        {
+          "domain": "reals",
+          "name": "H_n",
+          "role": "harmonic sum defined from n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "f_n",
+          "role": "depends on n and is evaluated at x",
+          "type": "function from reals to reals"
+        },
+        {
+          "domain": "reals",
+          "name": "x",
+          "role": "input to f_n; used inside floor(n*x) and floor(k*x)",
+          "type": "real number"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "quantified variable in the inequality, specialized as x = m/n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index for sums from k = 1 to k = n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are asserted; the bound holds for all allowed m with x fixed as m/n"
+      ]
+    },
+    "statement_nl": "Let n > 1, define H_n = sum_{k=1}^n 1/k, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. For every integer m with 0 <= m <= n-2, one has f_n(m/n) < H_n - 1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.93,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327182104_d854ce9c",
+    "proof_status": "complete",
+    "reason": "The proof matches the lemma statement exactly and establishes the strict bound for all allowed m. The m=0 case is handled directly; for m>0 the gcd decomposition correctly counts the fractional parts, the rearrangement step gives the appropriate upper bound, and strictness follows for all m<=n-2. No major semantic drift or illegality in dependencies is present.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T18:25:46.532037Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182104_d854ce9c",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:26:13.699519Z",
+  "worker_job_id": "wrk_lem_20260327182104_d854ce9c_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

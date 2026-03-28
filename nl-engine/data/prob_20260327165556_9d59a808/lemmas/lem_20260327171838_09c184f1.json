@@ -1,0 +1,85 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327171950_5ce4613f",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:18:44.887008Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:20:21.483587Z",
+  "last_dependency_check_id": "depchk_20260327172021_cdb6627e",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof establishes the required bounds k-1 <= k*t < k for every integer k with 1 <= k <= n, and concludes correctly that floor(k*t) = k-1. This exactly matches the lemma statement, with no semantic drift and no dependency issues.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n>1 and a real number t with (n-1)/n <= t < 1. Let k be any integer with 1 <= k <= n. We show that floor(k t) = k-1.\n\nFrom t < 1 we get k t < k.\nFrom t >= (n-1)/n we get\nk t >= k(n-1)/n = k - k/n.\nSince k <= n, we have k/n <= 1, hence k - k/n >= k - 1. Therefore\nk - 1 <= k t < k.\n\nBecause k-1 is an integer and it is the greatest integer not exceeding k t, it follows that floor(k t) = k-1.\n\nSince k was arbitrary, this holds for every integer k with 1 <= k <= n.",
+  "latest_vetted_proof_fingerprint": "c952c75cac0176afc93917d0a042c6f72335e276e05500e16a2d79909d7d014f",
+  "latest_vetter_report_id": "rep_20260327172021_0b74d35b",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327171838_09c184f1",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327171838_09c184f1.json",
+  "proof_graph_id": "pgraph_20260327171949_82d246b0",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Identify the floor pattern on the candidate maximizing interval.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n > 1",
+      "t is real and satisfies (n-1)/n <= t < 1",
+      "k is integer and satisfies 1 <= k <= n",
+      "floor is the greatest integer less than or equal to its real input"
+    ],
+    "normalized_claim": "For all integers n with n > 1, for all real numbers t with (n minus 1) divided by n <= t and t < 1, and for all integers k with 1 <= k <= n, the floor of k times t equals k minus 1.",
+    "quantifier_order": [
+      "for all n (integer)",
+      "for all t (real)",
+      "for all k (integer)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer quantified parameter; sets the range condition for t and the upper bound for k",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "parameter controlling the value inside the floor via multiplication with k",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "inner quantified parameter; argument of floor is k*t and RHS is k-1",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:20:21.483587Z"
+}

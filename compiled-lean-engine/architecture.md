@@ -1,12 +1,15 @@
 # Lean Engine Architecture
 
-> Last updated: 2026-03-25
+> Last updated: 2026-03-26
 
 ## What This System Does
 
-This is an NL-proof-to-Lean compiler. It takes structured natural-language proofs and compiles them into Lean 4 code that actually type-checks. If the Lean compiler accepts the output, the proof is mathematically verified.
+The Lean engine formalizes structured NL proofs into Lean 4 and exposes that capability as both:
 
-The system is NOT a theorem prover. It formalizes proofs that already exist in natural language.
+- a phase-based full pipeline
+- a versioned HTTP service used continuously by the NL orchestrator
+
+It is not a theorem prover. It formalizes proofs and decompositions that already exist in natural language.
 
 ---
 
@@ -35,7 +38,7 @@ Claude uses the fast LSP path for interactive proof writing. The engine validate
 
 ---
 
-## System Architecture Overview
+## Runtime Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -140,8 +143,35 @@ Claude uses the fast LSP path for interactive proof writing. The engine validate
 
 ### Phase 08 — HTTP Service
 - **Module:** `service/app.py`, `service/jobs.py`, `service/store.py`
-- POST `/v1/jobs`, GET `/v1/jobs/<id>`, GET `/v1/health`
-- SQLite-backed job persistence
+- exposes v1 job endpoints and v2 operation endpoints
+- JSON object-backed job persistence
+- preserves full-pipeline compatibility while enabling:
+  - `prepare_track`
+  - `formalize_lemma_from_nl`
+  - `assemble_root_from_track`
+  - `split_proof_into_sublemmas`
+
+## Unified NL Integration
+
+In the unified runtime, the NL orchestrator calls Lean throughout the theorem lifecycle:
+
+1. after decomposition acceptance with `prepare_track`
+2. after lemma vetter approval with `formalize_lemma_from_nl`
+3. on qualifying bottlenecks with `split_proof_into_sublemmas`
+4. after all lemmas are formally accepted with `assemble_root_from_track`
+
+The Lean engine is the authority for classification:
+
+- `proof_issue`
+- `lean_issue`
+
+Terminal results also return:
+
+- `error_class`
+- `confidence`
+- `fatality`
+- `progress_snapshot`
+- `artifact_index`
 
 ---
 

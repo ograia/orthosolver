@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Phase 08 adds an optional local service wrapper around the existing Phase 01-07 engine pipeline.
+Phase 08 exposes the Lean runtime as an asynchronous HTTP service.
 
-The service is asynchronous and idempotent by `job_id`.
+The service is asynchronous and idempotent by `job_id` or `operation_id`.
 
 ## Endpoints
 
@@ -23,7 +23,16 @@ The service is asynchronous and idempotent by `job_id`.
 PYTHONPATH=src python -m lean_engine.cli service \
   --host 127.0.0.1 \
   --port 8081 \
-  --db-path .artifacts/lean_engine/service/jobs.sqlite3
+  --store-root .artifacts/lean_engine/service/state
+```
+
+Optional shared-storage env:
+
+```bash
+export LEAN_ENGINE_STORAGE_BACKEND=gcs
+export GCS_BUCKET=orthos-runtime-dev
+export LEAN_ENGINE_GCS_STATE_PREFIX=lean-engine/state/dev
+export LEAN_ENGINE_GCS_ARTIFACT_PREFIX=lean-engine/artifacts/dev
 ```
 
 ## Job Request Shape
@@ -152,6 +161,7 @@ Useful options:
 ## Idempotency
 
 - Re-posting the same `job_id` returns the existing job status (`409`) and does not re-run work.
+- Re-posting the same `operation_id` does the same for v2 operations.
 
 ## Cancellation
 
@@ -176,6 +186,7 @@ Example:
 - Lean template initialization status
 - MCP command availability
 - active jobs and queue depth
+- storage mode
 
 ## Polling
 

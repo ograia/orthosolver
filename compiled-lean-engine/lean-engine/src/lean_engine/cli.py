@@ -91,8 +91,12 @@ def build_parser() -> argparse.ArgumentParser:
     init_parser.add_argument("problem_id", help="problem identifier for artifact layout")
     init_parser.add_argument("--config", default=None, help="optional runtime config path")
     init_parser.add_argument("--artifact-root", default=None, help="override artifacts root")
-    init_parser.add_argument("--model", default=None, help="override Claude primary model")
-    init_parser.add_argument("--fallback-model", default=None, help="override Claude fallback model")
+    init_parser.add_argument("--model", default=None, help="override Claude model")
+    init_parser.add_argument(
+        "--fallback-model",
+        default=None,
+        help="deprecated compatibility flag; when provided it must exactly match --model",
+    )
     _add_claude_api_key_flag(init_parser)
     init_parser.add_argument("--mcp-command", default=None, help="override MCP server command")
     _add_integration_flags(init_parser)
@@ -171,7 +175,11 @@ def build_parser() -> argparse.ArgumentParser:
     phase07_run_parser.add_argument("--config", default=None, help="optional runtime config path")
     phase07_run_parser.add_argument("--artifact-root", default=None, help="override artifacts root")
     phase07_run_parser.add_argument("--model", default=None, help="override Claude model")
-    phase07_run_parser.add_argument("--fallback-model", default=None, help="override Claude fallback model")
+    phase07_run_parser.add_argument(
+        "--fallback-model",
+        default=None,
+        help="deprecated compatibility flag; when provided it must exactly match --model",
+    )
     _add_claude_api_key_flag(phase07_run_parser)
     phase07_run_parser.add_argument("--mcp-command", default=None, help="override MCP server command")
     _add_integration_flags(phase07_run_parser)
@@ -452,15 +460,19 @@ def build_parser() -> argparse.ArgumentParser:
     service_parser.add_argument("--host", default="127.0.0.1", help="bind host for HTTP service")
     service_parser.add_argument("--port", type=int, default=8081, help="bind port for HTTP service")
     service_parser.add_argument(
-        "--db-path",
-        default=".artifacts/lean_engine/service/jobs.sqlite3",
-        help="SQLite path for job metadata",
+        "--store-root",
+        default=".artifacts/lean_engine/service/state",
+        help="store root for durable job metadata",
     )
     service_parser.add_argument("--max-workers", type=int, default=2, help="max concurrent background jobs")
     service_parser.add_argument("--config", default=None, help="optional runtime config path")
     service_parser.add_argument("--artifact-root", default=None, help="default artifacts root for submitted jobs")
     service_parser.add_argument("--model", default=None, help="default Claude model for submitted jobs")
-    service_parser.add_argument("--fallback-model", default=None, help="default fallback Claude model")
+    service_parser.add_argument(
+        "--fallback-model",
+        default=None,
+        help="deprecated compatibility flag; when provided it must exactly match --model",
+    )
     _add_claude_api_key_flag(service_parser)
     service_parser.add_argument("--mcp-command", default=None, help="default MCP command override")
     _add_integration_flags(service_parser)
@@ -1031,7 +1043,7 @@ def _run_service(args: argparse.Namespace) -> int:
         run_http_service(
             host=args.host,
             port=args.port,
-            db_path=Path(args.db_path).expanduser().resolve(),
+            store_root=Path(args.store_root).expanduser().resolve(),
             max_workers=args.max_workers,
             config_path=Path(args.config).expanduser().resolve() if args.config else None,
             model=args.model,

@@ -1,0 +1,209 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182030_86cc2c6b/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T18:22:23.778658Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:22:24.320061Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:22:17.627483Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n greater than 1",
+            "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "the floor function is applied to real numbers (so it is always defined)"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+          "quantifier_order": [
+            "for a given integer n greater than 1",
+            "find real x such that for all real y, expression at x is at least the expression at y",
+            "and there exists at least one real x achieving that maximal value"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index in the expression, ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizer x (if it exists) may depend on the fixed parameter n",
+            "the maximal value may depend on the fixed parameter n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327182030_86cc2c6b",
+    "proof_nl": "Let x be any real number, and write m = \u230ax\u230b and t = x - \u230ax\u230b. Then t = frac(x), so x = m + t with m an integer and 0 \u2264 t < 1.\n\nSince m is an integer and k is a positive integer, km is also an integer. Therefore, for each k = 1, 2, ..., n,\n\u230akx\u230b = \u230ak(m+t)\u230b = \u230akm + kt\u230b = km + \u230akt\u230b,\nand similarly\n\u230anx\u230b = nm + \u230ant\u230b.\n\nSubstituting these into the definition of f_n gives\nf_n(x) = \u230anx\u230b - \\sum_{k=1}^n \\frac{\u230akx\u230b}{k}\n= (nm + \u230ant\u230b) - \\sum_{k=1}^n \\frac{km + \u230akt\u230b}{k}.\nNow simplify term by term:\n\\frac{km + \u230akt\u230b}{k} = m + \\frac{\u230akt\u230b}{k},\nso\nf_n(x) = nm + \u230ant\u230b - \\sum_{k=1}^n m - \\sum_{k=1}^n \\frac{\u230akt\u230b}{k}\n= nm + \u230ant\u230b - nm - \\sum_{k=1}^n \\frac{\u230akt\u230b}{k}\n= \u230ant\u230b - \\sum_{k=1}^n \\frac{\u230akt\u230b}{k}.\nBut the right-hand side is exactly f_n(t), and t = frac(x). Hence\nf_n(x) = f_n(frac(x)).\n\nSince x was arbitrary, this holds for every real x.",
+    "role_in_assembly": "Reduces the maximization problem to the fundamental domain [0,1).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "x is any real number",
+        "k ranges over integers with 1 <= k <= n (implicit from the sum)",
+        "frac(x) is defined as x minus floor(x), so frac(x) lies in the interval from 0 up to but not including 1"
+      ],
+      "normalized_claim": "For every integer n greater than 1, define f_n on real numbers by f_n(x) equals floor of n times x minus the sum from k equals 1 to n of (floor of k times x divided by k). Then for every real x, f_n(x) equals f_n(frac(x)), where frac(x) equals x minus floor(x).",
+      "quantifier_order": [
+        "for all integers n with n > 1",
+        "for all real numbers x"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the function f_n; assumed greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index inside the definition of f_n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "input variable to the function f_n",
+          "type": "real"
+        },
+        {
+          "domain": "real numbers",
+          "name": "f_n",
+          "role": "value defined from n and floor expressions",
+          "type": "function from reals to reals"
+        },
+        {
+          "domain": "real numbers",
+          "name": "frac(x)",
+          "role": "auxiliary transform defined as x minus floor(x)",
+          "type": "real"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses; f_n is uniquely determined by n"
+      ]
+    },
+    "statement_nl": "Let n be an integer greater than 1, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. For every real x, f_n(x) = f_n(frac(x)), where frac(x) = x - floor(x).",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327182030_86cc2c6b",
+    "proof_status": "complete",
+    "reason": "The proof correctly shows that for x = m + t with m = floor(x) and t = frac(x), each term satisfies floor(kx) = km + floor(kt), hence f_n(x) depends only on t = frac(x). Therefore f_n(x) = f_n(frac(x)) for all real x, matching the lemma exactly.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T18:22:19.796409Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182030_86cc2c6b",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:22:24.320068Z",
+  "worker_job_id": "wrk_lem_20260327182030_86cc2c6b_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

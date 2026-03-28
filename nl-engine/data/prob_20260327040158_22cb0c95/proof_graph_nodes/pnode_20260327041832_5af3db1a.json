@@ -1,0 +1,86 @@
+{
+  "created_at": "2026-03-27T04:18:32.106852Z",
+  "graph_node_id": "pnode_20260327041832_5af3db1a",
+  "metadata": {
+    "parent_id": "thm_root_20260327040158_5065188f"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "649eff0b33e45f5f1594f68117bc64fcba72205106ee5a1a65b81f1d8a941097",
+  "owner_id": "lem_20260327041345_f30990bc",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m is a positive integer",
+      "x has exactly m entries",
+      "Each entry x_i is a nonnegative real number",
+      "Indices i run from 1 through m",
+      "Indices j run from 1 through m plus one",
+      "Empty sums are interpreted as 0",
+      "U(x) and D(x) are vectors of length m plus one",
+      "Nondecreasing means consecutive entries satisfy U_j <= U_j plus one",
+      "Nonincreasing means consecutive entries satisfy D_j >= D_j plus one",
+      "Nonconstant means not all entries of the vector are equal"
+    ],
+    "normalized_claim": "For every positive integer m and every length m vector x of nonnegative real numbers, the prefix-sum vector U and the suffix-sum vector D satisfy U_1 = 0, U at index m plus one equals the total sum of the entries of x, U is nondecreasing, D_1 equals the total sum of the entries of x, D at index m plus one is 0, and D is nonincreasing. If some coordinate of x is positive, then neither U nor D is constant.",
+    "quantifier_order": [
+      "For every positive integer m",
+      "For every length m vector x with nonnegative real entries",
+      "Define U(x) and D(x) using the stated formulas for each index j from 1 through m plus one",
+      "For every index j in the allowed range, the endpoint and monotonicity claims hold",
+      "If there exists an index i from 1 through m with x_i positive, then both U(x) and D(x) are nonconstant"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "length m vectors with nonnegative entries",
+        "name": "x",
+        "role": "input vector",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "nonnegative real numbers for i from 1 through m",
+        "name": "x_i",
+        "role": "coordinate of x",
+        "type": "real number"
+      },
+      {
+        "domain": "indices 1 through m",
+        "name": "i",
+        "role": "summation index",
+        "type": "integer index"
+      },
+      {
+        "domain": "indices 1 through m plus one",
+        "name": "j",
+        "role": "component index for U and D",
+        "type": "integer index"
+      },
+      {
+        "domain": "real vectors of length m plus one",
+        "name": "U(x)",
+        "role": "prefix-sum vector",
+        "type": "vector"
+      },
+      {
+        "domain": "real vectors of length m plus one",
+        "name": "D(x)",
+        "role": "suffix-sum vector",
+        "type": "vector"
+      }
+    ],
+    "witness_dependencies": [
+      "The hypothesis at least one entry of x is positive is shorthand for the existence of an index i with x_i > 0",
+      "The nonconstancy conclusion can be witnessed by the fixed endpoints 1 and m plus one, since U(x)_1 = 0 and U(x)_{m plus one} is the total sum, while D(x)_1 is the total sum and D(x)_{m plus one} = 0",
+      "The existential positive coordinate is only used to ensure the total sum is positive; the witness for nonconstancy does not depend on a separate choice of j"
+    ]
+  },
+  "statement_nl": "Let m be a positive integer, let x=(x_1,...,x_m) be a vector of nonnegative real numbers, and define vectors U(x) and D(x) of length m+1 by U(x)_j = sum_{i=1}^{j-1} x_i and D(x)_j = sum_{i=j}^{m} x_i for 1 <= j <= m+1, with empty sums interpreted as 0. Then U(x)_1=0, U(x)_{m+1}=x_1+...+x_m, and U(x) is nondecreasing. Also D(x)_1=x_1+...+x_m, D(x)_{m+1}=0, and D(x) is nonincreasing. If at least one entry of x is positive, then both U(x) and D(x) are nonconstant.",
+  "updated_at": "2026-03-27T04:18:32.106853Z"
+}

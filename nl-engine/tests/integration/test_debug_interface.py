@@ -47,10 +47,18 @@ def test_debug_problem_template_list_and_limit() -> None:
     assert "max_solver_series_wall_clock_seconds_per_lemma" in t["config"]["lemma_solving"]
     assert "lean_engine" in t["config"]
     assert "model" in t["config"]["lean_engine"]
-    assert t["config"]["lean_engine"]["assembly_check_timeout_seconds"] == 240
+    assert t["config"]["lean_engine"]["no_lean4_refs"] is False
     assert t["config"]["lean_engine"]["lean_job_timeout_seconds"] == 300
-    assert t["config"]["lean_engine"]["plausibility_check_timeout_seconds"] == 45
     assert t["config"]["lean_engine"]["assemble_root_timeout_seconds"] == 300
+    assert t["config"]["lean_engine"]["claude_activity_timeout_seconds"] == 0
+    assert t["config"]["lean_engine"]["claude_init_timeout_seconds"] == 0
+    assert "max_parallel_lean_jobs_per_problem" not in t["config"]["lean_engine"]
+    assert "effective_max_parallel_lean_jobs" not in t["config"]["lean_engine"]
+    assert "assembly_check_timeout_seconds" not in t["config"]["lean_engine"]
+    assert "plausibility_check_timeout_seconds" not in t["config"]["lean_engine"]
+    assert "claude_stall_timeout_seconds" not in t["config"]["lean_engine"]
+    assert "claude_tool_wait_timeout_seconds" not in t["config"]["lean_engine"]
+    assert "lean_mode" not in t["config"]["mode"]
     assert t["config"]["final_check"]["fail_problem_on_fatal"] is False
     assert "routing" not in t["config"]
     assert "global" not in t["config"]

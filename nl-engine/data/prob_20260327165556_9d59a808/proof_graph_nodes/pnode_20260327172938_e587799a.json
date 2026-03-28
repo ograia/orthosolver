@@ -1,0 +1,53 @@
+{
+  "created_at": "2026-03-27T17:29:38.282251Z",
+  "graph_node_id": "pnode_20260327172938_e587799a",
+  "metadata": {
+    "parent_id": "thm_root_20260327165556_b210f785"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "79edfa770acc109cd62ac58cee122f0e5aa0c095fde4c08c5cde77a435c1f62a",
+  "owner_id": "lem_20260327172808_e906dd4b",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327172936_9fcd13e5",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n > 1",
+      "t is real and satisfies 0 <= t and t < 1",
+      "a equals floor(n*t) so a is an integer",
+      "since t < 1, n*t < n, hence a <= n-1",
+      "since t >= 0, n*t >= 0, hence a >= 0",
+      "therefore a divided by n lies in the interval [0, 1)"
+    ],
+    "normalized_claim": "For all integers n with n > 1 and all real numbers t with 0 <= t < 1, let a be floor(n*t). Then E_n(t) is less than or equal to E_n(a divided by n).",
+    "quantifier_order": [
+      "for all integers n",
+      "for all real numbers t"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter; quantifier subject",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "input variable to the function E_n",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "auxiliary witness defined as floor(n*t)",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "a depends on n and t via the rule a = floor(n*t)"
+    ]
+  },
+  "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+  "updated_at": "2026-03-27T17:29:38.282252Z"
+}

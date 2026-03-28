@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-03-26T15:00:02.908395Z",
+  "graph_node_id": "pnode_20260326150002_8a0c7341",
+  "metadata": {
+    "parent_id": "thm_root_20260326142247_6714b56a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "b766a7314cc4538422d1855824a1568012e0eb7f2bb33b3c28c0d9db3aff02c8",
+  "owner_id": "lem_20260326145626_35de6c2f",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326150002_c70d2559",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer at least 2.",
+      "Each E_k is a natural number for k from 0 to n.",
+      "E_0 equals 1.",
+      "Each E_m is positive for every integer m from 1 to n.",
+      "For each m from 2 to n, the two convolution identities are asserted simultaneously.",
+      "In those identities, j ranges over integers between 1 and m, restricted by parity to odd or even values.",
+      "w_j is only defined for j from 1 to n.",
+      "V must contain no adjacent integers.",
+      "The odd and even comparison sums are taken over indices j from 1 to n."
+    ],
+    "normalized_claim": "Under the stated assumptions on n and the sequence E, define w_j as binomial(n minus 1, j minus 1) times E_{j minus 1} times E_{n minus j} for each j from 1 to n. Then every subset V of 1 through n with no consecutive elements has total weight at most the larger of the total weight on odd indices and the total weight on even indices. The upper bound is attained exactly when V is the entire set of odd indices or the entire set of even indices in 1 through n.",
+    "quantifier_order": [
+      "Fix an integer n with n at least 2.",
+      "Choose natural numbers E_0 through E_n such that E_0 equals 1 and E_m is positive for every integer m from 1 to n.",
+      "For every integer m from 2 to n, require both stated identities for E_m, one summed over odd j and one summed over even j.",
+      "For each integer j from 1 to n, define w_j from n and the E-sequence.",
+      "For every subset V of 1 through n with no two consecutive integers, the inequality holds.",
+      "Equality occurs exactly for the full odd-index set or the full even-index set in 1 through n."
+    ],
+    "variables": [
+      {
+        "domain": "integers with n at least 2",
+        "name": "n",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "indexed from 0 through n",
+        "name": "E",
+        "role": "given sequence satisfying the stated positivity and convolution identities",
+        "type": "finite sequence of natural numbers"
+      },
+      {
+        "domain": "integers from 2 to n for the convolution identities, and from 1 to n for the positivity condition",
+        "name": "m",
+        "role": "summation and recurrence index",
+        "type": "integer index"
+      },
+      {
+        "domain": "integers from 1 to m in the convolution identities, and from 1 to n in the definition of w_j and the parity sums",
+        "name": "j",
+        "role": "summation index",
+        "type": "integer index"
+      },
+      {
+        "domain": "defined for each integer j from 1 to n",
+        "name": "w_j",
+        "role": "weight attached to index j",
+        "type": "derived number"
+      },
+      {
+        "domain": "subsets of the integers from 1 to n with no two consecutive elements",
+        "name": "V",
+        "role": "independent set on a path of length n",
+        "type": "subset of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement.",
+      "The derived weights w_j depend only on the fixed parameter n and the sequence E.",
+      "The equality cases are determined solely by V and do not involve additional hidden choices."
+    ]
+  },
+  "statement_nl": "Fix an integer n with n at least 2. Let E_0,E_1,...,E_n be natural numbers such that E_0 = 1, E_m > 0 for every integer m with 1 <= m <= n, and for every integer m with 2 <= m <= n one has both identities E_m = sum over odd j with 1 <= j <= m of binomial(m-1,j-1) E_{j-1} E_{m-j} and E_m = sum over even j with 1 <= j <= m of binomial(m-1,j-1) E_{j-1} E_{m-j}. For each j in {1,...,n}, define w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}. If V is any subset of {1,...,n} with no two consecutive integers, then sum over j in V of w_j is at most max( sum over odd j with 1 <= j <= n of w_j, sum over even j with 1 <= j <= n of w_j ). Moreover, equality holds if and only if V is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+  "updated_at": "2026-03-26T15:00:02.908395Z"
+}

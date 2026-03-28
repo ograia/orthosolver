@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-03-27T23:02:43.802856Z",
+  "graph_node_id": "pnode_20260327230243_146498d5",
+  "metadata": {
+    "node_kind": "theorem"
+  },
+  "node_kind": "claim",
+  "node_status": "active",
+  "normalized_claim_hash": "6f1536c7453c7f17e2785813f00a32fd8a07a9a29390dac13a2f34a0066abfb8",
+  "owner_id": "thm_root_20260327225136_2b86db27",
+  "owner_kind": "theorem",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n greater than 1",
+      "k ranges over integers from 1 through n inclusive",
+      "x ranges over all real numbers",
+      "y ranges over all real numbers",
+      "floor(t) denotes the greatest integer less than or equal to t"
+    ],
+    "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+    "quantifier_order": [
+      "for all integers n with n greater than 1",
+      "there exists a real number x that maximizes the expression",
+      "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+    ],
+    "variables": [
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "fixed parameter for the maximization problem",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "summation index",
+        "type": "integer"
+      },
+      {
+        "domain": "all real numbers",
+        "name": "x",
+        "role": "argument to be maximized over",
+        "type": "real number"
+      },
+      {
+        "domain": "all real numbers",
+        "name": "y",
+        "role": "comparison point for defining maximality of x",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "m",
+        "role": "maximal value of the expression",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "the maximizing x may depend on n",
+      "the maximal value m may depend on n"
+    ]
+  },
+  "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+  "updated_at": "2026-03-27T23:02:43.802858Z"
+}

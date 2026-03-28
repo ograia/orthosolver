@@ -1,0 +1,191 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/lemmas/lem_20260327171517_a24fc482/solver_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-27T17:16:42.877485Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T17:16:43.470603Z",
+  "controller_consumed_by_execution_id": "exec_20260327165556_006dee7c",
+  "created_at": "2026-03-27T17:16:33.205117Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+        "item_id": "pnode_20260327171613_e9a3c72b",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 2,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327171612_4e7f6f6d",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260327171517_a24fc482",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327171633_4b2db136",
+    "role_in_assembly": "Identify the floor pattern on the candidate maximizing interval.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "t is a real number with (n-1)/n <= t and t < 1 (lower bound inclusive, upper bound strict)",
+        "k is an integer with 1 <= k and k <= n",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For every integer n with n > 1, for every real t with (n-1)/n <= t < 1, and for every integer k with 1 <= k <= n, the greatest integer less than or equal to k times t equals k minus 1.",
+      "quantifier_order": [
+        "for all n, with n > 1",
+        "for all t, with (n-1)/n <= t and t < 1",
+        "for all k, with 1 <= k and k <= n"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "outer universally quantified parameter, with lower bound n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "t",
+          "role": "universally quantified parameter depending on n, constrained by (n-1)/n <= t < 1",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "universally quantified index constrained by 1 <= k <= n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "boundary_case_check": "At t=(n-1)/n and k=n, kt=n-1 so the formula still gives floor(kt)=n-1.",
+      "lemma_used": "Directly proved the stated floor identity for all admissible n,t,k.",
+      "no_hidden_dependencies": true,
+      "range_checks": [
+        "Used only n>1, (n-1)/n <= t < 1, and 1 <= k <= n."
+      ]
+    },
+    "lemma_id": "lem_20260327171517_a24fc482",
+    "proof_nl": "Fix an integer n>1, and let t be any real number with (n-1)/n <= t < 1. Let k be any integer with 1 <= k <= n. We show that floor(k t) = k-1.\n\nFrom t >= (n-1)/n, we get\nk t >= k(n-1)/n = k - k/n.\nSince k <= n, we have k/n <= 1, so k - k/n >= k-1. Therefore\nk-1 <= k t.\n\nOn the other hand, t < 1 implies k t < k.\nThus\nk-1 <= k t < k.\nBecause k-1 is an integer, this interval condition implies floor(k t) = k-1.\n\nSince k was arbitrary in {1,2,...,n}, the conclusion holds for every such k.",
+    "proof_summary": "For k<=n and t in [(n-1)/n,1), one has k-1 <= kt < k, hence floor(kt)=k-1.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Basic characterization of the floor function: if m is an integer and m <= x < m+1, then floor(x)=m."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T17:16:35.700288Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327171517_a24fc482",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T17:16:43.470610Z",
+  "worker_job_id": "wrk_lem_20260327171517_a24fc482_g0_solve_2",
+  "worker_kind": "lemma_solver"
+}

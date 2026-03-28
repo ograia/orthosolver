@@ -1,0 +1,264 @@
+{
+  "artifact_prefix": "problems/prob_20260326184616_abfe1ff0/lemmas/lem_20260326190323_6fff1b77/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-26T23:21:57.475343Z",
+  "controller_consumed_by_execution_id": "exec_20260326184651_e3d7b613",
+  "created_at": "2026-03-26T23:21:10.253804Z",
+  "error_payload": null,
+  "execution_id": "exec_20260326184651_e3d7b613",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+        "item_id": "pnode_20260326192603_195dbcd0",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is at least 2",
+            "s has exactly n minus 1 entries",
+            "each entry of s is either plus 1 or minus 1",
+            "a is a permutation of the set {1, 2, ..., n}",
+            "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+            "the inequality condition is required for every index i from 1 to n minus 1"
+          ],
+          "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+          "quantifier_order": [
+            "For each integer n with n at least 2",
+            "For each sign sequence s of length n minus 1",
+            "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+            "Determine which sign sequences s maximize this count f(s)"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter with n at least 2",
+              "type": "integer"
+            },
+            {
+              "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+              "name": "s",
+              "role": "parameter over which the maximization is taken",
+              "type": "finite sign sequence"
+            },
+            {
+              "domain": "integers from 1 to n minus 1",
+              "name": "i",
+              "role": "index for adjacent comparisons in the sign sequence and permutation",
+              "type": "integer index"
+            },
+            {
+              "domain": "all permutations of {1, 2, ..., n}",
+              "name": "a",
+              "role": "counted object satisfying the sign constraints",
+              "type": "permutation"
+            },
+            {
+              "domain": "elements of {1, 2, ..., n}",
+              "name": "a_i",
+              "role": "ith entry of the permutation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The counted permutation a depends on the chosen n and sign sequence s",
+            "The maximality question is over s for each fixed n",
+            "There is no existential witness in the statement, only a counting definition and a maximization problem"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260326190323_6fff1b77",
+    "proof_nl": "We prove the three assertions in order.\n\nFirst, Peak(t) has no consecutive integers. If m = 1, then Peak(t) = {1}, so this is immediate. Assume m >= 2 and suppose, for contradiction, that j and j+1 both belong to Peak(t) for some 1 <= j <= m-1.\n\n- If j = 1, then 1 in Peak(t) gives t_1 = -1. Also 2 in Peak(t) forces t_1 = +1: if m = 2 this is the endpoint rule for m, and if m >= 3 this is the interior rule for 2. This is impossible.\n\n- If 2 <= j <= m-1, then j is an interior index, so j in Peak(t) implies t_j = -1. On the other hand, j+1 in Peak(t) forces t_j = +1: if j+1 <= m-1 this is the interior rule for j+1, while if j+1 = m this is the endpoint rule for m. Again impossible.\n\nThus no two consecutive integers can both lie in Peak(t).\n\nNow assume m >= 2.\n\nWe next prove that Peak(t) is exactly the set of odd integers in {1,...,m} if and only if t_i = (-1)^i for every i = 1,...,m-1.\n\nSuppose first that t_i = (-1)^i for all i.\n\n- Since t_1 = (-1)^1 = -1, the endpoint rule gives 1 in Peak(t).\n\n- Let 2 <= j <= m-1. Then j in Peak(t) exactly when t_{j-1} = +1 and t_j = -1. Under the hypothesis, this is exactly when (-1)^{j-1} = +1 and (-1)^j = -1, which is exactly when j is odd.\n\n- Also m in Peak(t) exactly when t_{m-1} = +1. Under the hypothesis this is exactly when (-1)^{m-1} = +1, i.e. when m-1 is even, i.e. when m is odd.\n\nSo Peak(t) consists exactly of the odd integers in {1,...,m}.\n\nConversely, suppose Peak(t) is exactly the set of odd integers in {1,...,m}. We show that t_i = (-1)^i for every i = 1,...,m-1.\n\nFix i with 1 <= i <= m-1.\n\n- If i is odd:\n  * If i = 1, then 1 in Peak(t), so t_1 = -1.\n  * If i >= 3, then i is an odd integer with 2 <= i <= m-1, so i in Peak(t). By the interior rule, t_i = -1.\n  Hence in all odd cases, t_i = -1 = (-1)^i.\n\n- If i is even:\n  * If i <= m-2, then i+1 is odd and 2 <= i+1 <= m-1, so i+1 in Peak(t). By the interior rule for i+1, we get t_i = +1.\n  * If i = m-1, then m is odd, hence m in Peak(t). By the endpoint rule for m, t_{m-1} = +1.\n  Hence in all even cases, t_i = +1 = (-1)^i.\n\nTherefore t_i = (-1)^i for every i.\n\nFinally we prove that Peak(t) is exactly the set of even integers in {1,...,m} if and only if t_i = (-1)^(i-1) for every i = 1,...,m-1.\n\nSuppose first that t_i = (-1)^(i-1) for all i.\n\n- Since t_1 = (-1)^0 = +1, the endpoint rule shows that 1 is not in Peak(t).\n\n- Let 2 <= j <= m-1. Then j in Peak(t) exactly when t_{j-1} = +1 and t_j = -1. Under the hypothesis, this is exactly when (-1)^{j-2} = +1 and (-1)^{j-1} = -1, which is exactly when j is even.\n\n- Also m in Peak(t) exactly when t_{m-1} = +1. Under the hypothesis this is exactly when (-1)^{m-2} = +1, i.e. when m-2 is even, i.e. when m is even.\n\nSo Peak(t) consists exactly of the even integers in {1,...,m}.\n\nConversely, suppose Peak(t) is exactly the set of even integers in {1,...,m}. We show that t_i = (-1)^(i-1) for every i = 1,...,m-1.\n\nFix i with 1 <= i <= m-1.\n\n- If i is odd:\n  * If i <= m-2, then i+1 is even and 2 <= i+1 <= m-1, so i+1 in Peak(t). By the interior rule for i+1, we get t_i = +1.\n  * If i = m-1, then m is even, hence m in Peak(t). By the endpoint rule for m, t_{m-1} = +1.\n  Hence in all odd cases, t_i = +1 = (-1)^(i-1).\n\n- If i is even, then 2 <= i <= m-1 and i in Peak(t). By the interior rule, t_i = -1 = (-1)^(i-1).\n\nTherefore t_i = (-1)^(i-1) for every i.\n\nThis proves all parts of the lemma.",
+    "role_in_assembly": "Shows that every sign sequence gives a nonadjacent admissible peak set, and converts the two extremal parity peak sets back into the two alternating sign sequences.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "each entry of s is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}",
+        "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+        "the inequality condition is required for every index i from 1 to n minus 1"
+      ],
+      "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+      "quantifier_order": [
+        "For each integer n with n at least 2",
+        "For each sign sequence s of length n minus 1",
+        "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+        "Determine which sign sequences s maximize this count f(s)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with n at least 2",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "parameter over which the maximization is taken",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "index for adjacent comparisons in the sign sequence and permutation",
+          "type": "integer index"
+        },
+        {
+          "domain": "all permutations of {1, 2, ..., n}",
+          "name": "a",
+          "role": "counted object satisfying the sign constraints",
+          "type": "permutation"
+        },
+        {
+          "domain": "elements of {1, 2, ..., n}",
+          "name": "a_i",
+          "role": "ith entry of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The counted permutation a depends on the chosen n and sign sequence s",
+        "The maximality question is over s for each fixed n",
+        "There is no existential witness in the statement, only a counting definition and a maximization problem"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer and m is at least 1.",
+        "t has exactly m minus 1 entries.",
+        "Each entry t sub i is either plus one or minus one.",
+        "When m equals 1, the sequence t is empty.",
+        "The definition of Peak of t for the nontrivial case only applies when m is at least 2.",
+        "The index j in the peak membership rule ranges over integers between 2 and m minus 1.",
+        "The index i in the final sign pattern characterizations ranges over integers between 1 and m minus 1."
+      ],
+      "normalized_claim": "For every positive integer m and every sign sequence t of length m minus 1, the set Peak of t defined by the endpoint and adjacent sign rules has no consecutive integers. When m is at least 2, Peak of t is the set of odd positions in 1 through m exactly when the signs alternate minus one, plus one, minus one, and so on starting with minus one, and Peak of t is the set of even positions in 1 through m exactly when the signs alternate plus one, minus one, plus one, and so on starting with plus one.",
+      "quantifier_order": [
+        "For every integer m with m at least 1.",
+        "For every sign sequence t of length m minus 1, with each entry equal to plus one or minus one.",
+        "Define Peak of t by cases depending on whether m equals 1 or m is at least 2.",
+        "If m is at least 2, for each integer j with 2 at most j at most m minus 1, membership of j in Peak of t is determined by the adjacent signs t sub j minus 1 and t sub j, with the endpoints handled separately.",
+        "If m is at least 2, for every index i from 1 to m minus 1, the odd peak characterization uses the condition t sub i equals minus one to the i.",
+        "If m is at least 2, for every index i from 1 to m minus 1, the even peak characterization uses the condition t sub i equals minus one to the i minus 1."
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "m",
+          "role": "main size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequence of length m minus 1 with entries each equal to plus one or minus one; empty when m equals 1",
+          "name": "t",
+          "role": "input sequence of signs",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "subset of the integers from 1 to m",
+          "name": "Peak(t)",
+          "role": "defined set of peak positions",
+          "type": "finite set of integers"
+        },
+        {
+          "domain": "integers with 2 at most j at most m minus 1",
+          "name": "j",
+          "role": "bound index in the membership definition of Peak(t)",
+          "type": "integer index"
+        },
+        {
+          "domain": "indices from 1 to m minus 1",
+          "name": "i",
+          "role": "bound index in the alternating sign characterizations",
+          "type": "integer index"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are involved; all conditions are universal or definitional.",
+        "The parity characterizations depend on the entire family of equalities for all indices i from 1 to m minus 1.",
+        "The set Peak of t is determined uniquely by m and t once the sign sequence is fixed."
+      ]
+    },
+    "statement_nl": "Let m be an integer with m >= 1, and let t = (t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}; when m = 1 this sequence is empty. Define Peak(t) subseteq {1,...,m} by: if m = 1 then Peak(t) = {1}; if m >= 2 then 1 belongs to Peak(t) exactly when t_1 = -1, m belongs to Peak(t) exactly when t_{m-1} = +1, and for each integer j with 2 <= j <= m-1, j belongs to Peak(t) exactly when t_{j-1} = +1 and t_j = -1. Then Peak(t) contains no two consecutive integers. If m >= 2, then Peak(t) is exactly the set of odd integers in {1,...,m} if and only if t_i = (-1)^i for every i, and Peak(t) is exactly the set of even integers in {1,...,m} if and only if t_i = (-1)^(i-1) for every i.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.97,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "declared_citations_used": [],
+      "dependency_legal": true,
+      "notes": "The proof relies only on the endpoint/interior membership rules stated in the lemma and elementary parity reasoning.",
+      "uses_only_local_definitions": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The nonadjacency argument correctly handles both the left endpoint case j=1 and the general case by deriving contradictory values for the shared sign t_j.",
+        "location": "first assertion",
+        "severity": "low"
+      },
+      {
+        "finding": "The two biconditional characterizations of odd and even peak sets are proved in both directions with all endpoint cases covered.",
+        "location": "second and third assertions",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260326190323_6fff1b77",
+    "proof_status": "complete",
+    "reason": "The proof correctly and completely establishes all three claimed parts directly from the definition of Peak(t): nonadjacency of peak positions, characterization of the odd peak set by the alternating pattern starting with -1, and characterization of the even peak set by the alternating pattern starting with +1. Edge cases m=1 and small endpoint cases are explicitly handled, and there is no semantic drift from the lemma or its role in the overall argument.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260326190323_6fff1b77",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-26T23:21:57.475350Z",
+  "worker_job_id": "wrk_lem_20260326190323_6fff1b77_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

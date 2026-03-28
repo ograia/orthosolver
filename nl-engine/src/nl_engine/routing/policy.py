@@ -2,6 +2,13 @@ from __future__ import annotations
 
 from nl_engine.domain.config import ProblemConfig
 
+DETERMINISTIC_LEAN_SETUP_ERRORS = {
+    "dependency_graph_invalid",
+    "problem_binding_mismatch",
+    "pinned_signature_binding_mismatch",
+    "stale_olean",
+}
+
 
 def route_vetter_result(statement_status: str, proof_status: str, drift_level: str | None, config: ProblemConfig) -> str:
     """Route NL vetter output according to docs/nl_engine.tex routing table."""
@@ -20,6 +27,10 @@ def route_vetter_result(statement_status: str, proof_status: str, drift_level: s
     return "retry_solver"
 
 
+def is_deterministic_lean_setup_error(error_class: str | None) -> bool:
+    return bool(error_class) and error_class in DETERMINISTIC_LEAN_SETUP_ERRORS
+
+
 def route_lean_result(
     status: str,
     error_class: str | None,
@@ -30,6 +41,9 @@ def route_lean_result(
     if status == "success":
         return "done"
 
+    if is_deterministic_lean_setup_error(error_class):
+        return "decompose_further"
+
     if issue_kind == "lean_issue":
         if error_class == "assembly_composition_failure":
             return "retry_assembly_plan"
@@ -37,7 +51,7 @@ def route_lean_result(
 
     if issue_kind == "proof_issue":
         if error_class == "false_lemma_suspected":
-            return "check_statement_plausibility"
+            return "retry_nl_proof"
         if error_class in config.routing.repairable_nl_loop_classes:
             return "retry_nl_proof"
         return "decompose_further"
@@ -49,7 +63,7 @@ def route_lean_result(
         return "retry_nl_proof"
 
     if error_class == "false_lemma_suspected":
-        return "check_statement_plausibility"
+        return "retry_nl_proof"
 
     if error_class == "assembly_composition_failure":
         return "retry_assembly_plan"

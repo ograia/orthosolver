@@ -1,0 +1,106 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327041832_d5423665",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T04:14:28.631812Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.28,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T06:48:27.612497Z",
+  "last_dependency_check_id": "depchk_20260327042034_15a7d140",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let\nD := \u03a3_{i=1}^m x_i w_i - \u03a3_{i=1}^m x_i w_{m+1-i}.\n\nFor the second sum, reindex by j = m+1-i. Then\n\u03a3_{i=1}^m x_i w_{m+1-i} = \u03a3_{j=1}^m x_{m+1-j} w_j,\nso\nD = \u03a3_{i=1}^m (x_i - x_{m+1-i}) w_i.\n\nNow pair the terms with indices i and m+1-i. For each i = 1, ..., \u230am/2\u230b, the contribution of this pair is\n(x_i - x_{m+1-i}) w_i + (x_{m+1-i} - x_i) w_{m+1-i}\n= (x_i - x_{m+1-i})(w_i - w_{m+1-i}).\nIf m is odd, the middle term i = (m+1)/2 is 0 because x_i - x_{m+1-i} = 0 there. Hence\nD = \u03a3_{i=1}^{\u230am/2\u230b} (x_i - x_{m+1-i})(w_i - w_{m+1-i}).\n\nAssume first that x_1 \u2265 x_2 \u2265 ... \u2265 x_m. Then for every i \u2264 \u230am/2\u230b we have i < m+1-i, so\nx_i \u2265 x_{m+1-i}\nand, because w_1 > w_2 > ... > w_m,\nw_i > w_{m+1-i}.\nTherefore every summand in the last expression for D is nonnegative, so D \u2265 0. This is exactly\n\u03a3_{i=1}^m x_i w_i \u2265 \u03a3_{i=1}^m x_i w_{m+1-i}.\n\nIf in addition x is nonconstant, then a nonincreasing nonconstant vector must satisfy x_1 > x_m. Since also w_1 > w_m, the i=1 summand\n(x_1 - x_m)(w_1 - w_m)\nis strictly positive. All other summands are nonnegative, so D > 0. Thus the inequality is strict when x is nonconstant.\n\nNow assume instead that x_1 \u2264 x_2 \u2264 ... \u2264 x_m. Define\nE := \u03a3_{i=1}^m x_i w_{m+1-i} - \u03a3_{i=1}^m x_i w_i.\nReindex the first sum exactly as above:\n\u03a3_{i=1}^m x_i w_{m+1-i} = \u03a3_{i=1}^m x_{m+1-i} w_i.\nHence\nE = \u03a3_{i=1}^m (x_{m+1-i} - x_i) w_i.\nPairing i with m+1-i gives\nE = \u03a3_{i=1}^{\u230am/2\u230b} (x_{m+1-i} - x_i)(w_i - w_{m+1-i}).\nFor each i \u2264 \u230am/2\u230b we have x_{m+1-i} \u2265 x_i because x is nondecreasing, and still w_i > w_{m+1-i} because w is strictly decreasing. So each summand is nonnegative, and therefore E \u2265 0. This is exactly\n\u03a3_{i=1}^m x_i w_{m+1-i} \u2265 \u03a3_{i=1}^m x_i w_i.\n\nIf x is nonconstant, then a nondecreasing nonconstant vector satisfies x_m > x_1. Since w_1 > w_m, the i=1 summand\n(x_m - x_1)(w_1 - w_m)\nis strictly positive, so E > 0. Thus the inequality is strict when x is nonconstant.\n\nThis proves both assertions.",
+  "latest_vetted_proof_fingerprint": "32c55b25f1f3ca57a78992d32b3f56e34584eef11971d2ad624efc7a783ab567",
+  "latest_vetter_report_id": "rep_20260327042034_8dfb57f1",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327041358_e26a6528",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "thm_root_20260327040158_5065188f",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "proof_bundle_artifact_id": "problems/prob_20260327040158_22cb0c95/proof_bundles/lemmas/lem_20260327041358_e26a6528.json",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "This is a support lemma for comparing the two alternating continuations; it is used inside the proof chain leading to L6.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let m be a positive integer. Let x=(x_1,...,x_m) be a nonnegative vector and let w=(w_1,...,w_m) be a positive vector with w_1 > w_2 > ... > w_m. If x_1 >= x_2 >= ... >= x_m, then sum_{i=1}^m x_i w_i >= sum_{i=1}^m x_i w_{m+1-i}, and the inequality is strict when x is nonconstant. If x_1 <= x_2 <= ... <= x_m, then sum_{i=1}^m x_i w_{m+1-i} >= sum_{i=1}^m x_i w_i, and the inequality is strict when x is nonconstant.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is a positive integer",
+      "x has exactly m components",
+      "w has exactly m components",
+      "each entry of x is nonnegative",
+      "each entry of w is positive",
+      "w_1 is greater than w_2, which is greater than w_3, and so on down to w_m",
+      "the comparisons among the x_i are entrywise comparisons of real numbers",
+      "nonconstant means not all entries of x are equal"
+    ],
+    "normalized_claim": "For every positive integer m, every nonnegative real vector x of length m, and every positive real vector w of length m that is strictly decreasing, the following hold. If x is nonincreasing, then the dot product of x with w is at least the dot product of x with the reversed vector w, and this is strict when x is not constant. If x is nondecreasing, then the dot product of x with the reversed vector w is at least the dot product of x with w, and this is strict when x is not constant.",
+    "quantifier_order": [
+      "For every positive integer m",
+      "for every real vector x of length m with nonnegative entries",
+      "for every real vector w of length m with positive entries and strict decrease from first to last entry",
+      "if x is nonincreasing, then the sum with matching order is at least the sum with reversed weights, and the inequality is strict when x is not constant",
+      "if x is nondecreasing, then the sum with reversed weights is at least the sum with matching order, and the inequality is strict when x is not constant"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "length of the vectors",
+        "type": "integer"
+      },
+      {
+        "domain": "real vectors of length m with all entries nonnegative",
+        "name": "x",
+        "role": "input vector whose monotonicity controls the comparison",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "real vectors of length m with all entries positive and strictly decreasing",
+        "name": "w",
+        "role": "weight vector",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "the i-th component of x for each index i from 1 to m",
+        "name": "x_i",
+        "role": "coordinate of x",
+        "type": "real number"
+      },
+      {
+        "domain": "the i-th component of w for each index i from 1 to m",
+        "name": "w_i",
+        "role": "coordinate of w",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement",
+      "The strictness clause depends on the same x and w as the weak inequality, with the extra condition that x is not constant"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T06:48:27.612497Z"
+}

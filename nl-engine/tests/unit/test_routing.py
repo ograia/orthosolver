@@ -1,5 +1,5 @@
 from nl_engine.domain.config import ProblemConfig
-from nl_engine.routing.policy import route_lean_result, route_vetter_result
+from nl_engine.routing.policy import is_deterministic_lean_setup_error, route_lean_result, route_vetter_result
 
 
 def test_vetter_major_drift_blocks() -> None:
@@ -21,4 +21,10 @@ def test_lean_routing_classes() -> None:
     cfg = ProblemConfig()
     assert route_lean_result("repairable", "syntax", cfg) == "retry_lean_only"
     assert route_lean_result("repairable", "tactic_failure", cfg) == "retry_nl_proof"
-    assert route_lean_result("fatal", "false_lemma_suspected", cfg) == "check_statement_plausibility"
+    assert route_lean_result("fatal", "false_lemma_suspected", cfg) == "retry_nl_proof"
+
+
+def test_deterministic_lean_setup_errors_route_to_decompose_even_for_lean_issue() -> None:
+    cfg = ProblemConfig()
+    assert is_deterministic_lean_setup_error("dependency_graph_invalid") is True
+    assert route_lean_result("fatal", "dependency_graph_invalid", cfg, issue_kind="lean_issue") == "decompose_further"

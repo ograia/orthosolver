@@ -1,0 +1,73 @@
+{
+  "assembly_plan_id": "asm_20260327182030_1d7ec5bc",
+  "created_at": "2026-03-27T18:21:56.333131Z",
+  "decomposition_id": "dec_20260327182030_fe21973d",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_skeleton_nl": "First use integer-shift invariance to replace x by its fractional part r in [0,1). On [0,1), compare r to the left endpoint m/n of its n-slice, where m = floor(nr). The last slice [(n-1)/n,1) is computed explicitly and yields the value H_n - 1. Every lower slice has value strictly below H_n - 1 by the discrete bottleneck lemma. Hence the maximum is H_n - 1, and the maximizers are exactly the integer translates of [(n-1)/n,1).",
+  "root_node_id": "thm_root_20260327181454_61717cff",
+  "steps": [
+    {
+      "derives": "For any real x, f_n(x) depends only on frac(x), so it suffices to maximize over r = frac(x) with 0 <= r < 1.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is a direct application of the fractional-part reduction lemma and the standard property 0 <= frac(x) < 1.",
+      "uses_lemmas": [
+        "lem_20260327182030_86cc2c6b"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For r in [0,1), letting m = floor(n*r), one has f_n(r) <= f_n(m/n).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "lem_20260327182037_d1cd11e0"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "If r lies in [(n-1)/n, 1), then f_n(r) = H_n - 1.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "lem_20260327182045_92fa3125",
+        "lem_20260327182051_cf1933bd"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "If r < (n-1)/n, then m = floor(n*r) <= n-2, so f_n(r) <= f_n(m/n) < H_n - 1.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "lem_20260327182104_d854ce9c",
+        "lem_20260327182037_d1cd11e0"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "Therefore the global maximum value is H_n - 1, and the maximizing real numbers are exactly those x whose fractional part lies in [(n-1)/n, 1), equivalently x in the union over integers z of [z + (n-1)/n, z + 1).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "",
+      "uses_lemmas": [
+        "lem_20260327182030_86cc2c6b"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    }
+  ]
+}

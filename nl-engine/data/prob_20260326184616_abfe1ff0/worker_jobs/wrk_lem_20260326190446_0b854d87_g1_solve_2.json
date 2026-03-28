@@ -1,0 +1,285 @@
+{
+  "artifact_prefix": "problems/prob_20260326184616_abfe1ff0/lemmas/lem_20260326190446_0b854d87/solver_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "continuation_generation": 1,
+  "controller_consumed_at": "2026-03-27T03:23:23.141913Z",
+  "controller_consumed_by_execution_id": "exec_20260327031537_c88045a1",
+  "created_at": "2026-03-27T03:18:09.704614Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327031537_c88045a1",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :=\n  \u2200 i, s i = 1 \u2228 s i = -1\n\n/-- Count of permutations of `Fin n` matching sign pattern `s` (0-indexed). -/\n\ndef countSignPerm (n : \u2115) (s : Fin (n - 1) \u2192 \u2124) : \u2115 :=\n  (univ.filter fun \u03c3 : Equiv.Perm (Fin n) =>\n    \u2200 i : Fin (n - 1),\n      s i * (((\u03c3 \u27e8i.val + 1, by omega\u27e9).val : \u2124) -\n             ((\u03c3 \u27e8i.val, by omega\u27e9).val : \u2124)) > 0).card\n\nprivate lemma isSignSeq_fin1 (t : Fin 1 \u2192 \u2124) (ht : IsSignSeq t) :\n    t = (fun _ => (1 : \u2124)) \u2228 t = (fun _ => (-1 : \u2124)) := by\n  rcases ht \u27e80, by omega\u27e9 with h | h\n  \u00b7 left\n    funext \u27e8i, hi\u27e9\n    have hi0 : i = 0 := by omega\n    subst hi0\n    exact h\n  \u00b7 right\n    funext \u27e8i, hi\u27e9\n    have hi0 : i = 0 := by omega\n    subst hi0\n    exact h\n\ntheorem lem_20260326190508_d45da648 : countSignPerm 2 (fun _ => (1 : \u2124)) = 1 \u2227 countSignPerm 2 (fun _ => (-1 : \u2124)) = 1 \u2227 (\u2200 t : Fin 1 \u2192 \u2124, IsSignSeq t \u2192 countSignPerm 2 t \u2264 countSignPerm 2 (fun _ => (1 : \u2124))) \u2227 (\u2200 t : Fin 1 \u2192 \u2124, IsSignSeq t \u2192 countSignPerm 2 t \u2264 countSignPerm 2 (fun _ => (-1 : \u2124))) := by\n  have h1 : countSignPerm 2 (fun _ => (1 : \u2124)) = 1 := by\n    unfold countSignPerm\n    native_decide\n  have h2 : countSignPerm 2 (fun _ => (-1 : \u2124)) = 1 := by\n    unfold countSignPerm\n    native_decide\n  refine \u27e8h1, h2, ?_, ?_\u27e9\n  \u00b7 intro t ht\n    rcases isSignSeq_fin1 t ht with rfl | rfl\n    \u00b7 exact le_refl _\n    \u00b7 exact le_of_eq (h2.trans h1.symm)\n  \u00b7 intro t ht\n    rcases isSignSeq_fin1 t ht with rfl | rfl\n    \u00b7 exact le_of_eq (h1.trans h2.symm)\n    \u00b7 exact le_refl _\n",
+        "item_id": "pnode_20260326232104_3ac0007c",
+        "item_kind": "trusted_decl",
+        "label": "lem_20260326190508_d45da648",
+        "metadata": {
+          "proof_graph_id": "pgraph_20260326190750_b9f48b9c"
+        },
+        "source": "graph_local"
+      },
+      {
+        "content": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :=\n  \u2200 i, s i = 1 \u2228 s i = -1\n\n/-- Count of permutations of `Fin n` matching sign pattern `s` (0-indexed). -/\n\ndef countSignPerm (n : \u2115) (s : Fin (n - 1) \u2192 \u2124) : \u2115 :=\n  (univ.filter fun \u03c3 : Equiv.Perm (Fin n) =>\n    \u2200 i : Fin (n - 1),\n      s i * (((\u03c3 \u27e8i.val + 1, by omega\u27e9).val : \u2124) -\n             ((\u03c3 \u27e8i.val, by omega\u27e9).val : \u2124)) > 0).card\n\n-- Phase 04 scratch file for lem_20260326190416_2b9e7f17.\n-- edit_scope: declaration target_lem_20260326190416_2b9e7f17\n\n/-- Reversing two Fin m elements negates their \u2124-valued difference. -/\n\nprivate lemma rev_diff_neg (m : \u2115) (a b : Fin m) :\n    ((Fin.rev a).val : \u2124) - ((Fin.rev b).val : \u2124) =\n    -((a.val : \u2124) - (b.val : \u2124)) := by\n  simp only [Fin.val_rev]\n  omega\n\n/-- Key algebra: negating sign and reversing perm preserves the sign-difference product. -/\n\nprivate lemma neg_sign_rev_eq (m : \u2115) (u : Fin (m - 1) \u2192 \u2124)\n    (\u03c3 : Equiv.Perm (Fin m)) (i : Fin (m - 1)) :\n    (-u i) * (((Fin.rev (\u03c3 \u27e8i.val + 1, by omega\u27e9)).val : \u2124) -\n              ((Fin.rev (\u03c3 \u27e8i.val, by omega\u27e9)).val : \u2124)) =\n    u i * (((\u03c3 \u27e8i.val + 1, by omega\u27e9).val : \u2124) -\n           ((\u03c3 \u27e8i.val, by omega\u27e9).val : \u2124)) := by\n  rw [rev_diff_neg]\n  ring\n\n/-- The reversal permutation on Fin m. -/\n\nprivate def revP (m : \u2115) : Equiv.Perm (Fin m) where\n  toFun := Fin.rev\n  invFun := Fin.rev\n  left_inv := Fin.rev_rev\n  right_inv := Fin.rev_rev\n\n@[simp] private lemma revP_apply (m : \u2115) (x : Fin m) : revP m x = Fin.rev x := rfl\n\nprivate lemma revP_sq (m : \u2115) : revP m * revP m = 1 := by\n  ext x\n  simp only [Equiv.Perm.coe_mul, Function.comp_apply, revP_apply,\n             Equiv.Perm.coe_one, id_eq, Fin.rev_rev]\n\nprivate lemma countSignPerm_neg (m : \u2115) (u : Fin (m - 1) \u2192 \u2124) :\n    countSignPerm m u = countSignPerm m (fun i => -u i) := by\n  simp only [countSignPerm]\n  apply Finset.card_bij (fun (\u03c3 : Equiv.Perm (Fin m)) _ => revP m * \u03c3)\n  \u00b7 -- Forward: u-filter \u2192 (-u)-filter\n    intro \u03c3 h\u03c3\n    simp only [mem_filter, mem_univ, true_and] at h\u03c3 \u22a2\n    intro i\n    simp only [Equiv.Perm.mul_apply, revP_apply]\n    rw [neg_sign_rev_eq]\n    exact h\u03c3 i\n  \u00b7 -- Injectivity\n    intro \u03c3\u2081 _ \u03c3\u2082 _ h\n    exact mul_left_cancel h\n  \u00b7 -- Surjectivity\n    intro \u03c4 h\u03c4\n    refine \u27e8revP m * \u03c4, ?_, ?_\u27e9\n    \u00b7 simp only [mem_filter, mem_univ, true_and] at h\u03c4 \u22a2\n      intro i\n      simp only [Equiv.Perm.mul_apply, revP_apply]\n      have key := neg_sign_rev_eq m (fun j => -u j) \u03c4 i\n      simp only [neg_neg] at key\n      rw [key]\n      exact h\u03c4 i\n    \u00b7 rw [\u2190 mul_assoc, revP_sq, one_mul]\n\ntheorem lem_20260326190416_2b9e7f17 (m : \u2115) (u : Fin (m - 1) \u2192 \u2124) (hu : IsSignSeq u) : countSignPerm m u = countSignPerm m (fun i => -u i) \u2227 countSignPerm m (fun i : Fin (m - 1) => (-1 : \u2124) ^ i.val) = countSignPerm m (fun i : Fin (m - 1) => (-1 : \u2124) ^ (i.val + 1)) := by\n  refine \u27e8countSignPerm_neg m u, ?_\u27e9\n  have h := countSignPerm_neg m (fun i : Fin (m - 1) => (-1 : \u2124) ^ i.val)\n  rw [h]\n  congr 1\n  ext i\n  ring\n",
+        "item_id": "pnode_20260326235334_bdba29af",
+        "item_kind": "trusted_decl",
+        "label": "lem_20260326190416_2b9e7f17",
+        "metadata": {
+          "proof_graph_id": "pgraph_20260326190750_b9f48b9c"
+        },
+        "source": "graph_local"
+      },
+      {
+        "content": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :=\n  \u2200 i, s i = 1 \u2228 s i = -1\n\ndef signAt {m : \u2115} (t : Fin (m - 1) \u2192 \u2124) (k : \u2115) : \u2124 :=\n  if h : k < m - 1 then t \u27e8k, h\u27e9 else 0\n\ndef peakSet (m : \u2115) (t : Fin (m - 1) \u2192 \u2124) : Finset (Fin m) :=\n  if hle : m \u2264 1 then\n    if hm : m = 1 then {\u27e80, by omega\u27e9} else \u2205\n  else\n    univ.filter fun j : Fin m =>\n      (j.val = 0 \u2227 signAt t 0 = -1) \u2228\n      (j.val = m - 1 \u2227 signAt t (m - 2) = 1) \u2228\n      (0 < j.val \u2227 j.val + 1 < m \u2227\n       signAt t (j.val - 1) = 1 \u2227 signAt t j.val = -1)\n\nend\n\n-- edit_scope: declaration target_lem_20260326190323_6fff1b77\n\n-- Helper: membership in peakSet for m \u2265 2\n\nprivate lemma mem_peakSet_of_ge2 {m : \u2115} (hm2 : m \u2265 2) (t : Fin (m - 1) \u2192 \u2124) (j : Fin m) :\n    j \u2208 peakSet m t \u2194\n    ((j.val = 0 \u2227 signAt t 0 = -1) \u2228\n     (j.val = m - 1 \u2227 signAt t (m - 2) = 1) \u2228\n     (0 < j.val \u2227 j.val + 1 < m \u2227 signAt t (j.val - 1) = 1 \u2227 signAt t j.val = -1)) := by\n  unfold peakSet\n  simp only [dif_neg (show \u00ac(m \u2264 1) from by omega), mem_filter, mem_univ, true_and]\n\n-- Helper: signAt for in-range index\n\nprivate lemma signAt_of_lt {m : \u2115} (t : Fin (m - 1) \u2192 \u2124) {k : \u2115} (hk : k < m - 1) :\n    signAt t k = t \u27e8k, hk\u27e9 := by\n  unfold signAt; exact dif_pos hk\n\n-- Helper: signAt at Fin index\n\nprivate lemma signAt_fin {m : \u2115} (t : Fin (m - 1) \u2192 \u2124) (i : Fin (m - 1)) :\n    signAt t i.val = t i := by\n  simp [signAt]\n\n-- (-1)^n parity helpers\n\nprivate lemma neg_one_pow_even {n : \u2115} (h : n % 2 = 0) : (-1 : \u2124) ^ n = 1 :=\n  (Nat.even_iff.mpr h).neg_one_pow\n\nprivate lemma neg_one_pow_odd {n : \u2115} (h : n % 2 = 1) : (-1 : \u2124) ^ n = -1 :=\n  (Nat.odd_iff.mpr h).neg_one_pow\n\nprivate lemma neg_one_pow_eq_one_imp {n : \u2115} (h : (-1 : \u2124) ^ n = 1) : n % 2 = 0 := by\n  by_contra h2; linarith [neg_one_pow_odd (show n % 2 = 1 by omega)]\n\nprivate lemma neg_one_pow_eq_neg_one_imp {n : \u2115} (h : (-1 : \u2124) ^ n = -1) : n % 2 = 1 := by\n  by_contra h2; linarith [neg_one_pow_even (show n % 2 = 0 by omega)]\n\n-- Peak sign helpers\n\nprivate lemma peak_signAt_neg {m : \u2115} (hm2 : m \u2265 2) (t : Fin (m - 1) \u2192 \u2124) {j : Fin m}\n    (hj : j \u2208 peakSet m t) (hjlt : j.val < m - 1) : signAt t j.val = -1 := by\n  rw [mem_peakSet_of_ge2 hm2] at hj\n  rcases hj with \u27e8h0, hs\u27e9 | \u27e8hend, _\u27e9 | \u27e8_, _, _, hs\u27e9\n  \u00b7 rw [h0]; exact hs\n  \u00b7 omega\n  \u00b7 exact hs\n\nprivate lemma peak_signAt_pos {m : \u2115} (hm2 : m \u2265 2) (t : Fin (m - 1) \u2192 \u2124) {j : Fin m}\n    (hj : j \u2208 peakSet m t) (hjpos : 0 < j.val) : signAt t (j.val - 1) = 1 := by\n  rw [mem_peakSet_of_ge2 hm2] at hj\n  rcases hj with \u27e8h0, _\u27e9 | \u27e8hend, hs\u27e9 | \u27e8_, _, hs, _\u27e9\n  \u00b7 omega\n  \u00b7 convert hs using 2; omega\n  \u00b7 exact hs\n\ntheorem lem_20260326190323_6fff1b77 (m : \u2115) (hm : m \u2265 1) (t : Fin (m - 1) \u2192 \u2124) (ht : IsSignSeq t) : (\u2200 j\u2081 j\u2082 : Fin m, j\u2081 \u2208 peakSet m t \u2192 j\u2082 \u2208 peakSet m t \u2192 j\u2081.val + 1 \u2260 j\u2082.val) \u2227 (m \u2265 2 \u2192 ((peakSet m t = univ.filter (fun j : Fin m => j.val % 2 = 0)) \u2194 (\u2200 i : Fin (m - 1), t i = (-1 : \u2124) ^ (i.val + 1)))) \u2227 (m \u2265 2 \u2192 ((peakSet m t = univ.filter (fun j : Fin m => j.val % 2 = 1)) \u2194 (\u2200 i : Fin (m - 1), t i = (-1 : \u2124) ^ i.val))) := by\n  refine \u27e8?_, ?_, ?_\u27e9\n  \u00b7 -- Part 1: no consecutive peaks\n    intro j\u2081 j\u2082 hj\u2081 hj\u2082 hcons\n    by_cases hm2 : m \u2265 2\n    \u00b7 have hj1lt : j\u2081.val < m - 1 := by have := j\u2082.isLt; omega\n      have hsn := peak_signAt_neg hm2 t hj\u2081 hj1lt\n      have hsp := peak_signAt_pos hm2 t hj\u2082 (show 0 < j\u2082.val by omega)\n      have heq : j\u2082.val - 1 = j\u2081.val := by omega\n      rw [heq] at hsp; linarith\n    \u00b7 have : m = 1 := by omega\n      subst this; have := j\u2082.isLt; omega\n  \u00b7 -- Part 2: even peaks \u2194 (-1)^(i+1)\n    intro hm2; constructor\n    \u00b7 -- \u2192 : peakSet = even_filter \u2192 t i = (-1)^(i+1)\n      intro hpeaks i\n      by_cases hi : i.val % 2 = 0\n      \u00b7 -- i even \u2192 t i = (-1)^(i+1) = -1\n        have hj_in : (\u27e8i.val, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, hi]\n        have hsn := peak_signAt_neg hm2 t hj_in i.isLt\n        rw [signAt_fin t i] at hsn; rw [hsn]\n        symm; exact neg_one_pow_odd (show (i.val + 1) % 2 = 1 by omega)\n      \u00b7 -- i odd \u2192 t i = (-1)^(i+1) = 1\n        have hj_in : (\u27e8i.val + 1, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, show (i.val + 1) % 2 = 0 by omega]\n        have hsp := peak_signAt_pos hm2 t hj_in (show 0 < (\u27e8i.val + 1, _\u27e9 : Fin m).val by simp)\n        simp only [Nat.add_sub_cancel] at hsp\n        rw [signAt_fin t i] at hsp; rw [hsp]\n        symm; exact neg_one_pow_even (show (i.val + 1) % 2 = 0 by omega)\n    \u00b7 -- \u2190 : t i = (-1)^(i+1) \u2192 peakSet = even_filter\n      intro hsigns\n      have hsA : \u2200 (k : \u2115), k < m - 1 \u2192 signAt t k = (-1 : \u2124) ^ (k + 1) := fun k hk => by\n        rw [signAt_of_lt t hk]; exact hsigns \u27e8k, hk\u27e9\n      ext j; simp only [mem_peakSet_of_ge2 hm2, mem_filter, mem_univ, true_and]\n      constructor\n      \u00b7 -- peak \u2192 even\n        rintro (\u27e8h0, -\u27e9 | \u27e8hjm, hs\u27e9 | \u27e8-, hjlt, -, hs\u27e9)\n        \u00b7 omega\n        \u00b7 rw [hsA _ (by omega)] at hs\n          have := neg_one_pow_eq_one_imp hs; rw [hjm]; omega\n        \u00b7 rw [hsA _ (by omega)] at hs\n          have := neg_one_pow_eq_neg_one_imp hs; omega\n      \u00b7 -- even \u2192 peak\n        intro heven\n        by_cases hj0 : j.val = 0\n        \u00b7 left; exact \u27e8hj0, by rw [hsA 0 (by omega)]; norm_num\u27e9\n        \u00b7 by_cases hjm : j.val = m - 1\n          \u00b7 right; left; refine \u27e8hjm, ?_\u27e9\n            rw [hsA (m - 2) (by omega)]\n            exact neg_one_pow_even (show (m - 2 + 1) % 2 = 0 by omega)\n          \u00b7 right; right; exact \u27e8by omega, by omega,\n              by rw [hsA (j.val - 1) (by omega)]; exact neg_one_pow_even (by omega),\n              by rw [hsA j.val (by omega)]; exact neg_one_pow_odd (by omega)\u27e9\n  \u00b7 -- Part 3: odd peaks \u2194 (-1)^i\n    intro hm2; constructor\n    \u00b7 -- \u2192 : peakSet = odd_filter \u2192 t i = (-1)^i\n      intro hpeaks i\n      by_cases hi : i.val % 2 = 1\n      \u00b7 -- i odd \u2192 t i = (-1)^i = -1\n        have hj_in : (\u27e8i.val, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, hi]\n        have hsn := peak_signAt_neg hm2 t hj_in i.isLt\n        rw [signAt_fin t i] at hsn; rw [hsn]\n        symm; exact neg_one_pow_odd hi\n      \u00b7 -- i even \u2192 t i = (-1)^i = 1\n        have hj_in : (\u27e8i.val + 1, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, show (i.val + 1) % 2 = 1 by omega]\n        have hsp := peak_signAt_pos hm2 t hj_in (show 0 < (\u27e8i.val + 1, _\u27e9 : Fin m).val by simp)\n        simp only [Nat.add_sub_cancel] at hsp\n        rw [signAt_fin t i] at hsp; rw [hsp]\n        symm; exact neg_one_pow_even (show i.val % 2 = 0 by omega)\n    \u00b7 -- \u2190 : t i = (-1)^i \u2192 peakSet = odd_filter\n      intro hsigns\n      have hsA : \u2200 (k : \u2115), k < m - 1 \u2192 signAt t k = (-1 : \u2124) ^ k := fun k hk => by\n        rw [signAt_of_lt t hk]; exact hsigns \u27e8k, hk\u27e9\n      ext j; simp only [mem_peakSet_of_ge2 hm2, mem_filter, mem_univ, true_and]\n      constructor\n      \u00b7 -- peak \u2192 odd\n        rintro (\u27e8h0, hs\u27e9 | \u27e8hjm, hs\u27e9 | \u27e8-, hjlt, -, hs\u27e9)\n        \u00b7 rw [hsA 0 (by omega)] at hs; norm_num at hs\n        \u00b7 rw [hsA _ (by omega)] at hs\n          have := neg_one_pow_eq_one_imp hs; rw [hjm]; omega\n        \u00b7 rw [hsA _ (by omega)] at hs\n          exact neg_one_pow_eq_neg_one_imp hs\n      \u00b7 -- odd \u2192 peak\n        intro hodd\n        by_cases hjm : j.val = m - 1\n        \u00b7 right; left; refine \u27e8hjm, ?_\u27e9\n          rw [hsA (m - 2) (by omega)]\n          exact neg_one_pow_even (by omega)\n        \u00b7 right; right; exact \u27e8by omega, by omega,\n            by rw [hsA (j.val - 1) (by omega)]; exact neg_one_pow_even (by omega),\n            by rw [hsA j.val (by omega)]; exact neg_one_pow_odd hodd\u27e9\n",
+        "item_id": "pnode_20260327002800_52fb411c",
+        "item_kind": "trusted_decl",
+        "label": "lem_20260326190323_6fff1b77",
+        "metadata": {
+          "proof_graph_id": "pgraph_20260326190750_b9f48b9c"
+        },
+        "source": "graph_local"
+      },
+      {
+        "content": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+        "item_id": "pnode_20260326192603_195dbcd0",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 2,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260326190750_60e3c469",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "lemma_id": "lem_20260326190446_0b854d87",
+    "previous_feedback": "Keep the same proof, but fix the generating-function step explicitly: (1) state that the counting argument gives S_odd = S_even = E_n for n >= 2; (2) deduce 2 E_{m+1} = sum_{k=0}^m binom(m,k) E_k E_{m-k} only for m >= 1; (3) then verify the missing constant term separately, namely 2 E_1 = 2 = 1 + E_0^2, so coefficientwise 2 F'(x) = 1 + F(x)^2. Also avoid the phrase 'for every n' when referring to S_odd = S_even.",
+    "previous_proof_nl": "Write an alternating permutation of length r as a permutation c_1,...,c_r with c_1 < c_2 > c_3 < c_4 > ... . First note that the number of reverse-alternating permutations c_1 > c_2 < c_3 > ... of {1,...,r} is also E_r, by the bijection c_i -> r+1-c_i.\n\nFor odd j, the number of alternating permutations of {1,...,n} with 1 in position j is exactly w_j. Indeed, in any alternating permutation the odd positions are valleys, so the minimum 1 can occur only at an odd position. Fix such a j. Choose the j-1 values lying to the left of 1; there are binom(n-1,j-1) choices. After order-preserving relabelling, the left block becomes an alternating permutation of length j-1, so there are E_{j-1} possibilities. The right block starts with a descent, hence is reverse-alternating; after complementing its values it becomes alternating, so there are E_{n-j} possibilities. Conversely these data reconstruct the original permutation uniquely. Therefore the count is binom(n-1,j-1) E_{j-1} E_{n-j} = w_j.\n\nSimilarly, for even j, the number of alternating permutations of {1,...,n} with n in position j is also w_j. Indeed, in an alternating permutation the even positions are peaks, so the maximum n can occur only at an even position. Fix such a j. Choose the j-1 values lying to the left of n; there are binom(n-1,j-1) choices. After standardization, both the left block and the right block are alternating permutations of lengths j-1 and n-j, so the count is again binom(n-1,j-1) E_{j-1} E_{n-j} = w_j.\n\nSumming over all odd positions of 1 gives S_odd = E_n, and summing over all even positions of n gives S_even = E_n. So in fact S_odd = S_even = E_n for every n.\n\nNow set F(x) = sum_{r>=0} E_r x^r/r!, and W_n(z) = sum_{j=1}^n w_j z^{j-1}. From the previous paragraph, with m = n-1, we get\n2 E_{m+1} = sum_{k=0}^m binom(m,k) E_k E_{m-k}.\nTherefore 2 F'(x) = 1 + F(x)^2.\n\nLet G(x) = sec x + tan x. A direct calculation gives 2 G'(x) = 1 + G(x)^2 and G(0)=1. For a power series H(x)=1+h_1 x+h_2 x^2+..., the equation 2 H' = 1+H^2 determines h_{m+1} recursively from h_0,...,h_m by comparing coefficients of x^m. Hence the solution with constant term 1 is unique, so F(x)=G(x)=sec x + tan x.\n\nAlso, by the Cauchy product,\nsum_{n>=1} W_n(z) x^{n-1}/(n-1)! = F(zx) F(x).\n\nSince S_odd = S_even, we have W_n(-1)=0 for every n>=2, so W_n(z) is divisible by 1+z. Write W_n(z)=(1+z) Q_n(z).\n\nNext we show that Q_n has strictly positive coefficients. Using F(t)=tan(pi/4+t/2), let A=pi/4+u/2 and B=pi/4+v/2. Then\n(F(u)F(v)-1)/(F(u)+F(v)) = (tan A tan B - 1)/(tan A + tan B) = -cot(A+B) = tan((u+v)/2).\nSo\nF(u)F(v)-1 = tan((u+v)/2) (F(u)+F(v)).\nWith u=zx and v=x this becomes\nsum_{n>=2} Q_n(z) x^{n-1}/(n-1)! = [tan((1+z)x/2)/(1+z)] * (F(zx)+F(x)).\n\nNow tan t = sum_{m>=0} E_{2m+1} t^{2m+1}/(2m+1)!, because F(t)-F(-t)=2 tan t and the odd coefficients of F are exactly E_{2m+1}. Hence\n tan((1+z)x/2)/(1+z) = sum_{m>=0} E_{2m+1} (1+z)^{2m} x^{2m+1} / ((2m+1)! 2^{2m+1}),\nwhich has nonnegative coefficients in x and z. The series\n F(zx)+F(x) = sum_{r>=0} E_r (z^r+1) x^r/r!\nalso has nonnegative coefficients. Therefore every polynomial Q_n(z) has nonnegative coefficients.\n\nIn fact those coefficients are all positive. If n is even, then in the product above the constant term 2 from F(zx)+F(x) multiplied by the x^{n-1} term of tan((1+z)x/2)/(1+z) contributes a positive multiple of (1+z)^{n-2} x^{n-1}; hence every coefficient of Q_n is positive. If n is odd, the x-term (1+z)x from F(zx)+F(x) multiplied by the x^{n-2} term of tan((1+z)x/2)/(1+z) contributes a positive multiple of (1+z)^{n-2} x^{n-1}; again every coefficient of Q_n is positive.\n\nSo write Q_n(z)=q_1+q_2 z+...+q_{n-1} z^{n-2} with q_i>0. Because W_n(z)=(1+z)Q_n(z), if we set q_0=q_n=0 then\nw_j = q_{j-1}+q_j for every 1<=j<=n.\n\nNow let P be any subset of {1,...,n} with no two consecutive elements. Then\nsum_{j in P} w_j = sum_{j in P} (q_{j-1}+q_j)\n= sum_{i=1}^{n-1} q_i (1_{i in P} + 1_{i+1 in P}).\nSince P has no consecutive integers, for each i at most one of i and i+1 lies in P, so 1_{i in P} + 1_{i+1 in P} <= 1. Therefore\nsum_{j in P} w_j <= sum_{i=1}^{n-1} q_i = Q_n(1) = W_n(1)/2 = (S_odd+S_even)/2 = E_n.\nBut E_n = S_odd = S_even, so\nsum_{j in P} w_j <= max(S_odd,S_even).\nThis proves the first assertion.\n\nFor the equality statement, the extra hypothesis S_odd = S_even is automatic from the first part. Because every q_i is strictly positive, equality in the displayed inequality holds exactly when 1_{i in P} + 1_{i+1 in P} = 1 for every i=1,...,n-1; that is, every adjacent pair {i,i+1} contains exactly one element of P. On a path this forces P to be one of the two parity classes: if 1 is in P, then 2 is not, then 3 is, and so on, so P is exactly the odd-index set; if 1 is not in P, then 2 is, then 3 is not, etc., so P is exactly the even-index set. Conversely those two sets have weights S_odd and S_even respectively, hence they do attain equality.\n\nTherefore the lemma is proved.",
+    "proof_attempt_node_id": "pnode_20260327031809_b250af42",
+    "role_in_assembly": "This is the extremal weighted independent-set inequality that turns the recurrence bound into the alternating upper bound.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "each entry of s is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}",
+        "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+        "the inequality condition is required for every index i from 1 to n minus 1"
+      ],
+      "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+      "quantifier_order": [
+        "For each integer n with n at least 2",
+        "For each sign sequence s of length n minus 1",
+        "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+        "Determine which sign sequences s maximize this count f(s)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with n at least 2",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "parameter over which the maximization is taken",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "index for adjacent comparisons in the sign sequence and permutation",
+          "type": "integer index"
+        },
+        {
+          "domain": "all permutations of {1, 2, ..., n}",
+          "name": "a",
+          "role": "counted object satisfying the sign constraints",
+          "type": "permutation"
+        },
+        {
+          "domain": "elements of {1, 2, ..., n}",
+          "name": "a_i",
+          "role": "ith entry of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The counted permutation a depends on the chosen n and sign sequence s",
+        "The maximality question is over s for each fixed n",
+        "There is no existential witness in the statement, only a counting definition and a maximization problem"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a fixed integer and n is at least 2.",
+        "r is an integer at least 1 in the definition of E_r.",
+        "E_0 is defined separately to be 1.",
+        "For E_r, the tuple b_1 through b_r must be a permutation of the set {1,...,r}.",
+        "For every i from 1 to r minus 1, the quantity b_{i+1} minus b_i has sign alternating with i: it is positive for odd i and negative for even i.",
+        "j ranges over integers from 1 to n when defining w_j.",
+        "The binomial coefficient uses n minus 1 and j minus 1, so the index range ensures the parameters are in the standard valid range.",
+        "P is a subset of {1,...,n} and contains no two consecutive integers.",
+        "The odd and even sums are taken over indices in {1,...,n} of the corresponding parity."
+      ],
+      "normalized_claim": "For a fixed integer n at least 2, define the numbers E_r by counting alternating permutations of {1,...,r}, with E_0 equal to 1, and define weights w_j from E_{j-1} and E_{n-j}. Then every subset P of {1,...,n} with no consecutive integers has total weight at most the larger of the total weight on odd indices and the total weight on even indices. Moreover, if the odd-index total and even-index total are equal, then a subset P achieves this maximum exactly when P is precisely the odd-index set or precisely the even-index set.",
+      "quantifier_order": [
+        "Fix an integer n at least 2.",
+        "For each integer r at least 1, define E_r by counting permutations of {1,...,r} whose consecutive differences alternate in sign, and set E_0 equal to 1.",
+        "For each j from 1 to n, define w_j using n, j, E_{j-1}, and E_{n-j}.",
+        "Define S_odd as the sum of w_j over odd j in {1,...,n}, and S_even as the sum of w_j over even j in {1,...,n}.",
+        "For every subset P of {1,...,n} with no consecutive integers, the sum of w_j over j in P is at most the larger of S_odd and S_even.",
+        "If S_odd equals S_even, then for every such P, equality with the maximum holds exactly when P is the set of odd integers in {1,...,n} or the set of even integers in {1,...,n}."
+      ],
+      "variables": [
+        {
+          "domain": "fixed integer with n at least 2",
+          "name": "n",
+          "role": "global parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "integer at least 1",
+          "name": "r",
+          "role": "index for the definition of E_r",
+          "type": "integer"
+        },
+        {
+          "domain": "integer from 1 to r minus 1",
+          "name": "i",
+          "role": "index in the alternating sign condition",
+          "type": "integer"
+        },
+        {
+          "domain": "a permutation of {1,...,r}",
+          "name": "b_1 through b_r",
+          "role": "counted object in the definition of E_r",
+          "type": "ordered tuple of integers"
+        },
+        {
+          "domain": "nonnegative integer sequence defined for r at least 0",
+          "name": "E_r",
+          "role": "counts permutations satisfying the alternating inequality condition",
+          "type": "integer"
+        },
+        {
+          "domain": "integer from 1 to n",
+          "name": "j",
+          "role": "index for the weights w_j",
+          "type": "integer"
+        },
+        {
+          "domain": "defined for each j from 1 to n",
+          "name": "w_j",
+          "role": "weight attached to index j",
+          "type": "integer"
+        },
+        {
+          "domain": "sum of the weights at odd indices in {1,...,n}",
+          "name": "S_odd",
+          "role": "odd-parity total weight",
+          "type": "integer"
+        },
+        {
+          "domain": "sum of the weights at even indices in {1,...,n}",
+          "name": "S_even",
+          "role": "even-parity total weight",
+          "type": "integer"
+        },
+        {
+          "domain": "subset of {1,...,n} with no two consecutive integers",
+          "name": "P",
+          "role": "arbitrary admissible subset in the inequality",
+          "type": "subset of integers"
+        }
+      ],
+      "witness_dependencies": [
+        "There is no existential witness in the main inequality; the statement is universally quantified over all admissible subsets P.",
+        "E_r depends only on r and on the existence and count of permutations b_1 through b_r satisfying the alternating sign condition.",
+        "w_j depends on n, j, E_{j-1}, and E_{n-j}.",
+        "S_odd and S_even depend on the full family of weights w_j and the parity partition of {1,...,n}.",
+        "In the equality characterization under S_odd equal to S_even, the only maximizing subsets are exactly the odd-index set and exactly the even-index set; no additional witness choice is involved."
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Fix an integer n >= 2. For each integer r >= 1, let E_r be the number of permutations (b_1,...,b_r) of {1,...,r} such that (-1)^(i-1) * (b_{i+1} - b_i) > 0 for every 1 <= i <= r-1, and set E_0 = 1. Define w_j = binom(n-1, j-1) * E_{j-1} * E_{n-j} for 1 <= j <= n, define S_odd = sum over odd j in {1,...,n} of w_j, and define S_even = sum over even j in {1,...,n} of w_j. If P is a subset of {1,...,n} containing no two consecutive integers, then sum over j in P of w_j is at most max(S_odd, S_even). If, in addition, S_odd = S_even, then equality sum over j in P of w_j = max(S_odd, S_even) holds if and only if P is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+    "trusted_context_summaries": [
+      {
+        "context_scope": "graph_local",
+        "name": "lem_20260326190508_d45da648",
+        "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+        "statement_lean": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :=\n  \u2200 i, s i = 1 \u2228 s i = -1\n\n/-- Count of permutations of `Fin n` matching sign pattern `s` (0-indexed). -/\n\ndef countSignPerm (n : \u2115) (s : Fin (n - 1) \u2192 \u2124) : \u2115 :=\n  (univ.filter fun \u03c3 : Equiv.Perm (Fin n) =>\n    \u2200 i : Fin (n - 1),\n      s i * (((\u03c3 \u27e8i.val + 1, by omega\u27e9).val : \u2124) -\n             ((\u03c3 \u27e8i.val, by omega\u27e9).val : \u2124)) > 0).card\n\nprivate lemma isSignSeq_fin1 (t : Fin 1 \u2192 \u2124) (ht : IsSignSeq t) :\n    t = (fun _ => (1 : \u2124)) \u2228 t = (fun _ => (-1 : \u2124)) := by\n  rcases ht \u27e80, by omega\u27e9 with h | h\n  \u00b7 left\n    funext \u27e8i, hi\u27e9\n    have hi0 : i = 0 := by omega\n    subst hi0\n    exact h\n  \u00b7 right\n    funext \u27e8i, hi\u27e9\n    have hi0 : i = 0 := by omega\n    subst hi0\n    exact h\n\ntheorem lem_20260326190508_d45da648 : countSignPerm 2 (fun _ => (1 : \u2124)) = 1 \u2227 countSignPerm 2 (fun _ => (-1 : \u2124)) = 1 \u2227 (\u2200 t : Fin 1 \u2192 \u2124, IsSignSeq t \u2192 countSignPerm 2 t \u2264 countSignPerm 2 (fun _ => (1 : \u2124))) \u2227 (\u2200 t : Fin 1 \u2192 \u2124, IsSignSeq t \u2192 countSignPerm 2 t \u2264 countSignPerm 2 (fun _ => (-1 : \u2124))) := by\n  have h1 : countSignPerm 2 (fun _ => (1 : \u2124)) = 1 := by\n    unfold countSignPerm\n    native_decide\n  have h2 : countSignPerm 2 (fun _ => (-1 : \u2124)) = 1 := by\n    unfold countSignPerm\n    native_decide\n  refine \u27e8h1, h2, ?_, ?_\u27e9\n  \u00b7 intro t ht\n    rcases isSignSeq_fin1 t ht with rfl | rfl\n    \u00b7 exact le_refl _\n    \u00b7 exact le_of_eq (h2.trans h1.symm)\n  \u00b7 intro t ht\n    rcases isSignSeq_fin1 t ht with rfl | rfl\n    \u00b7 exact le_of_eq (h1.trans h2.symm)\n    \u00b7 exact le_refl _\n",
+        "summary_nl": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :="
+      },
+      {
+        "context_scope": "graph_local",
+        "name": "lem_20260326190416_2b9e7f17",
+        "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+        "statement_lean": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :=\n  \u2200 i, s i = 1 \u2228 s i = -1\n\n/-- Count of permutations of `Fin n` matching sign pattern `s` (0-indexed). -/\n\ndef countSignPerm (n : \u2115) (s : Fin (n - 1) \u2192 \u2124) : \u2115 :=\n  (univ.filter fun \u03c3 : Equiv.Perm (Fin n) =>\n    \u2200 i : Fin (n - 1),\n      s i * (((\u03c3 \u27e8i.val + 1, by omega\u27e9).val : \u2124) -\n             ((\u03c3 \u27e8i.val, by omega\u27e9).val : \u2124)) > 0).card\n\n-- Phase 04 scratch file for lem_20260326190416_2b9e7f17.\n-- edit_scope: declaration target_lem_20260326190416_2b9e7f17\n\n/-- Reversing two Fin m elements negates their \u2124-valued difference. -/\n\nprivate lemma rev_diff_neg (m : \u2115) (a b : Fin m) :\n    ((Fin.rev a).val : \u2124) - ((Fin.rev b).val : \u2124) =\n    -((a.val : \u2124) - (b.val : \u2124)) := by\n  simp only [Fin.val_rev]\n  omega\n\n/-- Key algebra: negating sign and reversing perm preserves the sign-difference product. -/\n\nprivate lemma neg_sign_rev_eq (m : \u2115) (u : Fin (m - 1) \u2192 \u2124)\n    (\u03c3 : Equiv.Perm (Fin m)) (i : Fin (m - 1)) :\n    (-u i) * (((Fin.rev (\u03c3 \u27e8i.val + 1, by omega\u27e9)).val : \u2124) -\n              ((Fin.rev (\u03c3 \u27e8i.val, by omega\u27e9)).val : \u2124)) =\n    u i * (((\u03c3 \u27e8i.val + 1, by omega\u27e9).val : \u2124) -\n           ((\u03c3 \u27e8i.val, by omega\u27e9).val : \u2124)) := by\n  rw [rev_diff_neg]\n  ring\n\n/-- The reversal permutation on Fin m. -/\n\nprivate def revP (m : \u2115) : Equiv.Perm (Fin m) where\n  toFun := Fin.rev\n  invFun := Fin.rev\n  left_inv := Fin.rev_rev\n  right_inv := Fin.rev_rev\n\n@[simp] private lemma revP_apply (m : \u2115) (x : Fin m) : revP m x = Fin.rev x := rfl\n\nprivate lemma revP_sq (m : \u2115) : revP m * revP m = 1 := by\n  ext x\n  simp only [Equiv.Perm.coe_mul, Function.comp_apply, revP_apply,\n             Equiv.Perm.coe_one, id_eq, Fin.rev_rev]\n\nprivate lemma countSignPerm_neg (m : \u2115) (u : Fin (m - 1) \u2192 \u2124) :\n    countSignPerm m u = countSignPerm m (fun i => -u i) := by\n  simp only [countSignPerm]\n  apply Finset.card_bij (fun (\u03c3 : Equiv.Perm (Fin m)) _ => revP m * \u03c3)\n  \u00b7 -- Forward: u-filter \u2192 (-u)-filter\n    intro \u03c3 h\u03c3\n    simp only [mem_filter, mem_univ, true_and] at h\u03c3 \u22a2\n    intro i\n    simp only [Equiv.Perm.mul_apply, revP_apply]\n    rw [neg_sign_rev_eq]\n    exact h\u03c3 i\n  \u00b7 -- Injectivity\n    intro \u03c3\u2081 _ \u03c3\u2082 _ h\n    exact mul_left_cancel h\n  \u00b7 -- Surjectivity\n    intro \u03c4 h\u03c4\n    refine \u27e8revP m * \u03c4, ?_, ?_\u27e9\n    \u00b7 simp only [mem_filter, mem_univ, true_and] at h\u03c4 \u22a2\n      intro i\n      simp only [Equiv.Perm.mul_apply, revP_apply]\n      have key := neg_sign_rev_eq m (fun j => -u j) \u03c4 i\n      simp only [neg_neg] at key\n      rw [key]\n      exact h\u03c4 i\n    \u00b7 rw [\u2190 mul_assoc, revP_sq, one_mul]\n\ntheorem lem_20260326190416_2b9e7f17 (m : \u2115) (u : Fin (m - 1) \u2192 \u2124) (hu : IsSignSeq u) : countSignPerm m u = countSignPerm m (fun i => -u i) \u2227 countSignPerm m (fun i : Fin (m - 1) => (-1 : \u2124) ^ i.val) = countSignPerm m (fun i : Fin (m - 1) => (-1 : \u2124) ^ (i.val + 1)) := by\n  refine \u27e8countSignPerm_neg m u, ?_\u27e9\n  have h := countSignPerm_neg m (fun i : Fin (m - 1) => (-1 : \u2124) ^ i.val)\n  rw [h]\n  congr 1\n  ext i\n  ring\n",
+        "summary_nl": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :="
+      },
+      {
+        "context_scope": "graph_local",
+        "name": "lem_20260326190323_6fff1b77",
+        "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+        "statement_lean": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :=\n  \u2200 i, s i = 1 \u2228 s i = -1\n\ndef signAt {m : \u2115} (t : Fin (m - 1) \u2192 \u2124) (k : \u2115) : \u2124 :=\n  if h : k < m - 1 then t \u27e8k, h\u27e9 else 0\n\ndef peakSet (m : \u2115) (t : Fin (m - 1) \u2192 \u2124) : Finset (Fin m) :=\n  if hle : m \u2264 1 then\n    if hm : m = 1 then {\u27e80, by omega\u27e9} else \u2205\n  else\n    univ.filter fun j : Fin m =>\n      (j.val = 0 \u2227 signAt t 0 = -1) \u2228\n      (j.val = m - 1 \u2227 signAt t (m - 2) = 1) \u2228\n      (0 < j.val \u2227 j.val + 1 < m \u2227\n       signAt t (j.val - 1) = 1 \u2227 signAt t j.val = -1)\n\nend\n\n-- edit_scope: declaration target_lem_20260326190323_6fff1b77\n\n-- Helper: membership in peakSet for m \u2265 2\n\nprivate lemma mem_peakSet_of_ge2 {m : \u2115} (hm2 : m \u2265 2) (t : Fin (m - 1) \u2192 \u2124) (j : Fin m) :\n    j \u2208 peakSet m t \u2194\n    ((j.val = 0 \u2227 signAt t 0 = -1) \u2228\n     (j.val = m - 1 \u2227 signAt t (m - 2) = 1) \u2228\n     (0 < j.val \u2227 j.val + 1 < m \u2227 signAt t (j.val - 1) = 1 \u2227 signAt t j.val = -1)) := by\n  unfold peakSet\n  simp only [dif_neg (show \u00ac(m \u2264 1) from by omega), mem_filter, mem_univ, true_and]\n\n-- Helper: signAt for in-range index\n\nprivate lemma signAt_of_lt {m : \u2115} (t : Fin (m - 1) \u2192 \u2124) {k : \u2115} (hk : k < m - 1) :\n    signAt t k = t \u27e8k, hk\u27e9 := by\n  unfold signAt; exact dif_pos hk\n\n-- Helper: signAt at Fin index\n\nprivate lemma signAt_fin {m : \u2115} (t : Fin (m - 1) \u2192 \u2124) (i : Fin (m - 1)) :\n    signAt t i.val = t i := by\n  simp [signAt]\n\n-- (-1)^n parity helpers\n\nprivate lemma neg_one_pow_even {n : \u2115} (h : n % 2 = 0) : (-1 : \u2124) ^ n = 1 :=\n  (Nat.even_iff.mpr h).neg_one_pow\n\nprivate lemma neg_one_pow_odd {n : \u2115} (h : n % 2 = 1) : (-1 : \u2124) ^ n = -1 :=\n  (Nat.odd_iff.mpr h).neg_one_pow\n\nprivate lemma neg_one_pow_eq_one_imp {n : \u2115} (h : (-1 : \u2124) ^ n = 1) : n % 2 = 0 := by\n  by_contra h2; linarith [neg_one_pow_odd (show n % 2 = 1 by omega)]\n\nprivate lemma neg_one_pow_eq_neg_one_imp {n : \u2115} (h : (-1 : \u2124) ^ n = -1) : n % 2 = 1 := by\n  by_contra h2; linarith [neg_one_pow_even (show n % 2 = 0 by omega)]\n\n-- Peak sign helpers\n\nprivate lemma peak_signAt_neg {m : \u2115} (hm2 : m \u2265 2) (t : Fin (m - 1) \u2192 \u2124) {j : Fin m}\n    (hj : j \u2208 peakSet m t) (hjlt : j.val < m - 1) : signAt t j.val = -1 := by\n  rw [mem_peakSet_of_ge2 hm2] at hj\n  rcases hj with \u27e8h0, hs\u27e9 | \u27e8hend, _\u27e9 | \u27e8_, _, _, hs\u27e9\n  \u00b7 rw [h0]; exact hs\n  \u00b7 omega\n  \u00b7 exact hs\n\nprivate lemma peak_signAt_pos {m : \u2115} (hm2 : m \u2265 2) (t : Fin (m - 1) \u2192 \u2124) {j : Fin m}\n    (hj : j \u2208 peakSet m t) (hjpos : 0 < j.val) : signAt t (j.val - 1) = 1 := by\n  rw [mem_peakSet_of_ge2 hm2] at hj\n  rcases hj with \u27e8h0, _\u27e9 | \u27e8hend, hs\u27e9 | \u27e8_, _, hs, _\u27e9\n  \u00b7 omega\n  \u00b7 convert hs using 2; omega\n  \u00b7 exact hs\n\ntheorem lem_20260326190323_6fff1b77 (m : \u2115) (hm : m \u2265 1) (t : Fin (m - 1) \u2192 \u2124) (ht : IsSignSeq t) : (\u2200 j\u2081 j\u2082 : Fin m, j\u2081 \u2208 peakSet m t \u2192 j\u2082 \u2208 peakSet m t \u2192 j\u2081.val + 1 \u2260 j\u2082.val) \u2227 (m \u2265 2 \u2192 ((peakSet m t = univ.filter (fun j : Fin m => j.val % 2 = 0)) \u2194 (\u2200 i : Fin (m - 1), t i = (-1 : \u2124) ^ (i.val + 1)))) \u2227 (m \u2265 2 \u2192 ((peakSet m t = univ.filter (fun j : Fin m => j.val % 2 = 1)) \u2194 (\u2200 i : Fin (m - 1), t i = (-1 : \u2124) ^ i.val))) := by\n  refine \u27e8?_, ?_, ?_\u27e9\n  \u00b7 -- Part 1: no consecutive peaks\n    intro j\u2081 j\u2082 hj\u2081 hj\u2082 hcons\n    by_cases hm2 : m \u2265 2\n    \u00b7 have hj1lt : j\u2081.val < m - 1 := by have := j\u2082.isLt; omega\n      have hsn := peak_signAt_neg hm2 t hj\u2081 hj1lt\n      have hsp := peak_signAt_pos hm2 t hj\u2082 (show 0 < j\u2082.val by omega)\n      have heq : j\u2082.val - 1 = j\u2081.val := by omega\n      rw [heq] at hsp; linarith\n    \u00b7 have : m = 1 := by omega\n      subst this; have := j\u2082.isLt; omega\n  \u00b7 -- Part 2: even peaks \u2194 (-1)^(i+1)\n    intro hm2; constructor\n    \u00b7 -- \u2192 : peakSet = even_filter \u2192 t i = (-1)^(i+1)\n      intro hpeaks i\n      by_cases hi : i.val % 2 = 0\n      \u00b7 -- i even \u2192 t i = (-1)^(i+1) = -1\n        have hj_in : (\u27e8i.val, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, hi]\n        have hsn := peak_signAt_neg hm2 t hj_in i.isLt\n        rw [signAt_fin t i] at hsn; rw [hsn]\n        symm; exact neg_one_pow_odd (show (i.val + 1) % 2 = 1 by omega)\n      \u00b7 -- i odd \u2192 t i = (-1)^(i+1) = 1\n        have hj_in : (\u27e8i.val + 1, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, show (i.val + 1) % 2 = 0 by omega]\n        have hsp := peak_signAt_pos hm2 t hj_in (show 0 < (\u27e8i.val + 1, _\u27e9 : Fin m).val by simp)\n        simp only [Nat.add_sub_cancel] at hsp\n        rw [signAt_fin t i] at hsp; rw [hsp]\n        symm; exact neg_one_pow_even (show (i.val + 1) % 2 = 0 by omega)\n    \u00b7 -- \u2190 : t i = (-1)^(i+1) \u2192 peakSet = even_filter\n      intro hsigns\n      have hsA : \u2200 (k : \u2115), k < m - 1 \u2192 signAt t k = (-1 : \u2124) ^ (k + 1) := fun k hk => by\n        rw [signAt_of_lt t hk]; exact hsigns \u27e8k, hk\u27e9\n      ext j; simp only [mem_peakSet_of_ge2 hm2, mem_filter, mem_univ, true_and]\n      constructor\n      \u00b7 -- peak \u2192 even\n        rintro (\u27e8h0, -\u27e9 | \u27e8hjm, hs\u27e9 | \u27e8-, hjlt, -, hs\u27e9)\n        \u00b7 omega\n        \u00b7 rw [hsA _ (by omega)] at hs\n          have := neg_one_pow_eq_one_imp hs; rw [hjm]; omega\n        \u00b7 rw [hsA _ (by omega)] at hs\n          have := neg_one_pow_eq_neg_one_imp hs; omega\n      \u00b7 -- even \u2192 peak\n        intro heven\n        by_cases hj0 : j.val = 0\n        \u00b7 left; exact \u27e8hj0, by rw [hsA 0 (by omega)]; norm_num\u27e9\n        \u00b7 by_cases hjm : j.val = m - 1\n          \u00b7 right; left; refine \u27e8hjm, ?_\u27e9\n            rw [hsA (m - 2) (by omega)]\n            exact neg_one_pow_even (show (m - 2 + 1) % 2 = 0 by omega)\n          \u00b7 right; right; exact \u27e8by omega, by omega,\n              by rw [hsA (j.val - 1) (by omega)]; exact neg_one_pow_even (by omega),\n              by rw [hsA j.val (by omega)]; exact neg_one_pow_odd (by omega)\u27e9\n  \u00b7 -- Part 3: odd peaks \u2194 (-1)^i\n    intro hm2; constructor\n    \u00b7 -- \u2192 : peakSet = odd_filter \u2192 t i = (-1)^i\n      intro hpeaks i\n      by_cases hi : i.val % 2 = 1\n      \u00b7 -- i odd \u2192 t i = (-1)^i = -1\n        have hj_in : (\u27e8i.val, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, hi]\n        have hsn := peak_signAt_neg hm2 t hj_in i.isLt\n        rw [signAt_fin t i] at hsn; rw [hsn]\n        symm; exact neg_one_pow_odd hi\n      \u00b7 -- i even \u2192 t i = (-1)^i = 1\n        have hj_in : (\u27e8i.val + 1, by omega\u27e9 : Fin m) \u2208 peakSet m t := by\n          rw [hpeaks]; simp [mem_filter, show (i.val + 1) % 2 = 1 by omega]\n        have hsp := peak_signAt_pos hm2 t hj_in (show 0 < (\u27e8i.val + 1, _\u27e9 : Fin m).val by simp)\n        simp only [Nat.add_sub_cancel] at hsp\n        rw [signAt_fin t i] at hsp; rw [hsp]\n        symm; exact neg_one_pow_even (show i.val % 2 = 0 by omega)\n    \u00b7 -- \u2190 : t i = (-1)^i \u2192 peakSet = odd_filter\n      intro hsigns\n      have hsA : \u2200 (k : \u2115), k < m - 1 \u2192 signAt t k = (-1 : \u2124) ^ k := fun k hk => by\n        rw [signAt_of_lt t hk]; exact hsigns \u27e8k, hk\u27e9\n      ext j; simp only [mem_peakSet_of_ge2 hm2, mem_filter, mem_univ, true_and]\n      constructor\n      \u00b7 -- peak \u2192 odd\n        rintro (\u27e8h0, hs\u27e9 | \u27e8hjm, hs\u27e9 | \u27e8-, hjlt, -, hs\u27e9)\n        \u00b7 rw [hsA 0 (by omega)] at hs; norm_num at hs\n        \u00b7 rw [hsA _ (by omega)] at hs\n          have := neg_one_pow_eq_one_imp hs; rw [hjm]; omega\n        \u00b7 rw [hsA _ (by omega)] at hs\n          exact neg_one_pow_eq_neg_one_imp hs\n      \u00b7 -- odd \u2192 peak\n        intro hodd\n        by_cases hjm : j.val = m - 1\n        \u00b7 right; left; refine \u27e8hjm, ?_\u27e9\n          rw [hsA (m - 2) (by omega)]\n          exact neg_one_pow_even (by omega)\n        \u00b7 right; right; exact \u27e8by omega, by omega,\n            by rw [hsA (j.val - 1) (by omega)]; exact neg_one_pow_even (by omega),\n            by rw [hsA j.val (by omega)]; exact neg_one_pow_odd hodd\u27e9\n",
+        "summary_nl": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :="
+      }
+    ]
+  },
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": "Yes. I kept the same proof skeleton but made the generating-function step explicit: I stated that for each fixed N >= 2 the counting argument gives S_odd^(N) = S_even^(N) = E_N; I derived 2E_{m+1} = sum_{k=0}^m C(m,k)E_kE_{m-k} only for m >= 1 by applying that identity to length m+1; and I checked the missing constant term separately via 2E_1 = 2 = 1 + E_0^2 before concluding coefficientwise that 2F' = 1 + F^2. I also avoided saying S_odd = S_even 'for every n' in the loose way flagged by the feedback.",
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "relied_on_forbidden_root_claim": false,
+      "used_allowed_manifest_items": [],
+      "used_only_standard_mathematics_beyond_statement": true
+    },
+    "lemma_id": "lem_20260326190446_0b854d87",
+    "proof_nl": "For each integer N >= 1, set w_j^(N) = C(N-1,j-1) E_{j-1} E_{N-j} for 1 <= j <= N, and W_N(z) = sum_{j=1}^N w_j^(N) z^(j-1). For N = n these are exactly the weights in the statement.\n\nCall a permutation c_1,...,c_r reverse-alternating if c_1 > c_2 < c_3 > c_4 < ... . The map c_i -> r+1-c_i is a bijection from reverse-alternating permutations of {1,...,r} to alternating permutations of {1,...,r}, so the number of reverse-alternating permutations of length r is also E_r.\n\nFix N >= 2. We first count alternating permutations by the position of 1 and by the position of N.\n\nIf j is odd, then in an alternating permutation a_1 < a_2 > a_3 < a_4 > ... the odd positions are valleys, so the minimum 1 can occur only at an odd position. Count the alternating permutations of {1,...,N} with a_j = 1. Choose the j-1 values lying to the left of 1; there are C(N-1,j-1) choices. After standardization, the left block a_1,...,a_{j-1} is an alternating permutation of length j-1, hence has E_{j-1} possibilities. The right block a_{j+1},...,a_N begins with a descent and then alternates, so after standardization it is reverse-alternating of length N-j, hence has E_{N-j} possibilities. Conversely, from the chosen left-value set, an alternating left block, and a reverse-alternating right block, one reconstructs the original permutation uniquely. Therefore the number of alternating permutations with 1 in position j is exactly w_j^(N).\n\nSimilarly, if j is even, then the even positions are peaks, so the maximum N can occur only at an even position. Count the alternating permutations of {1,...,N} with a_j = N. Choose the j-1 values lying to the left of N; again there are C(N-1,j-1) choices. After standardization, both the left block and the right block are alternating permutations, of lengths j-1 and N-j. Hence the number of such permutations is again w_j^(N).\n\nSumming over all odd positions of 1 and over all even positions of N, we obtain, for this fixed N >= 2,\nS_odd^(N) := sum over odd j of w_j^(N) = E_N,\nand\nS_even^(N) := sum over even j of w_j^(N) = E_N.\nSo for each fixed N >= 2 we have S_odd^(N) = S_even^(N) = E_N.\n\nNow define the exponential generating series F(x) = sum_{r>=0} E_r x^r/r!.\nTake any m >= 1 and apply the previous identity with N = m+1. Since\nsum_{j=1}^{m+1} w_j^(m+1) = sum_{k=0}^m C(m,k) E_k E_{m-k},\nwe get\n2 E_{m+1} = sum_{k=0}^m C(m,k) E_k E_{m-k}    for every m >= 1.\nThis is exactly the recurrence coming from the counting argument, but only for m >= 1.\n\nThe constant term must be checked separately. We have E_1 = 1, because there is only one permutation of {1}, and E_0 = 1 by definition. Hence\n2 E_1 = 2 = 1 + E_0^2.\nTherefore, for every m >= 0, the coefficient of x^m/m! in 2 F'(x) equals the coefficient of x^m/m! in 1 + F(x)^2. Thus\n2 F'(x) = 1 + F(x)^2.\n\nLet G(x) = sec x + tan x. A direct calculation gives 2 G'(x) = 1 + G(x)^2, and G(0) = 1. If H(x) = sum_{r>=0} h_r x^r/r! satisfies 2 H' = 1 + H^2 and h_0 = 1, then comparing coefficients of x^0 gives 2 h_1 = 1 + h_0^2, and for every m >= 1, comparing coefficients of x^m/m! gives\n2 h_{m+1} = sum_{k=0}^m C(m,k) h_k h_{m-k}.\nSo h_{m+1} is determined recursively by h_0,...,h_m. Hence there is only one power series solution with constant term 1. Since both F and G satisfy that condition, F(x) = G(x) = sec x + tan x.\n\nNext, for every N >= 1,\nF(zx) F(x) = sum_{a,b>=0} E_a E_b z^a x^{a+b}/(a! b!)\n= sum_{N>=1} W_N(z) x^{N-1}/(N-1)!,\nby the Cauchy product. Thus\nsum_{N>=1} W_N(z) x^{N-1}/(N-1)! = F(zx) F(x).\n\nFor N >= 2 we already know W_N(-1) = S_odd^(N) - S_even^(N) = 0, so W_N(z) is divisible by 1+z. Write\nW_N(z) = (1+z) Q_N(z).\nSince W_1(z) = 1, subtracting the N = 1 term yields\nsum_{N>=2} Q_N(z) x^{N-1}/(N-1)! = (F(zx) F(x) - 1)/(1+z).\n\nNow use the identity F(t) = sec t + tan t = tan(pi/4 + t/2). Let A = pi/4 + u/2 and B = pi/4 + v/2. Then\n(F(u) F(v) - 1)/(F(u) + F(v))\n= (tan A tan B - 1)/(tan A + tan B)\n= -cot(A+B)\n= tan((u+v)/2),\nbecause A+B = pi/2 + (u+v)/2. Hence\nF(u) F(v) - 1 = tan((u+v)/2) (F(u) + F(v)).\nWith u = zx and v = x this becomes\nsum_{N>=2} Q_N(z) x^{N-1}/(N-1)! = [tan((1+z)x/2)/(1+z)] (F(zx) + F(x)).\n\nAlso,\nF(t) - F(-t) = 2 tan t,\nso\n tan t = sum_{m>=0} E_{2m+1} t^{2m+1}/(2m+1)!.\nTherefore\n tan((1+z)x/2)/(1+z)\n= sum_{m>=0} E_{2m+1} (1+z)^{2m} x^{2m+1} / ((2m+1)! 2^{2m+1}).\nEvery coefficient here is nonnegative. Likewise,\nF(zx) + F(x) = sum_{r>=0} E_r (z^r + 1) x^r/r!\nhas nonnegative coefficients. Hence every coefficient of every polynomial Q_N(z) is nonnegative.\n\nIn fact they are all strictly positive. First note that E_r > 0 for every r >= 1; for example, the permutation 1, r, 2, r-1, 3, ... is alternating. If N is even, then the constant term 2 from F(zx)+F(x), multiplied by the x^{N-1} term of tan((1+z)x/2)/(1+z), contributes a positive multiple of (1+z)^{N-2} to the coefficient of x^{N-1}, hence to Q_N(z). Since every coefficient of (1+z)^{N-2} is positive and all other contributions are nonnegative, every coefficient of Q_N(z) is positive. If N is odd, then the x-term (1+z)x from F(zx)+F(x), multiplied by the x^{N-2} term of tan((1+z)x/2)/(1+z), again contributes a positive multiple of (1+z)^{N-2}; the same conclusion follows. So for every N >= 2 we may write\nQ_N(z) = q_1 + q_2 z + ... + q_{N-1} z^{N-2}\nwith q_i > 0 for all i.\n\nNow return to the fixed n of the theorem, and write q_0 = q_n = 0. Since W_n(z) = (1+z) Q_n(z), comparing coefficients of z^{j-1} gives\nw_j = q_{j-1} + q_j    for 1 <= j <= n.\nLet P be a subset of {1,...,n} containing no two consecutive integers. Then\nsum over j in P of w_j\n= sum over j in P of (q_{j-1} + q_j)\n= sum_{i=1}^{n-1} q_i (1_{i in P} + 1_{i+1 in P}).\nBecause P has no consecutive elements, each number 1_{i in P} + 1_{i+1 in P} is at most 1. Therefore\nsum over j in P of w_j <= sum_{i=1}^{n-1} q_i = Q_n(1) = W_n(1)/2 = (S_odd + S_even)/2 <= max(S_odd,S_even).\nThis proves the first assertion.\n\nNow assume in addition that S_odd = S_even. Then max(S_odd,S_even) = Q_n(1) = sum_{i=1}^{n-1} q_i. Since every q_i is strictly positive and each alpha_i := 1_{i in P} + 1_{i+1 in P} belongs to {0,1}, equality\nsum over j in P of w_j = max(S_odd,S_even)\nholds if and only if alpha_i = 1 for every i = 1,...,n-1. Equivalently, every adjacent pair {i,i+1} contains exactly one element of P. On the path 1,2,...,n this forces P to be one of the two parity classes: if 1 is in P, then 2 is not, then 3 is, and so on, so P is exactly the odd-index set; if 1 is not in P, then 2 is, then 3 is not, and so on, so P is exactly the even-index set. Conversely, those two sets contain no consecutive integers, and their total weights are S_odd and S_even respectively; under the assumption S_odd = S_even they both attain the common maximum. Therefore equality holds if and only if P is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.\n\nThis proves the lemma.",
+    "proof_summary": "Count alternating permutations by the position of 1 and of n to get, for each fixed N >= 2, S_odd^(N) = S_even^(N) = E_N. From the length m+1 case, deduce the recurrence 2E_{m+1} = sum_{k=0}^m C(m,k)E_kE_{m-k} only for m >= 1, and check separately that 2E_1 = 1 + E_0^2; hence the EGF F(x) = sum E_r x^r/r! satisfies 2F' = 1 + F^2. Comparing with G(x) = sec x + tan x gives F = G. For W_N(z) = sum_j w_j^(N) z^{j-1}, the generating function identity sum_{N>=1} W_N(z) x^{N-1}/(N-1)! = F(zx)F(x), together with W_N(-1)=0, yields W_N(z)=(1+z)Q_N(z). Using the tangent identity derived from F(t)=tan(pi/4+t/2), one gets a product formula for the Q_N whose coefficients are all nonnegative, and then a parity-specific term shows they are in fact all positive. Writing w_j = q_{j-1}+q_j with q_i>0 turns the problem into a weighted independent-set inequality on a path, giving sum_{j in P} w_j <= max(S_odd,S_even), and under S_odd=S_even equality occurs exactly for the odd or even parity class.",
+    "self_report": {
+      "confidence": 0.93,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Standardization preserves adjacent inequality patterns in permutations.",
+        "The complement map c_i -> r+1-c_i bijects reverse-alternating and alternating permutations.",
+        "Cauchy product for exponential generating functions.",
+        "Basic trigonometric identities: sec x + tan x = tan(pi/4 + x/2) and the tangent addition formula."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260326190446_0b854d87",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T03:23:23.141919Z",
+  "worker_job_id": "wrk_lem_20260326190446_0b854d87_g1_solve_2",
+  "worker_kind": "lemma_solver"
+}

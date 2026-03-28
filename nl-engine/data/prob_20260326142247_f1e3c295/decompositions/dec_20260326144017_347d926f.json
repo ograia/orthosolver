@@ -1,0 +1,60 @@
+{
+  "assembly_plan_id": "asm_20260326144017_abd6800c",
+  "controller_status": "failed",
+  "created_at": "2026-03-26T14:45:56.212703Z",
+  "decomposition_id": "dec_20260326144017_347d926f",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "none",
+  "failure_origin": "agent3:minor_fix",
+  "failure_reason": "All six lemmas are plausible and consistent with small-case checks; no counterexample was found. The overall induction-plus-recursion strategy is sound and the bottleneck lemma L5 is a genuine reduction to a weighted independent-set problem rather than a restatement of the root theorem. However, the assembly leaves two small but real gaps: A3 silently uses a size-1 subproblem outside the stated induction range, and A5/A6 do not explicitly verify the positivity hypothesis needed to invoke L5.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.78,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "pending",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_minor",
+  "logical_decomposition_id": "logdec_thm_root_20260326142247_6714b56a_track_1",
+  "node_id": "thm_root_20260326142247_6714b56a",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260326142247_f1e3c295",
+  "proof_bundle_artifact_id": "problems/prob_20260326142247_f1e3c295/proof_bundles/decompositions/dec_20260326144017_347d926f.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260326142247_f1e3c295/decomposition_candidates/dec_20260326144017_347d926f/agent2_candidate.json",
+  "revision_number": 1,
+  "shared_context": [
+    {
+      "content": "For an integer m at least 1 and a sign sequence t=(t_1,...,t_{m-1}) with each t_i equal to plus 1 or minus 1, F(t) denotes the number of permutations b=(b_1,...,b_m) of {1,...,m} such that t_i(b_{i+1}-b_i) > 0 for every 1 <= i <= m-1. For m=1, t is the empty sequence and F(t)=1.",
+      "kind": "definition",
+      "label": "Generic counting function F"
+    },
+    {
+      "content": "For m at least 1, Alt_m^+ is the length m-1 sign sequence with entries plus 1, minus 1, plus 1, minus 1, ...; Alt_m^- is defined by Alt_m^- = -Alt_m^+. Set E_0 = 1 and E_m = F(Alt_m^+) for m >= 1.",
+      "kind": "definition",
+      "label": "Alternating sign sequences and E_m"
+    },
+    {
+      "content": "For s=(s_1,...,s_{n-1}), the valley set Val(s) is the subset of {1,...,n} defined by: 1 belongs to Val(s) iff s_1 = plus 1; n belongs to Val(s) iff s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to Val(s) iff s_{j-1} = minus 1 and s_j = plus 1.",
+      "kind": "definition",
+      "label": "Valley set"
+    }
+  ],
+  "strategy_summary": "Use strong induction on n via the position of the smallest value 1. For any sign pattern, 1 can only occur at a locally minimal position (a valley), and summing over the possible valley positions gives an exact recursion for the counting function. The induction hypothesis bounds the left and right subproblems by alternating-pattern counts E_m, turning the problem into a weighted independent-set problem on the path {1,...,n}. The bottleneck is to show that for the special weights coming from the alternating counts, the maximum independent-set weight is attained uniquely by the odd or even parity classes. Those parity valley sets force the original sign sequence itself to alternate.",
+  "updated_at": "2026-03-26T14:46:02.106159Z"
+}

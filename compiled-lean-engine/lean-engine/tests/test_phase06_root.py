@@ -82,6 +82,11 @@ def _ok_runner(command, **kwargs):
     return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
 
 
+def _latest_working_root(workspace_dir: Path, fallback: Path) -> Path:
+    matches = sorted((workspace_dir / "Orthos").glob("Root_working_round_*.lean"))
+    return matches[-1] if matches else fallback
+
+
 class _RootTraceRunner:
     def __init__(self, *, target_path: Path, candidate_text: str, result_text: str):
         self._target_path = target_path
@@ -100,6 +105,8 @@ class _RootTraceRunner:
         **_: object,
     ) -> ClaudeRunResult:
         _ = (timeout_seconds, permission_mode)
+        target_path = _latest_working_root(run_paths.workspace_dir, self._target_path)
+        target_path.write_text(self._candidate_text, encoding="utf-8")
         timestamp = "trace"
         prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
         raw_path = run_paths.claude_raw_dir / f"{phase_name}_{timestamp}.jsonl"
@@ -112,7 +119,7 @@ class _RootTraceRunner:
         trace = ClaudeRunTrace(
             result_text=self._result_text,
             assistant_text_chunks=(),
-            file_updates=(FileUpdateEvent(file_path=str(self._target_path), content=self._candidate_text),),
+            file_updates=(FileUpdateEvent(file_path=str(target_path), content=self._candidate_text),),
             target_file_latest_update=None,
         )
         return ClaudeRunResult(
@@ -127,6 +134,63 @@ class _RootTraceRunner:
             raw_output_path=raw_path,
             summary_path=summary_path,
             result_event={"type": "result", "result": self._result_text},
+            trace=trace,
+        )
+
+
+class _SequentialRootTraceRunner:
+    def __init__(self, *, fallback_target_path: Path, candidates: list[str], result_texts: list[str] | None = None):
+        self._fallback_target_path = fallback_target_path
+        self._candidates = candidates
+        self._result_texts = result_texts or ["ok"] * len(candidates)
+        self._index = 0
+        self.seed_texts: list[str] = []
+
+    def run_prompt(
+        self,
+        *,
+        run_paths,
+        prompt: str,
+        phase_name: str,
+        model: str | None = None,
+        timeout_seconds: int | None = None,
+        permission_mode: str | None = None,
+        **_: object,
+    ) -> ClaudeRunResult:
+        _ = (prompt, timeout_seconds, permission_mode)
+        candidate = self._candidates[self._index]
+        result_text = self._result_texts[self._index]
+        self._index += 1
+        target_path = _latest_working_root(run_paths.workspace_dir, self._fallback_target_path)
+        self.seed_texts.append(target_path.read_text(encoding="utf-8"))
+        target_path.write_text(candidate, encoding="utf-8")
+        timestamp = f"seq_{self._index:02d}"
+        prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
+        raw_path = run_paths.claude_raw_dir / f"{phase_name}_{timestamp}.jsonl"
+        summary_path = run_paths.summaries_dir / f"{phase_name}_{timestamp}_claude_result.json"
+        prompt_path.parent.mkdir(parents=True, exist_ok=True)
+        raw_path.parent.mkdir(parents=True, exist_ok=True)
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        prompt_path.write_text("", encoding="utf-8")
+        raw_path.write_text(json.dumps({"type": "result", "result": result_text}) + "\n", encoding="utf-8")
+        trace = ClaudeRunTrace(
+            result_text=result_text,
+            assistant_text_chunks=(),
+            file_updates=(FileUpdateEvent(file_path=str(target_path), content=candidate),),
+            target_file_latest_update=None,
+        )
+        return ClaudeRunResult(
+            phase_name=phase_name,
+            model=model or "claude-sonnet-4-6",
+            command=("claude", "--mock"),
+            cwd=run_paths.workspace_dir,
+            returncode=0,
+            timed_out=False,
+            duration_seconds=0.01,
+            prompt_path=prompt_path,
+            raw_output_path=raw_path,
+            summary_path=summary_path,
+            result_event={"type": "result", "result": result_text},
             trace=trace,
         )
 
@@ -290,7 +354,7 @@ def test_phase06_prefers_tool_update_candidate_over_prose_result(tmp_path: Path)
 
     assert result.status == "ok"
     assert result.rounds
-    assert result.rounds[0].candidate_source == "claude_trace"
+    assert result.rounds[0].candidate_source == "workspace_fallback"
 
 
 def test_phase06_writes_success_bundle_manifest_and_combined_file(tmp_path: Path) -> None:
@@ -353,6 +417,52 @@ def test_phase06_classifies_root_composition_failure(tmp_path: Path) -> None:
     fatal_payload = json.loads(result.final_result_path.read_text(encoding="utf-8"))
     assert fatal_payload["status"] == "fatal"
     assert fatal_payload["error_class"] == "assembly_composition_failure"
+
+
+def test_phase06_round_two_keeps_last_compiling_root_after_compile_failure(tmp_path: Path) -> None:
+    runtime_config, run_paths, bundle = _prepare_runtime(tmp_path, "prob_phase06_seed_root")
+    pinned_path, semantic_manifest_path, phase05_summary_path, lemma_decl_names, root_decl_name = _write_phase06_prereqs(
+        run_paths,
+        bundle,
+    )
+    round_1 = _root_candidate(f"theorem {root_decl_name} : True", lemma_decl_names).replace(
+        "by",
+        "by\n  -- round_1_marker",
+        1,
+    )
+    round_2 = _root_candidate(f"theorem {root_decl_name} : True", lemma_decl_names)
+    claude_runner = _SequentialRootTraceRunner(
+        fallback_target_path=run_paths.workspace_dir / "Orthos" / "Root.lean",
+        candidates=[round_1, round_2],
+    )
+
+    def _combined_runner(command, **kwargs):
+        _ = kwargs
+        command_tuple = tuple(command)
+        if command_tuple == ("lake", "env", "lean", "Combined.lean"):
+            text = (run_paths.workspace_dir / "Combined.lean").read_text(encoding="utf-8")
+            if "round_1_marker" in text:
+                return subprocess.CompletedProcess(command, 1, stdout="", stderr="type mismatch")
+        return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
+
+    result = run_phase06(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        bundle=bundle,
+        pinned_signatures_path=pinned_path,
+        semantic_manifest_path=semantic_manifest_path,
+        phase05_summary_path=phase05_summary_path,
+        max_root_attempts=2,
+        timeout_seconds=10,
+        model=None,
+        claude_runner=claude_runner,
+        runner=_combined_runner,
+    )
+
+    assert result.status == "ok"
+    assert len(claude_runner.seed_texts) == 2
+    assert "round_1_marker" not in claude_runner.seed_texts[1]
+    assert result.rounds[0].promotion_status == "rejected_compile"
 
 
 def test_cli_phase06_run_with_mock_candidate(tmp_path: Path, capsys, monkeypatch) -> None:

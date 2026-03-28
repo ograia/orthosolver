@@ -1,0 +1,88 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327171612_0a43c11e",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:15:29.005642Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:17:06.508333Z",
+  "last_dependency_check_id": "depchk_20260327171706_105298be",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof directly matches the lemma: under the hypothesis floor(k t)=k-1 for all 1<=k<=n, it correctly computes floor(nt)=n-1 and each term floor(kt)/k=1-1/k, yielding sum_{k=1}^n floor(kt)/k = n-H_n and hence E_n(t)=H_n-1. No semantic drift or dependency issues are present.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Assume n > 1 is an integer and t is a real number such that floor(k t) = k - 1 for every integer k with 1 <= k <= n. We must show that E_n(t) = H_n - 1.\n\nBy the definition of E_n, we have\nE_n(t) = floor(n t) - sum_{k=1}^n floor(k t)/k.\n\nSince the hypothesis holds for every k in {1, ..., n}, it also holds for k = n, so floor(n t) = n - 1. Moreover, for each k = 1, ..., n,\nfloor(k t)/k = (k - 1)/k = 1 - 1/k.\nTherefore\nsum_{k=1}^n floor(k t)/k = sum_{k=1}^n (1 - 1/k) = n - sum_{k=1}^n 1/k.\nWriting H_n for the nth harmonic number, H_n := sum_{k=1}^n 1/k, this becomes\nsum_{k=1}^n floor(k t)/k = n - H_n.\nHence\nE_n(t) = (n - 1) - (n - H_n) = H_n - 1.\nThis is exactly the desired conclusion.",
+  "latest_vetted_proof_fingerprint": "2c9d13802a456a51166bd87ac34c8cc29113a9f6e6bfc67f64b474ef42b450be",
+  "latest_vetter_report_id": "rep_20260327171706_09d993d4",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327171522_8e581742",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327171522_8e581742.json",
+  "proof_graph_id": "pgraph_20260327171612_d6601d07",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Convert the floor pattern into the exact value H_n-1.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 2,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every real number t, if floor(k*t) = k-1 for every integer k with 1 <= k <= n, then E_n(t) = H_n - 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "t is a real number",
+      "k is an integer and 1 <= k <= n",
+      "floor is the greatest integer less than or equal to its real input"
+    ],
+    "normalized_claim": "For every integer n > 1 and every real number t: if for every integer k with 1 <= k <= n, the floor of k times t equals k minus 1, then E_n of t equals H_n minus 1.",
+    "quantifier_order": [
+      "for all integers n with n greater than 1",
+      "for all real numbers t",
+      "if for all integers k with 1 less than or equal to k and k less than or equal to n, floor(k times t) equals k minus 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer parameter; appears in the range of k and as the index of E_n and H_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "real parameter in the floor condition; input to E_n(t)",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "quantified index in the premise; ranges from 1 to n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; all quantified variables are universal",
+      "The value of E_n(t) is determined by n and t, and H_n is determined by n"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:17:06.508333Z"
+}

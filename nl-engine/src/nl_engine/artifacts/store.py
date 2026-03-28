@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+import mimetypes
 from typing import Any
 
 from nl_engine.settings import get_settings
+from nl_engine.storage import ObjectMetadata, ObjectStore
 
 
 class ArtifactStore:
@@ -14,26 +15,50 @@ class ArtifactStore:
     maps to the GCS artifact boundary from the architecture spec.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, root_dir: str | None = None) -> None:
         settings = get_settings()
-        self.root = Path(settings.artifact_store_dir)
-        self.root.mkdir(parents=True, exist_ok=True)
+        self.objects = ObjectStore(root_dir or settings.artifact_store_dir, purpose="artifacts")
+        self.root = self.objects.root
 
     def save_text(self, key: str, body: str) -> str:
-        path = self.root / key
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(body)
+        content_type = mimetypes.guess_type(key)[0] or "text/plain"
+        self.objects.write_text(key, body, content_type=content_type)
         return key
 
     def save_json(self, key: str, payload: Any) -> str:
-        path = self.root / key
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(payload, indent=2, sort_keys=True))
+        self.objects.write_text(
+            key,
+            json.dumps(payload, indent=2, sort_keys=True, default=str),
+            content_type="application/json",
+        )
         return key
 
     def exists(self, key: str) -> bool:
-        return (self.root / key).exists()
+        return self.objects.exists(key)
 
     def load_json(self, key: str) -> Any:
-        path = self.root / key
-        return json.loads(path.read_text())
+        payload = self.objects.read_json(key)
+        if payload is None:
+            raise FileNotFoundError(key)
+        return payload
+
+    def load_text(self, key: str) -> str:
+        payload = self.objects.read_text(key)
+        if payload is None:
+            raise FileNotFoundError(key)
+        return payload
+
+    def delete(self, key: str) -> None:
+        if self.exists(key):
+            self.objects.delete(key)
+
+    def stat(self, key: str) -> ObjectMetadata | None:
+        return self.objects.stat(key)
+
+    def list_keys(self, *, prefix: str = "") -> list[str]:
+        return self.objects.list_keys(prefix=prefix)
+
+    def append_text(self, key: str, line: str) -> str:
+        existing = self.objects.read_text(key) or ""
+        self.objects.write_text(key, existing + line, content_type="application/x-ndjson")
+        return key

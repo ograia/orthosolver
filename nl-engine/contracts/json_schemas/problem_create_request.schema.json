@@ -31,9 +31,43 @@
         "mode": {
           "type": "object",
           "properties": {
-            "nl_only_mode": {"type": "boolean"}
+            "nl_only_mode": {"type": "boolean"},
+            "lean_mode": {"type": ["boolean", "null"]},
+            "lean": {
+              "type": "object",
+              "properties": {
+                "auto_split_sublemmas": {"type": "boolean"},
+                "stream_progress_payloads": {"type": "boolean"},
+                "strict_proof_issue_fail_fast": {"type": "boolean"},
+                "proof_issue_confidence_threshold": {
+                  "type": "number",
+                  "minimum": 0.0,
+                  "maximum": 1.0
+                }
+              },
+              "additionalProperties": true
+            }
           },
           "required": ["nl_only_mode"],
+          "additionalProperties": true
+        },
+        "lean_engine": {
+          "type": "object",
+          "properties": {
+            "model": {"type": ["string", "null"]},
+            "no_lean4_refs": {"type": "boolean"},
+            "max_repair_rounds": {"type": "integer", "minimum": 0},
+            "max_lean_jobs_per_lemma": {"type": "integer", "minimum": 1},
+            "repair_context_token_budget": {"type": "integer", "minimum": 0},
+            "assemble_root_repair_rounds": {"type": "integer", "minimum": 0},
+            "assembly_check_timeout_seconds": {"type": "integer", "minimum": 0},
+            "lean_job_timeout_seconds": {"type": "integer", "minimum": 0},
+            "plausibility_check_timeout_seconds": {"type": "integer", "minimum": 0},
+            "assemble_root_timeout_seconds": {"type": "integer", "minimum": 0},
+            "claude_stall_timeout_seconds": {"type": ["integer", "null"], "minimum": 0},
+            "claude_tool_wait_timeout_seconds": {"type": ["integer", "null"], "minimum": 0},
+            "claude_init_timeout_seconds": {"type": ["integer", "null"], "minimum": 0}
+          },
           "additionalProperties": true
         }
       },

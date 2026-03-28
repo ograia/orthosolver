@@ -1,0 +1,173 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260327231012_4527a447/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T23:12:48.485427Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-28T00:12:51.044776Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-27T23:12:35.765518Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327230243_146498d5",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327230243_386f3965",
+        "label": "lem_20260327230106_ecdda6c8",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For every real number x and every integer z, F_n(x + z) = F_n(x)."
+      }
+    ],
+    "lemma_id": "lem_20260327231012_4527a447",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327231235_296e2cdf",
+    "role_in_assembly": "Rewrites the negative branch so it can be fed into the negative-shift lemma.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is a natural number and is coerced to a real number",
+        "negation is the additive inverse in the real numbers",
+        "subtraction x - (m as real) is interpreted as x + (additive inverse of m as real)"
+      ],
+      "normalized_claim": "For all real x and all natural m, x plus negative of (m as a real) equals x minus (m as a real).",
+      "quantifier_order": [
+        "for all x in reals",
+        "for all m in natural numbers"
+      ],
+      "variables": [
+        {
+          "domain": "reals",
+          "name": "x",
+          "role": "free variable universally quantified; addend",
+          "type": "real number"
+        },
+        {
+          "domain": "natural numbers",
+          "name": "m",
+          "role": "universally quantified parameter; later coerced to reals",
+          "type": "natural number"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses; statement is purely universal"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every real number x and every natural number m, x + (-(m : \u2124) : \u211d) = x - (m : \u211d).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "used_allowed_dependency_manifest": false,
+      "used_forbidden_claim": false
+    },
+    "lemma_id": "lem_20260327231012_4527a447",
+    "proof_nl": "Let x be a real number and m a natural number. By compatibility of coercion with negation, we have (-(m : \u2124) : \u211d) = -((m : \u2124) : \u211d). Also, the natural number m viewed first as an integer and then as a real is the same real number as m viewed directly as a real, so ((m : \u2124) : \u211d) = (m : \u211d). Hence (-(m : \u2124) : \u211d) = -(m : \u211d). Therefore\nx + (-(m : \u2124) : \u211d) = x + (-(m : \u211d)).\nBy the definition of subtraction in \u211d, x - (m : \u211d) = x + (-(m : \u211d)). Thus\nx + (-(m : \u2124) : \u211d) = x - (m : \u211d),\nas required. Since x and m were arbitrary, the statement holds for all real x and all natural m.",
+    "proof_summary": "Use that integer-to-real coercion preserves negation, and that subtraction on reals is defined as addition of the additive inverse.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "coercion from integers to reals preserves negation",
+        "definition of subtraction in the real numbers"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T23:12:36.485795Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327231012_4527a447",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:12:51.044780Z",
+  "worker_job_id": "wrk_lem_20260327231012_4527a447_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

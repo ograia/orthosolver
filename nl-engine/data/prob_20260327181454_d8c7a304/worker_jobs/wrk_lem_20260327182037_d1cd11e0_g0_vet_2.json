@@ -1,0 +1,205 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182037_d1cd11e0/vetter_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-27T18:23:19.041548Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:23:30.302313Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:23:09.258152Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n greater than 1",
+            "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "the floor function is applied to real numbers (so it is always defined)"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+          "quantifier_order": [
+            "for a given integer n greater than 1",
+            "find real x such that for all real y, expression at x is at least the expression at y",
+            "and there exists at least one real x achieving that maximal value"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index in the expression, ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizer x (if it exists) may depend on the fixed parameter n",
+            "the maximal value may depend on the fixed parameter n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327182037_d1cd11e0",
+    "proof_nl": "Let n>1 and let r be real with 0<=r<1. Define m=\u230anr\u230b. Then m<=nr<m+1, so dividing by n>0 gives m/n<=r. Now fix any k with 1<=k<=n. Since k>0, multiplying preserves the inequality: k(m/n)<=kr. The floor function is nondecreasing, hence \u230ak(m/n)\u230b<=\u230akr\u230b.\n\nAlso, since m/n is a rational number with n(m/n)=m, we have \u230an(m/n)\u230b=m=\u230anr\u230b.\n\nTherefore\nf_n(r)=\u230anr\u230b-\\sum_{k=1}^n \\frac{\u230akr\u230b}{k}\n<= m-\\sum_{k=1}^n \\frac{\u230ak(m/n)\u230b}{k}\n=\u230an(m/n)\u230b-\\sum_{k=1}^n \\frac{\u230ak(m/n)\u230b}{k}\n=f_n(m/n).\n\nThis is exactly the desired inequality.",
+    "role_in_assembly": "Moves an arbitrary point in [0,1) to the left endpoint of its n-slice.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and satisfies n > 1",
+        "r is real and satisfies 0 <= r < 1",
+        "m is defined as floor of n times r, hence m is an integer",
+        "m divided by n is an input value for f_n (assumes f_n is defined on it)"
+      ],
+      "normalized_claim": "For every integer n with n > 1 and every real r with 0 <= r < 1, if m is defined as the floor of n times r, then f_n(r) is at most f_n(m divided by n).",
+      "quantifier_order": [
+        "for all integers n with n > 1",
+        "for all real numbers r with 0 <= r < 1",
+        "let m be floor of n times r",
+        "claim: f_n(r) <= f_n(m divided by n)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the function f_n; assumed to satisfy n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "r",
+          "role": "input variable to f_n constrained by 0 <= r < 1",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "auxiliary integer defined by m = floor(n*r); used to form the point m/n",
+          "type": "integer"
+        },
+        {
+          "domain": "unspecified set of inputs where f_n is defined (at least includes r and m/n)",
+          "name": "f_n",
+          "role": "parameterized function indexed by n",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "m depends on both n and r via m = floor(n*r)"
+      ]
+    },
+    "statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n).",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327182037_d1cd11e0",
+    "proof_status": "complete",
+    "reason": "The proof correctly shows that for r in [0,1), letting m = floor(nr), each term floor(k r) dominates floor(k m / n) by monotonicity of floor, so subtracting the sum yields f_n(r) <= f_n(m/n). The argument matches the stated lemma and the assembly role with no substantive drift.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T18:23:08.557648Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182037_d1cd11e0",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:23:30.302318Z",
+  "worker_job_id": "wrk_lem_20260327182037_d1cd11e0_g0_vet_2",
+  "worker_kind": "lemma_vetter"
+}

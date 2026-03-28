@@ -815,17 +815,20 @@ def resume_phase07(
             pass
 
     for lemma_id, pinned in pinned_map.items():
-        # Try 1: check lemma dir for final_success.lean
+        # Try 1: check lemma dir for merged_authoritative.lean (new) or final_success.lean (legacy)
         old_lemma_dir = old_lemmas_dir / lemma_id_to_path_token(lemma_id)
         old_result_path = old_lemma_dir / "result.json"
-        old_success_path = old_lemma_dir / "final_success.lean"
+        old_success_path = old_lemma_dir / "merged_authoritative.lean"
+        legacy_success_path = old_lemma_dir / "final_success.lean"
         declaration: str | None = None
 
-        if old_result_path.exists() and old_success_path.exists():
+        if old_result_path.exists() and (old_success_path.exists() or legacy_success_path.exists()):
             try:
                 old_result = json.loads(old_result_path.read_text(encoding="utf-8"))
-                if old_result.get("status") == "ok":
-                    declaration = old_success_path.read_text(encoding="utf-8").strip()
+                status = str(old_result.get("status", "")).strip()
+                if status in {"ok", "succeeded", "merged"}:
+                    proof_path = old_success_path if old_success_path.exists() else legacy_success_path
+                    declaration = proof_path.read_text(encoding="utf-8").strip()
             except (OSError, json.JSONDecodeError):
                 pass
 
@@ -929,12 +932,17 @@ def resume_phase07(
             carried_results.append(LemmaFormalizationResult(
                 lemma_id=lemma_id,
                 decl_name=pinned.decl_name,
-                status="ok",
+                status="succeeded",
                 attempts_used=0,
                 lemma_artifact_dir=old_lemma_dir,
                 scratch_file=old_lemma_dir / "scratch.lean",
                 result_path=old_lemma_dir / "result.json",
-                final_success_path=old_lemma_dir / "final_success.lean",
+                merged_authoritative_path=(
+                    (old_lemma_dir / "merged_authoritative.lean")
+                    if (old_lemma_dir / "merged_authoritative.lean").exists()
+                    else (old_lemma_dir / "final_success.lean")
+                ),
+                terminal=True,
             ))
         # Merge: carried results + phase04 retry results, in deterministic order
         retry_results_by_id = {r.lemma_id: r for r in phase04_result.lemma_results}
@@ -1227,7 +1235,7 @@ def _run_phase04(
     if phase04_result.status == "ok":
         return phase04_result
 
-    compiled_count = sum(1 for item in phase04_result.lemma_results if item.status == "ok")
+    compiled_count = sum(1 for item in phase04_result.lemma_results if item.status == "succeeded")
     result = Phase07RunResult(
         status="fatal",
         problem_id=bundle.problem_id,

@@ -1,0 +1,18 @@
+{
+  "created_at": "2026-03-26T23:21:04.447020Z",
+  "graph_node_id": "pnode_20260326232104_3ac0007c",
+  "metadata": {
+    "context_scope": "graph_local",
+    "decl_name": "lem_20260326190508_d45da648",
+    "proof_graph_id": "pgraph_20260326190750_b9f48b9c"
+  },
+  "node_kind": "trusted_decl",
+  "node_status": "trusted",
+  "normalized_claim_hash": null,
+  "owner_id": "1",
+  "owner_kind": "trusted_context",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "semantic_sketch_json": {},
+  "statement_nl": "def IsSignSeq {k : \u2115} (s : Fin k \u2192 \u2124) : Prop :=\n  \u2200 i, s i = 1 \u2228 s i = -1\n\n/-- Count of permutations of `Fin n` matching sign pattern `s` (0-indexed). -/\n\ndef countSignPerm (n : \u2115) (s : Fin (n - 1) \u2192 \u2124) : \u2115 :=\n  (univ.filter fun \u03c3 : Equiv.Perm (Fin n) =>\n    \u2200 i : Fin (n - 1),\n      s i * (((\u03c3 \u27e8i.val + 1, by omega\u27e9).val : \u2124) -\n             ((\u03c3 \u27e8i.val, by omega\u27e9).val : \u2124)) > 0).card\n\nprivate lemma isSignSeq_fin1 (t : Fin 1 \u2192 \u2124) (ht : IsSignSeq t) :\n    t = (fun _ => (1 : \u2124)) \u2228 t = (fun _ => (-1 : \u2124)) := by\n  rcases ht \u27e80, by omega\u27e9 with h | h\n  \u00b7 left\n    funext \u27e8i, hi\u27e9\n    have hi0 : i = 0 := by omega\n    subst hi0\n    exact h\n  \u00b7 right\n    funext \u27e8i, hi\u27e9\n    have hi0 : i = 0 := by omega\n    subst hi0\n    exact h\n\ntheorem lem_20260326190508_d45da648 : countSignPerm 2 (fun _ => (1 : \u2124)) = 1 \u2227 countSignPerm 2 (fun _ => (-1 : \u2124)) = 1 \u2227 (\u2200 t : Fin 1 \u2192 \u2124, IsSignSeq t \u2192 countSignPerm 2 t \u2264 countSignPerm 2 (fun _ => (1 : \u2124))) \u2227 (\u2200 t : Fin 1 \u2192 \u2124, IsSignSeq t \u2192 countSignPerm 2 t \u2264 countSignPerm 2 (fun _ => (-1 : \u2124))) := by\n  have h1 : countSignPerm 2 (fun _ => (1 : \u2124)) = 1 := by\n    unfold countSignPerm\n    native_decide\n  have h2 : countSignPerm 2 (fun _ => (-1 : \u2124)) = 1 := by\n    unfold countSignPerm\n    native_decide\n  refine \u27e8h1, h2, ?_, ?_\u27e9\n  \u00b7 intro t ht\n    rcases isSignSeq_fin1 t ht with rfl | rfl\n    \u00b7 exact le_refl _\n    \u00b7 exact le_of_eq (h2.trans h1.symm)\n  \u00b7 intro t ht\n    rcases isSignSeq_fin1 t ht with rfl | rfl\n    \u00b7 exact le_of_eq (h1.trans h2.symm)\n    \u00b7 exact le_refl _\n",
+  "updated_at": "2026-03-27T03:18:09.533710Z"
+}

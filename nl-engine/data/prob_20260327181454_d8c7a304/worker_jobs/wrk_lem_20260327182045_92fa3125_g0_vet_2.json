@@ -1,0 +1,202 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182045_92fa3125/vetter_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-27T18:45:47.883993Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:46:13.835566Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:45:42.320150Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n greater than 1",
+            "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "the floor function is applied to real numbers (so it is always defined)"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+          "quantifier_order": [
+            "for a given integer n greater than 1",
+            "find real x such that for all real y, expression at x is at least the expression at y",
+            "and there exists at least one real x achieving that maximal value"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index in the expression, ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizer x (if it exists) may depend on the fixed parameter n",
+            "the maximal value may depend on the fixed parameter n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327182045_92fa3125",
+    "proof_nl": "Let n > 1 be an integer and let r be a real number with (n - 1)/n <= r < 1.\n\nWe first handle integers k with 1 <= k < n. From r < 1, multiplying by the positive integer k gives kr < k. Also, from r >= (n - 1)/n we get\nkr >= k(n - 1)/n = k - k/n.\nSince k < n, we have k/n < 1, hence k - k/n > k - 1. Therefore\nk - 1 < kr < k.\nBecause k - 1 and k are consecutive integers, any real number strictly between them has floor equal to k - 1. Thus floor(kr) = k - 1 for every integer k with 1 <= k < n.\n\nNow take k = n. From r >= (n - 1)/n we obtain nr >= n - 1, and from r < 1 we obtain nr < n. Hence\nn - 1 <= nr < n.\nTherefore floor(nr) = n - 1.\n\nThis proves the stated floor identities.",
+    "role_in_assembly": "Computes the floor pattern on the candidate maximizing interval.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n > 1",
+        "r is a real number",
+        "(n-1)/n <= r",
+        "r < 1",
+        "k is an integer",
+        "1 <= k",
+        "k < n"
+      ],
+      "normalized_claim": "For every integer n > 1 and every real r with (n-1)/n <= r < 1, for every integer k with 1 <= k < n, the floor of k times r equals k minus 1; additionally, the floor of n times r equals n minus 1.",
+      "quantifier_order": [
+        "for all integers n with n > 1",
+        "for all real numbers r with (n-1)/n <= r and r < 1",
+        "for all integers k with 1 <= k and k < n"
+      ],
+      "variables": [
+        {
+          "domain": "all integers",
+          "name": "n",
+          "role": "parameter constrained by n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "r",
+          "role": "parameter constrained by (n-1)/n <= r < 1",
+          "type": "real number"
+        },
+        {
+          "domain": "all integers",
+          "name": "k",
+          "role": "quantified variable with 1 <= k < n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "There are no existential witnesses; all quantities are asserted for given n and r and for every eligible k."
+      ]
+    },
+    "statement_nl": "Let n > 1 and let r be a real number with (n-1)/n <= r < 1. Then for every integer k with 1 <= k < n, floor(k*r) = k - 1, and also floor(n*r) = n - 1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327182045_92fa3125",
+    "proof_status": "complete",
+    "reason": "The proof exactly establishes the stated floor identities on the interval (n-1)/n <= r < 1. For 1 <= k < n it correctly derives k-1 < kr < k, hence floor(kr) = k-1, and for k = n it derives n-1 <= nr < n, hence floor(nr) = n-1. This matches the lemma statement and semantic sketch with no dependency issues.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T18:45:42.780282Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182045_92fa3125",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:46:13.835578Z",
+  "worker_job_id": "wrk_lem_20260327182045_92fa3125_g0_vet_2",
+  "worker_kind": "lemma_vetter"
+}

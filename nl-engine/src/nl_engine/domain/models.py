@@ -33,6 +33,14 @@ class ProblemORM(BaseModel):
     continuation_generation: int = 0
     resume_anchor_lemma_id: str | None = None
     resume_anchor_owner_decomposition_id: str | None = None
+    lean_session_id: str | None = None
+    lean_session_endpoint: str | None = None
+    lean_session_pid: int | None = None
+    lean_session_store_root: str | None = None
+    lean_session_max_workers: int | None = None
+    lean_session_status: str | None = None
+    lean_session_started_at: datetime | None = None
+    lean_session_last_seen_at: datetime | None = None
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow)
 
@@ -73,6 +81,13 @@ class DecompositionORM(BaseModel):
     lean_v2_track_id: str | None = None
     lean_v2_lemma_handles: dict[str, str] = Field(default_factory=dict)
     lean_v2_prepare_status: str | None = None
+    latest_prepare_track_job_id: str | None = None
+    lean_prepare_issue_kind: str | None = None
+    lean_prepare_error_class: str | None = None
+    lean_prepare_confidence: float | None = None
+    lean_prepare_fatality: str | None = None
+    lean_artifact_index: dict[str, Any] = Field(default_factory=dict)
+    lean_bottlenecks: list[dict[str, Any]] = Field(default_factory=list)
     formalization_cost_estimate: float | None = None
     llm_vetting_status: str = "pending"
     lean_assembly_status: str = "pending"
@@ -88,6 +103,9 @@ class DecompositionORM(BaseModel):
     invalidated_by_lemma_id: str | None = None
     invalidated_by_counterexample_id: str | None = None
     previous_attempt_summaries: list[dict[str, Any]] = Field(default_factory=list)
+    decomposition_origin: str | None = None
+    decomposition_origin_reason: str | None = None
+    decomposition_origin_job_id: str | None = None
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow)
 
@@ -129,6 +147,9 @@ class LemmaORM(BaseModel):
     proof_status: str = "open"
     routing_status: str = "open"
     latest_nl_proof: str | None = None
+    latest_vetted_proof_fingerprint: str | None = None
+    last_submitted_lean_proof_fingerprint: str | None = None
+    last_submitted_lean_job_id: str | None = None
     proof_bundle_artifact_id: str | None = None
     latest_vetter_report_id: str | None = None
     latest_lean_result_id: str | None = None
@@ -235,6 +256,10 @@ class LeanJobORM(BaseModel):
     status: str = "queued"
     attempt_index: int = 1
     progress_snapshot: dict[str, Any] | None = None
+    proof_fingerprint: str | None = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    controller_harvested_at: datetime | None = None
     issue_kind: str | None = None
     confidence: float | None = None
     fatality: str | None = None
@@ -254,6 +279,10 @@ class LeanResultORM(BaseModel):
     status: str
     error_class: str | None = None
     issue_kind: str | None = None
+    artifact_check_status: str | None = None
+    artifact_check_diagnostics: list[dict[str, Any]] = Field(default_factory=list)
+    integration_check_status: str | None = None
+    integration_check_diagnostics: list[dict[str, Any]] = Field(default_factory=list)
     confidence: float | None = None
     fatality: str | None = None
     error_scope: str | None = None
@@ -264,9 +293,12 @@ class LeanResultORM(BaseModel):
     lean_code_artifact_id: str | None = None
     compiler_log_artifact_id: str | None = None
     artifact_index: dict[str, Any] = Field(default_factory=dict)
+    timing_breakdown: dict[str, Any] = Field(default_factory=dict)
     recommended_next_step: str | None = None
     routing_confidence: float | None = None
+    controller_harvested_at: datetime | None = None
     created_at: datetime = Field(default_factory=utcnow)
+    updated_at: datetime = Field(default_factory=utcnow)
 
 
 class TrustedContextORM(BaseModel):
@@ -387,6 +419,8 @@ class WorkerJobORM(BaseModel):
     controller_consumed_by_execution_id: str | None = None
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow)
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
 
 
 class ProblemExecutionORM(BaseModel):

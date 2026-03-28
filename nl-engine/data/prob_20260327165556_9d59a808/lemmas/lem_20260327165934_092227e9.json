@@ -1,0 +1,87 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327170047_848f8dc4",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T16:59:39.679309Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:01:12.684629Z",
+  "last_dependency_check_id": "depchk_20260327170112_2451fa4d",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly establishes integer-translation invariance of E_n(x) using the floor identity floor(t+z)=floor(t)+z for integer z. The argument is complete, matches the lemma statement exactly, and is aligned with the assembly role of reducing to fractional parts modulo 1.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n>1, a real number x, and an integer m. We show that E_n(x+m)=E_n(x).\n\nBy the basic property of the floor function, if z is an integer then floor(t+z)=floor(t)+z for every real t. Since km is an integer for each integer k, we have\nfloor(k(x+m)) = floor(kx+km) = floor(kx)+km\nfor every k=1,2,...,n.\nIn particular,\nfloor(n(x+m)) = floor(nx+nm) = floor(nx)+nm.\n\nTherefore\nE_n(x+m)\n= floor(n(x+m)) - sum_{k=1}^n floor(k(x+m))/k\n= (floor(nx)+nm) - sum_{k=1}^n (floor(kx)+km)/k.\nNow simplify the sum:\nsum_{k=1}^n (floor(kx)+km)/k = sum_{k=1}^n floor(kx)/k + sum_{k=1}^n m = sum_{k=1}^n floor(kx)/k + nm,\nbecause (km)/k = m for each k.\nSubstituting this into the previous line gives\nE_n(x+m) = floor(nx)+nm - (sum_{k=1}^n floor(kx)/k + nm)\n= floor(nx) - sum_{k=1}^n floor(kx)/k\n= E_n(x).\n\nHence E_n(x+m)=E_n(x) for all integers n>1, all real x, and all integers m.",
+  "latest_vetted_proof_fingerprint": "9eb462040d8e8ca7ad81e551d9f79e0d6e921bc5eaa4ec426c95b45b73871991",
+  "latest_vetter_report_id": "rep_20260327170112_40397c13",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327165934_092227e9",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327165934_092227e9.json",
+  "proof_graph_id": "pgraph_20260327170047_9e8a6c61",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Reduce the search for maximizers from all real x to the fractional part frac(x) in [0,1).",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "x is any real number",
+      "m is any integer",
+      "x + m is interpreted as a real number"
+    ],
+    "normalized_claim": "For every integer n with n greater than 1, for every real number x, and for every integer m, the equality E_n(x plus m) equals E_n(x) holds.",
+    "quantifier_order": [
+      "for all integers n",
+      "for all real numbers x",
+      "for all integers m"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter indexing the function E_n",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "x",
+        "role": "real input to the function E_n",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "integer shift applied to the real input x",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "none (no existential quantifiers; the equality must hold for every triple (n, x, m) in the specified domains)"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:01:12.684629Z"
+}

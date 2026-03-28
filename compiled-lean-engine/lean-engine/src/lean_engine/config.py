@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -16,30 +17,16 @@ ALLOWED_CLAUDE_MODELS = (
     "claude-haiku-4-5",
 )
 
-# Models that support extended context windows.  When a user specifies a base
-# model name (e.g. ``claude-opus-4-6``), the engine auto-upgrades to the
-# extended-context variant so Claude Code gets the full 1M token window instead
-# of the default 200K.
-_MODEL_EXTENDED_CONTEXT: dict[str, str] = {
-    "claude-opus-4-6": "claude-opus-4-6[1m]",
-    "claude-sonnet-4-6": "claude-sonnet-4-6[1m]",
-}
-
-
-def resolve_model_id(model: str) -> str:
-    """Upgrade model ID to extended-context variant when available."""
-    return _MODEL_EXTENDED_CONTEXT.get(model, model)
-
 
 @dataclass(frozen=True)
 class ClaudeConfig:
     model: str
-    fallback_model: str
     timeout_seconds: int
+    fallback_model: str | None = None
     stall_timeout_seconds: int = 2700
     tool_wait_timeout_seconds: int = 2700
     init_timeout_seconds: int = 180
-    max_output_tokens: int = 64000
+    max_output_tokens: int = 131072
     command: str = "claude"
 
     def to_dict(self) -> dict[str, Any]:
@@ -119,6 +106,20 @@ class WorkspaceCacheConfig:
 
 
 @dataclass(frozen=True)
+class Phase04Config:
+    canonical_code_root: Path
+    worker_snapshot_mode: str
+    merge_order: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "canonical_code_root": str(self.canonical_code_root),
+            "worker_snapshot_mode": self.worker_snapshot_mode,
+            "merge_order": self.merge_order,
+        }
+
+
+@dataclass(frozen=True)
 class RuntimeConfig:
     claude: ClaudeConfig
     lean: LeanConfig
@@ -126,6 +127,7 @@ class RuntimeConfig:
     mcp: McpConfig
     integrations: IntegrationsConfig
     workspace_cache: WorkspaceCacheConfig
+    phase04: Phase04Config
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -135,6 +137,7 @@ class RuntimeConfig:
             "mcp": self.mcp.to_dict(),
             "integrations": self.integrations.to_dict(),
             "workspace_cache": self.workspace_cache.to_dict(),
+            "phase04": self.phase04.to_dict(),
         }
 
 
@@ -162,12 +165,11 @@ def default_runtime_config_dict() -> dict[str, Any]:
     return {
         "claude": {
             "model": "claude-sonnet-4-6",
-            "fallback_model": "claude-sonnet-4-6",
             "timeout_seconds": 2700,
             "stall_timeout_seconds": 2700,
             "tool_wait_timeout_seconds": 2700,
             "init_timeout_seconds": 180,
-            "max_output_tokens": 64000,
+            "max_output_tokens": 131072,
             "command": "claude",
         },
         "lean": {
@@ -193,6 +195,11 @@ def default_runtime_config_dict() -> dict[str, Any]:
             "enabled": True,
             "cache_dir": ".artifacts/lean_engine/_lake_cache",
         },
+        "phase04": {
+            "canonical_code_root": str(project_root()),
+            "worker_snapshot_mode": "copy",
+            "merge_order": "lemma_order",
+        },
     }
 
 
@@ -201,6 +208,10 @@ def load_runtime_config(
     *,
     model: str | None = None,
     fallback_model: str | None = None,
+    timeout_seconds: int | None = None,
+    stall_timeout_seconds: int | None = None,
+    tool_wait_timeout_seconds: int | None = None,
+    init_timeout_seconds: int | None = None,
     artifact_root: Path | None = None,
     mcp_command: str | None = None,
     repo_lean_lsp_mcp_root: Path | None = None,
@@ -217,6 +228,14 @@ def load_runtime_config(
         merged.setdefault("claude", {})["model"] = model
     if fallback_model is not None:
         merged.setdefault("claude", {})["fallback_model"] = fallback_model
+    if timeout_seconds is not None:
+        merged.setdefault("claude", {})["timeout_seconds"] = timeout_seconds
+    if stall_timeout_seconds is not None:
+        merged.setdefault("claude", {})["stall_timeout_seconds"] = stall_timeout_seconds
+    if tool_wait_timeout_seconds is not None:
+        merged.setdefault("claude", {})["tool_wait_timeout_seconds"] = tool_wait_timeout_seconds
+    if init_timeout_seconds is not None:
+        merged.setdefault("claude", {})["init_timeout_seconds"] = init_timeout_seconds
     if artifact_root is not None:
         merged.setdefault("artifacts", {})["root"] = str(artifact_root)
         _default_cache = ".artifacts/lean_engine/_lake_cache"
@@ -241,12 +260,17 @@ def parse_runtime_config(data: dict[str, Any]) -> RuntimeConfig:
     artifacts_raw = _expect_mapping(data, "artifacts")
     mcp_raw = _expect_mapping(data, "mcp")
 
-    model = resolve_model_id(_expect_string(claude_raw, "model"))
-    fallback_model = resolve_model_id(_expect_string(claude_raw, "fallback_model"))
+    model = _expect_string(claude_raw, "model")
+    fallback_model = _optional_string(claude_raw.get("fallback_model"))
     _validate_model(model, field_name="claude.model")
-    _validate_model(fallback_model, field_name="claude.fallback_model")
+    if fallback_model is not None:
+        _validate_model(fallback_model, field_name="claude.fallback_model")
+        if fallback_model != model:
+            raise ValueError(
+                "claude.fallback_model is deprecated and must exactly match claude.model when provided"
+            )
 
-    timeout_seconds = _expect_int(claude_raw, "timeout_seconds")
+    timeout_seconds = _expect_int(claude_raw, "timeout_seconds", minimum=0)
     stall_timeout_raw = claude_raw.get("stall_timeout_seconds", 2700)
     stall_timeout_seconds = int(stall_timeout_raw) if isinstance(stall_timeout_raw, (int, float)) else 2700
     tool_wait_timeout_raw = claude_raw.get("tool_wait_timeout_seconds", stall_timeout_seconds)
@@ -255,8 +279,8 @@ def parse_runtime_config(data: dict[str, Any]) -> RuntimeConfig:
     )
     init_timeout_raw = claude_raw.get("init_timeout_seconds", 180)
     init_timeout_seconds = int(init_timeout_raw) if isinstance(init_timeout_raw, (int, float)) else 180
-    max_output_tokens_raw = claude_raw.get("max_output_tokens", 64000)
-    max_output_tokens = int(max_output_tokens_raw) if isinstance(max_output_tokens_raw, (int, float)) else 64000
+    max_output_tokens_raw = claude_raw.get("max_output_tokens", 131072)
+    max_output_tokens = int(max_output_tokens_raw) if isinstance(max_output_tokens_raw, (int, float)) else 131072
     command = _expect_string(claude_raw, "command")
 
     imports_raw = lean_raw.get("imports", [])
@@ -298,6 +322,17 @@ def parse_runtime_config(data: dict[str, Any]) -> RuntimeConfig:
         wc_enabled = True
     wc_cache_dir = str(workspace_cache_raw.get("cache_dir", ".artifacts/lean_engine/_lake_cache")).strip()
 
+    phase04_raw = data.get("phase04", {})
+    if not isinstance(phase04_raw, dict):
+        phase04_raw = {}
+    canonical_code_root = str(phase04_raw.get("canonical_code_root", str(project_root()))).strip()
+    worker_snapshot_mode = str(phase04_raw.get("worker_snapshot_mode", "copy")).strip().lower() or "copy"
+    merge_order = str(phase04_raw.get("merge_order", "lemma_order")).strip().lower() or "lemma_order"
+    if worker_snapshot_mode not in {"copy", "hardlink", "reflink"}:
+        raise ValueError("phase04.worker_snapshot_mode must be one of: copy, hardlink, reflink")
+    if merge_order not in {"lemma_order"}:
+        raise ValueError("phase04.merge_order must be `lemma_order`")
+
     return RuntimeConfig(
         claude=ClaudeConfig(
             model=model,
@@ -330,7 +365,54 @@ def parse_runtime_config(data: dict[str, Any]) -> RuntimeConfig:
             enabled=wc_enabled,
             cache_dir=Path(wc_cache_dir).expanduser(),
         ),
+        phase04=Phase04Config(
+            canonical_code_root=Path(canonical_code_root).expanduser(),
+            worker_snapshot_mode=worker_snapshot_mode,
+            merge_order=merge_order,
+        ),
     )
+
+
+def current_code_origin(*, root: Path | None = None) -> dict[str, Any]:
+    code_root = (root or project_root()).expanduser().resolve()
+    git_sha = None
+    git_dirty = None
+    try:
+        git_sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=code_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip() or None
+        git_dirty = bool(
+            subprocess.run(
+                ["git", "status", "--porcelain"],
+                cwd=code_root,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+        )
+    except (OSError, subprocess.CalledProcessError):
+        git_sha = None
+        git_dirty = None
+    return {
+        "code_root": str(code_root),
+        "git_sha": git_sha,
+        "git_dirty": git_dirty,
+    }
+
+
+def ensure_canonical_code_root(expected_root: Path) -> dict[str, Any]:
+    actual_root = project_root().resolve()
+    expected = expected_root.expanduser().resolve()
+    if actual_root != expected:
+        raise ValueError(
+            "lean-engine canonical code root mismatch: "
+            f"expected `{expected}`, imported from `{actual_root}`"
+        )
+    return current_code_origin(root=actual_root)
 
 
 def _validate_model(model: str, *, field_name: str) -> None:
@@ -375,8 +457,18 @@ def _expect_string(payload: dict[str, Any], key: str) -> str:
     return value.strip()
 
 
-def _expect_int(payload: dict[str, Any], key: str) -> int:
+def _optional_string(value: Any) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValueError("optional string value must be a string when provided")
+    normalized = value.strip()
+    return normalized or None
+
+
+def _expect_int(payload: dict[str, Any], key: str, *, minimum: int = 1) -> int:
     value = payload.get(key)
-    if not isinstance(value, int) or value <= 0:
-        raise ValueError(f"{key} must be a positive integer")
+    if not isinstance(value, int) or value < minimum:
+        qualifier = "a positive integer" if minimum > 0 else "a non-negative integer"
+        raise ValueError(f"{key} must be {qualifier}")
     return value

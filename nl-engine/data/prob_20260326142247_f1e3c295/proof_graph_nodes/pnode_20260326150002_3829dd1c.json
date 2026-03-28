@@ -1,0 +1,87 @@
+{
+  "created_at": "2026-03-26T15:00:02.899723Z",
+  "graph_node_id": "pnode_20260326150002_3829dd1c",
+  "metadata": {
+    "parent_id": "thm_root_20260326142247_6714b56a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "dcccbadad1ea1e633798f2c124345d47827f921002ef35e0ebce82601cccc8e1",
+  "owner_id": "lem_20260326145604_4b9d21e2",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326150002_c70d2559",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m is an integer at least 1",
+      "when m equals 1, Alt_m_plus is the empty sequence",
+      "i ranges over the positions in Alt_m_plus, so i is between 1 and m minus 1",
+      "E_0 is fixed to be 1",
+      "E_m counts permutations of the finite set 1 through m",
+      "n is an integer at least 2",
+      "j is an integer between 1 and n inclusive",
+      "in the first recurrence sum, j must be odd",
+      "in the second recurrence sum, j must be even"
+    ],
+    "normalized_claim": "Define an alternating sign sequence Alt_m_plus of length m minus 1 that starts with plus 1 and alternates sign, with the empty sequence at m equals 1. Let E_0 be 1, and for each m at least 1 let E_m be the number of permutations of 1 through m that realize this sign pattern. Then for every integer n at least 2, E_n is equal to the sum over odd j from 1 to n of binomial(n minus 1, j minus 1) times E_j minus 1 times E_n minus j, and it is also equal to the analogous sum over even j from 1 to n.",
+    "quantifier_order": [
+      "for each integer m at least 1, define Alt_m_plus",
+      "for each integer i from 1 through m minus 1, the i-th entry of Alt_m_plus is plus 1 if i is odd and minus 1 if i is even",
+      "set E_0 equal to 1",
+      "for each integer m at least 1, define E_m as the number of permutations of the set of the first m positive integers satisfying Alt_m_plus",
+      "for each integer n at least 2, E_n equals the odd-j sum and also equals the even-j sum"
+    ],
+    "variables": [
+      {
+        "domain": "all integers at least 1",
+        "name": "m",
+        "role": "parameter used to define the sign sequence and the counting number E_m",
+        "type": "integer"
+      },
+      {
+        "domain": "positions from 1 through m minus 1",
+        "name": "i",
+        "role": "index of an entry in the sign sequence Alt_m_plus",
+        "type": "integer"
+      },
+      {
+        "domain": "length m minus 1, with the empty sequence when m equals 1",
+        "name": "Alt_m_plus",
+        "role": "alternating sign sequence starting with plus 1",
+        "type": "sequence of signs"
+      },
+      {
+        "domain": "single initial value",
+        "name": "E_0",
+        "role": "base case fixed equal to 1",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers m at least 1",
+        "name": "E_m",
+        "role": "number of permutations of the set of the first m positive integers that satisfy the specified sign pattern",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "all integers at least 2",
+        "name": "n",
+        "role": "index at which the recurrence is asserted",
+        "type": "integer"
+      },
+      {
+        "domain": "integers between 1 and n, with parity restricted to odd in one sum and even in the other",
+        "name": "j",
+        "role": "summation index in the recurrence",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "Alt_m_plus depends only on m and the parity rule for i",
+      "E_m depends on the previously defined sign sequence Alt_m_plus for the same m",
+      "the recurrence terms for E_n depend on the values E_j minus 1 and E_n minus j",
+      "the counted permutation objects are internal to the definition of E_m and are not external free variables",
+      "there is no existential witness in the recurrence itself; it is an identity over all admissible n"
+    ]
+  },
+  "statement_nl": "For each integer m at least 1, let Alt_m^+ be the sign sequence of length m-1 whose ith entry is plus 1 when i is odd and minus 1 when i is even; for m=1 this is the empty sequence. Set E_0 = 1, and for m at least 1 let E_m be the number of permutations of {1,...,m} satisfying Alt_m^+. Then for every integer n at least 2, E_n = sum over odd j with 1 <= j <= n of binomial(n-1,j-1) E_{j-1} E_{n-j}, and also E_n = sum over even j with 1 <= j <= n of binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+  "updated_at": "2026-03-26T15:00:02.899723Z"
+}

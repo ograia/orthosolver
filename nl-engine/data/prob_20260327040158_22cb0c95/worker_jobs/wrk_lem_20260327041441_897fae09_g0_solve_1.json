@@ -1,0 +1,241 @@
+{
+  "artifact_prefix": "problems/prob_20260327040158_22cb0c95/lemmas/lem_20260327041441_897fae09/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T04:26:32.161795Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T04:26:40.396027Z",
+  "controller_consumed_by_execution_id": "exec_20260327040158_2f750a29",
+  "created_at": "2026-03-27T04:18:42.801439Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327040158_2f750a29",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+        "item_id": "pnode_20260327041842_33999f03",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327041832_92c03bca",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "lemma_id": "lem_20260327041441_897fae09",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327041842_eee9585b",
+    "role_in_assembly": "This is a support lemma for L6; after induction reduces the search to two alternating candidates, this lemma decides which of the two is better.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2.",
+        "The sequence s has exactly n minus 1 entries.",
+        "Each entry of s is either plus 1 or minus 1.",
+        "The tuple a is a permutation of {1, 2, ..., n}, so all entries are distinct and each integer from 1 to n appears exactly once.",
+        "The inequality si times (a(i+1) - ai) greater than 0 means ai+1 is greater than ai when si is plus 1, and ai+1 is less than ai when si is minus 1.",
+        "The constraint must hold for every index i from 1 to n minus 1."
+      ],
+      "normalized_claim": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+      "quantifier_order": [
+        "First fix an integer n with n at least 2.",
+        "Then range over all sign sequences s of length n minus 1.",
+        "For a given s, count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every i from 1 to n minus 1.",
+        "Finally, for each n, identify which sequences s maximize this count."
+      ],
+      "variables": [
+        {
+          "domain": "integers with n at least 2",
+          "name": "n",
+          "role": "problem size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "candidate sign pattern to optimize over",
+          "type": "sequence of signs"
+        },
+        {
+          "domain": "each entry is plus 1 or minus 1",
+          "name": "si",
+          "role": "the i-th sign controlling the i-th adjacent comparison",
+          "type": "sign"
+        },
+        {
+          "domain": "ordered n-tuples containing each element of {1, 2, ..., n} exactly once",
+          "name": "a",
+          "role": "object being counted by f(s)",
+          "type": "permutation sequence"
+        },
+        {
+          "domain": "values from 1 to n appearing in the permutation",
+          "name": "ai",
+          "role": "the i-th term of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing sign sequence depends on n.",
+        "No existential witness is built into the counting definition of f(s); the only counted witnesses are permutations a satisfying the inequalities.",
+        "Any characterization of maximizers must be valid uniformly for all sign sequences of the specified length for the fixed n."
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m and r are positive integers.",
+        "The generic vector y has length ell, where ell is a positive integer.",
+        "The sign string t has length r and each entry is either plus one or minus one.",
+        "Empty sums are defined to be zero.",
+        "x has length m.",
+        "All entries of x are nonnegative.",
+        "In the first comparison, x is nonincreasing, meaning its entries do not increase as the index increases.",
+        "In the second comparison, x is nondecreasing, meaning its entries do not decrease as the index increases.",
+        "The strict inequality clauses apply only when x is nonconstant, meaning not all entries of x are equal."
+      ],
+      "normalized_claim": "With m and r fixed as positive integers, define U, D, T_t, Total, and the two alternating sign strings as stated. Then every nonnegative weakly decreasing vector x of length m satisfies that the total after the plus-starting alternating composition is at least the total after the minus-starting alternating composition, and the inequality is strict when x is not constant. Likewise, every nonnegative weakly increasing vector x of length m satisfies the reverse inequality, again strict when x is not constant.",
+      "quantifier_order": [
+        "For each positive integer m and each positive integer r, the operators and sign strings are defined in terms of these fixed parameters.",
+        "For every vector y of length ell, U(y), D(y), and Total(y) are defined using the given formulas, with empty sums interpreted as zero.",
+        "For every sign string t of length r, T_t is obtained by applying U or D successively according to the signs in t.",
+        "For every vector x of length m that is nonnegative and nonincreasing, Total applied to T_Alt_r_plus of x is at least Total applied to T_Alt_r_minus of x.",
+        "If such an x is nonconstant, the previous inequality is strict.",
+        "For every vector x of length m that is nonnegative and nondecreasing, Total applied to T_Alt_r_minus of x is at least Total applied to T_Alt_r_plus of x.",
+        "If such an x is nonconstant, the previous inequality is strict."
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "m",
+          "role": "fixed parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "positive integers",
+          "name": "r",
+          "role": "fixed parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "positive integers",
+          "name": "ell",
+          "role": "length parameter for the generic vector y",
+          "type": "integer"
+        },
+        {
+          "domain": "vectors of length ell over the underlying scalar domain",
+          "name": "y",
+          "role": "generic input for the operators U, D, and Total",
+          "type": "vector"
+        },
+        {
+          "domain": "strings of length r with entries plus one or minus one",
+          "name": "t",
+          "role": "instruction string determining the composition T_t",
+          "type": "sign string"
+        },
+        {
+          "domain": "vectors of length m over the underlying scalar domain",
+          "name": "x",
+          "role": "quantified input vector subject to monotonicity and nonnegativity conditions",
+          "type": "vector"
+        },
+        {
+          "domain": "vectors to vectors",
+          "name": "U",
+          "role": "prefix-sum operator that increases length by one",
+          "type": "operator"
+        },
+        {
+          "domain": "vectors to vectors",
+          "name": "D",
+          "role": "suffix-sum operator that increases length by one",
+          "type": "operator"
+        },
+        {
+          "domain": "vectors to vectors",
+          "name": "T_t",
+          "role": "composition of U and D determined by the sign string t",
+          "type": "operator family"
+        },
+        {
+          "domain": "vectors to scalars",
+          "name": "Total",
+          "role": "sum of all entries of a vector",
+          "type": "function"
+        },
+        {
+          "domain": "length r strings",
+          "name": "Alt_r_plus",
+          "role": "alternating pattern starting with plus one",
+          "type": "sign string"
+        },
+        {
+          "domain": "length r strings",
+          "name": "Alt_r_minus",
+          "role": "alternating pattern starting with minus one",
+          "type": "sign string"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are present in the statement.",
+        "The strictness conclusion depends only on the same vector x being nonconstant; there is no separate witness to choose.",
+        "The operator T_t depends on the chosen sign string t, and in the theorem the two special choices are Alt_r_plus and Alt_r_minus."
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Fix positive integers m and r. Define U, D, T_t, Total, Alt_r^+, and Alt_r^- exactly as follows: if y=(y_1,...,y_ell), then U(y) and D(y) are length ell+1 vectors given by U(y)_j = sum_{i=1}^{j-1} y_i and D(y)_j = sum_{i=j}^{ell} y_i for 1 <= j <= ell+1, with empty sums equal to 0; for a sign string t=(t_1,...,t_r), T_t(x) is obtained by applying U or D successively according to the signs; Alt_r^+=(+1,-1,+1,-1,...) and Alt_r^-=(-1,+1,-1,+1,...) have length r; and Total(y) is the sum of the entries of y. If x is a nonnegative nonincreasing vector of length m, then Total(T_{Alt_r^+}(x)) >= Total(T_{Alt_r^-}(x)), with strict inequality if x is nonconstant. If x is a nonnegative nondecreasing vector of length m, then Total(T_{Alt_r^-}(x)) >= Total(T_{Alt_r^+}(x)), with strict inequality if x is nonconstant.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "used_allowed_dependency_manifest_items": [],
+      "used_only_statement_definitions": true,
+      "used_trusted_context_summaries": []
+    },
+    "lemma_id": "lem_20260327041441_897fae09",
+    "proof_nl": "Let e_i be the i-th standard basis vector of length m (so e_i has a 1 in position i and 0 elsewhere). For a sign string t, define c_t(i)=Total(T_t(e_i)). Since U, D, and Total are linear, T_t is linear, hence for every x=(x_1,...,x_m),\nTotal(T_t(x))=sum_{i=1}^m c_t(i)x_i.\nSo it is enough to understand the coefficients c_t(i).\n\nFor t=(t_1,...,t_r) and indices i,j, call a sequence p_0,p_1,...,p_r an admissible t-chain from i to j if p_0=i, p_r=j, 1<=p_k<=m+k for each k, and for each k:\n- if t_k=+1, then p_{k-1}<p_k;\n- if t_k=-1, then p_{k-1}>=p_k.\nI claim that T_t(e_i)_j is exactly the number of admissible t-chains from i to j.\n\nThis is proved by induction on r. For r=1, if t=(+1), then U(e_i)_j=1 exactly when i<j and 0 otherwise, so it counts one-step admissible chains. If t=(-1), then D(e_i)_j=1 exactly when i>=j and 0 otherwise, so it again counts one-step admissible chains.\n\nFor the induction step, suppose the claim is true for a sign string t of length r, and let t' be obtained by appending one more sign. If the new sign is +1, then for each j,\nT_{t'}(e_i)_j=U(T_t(e_i))_j=sum_{h=1}^{j-1} T_t(e_i)_h.\nBy the induction hypothesis, this counts exactly the admissible t-chains from i to h, summed over all h<j; that is exactly the number of admissible t'-chains from i to j. If the new sign is -1, then similarly\nT_{t'}(e_i)_j=D(T_t(e_i))_j=sum_{h=j}^{m+r} T_t(e_i)_h,\nwhich counts exactly the admissible t'-chains from i to j. Thus the claim holds for all r.\n\nTherefore c_t(i)=Total(T_t(e_i)) is the number of admissible t-chains starting at i, with arbitrary endpoint.\n\nNow let a_i=c_{Alt_r^+}(i). Because the first sign of Alt_r^+ is +1, every admissible Alt_r^+-chain starting at i+1 is also admissible starting at i: indeed the only condition involving the start is p_0<p_1, and i+1<p_1 implies i<p_1. Hence a_i>=a_{i+1}.\n\nThis inclusion is strict for every i<m. Consider the chain defined by\np_0=i,\np_1=i+1,\nand for k>=2,\np_k=1 if k is even, and p_k=m+k if k is odd.\nThis satisfies the alternating conditions +,-,+,-,..., so it is an admissible Alt_r^+-chain starting at i. But it is not admissible starting at i+1, because its first step would require i+1<p_1=i+1, which is false. Therefore\na_1>a_2>...>a_m.\n\nNext let b_i=c_{Alt_r^-}(i). I claim that b_i=a_{m+1-i}. Take any admissible Alt_r^+-chain p_0=i,p_1,...,p_r and define\nq_k=m+k+1-p_k  for 0<=k<=r.\nThen q_0=m+1-i and 1<=q_k<=m+k for every k. Also, Alt_r^- is obtained from Alt_r^+ by flipping every sign, and the inequalities transform correctly:\n- if the k-th sign of Alt_r^+ is +1, then p_{k-1}<p_k, so\n  q_{k-1}-q_k=(m+k-p_{k-1})-(m+k+1-p_k)=p_k-p_{k-1}-1>=0,\n  hence q_{k-1}>=q_k;\n- if the k-th sign of Alt_r^+ is -1, then p_{k-1}>=p_k, so\n  q_{k-1}-q_k=p_k-p_{k-1}-1<=-1,\n  hence q_{k-1}<q_k.\nSo q is an admissible Alt_r^--chain starting at m+1-i. The same transformation is its own inverse, so this is a bijection. Hence b_i=a_{m+1-i}.\n\nNow define\nF_+(x)=Total(T_{Alt_r^+}(x)),\nF_-(x)=Total(T_{Alt_r^-}(x)).\nBy linearity and the identities above,\nF_+(x)=sum_{i=1}^m a_i x_i,\nF_-(x)=sum_{i=1}^m a_{m+1-i} x_i.\nTherefore\nF_+(x)-F_-(x)=sum_{i=1}^m (a_i-a_{m+1-i})x_i.\nPairing the terms with indices i and m+1-i gives\nF_+(x)-F_-(x)=sum_{i=1}^{floor(m/2)} (a_i-a_{m+1-i})(x_i-x_{m+1-i}).\nBecause a_1>a_2>...>a_m, each coefficient a_i-a_{m+1-i} in this sum is positive.\n\nIf x is nonnegative and nonincreasing, then x_i>=x_{m+1-i} for every i<=floor(m/2). Hence every term in the last sum is >=0, so F_+(x)>=F_-(x). If x is nonconstant, then x_1>x_m, and since a_1>a_m, the term with i=1 is >0; therefore F_+(x)>F_-(x).\n\nIf x is nonnegative and nondecreasing, then x_i<=x_{m+1-i} for every i<=floor(m/2). Hence every term in the last sum is <=0, so F_+(x)<=F_-(x), i.e. F_-(x)>=F_+(x). If x is nonconstant, then x_1<x_m, so the term with i=1 is <0; therefore F_+(x)<F_-(x).\n\nThis is exactly the stated lemma.",
+    "proof_summary": "Expand the total as a linear combination of the coordinates of x using basis vectors. For Alt_r^+, the coefficient of x_i counts alternating index-chains starting at i; this count is strictly decreasing in i because the first step is a strict ascent. Complementing each intermediate index gives a bijection showing that the Alt_r^- coefficients are the reverse of the Alt_r^+ coefficients. Pairing symmetric indices then yields the required sign of the difference for monotone x, with strictness for nonconstant x.",
+    "self_report": {
+      "confidence": 0.97,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T04:18:46.080842Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327041441_897fae09",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T04:26:40.396032Z",
+  "worker_job_id": "wrk_lem_20260327041441_897fae09_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

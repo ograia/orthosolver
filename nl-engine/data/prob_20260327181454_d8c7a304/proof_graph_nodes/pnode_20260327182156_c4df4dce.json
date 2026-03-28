@@ -1,0 +1,53 @@
+{
+  "created_at": "2026-03-27T18:21:56.405255Z",
+  "graph_node_id": "pnode_20260327182156_c4df4dce",
+  "metadata": {
+    "node_kind": "theorem"
+  },
+  "node_kind": "claim",
+  "node_status": "active",
+  "normalized_claim_hash": "f2e3cce3a35a696093b8bb3217c6128cc7f5a91c51f4d0537d931188f32553e0",
+  "owner_id": "thm_root_20260327181454_61717cff",
+  "owner_kind": "theorem",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer with n greater than 1",
+      "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+      "x is any real number",
+      "the floor function is applied to real numbers (so it is always defined)"
+    ],
+    "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+    "quantifier_order": [
+      "for a given integer n greater than 1",
+      "find real x such that for all real y, expression at x is at least the expression at y",
+      "and there exists at least one real x achieving that maximal value"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "optimization variable over which the expression is maximized",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index in the expression, ranging from 1 to n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "the maximizer x (if it exists) may depend on the fixed parameter n",
+      "the maximal value may depend on the fixed parameter n"
+    ]
+  },
+  "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+  "updated_at": "2026-03-27T18:21:56.405257Z"
+}

@@ -259,6 +259,24 @@ class DebugArtifactContentResponse(ApiEnvelope):
     content_type: str | None
 
 
+class DebugLeanFileEntry(BaseModel):
+    kind: str
+    label: str
+    path: str | None = None
+    content: str | None = None
+    exists: bool = False
+    compile_status: str | None = None
+    compile_diagnostics: list[dict[str, Any]] = Field(default_factory=list)
+    source_job_id: str | None = None
+    updated_at: datetime | None = None
+
+
+class DebugLeanFilesResponse(ApiEnvelope):
+    problem_id: str
+    node_id: str
+    entries: list[DebugLeanFileEntry]
+
+
 class DebugNodeGraphNode(BaseModel):
     id: str
     kind: str
@@ -501,6 +519,7 @@ class Agent2Lemma(BaseModel):
     formalization_cost_estimate: float
     self_check_true: bool
     self_check_notes: str
+    proof_nl: str | None = None
 
 
 class Agent2AssemblyPlan(BaseModel):
@@ -689,6 +708,62 @@ class Agent6Output(BaseModel):
     circularity_found: bool = False
     cross_track_contamination: bool = False
     unresolved_bottleneck_use: bool = False
+
+
+class Agent7Input(BaseModel):
+    lemma_id: str
+    parent_statement_nl: str
+    parent_semantic_sketch: dict[str, Any]
+    parent_proof_nl: str
+    role_in_parent: str | None = None
+    root_theorem_nl: str = ""
+    root_semantic_sketch: dict[str, Any] = Field(default_factory=dict)
+    ancestry_summary: list[dict[str, Any]] = Field(default_factory=list)
+    trusted_context_summaries: list[dict[str, Any]] = Field(default_factory=list)
+    lean_failure: dict[str, Any] = Field(default_factory=dict)
+    previous_attempt_summaries: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class Agent7Output(BaseModel):
+    status: Literal["completed"]
+    decision: Literal["split", "unable_to_split"]
+    strategy_summary: str
+    shared_context: list[dict[str, Any]] = Field(default_factory=list)
+    context_items: list[dict[str, Any]] = Field(default_factory=list)
+    lemmas: list[Agent2Lemma] = Field(default_factory=list)
+    assembly_plan: Agent2AssemblyPlan
+    parent_reassembly_explanation: str
+    confidence: float = 0.0
+    summary: str = ""
+
+
+class Agent8Input(BaseModel):
+    lemma_id: str
+    parent_statement_nl: str
+    parent_semantic_sketch: dict[str, Any]
+    parent_proof_nl: str
+    lean_failure: dict[str, Any] = Field(default_factory=dict)
+    proposed_split: dict[str, Any]
+
+
+class Agent8Output(BaseModel):
+    status: Literal["completed"]
+    decision: Literal["approved", "rejected"]
+    confidence: float
+    summary: str
+    parent_reassembly_valid: bool = False
+    child_findings: list[dict[str, Any]] = Field(default_factory=list)
+    bundle_findings: list[dict[str, Any]] = Field(default_factory=list)
+
+    @field_validator("child_findings", mode="before")
+    @classmethod
+    def _normalize_child_findings(cls, value: Any) -> list[dict[str, Any]]:
+        return _normalize_findings_list(value, string_key="finding")
+
+    @field_validator("bundle_findings", mode="before")
+    @classmethod
+    def _normalize_bundle_findings(cls, value: Any) -> list[dict[str, Any]]:
+        return _normalize_findings_list(value, string_key="finding")
 
 
 TreeNode.model_rebuild()

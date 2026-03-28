@@ -232,6 +232,29 @@ def test_root_agent_deferred_state_is_reported_as_deferred_failure(tmp_path: Pat
     )
 
 
+def test_lean_completion_uses_response_artifact_and_terminal_status(tmp_path: Path) -> None:
+    browser = ArtifactBrowser(str(tmp_path))
+    request_key = "problems/p/lean_jobs/lean_job_1/request.json"
+    response_key = "problems/p/lean_jobs/lean_job_1/response.json"
+    _write(tmp_path / request_key)
+    _write(
+        tmp_path / response_key,
+        '{"status":"repairable","result":{"issue_kind":"lean_issue","error_class":"llm_runtime_failure"}}',
+    )
+
+    status, detail = _request_completion_status(
+        browser=browser,
+        source="lean",
+        artifact_key=request_key,
+        problem_id="p",
+        key_set={request_key, response_key},
+        problem_running=False,
+    )
+
+    assert status == "failed"
+    assert detail == "lean result repairable (lean_issue, llm_runtime_failure)"
+
+
 def test_root_agent_queued_state_is_pending(tmp_path: Path) -> None:
     browser = ArtifactBrowser(str(tmp_path))
     input_key = "problems/p/decomposer/attempt_1/agent2_input.json"

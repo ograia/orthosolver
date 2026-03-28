@@ -1,0 +1,53 @@
+{
+  "created_at": "2026-03-27T17:19:50.308940Z",
+  "graph_node_id": "pnode_20260327171950_a8deae8f",
+  "metadata": {
+    "parent_id": "thm_root_20260327165556_b210f785"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "81a0aacbd98d74c6932eb4348d6b124c347e885644a4ba67369bfdb091623648",
+  "owner_id": "lem_20260327171831_32794821",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327171949_82d246b0",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "t is a real number and 0 <= t and t < 1",
+      "a equals floor(n times t), so a is an integer satisfying a <= n*t < a + 1",
+      "the expression a/n must be a valid input to E_n (so E_n must be defined at least for the value a/n that results from the floor construction)"
+    ],
+    "normalized_claim": "For every integer n > 1 and every real t with 0 <= t < 1, letting a = floor(n*t), it holds that E_n(t) is less than or equal to E_n(a divided by n).",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all real numbers t with 0 <= t < 1",
+      "let a be floor(n*t) (dependent definition/witness)"
+    ],
+    "variables": [
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "global parameter indexing the function E_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers with 0 <= t < 1",
+        "name": "t",
+        "role": "input to the function E_n",
+        "type": "real number"
+      },
+      {
+        "domain": "all integers (but constrained by a = floor(n*t))",
+        "name": "a",
+        "role": "witness defined as the floor of n*t, used to form the rational input a/n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "a depends on n and t via a = floor(n*t)",
+      "the point a/n depends on n and t through a"
+    ]
+  },
+  "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+  "updated_at": "2026-03-27T17:19:50.308941Z"
+}

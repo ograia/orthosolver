@@ -1,0 +1,252 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/lemmas/lem_20260327170816_de67354a/vetter_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-27T17:10:37.353308Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-27T17:10:27.743949Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+        "item_id": "pnode_20260327170943_5b5165a1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327165556_b210f785",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327165556_b210f785",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer",
+            "n greater than 1",
+            "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+            "x is a real number",
+            "floor is the greatest integer less than or equal to its real input"
+          ],
+          "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+          "quantifier_order": [
+            "for all integers n with n greater than 1",
+            "there exists a real number x_star",
+            "for all real numbers y",
+            "E_n(x_star) is at least E_n(y)"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter with constraint n greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index, restricted to k from 1 through n",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "variable over which the expression is maximized",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "y",
+              "role": "arbitrary competitor value to define maximality",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "E_n(x)",
+              "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "M(n)",
+              "role": "the maximal value of E_n(x) over all real x, depends on n",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x_star",
+              "role": "a real number where the maximum is achieved; may depend on n",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+            "M(n) depends on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327170816_de67354a",
+    "proof_nl": "Fix an integer n>1 and a real number t with (n-1)/n \\le t < 1. Let k be any integer with 1 \\le k \\le n. Since k>0, multiplying the inequality for t by k gives\nk(n-1)/n \\le kt < k.\nNow k \\le n implies k/n \\le 1, so\nk(n-1)/n = k - k/n \\ge k-1.\nTherefore k-1 \\le kt < k. Because k-1 and k are consecutive integers, it follows that\nfloor(k t) = k-1.\n\nIn particular, taking k=n yields floor(nt)=n-1. Hence\nE_n(t) = floor(nt) - \\sum_{k=1}^n \\frac{floor(k t)}{k}\n= (n-1) - \\sum_{k=1}^n \\frac{k-1}{k}.\nWriting \\frac{k-1}{k}=1-\\frac1k and using H_n := \\sum_{k=1}^n \\frac1k, we get\n\\sum_{k=1}^n \\frac{k-1}{k} = \\sum_{k=1}^n \\left(1-\\frac1k\\right) = n - H_n.\nTherefore\nE_n(t) = (n-1) - (n-H_n) = H_n - 1.\nSo for every such t, floor(k t)=k-1 for all 1\\le k\\le n, and hence E_n(t)=H_n-1.",
+    "role_in_assembly": "Exhibit the maximizing interval and compute the value there.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "t is a real number satisfying (n-1)/n is at most t",
+        "t is a real number with t strictly less than 1",
+        "k is an integer with k at least 1",
+        "k is an integer with k at most n"
+      ],
+      "normalized_claim": "For all integers n greater than 1, for all real numbers t with (n-1)/n <= t and t < 1, and for all integers k with 1 <= k <= n, floor of (k times t) equals k minus 1; therefore E_n(t) equals H_n minus 1.",
+      "quantifier_order": [
+        "for all integers n",
+        "for all real numbers t",
+        "for all integers k"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "outer universal parameter controlling the range of t and k",
+          "type": "integer"
+        },
+        {
+          "domain": "reals with (n-1)/n <= t < 1",
+          "name": "t",
+          "role": "real scaling parameter used in k*t",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "index parameter in the floor(k*t) expression",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced; all variables (n, t, k) are universally quantified",
+        "The allowable range of t depends on n via the bound (n-1)/n"
+      ]
+    },
+    "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n, and hence E_n(t) = H_n - 1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327170816_de67354a",
+    "proof_status": "complete",
+    "reason": "The proof correctly shows that for any t in [(n-1)/n, 1), and any integer k with 1<=k<=n, we have k-1 <= kt < k, hence floor(k t)=k-1. It then computes E_n(t)=H_n-1 exactly as claimed. No semantic drift or dependency issues are present.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T17:10:29.210803Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327170816_de67354a",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T17:10:37.353308Z",
+  "worker_job_id": "wrk_lem_20260327170816_de67354a_g0_vet_2",
+  "worker_kind": "lemma_vetter"
+}

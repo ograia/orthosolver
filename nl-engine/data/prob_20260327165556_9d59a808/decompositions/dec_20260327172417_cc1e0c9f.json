@@ -1,0 +1,2108 @@
+{
+  "assembly_plan_id": "asm_20260327172417_b58354c5",
+  "controller_status": "failed",
+  "created_at": "2026-03-27T17:25:23.791047Z",
+  "decomposition_id": "dec_20260327172417_cc1e0c9f",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "passed",
+  "equivalence_risk": "none",
+  "failure_origin": "lean_prepare:lean_issue",
+  "failure_reason": "Claude statement generation failed before producing a usable candidate.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 1.09,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": null,
+  "latest_prepare_track_job_id": "lean_job_dec_20260327172417_cc1e0c9f_prepare_track_3",
+  "lean_artifact_index": {
+    "normalized_bundle": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327165556_9d59a808/run_015/normalized_problem.json",
+    "normalized_problem": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327165556_9d59a808/run_015/normalized_problem.json",
+    "phase03_summary": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327165556_9d59a808/run_015/summaries/phase03_summary.json",
+    "run_root": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327165556_9d59a808/run_015",
+    "summaries": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327165556_9d59a808/run_015/summaries",
+    "track_manifest": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327165556_9d59a808/run_015/track_manifest.json",
+    "workspace": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327165556_9d59a808/run_015/workspace"
+  },
+  "lean_assembly_status": "pending",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": 0.9,
+  "lean_prepare_error_class": "llm_runtime_failure",
+  "lean_prepare_fatality": "repairable",
+  "lean_prepare_issue_kind": "lean_issue",
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": "exhausted",
+  "lean_v2_track_id": null,
+  "lemma_ids": [
+    "lem_20260327172417_237013e8",
+    "lem_20260327172422_2c8f5439",
+    "lem_20260327172428_0b7ed061",
+    "lem_20260327172435_7d2786d3",
+    "lem_20260327172441_7b3fd879",
+    "lem_20260327172447_6a836050"
+  ],
+  "llm_vetting_status": "accepted",
+  "logical_decomposition_id": "logdec_thm_root_20260327165556_b210f785_track_1",
+  "node_id": "thm_root_20260327165556_b210f785",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decision": "accepted",
+      "decomposition_id": "dec_20260327165934_b127306b",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "accepted",
+      "failure_origin": "lean_prepare:lean_issue",
+      "fixes_required": [],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "First use integer-shift periodicity to replace an arbitrary real x by its fractional part t in [0,1). For t in [0,1), let a=floor(n t). The floor function is monotone, so each floor(k t) is at least floor(k a/n); summing gives E_n(t) <= E_n(a/n). The sharp endpoint lemma then gives E_n(a/n) <= H_n - 1, with equality only when a=n-1. On the other hand, if t lies in [(n-1)/n,1), then every floor(k t) equals k-1 for 1<=k<=n, and direct substitution shows E_n(t)=H_n-1. Therefore the maximum is H_n-1 = sum_{k=2}^n 1/k, and the maximizers are exactly the real x whose fractional part lies in [(n-1)/n,1).",
+          "steps": [
+            {
+              "derives": "For an arbitrary real x, replacing x by t = frac(x) does not change E_n(x), so it suffices to analyze t in the interval [0,1).",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "Take m = floor(x), so x = t + m with t = frac(x); L1 gives E_n(x)=E_n(t).",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For t in [0,1), writing a = floor(n*t), one has E_n(t) <= E_n(a/n).",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Apply the pointwise floor comparison from L4 to each k = 1,...,n and sum after dividing by k.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For every real x, E_n(x) <= H_n - 1, and if equality holds then the integer a = floor(n*frac(x)) must equal n-1.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "Combine A2 with the sharp endpoint bound from L5. The equality clause in L5 forces a=n-1 whenever the upper bound is attained at an endpoint.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "If frac(x) lies in [(n-1)/n, 1), then E_n(x) = H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "By L2, all floors floor(k*frac(x)) equal k-1 for 1<=k<=n; substituting these identities into the definition of E_n and simplifying via L3 gives the exact value H_n-1.",
+              "uses_lemmas": [
+                "L2",
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "The set of real maximizers is exactly those x whose fractional part lies in [(n-1)/n, 1), and the maximal value is H_n - 1 = sum_{k=2}^n 1/k.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "A3 shows no value can exceed H_n-1; A4 shows every x with fractional part in the top interval attains H_n-1. The equality case in A3/L5 forces the fractional part of any maximizer to lie in that same interval, and periodicity from L1 extends the description to all real x.",
+              "uses_lemmas": [
+                "L1",
+                "L2",
+                "L3",
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A3",
+                "A4"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.3,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce the search for maximizers from all real x to the fractional part frac(x) in [0,1).",
+            "self_check_notes": "Standard periodicity of expressions built from floor(kx) with matching integer shifts.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "m is an integer"
+              ],
+              "normalized_claim": "The function E_n is periodic with period 1: E_n(x+m)=E_n(x) for every integer shift m.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers x",
+                "for all integers m"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "x",
+                  "role": "real input of the function E_n",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "integer shift",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+            "strictly_easier_reason": "It is a direct algebraic check using floor(k*(x+m)) = floor(k*x) + k*m for integer m, plus cancellation in the defining sum."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Identify all floor values on the candidate maximizing interval.",
+            "self_check_notes": "This is a local floor computation on a short interval.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "(n-1)/n <= t < 1",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "On the interval [(n-1)/n,1), every multiple kt with 1<=k<=n lies in [k-1,k), so its floor is exactly k-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with (n-1)/n <= t < 1",
+                "for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real parameter in the top interval",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "summation index / floor index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n.",
+            "strictly_easier_reason": "It is a straightforward interval estimate: k(n-1)/n <= k*t < k, and k(n-1)/n >= k-1 for k<=n."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Convert the floor pattern on the top interval into the exact value of E_n.",
+            "self_check_notes": "This is an explicit evaluation lemma once the floor pattern is known.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "for every k, 1 <= k <= n"
+              ],
+              "normalized_claim": "If floor(k*t)=k-1 for all k=1,...,n, then the defining expression becomes floor(n*t) - sum_{k=1}^n (k-1)/k = (n-1) - sum_{k=1}^{n-1}(k-1)/k - (n-1)/n = H_n - 1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t",
+                "if the floor identities hold for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real variable",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "index in the defining sum",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t, if floor(k*t) = k-1 for every integer k with 1 <= k <= n, then E_n(t) = H_n - 1.",
+            "strictly_easier_reason": "It is a direct substitution into the definition of E_n followed by a finite harmonic-number computation."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce the maximization problem on each interval [a/n,(a+1)/n) to the left endpoint a/n.",
+            "self_check_notes": "This is a standard endpoint comparison on each short interval.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "0 <= t < 1",
+                "a = floor(n*t)",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "Since t >= a/n, floor(k*t) >= floor(k*a/n) for each k, hence the sum term in E_n(t) is at least the corresponding sum at a/n, so E_n(t) <= E_n(a/n).",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with 0 <= t < 1",
+                "let a = floor(n*t)",
+                "for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "fractional representative in [0,1)",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "the integer floor(n*t)",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "a depends on n and t"
+              ]
+            },
+            "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+            "strictly_easier_reason": "It is a monotonicity-and-summing argument: each floor(k*t) is monotone in t, so the whole expression is bounded by the left endpoint of the 1/n-interval."
+          },
+          {
+            "bottleneck_reason": "This is the main nontrivial inequality: it packages the exact maximum value and the exact equality case at the rational endpoints, which is the hard arithmetic core of the theorem.",
+            "formalization_cost_estimate": 0.82,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "This is the sharp global upper bound at the discrete endpoints a/n; it is the main frontier/bottleneck step.",
+            "self_check_notes": "Restricted to rational endpoints, but still the key sharp inequality needed to exclude all non-maximizing intervals.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "0 <= a <= n-1"
+              ],
+              "normalized_claim": "The rational endpoint values never exceed the harmonic threshold H_n - 1, and the threshold is attained exactly at a=n-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all integers a with 0 <= a <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "endpoint numerator with 0<=a<=n-1",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) <= H_n - 1, and equality holds if and only if a = n-1.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "strategy_summary": "Reduce the problem to the fractional part of x, prove the expression is constant and maximal on the top 1/n-interval, and use a sharp bound at the rational endpoints a/n to rule out every other interval. The only genuinely hard step is the sharp endpoint inequality and its equality case."
+      },
+      "lean_assembly_status": "pending",
+      "lean_prepare_confidence": 0.9,
+      "lean_prepare_error_class": "llm_runtime_failure",
+      "lean_prepare_fatality": "repairable",
+      "lean_prepare_issue_kind": "lean_issue",
+      "lean_v2_prepare_status": "exhausted",
+      "llm_vetting_status": "accepted",
+      "missing_coverage": [],
+      "rejection_reason": "Claude statement generation failed before producing a usable candidate.",
+      "strategy_summary": "Reduce the problem to the fractional part of x, prove the expression is constant and maximal on the top 1/n-interval, and use a sharp bound at the rational endpoints a/n to rule out every other interval. The only genuinely hard step is the sharp endpoint inequality and its equality case.",
+      "vet_summary": "The decomposition is sound: all five lemmas are plausible, the assembly correctly reduces the problem to the fractional part, applies the interval comparison and sharp endpoint bound, and identifies both the maximal value and the maximizers. No self-containment or semantic drift issues were found; L5 is the intended bottleneck but is strictly weaker than the root theorem."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "accepted",
+      "decomposition_id": "dec_20260327170732_4936903f",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "accepted",
+      "failure_origin": "lean_prepare:lean_issue",
+      "fixes_required": [],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "First reduce an arbitrary real x to its fractional part using periodicity under integer shifts. On [0,1), let a = floor(n*frac(x)); then the value at frac(x) is bounded above by the endpoint value a/n. Rewrite that endpoint value as a weighted sum of least residues of k*a modulo n. Rearrangement shows the weighted sum is maximized when the residues are sorted in nonincreasing order, and the gcd-based residue lemma gives the pointwise bound needed to reach H_n-1. If equality occurs, the rearrangement step forces the residue sequence to be nonincreasing, and the modular recursion lemma then forces a=n-1, so frac(x) lies in the top interval [(n-1)/n,1). Conversely, every x with fractional part in that interval gives floor(kx)=k-1 for all 1<=k<=n, so the expression evaluates to H_n-1. Therefore the maximal value is H_n-1 and the maximizers are exactly the real x whose fractional part lies in [(n-1)/n,1).",
+          "steps": [
+            {
+              "derives": "For an arbitrary real x, E_n(x) equals E_n(frac(x)), so one may assume the input lies in [0,1).",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "Write x = floor(x) + frac(x) and apply integer-translation invariance.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For t = frac(x) in [0,1), if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Since t >= a/n, floor(k*t) >= floor(k*a/n) for every k, while the first term floor(n*t) agrees with floor(n*a/n).",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "The endpoint value E_n(a/n) can be rewritten as a weighted sum of least residues modulo n.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "Expand each floor(k*a/n) as k*a/n minus its residue divided by n, then sum and cancel the a-term.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "The weighted residue sum is at most the weighted sum of the same residues arranged in nonincreasing order.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "Apply the rearrangement inequality with weights 1,1/2,...,1/(n-1), which are strictly decreasing.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "The sorted residue list satisfies u_j <= n-j, so the weighted sum is at most sum_{j=1}^{n-1}(n-j)/j = n(H_n-1), hence E_n(a/n) <= H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "Insert the pointwise bound from L5 into the estimate from A4 and divide by n.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A4"
+              ]
+            },
+            {
+              "derives": "If equality holds in the bound from A5, then the residue sequence must already be nonincreasing; L6 then forces a = n-1, so frac(x) lies in [(n-1)/n,1).",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "Equality in the rearrangement inequality forces the original residue order to be nonincreasing, and the modular recursion lemma then identifies the only possible endpoint numerator.",
+              "uses_lemmas": [
+                "L4",
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            },
+            {
+              "derives": "Every real x whose fractional part lies in [(n-1)/n,1) satisfies E_n(x) = H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "Apply the top-interval evaluation to frac(x), then use periodicity to transfer the value back to x.",
+              "uses_lemmas": [
+                "L1",
+                "L7"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "The maximal value is H_n - 1 = sum_{k=2}^n 1/k, and every x with fractional part in [(n-1)/n,1) attains it.",
+              "is_trivial": false,
+              "step_id": "A8",
+              "trivial_justification": "A5 gives the universal upper bound H_n-1, while A7 shows this value is attained on the top interval.",
+              "uses_lemmas": [
+                "A5",
+                "A7"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Any maximizer x must have frac(x) in [(n-1)/n,1).",
+              "is_trivial": false,
+              "step_id": "A9",
+              "trivial_justification": "If x is a maximizer, then equality holds in the upper bound from A5, so A6 applies.",
+              "uses_lemmas": [
+                "A5",
+                "A6"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For fixed integer n>1, the expression floor(n*x) - sum_{k=1}^n floor(k*x)/k is maximal exactly for the real numbers x with frac(x) in [(n-1)/n,1), and the maximal value is H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A10",
+              "trivial_justification": "A8 provides the lower bound and value on the candidate set, and A9 shows no other x can be maximal.",
+              "uses_lemmas": [
+                "A8",
+                "A9"
+              ],
+              "uses_prior_steps": []
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          },
+          {
+            "content": "For integers n>1, a, and k, define Res_n(a,k) to be the unique integer r with 0 <= r < n and r \u2261 k*a (mod n).",
+            "kind": "notation",
+            "label": "Res_n"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.18,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce the problem from an arbitrary real x to its fractional part in [0,1).",
+            "self_check_notes": "Standard periodicity of an expression built from floor(kx) with an integer shift.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "m is an integer"
+              ],
+              "normalized_claim": "The function E_n is periodic with period 1 under integer translation.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers x",
+                "for all integers m"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "x",
+                  "role": "real input of the function E_n",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "integer shift",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+            "strictly_easier_reason": "It is a direct calculation from floor(k*(x+m)) = floor(k*x) + k*m for integer m, with cancellation in the defining sum."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce the maximization problem on [0,1) to the discrete endpoints a/n.",
+            "self_check_notes": "This is a monotonicity comparison for floor functions on a short interval.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "0 <= t < 1",
+                "a = floor(n*t)"
+              ],
+              "normalized_claim": "On each interval [a/n,(a+1)/n), the value at t is bounded above by the left endpoint a/n.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with 0 <= t < 1",
+                "let a = floor(n*t)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "fractional representative in [0,1)",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "the integer floor(n*t)",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "a depends on n and t"
+              ]
+            },
+            "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+            "strictly_easier_reason": "Since t >= a/n, floor(k*t) >= floor(k*a/n) for each k, and the first term floor(n*t) agrees with floor(n*a/n)."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Convert the discrete endpoint value into a weighted sum of least residues modulo n.",
+            "self_check_notes": "The k=n term contributes zero residue, so the sum up to n-1 is the clean form.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "0 <= a <= n-1",
+                "1 <= k <= n-1"
+              ],
+              "normalized_claim": "After writing floor(k*a/n) = k*a/n - Res_n(a,k)/n and summing, the endpoint value becomes a weighted residue sum.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all integers a with 0 <= a <= n-1",
+                "for all integers k with 1 <= k <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "endpoint numerator with 0<=a<=n-1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "r_k",
+                  "role": "least nonnegative residue of k*a modulo n",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "r_k depends on n, a, and k"
+              ]
+            },
+            "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) = (1/n) * sum_{k=1}^{n-1} Res_n(a,k)/k.",
+            "strictly_easier_reason": "This is an explicit algebraic rewrite using the definition of Res_n and the floor identity floor(z)=z-frac(z)."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.22,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Move from the raw residue order to the best possible ordering of the same residue multiset.",
+            "self_check_notes": "The weights 1/k are strictly decreasing, so the usual equality condition is the sorted order.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "all b_k are nonnegative",
+                "u_1 >= u_2 >= ... >= u_{n-1}",
+                "u is a permutation of b"
+              ],
+              "normalized_claim": "With strictly decreasing weights 1,1/2,...,1/(n-1), the weighted sum is maximized by sorting the entries in nonincreasing order; equality forces the original order to already be nonincreasing.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all nonnegative real sequences b_1,...,b_{n-1}",
+                "for all nonincreasing reorderings u_1,...,u_{n-1} of the same multiset"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "length parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R^(n-1)",
+                  "name": "b",
+                  "role": "original nonnegative list",
+                  "type": "sequence of reals"
+                },
+                {
+                  "domain": "R^(n-1)",
+                  "name": "u",
+                  "role": "nonincreasing rearrangement of b",
+                  "type": "sequence of reals"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n>1. If b_1,...,b_{n-1} are nonnegative real numbers, and u_1,...,u_{n-1} is a nonincreasing reordering of the same multiset of numbers, then sum_{k=1}^{n-1} b_k/k <= sum_{k=1}^{n-1} u_k/k. If equality holds, then the original list b_1,...,b_{n-1} is already nonincreasing.",
+            "strictly_easier_reason": "This is a classical rearrangement inequality with strict weights, independent of the arithmetic specifics of E_n."
+          },
+          {
+            "bottleneck_reason": "This is the main arithmetic core of the alternative strategy: it packages the gcd decomposition of the residue multiset and the resulting majorization bound needed to control the weighted sum.",
+            "formalization_cost_estimate": 0.32,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Supply the pointwise majorization u_j <= n-j for the sorted residue list.",
+            "self_check_notes": "The block structure is the key arithmetic input; the final inequality u_j <= n-j is exactly what the rearrangement step needs.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "0 <= a <= n-1",
+                "d = gcd(a,n)",
+                "m = n/d",
+                "u_1 >= ... >= u_{n-1} is the sorted residue list"
+              ],
+              "normalized_claim": "Writing a = d*b and n = d*m, the residues of k*a modulo n are d times the residues of k*b modulo m, repeated across d blocks; hence the sorted residue list is blockwise bounded by n-1,n-2,...,0.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all integers a with 0 <= a <= n-1",
+                "let d = gcd(a,n) and m = n/d",
+                "for all integers j with 1 <= j <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "endpoint numerator with 0<=a<=n-1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "d",
+                  "role": "gcd(a,n)",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "quotient n/d",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R^(n-1)",
+                  "name": "u",
+                  "role": "sorted residue list",
+                  "type": "sequence of reals"
+                },
+                {
+                  "domain": "Z",
+                  "name": "j",
+                  "role": "index in the sorted list",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "d depends on a and n",
+                "m depends on d and n",
+                "u depends on the residue multiset"
+              ]
+            },
+            "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, let d = gcd(a,n) and m = n/d. Let u_1 >= u_2 >= ... >= u_{n-1} be the least residues Res_n(a,1), ..., Res_n(a,n-1) arranged in nonincreasing order. Then u_j <= n-j for every integer j with 1 <= j <= n-1.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.16,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Identify the unique endpoint numerator that can saturate the bound.",
+            "self_check_notes": "The assumption a>=1 rules out the trivial zero-residue case, so the recursion forces a=n-1.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "1 <= a <= n-1",
+                "r_k = Res_n(a,k)",
+                "r_1 >= r_2 >= ... >= r_{n-1}"
+              ],
+              "normalized_claim": "A nonincreasing residue sequence forces wraparound at every step, so r_{k+1} = r_k + a - n and therefore the final residue constraint can only be met when a = n-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all integers a with 1 <= a <= n-1",
+                "for all residue sequences r_k defined by Res_n(a,k)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "residue step with 1<=a<=n-1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "r_k",
+                  "role": "least residue of k*a modulo n",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "index in the residue sequence",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every integer a with 1 <= a <= n-1, let r_k be the least nonnegative residue Res_n(a,k) for k=1,...,n-1. If r_1 >= r_2 >= ... >= r_{n-1}, then a = n-1.",
+            "strictly_easier_reason": "This is a short modular-recursion argument once one knows the residue sequence is nonincreasing."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L7",
+            "proof_nl": null,
+            "role_in_assembly": "Exhibit the maximizing interval and compute the value there.",
+            "self_check_notes": "This is the explicit attainment computation for the top interval.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "(n-1)/n <= t < 1",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "On the top 1/n-interval, every multiple k*t lies in [k-1,k), so all the floors are exactly k-1 and the expression evaluates to H_n-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with (n-1)/n <= t < 1",
+                "for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real variable in the top interval",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n, and hence E_n(t) = H_n - 1.",
+            "strictly_easier_reason": "It is a direct interval estimate followed by substitution into the definition of E_n."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          },
+          {
+            "content": "For integers n>1, a, and k, define Res_n(a,k) to be the unique integer r with 0 <= r < n and r \u2261 k*a (mod n).",
+            "kind": "notation",
+            "label": "Res_n"
+          }
+        ],
+        "strategy_summary": "Unlike the previous decomposition, which bundled the sharp endpoint estimate into one hard lemma, this version rewrites rational values as weighted least-residue sums and separates the proof into a standard rearrangement step, a gcd-based residue-majorization lemma, and a small modular equality lemma. The correction is that the frontier is now the residue-ordering argument rather than the whole endpoint inequality."
+      },
+      "lean_assembly_status": "pending",
+      "lean_prepare_confidence": 0.9,
+      "lean_prepare_error_class": "llm_runtime_failure",
+      "lean_prepare_fatality": "repairable",
+      "lean_prepare_issue_kind": "lean_issue",
+      "lean_v2_prepare_status": "exhausted",
+      "llm_vetting_status": "accepted",
+      "missing_coverage": [],
+      "rejection_reason": "Claude statement generation failed before producing a usable candidate.",
+      "strategy_summary": "Unlike the previous decomposition, which bundled the sharp endpoint estimate into one hard lemma, this version rewrites rational values as weighted least-residue sums and separates the proof into a standard rearrangement step, a gcd-based residue-majorization lemma, and a small modular equality lemma. The correction is that the frontier is now the residue-ordering argument rather than the whole endpoint inequality.",
+      "vet_summary": "All seven lemmas are plausible, the assembly chain is logically coherent, and the final statement matches the root theorem exactly: the maximum is H_n-1 and the maximizers are precisely those x with fractional part in [(n-1)/n,1). No self-containment or semantic-drift issues were found; L5 is the clear bottleneck but it is genuinely weaker than the parent theorem."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "minor_fix",
+      "decomposition_id": "dec_20260327171204_d64eae5f",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "rejected_minor:failed",
+      "failure_origin": "agent3:minor_fix",
+      "fixes_required": [
+        "Step A3 should explicitly cite A1 (periodicity) or restate E_n(x)=E_n(frac(x)) before using A2 and L5."
+      ],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Use integer-translation invariance to reduce to t = frac(x) in [0,1). On each subinterval [a/n,(a+1)/n), compare t to the left endpoint a/n via monotonicity of floor; this gives E_n(t) <= E_n(a/n). The sharp endpoint lemma says every such rational endpoint is at most H_n - 1, with equality only at a=n-1. Separately, on the top interval [(n-1)/n,1) the floor values are all k-1, and direct substitution gives E_n = H_n - 1. Therefore H_n-1 is the global maximum, and the maximizers are exactly the real x with fractional part in [(n-1)/n,1).",
+          "steps": [
+            {
+              "derives": "For an arbitrary real x, E_n(x) equals E_n(frac(x)), so it suffices to analyze inputs t in the interval [0,1).",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "Take m = floor(x), so x = frac(x) + m, and apply integer-translation invariance.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For t = frac(x) in [0,1), if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Since t >= a/n, floor(k*t) >= floor(k*a/n) for every k, and the first term floor(n*t) is exactly a = floor(n*(a/n)). Subtracting the larger sum gives the claimed inequality.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For every real x, E_n(x) <= H_n - 1, and if equality holds then the integer a = floor(n*frac(x)) must equal n-1.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "Combine A2 with the sharp endpoint bound. If E_n(x) reaches H_n-1, then E_n(t)=E_n(a/n)=H_n-1, so the equality clause in L5 forces a=n-1.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "If frac(x) lies in [(n-1)/n, 1), then floor(k*frac(x)) = k-1 for every integer k with 1 <= k <= n.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "This is a direct instantiation of the interval floor estimate with t = frac(x).",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "If frac(x) lies in [(n-1)/n, 1), then E_n(x) = H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "Apply the exact-evaluation lemma to t = frac(x), then use periodicity from A1 to transfer the value from frac(x) back to x.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A4"
+              ]
+            },
+            {
+              "derives": "For every integer n>1, the function x \u21a6 floor(n*x) - sum_{k=1}^n floor(k*x)/k has maximal value H_n - 1 = sum_{k=2}^n 1/k, and its maximizers are exactly the real numbers x whose fractional part lies in [(n-1)/n, 1).",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "A3 gives the universal upper bound and shows any maximizer must have frac(x) in the top interval; A5 gives attainment on that interval. Together they characterize exactly the maximizers and the maximal value.",
+              "uses_lemmas": [
+                "L1",
+                "L3",
+                "L4",
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A3",
+                "A5"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.08,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce an arbitrary real input x to its fractional part frac(x).",
+            "self_check_notes": "Standard translation invariance; no hidden dependencies.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "m is an integer"
+              ],
+              "normalized_claim": "The function E_n is periodic with period 1 under integer translation: E_n(x+m)=E_n(x) for every integer m.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers x",
+                "for all integers m"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "x",
+                  "role": "real input of the function E_n",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "integer shift",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+            "strictly_easier_reason": "It is a direct floor-function calculation using floor(k*(x+m)) = floor(k*x) + k*m for integer m, followed by cancellation in the defining sum."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Compare the value at an arbitrary t in [0,1) with the left endpoint of its 1/n-interval.",
+            "self_check_notes": "The inequality is pointwise and local; it does not use any global maximization input.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "0 <= t < 1",
+                "a = floor(n*t)"
+              ],
+              "normalized_claim": "On each interval [a/n,(a+1)/n), the value at t is bounded above by the left endpoint a/n: since t >= a/n, floor(k*t) >= floor(k*a/n) for each k, so the subtractive sum in E_n(t) is at least the corresponding sum at a/n.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with 0 <= t < 1",
+                "let a = floor(n*t)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "fractional representative in [0,1)",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "the integer floor(n*t)",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "a depends on n and t"
+              ]
+            },
+            "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+            "strictly_easier_reason": "This is a monotonicity argument for floor on a short interval, plus a direct substitution of a = floor(n*t)."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Identify the floor pattern on the candidate maximizing interval.",
+            "self_check_notes": "Pure interval arithmetic; independent of the global optimization argument.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "(n-1)/n <= t < 1",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "On the interval [(n-1)/n,1), every multiple kt lies in [k-1,k), hence its floor is exactly k-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with (n-1)/n <= t < 1",
+                "for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real parameter in the top interval",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "floor index / summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n.",
+            "strictly_easier_reason": "It is a straightforward interval estimate: k(n-1)/n <= k*t < k, and k(n-1)/n >= k-1 when k<=n."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Convert the floor pattern into the exact value H_n-1.",
+            "self_check_notes": "This is an explicit evaluation lemma once the floor pattern is known.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "for every k, 1 <= k <= n, floor(k*t)=k-1"
+              ],
+              "normalized_claim": "If all floors satisfy floor(k*t)=k-1 for k=1,...,n, then substituting into the definition of E_n gives floor(n*t) - sum_{k=1}^n (k-1)/k = H_n - 1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t",
+                "if the floor identities hold for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real variable",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "index in the defining sum",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t, if floor(k*t) = k-1 for every integer k with 1 <= k <= n, then E_n(t) = H_n - 1.",
+            "strictly_easier_reason": "It is a direct substitution into the definition of E_n followed by a finite harmonic-number computation."
+          },
+          {
+            "bottleneck_reason": "This is the arithmetic core: it is exactly the sharp endpoint inequality and equality characterization needed to exclude all intervals except the top one.",
+            "formalization_cost_estimate": 0.75,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Provide the sharp global upper bound at rational endpoints and identify the unique endpoint achieving equality.",
+            "self_check_notes": "This is the only genuinely hard step; everything else reduces to interval arithmetic or substitution.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "0 <= a <= n-1"
+              ],
+              "normalized_claim": "The rational endpoint values never exceed the harmonic threshold H_n - 1, and the threshold is attained exactly at a=n-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all integers a with 0 <= a <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "endpoint numerator with 0<=a<=n-1",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) <= H_n - 1, and equality holds if and only if a = n-1.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "strategy_summary": "This candidate deliberately avoids the residue/rearrangement branch from the earlier failed attempt: instead it stays in the one-dimensional interval picture and isolates only the sharp rational-endpoint estimate as the bottleneck. That correction is meant to make the proof tree Lean-friendlier, with no auxiliary residue notation or equality-bookkeeping across permutations."
+      },
+      "lean_assembly_status": "pending",
+      "lean_v2_prepare_status": null,
+      "llm_vetting_status": "rejected_minor",
+      "missing_coverage": [],
+      "rejection_reason": "The supporting lemmas are plausible and the decomposition targets the correct maximization statement. The proof skeleton is nearly complete, but step A3 should explicitly invoke the periodicity reduction from A1 before applying A2 and L5; this is a fixable gap rather than a fatal flaw.",
+      "strategy_summary": "This candidate deliberately avoids the residue/rearrangement branch from the earlier failed attempt: instead it stays in the one-dimensional interval picture and isolates only the sharp rational-endpoint estimate as the bottleneck. That correction is meant to make the proof tree Lean-friendlier, with no auxiliary residue notation or equality-bookkeeping across permutations.",
+      "vet_summary": "The supporting lemmas are plausible and the decomposition targets the correct maximization statement. The proof skeleton is nearly complete, but step A3 should explicitly invoke the periodicity reduction from A1 before applying A2 and L5; this is a fixable gap rather than a fatal flaw."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "accepted",
+      "decomposition_id": "dec_20260327171506_21086961",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "accepted",
+      "failure_origin": "lean_prepare:lean_issue",
+      "fixes_required": [],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Use integer-translation invariance to replace an arbitrary x by its fractional part t = frac(x). For t in [0,1), let a = floor(n*t); then the floor monotonicity lemma gives E_n(t) <= E_n(a/n). The sharp endpoint lemma gives E_n(a/n) <= H_n - 1, with equality only when a = n-1. Separately, on the top interval [(n-1)/n,1), every floor(k*t) equals k-1 for 1<=k<=n, so direct substitution yields E_n(t)=H_n-1. Combining the upper bound with the attainment on the top interval shows that the maximum value is H_n-1 = sum_{k=2}^n 1/k, and the maximizers are exactly the real x whose fractional part lies in [(n-1)/n,1).",
+          "steps": [
+            {
+              "derives": "For an arbitrary real x, E_n(x) equals E_n(frac(x)), so it suffices to analyze inputs in the interval [0,1).",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "Write x = floor(x) + frac(x) with floor(x) an integer, then apply integer-translation invariance from L1.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For t = frac(x) in [0,1), if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Since t >= a/n, floor(k*t) >= floor(k*a/n) for each k, and the first term floor(n*t) equals a = floor(n*(a/n)). Subtracting the larger denominator-weighted sum gives the claimed inequality.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For every real x, E_n(x) <= H_n - 1, and if equality holds then floor(n*frac(x)) = n-1.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "By A1, replace x by t = frac(x). Then A2 gives E_n(t) <= E_n(a/n) with a = floor(n*t), and L5 bounds E_n(a/n) by H_n-1 while forcing a=n-1 in the equality case.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2"
+              ]
+            },
+            {
+              "derives": "If frac(x) lies in [(n-1)/n,1), then E_n(x) = H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "By A1, it is enough to evaluate at t = frac(x). L3 gives floor(k*t)=k-1 for every 1<=k<=n, and then L4 substitutes these identities into the definition of E_n to obtain H_n-1.",
+              "uses_lemmas": [
+                "L3",
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For fixed integer n>1, the expression floor(n*x) - sum_{k=1}^n floor(k*x)/k is maximal exactly for the real numbers x with frac(x) in [(n-1)/n,1), and the maximal value is H_n - 1 = sum_{k=2}^n 1/k.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "A3 gives the global upper bound and shows that any maximizer must satisfy floor(n*frac(x))=n-1, which is equivalent to frac(x) lying in [(n-1)/n,1). A4 shows every x with fractional part in that interval attains the upper bound. Therefore these are exactly the maximizers, and the maximal value is H_n-1, i.e. sum_{k=2}^n 1/k.",
+              "uses_lemmas": [
+                "A3",
+                "A4"
+              ],
+              "uses_prior_steps": []
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.13,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce an arbitrary real x to its fractional part frac(x).",
+            "self_check_notes": "Standard periodicity; no hidden dependencies.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "m is an integer"
+              ],
+              "normalized_claim": "The function E_n is periodic with period 1 under integer translation: E_n(x+m)=E_n(x) for every integer m.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers x",
+                "for all integers m"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "x",
+                  "role": "real input of the function E_n",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "integer shift",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+            "strictly_easier_reason": "It is a direct floor-function calculation using floor(k*(x+m)) = floor(k*x) + k*m for integer m, followed by cancellation in the defining sum."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Compare the value at an arbitrary fractional input with the left endpoint of its 1/n-interval.",
+            "self_check_notes": "Local interval comparison only; independent of the global bound.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "0 <= t < 1",
+                "a = floor(n*t)"
+              ],
+              "normalized_claim": "On each interval [a/n,(a+1)/n), the value at t is bounded above by the left endpoint a/n: since t >= a/n, floor(k*t) >= floor(k*a/n) for each k, so the subtractive sum in E_n(t) is at least the corresponding sum at a/n.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with 0 <= t < 1",
+                "let a = floor(n*t)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "fractional representative in [0,1)",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "the integer floor(n*t)",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "a depends on n and t"
+              ]
+            },
+            "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+            "strictly_easier_reason": "It is a monotonicity argument for floor on a short interval, plus a direct substitution of a = floor(n*t)."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Identify the floor pattern on the candidate maximizing interval.",
+            "self_check_notes": "Pure interval arithmetic.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "(n-1)/n <= t < 1",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "On the interval [(n-1)/n,1), every multiple kt lies in [k-1,k), hence its floor is exactly k-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with (n-1)/n <= t < 1",
+                "for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real parameter in the top interval",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "floor index / summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n.",
+            "strictly_easier_reason": "It is a straightforward interval estimate: k(n-1)/n <= k*t < k, and k(n-1)/n >= k-1 when k<=n."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Convert the floor pattern into the exact value H_n-1.",
+            "self_check_notes": "This is explicit evaluation once the floor pattern is known.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "for every k, 1 <= k <= n"
+              ],
+              "normalized_claim": "If floor(k*t)=k-1 for all k=1,...,n, then substituting into the definition of E_n gives floor(n*t) - sum_{k=1}^n (k-1)/k = H_n - 1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t",
+                "if the floor identities hold for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real variable",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "index in the defining sum",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t, if floor(k*t) = k-1 for every integer k with 1 <= k <= n, then E_n(t) = H_n - 1.",
+            "strictly_easier_reason": "It is a direct substitution into the definition of E_n followed by a finite harmonic-number computation."
+          },
+          {
+            "bottleneck_reason": "This is the arithmetic core: it packages the sharp endpoint inequality and equality characterization needed to exclude all intervals except the top one.",
+            "formalization_cost_estimate": 0.82,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Provide the sharp global upper bound at rational endpoints and identify the unique endpoint achieving equality.",
+            "self_check_notes": "This is the only genuinely hard step; everything else is interval reduction or substitution.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "0 <= a <= n-1"
+              ],
+              "normalized_claim": "The rational endpoint values never exceed the harmonic threshold H_n - 1, and the threshold is attained exactly at a=n-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all integers a with 0 <= a <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "endpoint numerator with 0<=a<=n-1",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) <= H_n - 1, and equality holds if and only if a = n-1.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "strategy_summary": "Interval-only proof, not the residue/rearrangement branch from the rejected attempt. Compared with the earlier minor-fix gap, the periodicity reduction is now explicit before the endpoint comparison, so the A1 -> A2 -> L5 chain is locally complete and Lean-friendly; no extra coverage is needed."
+      },
+      "lean_assembly_status": "pending",
+      "lean_prepare_confidence": 0.9,
+      "lean_prepare_error_class": "llm_runtime_failure",
+      "lean_prepare_fatality": "repairable",
+      "lean_prepare_issue_kind": "lean_issue",
+      "lean_v2_prepare_status": "exhausted",
+      "llm_vetting_status": "accepted",
+      "missing_coverage": [],
+      "rejection_reason": "Claude statement generation failed before producing a usable candidate.",
+      "strategy_summary": "Interval-only proof, not the residue/rearrangement branch from the rejected attempt. Compared with the earlier minor-fix gap, the periodicity reduction is now explicit before the endpoint comparison, so the A1 -> A2 -> L5 chain is locally complete and Lean-friendly; no extra coverage is needed.",
+      "vet_summary": "All five lemmas are plausible and self-contained. The assembly correctly reduces to fractional parts, compares each point to its rational endpoint, applies the sharp endpoint bound, and then identifies the top interval as exactly the maximizer set with maximum H_n-1 = sum_{k=2}^n 1/k."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "accepted",
+      "decomposition_id": "dec_20260327171826_77dce1f0",
+      "disguised_difficulty": [],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "accepted",
+      "failure_origin": "lean_prepare:lean_issue",
+      "fixes_required": [],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Use integer-translation invariance to reduce any real x to t = frac(x) in [0,1). On the subinterval containing t, compare E_n(t) to the left endpoint a/n with a = floor(n t); this gives E_n(t) <= E_n(a/n). The sharp endpoint lemma bounds every rational endpoint by H_n - 1, and its equality case forces a = n-1. A simple floor-interval characterization then translates a = n-1 into t lying in [(n-1)/n,1). Separately, on that top interval every floor(k t) equals k-1, so direct substitution gives E_n(t)=H_n-1. Combining the global upper bound with the attainment on the top interval yields that the maximum value is H_n-1 = sum_{k=2}^n 1/k, and the maximizers are exactly the real x whose fractional part lies in [(n-1)/n,1).",
+          "steps": [
+            {
+              "derives": "For an arbitrary real x, E_n(x) equals E_n(frac(x)), so it suffices to analyze values t in the interval [0,1).",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "Take m = floor(x), so x = frac(x) + m, and apply integer-translation invariance from L1.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For t = frac(x) in [0,1), if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Since t lies in [0,1), the integer a = floor(n*t) satisfies 0 <= a <= n-1. Apply the endpoint comparison lemma L2 to this t and a, yielding the inequality on the 1/n-subinterval containing t.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For every real x, E_n(x) <= H_n - 1, and if equality holds then frac(x) lies in [(n-1)/n,1).",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "By A1, replace x with t = frac(x). Then A2 gives E_n(t) <= E_n(a/n) for a = floor(n*t). Since t in [0,1), the integer a satisfies 0 <= a <= n-1, so L5 applies and gives E_n(t) <= H_n-1. If equality holds, L5 forces a = n-1; with a = floor(n*t), L6 converts this exactly into (n-1)/n <= t < 1, i.e. frac(x) lies in the top interval.",
+              "uses_lemmas": [
+                "L5",
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2"
+              ]
+            },
+            {
+              "derives": "If frac(x) lies in [(n-1)/n,1), then E_n(x) = H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "Let t = frac(x). By L3, floor(k*t)=k-1 for every k with 1<=k<=n. Then L4 evaluates E_n(t) exactly as H_n-1. Finally A1 transfers this value back from t to x.",
+              "uses_lemmas": [
+                "L3",
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For every integer n>1, the function x \u21a6 floor(n*x) - sum_{k=1}^n floor(k*x)/k is maximal exactly for those real numbers x whose fractional part lies in [(n-1)/n,1), and the maximal value is H_n - 1 = sum_{k=2}^n 1/k.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "A3 gives the universal upper bound H_n-1 and the necessary condition on any maximizer. A4 shows every x with fractional part in the top interval attains H_n-1. Therefore the maximizers are exactly that set, and since H_n = sum_{k=1}^n 1/k, the maximal value is H_n-1 = sum_{k=2}^n 1/k.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A3",
+                "A4"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.12,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce an arbitrary real input x to its fractional part frac(x).",
+            "self_check_notes": "Standard translation invariance; no hidden dependencies.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "m is an integer"
+              ],
+              "normalized_claim": "The function E_n is periodic with period 1 under integer translation: E_n(x+m)=E_n(x) for every integer shift m.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers x",
+                "for all integers m"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "x",
+                  "role": "real input of the function E_n",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "m",
+                  "role": "integer shift",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+            "strictly_easier_reason": "It is a direct floor-function calculation using floor(k*(x+m)) = floor(k*x) + k*m for integer m, followed by cancellation in the defining sum."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Compare the value at an arbitrary fractional input with the left endpoint of its 1/n-interval.",
+            "self_check_notes": "Local interval comparison only; independent of the global bound.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "0 <= t < 1",
+                "a = floor(n*t)"
+              ],
+              "normalized_claim": "On each interval [a/n,(a+1)/n), the value at t is bounded above by the left endpoint a/n: since t >= a/n, floor(k*t) >= floor(k*a/n) for each k, so the subtractive sum in E_n(t) is at least the corresponding sum at a/n.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with 0 <= t < 1",
+                "let a = floor(n*t)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "fractional representative in [0,1)",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "the integer floor(n*t)",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "a depends on n and t"
+              ]
+            },
+            "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+            "strictly_easier_reason": "It is a monotonicity argument for floor on a short interval, plus a direct substitution of a = floor(n*t)."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Identify the floor pattern on the candidate maximizing interval.",
+            "self_check_notes": "Pure interval arithmetic.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "(n-1)/n <= t < 1",
+                "1 <= k <= n"
+              ],
+              "normalized_claim": "On the interval [(n-1)/n,1), every multiple kt lies in [k-1,k), hence its floor is exactly k-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with (n-1)/n <= t < 1",
+                "for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real parameter in the top interval",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "floor index / summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t with (n-1)/n <= t < 1, one has floor(k*t) = k-1 for every integer k with 1 <= k <= n.",
+            "strictly_easier_reason": "It is a straightforward interval estimate: k(n-1)/n <= k*t < k, and k(n-1)/n >= k-1 when k<=n."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Convert the floor pattern into the exact value H_n-1.",
+            "self_check_notes": "Explicit evaluation once the floor pattern is known.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "for every k, 1 <= k <= n"
+              ],
+              "normalized_claim": "If floor(k*t)=k-1 for all k=1,...,n, then substituting into the definition of E_n gives floor(n*t) - sum_{k=1}^n (k-1)/k = H_n - 1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t",
+                "if the floor identities hold for all integers k with 1 <= k <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real variable",
+                  "type": "real number"
+                },
+                {
+                  "domain": "Z",
+                  "name": "k",
+                  "role": "index in the defining sum",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t, if floor(k*t) = k-1 for every integer k with 1 <= k <= n, then E_n(t) = H_n - 1.",
+            "strictly_easier_reason": "It is a direct substitution into the definition of E_n followed by a finite harmonic-number computation."
+          },
+          {
+            "bottleneck_reason": "This is the arithmetic core: it packages the sharp endpoint inequality and equality characterization needed to exclude all intervals except the top one.",
+            "formalization_cost_estimate": 0.75,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Provide the sharp global upper bound at rational endpoints and identify the unique endpoint achieving equality.",
+            "self_check_notes": "This is the only genuinely hard step; everything else is interval reduction or substitution.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "0 <= a <= n-1"
+              ],
+              "normalized_claim": "The rational endpoint values never exceed the harmonic threshold H_n - 1, and the threshold is attained exactly at a=n-1.",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all integers a with 0 <= a <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "Z",
+                  "name": "a",
+                  "role": "endpoint numerator with 0<=a<=n-1",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) <= H_n - 1, and equality holds if and only if a = n-1.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.06,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Translate the equality case in the endpoint lemma into the corresponding interval description.",
+            "self_check_notes": "Basic floor/interval equivalence.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "0 <= t < 1"
+              ],
+              "normalized_claim": "For t in [0,1), the condition floor(n*t)=n-1 is equivalent to t lying in the top interval [(n-1)/n,1).",
+              "quantifier_order": [
+                "for all integers n with n>1",
+                "for all real numbers t with 0 <= t < 1"
+              ],
+              "variables": [
+                {
+                  "domain": "Z",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "R",
+                  "name": "t",
+                  "role": "real variable in [0,1)",
+                  "type": "real number"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, floor(n*t) = n-1 if and only if (n-1)/n <= t < 1.",
+            "strictly_easier_reason": "It is a direct floor-characterization on a unit interval."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+            "kind": "definition",
+            "label": "E_n"
+          },
+          {
+            "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "strategy_summary": "This candidate stays in the interval-only strategy, unlike the earlier residue/rearrangement branch, and it explicitly repairs the prior assembly gap by threading the periodicity-to-fractional-part reduction before the endpoint estimate. The hard part is isolated in one sharp rational-endpoint lemma, while the rest is local floor arithmetic and substitution."
+      },
+      "lean_assembly_status": "pending",
+      "lean_prepare_confidence": 0.9,
+      "lean_prepare_error_class": "llm_runtime_failure",
+      "lean_prepare_fatality": "repairable",
+      "lean_prepare_issue_kind": "lean_issue",
+      "lean_v2_prepare_status": "exhausted",
+      "llm_vetting_status": "accepted",
+      "missing_coverage": [],
+      "rejection_reason": "Claude statement generation failed before producing a usable candidate.",
+      "strategy_summary": "This candidate stays in the interval-only strategy, unlike the earlier residue/rearrangement branch, and it explicitly repairs the prior assembly gap by threading the periodicity-to-fractional-part reduction before the endpoint estimate. The hard part is isolated in one sharp rational-endpoint lemma, while the rest is local floor arithmetic and substitution.",
+      "vet_summary": "The decomposition is logically sound: translation invariance reduces to fractional parts, the interval comparison and endpoint bound give the global upper bound, and the top interval characterization shows where equality is attained. No lemma shows semantic drift or self-containment problems, and the assembly reaches the root theorem exactly."
+    }
+  ],
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/decompositions/dec_20260327172417_cc1e0c9f.json",
+  "proof_graph_id": "pgraph_20260327172523_80961515",
+  "raw_candidate_artifact_id": "problems/prob_20260327165556_9d59a808/decomposition_candidates/dec_20260327172417_cc1e0c9f/agent2_candidate.json",
+  "revision_number": 6,
+  "shared_context": [
+    {
+      "content": "For an integer n>1 and a real number x, define E_n(x) := floor(n*x) - sum_{k=1}^n floor(k*x)/k.",
+      "kind": "definition",
+      "label": "E_n"
+    },
+    {
+      "content": "For an integer n>1, define H_n := sum_{k=1}^n 1/k.",
+      "kind": "notation",
+      "label": "H_n"
+    },
+    {
+      "content": "For a real number x, define frac(x) := x - floor(x), so 0 <= frac(x) < 1.",
+      "kind": "notation",
+      "label": "frac"
+    }
+  ],
+  "strategy_summary": "Compared with the earlier rejected residue/rearrangement detour, this candidate stays interval-based but fixes the Lean gap by making the reduction to frac(x) an explicit first step before any endpoint comparison. The hard arithmetic remains isolated in one sharp rational-endpoint lemma, while the top-interval computation is kept separate and local.",
+  "updated_at": "2026-03-27T17:26:42.665890Z"
+}

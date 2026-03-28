@@ -1,0 +1,275 @@
+{
+  "artifact_prefix": "problems/prob_20260327040158_22cb0c95/lemmas/lem_20260327041345_f30990bc/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T04:20:28.622799Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T04:20:28.770840Z",
+  "controller_consumed_by_execution_id": "exec_20260327040158_2f750a29",
+  "created_at": "2026-03-27T04:19:35.153937Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327040158_2f750a29",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+        "item_id": "pnode_20260327041842_33999f03",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327040158_5065188f",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327040158_5065188f",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is at least 2.",
+            "The sequence s has exactly n minus 1 entries.",
+            "Each entry of s is either plus 1 or minus 1.",
+            "The tuple a is a permutation of {1, 2, ..., n}, so all entries are distinct and each integer from 1 to n appears exactly once.",
+            "The inequality si times (a(i+1) - ai) greater than 0 means ai+1 is greater than ai when si is plus 1, and ai+1 is less than ai when si is minus 1.",
+            "The constraint must hold for every index i from 1 to n minus 1."
+          ],
+          "normalized_claim": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+          "quantifier_order": [
+            "First fix an integer n with n at least 2.",
+            "Then range over all sign sequences s of length n minus 1.",
+            "For a given s, count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every i from 1 to n minus 1.",
+            "Finally, for each n, identify which sequences s maximize this count."
+          ],
+          "variables": [
+            {
+              "domain": "integers with n at least 2",
+              "name": "n",
+              "role": "problem size parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+              "name": "s",
+              "role": "candidate sign pattern to optimize over",
+              "type": "sequence of signs"
+            },
+            {
+              "domain": "each entry is plus 1 or minus 1",
+              "name": "si",
+              "role": "the i-th sign controlling the i-th adjacent comparison",
+              "type": "sign"
+            },
+            {
+              "domain": "ordered n-tuples containing each element of {1, 2, ..., n} exactly once",
+              "name": "a",
+              "role": "object being counted by f(s)",
+              "type": "permutation sequence"
+            },
+            {
+              "domain": "values from 1 to n appearing in the permutation",
+              "name": "ai",
+              "role": "the i-th term of the permutation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing sign sequence depends on n.",
+            "No existential witness is built into the counting definition of f(s); the only counted witnesses are permutations a satisfying the inequalities.",
+            "Any characterization of maximizers must be valid uniformly for all sign sequences of the specified length for the fixed n."
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327041345_f30990bc",
+    "proof_nl": "Let S:=x_1+\\cdots+x_m.\n\nBy definition,\nU(x)_j=\\sum_{i=1}^{j-1}x_i \\qquad (1\\le j\\le m+1),\nwith the convention that an empty sum is 0. Hence\nU(x)_1=\\sum_{i=1}^{0}x_i=0,\nand\nU(x)_{m+1}=\\sum_{i=1}^{m}x_i=S.\n\nNow fix j with 1\\le j\\le m. Then\nU(x)_{j+1}=\\sum_{i=1}^{j}x_i=\\left(\\sum_{i=1}^{j-1}x_i\\right)+x_j=U(x)_j+x_j.\nSince each x_j is nonnegative, we have U(x)_{j+1}\\ge U(x)_j. Therefore U(x) is nondecreasing.\n\nSimilarly,\nD(x)_j=\\sum_{i=j}^{m}x_i \\qquad (1\\le j\\le m+1),\nagain with empty sums interpreted as 0. So\nD(x)_1=\\sum_{i=1}^{m}x_i=S,\nand\nD(x)_{m+1}=\\sum_{i=m+1}^{m}x_i=0.\n\nFor 1\\le j\\le m,\nD(x)_j=\\sum_{i=j}^{m}x_i=x_j+\\sum_{i=j+1}^{m}x_i=x_j+D(x)_{j+1}.\nBecause x_j\\ge 0, this gives D(x)_j\\ge D(x)_{j+1}. Therefore D(x) is nonincreasing.\n\nFinally, assume that at least one entry of x is positive; say x_k>0 for some k. Since every x_i\\ge 0, it follows that\nS=\\sum_{i=1}^{m}x_i>0.\nBut then\nU(x)_1=0 \\quad\\text{and}\\quad U(x)_{m+1}=S>0,\nso U(x)_1\\ne U(x)_{m+1}. Hence U(x) is not constant.\nLikewise,\nD(x)_1=S>0 \\quad\\text{and}\\quad D(x)_{m+1}=0,\nso D(x)_1\\ne D(x)_{m+1}. Hence D(x) is not constant.\n\nThus all the stated endpoint, monotonicity, and nonconstancy claims hold.",
+    "role_in_assembly": "This is a support lemma for the proof of the bottleneck lemma L6; it controls the monotonicity type of the dynamic-programming state after each step.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2.",
+        "The sequence s has exactly n minus 1 entries.",
+        "Each entry of s is either plus 1 or minus 1.",
+        "The tuple a is a permutation of {1, 2, ..., n}, so all entries are distinct and each integer from 1 to n appears exactly once.",
+        "The inequality si times (a(i+1) - ai) greater than 0 means ai+1 is greater than ai when si is plus 1, and ai+1 is less than ai when si is minus 1.",
+        "The constraint must hold for every index i from 1 to n minus 1."
+      ],
+      "normalized_claim": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+      "quantifier_order": [
+        "First fix an integer n with n at least 2.",
+        "Then range over all sign sequences s of length n minus 1.",
+        "For a given s, count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every i from 1 to n minus 1.",
+        "Finally, for each n, identify which sequences s maximize this count."
+      ],
+      "variables": [
+        {
+          "domain": "integers with n at least 2",
+          "name": "n",
+          "role": "problem size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "candidate sign pattern to optimize over",
+          "type": "sequence of signs"
+        },
+        {
+          "domain": "each entry is plus 1 or minus 1",
+          "name": "si",
+          "role": "the i-th sign controlling the i-th adjacent comparison",
+          "type": "sign"
+        },
+        {
+          "domain": "ordered n-tuples containing each element of {1, 2, ..., n} exactly once",
+          "name": "a",
+          "role": "object being counted by f(s)",
+          "type": "permutation sequence"
+        },
+        {
+          "domain": "values from 1 to n appearing in the permutation",
+          "name": "ai",
+          "role": "the i-th term of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing sign sequence depends on n.",
+        "No existential witness is built into the counting definition of f(s); the only counted witnesses are permutations a satisfying the inequalities.",
+        "Any characterization of maximizers must be valid uniformly for all sign sequences of the specified length for the fixed n."
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is a positive integer",
+        "x has exactly m entries",
+        "Each entry x_i is a nonnegative real number",
+        "Indices i run from 1 through m",
+        "Indices j run from 1 through m plus one",
+        "Empty sums are interpreted as 0",
+        "U(x) and D(x) are vectors of length m plus one",
+        "Nondecreasing means consecutive entries satisfy U_j <= U_j plus one",
+        "Nonincreasing means consecutive entries satisfy D_j >= D_j plus one",
+        "Nonconstant means not all entries of the vector are equal"
+      ],
+      "normalized_claim": "For every positive integer m and every length m vector x of nonnegative real numbers, the prefix-sum vector U and the suffix-sum vector D satisfy U_1 = 0, U at index m plus one equals the total sum of the entries of x, U is nondecreasing, D_1 equals the total sum of the entries of x, D at index m plus one is 0, and D is nonincreasing. If some coordinate of x is positive, then neither U nor D is constant.",
+      "quantifier_order": [
+        "For every positive integer m",
+        "For every length m vector x with nonnegative real entries",
+        "Define U(x) and D(x) using the stated formulas for each index j from 1 through m plus one",
+        "For every index j in the allowed range, the endpoint and monotonicity claims hold",
+        "If there exists an index i from 1 through m with x_i positive, then both U(x) and D(x) are nonconstant"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "m",
+          "role": "parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "length m vectors with nonnegative entries",
+          "name": "x",
+          "role": "input vector",
+          "type": "vector of real numbers"
+        },
+        {
+          "domain": "nonnegative real numbers for i from 1 through m",
+          "name": "x_i",
+          "role": "coordinate of x",
+          "type": "real number"
+        },
+        {
+          "domain": "indices 1 through m",
+          "name": "i",
+          "role": "summation index",
+          "type": "integer index"
+        },
+        {
+          "domain": "indices 1 through m plus one",
+          "name": "j",
+          "role": "component index for U and D",
+          "type": "integer index"
+        },
+        {
+          "domain": "real vectors of length m plus one",
+          "name": "U(x)",
+          "role": "prefix-sum vector",
+          "type": "vector"
+        },
+        {
+          "domain": "real vectors of length m plus one",
+          "name": "D(x)",
+          "role": "suffix-sum vector",
+          "type": "vector"
+        }
+      ],
+      "witness_dependencies": [
+        "The hypothesis at least one entry of x is positive is shorthand for the existence of an index i with x_i > 0",
+        "The nonconstancy conclusion can be witnessed by the fixed endpoints 1 and m plus one, since U(x)_1 = 0 and U(x)_{m plus one} is the total sum, while D(x)_1 is the total sum and D(x)_{m plus one} = 0",
+        "The existential positive coordinate is only used to ensure the total sum is positive; the witness for nonconstancy does not depend on a separate choice of j"
+      ]
+    },
+    "statement_nl": "Let m be a positive integer, let x=(x_1,...,x_m) be a vector of nonnegative real numbers, and define vectors U(x) and D(x) of length m+1 by U(x)_j = sum_{i=1}^{j-1} x_i and D(x)_j = sum_{i=j}^{m} x_i for 1 <= j <= m+1, with empty sums interpreted as 0. Then U(x)_1=0, U(x)_{m+1}=x_1+...+x_m, and U(x) is nondecreasing. Also D(x)_1=x_1+...+x_m, D(x)_{m+1}=0, and D(x) is nonincreasing. If at least one entry of x is positive, then both U(x) and D(x) are nonconstant.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "forbidden_dependencies_detected": false,
+      "notes": "No citations were used; the argument is self-contained.",
+      "undeclared_dependencies_detected": false,
+      "uses_declared_citations_only": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The proof is complete and self-contained: all endpoint, monotonicity, and nonconstancy claims are derived directly from the definitions and the nonnegativity hypothesis.",
+        "location": "whole proof",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327041345_f30990bc",
+    "proof_status": "complete",
+    "reason": "The proof directly establishes the endpoint identities for U and D from their definitions, proves monotonicity via the relations U(x)_{j+1} = U(x)_j + x_j and D(x)_j = x_j + D(x)_{j+1} with x_j >= 0, and proves nonconstancy from the positivity of the total sum when some coordinate is positive. It matches the lemma sketch with no substantive drift and uses no undeclared or forbidden dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T04:19:35.046342Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327041345_f30990bc",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T04:20:28.770845Z",
+  "worker_job_id": "wrk_lem_20260327041345_f30990bc_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

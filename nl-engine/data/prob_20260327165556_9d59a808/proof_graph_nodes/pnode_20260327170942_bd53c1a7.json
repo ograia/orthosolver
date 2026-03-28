@@ -1,0 +1,67 @@
+{
+  "created_at": "2026-03-27T17:09:42.303651Z",
+  "graph_node_id": "pnode_20260327170942_bd53c1a7",
+  "metadata": {
+    "parent_id": "thm_root_20260327165556_b210f785"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "8c4c5a72a8711c4efa9ea4b15611a38d500729f8e0725fc8c6b314b2337931e2",
+  "owner_id": "lem_20260327170808_4b8fd224",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "a is an integer and 1 <= a <= n - 1",
+      "k is an integer with 1 <= k <= n - 1",
+      "r_k is the least nonnegative residue modulo n, hence 0 <= r_k <= n - 1",
+      "The inequality r_1 >= r_2 >= ... >= r_{n-1} is asserted over the finite index set k = 1, ..., n - 1"
+    ],
+    "normalized_claim": "For every integer n > 1 and every integer a with 1 <= a <= n - 1, define for each integer k with 1 <= k <= n - 1 the value r_k to be the least nonnegative residue modulo n of Res_n(a,k). If the sequence satisfies r_1 >= r_2 >= ... >= r_{n-1}, then a equals n - 1.",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all integers a with 1 <= a <= n - 1",
+      "for all integers k with 1 <= k <= n - 1 (in the definition of r_k)",
+      "if the inequality condition holds for the resulting sequence r_1, ..., r_{n-1}"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "modulus parameter, with restriction n > 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "base parameter, with restriction 1 <= a <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "index for a finite sequence, with restriction 1 <= k <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r_k",
+        "role": "least nonnegative residue of Res_n(a,k), so it satisfies 0 <= r_k <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "Res_n(a,k)",
+        "role": "an integer-valued expression defined in terms of n, a, and k whose residue modulo n is taken to define r_k",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "r_k depends on (n, a, k) through the value Res_n(a,k) and then taking its least nonnegative residue modulo n",
+      "The inequality condition depends on the entire sequence {r_k} for k from 1 to n - 1"
+    ]
+  },
+  "statement_nl": "For every integer n>1 and every integer a with 1 <= a <= n-1, let r_k be the least nonnegative residue Res_n(a,k) for k=1,...,n-1. If r_1 >= r_2 >= ... >= r_{n-1}, then a = n-1.",
+  "updated_at": "2026-03-27T17:09:42.303651Z"
+}

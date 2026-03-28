@@ -1,0 +1,48 @@
+{
+  "assembly_plan_id": "asm_20260327183833_a9f87229",
+  "created_at": "2026-03-27T18:40:01.406064Z",
+  "decomposition_id": "dec_20260327183833_2303777a",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_skeleton_nl": "First decompose n*r into its integer part m and fractional remainder theta, then rewrite r as m/n + theta/n with theta/n in [0,1/n). Next verify that m is a legal cell index and invoke the shifted monotonicity of the translated function u -> f_n(m/n + u) on [0,1/n). Finally apply the generic comparison lemma at u = theta/n and at 0 to obtain f_n(r) <= f_n(m/n), exactly the required inequality.",
+  "root_node_id": "lem_20260327182037_d1cd11e0",
+  "steps": [
+    {
+      "derives": "Write r as m/n + theta/n with 0 <= theta/n < 1/n.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This is a short algebraic derivation combining the floor decomposition with division by n.",
+      "uses_lemmas": [
+        "L1",
+        "L2"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The translation index m is valid, and the shifted function u -> f_n(m/n + u) is nonincreasing on [0,1/n).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "This requires instantiating the universal translated monotonicity statement at k = m using the range bound on m.",
+      "uses_lemmas": [
+        "L3",
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Applying the generic translated endpoint comparison to h(u) = f_n(m/n + u), delta = 1/n, and u = theta/n gives f_n(r) <= f_n(m/n).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "This is a direct but nontrivial specialization of the abstract lemma after the translated monotonicity has been established.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    }
+  ]
+}

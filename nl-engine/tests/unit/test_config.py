@@ -20,7 +20,10 @@ def test_config_defaults_and_caps_present() -> None:
     assert cfg.lemma_solving.max_solver_attempts_per_lemma_total is None
     assert cfg.lemma_solving.max_consecutive_infrastructure_failures_per_lemma is None
     assert cfg.lemma_solving.max_solver_series_wall_clock_seconds_per_lemma is None
-    assert cfg.lean_engine.max_lean_jobs_per_lemma > 0
+    assert cfg.lean_engine.max_workers > 0
+    assert cfg.lean_engine.no_lean4_refs is False
+    assert cfg.lean_engine.claude_activity_timeout_seconds == 0
+    assert cfg.lean_engine.claude_init_timeout_seconds == 0
     assert cfg.routing.max_identical_fatal_class_repeats >= 1
     assert cfg.final_check.fail_problem_on_fatal is False
     assert cfg.llm.agent1.model is None
@@ -44,10 +47,17 @@ def test_user_facing_config_excludes_global_ops_and_hidden_knobs() -> None:
     assert "assembly_check_max_tool_calls" not in payload["decomposition"]
     assert "max_tool_calls_per_job" not in payload["lean_engine"]
     assert payload["lean_engine"]["model"] is None
-    assert payload["lean_engine"]["assembly_check_timeout_seconds"] == 240
+    assert payload["lean_engine"]["no_lean4_refs"] is False
     assert payload["lean_engine"]["lean_job_timeout_seconds"] == 300
-    assert payload["lean_engine"]["plausibility_check_timeout_seconds"] == 45
     assert payload["lean_engine"]["assemble_root_timeout_seconds"] == 300
+    assert payload["lean_engine"]["claude_activity_timeout_seconds"] == 0
+    assert payload["lean_engine"]["claude_init_timeout_seconds"] == 0
+    assert "max_parallel_lean_jobs_per_problem" not in payload["lean_engine"]
+    assert "max_lean_jobs_per_lemma" not in payload["lean_engine"]
+    assert "assembly_check_timeout_seconds" not in payload["lean_engine"]
+    assert "plausibility_check_timeout_seconds" not in payload["lean_engine"]
+    assert "claude_stall_timeout_seconds" not in payload["lean_engine"]
+    assert "claude_tool_wait_timeout_seconds" not in payload["lean_engine"]
 
 
 def test_lean_engine_model_and_timeouts_round_trip() -> None:
@@ -55,18 +65,44 @@ def test_lean_engine_model_and_timeouts_round_trip() -> None:
         {
             "lean_engine": {
                 "model": "claude-sonnet-4-6",
-                "assembly_check_timeout_seconds": 180,
+                "no_lean4_refs": True,
                 "lean_job_timeout_seconds": 420,
-                "plausibility_check_timeout_seconds": 90,
                 "assemble_root_timeout_seconds": 600,
+                "claude_activity_timeout_seconds": 5400,
+                "claude_init_timeout_seconds": 0,
             }
         }
     )
     assert cfg.lean_engine.model == "claude-sonnet-4-6"
-    assert cfg.lean_engine.assembly_check_timeout_seconds == 180
+    assert cfg.lean_engine.no_lean4_refs is True
     assert cfg.lean_engine.lean_job_timeout_seconds == 420
-    assert cfg.lean_engine.plausibility_check_timeout_seconds == 90
+    assert cfg.lean_engine.assembly_check_timeout_seconds == 420
+    assert cfg.lean_engine.plausibility_check_timeout_seconds == 420
     assert cfg.lean_engine.assemble_root_timeout_seconds == 600
+    assert cfg.lean_engine.claude_activity_timeout_seconds == 5400
+    assert cfg.lean_engine.claude_stall_timeout_seconds == 5400
+    assert cfg.lean_engine.claude_tool_wait_timeout_seconds == 5400
+    assert cfg.lean_engine.claude_init_timeout_seconds == 0
+
+
+def test_lean_engine_legacy_aliases_collapse_to_simplified_inputs() -> None:
+    cfg = ProblemConfig.model_validate(
+        {
+            "lean_engine": {
+                "max_workers": None,
+                "max_parallel_lean_jobs_per_problem": 7,
+                "assembly_check_timeout_seconds": 180,
+                "plausibility_check_timeout_seconds": 90,
+                "claude_stall_timeout_seconds": 3600,
+                "claude_tool_wait_timeout_seconds": 5400,
+                "claude_init_timeout_seconds": None,
+            }
+        }
+    )
+    assert cfg.lean_engine.max_workers == 7
+    assert cfg.lean_engine.lean_job_timeout_seconds == 180
+    assert cfg.lean_engine.claude_activity_timeout_seconds == 5400
+    assert cfg.lean_engine.claude_init_timeout_seconds == 0
 
 
 def test_mode_accepts_lean_mode_alias() -> None:
@@ -183,3 +219,22 @@ def test_budget_and_solver_guardrails_round_trip() -> None:
     assert cfg.lemma_solving.max_solver_attempts_per_lemma_total == 6
     assert cfg.lemma_solving.max_consecutive_infrastructure_failures_per_lemma == 2
     assert cfg.lemma_solving.max_solver_series_wall_clock_seconds_per_lemma == 1800
+
+
+def test_zero_disables_optional_budget_and_solver_caps() -> None:
+    cfg = ProblemConfig.model_validate(
+        {
+            "budget": {
+                "max_estimated_cost_usd_per_problem": 0,
+                "max_estimated_cost_usd_per_lemma": 0,
+            },
+            "lemma_solving": {
+                "max_solver_attempts_per_lemma_total": 0,
+                "max_solver_series_wall_clock_seconds_per_lemma": 0,
+            },
+        }
+    )
+    assert cfg.budget.max_estimated_cost_usd_per_problem is None
+    assert cfg.budget.max_estimated_cost_usd_per_lemma is None
+    assert cfg.lemma_solving.max_solver_attempts_per_lemma_total is None
+    assert cfg.lemma_solving.max_solver_series_wall_clock_seconds_per_lemma is None

@@ -6,7 +6,6 @@ import time
 from datetime import UTC, datetime
 
 import logging
-import threading
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.exceptions import RequestValidationError
@@ -48,6 +47,7 @@ from nl_engine.execution.runtime import (
     start_embedded_supervisor_if_enabled,
     stop_embedded_supervisor,
 )
+from nl_engine.lean_client.sessions import LeanSessionManager
 from nl_engine.persistence.repositories import (
     DecompositionRepository,
     EventRepository,
@@ -83,6 +83,7 @@ def _start_embedded_workers() -> None:
     # even without active browser polling. The supervisor checks
     # is_enabled internally based on settings.
     import os
+    LeanSessionManager(get_file_store()).recover_active_problem_sessions()
     if os.environ.get("NL_ENGINE_NO_AUTO_SUPERVISOR") != "1":
         start_embedded_supervisor_if_enabled()
 
@@ -177,7 +178,7 @@ def _await_compatibility_progress(problem_id: str, *, timeout_seconds: float = 0
 
 def _run_compatibility_pump(problem_id: str, execution_id: str, *, timeout_seconds: float = 2.0) -> None:
     # When the embedded supervisor is already driving execution and stage
-    # workers, creating additional drivers here only adds SQLite write-lock
+    # workers, creating additional drivers here only adds redundant local
     # contention.  Fall back to polling only.
     if is_embedded_supervisor_running():
         _await_compatibility_progress(problem_id, timeout_seconds=timeout_seconds)
@@ -298,7 +299,6 @@ def create_problem(payload: ProblemCreateRequest, db: FileStore = Depends(get_db
     log.info("POST /v1/problems — creating problem: %s", payload.title[:80])
     if is_global_stop_active():
         raise_api_error(409, code="reset_in_progress", message="local reset is in progress; try again shortly")
-    llm_overrides = payload.config.llm.model_dump(exclude_none=True)
     artifacts = ArtifactStore()
     problem_id = new_id("prob")
     theorem_id = new_id("thm_root")
@@ -307,8 +307,8 @@ def create_problem(payload: ProblemCreateRequest, db: FileStore = Depends(get_db
         payload.model_dump(by_alias=True),
     )
 
-    # Create problem and theorem records immediately with empty sketch placeholder.
-    # Agent 1 runs in a background thread and updates the sketch when ready.
+    # Create problem and theorem records immediately with an empty sketch placeholder.
+    # Root semantic sketching is performed later by the durable worker path.
     problem = ProblemORM(
         problem_id=problem_id,
         status=ProblemStatus.CREATED.value,
@@ -356,14 +356,6 @@ def create_problem(payload: ProblemCreateRequest, db: FileStore = Depends(get_db
             )
 
     EventRepository(db).append(problem_id, "problem.created", None, ProblemStatus.CREATED.value, target_node_id=theorem_id)
-
-    # Launch Agent 1 in background thread
-    threading.Thread(
-        target=_run_semantic_sketch_background,
-        args=(problem_id, theorem_id, payload.statement_nl, llm_overrides),
-        daemon=True,
-        name=f"sketch-{problem_id}",
-    ).start()
 
     response = ProblemCreateResponse(
         request_id=new_id("req"),
@@ -795,7 +787,7 @@ def resume_problem(problem_id: str, db: FileStore = Depends(get_db)) -> ProblemR
             try:
                 cached = artifacts.load_json(result_key)
                 if cached.get("status") == "failed":
-                    (artifacts.root / result_key).unlink(missing_ok=True)
+                    artifacts.delete(result_key)
             except Exception:
                 pass
 

@@ -1,0 +1,976 @@
+{
+  "artifact_prefix": "problems/prob_20260326124749_deb90b24/decomposer/attempt_20260326130337_b75c3e1a_track_1",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-26T13:03:37.732293Z",
+  "error_payload": null,
+  "execution_id": "exec_20260326124830_66f89877",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [
+      {
+        "controller_status": "failed",
+        "decision": "fatal",
+        "decomposition_id": "dec_20260326125846_dc85bfd4",
+        "disguised_difficulty": [],
+        "drift_severity": "none",
+        "equivalence_risk": "none",
+        "failure_mode": "rejected_fatal:failed",
+        "failure_origin": "context_purity",
+        "fixes_required": [
+          "Replace Lemma L3 with a correct local comparison lemma. As stated it is false for general continuous g >= 0 that are positive on (0,1).",
+          "Correct the displayed formulas in Lemma L3; they do not equal the stated operator differences even for g \u2261 1.",
+          "If the intended comparison only holds for the special class g = V1 arising from operator words, state that structural hypothesis explicitly and re-prove A4/A5 under that restricted lemma."
+        ],
+        "full_candidate": {
+          "assembly_plan": {
+            "final_step_yields_exact_root": true,
+            "proof_skeleton_nl": "Use L1 to encode f(s) as an iterated Volterra integral. For a single local move that flips the first sign of an equal adjacent pair, isolate the changed two-step block inside the operator word. L2 shows that the inner word applied to 1 and the adjoint outer word applied to 1 are both strictly positive on (0,1). L3 shows that replacing ++ by +- or -- by -+ makes the middle block pointwise larger on (0,1). L4 transfers the outer word to the other side of the integral pairing, so the difference of the two counts is the integral of a product of two strictly positive functions; hence the count strictly increases at every allowed local move. L5 gives a finite right-to-left chain of such local moves from any sign sequence to the alternating sequence with the same last sign. Therefore every nonalternating pattern is strictly dominated by an alternating one. Finally, L6 shows that negating every sign leaves f unchanged, so the two alternating sequences have equal count. Therefore the maximizers are exactly the alternating sign sequences.",
+            "steps": [
+              {
+                "derives": "Fix n >= 2 and an arbitrary sign sequence s of length n - 1. Apply L5 with m = n - 1. Obtain an alternating sequence t of length n - 1, characterized by t_{n-1} = s_{n-1} and t_i t_{i+1} = -1 for all 1 <= i <= n - 2, together with a chain u^(0),u^(1),...,u^(r) such that u^(0)=s, u^(r)=t, and each transition u^(k) -> u^(k+1) flips exactly one entry j_k for which u^(k)_{j_k} = u^(k)_{j_k+1}. If s is not alternating, then r >= 1.",
+                "is_trivial": false,
+                "step_id": "A1",
+                "trivial_justification": "This step uses the explicit combinatorial construction in L5 to produce both the alternating endpoint and the full chain of local moves.",
+                "uses_lemmas": [
+                  "L5"
+                ],
+                "uses_prior_steps": []
+              },
+              {
+                "derives": "Fix one transition u^(k) -> u^(k+1) from A1, and let j_k be its changed index. Define V_k to be the operator word T_{u^(k)_{j_k-1}} o ... o T_{u^(k)_1}, with V_k = Id when j_k = 1, and define U_k to be the operator word T_{u^(k)_{n-1}} o ... o T_{u^(k)_{j_k+2}}, with U_k = Id when j_k = n - 2. Because only the sign at position j_k changes and because u^(k)_{j_k} = u^(k)_{j_k+1}, L1 gives the two formulas f(u^(k)) / n! = int_0^1 (U_k(B_k(V_k 1)))(x) dx and f(u^(k+1)) / n! = int_0^1 (U_k(B'_k(V_k 1)))(x) dx, where in the case u^(k)_{j_k} = u^(k)_{j_k+1} = +1 one has B_k = T_+ o T_+ and B'_k = T_+ o T_-, and in the case u^(k)_{j_k} = u^(k)_{j_k+1} = -1 one has B_k = T_- o T_- and B'_k = T_- o T_+.",
+                "is_trivial": false,
+                "step_id": "A2",
+                "trivial_justification": "This is the operator-word decomposition at the modified index furnished by L1; it isolates the unchanged outer words U_k and V_k and the two-step middle block that differs between the two sign sequences.",
+                "uses_lemmas": [
+                  "L1"
+                ],
+                "uses_prior_steps": [
+                  "A1"
+                ]
+              },
+              {
+                "derives": "For the same k, let g_k = V_k 1 and let h_k = U_k^* 1, where U_k^* is the reversed sign-swapped word from L4. By L2, both g_k and h_k are continuous, nonnegative on [0,1], and strictly positive on (0,1). This remains true when U_k or V_k is the empty word, because L2 includes the empty-word case and then the resulting function is the constant 1.",
+                "is_trivial": false,
+                "step_id": "A3",
+                "trivial_justification": "L2 applies directly to the two finite words V_k and U_k^*; the positivity conclusions are needed on both sides of the later pairing.",
+                "uses_lemmas": [
+                  "L2"
+                ],
+                "uses_prior_steps": [
+                  "A2"
+                ]
+              },
+              {
+                "derives": "Define d_k = (B'_k - B_k) g_k. In the ++ case, d_k = T_+(T_- g_k) - T_+(T_+ g_k); in the -- case, d_k = T_-(T_+ g_k) - T_-(T_- g_k). Since g_k is strictly positive on (0,1) by A3, L3 gives d_k(x) > 0 for every x in (0,1).",
+                "is_trivial": false,
+                "step_id": "A4",
+                "trivial_justification": "This is exactly the strict pointwise comparison from L3, applied to the positive function g_k produced in A3.",
+                "uses_lemmas": [
+                  "L3"
+                ],
+                "uses_prior_steps": [
+                  "A2",
+                  "A3"
+                ]
+              },
+              {
+                "derives": "From A2, f(u^(k+1)) - f(u^(k)) = n! * int_0^1 (U_k d_k)(x) dx. Apply L4 with u = d_k, v = 1, and operator word U = U_k to rewrite this as n! * int_0^1 d_k(x) h_k(x) dx, where h_k = U_k^* 1 is the positive function from A3. Because both d_k and h_k are strictly positive on (0,1), their product has strictly positive integral over [0,1]. Therefore f(u^(k+1)) > f(u^(k)).",
+                "is_trivial": false,
+                "step_id": "A5",
+                "trivial_justification": "The adjoint identity from L4 transfers U_k to the other side of the pairing, and the positivity information from A3-A4 then makes the resulting integral strictly positive.",
+                "uses_lemmas": [
+                  "L4"
+                ],
+                "uses_prior_steps": [
+                  "A2",
+                  "A3",
+                  "A4"
+                ]
+              },
+              {
+                "derives": "If s is not alternating, then A1 gives r >= 1. Applying A5 successively to each of the r local moves in the chain yields f(u^(1)) > f(u^(0)), f(u^(2)) > f(u^(1)), ..., f(u^(r)) > f(u^(r-1)). By transitivity, f(t) = f(u^(r)) > f(u^(0)) = f(s). Hence every nonalternating sign sequence has strictly smaller count than some alternating sign sequence and therefore cannot be a maximizer.",
+                "is_trivial": false,
+                "step_id": "A6",
+                "trivial_justification": "This is a finite induction along the chain produced in A1, using the strict increase from A5 at each link.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A1",
+                  "A5"
+                ]
+              },
+              {
+                "derives": "Let u^+ and u^- be the two alternating sign sequences of length n - 1. They satisfy u^- = -u^+. By L6, f(u^+) = f(u^-). Denote this common value by M.",
+                "is_trivial": true,
+                "step_id": "A7",
+                "trivial_justification": "This is a direct application of the sign-negation symmetry in L6 to the pair of alternating sequences, which are negatives of each other.",
+                "uses_lemmas": [
+                  "L6"
+                ],
+                "uses_prior_steps": []
+              },
+              {
+                "derives": "If s is alternating, then s is one of the two sequences u^+ or u^- and therefore f(s) = M by A7. If s is not alternating, then A6 gives an alternating sequence t with f(s) < f(t), and A7 shows f(t) = M. Hence f(s) is maximal exactly when s is alternating, equivalently exactly when s_i s_{i+1} = -1 for every 1 <= i <= n - 2. This is precisely the characterization of the maximizing sequences required in the theorem.",
+                "is_trivial": false,
+                "step_id": "A8",
+                "trivial_justification": "A6 rules out every nonalternating pattern, while A7 identifies the common maximal value attained by the two alternating patterns.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A6",
+                  "A7"
+                ]
+              }
+            ]
+          },
+          "candidate_index": 0,
+          "context_items": [
+            {
+              "content": "For an integer n >= 2 and a sign sequence s = (s_1,...,s_{n-1}) with each s_i in {+1,-1}, f_n(s) denotes the number of permutations a = (a_1,...,a_n) of {1,...,n} such that s_i * (a_{i+1} - a_i) > 0 for every 1 <= i <= n-1.",
+              "kind": "definition",
+              "label": "pattern_count"
+            },
+            {
+              "content": "For a function g : [0,1] -> R, define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du.",
+              "kind": "definition",
+              "label": "volterra_operators"
+            },
+            {
+              "content": "A sign sequence t = (t_1,...,t_m) with entries in {+1,-1} is alternating if t_i * t_{i+1} = -1 for every 1 <= i < m.",
+              "kind": "definition",
+              "label": "alternating_sign_sequence"
+            }
+          ],
+          "drift_self_check": {
+            "all_lemmas_consistent_with_root_sketch": true,
+            "inconsistencies_noted": []
+          },
+          "formalization_cost_estimate_total": 0.8,
+          "lemmas": [
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.68,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L1",
+              "proof_nl": null,
+              "role_in_assembly": "Translates the discrete counting problem into an iterated integral/operator word so a local sign change becomes a local operator replacement.",
+              "self_check_notes": "All nonstandard notation T_+, T_-, and the constant function 1 is defined locally; the count f(s) is restated explicitly.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "n >= 2",
+                  "s has length n - 1",
+                  "each entry of s is +1 or -1"
+                ],
+                "normalized_claim": "If T_{+1}(g)(x)=int_0^x g(u) du and T_{-1}(g)(x)=int_x^1 g(u) du, then f(s)=n! * int_0^1 (T_{s_{n-1}} o ... o T_{s_1} 1)(x) dx.",
+                "quantifier_order": [
+                  "Fix n",
+                  "fix s"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers >= 2",
+                    "name": "n",
+                    "role": "ambient size parameter",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "sign sequences of length n-1 with entries in {+1,-1}",
+                    "name": "s",
+                    "role": "prescribed ascent-descent pattern",
+                    "type": "finite sequence"
+                  },
+                  {
+                    "domain": "permutations of {1,...,n}",
+                    "name": "a",
+                    "role": "counted object in f(s)",
+                    "type": "permutation sequence"
+                  },
+                  {
+                    "domain": "[0,1]",
+                    "name": "x",
+                    "role": "integration variable",
+                    "type": "real"
+                  }
+                ],
+                "witness_dependencies": [
+                  "The operator word T_{s_{n-1}} o ... o T_{s_1} depends on s"
+                ]
+              },
+              "statement_nl": "Let n be an integer with n >= 2, and let s = (s_1,...,s_{n-1}) be a sequence with each s_i in {+1,-1}. For a function g : [0,1] -> R define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du, and write T_{+1} = T_+ and T_{-1} = T_-. Let 1 denote the constant function 1 on [0,1]. Let f(s) be the number of permutations a = (a_1,...,a_n) of {1,2,...,n} such that s_i(a_{i+1} - a_i) > 0 for every 1 <= i <= n-1. Then f(s) = n! * integral from 0 to 1 of (T_{s_{n-1}} o T_{s_{n-2}} o ... o T_{s_1} 1)(x) dx.",
+              "strictly_easier_reason": "This lemma gives an analytic formula for f(s) for one fixed sign pattern and does not address which sign patterns maximize the count."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.24,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L2",
+              "proof_nl": null,
+              "role_in_assembly": "Provides the positivity of the inner function V_k 1 and the adjoint test function U_k^* 1 in each local comparison step.",
+              "self_check_notes": "The empty-word case m = 0 is included explicitly, so the statement is standalone.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "m >= 0",
+                  "epsilon has length m",
+                  "each epsilon_i is +1 or -1"
+                ],
+                "normalized_claim": "Any finite word in T_+ and T_- applied to the constant function 1 yields a continuous function that is nonnegative on [0,1] and strictly positive on (0,1).",
+                "quantifier_order": [
+                  "Fix m",
+                  "fix epsilon"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers >= 0",
+                    "name": "m",
+                    "role": "word length",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "sign sequences of length m with entries in {+1,-1}",
+                    "name": "epsilon",
+                    "role": "operator word",
+                    "type": "finite sequence"
+                  },
+                  {
+                    "domain": "continuous functions [0,1] -> R",
+                    "name": "g_epsilon",
+                    "role": "result of applying the operator word to the constant 1",
+                    "type": "function"
+                  },
+                  {
+                    "domain": "[0,1]",
+                    "name": "x",
+                    "role": "evaluation variable",
+                    "type": "real"
+                  }
+                ],
+                "witness_dependencies": [
+                  "g_epsilon depends on the full word epsilon"
+                ]
+              },
+              "statement_nl": "Let m be an integer with m >= 0, and let epsilon = (epsilon_1,...,epsilon_m) with each epsilon_i in {+1,-1}. For a function g : [0,1] -> R define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du, and write T_{+1} = T_+ and T_{-1} = T_-. Let 1 denote the constant function 1 on [0,1], and define g_epsilon = T_{epsilon_m} o ... o T_{epsilon_1} 1, with g_epsilon = 1 when m = 0. Then g_epsilon is continuous on [0,1], satisfies g_epsilon(x) >= 0 for every x in [0,1], and satisfies g_epsilon(x) > 0 for every x in (0,1).",
+              "strictly_easier_reason": "This is a positivity statement for iterated integral operators on [0,1]; it involves no permutation optimization."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.31,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L3",
+              "proof_nl": null,
+              "role_in_assembly": "Supplies the strict pointwise gain obtained by replacing a repeated sign pair with an alternating pair in the operator model.",
+              "self_check_notes": "All operators and hypotheses are stated explicitly; no outside notation is needed.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "g is continuous on [0,1]",
+                  "g(x) >= 0 for all x in [0,1]",
+                  "g(x) > 0 for all x in (0,1)"
+                ],
+                "normalized_claim": "On every strictly positive input g, the alternating operator pairs T_+ o T_- and T_- o T_+ are pointwise larger on (0,1) than the equal-sign pairs T_+ o T_+ and T_- o T_- respectively.",
+                "quantifier_order": [
+                  "Fix g",
+                  "fix x in (0,1)"
+                ],
+                "variables": [
+                  {
+                    "domain": "continuous functions [0,1] -> R with g >= 0 on [0,1] and g > 0 on (0,1)",
+                    "name": "g",
+                    "role": "positive input function",
+                    "type": "function"
+                  },
+                  {
+                    "domain": "(0,1)",
+                    "name": "x",
+                    "role": "evaluation point",
+                    "type": "real"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let g : [0,1] -> R be continuous, assume g(x) >= 0 for every x in [0,1], and assume g(x) > 0 for every x in (0,1). Define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du. Then for every x in (0,1), (T_+(T_- g))(x) - (T_+(T_+ g))(x) = integral from 0 to x of u g(u) du + x * integral from x to 1 of g(u) du > 0, and also (T_-(T_+ g))(x) - (T_-(T_- g))(x) = (1 - x) * integral from 0 to x of g(u) du + integral from x to 1 of (1 - u) g(u) du > 0.",
+              "strictly_easier_reason": "This is a purely analytic inequality for two-step integral operators, disconnected from the global maximization problem except as a local ingredient."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.49,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L4",
+              "proof_nl": null,
+              "role_in_assembly": "Moves the outer operator word away from the difference term so positivity can be tested against a positive function U^*1.",
+              "self_check_notes": "The operators, the pairing, and the construction of U^* are all defined within the statement.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "u is integrable on [0,1]",
+                  "v is integrable on [0,1]",
+                  "U is a finite composition of T_+ and T_-"
+                ],
+                "normalized_claim": "T_+ and T_- are adjoint to each other under the L^2-type integral pairing, and any word U is adjoint to the reversed sign-swapped word U^*.",
+                "quantifier_order": [
+                  "Fix u",
+                  "fix v",
+                  "fix U"
+                ],
+                "variables": [
+                  {
+                    "domain": "integrable functions [0,1] -> R",
+                    "name": "u",
+                    "role": "left input of the pairing",
+                    "type": "function"
+                  },
+                  {
+                    "domain": "integrable functions [0,1] -> R",
+                    "name": "v",
+                    "role": "right input of the pairing",
+                    "type": "function"
+                  },
+                  {
+                    "domain": "finite compositions of T_+ and T_-",
+                    "name": "U",
+                    "role": "outer operator composition",
+                    "type": "operator word"
+                  }
+                ],
+                "witness_dependencies": [
+                  "U^* depends on the chosen word U"
+                ]
+              },
+              "statement_nl": "Let u,v : [0,1] -> R be integrable functions. Define (T_+ u)(x) = integral from 0 to x of u(t) dt and (T_- u)(x) = integral from x to 1 of u(t) dt. Then integral from 0 to 1 of (T_+ u)(x) v(x) dx = integral from 0 to 1 of u(x) (T_- v)(x) dx, and integral from 0 to 1 of (T_- u)(x) v(x) dx = integral from 0 to 1 of u(x) (T_+ v)(x) dx. Consequently, if U is any finite composition, possibly empty, of the operators T_+ and T_-, and U^* is obtained from U by reversing the order of composition and swapping each T_+ with T_- and each T_- with T_+, then integral from 0 to 1 of (Uu)(x) v(x) dx = integral from 0 to 1 of u(x) (U^* v)(x) dx.",
+              "strictly_easier_reason": "This is an operator-adjointness identity on [0,1], independent of the combinatorics of permutations."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.23,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L5",
+              "proof_nl": null,
+              "role_in_assembly": "Constructs a finite chain of admissible local replacements from any sign pattern to an alternating one.",
+              "self_check_notes": "The recursive definition of t and the precise local move are both fully spelled out; no hidden notation is used.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "m >= 1",
+                  "s has length m",
+                  "each s_i is +1 or -1"
+                ],
+                "normalized_claim": "Every sign sequence can be transformed into the alternating sequence with the same last sign by finitely many operations that flip the first entry of an equal adjacent pair; a nonalternating sequence requires at least one such flip.",
+                "quantifier_order": [
+                  "Fix m",
+                  "fix s",
+                  "define t recursively from the last sign of s"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers >= 1",
+                    "name": "m",
+                    "role": "length of the sign sequence",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "sign sequences of length m with entries in {+1,-1}",
+                    "name": "s",
+                    "role": "initial sign pattern",
+                    "type": "finite sequence"
+                  },
+                  {
+                    "domain": "sign sequences of length m with entries in {+1,-1}",
+                    "name": "t",
+                    "role": "alternating target with the same last sign as s",
+                    "type": "finite sequence"
+                  },
+                  {
+                    "domain": "chains of sign sequences of length m",
+                    "name": "u",
+                    "role": "explicit sequence of local flips from s to t",
+                    "type": "finite list of finite sequences"
+                  }
+                ],
+                "witness_dependencies": [
+                  "t depends on s",
+                  "the chain u^(0),...,u^(r) depends on s"
+                ]
+              },
+              "statement_nl": "Let m be an integer with m >= 1, and let s = (s_1,...,s_m) be a sequence with each s_i in {+1,-1}. Define a new sequence t = (t_1,...,t_m) recursively by t_m = s_m and t_j = -t_{j+1} for j = m-1, m-2, ..., 1. Then t_i t_{i+1} = -1 for every 1 <= i < m, and there exist sign sequences u^(0),u^(1),...,u^(r) of length m such that u^(0) = s, u^(r) = t, and for each k < r there exists an index j_k with 1 <= j_k < m such that u^(k)_{j_k} = u^(k)_{j_k+1} and u^(k+1) is obtained from u^(k) by changing only the entry at position j_k to its negative. If s_i t_{i} is not defined this condition is irrelevant; the key point is that if s is not already alternating, meaning s_i s_{i+1} != -1 for some i, then one may choose r >= 1.",
+              "strictly_easier_reason": "This is a purely combinatorial normalization procedure on sign words and contains no counting argument."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.12,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L6",
+              "proof_nl": null,
+              "role_in_assembly": "Shows the two alternating sign sequences have the same f-value, so both attain the same maximal count.",
+              "self_check_notes": "The negated sequence -s and the count f(s) are both explicitly defined in the statement.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "n >= 2",
+                  "s has length n - 1",
+                  "each entry of s is +1 or -1"
+                ],
+                "normalized_claim": "Negating every prescribed adjacent sign does not change the number of realizing permutations.",
+                "quantifier_order": [
+                  "Fix n",
+                  "fix s"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers >= 2",
+                    "name": "n",
+                    "role": "ambient size parameter",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "sign sequences of length n-1 with entries in {+1,-1}",
+                    "name": "s",
+                    "role": "given sign pattern",
+                    "type": "finite sequence"
+                  }
+                ],
+                "witness_dependencies": [
+                  "-s is obtained from s by entrywise negation"
+                ]
+              },
+              "statement_nl": "Let n be an integer with n >= 2, and let s = (s_1,...,s_{n-1}) be a sequence with each s_i in {+1,-1}. Let -s denote the sequence (-s_1,...,-s_{n-1}). Let f(s) be the number of permutations a = (a_1,...,a_n) of {1,2,...,n} such that s_i(a_{i+1} - a_i) > 0 for every 1 <= i <= n-1. Then f(-s) = f(s).",
+              "strictly_easier_reason": "This is a direct symmetry statement coming from complementing each permutation value x to n+1-x."
+            }
+          ],
+          "shared_context": [
+            {
+              "content": "For an integer n >= 2 and a sign sequence s = (s_1,...,s_{n-1}) with each s_i in {+1,-1}, f_n(s) denotes the number of permutations a = (a_1,...,a_n) of {1,...,n} such that s_i * (a_{i+1} - a_i) > 0 for every 1 <= i <= n-1.",
+              "kind": "definition",
+              "label": "pattern_count"
+            },
+            {
+              "content": "For a function g : [0,1] -> R, define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du.",
+              "kind": "definition",
+              "label": "volterra_operators"
+            },
+            {
+              "content": "A sign sequence t = (t_1,...,t_m) with entries in {+1,-1} is alternating if t_i * t_{i+1} = -1 for every 1 <= i < m.",
+              "kind": "definition",
+              "label": "alternating_sign_sequence"
+            }
+          ],
+          "strategy_summary": "Represent f(s) by an iterated Volterra integral. Show that replacing any repeated adjacent sign by an alternating pair makes the corresponding operator word strictly larger on positive inputs. Use a right-to-left flip algorithm to transform every sign sequence into an alternating one, and use sign-complement symmetry to show the two alternating sequences have the same count."
+        },
+        "lean_assembly_status": "pending",
+        "lean_v2_prepare_status": null,
+        "llm_vetting_status": "rejected_fatal",
+        "missing_coverage": [],
+        "rejection_reason": "Rejected: decomposition context purity validation found a fatal issue.",
+        "strategy_summary": "Represent f(s) by an iterated Volterra integral. Show that replacing any repeated adjacent sign by an alternating pair makes the corresponding operator word strictly larger on positive inputs. Use a right-to-left flip algorithm to transform every sign sequence into an alternating one, and use sign-complement symmetry to show the two alternating sequences have the same count.",
+        "vet_summary": "The overall strategy is sound and the assembly skeleton is logically coherent assuming the lemmas, but Lemma L3 is false as stated and it is the key input for the strict local-improvement step A4/A5. So the decomposition does not currently prove the theorem."
+      }
+    ],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "each entry of s is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}, so each integer from 1 to n appears exactly once",
+        "the inequality at each position is strict: si times (a(i+1) minus a(i)) must be positive",
+        "the condition is imposed for every i from 1 to n minus 1"
+      ],
+      "normalized_claim": "For each integer n at least 2, among all sign sequences of length n minus 1 with entries plus or minus 1, characterize exactly those sequences that maximize the number of permutations of 1 through n whose successive differences have the prescribed signs.",
+      "quantifier_order": [
+        "Fix an integer n with n at least 2",
+        "Consider all sign sequences s of length n minus 1 with each entry plus or minus 1",
+        "For each such s, count all permutations a of 1 through n satisfying the adjacency inequalities for every index i from 1 to n minus 1",
+        "For each n, identify exactly those sign sequences s for which this count is maximal among all admissible sign sequences of that length"
+      ],
+      "variables": [
+        {
+          "domain": "integers at least 2",
+          "name": "n",
+          "role": "ambient size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries plus or minus 1",
+          "name": "s",
+          "role": "sign pattern being optimized over",
+          "type": "finite sequence"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "adjacent-position index in the sign condition",
+          "type": "index"
+        },
+        {
+          "domain": "all orderings of the integers from 1 to n",
+          "name": "a",
+          "role": "counted object satisfying the inequalities",
+          "type": "permutation sequence"
+        },
+        {
+          "domain": "sign sequences of length n minus 1",
+          "name": "f",
+          "role": "counts how many permutations satisfy the sign constraints",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "The permutations counted by f(s) depend on both n and s",
+        "The maximizing sign sequence is allowed to depend on n",
+        "The statement asks for all maximizers, so there may be more than one maximizing sequence for a given n"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260326124749_deb90b24",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix n and encode f(s) by the Volterra operator formula from L1. Normalize any sign sequence to the alternating sequence with the same first sign by repeatedly flipping the second sign in an equal adjacent pair, using L4. For one such move, isolate the changed two-step block inside the operator word. The prefix output g_k is positive by L2. The corrected comparison L3 shows that replacing ++ by +-, or -- by -+, makes that two-step block larger by a function d_k that is nonnegative on [0,1] and strictly positive on (0,1). Apply L2 again to the unchanged suffix word to deduce that the whole operator-word difference U_k d_k is still positive on (0,1), so its integral is strictly positive. Therefore each local move strictly increases f, and by chaining the moves every nonalternating pattern is strictly dominated by an alternating one. Finally, L5 shows that the two alternating patterns have equal count because they are negatives of each other. Hence the maximal sign patterns are exactly the alternating ones.",
+          "steps": [
+            {
+              "derives": "Fix an arbitrary integer n >= 2 and an arbitrary sign sequence s = (s_1,...,s_{n-1}) with each s_i in {+1,-1}. Apply L4 with m = n - 1. Obtain an alternating sequence t = (t_1,...,t_{n-1}) satisfying t_1 = s_1 and t_i t_{i+1} = -1 for all 1 <= i <= n - 2, together with a chain u^(0),u^(1),...,u^(r) of sign sequences of length n - 1 such that u^(0) = s, u^(r) = t, and for each k < r there exists j_k with 1 <= j_k <= n - 2, u^(k)_{j_k} = u^(k)_{j_k+1}, and u^(k+1) is obtained from u^(k) by changing only the entry at position j_k + 1 to its negative. If s is not alternating, then r >= 1.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "This is the combinatorial normalization chain supplied by L4.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Fix an index k with 0 <= k < r, and let j_k be the index given by A1. Define V_k to be the operator word T_{u^(k)_{j_k-1}} o ... o T_{u^(k)_1}, with V_k equal to the identity operator when j_k = 1. Define U_k to be the operator word T_{u^(k)_{n-1}} o ... o T_{u^(k)_{j_k+2}}, with U_k equal to the identity operator when j_k = n - 2. Because u^(k+1) differs from u^(k) only at the coordinate j_k + 1, L1 gives f(u^(k)) / n! = integral from 0 to 1 of (U_k(B_k(V_k 1)))(x) dx and f(u^(k+1)) / n! = integral from 0 to 1 of (U_k(B'_k(V_k 1)))(x) dx, where in the case u^(k)_{j_k} = u^(k)_{j_k+1} = +1 one has B_k = T_+ o T_+ and B'_k = T_- o T_+, and in the case u^(k)_{j_k} = u^(k)_{j_k+1} = -1 one has B_k = T_- o T_- and B'_k = T_+ o T_-.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "L1 is applied to the two sign sequences u^(k) and u^(k+1), and the common prefix and suffix operator words are explicitly factored out.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "Let g_k = V_k 1. Since the constant function 1 is continuous, nonnegative on [0,1], and strictly positive on (0,1), L2 applied to the sign word defining V_k shows that g_k is continuous on [0,1], satisfies g_k(x) >= 0 for every x in [0,1], and satisfies g_k(x) > 0 for every x in (0,1). This also covers the empty-word case j_k = 1, where g_k is just the constant function 1.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "This is a direct application of the positivity-preservation lemma L2 to the prefix word V_k.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "Define d_k = (B'_k - B_k) g_k. In the ++ case from A2, d_k = T_-(T_+ g_k) - T_+(T_+ g_k). In the -- case from A2, d_k = T_+(T_- g_k) - T_-(T_- g_k). Because g_k satisfies the hypotheses of L3 by A3, L3 shows that d_k is continuous on [0,1], d_k(x) >= 0 for every x in [0,1], and d_k(x) > 0 for every x in (0,1).",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "A3 provides the positivity hypothesis on g_k, and the corrected local comparison lemma L3 turns that into positivity of the block difference d_k.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A3"
+              ]
+            },
+            {
+              "derives": "Apply L2 again, now to the input function d_k and to the sign word defining U_k. Since A4 shows that d_k is continuous, nonnegative on [0,1], and strictly positive on (0,1), L2 yields that U_k d_k is continuous on [0,1], satisfies (U_k d_k)(x) >= 0 for every x in [0,1], and satisfies (U_k d_k)(x) > 0 for every x in (0,1). This also covers the empty-word case U_k = identity.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "This step propagates the positivity of the local block difference through the unchanged suffix word.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A4"
+              ]
+            },
+            {
+              "derives": "Subtract the two formulas in A2 to obtain f(u^(k+1)) - f(u^(k)) = n! times the integral from 0 to 1 of (U_k d_k)(x) dx. By A5, the integrand U_k d_k is continuous, nonnegative on [0,1], and strictly positive on the whole open interval (0,1). Therefore its integral over [0,1] is strictly positive; since n! > 0, it follows that f(u^(k+1)) > f(u^(k)).",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "The equality comes from algebraic subtraction of the integral representations in A2. The strict positivity of the integral follows because a continuous function that is positive on the nonempty open interval (0,1) cannot have zero integral on [0,1].",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A2",
+                "A5"
+              ]
+            },
+            {
+              "derives": "Assume s is not alternating. Then A1 gives r >= 1. Apply A6 to each transition u^(0) -> u^(1), u^(1) -> u^(2), ..., u^(r-1) -> u^(r). This yields f(u^(1)) > f(u^(0)), f(u^(2)) > f(u^(1)), ..., f(u^(r)) > f(u^(r-1)). By transitivity, f(t) = f(u^(r)) > f(u^(0)) = f(s). Hence every nonalternating sign sequence has strictly smaller count than some alternating sign sequence and therefore cannot be a maximizer.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "This is a finite induction along the chain from A1, using the strict local increase established in A6 at each link.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A6"
+              ]
+            },
+            {
+              "derives": "Let u^+ = (+1,-1,+1,-1,...) and u^- = (-1,+1,-1,+1,...) be the two alternating sign sequences of length n - 1. They satisfy u^- = -u^+. Applying L5 to the sequence u^+ gives f(u^-) = f(u^+).",
+              "is_trivial": false,
+              "step_id": "A8",
+              "trivial_justification": "Once the two alternating sequences are explicitly named, L5 immediately identifies their f-values.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Let n be an integer with n >= 2. For a sequence s = (s_1,...,s_{n-1}) where each s_i = +/- 1, let f(s) be the number of permutations (a_1,...,a_n) of {1,2,...,n} such that s_i(a_{i+1}-a_i) > 0 for all i. Then f(s) is maximal exactly for the alternating sign sequences, equivalently exactly for those s satisfying s_i s_{i+1} = -1 for every 1 <= i <= n - 2.",
+              "is_trivial": false,
+              "step_id": "A9",
+              "trivial_justification": "If s is alternating, then once s_1 is chosen all later entries are forced by the relation s_i s_{i+1} = -1, so s is either u^+ or u^- and A8 gives its value. If s is not alternating, A7 shows f(s) is strictly smaller than the value at some alternating sequence. Therefore the maximizers are precisely the alternating sequences.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A7",
+                "A8"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer n >= 2 and a sign sequence s = (s_1,...,s_{n-1}) with each s_i in {+1,-1}, let f(s) denote the number of permutations a = (a_1,...,a_n) of {1,2,...,n} such that s_i (a_{i+1} - a_i) > 0 for every 1 <= i <= n-1.",
+            "kind": "definition",
+            "label": "pattern_count"
+          },
+          {
+            "content": "For a function g : [0,1] -> R, define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du.",
+            "kind": "definition",
+            "label": "volterra_operators"
+          },
+          {
+            "content": "For epsilon in {+1,-1}, write T_epsilon = T_+ when epsilon = +1 and T_epsilon = T_- when epsilon = -1.",
+            "kind": "notation",
+            "label": "signed_operator"
+          },
+          {
+            "content": "A sign sequence t = (t_1,...,t_m) with entries in {+1,-1} is alternating if t_i t_{i+1} = -1 for every 1 <= i < m.",
+            "kind": "definition",
+            "label": "alternating_sign_sequence"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.67,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.65,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Translates the permutation-counting problem into an operator-word integral so that one local sign change becomes one local replacement of a two-step operator block.",
+            "self_check_notes": "All symbols used in the statement, including T_+, T_-, T_{+1}, T_{-1}, the constant function 1, and f(s), are defined locally.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n >= 2",
+                "s has length n - 1",
+                "each entry of s is +1 or -1"
+              ],
+              "normalized_claim": "If T_{+1}(g)(x) = integral from 0 to x of g(u) du and T_{-1}(g)(x) = integral from x to 1 of g(u) du, then f(s) = n! times integral from 0 to 1 of (T_{s_{n-1}} o ... o T_{s_1} 1)(x) dx.",
+              "quantifier_order": [
+                "Fix n",
+                "fix s"
+              ],
+              "variables": [
+                {
+                  "domain": "integers at least 2",
+                  "name": "n",
+                  "role": "ambient size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sign sequences of length n-1 with entries in {+1,-1}",
+                  "name": "s",
+                  "role": "prescribed ascent-descent pattern",
+                  "type": "finite sequence"
+                },
+                {
+                  "domain": "permutations of {1,...,n}",
+                  "name": "a",
+                  "role": "counted object in f(s)",
+                  "type": "permutation sequence"
+                },
+                {
+                  "domain": "[0,1]",
+                  "name": "x",
+                  "role": "integration variable",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": [
+                "The operator word T_{s_{n-1}} o ... o T_{s_1} depends on s"
+              ]
+            },
+            "statement_nl": "Let n be an integer with n >= 2, and let s = (s_1,...,s_{n-1}) be a sequence with each s_i in {+1,-1}. For a function g : [0,1] -> R define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du, and write T_{+1} = T_+ and T_{-1} = T_-. Let 1 denote the constant function 1 on [0,1]. Let f(s) be the number of permutations a = (a_1,...,a_n) of {1,2,...,n} such that s_i (a_{i+1} - a_i) > 0 for every 1 <= i <= n-1. Then f(s) = n! times the integral from 0 to 1 of (T_{s_{n-1}} o T_{s_{n-2}} o ... o T_{s_1} 1)(x) dx.",
+            "strictly_easier_reason": "It gives an exact formula for f(s) for one fixed sign pattern and does not address which patterns maximize f."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.2,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Used twice: first to show that the inner prefix word applied to 1 is positive, and second to propagate positivity through the unchanged outer suffix word after the local comparison.",
+            "self_check_notes": "The statement is fully self-contained and includes the empty-word case m = 0.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "m >= 0",
+                "epsilon has length m",
+                "each epsilon_i is +1 or -1",
+                "g is continuous on [0,1]",
+                "g(x) >= 0 on [0,1]",
+                "g(x) > 0 on (0,1)"
+              ],
+              "normalized_claim": "Any finite word in T_+ and T_- maps a continuous function that is nonnegative on [0,1] and strictly positive on (0,1) to another continuous function with the same properties.",
+              "quantifier_order": [
+                "Fix m",
+                "fix epsilon",
+                "fix g"
+              ],
+              "variables": [
+                {
+                  "domain": "integers at least 0",
+                  "name": "m",
+                  "role": "length of the operator word",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sign sequences of length m with entries in {+1,-1}",
+                  "name": "epsilon",
+                  "role": "operator word",
+                  "type": "finite sequence"
+                },
+                {
+                  "domain": "continuous functions [0,1] -> R that are nonnegative on [0,1] and strictly positive on (0,1)",
+                  "name": "g",
+                  "role": "input function",
+                  "type": "function"
+                },
+                {
+                  "domain": "continuous functions [0,1] -> R",
+                  "name": "W",
+                  "role": "output after applying the operator word to g",
+                  "type": "function"
+                },
+                {
+                  "domain": "[0,1]",
+                  "name": "x",
+                  "role": "evaluation variable",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": [
+                "The output function W depends on epsilon and g"
+              ]
+            },
+            "statement_nl": "Let m be an integer with m >= 0, let epsilon = (epsilon_1,...,epsilon_m) be a sequence with each epsilon_i in {+1,-1}, and let g : [0,1] -> R be a continuous function such that g(x) >= 0 for every x in [0,1] and g(x) > 0 for every x in (0,1). For a function h : [0,1] -> R define (T_+ h)(x) = integral from 0 to x of h(u) du and (T_- h)(x) = integral from x to 1 of h(u) du, and write T_{+1} = T_+ and T_{-1} = T_-. Define W = T_{epsilon_m} o T_{epsilon_{m-1}} o ... o T_{epsilon_1} g, with W = g when m = 0. Then W is continuous on [0,1], satisfies W(x) >= 0 for every x in [0,1], and satisfies W(x) > 0 for every x in (0,1).",
+            "strictly_easier_reason": "This is a general positivity-preservation fact for integral operators on [0,1], independent of the combinatorial maximization problem."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "This is the corrected local comparison lemma: after flipping the second sign in an equal adjacent pair, the changed two-step block produces a strictly larger positive function.",
+            "self_check_notes": "This explicitly fixes the previously rejected false comparison. The valid comparisons are T_- o T_+ versus T_+ o T_+, and T_+ o T_- versus T_- o T_-; no incorrect displayed formulas are used.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "g is continuous on [0,1]",
+                "g(x) >= 0 for all x in [0,1]",
+                "g(x) > 0 for all x in (0,1)"
+              ],
+              "normalized_claim": "For every continuous g that is nonnegative on [0,1] and strictly positive on (0,1), the two difference functions T_- o T_+ g - T_+ o T_+ g and T_+ o T_- g - T_- o T_- g are continuous, nonnegative on [0,1], and strictly positive on (0,1).",
+              "quantifier_order": [
+                "Fix g"
+              ],
+              "variables": [
+                {
+                  "domain": "continuous functions [0,1] -> R that are nonnegative on [0,1] and strictly positive on (0,1)",
+                  "name": "g",
+                  "role": "positive input function",
+                  "type": "function"
+                },
+                {
+                  "domain": "continuous functions [0,1] -> R",
+                  "name": "d_+",
+                  "role": "difference T_- o T_+ minus T_+ o T_+ applied to g",
+                  "type": "function"
+                },
+                {
+                  "domain": "continuous functions [0,1] -> R",
+                  "name": "d_-",
+                  "role": "difference T_+ o T_- minus T_- o T_- applied to g",
+                  "type": "function"
+                },
+                {
+                  "domain": "[0,1]",
+                  "name": "x",
+                  "role": "evaluation point",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": [
+                "d_+ and d_- are defined from g"
+              ]
+            },
+            "statement_nl": "Let g : [0,1] -> R be continuous, assume g(x) >= 0 for every x in [0,1], and assume g(x) > 0 for every x in (0,1). Define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du. Define two functions on [0,1] by d_+(x) = (T_-(T_+ g))(x) - (T_+(T_+ g))(x) and d_-(x) = (T_+(T_- g))(x) - (T_-(T_- g))(x). Then d_+ and d_- are continuous on [0,1], satisfy d_+(x) >= 0 and d_-(x) >= 0 for every x in [0,1], and satisfy d_+(x) > 0 and d_-(x) > 0 for every x in (0,1).",
+            "strictly_easier_reason": "It is a two-step analytic inequality for Volterra operators and does not mention permutations or maximizers."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.15,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Provides a finite chain of corrected local moves from any sign sequence to an alternating one.",
+            "self_check_notes": "The target sequence and the allowed local move are fully spelled out. This deliberately replaces the rejected first-sign flip by the correct second-sign flip.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "m >= 1",
+                "s has length m",
+                "each s_i is +1 or -1"
+              ],
+              "normalized_claim": "Every sign sequence can be transformed into the alternating sequence with the same first sign by finitely many operations that flip the second entry of an equal adjacent pair; if the initial sequence is not alternating, at least one such flip is required.",
+              "quantifier_order": [
+                "Fix m",
+                "fix s",
+                "define t from the first sign of s"
+              ],
+              "variables": [
+                {
+                  "domain": "integers at least 1",
+                  "name": "m",
+                  "role": "length of the sign sequence",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sign sequences of length m with entries in {+1,-1}",
+                  "name": "s",
+                  "role": "initial sign pattern",
+                  "type": "finite sequence"
+                },
+                {
+                  "domain": "sign sequences of length m with entries in {+1,-1}",
+                  "name": "t",
+                  "role": "alternating target with the same first sign as s",
+                  "type": "finite sequence"
+                },
+                {
+                  "domain": "chains of sign sequences of length m",
+                  "name": "u",
+                  "role": "explicit sequence of local flips from s to t",
+                  "type": "finite list of finite sequences"
+                }
+              ],
+              "witness_dependencies": [
+                "The alternating target t depends on s_1",
+                "The chain u^(0),...,u^(r) depends on s"
+              ]
+            },
+            "statement_nl": "Let m be an integer with m >= 1, and let s = (s_1,...,s_m) be a sequence with each s_i in {+1,-1}. Define a sequence t = (t_1,...,t_m) by t_1 = s_1 and t_{j+1} = -t_j for each integer j with 1 <= j < m. Then t_i t_{i+1} = -1 for every 1 <= i < m. Moreover there exist an integer r >= 0 and sign sequences u^(0),u^(1),...,u^(r), each of length m, such that u^(0) = s, u^(r) = t, and for every k with 0 <= k < r there exists an index j_k with 1 <= j_k < m such that u^(k)_{j_k} = u^(k)_{j_k+1} and u^(k+1) is obtained from u^(k) by changing only the entry at position j_k + 1 to its negative. If s is not alternating, meaning s_i s_{i+1} is not equal to -1 for some 1 <= i < m, then one may choose r >= 1.",
+            "strictly_easier_reason": "This is a purely combinatorial normalization statement about sign words and does not involve permutation counts."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Shows that the two alternating patterns have the same value of f, so both are maximizers once all nonalternating patterns are ruled out.",
+            "self_check_notes": "The negated sequence and the count f(s) are defined locally; no external notation is used.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n >= 2",
+                "s has length n - 1",
+                "each entry of s is +1 or -1"
+              ],
+              "normalized_claim": "Negating every sign in the prescribed up-down pattern does not change the number of permutations that realize the pattern.",
+              "quantifier_order": [
+                "Fix n",
+                "fix s"
+              ],
+              "variables": [
+                {
+                  "domain": "integers at least 2",
+                  "name": "n",
+                  "role": "ambient size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sign sequences of length n-1 with entries in {+1,-1}",
+                  "name": "s",
+                  "role": "given sign pattern",
+                  "type": "finite sequence"
+                }
+              ],
+              "witness_dependencies": [
+                "The sequence -s is obtained from s by entrywise negation"
+              ]
+            },
+            "statement_nl": "Let n be an integer with n >= 2, and let s = (s_1,...,s_{n-1}) be a sequence with each s_i in {+1,-1}. Let -s denote the sequence (-s_1,...,-s_{n-1}). Let f(s) be the number of permutations a = (a_1,...,a_n) of {1,2,...,n} such that s_i (a_{i+1} - a_i) > 0 for every 1 <= i <= n-1. Then f(-s) = f(s).",
+            "strictly_easier_reason": "This is a direct symmetry statement obtained by complementing each permutation value x to n+1-x."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer n >= 2 and a sign sequence s = (s_1,...,s_{n-1}) with each s_i in {+1,-1}, let f(s) denote the number of permutations a = (a_1,...,a_n) of {1,2,...,n} such that s_i (a_{i+1} - a_i) > 0 for every 1 <= i <= n-1.",
+            "kind": "definition",
+            "label": "pattern_count"
+          },
+          {
+            "content": "For a function g : [0,1] -> R, define (T_+ g)(x) = integral from 0 to x of g(u) du and (T_- g)(x) = integral from x to 1 of g(u) du.",
+            "kind": "definition",
+            "label": "volterra_operators"
+          },
+          {
+            "content": "For epsilon in {+1,-1}, write T_epsilon = T_+ when epsilon = +1 and T_epsilon = T_- when epsilon = -1.",
+            "kind": "notation",
+            "label": "signed_operator"
+          },
+          {
+            "content": "A sign sequence t = (t_1,...,t_m) with entries in {+1,-1} is alternating if t_i t_{i+1} = -1 for every 1 <= i < m.",
+            "kind": "definition",
+            "label": "alternating_sign_sequence"
+          }
+        ],
+        "strategy_summary": "Unlike the rejected attempt, this candidate replaces the false local comparison with a correct one by changing the local move: it flips the second sign in an equal adjacent pair, not the first. With that correction, the universally valid comparisons T_- o T_+ > T_+ o T_+ and T_+ o T_- > T_- o T_- on positive inputs replace the invalid previous formulas, and the adjointness step is no longer needed because positivity can be pushed forward through the unchanged suffix word."
+      }
+    ],
+    "status": "completed"
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260326124749_c952dad1",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-26T13:11:23.172604Z",
+  "worker_job_id": "wrk_thm_root_20260326124749_c952dad1_decompose_1_track_1_req_20260326130337_3b9d12e0",
+  "worker_kind": "decomposition_generation"
+}

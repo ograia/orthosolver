@@ -1,0 +1,97 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327041832_20e20de1",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T04:15:41.188831Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T06:48:27.892904Z",
+  "last_dependency_check_id": "depchk_20260327042029_7a212aa5",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix n at least 2 and a sign sequence s=(s_1,...,s_{n-1}) with each s_i in {+1,-1}. Let A_s be the set of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i)>0 for every i=1,...,n-1. By definition, |A_s|=f(s). Similarly define A_{-s}.\n\nDefine a map T on permutations of {1,...,n} by\nT(a_1,...,a_n)=(n+1-a_1,...,n+1-a_n).\nBecause the map x -> n+1-x is a bijection from {1,...,n} to itself, T sends permutations of {1,...,n} to permutations of {1,...,n}. Also T is an involution, since applying it twice gives back the original permutation:\nT(T(a_1,...,a_n))=(a_1,...,a_n).\nHence T is a bijection on the set of all permutations of {1,...,n}.\n\nNow take any a=(a_1,...,a_n) in A_s, and write b=T(a). For each i=1,...,n-1 we have\nb_{i+1}-b_i=(n+1-a_{i+1})-(n+1-a_i)=-(a_{i+1}-a_i).\nTherefore\n(-s_i)(b_{i+1}-b_i)=(-s_i)(-(a_{i+1}-a_i))=s_i(a_{i+1}-a_i)>0.\nSo b satisfies the defining inequalities for A_{-s}, and thus T(a) is in A_{-s}.\n\nConversely, if b is in A_{-s}, the same calculation applied to T(b) shows that T(b) is in A_s, because T is its own inverse. Therefore T restricts to a bijection from A_s onto A_{-s}.\n\nSince bijective finite sets have the same cardinality, |A_s|=|A_{-s}|. Equivalently, f(s)=f(-s). This is exactly the claimed statement.",
+  "latest_vetted_proof_fingerprint": "d6305f40b22ba0e67721c6f0e593f1980846580f0b8e7ae8c1919395cbe56617",
+  "latest_vetter_report_id": "rep_20260327042029_39ae0216",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327041528_ad159b87",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "thm_root_20260327040158_5065188f",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "proof_bundle_artifact_id": "problems/prob_20260327040158_22cb0c95/proof_bundles/lemmas/lem_20260327041528_ad159b87.json",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "This symmetry reduces the analysis of patterns starting with -1 to the already solved case of patterns starting with +1, and it also shows the two alternating maximizers have equal value.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer at least 2, and let s=(s_1,...,s_{n-1}) with each s_i in {+1,-1}. Define -s=(-s_1,...,-s_{n-1}). Let f(s) be the number of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i)>0 for every 1 <= i <= n-1. Then f(s)=f(-s).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n is at least 2",
+      "s has exactly n minus 1 components",
+      "Each component of s is either plus 1 or minus 1",
+      "The negated sequence -s is formed entry by entry",
+      "a is a permutation of the integers from 1 through n",
+      "The inequality is strict: the product must be greater than 0 for every index i from 1 to n minus 1",
+      "The index i ranges over all integers from 1 to n minus 1"
+    ],
+    "normalized_claim": "For every integer n at least 2 and every sign sequence s of length n minus 1, the number of permutations a of 1 through n for which each adjacent difference has the sign prescribed by s is equal to the number of permutations counted using the coordinatewise negated sign sequence -s.",
+    "quantifier_order": [
+      "For every integer n at least 2",
+      "For every sign sequence s of length n minus 1 with entries plus 1 or minus 1",
+      "For the count defining f(s), consider all permutations a of 1 through n",
+      "For each index i from 1 to n minus 1, require that the i-th sign times the difference between the next two entries of a is positive"
+    ],
+    "variables": [
+      {
+        "domain": "integers with n at least 2",
+        "name": "n",
+        "role": "size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length n minus 1 with each entry equal to plus 1 or minus 1",
+        "name": "s",
+        "role": "input parameter for the counting function",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "ordered n-tuples whose entries are exactly the integers from 1 through n, each used once",
+        "name": "a",
+        "role": "object being counted",
+        "type": "permutation tuple"
+      },
+      {
+        "domain": "integers from 1 through n minus 1",
+        "name": "i",
+        "role": "index for the adjacency condition",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses appear in the statement; the only object being quantified over inside the definition of f(s) is the counted permutation a."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T06:48:27.892904Z"
+}

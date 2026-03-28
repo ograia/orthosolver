@@ -1,0 +1,83 @@
+{
+  "assembly_plan_id": "asm_20260327171204_20f71edd",
+  "created_at": "2026-03-27T17:13:44.639018Z",
+  "decomposition_id": "dec_20260327171204_d64eae5f",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_skeleton_nl": "Use integer-translation invariance to reduce to t = frac(x) in [0,1). On each subinterval [a/n,(a+1)/n), compare t to the left endpoint a/n via monotonicity of floor; this gives E_n(t) <= E_n(a/n). The sharp endpoint lemma says every such rational endpoint is at most H_n - 1, with equality only at a=n-1. Separately, on the top interval [(n-1)/n,1) the floor values are all k-1, and direct substitution gives E_n = H_n - 1. Therefore H_n-1 is the global maximum, and the maximizers are exactly the real x with fractional part in [(n-1)/n,1).",
+  "root_node_id": "thm_root_20260327165556_b210f785",
+  "steps": [
+    {
+      "derives": "For an arbitrary real x, E_n(x) equals E_n(frac(x)), so it suffices to analyze inputs t in the interval [0,1).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "Take m = floor(x), so x = frac(x) + m, and apply integer-translation invariance.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For t = frac(x) in [0,1), if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Since t >= a/n, floor(k*t) >= floor(k*a/n) for every k, and the first term floor(n*t) is exactly a = floor(n*(a/n)). Subtracting the larger sum gives the claimed inequality.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For every real x, E_n(x) <= H_n - 1, and if equality holds then the integer a = floor(n*frac(x)) must equal n-1.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Combine A2 with the sharp endpoint bound. If E_n(x) reaches H_n-1, then E_n(t)=E_n(a/n)=H_n-1, so the equality clause in L5 forces a=n-1.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "If frac(x) lies in [(n-1)/n, 1), then floor(k*frac(x)) = k-1 for every integer k with 1 <= k <= n.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is a direct instantiation of the interval floor estimate with t = frac(x).",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If frac(x) lies in [(n-1)/n, 1), then E_n(x) = H_n - 1.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Apply the exact-evaluation lemma to t = frac(x), then use periodicity from A1 to transfer the value from frac(x) back to x.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every integer n>1, the function x \u21a6 floor(n*x) - sum_{k=1}^n floor(k*x)/k has maximal value H_n - 1 = sum_{k=2}^n 1/k, and its maximizers are exactly the real numbers x whose fractional part lies in [(n-1)/n, 1).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "A3 gives the universal upper bound and shows any maximizer must have frac(x) in the top interval; A5 gives attainment on that interval. Together they characterize exactly the maximizers and the maximal value.",
+      "uses_lemmas": [
+        "L1",
+        "L3",
+        "L4",
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A5"
+      ]
+    }
+  ]
+}

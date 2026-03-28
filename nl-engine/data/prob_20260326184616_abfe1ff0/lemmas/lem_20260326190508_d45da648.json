@@ -1,0 +1,96 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260326190750_14a1d5ee",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-26T19:05:18.148322Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-26T23:21:04.304069Z",
+  "last_dependency_check_id": "depchk_20260326192700_db3ada7a",
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalization succeeded",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": "lean_res_20260326232104_5eaee148",
+  "latest_nl_proof": "Fix n = 2. Then a sign sequence has length n - 1 = 1, so it consists of a single entry, and that entry must be either +1 or -1. Therefore the only sign sequences of length 1 are (+1) and (-1).\n\nEach of these sequences is alternating: a sequence of length 1 has no adjacent pair of entries, so there is no possible violation of alternation.\n\nNow consider the counting function f. For a sign sequence s = (s_1), f(s) counts the permutations (a_1,a_2) of {1,2} such that s_1(a_2-a_1) > 0. The only permutations of {1,2} are (1,2) and (2,1).\n\nFor s = (+1), the condition is a_2 - a_1 > 0. This is true for (1,2), since 2 - 1 = 1 > 0, and false for (2,1), since 1 - 2 = -1 < 0. Hence f((+1)) = 1.\n\nFor s = (-1), the condition is -(a_2-a_1) > 0, equivalently a_2 - a_1 < 0. This is true for (2,1), since 1 - 2 = -1 < 0, and false for (1,2), since 2 - 1 = 1 > 0. Hence f((-1)) = 1.\n\nSo each of the two sign sequences is satisfied by exactly one permutation of {1,2}. Since (+1) and (-1) are the only sign sequences of length 1, the maximum possible value of the counting function is 1, and both of these sequences attain it. Therefore, when n = 2, both sign sequences maximize the counting function.",
+  "latest_vetter_report_id": "rep_20260326192700_f0624de5",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260326190508_d45da648",
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260326184616_b94d02f6",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "proof_bundle_artifact_id": "problems/prob_20260326184616_abfe1ff0/proof_bundles/lemmas/lem_20260326190508_d45da648.json",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "proof_status": "proof_formalized",
+  "role_in_parent": "Provides the base case for the induction on n.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "When n = 2, the two sign sequences of length 1 are (+1) and (-1). Each of them is alternating, and each is satisfied by exactly one permutation of {1,2}. Hence for n = 2 both sign sequences maximize the counting function.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is a natural number, and here n equals 2.",
+      "Sign sequences under discussion have length 1.",
+      "The only sign sequences mentioned are plus one and minus one.",
+      "Permutations are taken of the set {1,2}.",
+      "The counting function is evaluated on sign sequences of length 1.",
+      "Maximize means among all sign sequences of the relevant length, ties allowed."
+    ],
+    "normalized_claim": "In the special case n equals 2, there are exactly two sign sequences of length 1, plus one and minus one. Both are alternating, and each has exactly one satisfying permutation of {1,2}. Therefore both sequences achieve the maximum possible value of the counting function for that case.",
+    "quantifier_order": [
+      "Fix n equal to 2.",
+      "Consider the two sign sequences of length 1, namely plus one and minus one.",
+      "For each such sign sequence, it is alternating.",
+      "For each such sign sequence, there exists exactly one permutation of {1,2} that satisfies it.",
+      "Therefore each of the two sign sequences attains the maximum value of the counting function for n equal to 2."
+    ],
+    "variables": [
+      {
+        "domain": "natural numbers",
+        "name": "n",
+        "role": "length parameter fixed to 2",
+        "type": "integer"
+      },
+      {
+        "domain": "sign sequences of length 1 with entries plus one or minus one",
+        "name": "sigma",
+        "role": "a sign sequence being compared",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "permutations of the set {1,2}",
+        "name": "pi",
+        "role": "witness permutation satisfying a sign sequence",
+        "type": "permutation"
+      },
+      {
+        "domain": "sign sequences of length 1 to nonnegative integers",
+        "name": "count",
+        "role": "number of permutations satisfying a sign sequence",
+        "type": "integer-valued function"
+      }
+    ],
+    "witness_dependencies": [
+      "The unique satisfying permutation depends on the chosen sign sequence.",
+      "The maximizing conclusion depends on the fact that each sign sequence has counting value 1.",
+      "No additional witness is needed beyond the unique permutation for each sign sequence."
+    ]
+  },
+  "statement_status": "formalized",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-26T23:21:04.304069Z"
+}

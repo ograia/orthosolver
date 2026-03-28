@@ -1,0 +1,102 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327170942_bd53c1a7",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:08:16.047641Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.16,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:10:27.368614Z",
+  "last_dependency_check_id": null,
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent4:failed",
+  "last_transition_reason": "solver attempt 2 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327170808_4b8fd224",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327170808_4b8fd224.json",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "proof_status": "proof_flawed",
+  "role_in_parent": "Identify the unique endpoint numerator that can saturate the bound.",
+  "routing_status": "retry_solver",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": "2026-03-27T17:09:44.485046Z",
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every integer a with 1 <= a <= n-1, let r_k be the least nonnegative residue Res_n(a,k) for k=1,...,n-1. If r_1 >= r_2 >= ... >= r_{n-1}, then a = n-1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "a is an integer and 1 <= a <= n - 1",
+      "k is an integer with 1 <= k <= n - 1",
+      "r_k is the least nonnegative residue modulo n, hence 0 <= r_k <= n - 1",
+      "The inequality r_1 >= r_2 >= ... >= r_{n-1} is asserted over the finite index set k = 1, ..., n - 1"
+    ],
+    "normalized_claim": "For every integer n > 1 and every integer a with 1 <= a <= n - 1, define for each integer k with 1 <= k <= n - 1 the value r_k to be the least nonnegative residue modulo n of Res_n(a,k). If the sequence satisfies r_1 >= r_2 >= ... >= r_{n-1}, then a equals n - 1.",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all integers a with 1 <= a <= n - 1",
+      "for all integers k with 1 <= k <= n - 1 (in the definition of r_k)",
+      "if the inequality condition holds for the resulting sequence r_1, ..., r_{n-1}"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "modulus parameter, with restriction n > 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "base parameter, with restriction 1 <= a <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "index for a finite sequence, with restriction 1 <= k <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r_k",
+        "role": "least nonnegative residue of Res_n(a,k), so it satisfies 0 <= r_k <= n - 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "Res_n(a,k)",
+        "role": "an integer-valued expression defined in terms of n, a, and k whose residue modulo n is taken to define r_k",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "r_k depends on (n, a, k) through the value Res_n(a,k) and then taking its least nonnegative residue modulo n",
+      "The inequality condition depends on the entire sequence {r_k} for k from 1 to n - 1"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:10:27.368614Z"
+}

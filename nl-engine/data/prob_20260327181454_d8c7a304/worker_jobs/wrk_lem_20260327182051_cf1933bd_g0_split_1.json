@@ -1,0 +1,204 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182051_cf1933bd/split_existing_proof_attempt_1",
+  "attempt_count": 2,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T22:52:09.839478Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-27T18:48:11.922859Z",
+  "error_payload": {
+    "agent_key": "agent7",
+    "class": "AgentExecutionError",
+    "error_class": "invalid_agent_output",
+    "message": "agent7 output failed schema validation: 9 validation errors for Agent7Output\nshared_context.0\n  Input should be a valid dictionary [type=dict_type, input_value='H_n denotes the harmonic sum sum_{k=1}^n 1/k.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nshared_context.1\n  Input should be a valid dictionary [type=dict_type, input_value='f_n(x) is defined by flo...m_{k=1}^n floor(k x)/k.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nshared_context.2\n  Input should be a valid dictionary [type=dict_type, input_value='The floor characterizati...< m+1, then floor(t)=m.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\ncontext_items.0\n  Input should be a valid dictionary [type=dict_type, input_value='The relevant interval for r is (n-1)/n <= r < 1.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\ncontext_items.1\n  Input should be a valid dictionary [type=dict_type, input_value='For k <= n, the inequali... follows from n-k >= 0.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.0\n  Input should be a valid dictionary [type=dict_type, input_value='Apply lem_1_interval_bou...r every k in {1,...,n}.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.1\n  Input should be a valid dictionary [type=dict_type, input_value='Use lem_2_floor_values t...ticular floor(n r)=n-1.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.2\n  Input should be a valid dictionary [type=dict_type, input_value='Apply lem_3_sum_identity...ted floor sum as n-H_n.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.3\n  Input should be a valid dictionary [type=dict_type, input_value='Substitute floor(n r)=n-...r)=(n-1)-(n-H_n)=H_n-1.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type"
+  },
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent7_split_existing_proof",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n greater than 1",
+            "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "the floor function is applied to real numbers (so it is always defined)"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+          "quantifier_order": [
+            "for a given integer n greater than 1",
+            "find real x such that for all real y, expression at x is at least the expression at y",
+            "and there exists at least one real x achieving that maximal value"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index in the expression, ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizer x (if it exists) may depend on the fixed parameter n",
+            "the maximal value may depend on the fixed parameter n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lean_failure": {
+      "artifact_keys": {
+        "normalized_problem": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/normalized_problem.json",
+        "pinned_signatures": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/pinned_signatures.json",
+        "run_root": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001",
+        "summaries": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/summaries",
+        "track_manifest": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/track_manifest.json",
+        "trusted_context_manifest": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/trusted_context_manifest.json",
+        "workspace": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/workspace"
+      },
+      "confidence": 0.9,
+      "error_class": "tactic_failure",
+      "fatality": "repairable",
+      "issue_kind": "lean_issue",
+      "job_id": "lean_job_lem_20260327182051_cf1933bd_formalize_lemma_from_nl_1",
+      "recommended_next_step": "retry_lean_only"
+    },
+    "lemma_id": "lem_20260327182051_cf1933bd",
+    "parent_proof_nl": "Let n>1 and let r be real with (n-1)/n <= r < 1. We show that every floor term in the definition of f_n(r) is determined explicitly.\n\nFix k with 1 <= k <= n. From r >= (n-1)/n we get kr >= k(n-1)/n. Since k <= n, we have k(n-1)/n >= k-1. Also r < 1 implies kr < k. Therefore\nk-1 <= kr < k.\nHence floor(k r) = k-1 for every k=1,2,...,n.\n\nIn particular, floor(nr)=n-1, and\nsum_{k=1}^n floor(k r)/k = sum_{k=1}^n (k-1)/k = sum_{k=1}^n (1 - 1/k) = n - H_n,\nwhere H_n = sum_{k=1}^n 1/k.\nTherefore\nf_n(r) = floor(nr) - sum_{k=1}^n floor(k r)/k = (n-1) - (n - H_n) = H_n - 1.\nThis is exactly the desired identity.",
+    "parent_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "in the definition of H_n, k ranges over integers from 1 to n",
+        "in the definition of f_n(x), x is a real number so that floor(n*x) and floor(k*x) are well-defined",
+        "r satisfies (n-1)/n <= r and r < 1"
+      ],
+      "normalized_claim": "For every natural number n greater than 1, define H_n as the sum from k = 1 to n of 1 divided by k, and define f_n on real numbers by f_n(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Then for every real number r with (n minus 1) divided by n less than or equal to r and r less than 1, it holds that f_n(r) equals H_n minus 1.",
+      "quantifier_order": [
+        "for all natural numbers n with n > 1",
+        "for all real numbers r with (n-1)/n <= r and r < 1"
+      ],
+      "variables": [
+        {
+          "domain": "natural numbers",
+          "name": "n",
+          "role": "parameter for the definitions of H_n and f_n; also bounds the index set for k",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index running from 1 to n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "argument of the function f_n used in its definition",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "r",
+          "role": "input at which the equality f_n(r) = H_n - 1 is asserted",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "H_n",
+          "role": "harmonic-sum quantity defined from n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "f_n",
+          "role": "function defined from n, using floor and a weighted sum",
+          "type": "function from real to real"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced; the statement is a universal implication from the condition on r to the equality"
+      ]
+    },
+    "parent_statement_nl": "Let n > 1, define H_n = sum_{k=1}^n 1/k, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. If r is a real number with (n-1)/n <= r < 1, then f_n(r) = H_n - 1.",
+    "previous_attempt_summaries": [],
+    "role_in_parent": "Turns the floor pattern into the exact maximal value.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "root_theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "split_existing_proof_generation",
+  "result_payload": null,
+  "started_at": "2026-03-27T18:48:10.430275Z",
+  "status": "failed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182051_cf1933bd",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T22:52:09.839478Z",
+  "worker_job_id": "wrk_lem_20260327182051_cf1933bd_g0_split_1",
+  "worker_kind": "proof_split_generation"
+}

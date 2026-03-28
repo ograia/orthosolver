@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-03-26T19:07:50.638767Z",
+  "graph_node_id": "pnode_20260326190750_752d8d9b",
+  "metadata": {
+    "parent_id": "thm_root_20260326184616_b94d02f6"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "08bda9afd138a5a705eb498dc6524641a15bdd58fcb2a41fb8712fdc372e3a2a",
+  "owner_id": "lem_20260326190353_f4ff61a3",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m is an integer and m is at least 1.",
+      "t is a sign sequence of length m minus 1, with each entry equal to plus 1 or minus 1.",
+      "When m equals 1, the sequence t is empty and Peak(t) is exactly the set containing 1.",
+      "r is an integer and r is at least 0.",
+      "When r is 0, the sign sequence u is empty and U_0 of the empty sequence is defined to be 1.",
+      "When r is at least 1, u has length r minus 1 and the counted object is a permutation of 1 through r.",
+      "The defining inequalities for U_r(u) require all indices i from 1 to r minus 1.",
+      "For Peak(t) with m at least 2, 1 is a peak exactly when t_1 equals minus 1, m is a peak exactly when t_{m minus 1} equals plus 1, and interior j are peaks exactly when the left sign is plus 1 and the right sign is minus 1.",
+      "For each j from 1 to m, t left of j means the prefix ending at index j minus 2, and t right of j means the suffix starting at index j plus 1; either is empty if the indicated index range is invalid."
+    ],
+    "normalized_claim": "For every integer m at least 1 and every sign sequence t of length m minus 1, the quantity U_m of t equals the sum over all peak positions j in Peak(t) of binomial coefficient m minus 1 choose j minus 1 times U_{j minus 1} of the left truncated sign sequence times U_{m minus j} of the right truncated sign sequence.",
+    "quantifier_order": [
+      "For every integer m at least 1, choose a sign sequence t of length m minus 1 with entries plus 1 or minus 1.",
+      "For every integer r at least 0 and every compatible sign sequence u, define U_r(u) by counting permutations of 1 through r that satisfy the sign inequalities.",
+      "For every integer j from 1 to m, define the truncated sequences t left of j and t right of j, and define membership in Peak(t) from the neighboring signs.",
+      "Then the identity U_m(t) equals the sum over j in Peak(t) of the stated product holds."
+    ],
+    "variables": [
+      {
+        "domain": "integers at least 1",
+        "name": "m",
+        "role": "main size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequence of length m minus 1, with each entry equal to plus 1 or minus 1; empty when m equals 1",
+        "name": "t",
+        "role": "input sign sequence for the main identity",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "auxiliary size parameter in the definition of U",
+        "type": "integer"
+      },
+      {
+        "domain": "sequence of length r minus 1 when r is at least 1; empty when r equals 0",
+        "name": "u",
+        "role": "input sign sequence for the definition of U_r",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "permutations of 1 through r",
+        "name": "b",
+        "role": "object being counted by U_r",
+        "type": "tuple of integers"
+      },
+      {
+        "domain": "integers from 1 to r minus 1",
+        "name": "i",
+        "role": "index in the sign constraint for permutations",
+        "type": "integer index"
+      },
+      {
+        "domain": "integers from 1 to m",
+        "name": "j",
+        "role": "summation index and peak location",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "There is no existential witness in the main claim; the statement is a universal recursive identity.",
+      "The summand indexed by j depends on j through Peak(t), t left of j, and t right of j."
+    ]
+  },
+  "statement_nl": "Let m be an integer with m >= 1, and let t = (t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}; when m = 1 this sequence is empty. For an integer r >= 0 and a sign sequence u of length r-1 when r >= 1 (and u empty when r = 0), define U_r(u) to be the number of permutations (b_1,...,b_r) of {1,...,r} satisfying u_i * (b_{i+1} - b_i) > 0 for all 1 <= i <= r-1, and set U_0(empty) = 1. Define Peak(t) subseteq {1,...,m} by: if m = 1 then Peak(t) = {1}; if m >= 2 then 1 belongs to Peak(t) exactly when t_1 = -1, m belongs to Peak(t) exactly when t_{m-1} = +1, and for each integer j with 2 <= j <= m-1, j belongs to Peak(t) exactly when t_{j-1} = +1 and t_j = -1. For each integer j with 1 <= j <= m, define t^{<j} = (t_1,...,t_{j-2}) and t^{>j} = (t_{j+1},...,t_{m-1}), interpreting these as the empty sequence when the lower index exceeds the upper. Then U_m(t) = sum over j in Peak(t) of binom(m-1, j-1) * U_{j-1}(t^{<j}) * U_{m-j}(t^{>j}).",
+  "updated_at": "2026-03-26T19:07:50.638768Z"
+}

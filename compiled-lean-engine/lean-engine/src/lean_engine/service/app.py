@@ -9,7 +9,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any
 
-from ..config import RuntimeConfig, load_runtime_config
+from ..config import RuntimeConfig, ensure_canonical_code_root, load_runtime_config
 from ..integrations import IntegrationPreflight, lean_lsp_mcp
 from ..workspace import create_workspace_from_template
 from .jobs import SUPPORTED_SERVICE_MODES, ServiceJobManager
@@ -27,16 +27,18 @@ class LeanEngineServiceApp:
         store: JobStore,
         jobs: ServiceJobManager,
         default_runtime_config: RuntimeConfig,
+        code_origin: dict[str, Any],
     ) -> None:
         self._store = store
         self._jobs = jobs
         self._default_runtime_config = default_runtime_config
+        self._code_origin = code_origin
 
     @classmethod
     def from_defaults(
         cls,
         *,
-        db_path: Path,
+        store_root: Path,
         max_workers: int,
         config_path: Path | None = None,
         model: str | None = None,
@@ -55,14 +57,15 @@ class LeanEngineServiceApp:
             repo_lean_lsp_mcp_root=repo_lean_lsp_mcp_root,
             lean4_skills_root=lean4_skills_root,
         )
-        store = JobStore(db_path)
+        code_origin = ensure_canonical_code_root(runtime_config.phase04.canonical_code_root)
+        store = JobStore(store_root)
         jobs = ServiceJobManager(
             store=store,
             default_config_path=config_path,
             default_runtime_config=runtime_config,
             max_workers=max_workers,
         )
-        return cls(store=store, jobs=jobs, default_runtime_config=runtime_config)
+        return cls(store=store, jobs=jobs, default_runtime_config=runtime_config, code_origin=code_origin)
 
     def shutdown(self) -> None:
         self._jobs.shutdown()
@@ -179,15 +182,29 @@ class LeanEngineServiceApp:
             "integration_preflight": integration_health["preflight"],
             "active_jobs": self._store.active_job_count(),
             "queue_depth": self._store.queue_depth(),
+            "max_workers": self._jobs.max_workers,
+            "storage_mode": self._store.storage_mode,
+            "code_origin": dict(self._code_origin),
+            "canonical_code_root": str(self._default_runtime_config.phase04.canonical_code_root),
         }
         return int(HTTPStatus.OK), payload
+
+    def health_live(self) -> tuple[int, dict[str, Any]]:
+        return int(HTTPStatus.OK), {
+            "status": "running",
+            "active_jobs": self._store.active_job_count(),
+            "queue_depth": self._store.queue_depth(),
+            "max_workers": self._jobs.max_workers,
+            "storage_mode": self._store.storage_mode,
+            "code_origin": dict(self._code_origin),
+        }
 
 
 def run_http_service(
     *,
     host: str,
     port: int,
-    db_path: Path,
+    store_root: Path,
     max_workers: int,
     config_path: Path | None = None,
     model: str | None = None,
@@ -198,7 +215,7 @@ def run_http_service(
     lean4_skills_root: Path | None = None,
 ) -> None:
     app = LeanEngineServiceApp.from_defaults(
-        db_path=db_path,
+        store_root=store_root,
         max_workers=max_workers,
         config_path=config_path,
         model=model,
@@ -288,6 +305,11 @@ def _build_handler_class(app: LeanEngineServiceApp):
             )
 
         def do_GET(self) -> None:  # noqa: N802
+            if self.path in {"/v1/health/live", "/v2/health/live"}:
+                status_code, payload = app.health_live()
+                self._send_json(status_code, payload)
+                return
+
             if self.path in {"/v1/health", "/v2/health"}:
                 status_code, payload = app.health()
                 self._send_json(status_code, payload)

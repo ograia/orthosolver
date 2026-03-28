@@ -8,7 +8,13 @@ SupportedModel = Literal["gpt-5.4", "gpt-5.4-pro", "gpt-5-mini", "gpt-5.4-mini",
 
 
 class LeanModeConfig(BaseModel):
-    """Feature flags for Lean API v2 orchestration flow."""
+    """Feature flags for the unified Lean standard-mode flow.
+
+    `enabled`, `use_v2_endpoints`, `use_v2_prepare_track`, and
+    `fallback_to_v1_on_error` are parsed only for backward compatibility.
+    The standard-mode orchestrator now always uses the Lean v2 operation
+    endpoints and does not fall back to the legacy v1 flow.
+    """
 
     enabled: bool = False
     use_v2_endpoints: bool = False
@@ -102,9 +108,9 @@ class LemmaSolvingConfig(BaseModel):
     max_minor_rejections_per_lemma: int = Field(default=10, ge=1)
     max_total_lemma_nodes: int = 5000
     max_infrastructure_failures: int = 5
-    max_solver_attempts_per_lemma_total: int | None = Field(default=None, ge=1)
+    max_solver_attempts_per_lemma_total: int | None = Field(default=None, ge=0)
     max_consecutive_infrastructure_failures_per_lemma: int | None = Field(default=None, ge=1)
-    max_solver_series_wall_clock_seconds_per_lemma: int | None = Field(default=None, ge=1)
+    max_solver_series_wall_clock_seconds_per_lemma: int | None = Field(default=None, ge=0)
 
     @model_validator(mode="before")
     @classmethod
@@ -115,6 +121,14 @@ class LemmaSolvingConfig(BaseModel):
         if "max_consecutive_fatal_rejections_per_lemma" not in payload and "max_solver_retries_per_lemma" in payload:
             payload["max_consecutive_fatal_rejections_per_lemma"] = payload.get("max_solver_retries_per_lemma")
         return payload
+
+    @model_validator(mode="after")
+    def _normalize_zero_disables_optional_caps(self) -> "LemmaSolvingConfig":
+        if self.max_solver_attempts_per_lemma_total == 0:
+            self.max_solver_attempts_per_lemma_total = None
+        if self.max_solver_series_wall_clock_seconds_per_lemma == 0:
+            self.max_solver_series_wall_clock_seconds_per_lemma = None
+        return self
 
     @property
     def max_parallel_lemmas(self) -> int:
@@ -131,19 +145,81 @@ class LemmaSolvingConfig(BaseModel):
 
 class LeanEngineConfig(BaseModel):
     model: str | None = None
+    no_lean4_refs: bool = False
     max_repair_rounds: int = 5
-    max_lean_jobs_per_lemma: int = 3
+    max_workers: int = Field(default=4, ge=1)
+    internal_packaging_retry_count: int = Field(default=1, ge=0)
     repair_context_token_budget: int = 32000
     assemble_root_repair_rounds: int = 3
-    assembly_check_timeout_seconds: int = 240
     lean_job_timeout_seconds: int = 300
-    plausibility_check_timeout_seconds: int = 45
     assemble_root_timeout_seconds: int = 300
+    claude_activity_timeout_seconds: int = Field(default=0, ge=0)
+    claude_init_timeout_seconds: int = Field(default=0, ge=0)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _accept_legacy_aliases(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        payload = dict(value)
+        if payload.get("max_workers") is None:
+            legacy_parallel = payload.get("max_parallel_lean_jobs_per_problem")
+            if isinstance(legacy_parallel, (int, float)) and not isinstance(legacy_parallel, bool):
+                payload["max_workers"] = int(legacy_parallel)
+            else:
+                payload.pop("max_workers", None)
+
+        if payload.get("lean_job_timeout_seconds") is None:
+            legacy_job_timeouts = [
+                int(raw)
+                for key in ("assembly_check_timeout_seconds", "plausibility_check_timeout_seconds")
+                for raw in [payload.get(key)]
+                if isinstance(raw, (int, float)) and not isinstance(raw, bool)
+            ]
+            if legacy_job_timeouts:
+                payload["lean_job_timeout_seconds"] = max(legacy_job_timeouts)
+            else:
+                payload.pop("lean_job_timeout_seconds", None)
+
+        if payload.get("claude_activity_timeout_seconds") is None:
+            legacy_activity_timeouts = [
+                int(raw)
+                for key in ("claude_stall_timeout_seconds", "claude_tool_wait_timeout_seconds")
+                for raw in [payload.get(key)]
+                if isinstance(raw, (int, float)) and not isinstance(raw, bool)
+            ]
+            if legacy_activity_timeouts:
+                payload["claude_activity_timeout_seconds"] = max(legacy_activity_timeouts)
+            else:
+                payload.pop("claude_activity_timeout_seconds", None)
+        if payload.get("claude_init_timeout_seconds") is None:
+            payload.pop("claude_init_timeout_seconds", None)
+        return payload
 
     @property
     def max_tool_calls_per_job(self) -> int:
         # Keep Lean payload valid while making tool-call limits effectively non-user-facing.
         return 1_000_000
+
+    @property
+    def effective_max_parallel_lean_jobs(self) -> int:
+        return self.max_workers
+
+    @property
+    def assembly_check_timeout_seconds(self) -> int:
+        return self.lean_job_timeout_seconds
+
+    @property
+    def plausibility_check_timeout_seconds(self) -> int:
+        return self.lean_job_timeout_seconds
+
+    @property
+    def claude_stall_timeout_seconds(self) -> int:
+        return self.claude_activity_timeout_seconds
+
+    @property
+    def claude_tool_wait_timeout_seconds(self) -> int:
+        return self.claude_activity_timeout_seconds
 
 
 class RoutingConfig(BaseModel):
@@ -166,6 +242,14 @@ class FinalCheckConfig(BaseModel):
 class BudgetConfig(BaseModel):
     max_estimated_cost_usd_per_problem: float | None = Field(default=None, ge=0)
     max_estimated_cost_usd_per_lemma: float | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def _normalize_zero_disables_budget_caps(self) -> "BudgetConfig":
+        if self.max_estimated_cost_usd_per_problem == 0:
+            self.max_estimated_cost_usd_per_problem = None
+        if self.max_estimated_cost_usd_per_lemma == 0:
+            self.max_estimated_cost_usd_per_lemma = None
+        return self
 
 
 class AgentLlmConfig(BaseModel):
@@ -204,6 +288,8 @@ class LlmConfig(BaseModel):
     agent4: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
     agent5: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
     agent6: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
+    agent7: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
+    agent8: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
     # First-attempt model overrides. When set, used for the first attempt
     # only; subsequent retries fall back to the standard agent2/agent4 config.
     agent2_first_root: AgentLlmConfig | None = None

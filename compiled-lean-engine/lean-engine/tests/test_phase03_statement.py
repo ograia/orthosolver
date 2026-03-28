@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import json
 import subprocess
+from dataclasses import replace
 from pathlib import Path
 
 from lean_engine.artifact_io import create_run_paths
 from lean_engine.assembly_phase import run_assembly_precheck
 from lean_engine.claude_runner import ClaudeRunResult, ClaudeRunTrace, FileUpdateEvent
-from lean_engine.config import load_runtime_config
+from lean_engine.config import WorkspaceCacheConfig, load_runtime_config
 from lean_engine.normalize import normalize_problem_artifact
 from lean_engine.prompting import build_statement_repair_prompt, build_statement_translation_prompt
 from lean_engine.statement_phase import (
@@ -16,6 +17,11 @@ from lean_engine.statement_phase import (
     run_statement_phase,
 )
 from lean_engine.workspace import create_workspace_from_template
+
+
+def _latest_working_file(workspace_dir: Path, pattern: str, fallback: Path) -> Path:
+    matches = sorted((workspace_dir / "Orthos").glob(pattern))
+    return matches[-1] if matches else fallback
 
 
 def _valid_payload(problem_id: str = "prob_phase03") -> dict:
@@ -169,7 +175,8 @@ class _ToolWritingClaudeRunner:
         **_: object,
     ) -> ClaudeRunResult:
         statements_path = run_paths.workspace_dir / "Orthos" / "Statements.lean"
-        statements_path.write_text(self._statements_text, encoding="utf-8")
+        target_path = _latest_working_file(run_paths.workspace_dir, "Statements*_round_*.lean", statements_path)
+        target_path.write_text(self._statements_text, encoding="utf-8")
 
         timestamp = "toolwrite"
         prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
@@ -220,6 +227,7 @@ class _TraceClaudeRunner:
         **_: object,
     ) -> ClaudeRunResult:
         _ = (timeout_seconds, permission_mode)
+        target_path = _latest_working_file(run_paths.workspace_dir, "Statements*_round_*.lean", self._target_path)
         timestamp = "trace"
         prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
         raw_path = run_paths.claude_raw_dir / f"{phase_name}_{timestamp}.jsonl"
@@ -232,7 +240,8 @@ class _TraceClaudeRunner:
 
         updates = ()
         if self._tool_update_text is not None:
-            updates = (FileUpdateEvent(file_path=str(self._target_path), content=self._tool_update_text),)
+            target_path.write_text(self._tool_update_text, encoding="utf-8")
+            updates = (FileUpdateEvent(file_path=str(target_path), content=self._tool_update_text),)
         trace = ClaudeRunTrace(
             result_text=self._result_text,
             assistant_text_chunks=(),
@@ -251,6 +260,122 @@ class _TraceClaudeRunner:
             raw_output_path=raw_path,
             summary_path=summary_path,
             result_event={"type": "result", "result": self._result_text},
+            trace=trace,
+        )
+
+
+class _RecordingClaudeRunner:
+    def __init__(self, *, statements_text: str):
+        self._statements_text = statements_text
+        self.calls: list[dict[str, object]] = []
+
+    def run_prompt(
+        self,
+        *,
+        run_paths,
+        prompt: str,
+        phase_name: str,
+        model: str | None = None,
+        timeout_seconds: int | None = None,
+        idle_timeout_seconds: int | None = None,
+        tool_wait_timeout_seconds: int | None = None,
+        init_timeout_seconds: int | None = None,
+        permission_mode: str | None = None,
+        **_: object,
+    ) -> ClaudeRunResult:
+        self.calls.append(
+            {
+                "phase_name": phase_name,
+                "model": model,
+                "timeout_seconds": timeout_seconds,
+                "idle_timeout_seconds": idle_timeout_seconds,
+                "tool_wait_timeout_seconds": tool_wait_timeout_seconds,
+                "init_timeout_seconds": init_timeout_seconds,
+                "permission_mode": permission_mode,
+            }
+        )
+        statements_path = run_paths.workspace_dir / "Orthos" / "Statements.lean"
+        target_path = _latest_working_file(run_paths.workspace_dir, "Statements*_round_*.lean", statements_path)
+        target_path.write_text(self._statements_text, encoding="utf-8")
+
+        timestamp = "recording"
+        prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
+        raw_path = run_paths.claude_raw_dir / f"{phase_name}_{timestamp}.jsonl"
+        summary_path = run_paths.summaries_dir / f"{phase_name}_{timestamp}_claude_result.json"
+        prompt_path.parent.mkdir(parents=True, exist_ok=True)
+        raw_path.parent.mkdir(parents=True, exist_ok=True)
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        prompt_path.write_text(prompt, encoding="utf-8")
+        raw_path.write_text(json.dumps({"type": "result", "result": ""}) + "\n", encoding="utf-8")
+
+        return ClaudeRunResult(
+            phase_name=phase_name,
+            model=model or "claude-sonnet-4-6",
+            command=("claude", "--mock"),
+            cwd=run_paths.workspace_dir,
+            returncode=0,
+            timed_out=False,
+            duration_seconds=0.01,
+            prompt_path=prompt_path,
+            raw_output_path=raw_path,
+            summary_path=summary_path,
+            result_event={"type": "result", "result": ""},
+        )
+
+
+class _SequentialStatementTraceRunner:
+    def __init__(self, *, fallback_target_path: Path, candidates: list[str], result_texts: list[str] | None = None):
+        self._fallback_target_path = fallback_target_path
+        self._candidates = candidates
+        self._result_texts = result_texts or ["ok"] * len(candidates)
+        self._index = 0
+        self.seed_texts: list[str] = []
+
+    def run_prompt(
+        self,
+        *,
+        run_paths,
+        prompt: str,
+        phase_name: str,
+        model: str | None = None,
+        timeout_seconds: int | None = None,
+        permission_mode: str | None = None,
+        **_: object,
+    ) -> ClaudeRunResult:
+        _ = (prompt, timeout_seconds, permission_mode)
+        candidate = self._candidates[self._index]
+        result_text = self._result_texts[self._index]
+        self._index += 1
+        target_path = _latest_working_file(run_paths.workspace_dir, "Statements*_round_*.lean", self._fallback_target_path)
+        self.seed_texts.append(target_path.read_text(encoding="utf-8"))
+        target_path.write_text(candidate, encoding="utf-8")
+        timestamp = f"seq_{self._index:02d}"
+        prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
+        raw_path = run_paths.claude_raw_dir / f"{phase_name}_{timestamp}.jsonl"
+        summary_path = run_paths.summaries_dir / f"{phase_name}_{timestamp}_claude_result.json"
+        prompt_path.parent.mkdir(parents=True, exist_ok=True)
+        raw_path.parent.mkdir(parents=True, exist_ok=True)
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        prompt_path.write_text("", encoding="utf-8")
+        raw_path.write_text(json.dumps({"type": "result", "result": result_text}) + "\n", encoding="utf-8")
+        trace = ClaudeRunTrace(
+            result_text=result_text,
+            assistant_text_chunks=(),
+            file_updates=(FileUpdateEvent(file_path=str(target_path), content=candidate),),
+            target_file_latest_update=None,
+        )
+        return ClaudeRunResult(
+            phase_name=phase_name,
+            model=model or "claude-sonnet-4-6",
+            command=("claude", "--mock"),
+            cwd=run_paths.workspace_dir,
+            returncode=0,
+            timed_out=False,
+            duration_seconds=0.01,
+            prompt_path=prompt_path,
+            raw_output_path=raw_path,
+            summary_path=summary_path,
+            result_event={"type": "result", "result": result_text},
             trace=trace,
         )
 
@@ -335,7 +460,7 @@ def test_statement_phase_prefers_tool_update_over_prose_result_text(tmp_path: Pa
     )
 
     assert result.status == "ok"
-    assert result.candidate_source == "tool_update"
+    assert result.candidate_source == "workspace_fallback"
     text = statements_path.read_text(encoding="utf-8")
     assert decl_naming.root_decl_name in text
     assert "Zero diagnostics" not in text
@@ -420,6 +545,123 @@ def test_statement_phase_classifies_environment_dependency_missing(tmp_path: Pat
 
     assert result.status == "fatal"
     assert result.error_class == "environment_dependency_missing"
+
+
+def test_statement_phase_disables_hidden_claude_timeouts_when_phase_timeout_is_zero(tmp_path: Path) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+    runtime_config = replace(
+        runtime_config,
+        workspace_cache=WorkspaceCacheConfig(enabled=False, cache_dir=tmp_path / "artifacts" / "_lake_cache"),
+    )
+    run_paths = create_run_paths("prob_phase03_no_timeout", artifacts_root=runtime_config.artifacts.root)
+    create_workspace_from_template(run_paths.workspace_dir, runtime_config=runtime_config)
+
+    bundle = normalize_problem_artifact(_valid_payload(problem_id="prob_phase03_no_timeout"))
+    decl_naming = build_phase03_decl_naming(bundle)
+    claude_runner = _RecordingClaudeRunner(statements_text=_make_axiom_statements_text(decl_naming))
+
+    result = run_statement_phase(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        bundle=bundle,
+        decl_naming=decl_naming,
+        provided_statements_text=None,
+        max_repair_rounds=0,
+        timeout_seconds=0,
+        claude_runner=claude_runner,
+        runner=_ok_runner,
+    )
+
+    assert result.status == "ok"
+    assert claude_runner.calls == [
+        {
+            "phase_name": "phase03_statements_draft",
+            "model": runtime_config.claude.model,
+            "timeout_seconds": 0,
+            "idle_timeout_seconds": 0,
+            "tool_wait_timeout_seconds": 0,
+            "init_timeout_seconds": 0,
+            "permission_mode": "bypassPermissions",
+        }
+    ]
+
+
+def test_statement_phase_uses_runtime_config_model_when_no_override(tmp_path: Path) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+    runtime_config = replace(
+        runtime_config,
+        claude=replace(runtime_config.claude, model="claude-sonnet-4-6[1m]"),
+        workspace_cache=WorkspaceCacheConfig(enabled=False, cache_dir=tmp_path / "artifacts" / "_lake_cache"),
+    )
+    run_paths = create_run_paths("prob_phase03_runtime_model", artifacts_root=runtime_config.artifacts.root)
+    create_workspace_from_template(run_paths.workspace_dir, runtime_config=runtime_config)
+
+    bundle = normalize_problem_artifact(_valid_payload(problem_id="prob_phase03_runtime_model"))
+    decl_naming = build_phase03_decl_naming(bundle)
+    claude_runner = _RecordingClaudeRunner(statements_text=_make_axiom_statements_text(decl_naming))
+
+    result = run_statement_phase(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        bundle=bundle,
+        decl_naming=decl_naming,
+        provided_statements_text=None,
+        max_repair_rounds=0,
+        timeout_seconds=0,
+        claude_runner=claude_runner,
+        runner=_ok_runner,
+    )
+
+    assert result.status == "ok"
+    assert claude_runner.calls[0]["model"] == "claude-sonnet-4-6[1m]"
+
+
+def test_statement_repair_round_keeps_last_compiling_canonical_after_compile_failure(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+    run_paths = create_run_paths("prob_phase03_repair_seed", artifacts_root=runtime_config.artifacts.root)
+    create_workspace_from_template(run_paths.workspace_dir, runtime_config=runtime_config)
+
+    bundle = normalize_problem_artifact(_valid_payload(problem_id="prob_phase03_repair_seed"))
+    decl_naming = build_phase03_decl_naming(bundle)
+    statements_path = run_paths.workspace_dir / "Orthos" / "Statements.lean"
+    round_1 = _make_axiom_statements_text(decl_naming).replace(
+        f"axiom {decl_naming.lemma_decl_names['lem_2']} : True",
+        f"axiom {decl_naming.lemma_decl_names['lem_2']} : typo_token",
+    )
+    round_2 = _make_axiom_statements_text(decl_naming)
+    claude_runner = _SequentialStatementTraceRunner(
+        fallback_target_path=statements_path,
+        candidates=[round_1, round_2],
+    )
+
+    def _runner(command, **kwargs):
+        _ = kwargs
+        relative = command[-1]
+        file_path = run_paths.workspace_dir / relative
+        text = file_path.read_text(encoding="utf-8")
+        if "typo_token" in text:
+            return subprocess.CompletedProcess(command, 1, stdout="", stderr="unknown identifier 'typo_token'")
+        return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
+
+    result = run_statement_phase(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        bundle=bundle,
+        decl_naming=decl_naming,
+        provided_statements_text=None,
+        max_repair_rounds=2,
+        claude_runner=claude_runner,
+        runner=_runner,
+    )
+
+    assert result.status == "ok"
+    assert len(claude_runner.seed_texts) == 2
+    assert "typo_token" not in claude_runner.seed_texts[1]
+    assert result.round_artifacts[0].promotion_status == "rejected_compile"
+    assert result.round_artifacts[1].promotion_status == "promoted"
 
 
 def test_pinned_signatures_are_stable_on_rerun(tmp_path: Path) -> None:
@@ -696,17 +938,18 @@ def test_prompt_contract_enforces_statements_only_and_required_fields() -> None:
     assert "DO NOT ATTEMPT OR SOLVE PROOFS" in translation_prompt
     assert "statement_nl" in translation_prompt
     assert "semantic_sketch" in translation_prompt
+    assert "Workspace editing contract:" in translation_prompt
     assert decl_naming.root_decl_name in translation_prompt
 
     repair_prompt = build_statement_repair_prompt(
         bundle,
         decl_naming.to_prompt_naming(),
-        current_statements_text=_make_statements_text(decl_naming),
         diagnostics_text="fake diagnostics",
         repair_round=1,
     )
     assert "STATEMENTS ONLY" in repair_prompt
-    assert "Return a COMPLETE replacement for `Orthos/Statements.lean`" in repair_prompt
+    assert "Workspace editing contract:" in repair_prompt
+    assert "[STATUS: clean]" in repair_prompt
 
 
 # ---------------------------------------------------------------------------

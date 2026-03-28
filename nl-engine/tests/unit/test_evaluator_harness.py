@@ -18,7 +18,7 @@ def test_evaluator_case_and_report_generation() -> None:
         config_overrides={},
     )
     with TestClient(app) as client:
-        result = run_case(client, case, tick_limit=40, poll_sleep=0.0, database_url=None)
+        result = run_case(client, case, tick_limit=40, poll_sleep=0.0)
     assert result["passed"] is True
     summary = _build_summary([result])
     assert summary["total_cases"] == 1

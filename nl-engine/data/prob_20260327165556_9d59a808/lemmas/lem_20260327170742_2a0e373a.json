@@ -1,0 +1,93 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327170942_1ce060ea",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:07:49.271612Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.12,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:10:26.562663Z",
+  "last_dependency_check_id": "depchk_20260327171026_187387ad",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly derives the stated identity for E_n(a/n) by rewriting floor(ka/n) via the quotient-remainder decomposition ak = nq_k + r_k, then summing and using r_n = 0. It matches the lemma sketch exactly, with no semantic drift and no dependency issues.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n>1 and an integer a with 0<=a<=n-1, and set x=a/n. By the definition of E_n,\nE_n(a/n)=\\lfloor n(a/n)\\rfloor-\\sum_{k=1}^n \\frac{\\lfloor k(a/n)\\rfloor}{k}=a-\\sum_{k=1}^n \\frac{\\lfloor ka/n\\rfloor}{k}.\n\nFor each k in {1,...,n}, let r_k be the least nonnegative residue of ak modulo n; equivalently, 0<=r_k<n and ak\\equiv r_k (mod n). Then there exists an integer q_k such that\nak=nq_k+r_k,\nand therefore\n\\lfloor ka/n\\rfloor=q_k=\\frac{ak-r_k}{n}.\nHence\n\\sum_{k=1}^n \\frac{\\lfloor ka/n\\rfloor}{k}\n=\\sum_{k=1}^n \\frac{ak-r_k}{nk}\n=\\sum_{k=1}^n \\left(\\frac{a}{n}-\\frac{r_k}{nk}\\right)\n=a-\\frac1n\\sum_{k=1}^n \\frac{r_k}{k}.\nSubstituting this into the formula for E_n(a/n) gives\nE_n(a/n)=a-\\left(a-\\frac1n\\sum_{k=1}^n \\frac{r_k}{k}\\right)=\\frac1n\\sum_{k=1}^n \\frac{r_k}{k}.\n\nFinally, when k=n we have an\\equiv 0 (mod n), so r_n=0. Thus the k=n term vanishes, and\nE_n(a/n)=\\frac1n\\sum_{k=1}^{n-1} \\frac{r_k}{k}.\nSince r_k=Res_n(a,k), this is exactly\nE_n(a/n)=\\frac1n\\sum_{k=1}^{n-1} \\frac{Res_n(a,k)}{k}.\n",
+  "latest_vetted_proof_fingerprint": "4019a6b0b1af3fc9e90da706acc55514551883f498a83958f49b38b97dc0373e",
+  "latest_vetter_report_id": "rep_20260327171026_6530a885",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327170742_2a0e373a",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327170742_2a0e373a.json",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Convert the discrete endpoint value into a weighted sum of least residues modulo n.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) = (1/n) * sum_{k=1}^{n-1} Res_n(a,k)/k.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "a is an integer and 0 <= a <= n - 1",
+      "the summation index k is an integer with 1 <= k <= n - 1",
+      "division by n and division by k are defined (implicitly requiring n != 0 and k != 0, ensured by n > 1 and k >= 1)"
+    ],
+    "normalized_claim": "For all integers n with n > 1 and for all integers a with 0 <= a <= n - 1, letting x be the rational a divided by n, we have: E_n of x equals (1 divided by n) times the sum over integers k from 1 to n - 1 of Res_n of (a,k) divided by k.",
+    "quantifier_order": [
+      "for all integer n with n > 1",
+      "for all integer a with 0 <= a <= n - 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "outer parameter for the identity",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "inner parameter to the functions E_n and Res_n; constrained by 0 <= a <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index with range 1 <= k <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "rationals of the form a divided by n",
+        "name": "input_x",
+        "role": "argument to E_n, defined as x = a/n",
+        "type": "rational"
+      }
+    ],
+    "witness_dependencies": [
+      "k is not a free witness; it is a bound summation index depending on n through the range 1 <= k <= n - 1",
+      "the value Res_n(a,k) depends on both n and a, and also on the summation index k"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:10:26.562663Z"
+}

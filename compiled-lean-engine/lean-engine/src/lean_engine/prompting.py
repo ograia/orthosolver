@@ -12,9 +12,26 @@ class StatementPromptDeclNaming:
     lemma_decl_names: dict[str, str]
 
 
+def build_edit_first_status_only_contract(
+    *,
+    target_relative_path: str,
+) -> list[str]:
+    return [
+        "Workspace editing contract:",
+        f"- Read `{target_relative_path}` from the workspace before making changes.",
+        f"- Prefer `Edit` when `{target_relative_path}` already exists.",
+        f"- Use `Write` only when `{target_relative_path}` does not exist yet or you must replace it after explicit failure recovery.",
+        "- Do NOT paste the full Lean file into the final response.",
+        "- Final response must be exactly one tiny status line only:",
+        "  `[STATUS: clean]`, `[STATUS: updated]`, or `[STATUS: blocked]`.",
+    ]
+
+
 def build_statement_translation_prompt(
     bundle: NormalizedProblemBundle,
     decl_naming: StatementPromptDeclNaming,
+    *,
+    target_relative_path: str = "Orthos/Statements.lean",
     lean4_skills_refs: str = "",
 ) -> str:
     payload = _statement_payload(bundle, decl_naming)
@@ -52,16 +69,15 @@ def build_statement_translation_prompt(
     lines.extend([
         "",
         "Compilation checking:",
-        "- After writing Orthos/Statements.lean, call lean_diagnostic_messages to check",
+        f"- After editing `{target_relative_path}`, call lean_diagnostic_messages to check",
         "  that the file compiles. Fix any errors before finishing.",
         "- Do NOT run `lake env lean`, `lake build`, or any Lean compilation command via Bash.",
         "  Use lean_diagnostic_messages instead — it keeps Mathlib in memory and is fast.",
         "- Do NOT use `sleep` or polling loops. MCP tools return when ready.",
         "",
-        "File contract:",
-        "- Return a COMPLETE replacement for `Orthos/Statements.lean`.",
-        "- Output Lean code only. No markdown fences. No commentary.",
-        "- If you use tools to edit files, keep the final response minimal and do not summarize.",
+        *build_edit_first_status_only_contract(target_relative_path=target_relative_path),
+        "",
+        "File rules:",
         "- Do NOT wrap declarations in any namespace.",
         "- Do NOT modify any other workspace files (especially Orthos/Lemmas.lean or Orthos/Root.lean).",
         "- Prefer explicit binders and assumptions.",
@@ -88,7 +104,7 @@ def build_statement_repair_prompt(
     bundle: NormalizedProblemBundle,
     decl_naming: StatementPromptDeclNaming,
     *,
-    current_statements_text: str,
+    target_relative_path: str = "Orthos/Statements.lean",
     diagnostics_text: str,
     repair_round: int,
     lean4_skills_refs: str = "",
@@ -105,7 +121,7 @@ def build_statement_repair_prompt(
         f"Repair round: {repair_round}",
         "",
         "Compilation checking:",
-        "- After fixing Orthos/Statements.lean, call lean_diagnostic_messages to verify",
+        f"- After fixing `{target_relative_path}`, call lean_diagnostic_messages to verify",
         "  the file compiles. Keep fixing until there are no errors.",
         "- Do NOT run `lake env lean` or `lake build` via Bash.",
         "  Use lean_diagnostic_messages instead — it keeps Mathlib in memory and is fast.",
@@ -124,15 +140,10 @@ def build_statement_repair_prompt(
 
     lines.extend([
         "",
-        "Current `Orthos/Statements.lean` candidate:",
-        current_statements_text.rstrip(),
-        "",
         "Expected input contract:",
         json.dumps(payload, indent=2, ensure_ascii=True, sort_keys=True),
         "",
-        "Return a COMPLETE replacement for `Orthos/Statements.lean`.",
-        "Output Lean code only.",
-        "If you used tools to update files, do not return prose summaries.",
+        *build_edit_first_status_only_contract(target_relative_path=target_relative_path),
     ])
     return "\n".join(lines).strip() + "\n"
 
@@ -141,7 +152,7 @@ def build_assembly_repair_prompt(
     bundle: NormalizedProblemBundle,
     decl_naming: StatementPromptDeclNaming,
     *,
-    current_statements_text: str,
+    target_relative_path: str = "Orthos/Statements.lean",
     assembly_diagnostics_text: str,
     repair_round: int,
     lean4_skills_refs: str = "",
@@ -179,18 +190,13 @@ def build_assembly_repair_prompt(
 
     lines.extend([
         "",
-        "Current `Orthos/Statements.lean`:",
-        current_statements_text.rstrip(),
-        "",
         "Checking tools:",
-        "- After editing `Orthos/Statements.lean`, call lean_diagnostic_messages to verify",
+        f"- After editing `{target_relative_path}`, call lean_diagnostic_messages to verify",
         "  the file still compiles clean (no errors).",
         "- Do NOT run `lake env lean` or `lake build` via Bash.",
         "- Do NOT use `sleep` or polling loops. MCP tools return when ready.",
         "",
-        "Return a COMPLETE replacement for `Orthos/Statements.lean`.",
-        "Output Lean code only.",
-        "If you used tools to update files, do not return prose summaries.",
+        *build_edit_first_status_only_contract(target_relative_path=target_relative_path),
     ])
     return "\n".join(lines).strip() + "\n"
 

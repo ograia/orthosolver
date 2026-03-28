@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-03-26T19:07:50.613719Z",
+  "graph_node_id": "pnode_20260326190750_52df9d72",
+  "metadata": {
+    "parent_id": "thm_root_20260326184616_b94d02f6"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "c21abcdaccb523273ccf17e39d94d3909518d2dc1bf81137c68550a9f7962afa",
+  "owner_id": "lem_20260326190323_6fff1b77",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m is an integer and m is at least 1.",
+      "t has exactly m minus 1 entries.",
+      "Each entry t sub i is either plus one or minus one.",
+      "When m equals 1, the sequence t is empty.",
+      "The definition of Peak of t for the nontrivial case only applies when m is at least 2.",
+      "The index j in the peak membership rule ranges over integers between 2 and m minus 1.",
+      "The index i in the final sign pattern characterizations ranges over integers between 1 and m minus 1."
+    ],
+    "normalized_claim": "For every positive integer m and every sign sequence t of length m minus 1, the set Peak of t defined by the endpoint and adjacent sign rules has no consecutive integers. When m is at least 2, Peak of t is the set of odd positions in 1 through m exactly when the signs alternate minus one, plus one, minus one, and so on starting with minus one, and Peak of t is the set of even positions in 1 through m exactly when the signs alternate plus one, minus one, plus one, and so on starting with plus one.",
+    "quantifier_order": [
+      "For every integer m with m at least 1.",
+      "For every sign sequence t of length m minus 1, with each entry equal to plus one or minus one.",
+      "Define Peak of t by cases depending on whether m equals 1 or m is at least 2.",
+      "If m is at least 2, for each integer j with 2 at most j at most m minus 1, membership of j in Peak of t is determined by the adjacent signs t sub j minus 1 and t sub j, with the endpoints handled separately.",
+      "If m is at least 2, for every index i from 1 to m minus 1, the odd peak characterization uses the condition t sub i equals minus one to the i.",
+      "If m is at least 2, for every index i from 1 to m minus 1, the even peak characterization uses the condition t sub i equals minus one to the i minus 1."
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "main size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequence of length m minus 1 with entries each equal to plus one or minus one; empty when m equals 1",
+        "name": "t",
+        "role": "input sequence of signs",
+        "type": "finite sign sequence"
+      },
+      {
+        "domain": "subset of the integers from 1 to m",
+        "name": "Peak(t)",
+        "role": "defined set of peak positions",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "integers with 2 at most j at most m minus 1",
+        "name": "j",
+        "role": "bound index in the membership definition of Peak(t)",
+        "type": "integer index"
+      },
+      {
+        "domain": "indices from 1 to m minus 1",
+        "name": "i",
+        "role": "bound index in the alternating sign characterizations",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are involved; all conditions are universal or definitional.",
+      "The parity characterizations depend on the entire family of equalities for all indices i from 1 to m minus 1.",
+      "The set Peak of t is determined uniquely by m and t once the sign sequence is fixed."
+    ]
+  },
+  "statement_nl": "Let m be an integer with m >= 1, and let t = (t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}; when m = 1 this sequence is empty. Define Peak(t) subseteq {1,...,m} by: if m = 1 then Peak(t) = {1}; if m >= 2 then 1 belongs to Peak(t) exactly when t_1 = -1, m belongs to Peak(t) exactly when t_{m-1} = +1, and for each integer j with 2 <= j <= m-1, j belongs to Peak(t) exactly when t_{j-1} = +1 and t_j = -1. Then Peak(t) contains no two consecutive integers. If m >= 2, then Peak(t) is exactly the set of odd integers in {1,...,m} if and only if t_i = (-1)^i for every i, and Peak(t) is exactly the set of even integers in {1,...,m} if and only if t_i = (-1)^(i-1) for every i.",
+  "updated_at": "2026-03-26T19:07:50.613720Z"
+}

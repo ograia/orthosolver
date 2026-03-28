@@ -1,0 +1,115 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260326190750_080ab4af",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-26T19:04:46.065778Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.41,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T03:16:34.543101Z",
+  "last_dependency_check_id": "depchk_20260327031634_cc5f6957",
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "For m >= 1, let U_m be the set of permutations c = (c_1,...,c_m) of {1,...,m} such that (-1)^(i-1)(c_{i+1}-c_i) > 0 for every 1 <= i <= m-1; thus |U_m| = E_m. Also let U_0 consist of the empty permutation, so |U_0| = E_0 = 1.\n\nFor m >= 1, let V_m be the set of permutations c = (c_1,...,c_m) of {1,...,m} such that (-1)^i(c_{i+1}-c_i) > 0 for every 1 <= i <= m-1; this is the alternating pattern starting with a decrease. Let V_0 also consist of the empty permutation.\n\nThe map c = (c_1,...,c_m) -> (m+1-c_1,...,m+1-c_m) is a bijection V_m -> U_m, because for each i,\n(-1)^(i-1)((m+1-c_{i+1})-(m+1-c_i)) = -(-1)^(i-1)(c_{i+1}-c_i) = (-1)^i(c_{i+1}-c_i) > 0.\nHence |V_m| = |U_m| = E_m for all m >= 0.\n\nWe also use the following simple relabeling fact. If S = {s_1 < ... < s_m} is any m-element set, then the map\n(u_1,...,u_m) -> (s_{u_1},...,s_{u_m})\nis a bijection from U_m onto the permutations of S satisfying the U-pattern, and from V_m onto the permutations of S satisfying the V-pattern, because s_a < s_b iff a < b. So the number of permutations of an m-element set with either pattern depends only on m.\n\nNow fix n >= 2 and let A = U_n. Then |A| = E_n.\n\nFirst, count A by the position of the maximum element n. If b = (b_1,...,b_n) is in A and b_j = n, then j must be even. Indeed, if j = 1 then b_1 < b_2, so b_1 is not the maximum. If j > 1 is odd, then j-1 is even, and the defining inequality at i = j-1 gives b_j < b_{j-1}, again impossible for the maximum. Thus the sets\nA_j = { b in A : b_j = n }\nfor even j form a disjoint partition of A.\n\nFix an even j. We count A_j. For b in A_j, let L = {b_1,...,b_{j-1}} and R = {b_{j+1},...,b_n}. Then L is any subset of {1,...,n-1} of size j-1, so there are binom(n-1,j-1) choices for L.\n\nThe left block (b_1,...,b_{j-1}) satisfies the U-pattern on the set L, since it obeys the original inequalities for indices 1,...,j-2. Therefore, by the relabeling fact, there are E_{j-1} possibilities for the left block.\n\nFor the right block, write c_t = b_{j+t} for 1 <= t <= n-j. For 1 <= t <= n-j-1, the original inequality at i = j+t gives\n(-1)^(j+t-1)(c_{t+1}-c_t) > 0.\nBecause j is even, (-1)^(j+t-1) = (-1)^(t-1), so the right block also satisfies the U-pattern. Hence there are E_{n-j} possibilities for the right block.\n\nConversely, given any subset L of {1,...,n-1} of size j-1, any U-pattern permutation of L, and any U-pattern permutation of R = {1,...,n-1} \\ L, inserting n between those two blocks produces an element of A_j. The inequalities inside each block hold by construction, and the boundary inequalities at position j are automatic because n is larger than every element of L and R; when one side is empty, there is simply no boundary inequality on that side. This reconstruction is unique. Therefore\n|A_j| = binom(n-1,j-1) E_{j-1} E_{n-j} = w_j.\n\nSince the A_j for even j partition A, we get\nE_n = |A| = sum over even j of |A_j| = sum over even j of w_j.\n\nNow count the same set A by the position of the minimum element 1. If b = (b_1,...,b_n) is in A and b_j = 1, then j must be odd. Indeed, if j is even, then j-1 is odd, and the defining inequality at i = j-1 gives b_j > b_{j-1}, impossible for the minimum. Thus the sets\nB_j = { b in A : b_j = 1 }\nfor odd j form a disjoint partition of A.\n\nFix an odd j. We count B_j. For b in B_j, let L = {b_1,...,b_{j-1}} and R = {b_{j+1},...,b_n}. Then L is any subset of {2,...,n} of size j-1, so there are again binom(n-1,j-1) choices for L.\n\nAs before, the left block (b_1,...,b_{j-1}) satisfies the U-pattern, so there are E_{j-1} possibilities for it.\n\nFor the right block, again write c_t = b_{j+t} for 1 <= t <= n-j. For 1 <= t <= n-j-1, the original inequality at i = j+t gives\n(-1)^(j+t-1)(c_{t+1}-c_t) > 0.\nBecause j is odd, (-1)^(j+t-1) = (-1)^t, so the right block satisfies the V-pattern. Hence there are |V_{n-j}| = E_{n-j} possibilities for the right block.\n\nConversely, given any subset L of {2,...,n} of size j-1, any U-pattern permutation of L, and any V-pattern permutation of R = {2,...,n} \\ L, inserting 1 between those two blocks produces an element of B_j. The inequalities inside each block hold by construction, and the boundary inequalities at position j are automatic because 1 is smaller than every element of L and R. Again the reconstruction is unique. Therefore\n|B_j| = binom(n-1,j-1) E_{j-1} E_{n-j} = w_j.\n\nSince the B_j for odd j partition A, we get\nE_n = |A| = sum over odd j of |B_j| = sum over odd j of w_j.\n\nThus both parity-restricted sums are equal to E_n, exactly as claimed.",
+  "latest_vetter_report_id": "rep_20260327031634_9435821b",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260326190432_1aed23ca",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_lean_formalization",
+  "parent_id": "thm_root_20260326184616_b94d02f6",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "proof_bundle_artifact_id": "problems/prob_20260326184616_abfe1ff0/proof_bundles/lemmas/lem_20260326190432_1aed23ca.json",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Identifies the total weight of each full parity class with the count of an alternating sign sequence of length n-1.",
+  "routing_status": "send_to_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For each integer r >= 1, let E_r be the number of permutations (b_1,...,b_r) of {1,...,r} such that (-1)^(i-1) * (b_{i+1} - b_i) > 0 for every 1 <= i <= r-1, and set E_0 = 1. Fix an integer n >= 2 and define w_j = binom(n-1, j-1) * E_{j-1} * E_{n-j} for 1 <= j <= n. Then sum over odd j in {1,...,n} of w_j is equal to E_n, and sum over even j in {1,...,n} of w_j is also equal to E_n.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "r is an integer with r at least 1",
+      "b_1 through b_r form a permutation of {1,...,r}",
+      "i ranges over integers from 1 to r minus 1",
+      "The condition on the permutation is alternating: when i is odd, b_{i+1} is greater than b_i, and when i is even, b_{i+1} is less than b_i",
+      "E_0 is assigned the value 1 by convention",
+      "n is an integer with n at least 2",
+      "j ranges over integers from 1 to n",
+      "The binomial coefficient is taken with parameters n minus 1 and j minus 1, so both are integers in the usual combinatorial range"
+    ],
+    "normalized_claim": "Define E_r for each positive integer r as the number of permutations of {1,...,r} whose entries alternate up and down, starting with an increase at the first step, and set E_0 to 1. For each integer n at least 2, define w_j as the binomial coefficient n minus 1 choose j minus 1 times E_{j-1} times E_{n-j}. Then, for that n, the sum of w_j over odd j from 1 to n equals E_n, and the sum of w_j over even j from 1 to n also equals E_n.",
+    "quantifier_order": [
+      "For each integer r at least 1, define E_r by counting permutations b_1 through b_r of {1,...,r} satisfying the alternating sign inequalities, and also set E_0 equal to 1.",
+      "For the fixed integer n at least 2, define w_j for each j from 1 to n.",
+      "For that same fixed n, the sum of w_j over odd j equals E_n.",
+      "For that same fixed n, the sum of w_j over even j equals E_n."
+    ],
+    "variables": [
+      {
+        "domain": "integers at least 1",
+        "name": "r",
+        "role": "index for the definition of E_r",
+        "type": "integer"
+      },
+      {
+        "domain": "a permutation of the set {1,...,r}",
+        "name": "b_1 through b_r",
+        "role": "one-line representation of a permutation counted by E_r",
+        "type": "sequence of integers"
+      },
+      {
+        "domain": "integers from 1 to r minus 1",
+        "name": "i",
+        "role": "index for the alternating inequality condition",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers, with E_0 fixed separately as 1",
+        "name": "E_r",
+        "role": "count of permutations satisfying the alternating sign condition",
+        "type": "integer"
+      },
+      {
+        "domain": "integers at least 2",
+        "name": "n",
+        "role": "fixed parameter in the main identity",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 1 to n",
+        "name": "j",
+        "role": "index for the quantities w_j and the parity split in the sums",
+        "type": "integer"
+      },
+      {
+        "domain": "defined for each j between 1 and n",
+        "name": "w_j",
+        "role": "summand built from a binomial coefficient and two E values",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "The permutation counted by E_r is an implicit witness object depending on r, but E_r is defined as a count, not by selecting a specific permutation",
+      "w_j depends on the fixed n and on the previously defined values E_{j-1} and E_{n-j}",
+      "The parity restricted sums do not introduce any additional existential witnesses"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T03:16:34.543101Z"
+}

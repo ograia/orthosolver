@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import json
-import mimetypes
 from dataclasses import dataclass
-from datetime import UTC, datetime
-from pathlib import Path
+from datetime import datetime
 from typing import Any
 
+from nl_engine.artifacts.store import ArtifactStore
 
 class ArtifactSecurityError(ValueError):
     """Raised when an artifact key escapes the configured artifact root."""
@@ -30,61 +29,38 @@ class ArtifactContent:
 
 
 class ArtifactBrowser:
-    """Safe filesystem browser rooted at a configured artifact directory."""
+    """Safe artifact browser over the configured artifact store boundary."""
 
     def __init__(self, root_dir: str) -> None:
-        self.root = Path(root_dir).resolve()
-        self.root.mkdir(parents=True, exist_ok=True)
+        self.store = ArtifactStore(root_dir)
 
     def _normalize_key(self, key: str, *, allow_empty: bool = False) -> str:
-        normalized = key.replace("\\", "/").strip("/")
+        normalized = str(key or "").replace("\\", "/").strip("/")
         if not normalized and allow_empty:
             return ""
         if not normalized:
             raise ArtifactSecurityError("artifact key must not be empty")
-        if any(part in {"..", ""} for part in Path(normalized).parts):
+        if any(part in {"..", "", "."} for part in normalized.split("/")):
             raise ArtifactSecurityError("artifact key contains invalid path segments")
         return normalized
 
-    def _resolve(self, key: str, *, allow_empty: bool = False) -> tuple[str, Path]:
-        normalized = self._normalize_key(key, allow_empty=allow_empty)
-        if not normalized:
-            return normalized, self.root
-
-        path = (self.root / normalized).resolve()
-        if path != self.root and self.root not in path.parents:
-            raise ArtifactSecurityError("artifact key escapes artifact root")
-        return normalized, path
-
     def exists(self, artifact_key: str) -> bool:
-        _, path = self._resolve(artifact_key)
-        return path.exists()
+        normalized = self._normalize_key(artifact_key)
+        return self.store.exists(normalized)
 
     def list_files(self, *, prefix: str = "", limit: int = 500) -> list[ArtifactEntry]:
-        _, base = self._resolve(prefix, allow_empty=True)
-        if not base.exists():
-            return []
-
-        files: list[Path]
-        if base.is_file():
-            files = [base]
-        else:
-            files = [path for path in sorted(base.rglob("*")) if path.is_file()]
-
         rows: list[ArtifactEntry] = []
-        for path in files:
-            resolved = path.resolve()
-            if resolved != self.root and self.root not in resolved.parents:
-                # Defensive: skip symlink escapes.
+        normalized_prefix = self._normalize_key(prefix, allow_empty=True)
+        for rel_key in self.store.list_keys(prefix=normalized_prefix):
+            meta = self.store.stat(rel_key)
+            if meta is None:
                 continue
-            rel_key = resolved.relative_to(self.root).as_posix()
-            stat = resolved.stat()
             rows.append(
                 ArtifactEntry(
                     artifact_key=rel_key,
-                    size_bytes=stat.st_size,
-                    modified_at=datetime.fromtimestamp(stat.st_mtime, tz=UTC),
-                    content_type=mimetypes.guess_type(rel_key)[0],
+                    size_bytes=meta.size_bytes,
+                    modified_at=meta.modified_at,
+                    content_type=meta.content_type,
                 )
             )
             if len(rows) >= limit:
@@ -92,23 +68,21 @@ class ArtifactBrowser:
         return rows
 
     def read(self, artifact_key: str) -> ArtifactContent:
-        normalized, path = self._resolve(artifact_key)
-        if not path.exists() or not path.is_file():
+        normalized = self._normalize_key(artifact_key)
+        meta = self.store.stat(normalized)
+        if meta is None:
             raise FileNotFoundError(normalized)
 
-        stat = path.stat()
-        content_type = mimetypes.guess_type(normalized)[0]
-
-        if path.suffix.lower() == ".json":
-            text = path.read_text(encoding="utf-8")
+        if normalized.lower().endswith(".json"):
+            text = self.store.load_text(normalized)
             try:
                 parsed = json.loads(text)
                 return ArtifactContent(
                     artifact_key=normalized,
                     format="json",
                     content=parsed,
-                    size_bytes=stat.st_size,
-                    content_type=content_type or "application/json",
+                    size_bytes=meta.size_bytes,
+                    content_type=meta.content_type or "application/json",
                 )
             except json.JSONDecodeError:
                 # Preserve inspectability when malformed JSON is encountered.
@@ -116,15 +90,15 @@ class ArtifactBrowser:
                     artifact_key=normalized,
                     format="text",
                     content=text,
-                    size_bytes=stat.st_size,
-                    content_type=content_type or "text/plain",
+                    size_bytes=meta.size_bytes,
+                    content_type=meta.content_type or "text/plain",
                 )
 
-        text = path.read_text(encoding="utf-8", errors="replace")
+        text = self.store.load_text(normalized)
         return ArtifactContent(
             artifact_key=normalized,
             format="text",
             content=text,
-            size_bytes=stat.st_size,
-            content_type=content_type or "text/plain",
+            size_bytes=meta.size_bytes,
+            content_type=meta.content_type or "text/plain",
         )

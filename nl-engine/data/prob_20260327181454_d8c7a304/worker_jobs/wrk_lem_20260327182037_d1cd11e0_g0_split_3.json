@@ -1,0 +1,194 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182037_d1cd11e0/split_existing_proof_attempt_3",
+  "attempt_count": 2,
+  "attempt_number": 3,
+  "completed_at": "2026-03-27T18:30:48.196771Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:30:52.444823Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:29:44.659485Z",
+  "error_payload": {
+    "agent_key": "agent7",
+    "class": "AgentExecutionError",
+    "error_class": "invalid_agent_output",
+    "message": "agent7 output failed schema validation: 5 validation errors for Agent7Output\nassembly_plan.steps.0\n  Input should be a valid dictionary [type=dict_type, input_value='Use lem_m_over_n_le_r to get m/n <= r.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.1\n  Input should be a valid dictionary [type=dict_type, input_value='Apply lem_floor_termwise...or(kr) for k = 1,...,n.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.2\n  Input should be a valid dictionary [type=dict_type, input_value='Apply lem_weighted_sum_c...um_{k=1}^n floor(kr)/k.', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.3\n  Input should be a valid dictionary [type=dict_type, input_value='Use lem_first_term_equal...r(n(m/n)) by floor(nr).', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type\nassembly_plan.steps.4\n  Input should be a valid dictionary [type=dict_type, input_value='Substitute these two com...ain f_n(r) <= f_n(m/n).', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/dict_type"
+  },
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent7_split_existing_proof",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327181454_61717cff",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n greater than 1",
+            "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+            "x is any real number",
+            "the floor function is applied to real numbers (so it is always defined)"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+          "quantifier_order": [
+            "for a given integer n greater than 1",
+            "find real x such that for all real y, expression at x is at least the expression at y",
+            "and there exists at least one real x achieving that maximal value"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "optimization variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index in the expression, ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizer x (if it exists) may depend on the fixed parameter n",
+            "the maximal value may depend on the fixed parameter n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lean_failure": {
+      "artifact_keys": {
+        "normalized_problem": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/normalized_problem.json",
+        "pinned_signatures": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/pinned_signatures.json",
+        "run_root": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001",
+        "summaries": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/summaries",
+        "track_manifest": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/track_manifest.json",
+        "trusted_context_manifest": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/trusted_context_manifest.json",
+        "workspace": "/home/admin_hgraia_altostrat_com/orthosolver/compiled-lean-engine/lean-engine/.artifacts/lean_engine/prob_20260327181454_d8c7a304/run_001/workspace"
+      },
+      "confidence": 0.9,
+      "error_class": "dependency_graph_invalid",
+      "fatality": "fatal",
+      "issue_kind": "lean_issue",
+      "job_id": "lean_job_lem_20260327182037_d1cd11e0_formalize_lemma_from_nl_3",
+      "recommended_next_step": "retry_lean_only"
+    },
+    "lemma_id": "lem_20260327182037_d1cd11e0",
+    "parent_proof_nl": "Fix an integer n > 1 and define f_n(x) = floor(nx) - sum_{k=1}^n floor(kx)/k. Let r be any real number with 0 <= r < 1, and set m = floor(nr). We will show that f_n(r) <= f_n(m/n).\n\nSince m = floor(nr), we have m <= nr < m+1. Dividing by n > 0 gives m/n <= r. Now fix any k in {1,2,...,n}. Multiplying by the positive number k preserves the inequality, so k(m/n) <= kr. Because the floor function is nondecreasing on the real numbers, it follows that floor(k(m/n)) <= floor(kr) for every such k.\n\nAlso, m is an integer, so floor(n(m/n)) = floor(m) = m = floor(nr).\n\nTherefore, term by term,\nsum_{k=1}^n floor(k(m/n))/k <= sum_{k=1}^n floor(kr)/k.\nUsing the equality of the first terms, we obtain\nf_n(r) = floor(nr) - sum_{k=1}^n floor(kr)/k = m - sum_{k=1}^n floor(kr)/k\n<= m - sum_{k=1}^n floor(k(m/n))/k\n= floor(n(m/n)) - sum_{k=1}^n floor(k(m/n))/k\n= f_n(m/n).\n\nThis is exactly the claimed inequality.",
+    "parent_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and satisfies n > 1",
+        "r is real and satisfies 0 <= r < 1",
+        "m is defined as floor of n times r, hence m is an integer",
+        "m divided by n is an input value for f_n (assumes f_n is defined on it)"
+      ],
+      "normalized_claim": "For every integer n with n > 1 and every real r with 0 <= r < 1, if m is defined as the floor of n times r, then f_n(r) is at most f_n(m divided by n).",
+      "quantifier_order": [
+        "for all integers n with n > 1",
+        "for all real numbers r with 0 <= r < 1",
+        "let m be floor of n times r",
+        "claim: f_n(r) <= f_n(m divided by n)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the function f_n; assumed to satisfy n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "r",
+          "role": "input variable to f_n constrained by 0 <= r < 1",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "auxiliary integer defined by m = floor(n*r); used to form the point m/n",
+          "type": "integer"
+        },
+        {
+          "domain": "unspecified set of inputs where f_n is defined (at least includes r and m/n)",
+          "name": "f_n",
+          "role": "parameterized function indexed by n",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "m depends on both n and r via m = floor(n*r)"
+      ]
+    },
+    "parent_statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n).",
+    "previous_attempt_summaries": [],
+    "role_in_parent": "Moves an arbitrary point in [0,1) to the left endpoint of its n-slice.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "root_theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "split_existing_proof_generation",
+  "result_payload": null,
+  "started_at": "2026-03-27T18:29:47.267829Z",
+  "status": "failed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182037_d1cd11e0",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:30:52.444828Z",
+  "worker_job_id": "wrk_lem_20260327182037_d1cd11e0_g0_split_3",
+  "worker_kind": "proof_split_generation"
+}

@@ -1,0 +1,139 @@
+{
+  "assembly_plan_id": "asm_20260326144017_abd6800c",
+  "created_at": "2026-03-26T14:45:56.212719Z",
+  "decomposition_id": "dec_20260326144017_347d926f",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260326142247_f1e3c295",
+  "proof_skeleton_nl": "The proof is by strong induction on n. For a fixed sign sequence s, look at the position of the smallest value 1. It can occur only at a valley of s, and summing over the possible valley positions gives an exact recursion for f(s). By the induction hypothesis, each left or right subproblem is bounded by the corresponding alternating count E_m, so f(s) is bounded by a weighted sum over the valley set V(s). The weights are w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}. A separate weighted independent-set theorem shows that among all subsets of {1,...,n} with no consecutive elements, the largest possible total weight is achieved exactly by the odd positions or the even positions. The alternating patterns realize those two parity valley sets, and their counts are exactly E_n by the alternating recurrence. Hence they attain the global maximum. If equality holds for some s, then its valley set must be one of those two parity classes, which forces s itself to alternate. Therefore the maximizers are exactly the two alternating sign sequences.",
+  "root_node_id": "thm_root_20260326142247_6714b56a",
+  "steps": [
+    {
+      "derives": "Prove the theorem by strong induction on n. For the induction, keep the auxiliary conventions E_0 = 1 and E_1 = 1. The base case n = 2 is immediate: the only sign sequences have length 1, namely (+1) and (-1), both satisfy the alternating condition vacuously, and each is realized by exactly one permutation, so both are maximal.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This is the induction setup together with a direct check of the first nontrivial size.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Fix n >= 3 and assume the theorem already holds for every smaller size 2 <= m < n. Let s be any sign sequence of length n-1, and write f(s) for the theorem's counting function. Applying L2 to s gives an exact decomposition f(s) = sum_{j in V(s)} binomial(n-1,j-1) left_count(j) right_count(j), where V(s) is the valley set of s and left_count(j), right_count(j) count the valid left and right subpatterns obtained after placing the value 1 at position j.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "L2 is the exact recursion by the position of the smallest value 1.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For each j in V(s), the left factor left_count(j) is a count for a sign sequence on j-1 positions, and the right factor right_count(j) is a count for a sign sequence on n-j positions. By the induction hypothesis, each such count is at most the alternating maximum for that size, namely E_{j-1} on the left and E_{n-j} on the right. In the boundary cases j=1 or j=n, the missing side contributes 1, which is exactly E_0 by convention. Therefore every summand in A2 is at most w_j := binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "This step applies the induction hypothesis separately to the two smaller subproblems in each summand and handles the empty-side cases by the convention E_0 = 1.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "Summing the termwise bounds from A3 over all j in V(s) yields f(s) <= sum_{j in V(s)} w_j, where w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "A4 is obtained by replacing each summand in the exact formula from A2 by the corresponding upper bound from A3 and summing.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "By L1, the valley set V(s) has no two consecutive elements, so it is an independent set in the path {1,...,n}. Also, by instantiating L4 at each size m = 2,3,...,n, the sequence E_0,E_1,...,E_n satisfies the parity convolution identities required in the hypotheses of L5.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "The first conclusion is exactly the structural part of L1. The second conclusion comes from applying the universal statement of L4 to every size up to n.",
+      "uses_lemmas": [
+        "L1",
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "Applying L5 to the independent set V(s) and the weights w_j from A4 gives f(s) <= sum_{j in V(s)} w_j <= max( sum_{j odd} w_j, sum_{j even} w_j ).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "L5 is applicable because A5 verifies exactly its hypotheses: the set V(s) has no consecutive elements and the sequence E satisfies the required convolution identities.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "By L4, both parity sums are equal to the alternating count E_n: sum_{j odd} w_j = E_n and sum_{j even} w_j = E_n.",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "This is exactly the conclusion of L4 at size n after identifying w_j with binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Combining A6 with A7 yields the global upper bound f(s) <= E_n for every sign sequence s of length n-1.",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "Substitute the value E_n for the parity sums in the inequality from A6.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6",
+        "A7"
+      ]
+    },
+    {
+      "derives": "By definition, E_n is the count of the alternating sequence Alt_n^+. By L3, the opposite alternating sequence Alt_n^- has the same count E_n. Since A8 shows that no sign sequence can have count larger than E_n, both alternating sequences are maximizers.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "This step combines the definition of E_n, the symmetry from L3, and the universal upper bound from A8.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    },
+    {
+      "derives": "Now assume in addition that f(s) = E_n. The inequalities from A4, A6, and A7 then force equality throughout: sum_{j in V(s)} w_j = E_n = max( sum_{j odd} w_j, sum_{j even} w_j ). Therefore, by the equality clause in L5, the valley set V(s) must be exactly the odd positions in {1,...,n} or exactly the even positions in {1,...,n}.",
+      "is_trivial": false,
+      "step_id": "A10",
+      "trivial_justification": "If the final value equals the upper bound from A8, then the intermediate bound in A4 and the independent-set bound in A6 must also be equalities. L5 characterizes when that can happen.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A6",
+        "A7",
+        "A8"
+      ]
+    },
+    {
+      "derives": "By L6, if V(s) is the full odd class then s is Alt_n^+, and if V(s) is the full even class then s is Alt_n^-. Together with A9, this proves that for every integer n at least 2, the sign sequences s for which f(s) is maximal are exactly the two alternating sequences, equivalently exactly those satisfying s_i s_{i+1} = -1 for every i = 1,...,n-2.",
+      "is_trivial": false,
+      "step_id": "A11",
+      "trivial_justification": "A10 gives the only two possible valley sets for a maximizer, L6 converts those valley sets into the two alternating sign sequences, and A9 already showed that those two sequences do attain the maximum.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A9",
+        "A10"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327182156_f5dad144",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T18:20:37.975567Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.12,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T20:41:02.946644Z",
+  "last_dependency_check_id": "depchk_20260327182224_4e8baedd",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let x be any real number, and write m = \u230ax\u230b and t = x - \u230ax\u230b. Then t = frac(x), so x = m + t with m an integer and 0 \u2264 t < 1.\n\nSince m is an integer and k is a positive integer, km is also an integer. Therefore, for each k = 1, 2, ..., n,\n\u230akx\u230b = \u230ak(m+t)\u230b = \u230akm + kt\u230b = km + \u230akt\u230b,\nand similarly\n\u230anx\u230b = nm + \u230ant\u230b.\n\nSubstituting these into the definition of f_n gives\nf_n(x) = \u230anx\u230b - \\sum_{k=1}^n \\frac{\u230akx\u230b}{k}\n= (nm + \u230ant\u230b) - \\sum_{k=1}^n \\frac{km + \u230akt\u230b}{k}.\nNow simplify term by term:\n\\frac{km + \u230akt\u230b}{k} = m + \\frac{\u230akt\u230b}{k},\nso\nf_n(x) = nm + \u230ant\u230b - \\sum_{k=1}^n m - \\sum_{k=1}^n \\frac{\u230akt\u230b}{k}\n= nm + \u230ant\u230b - nm - \\sum_{k=1}^n \\frac{\u230akt\u230b}{k}\n= \u230ant\u230b - \\sum_{k=1}^n \\frac{\u230akt\u230b}{k}.\nBut the right-hand side is exactly f_n(t), and t = frac(x). Hence\nf_n(x) = f_n(frac(x)).\n\nSince x was arbitrary, this holds for every real x.",
+  "latest_vetted_proof_fingerprint": "edbb8a0fc48b45b3dd37ff26452c20e30afc749edbebac7328ca8b1eeed6ca83",
+  "latest_vetter_report_id": "rep_20260327182224_f8a0faec",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327182030_86cc2c6b",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "thm_root_20260327181454_61717cff",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_bundle_artifact_id": "problems/prob_20260327181454_d8c7a304/proof_bundles/lemmas/lem_20260327182030_86cc2c6b.json",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Reduces the maximization problem to the fundamental domain [0,1).",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. For every real x, f_n(x) = f_n(frac(x)), where frac(x) = x - floor(x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n > 1",
+      "x is any real number",
+      "k ranges over integers with 1 <= k <= n (implicit from the sum)",
+      "frac(x) is defined as x minus floor(x), so frac(x) lies in the interval from 0 up to but not including 1"
+    ],
+    "normalized_claim": "For every integer n greater than 1, define f_n on real numbers by f_n(x) equals floor of n times x minus the sum from k equals 1 to n of (floor of k times x divided by k). Then for every real x, f_n(x) equals f_n(frac(x)), where frac(x) equals x minus floor(x).",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all real numbers x"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "fixed parameter for the function f_n; assumed greater than 1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index inside the definition of f_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input variable to the function f_n",
+        "type": "real"
+      },
+      {
+        "domain": "real numbers",
+        "name": "f_n",
+        "role": "value defined from n and floor expressions",
+        "type": "function from reals to reals"
+      },
+      {
+        "domain": "real numbers",
+        "name": "frac(x)",
+        "role": "auxiliary transform defined as x minus floor(x)",
+        "type": "real"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses; f_n is uniquely determined by n"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T20:41:02.946644Z"
+}

@@ -1,0 +1,121 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327041832_5af3db1a",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T04:13:58.848707Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.12,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T06:48:27.543820Z",
+  "last_dependency_check_id": "depchk_20260327042028_1b53ecad",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let S:=x_1+\\cdots+x_m.\n\nBy definition,\nU(x)_j=\\sum_{i=1}^{j-1}x_i \\qquad (1\\le j\\le m+1),\nwith the convention that an empty sum is 0. Hence\nU(x)_1=\\sum_{i=1}^{0}x_i=0,\nand\nU(x)_{m+1}=\\sum_{i=1}^{m}x_i=S.\n\nNow fix j with 1\\le j\\le m. Then\nU(x)_{j+1}=\\sum_{i=1}^{j}x_i=\\left(\\sum_{i=1}^{j-1}x_i\\right)+x_j=U(x)_j+x_j.\nSince each x_j is nonnegative, we have U(x)_{j+1}\\ge U(x)_j. Therefore U(x) is nondecreasing.\n\nSimilarly,\nD(x)_j=\\sum_{i=j}^{m}x_i \\qquad (1\\le j\\le m+1),\nagain with empty sums interpreted as 0. So\nD(x)_1=\\sum_{i=1}^{m}x_i=S,\nand\nD(x)_{m+1}=\\sum_{i=m+1}^{m}x_i=0.\n\nFor 1\\le j\\le m,\nD(x)_j=\\sum_{i=j}^{m}x_i=x_j+\\sum_{i=j+1}^{m}x_i=x_j+D(x)_{j+1}.\nBecause x_j\\ge 0, this gives D(x)_j\\ge D(x)_{j+1}. Therefore D(x) is nonincreasing.\n\nFinally, assume that at least one entry of x is positive; say x_k>0 for some k. Since every x_i\\ge 0, it follows that\nS=\\sum_{i=1}^{m}x_i>0.\nBut then\nU(x)_1=0 \\quad\\text{and}\\quad U(x)_{m+1}=S>0,\nso U(x)_1\\ne U(x)_{m+1}. Hence U(x) is not constant.\nLikewise,\nD(x)_1=S>0 \\quad\\text{and}\\quad D(x)_{m+1}=0,\nso D(x)_1\\ne D(x)_{m+1}. Hence D(x) is not constant.\n\nThus all the stated endpoint, monotonicity, and nonconstancy claims hold.",
+  "latest_vetted_proof_fingerprint": "96ff88fb12b94a3a52903097995d5236be5a06e0a176885165566d15ac850503",
+  "latest_vetter_report_id": "rep_20260327042028_3d9b8991",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327041345_f30990bc",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "thm_root_20260327040158_5065188f",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "proof_bundle_artifact_id": "problems/prob_20260327040158_22cb0c95/proof_bundles/lemmas/lem_20260327041345_f30990bc.json",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "This is a support lemma for the proof of the bottleneck lemma L6; it controls the monotonicity type of the dynamic-programming state after each step.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let m be a positive integer, let x=(x_1,...,x_m) be a vector of nonnegative real numbers, and define vectors U(x) and D(x) of length m+1 by U(x)_j = sum_{i=1}^{j-1} x_i and D(x)_j = sum_{i=j}^{m} x_i for 1 <= j <= m+1, with empty sums interpreted as 0. Then U(x)_1=0, U(x)_{m+1}=x_1+...+x_m, and U(x) is nondecreasing. Also D(x)_1=x_1+...+x_m, D(x)_{m+1}=0, and D(x) is nonincreasing. If at least one entry of x is positive, then both U(x) and D(x) are nonconstant.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m is a positive integer",
+      "x has exactly m entries",
+      "Each entry x_i is a nonnegative real number",
+      "Indices i run from 1 through m",
+      "Indices j run from 1 through m plus one",
+      "Empty sums are interpreted as 0",
+      "U(x) and D(x) are vectors of length m plus one",
+      "Nondecreasing means consecutive entries satisfy U_j <= U_j plus one",
+      "Nonincreasing means consecutive entries satisfy D_j >= D_j plus one",
+      "Nonconstant means not all entries of the vector are equal"
+    ],
+    "normalized_claim": "For every positive integer m and every length m vector x of nonnegative real numbers, the prefix-sum vector U and the suffix-sum vector D satisfy U_1 = 0, U at index m plus one equals the total sum of the entries of x, U is nondecreasing, D_1 equals the total sum of the entries of x, D at index m plus one is 0, and D is nonincreasing. If some coordinate of x is positive, then neither U nor D is constant.",
+    "quantifier_order": [
+      "For every positive integer m",
+      "For every length m vector x with nonnegative real entries",
+      "Define U(x) and D(x) using the stated formulas for each index j from 1 through m plus one",
+      "For every index j in the allowed range, the endpoint and monotonicity claims hold",
+      "If there exists an index i from 1 through m with x_i positive, then both U(x) and D(x) are nonconstant"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "length m vectors with nonnegative entries",
+        "name": "x",
+        "role": "input vector",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "nonnegative real numbers for i from 1 through m",
+        "name": "x_i",
+        "role": "coordinate of x",
+        "type": "real number"
+      },
+      {
+        "domain": "indices 1 through m",
+        "name": "i",
+        "role": "summation index",
+        "type": "integer index"
+      },
+      {
+        "domain": "indices 1 through m plus one",
+        "name": "j",
+        "role": "component index for U and D",
+        "type": "integer index"
+      },
+      {
+        "domain": "real vectors of length m plus one",
+        "name": "U(x)",
+        "role": "prefix-sum vector",
+        "type": "vector"
+      },
+      {
+        "domain": "real vectors of length m plus one",
+        "name": "D(x)",
+        "role": "suffix-sum vector",
+        "type": "vector"
+      }
+    ],
+    "witness_dependencies": [
+      "The hypothesis at least one entry of x is positive is shorthand for the existence of an index i with x_i > 0",
+      "The nonconstancy conclusion can be witnessed by the fixed endpoints 1 and m plus one, since U(x)_1 = 0 and U(x)_{m plus one} is the total sum, while D(x)_1 is the total sum and D(x)_{m plus one} = 0",
+      "The existential positive coordinate is only used to ensure the total sum is positive; the witness for nonconstancy does not depend on a separate choice of j"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T06:48:27.543820Z"
+}

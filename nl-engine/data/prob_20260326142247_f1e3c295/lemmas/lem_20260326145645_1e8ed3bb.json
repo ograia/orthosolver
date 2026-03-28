@@ -1,0 +1,109 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260326150002_26ede739",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-26T14:57:00.030829Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.18,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-26T15:00:03.444200Z",
+  "last_dependency_check_id": null,
+  "last_terminal_worker_result": null,
+  "last_transition_reason": null,
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260326145645_1e8ed3bb",
+  "minor_rejection_count": 0,
+  "next_action": null,
+  "parent_id": "thm_root_20260326142247_6714b56a",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260326142247_f1e3c295",
+  "proof_bundle_artifact_id": "problems/prob_20260326142247_f1e3c295/proof_bundles/lemmas/lem_20260326145645_1e8ed3bb.json",
+  "proof_graph_id": "pgraph_20260326150002_c70d2559",
+  "proof_status": "open",
+  "role_in_parent": "Converts the equality case for the optimal valley set back into the original statement that the maximizing sign sequence itself must alternate.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 0,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer with n at least 2, and let s=(s_1,...,s_{n-1}) be a sign sequence with each s_i equal to plus 1 or minus 1. Define the valley set V(s) subset of {1,...,n} by: 1 belongs to V(s) exactly when s_1 = plus 1; n belongs to V(s) exactly when s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to V(s) exactly when s_{j-1} = minus 1 and s_j = plus 1. If V(s) is exactly the set of odd integers in {1,...,n}, then s_i = plus 1 for odd i and s_i = minus 1 for even i. If V(s) is exactly the set of even integers in {1,...,n}, then s_i = minus 1 for odd i and s_i = plus 1 for even i. Equivalently, if V(s) is a full parity class, then s_i s_{i+1} = -1 for every i=1,...,n-2.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n is at least 2.",
+      "s has exactly n minus 1 entries.",
+      "Each entry s_i is restricted to the two values plus 1 and minus 1.",
+      "V(s) is a subset of the indices from 1 to n.",
+      "The valley condition at j is only defined for interior indices j from 2 to n minus 1.",
+      "The adjacent product conclusion only ranges over i from 1 to n minus 2.",
+      "Odd and even integers are interpreted relative to the set of integers from 1 to n."
+    ],
+    "normalized_claim": "For every integer n at least 2 and every length n minus 1 sign sequence with entries plus 1 or minus 1, the valley set definition has the following rigidity property: if V(s) is exactly the odd indices, then the sequence alternates starting with plus 1; if V(s) is exactly the even indices, then the sequence alternates starting with minus 1; equivalently, whenever V(s) is exactly one parity class, consecutive entries of the sequence always have opposite signs.",
+    "quantifier_order": [
+      "For every integer n with n at least 2.",
+      "For every sign sequence s of length n minus 1 with each entry equal to plus 1 or minus 1.",
+      "If the valley set V(s) is exactly the odd indices in the range from 1 to n, then every entry s_i is plus 1 for odd i and minus 1 for even i.",
+      "If the valley set V(s) is exactly the even indices in the range from 1 to n, then every entry s_i is minus 1 for odd i and plus 1 for even i.",
+      "Equivalently, if V(s) is exactly one parity class, then for every i from 1 to n minus 2, the adjacent entries satisfy s_i times s_{i+1} equals minus 1."
+    ],
+    "variables": [
+      {
+        "domain": "integers with n at least 2",
+        "name": "n",
+        "role": "global size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "a sequence of length n minus 1 with each entry equal to plus 1 or minus 1",
+        "name": "s",
+        "role": "main object under study",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "plus 1 or minus 1 for each index i from 1 to n minus 1",
+        "name": "s_i",
+        "role": "entries of the sign sequence",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of the index set from 1 to n",
+        "name": "V(s)",
+        "role": "valley set determined by s",
+        "type": "set of indices"
+      },
+      {
+        "domain": "integers from 2 to n minus 1",
+        "name": "j",
+        "role": "interior index used in the definition of V(s)",
+        "type": "index"
+      },
+      {
+        "domain": "integers from 1 to n minus 2",
+        "name": "i",
+        "role": "index for adjacent products in the conclusion",
+        "type": "index"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement; all assertions are universal implications.",
+      "The conclusion about each s_i is determined directly by the assumption on V(s), with no additional chosen parameters.",
+      "The adjacent product conclusion depends only on the given sequence s and the parity-class assumption on V(s)."
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-26T15:00:03.444200Z"
+}

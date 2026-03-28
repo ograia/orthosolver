@@ -2,9 +2,9 @@
 
 ## Project Overview
 
-Orthosolver NL Engine — the natural-language orchestration layer for theorem decomposition, solving, vetting, and assembly. FastAPI backend with OpenAI-powered agents, file-based JSON persistence, and a Lean engine integration boundary.
+Orthosolver NL Engine — the natural-language orchestration layer for theorem decomposition, solving, vetting, and assembly. FastAPI backend with OpenAI-powered agents, JSON object-backed persistence, and a Lean engine integration boundary.
 
-Authoritative spec: `docs/nl_engine.tex`. This repo does **not** implement Lean engine internals.
+The active implementation docs are the markdown files in `docs/`. This repo does **not** implement Lean engine internals.
 
 ## Quick Reference
 
@@ -67,9 +67,9 @@ Key files for common tasks:
 
 ## Lifecycle
 
-1. `POST /v1/problems` — creates problem, returns instantly, runs Agent 1 semantic sketch in background thread
-2. `POST /v1/problems/{id}/start` — begins durable background execution (embedded supervisor)
-3. `POST /v1/problems/{id}/run` — compatibility alias (one controller tick + 2s pump)
+1. `POST /v1/problems` — creates a problem and queues the root semantic sketch durably
+2. `POST /v1/problems/{id}/start` — begins durable background execution
+3. `POST /v1/problems/{id}/run` — compatibility alias for durable start
 4. Poll `GET /v1/problems/{id}` or `GET /v1/problems/{id}/execution` until terminal (`succeeded`/`failed`)
 
 ## Agent Pipeline
@@ -103,7 +103,7 @@ Key files for common tasks:
 
 ## Safety Rules
 
-- **Do not edit** `docs/nl_engine.tex` or `docs/lean_engine.tex`
+- Treat markdown docs as the current source of truth. TeX files are historical material.
 - Do not invent alternative public API contracts when existing ones cover the surface
 - Do not silently weaken drift checks or trusted-context constraints
 - Do not collapse architecture boundaries into a monolithic script
@@ -127,7 +127,7 @@ All defaults in `src/nl_engine/settings.py`. Local defaults are cost-minimized (
 
 ## Persistence (FileStore)
 
-All state is stored as JSON files on disk — no SQLite, no SQLAlchemy, no database locking.
+All state is stored as JSON files on disk and can optionally be mirrored through the object-store backends.
 
 ```
 data/
@@ -148,7 +148,7 @@ data/
 
 - `FileStore` class in `persistence/db.py` handles all reads/writes
 - Repositories in `persistence/repositories.py` wrap FileStore with typed access
-- All models are Pydantic `BaseModel` subclasses (not SQLAlchemy ORM)
+- All models are Pydantic `BaseModel` subclasses
 - Writes are atomic (write to temp file, then rename)
 - No transactions, no locks, no connection pools
 - Data survives code updates, server restarts, and git operations
@@ -156,9 +156,9 @@ data/
 
 ## Source Priority
 
-1. `docs/nl_engine.tex` (authoritative spec)
-2. Current runtime code in `src/nl_engine/`
-3. `docs/ARCHITECTURE_SUMMARY.md`
+1. `docs/overview.md`
+2. `docs/ARCHITECTURE_SUMMARY.md`
+3. Current runtime code in `src/nl_engine/`
 4. Other docs in `docs/`
 
 ## Versioning

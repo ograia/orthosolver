@@ -1,0 +1,397 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/decomposer/attempt_20260327181532_c3c1b28c_track_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T18:20:28.751964Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-27T18:15:32.071118Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 5,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "First use integer-shift invariance to replace x by its fractional part r in [0,1). On [0,1), compare r to the left endpoint m/n of its n-slice, where m = floor(nr). The last slice [(n-1)/n,1) is computed explicitly and yields the value H_n - 1. Every lower slice has value strictly below H_n - 1 by the discrete bottleneck lemma. Hence the maximum is H_n - 1, and the maximizers are exactly the integer translates of [(n-1)/n,1).",
+          "steps": [
+            {
+              "derives": "For any real x, f_n(x) depends only on frac(x), so it suffices to maximize over r = frac(x) with 0 <= r < 1.",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "This is a direct application of the fractional-part reduction lemma and the standard property 0 <= frac(x) < 1.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For r in [0,1), letting m = floor(n*r), one has f_n(r) <= f_n(m/n).",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "If r lies in [(n-1)/n, 1), then f_n(r) = H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L3",
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "If r < (n-1)/n, then m = floor(n*r) <= n-2, so f_n(r) <= f_n(m/n) < H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L5",
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2"
+              ]
+            },
+            {
+              "derives": "Therefore the global maximum value is H_n - 1, and the maximizing real numbers are exactly those x whose fractional part lies in [(n-1)/n, 1), equivalently x in the union over integers z of [z + (n-1)/n, z + 1).",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": [
+                "A3",
+                "A4"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For a fixed integer n > 1, define f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k for real x.",
+            "kind": "definition",
+            "label": "f_n"
+          },
+          {
+            "content": "For a fixed integer n > 1, define H_n = sum_{k=1}^n 1/k.",
+            "kind": "definition",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real x, frac(x) = x - floor(x), so frac(x) is the fractional part of x and lies in [0,1).",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.36,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduces the maximization problem to the fundamental domain [0,1).",
+            "self_check_notes": "Integer shifts cancel term-by-term in the definition of f_n, so only the fractional part matters.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n > 1",
+                "x is a real number",
+                "frac(x) is defined as x - floor(x) and lies in [0,1)"
+              ],
+              "normalized_claim": "f_n(x) equals f_n of the fractional part of x.",
+              "quantifier_order": [
+                "fix an integer n > 1",
+                "for every real x"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "arbitrary evaluation point",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n be an integer greater than 1, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. For every real x, f_n(x) = f_n(frac(x)), where frac(x) = x - floor(x).",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Moves an arbitrary point in [0,1) to the left endpoint of its n-slice.",
+            "self_check_notes": "This follows from monotonicity of floor and the fact that floor(n*r) is constant on the slice.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "0 <= r < 1",
+                "m = floor(n*r), so 0 <= m <= n-1"
+              ],
+              "normalized_claim": "On each slice [m/n, (m+1)/n), the value of f_n(r) is at most the value at the left endpoint m/n.",
+              "quantifier_order": [
+                "fix an integer n > 1",
+                "for every real r with 0 <= r < 1",
+                "let m = floor(n*r)"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "r",
+                  "role": "point in the fundamental domain [0,1)",
+                  "type": "real"
+                },
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "left endpoint index of the n-slice containing r",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "m is determined by r as floor(n*r)"
+              ]
+            },
+            "statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n).",
+            "strictly_easier_reason": "It only compares one point to the left endpoint of the n-slice containing it, rather than solving the global maximization problem."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Computes the floor pattern on the candidate maximizing interval.",
+            "self_check_notes": "Because k*(n-1)/n > k-1 for k<n and k*r < k, the floor must be k-1.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "r lies in the last subinterval of [0,1)",
+                "1 <= k < n"
+              ],
+              "normalized_claim": "On the last interval before 1, all the floor values floor(k*r) for k < n are exactly k-1, and the nth floor is n-1.",
+              "quantifier_order": [
+                "fix an integer n > 1",
+                "for every real r with (n-1)/n <= r < 1",
+                "for every integer k with 1 <= k < n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "r",
+                  "role": "point in the last slice before 1",
+                  "type": "real"
+                },
+                {
+                  "domain": "integers",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n > 1 and let r be a real number with (n-1)/n <= r < 1. Then for every integer k with 1 <= k < n, floor(k*r) = k - 1, and also floor(n*r) = n - 1.",
+            "strictly_easier_reason": "It is a direct floor computation on a single interval, not a full optimization argument."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.14,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Turns the floor pattern into the exact maximal value.",
+            "self_check_notes": "Substitute the floor values from the top interval and sum the resulting harmonic series terms.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "r lies in the last subinterval of [0,1)"
+              ],
+              "normalized_claim": "The expression takes the value H_n - 1 throughout the last interval [(n-1)/n, 1).",
+              "quantifier_order": [
+                "fix an integer n > 1",
+                "for every real r with (n-1)/n <= r < 1"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "r",
+                  "role": "evaluation point in the top interval",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n > 1, define H_n = sum_{k=1}^n 1/k, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. If r is a real number with (n-1)/n <= r < 1, then f_n(r) = H_n - 1.",
+            "strictly_easier_reason": "It computes the expression on one explicit interval, rather than characterizing all maximizers."
+          },
+          {
+            "bottleneck_reason": "This is the core floor-sum inequality needed to show no point below the last interval can attain the maximum.",
+            "formalization_cost_estimate": 0.82,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Excludes every lower discrete endpoint; this is the main bottleneck.",
+            "self_check_notes": "This is the only genuinely hard step; everything else reduces the problem to it.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "m is an integer endpoint below the last slice"
+              ],
+              "normalized_claim": "All discrete endpoints m/n below (n-1)/n lie strictly below the value H_n - 1.",
+              "quantifier_order": [
+                "fix an integer n > 1",
+                "for every integer m with 0 <= m <= n-2"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "discrete endpoint below the top slice",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let n > 1, define H_n = sum_{k=1}^n 1/k, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. For every integer m with 0 <= m <= n-2, one has f_n(m/n) < H_n - 1.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For a fixed integer n > 1, define f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k for real x.",
+            "kind": "definition",
+            "label": "f_n"
+          },
+          {
+            "content": "For a fixed integer n > 1, define H_n = sum_{k=1}^n 1/k.",
+            "kind": "definition",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real x, frac(x) = x - floor(x), so frac(x) is the fractional part of x and lies in [0,1).",
+            "kind": "notation",
+            "label": "frac"
+          }
+        ],
+        "strategy_summary": "Reduce the problem modulo 1, compare any point in [0,1) to the left endpoint of its n-slice, compute the last slice explicitly, and isolate the only genuinely hard step as a discrete floor-sum bound below the top slice."
+      }
+    ],
+    "status": "completed"
+  },
+  "started_at": "2026-03-27T18:15:31.764104Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260327181454_61717cff",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-27T18:20:28.751964Z",
+  "worker_job_id": "wrk_thm_root_20260327181454_61717cff_decompose_0_track_1_req_20260327181532_c5ec4897",
+  "worker_kind": "decomposition_generation"
+}

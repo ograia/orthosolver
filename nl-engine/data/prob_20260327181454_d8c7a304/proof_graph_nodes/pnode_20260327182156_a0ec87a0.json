@@ -1,0 +1,69 @@
+{
+  "created_at": "2026-03-27T18:21:56.726483Z",
+  "graph_node_id": "pnode_20260327182156_a0ec87a0",
+  "metadata": {
+    "parent_id": "thm_root_20260327181454_61717cff"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "05111d73694cbf21c7c8971e76f32171e4c042c0a978b58748f1ef02c4056e75",
+  "owner_id": "lem_20260327182104_d854ce9c",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and satisfies n > 1",
+      "m is an integer and satisfies 0 <= m <= n - 2",
+      "x is a real number whenever f_n(x) is evaluated",
+      "the sums use integer index k with k between 1 and n inclusive"
+    ],
+    "normalized_claim": "For each integer n > 1, if H_n is defined as the sum from k = 1 to n of 1 divided by k, and f_n is defined by f_n(x) equals the floor of n times x minus the sum from k = 1 to n of (the floor of k times x) divided by k, then for every integer m with 0 <= m <= n - 2, f_n of (m divided by n) is strictly less than H_n minus 1.",
+    "quantifier_order": [
+      "for each integer n with n > 1",
+      "for every integer m with 0 <= m <= n - 2"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter used to define H_n and the function f_n",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "H_n",
+        "role": "harmonic sum defined from n",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "f_n",
+        "role": "depends on n and is evaluated at x",
+        "type": "function from reals to reals"
+      },
+      {
+        "domain": "reals",
+        "name": "x",
+        "role": "input to f_n; used inside floor(n*x) and floor(k*x)",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "quantified variable in the inequality, specialized as x = m/n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index for sums from k = 1 to k = n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses are asserted; the bound holds for all allowed m with x fixed as m/n"
+    ]
+  },
+  "statement_nl": "Let n > 1, define H_n = sum_{k=1}^n 1/k, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. For every integer m with 0 <= m <= n-2, one has f_n(m/n) < H_n - 1.",
+  "updated_at": "2026-03-27T18:21:56.726484Z"
+}

@@ -1,0 +1,267 @@
+{
+  "artifact_prefix": "problems/prob_20260326184616_abfe1ff0/lemmas/lem_20260326190416_2b9e7f17/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-26T23:21:10.458585Z",
+  "controller_consumed_by_execution_id": "exec_20260326184651_e3d7b613",
+  "created_at": "2026-03-26T19:27:03.979421Z",
+  "error_payload": null,
+  "execution_id": "exec_20260326184651_e3d7b613",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+        "item_id": "pnode_20260326192603_195dbcd0",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is at least 2",
+            "s has exactly n minus 1 entries",
+            "each entry of s is either plus 1 or minus 1",
+            "a is a permutation of the set {1, 2, ..., n}",
+            "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+            "the inequality condition is required for every index i from 1 to n minus 1"
+          ],
+          "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+          "quantifier_order": [
+            "For each integer n with n at least 2",
+            "For each sign sequence s of length n minus 1",
+            "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+            "Determine which sign sequences s maximize this count f(s)"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter with n at least 2",
+              "type": "integer"
+            },
+            {
+              "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+              "name": "s",
+              "role": "parameter over which the maximization is taken",
+              "type": "finite sign sequence"
+            },
+            {
+              "domain": "integers from 1 to n minus 1",
+              "name": "i",
+              "role": "index for adjacent comparisons in the sign sequence and permutation",
+              "type": "integer index"
+            },
+            {
+              "domain": "all permutations of {1, 2, ..., n}",
+              "name": "a",
+              "role": "counted object satisfying the sign constraints",
+              "type": "permutation"
+            },
+            {
+              "domain": "elements of {1, 2, ..., n}",
+              "name": "a_i",
+              "role": "ith entry of the permutation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The counted permutation a depends on the chosen n and sign sequence s",
+            "The maximality question is over s for each fixed n",
+            "There is no existential witness in the statement, only a counting definition and a maximization problem"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260326190416_2b9e7f17",
+    "proof_nl": "If m=0, then u is empty and -u is also empty, and the statement gives U_0(empty)=1. Hence U_0(u)=U_0(-u).\n\nNow assume m>=1. For any sign sequence v of length m-1, let A(v) be the set of permutations b=(b_1,...,b_m) of {1,...,m} such that v_i(b_{i+1}-b_i)>0 for every i with 1<=i<=m-1. Then U_m(v)=|A(v)| by definition.\n\nDefine a map T on the set of all permutations of {1,...,m} by\nT(b_1,...,b_m)=(m+1-b_1,\\dots,m+1-b_m).\nBecause the map x\u21a6m+1-x is a bijection from {1,...,m} to itself, T sends permutations to permutations. Also T is an involution, since applying it twice gives back the original permutation.\n\nTake any b=(b_1,...,b_m) in A(u), and write c=T(b). For each i with 1<=i<=m-1,\nc_{i+1}-c_i=(m+1-b_{i+1})-(m+1-b_i)=-(b_{i+1}-b_i).\nTherefore\n(-u_i)(c_{i+1}-c_i)=(-u_i)(-(b_{i+1}-b_i))=u_i(b_{i+1}-b_i)>0.\nSo c belongs to A(-u). Thus T maps A(u) into A(-u).\n\nThe same computation, with -u in place of u, shows that if c is in A(-u), then T(c) is in A(u). Since T is its own inverse, T restricts to a bijection between A(u) and A(-u). Hence\nU_m(u)=|A(u)|=|A(-u)|=U_m(-u).\n\nFor the special case of alternating patterns, alt_m^- is the componentwise negative of alt_m^+ (and when m<=1 both are empty), so the equality just proved gives\nU_m(alt_m^+)=U_m(-alt_m^+)=U_m(alt_m^-).\nThis proves the lemma.",
+    "role_in_assembly": "Ensures that both alternating orientations have the same count, so one alternating-count sequence E_m suffices for both parities.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "each entry of s is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}",
+        "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+        "the inequality condition is required for every index i from 1 to n minus 1"
+      ],
+      "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+      "quantifier_order": [
+        "For each integer n with n at least 2",
+        "For each sign sequence s of length n minus 1",
+        "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+        "Determine which sign sequences s maximize this count f(s)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with n at least 2",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "parameter over which the maximization is taken",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "index for adjacent comparisons in the sign sequence and permutation",
+          "type": "integer index"
+        },
+        {
+          "domain": "all permutations of {1, 2, ..., n}",
+          "name": "a",
+          "role": "counted object satisfying the sign constraints",
+          "type": "permutation"
+        },
+        {
+          "domain": "elements of {1, 2, ..., n}",
+          "name": "a_i",
+          "role": "ith entry of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The counted permutation a depends on the chosen n and sign sequence s",
+        "The maximality question is over s for each fixed n",
+        "There is no existential witness in the statement, only a counting definition and a maximization problem"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m must be a nonnegative integer.",
+        "u has length m minus 1.",
+        "Each entry of u and v must be either plus one or minus one.",
+        "When m is 0 or 1, the sequence u is empty.",
+        "v must have the same length as u.",
+        "b must be a permutation of 1 through m, meaning it lists each integer from 1 to m exactly once.",
+        "The inequality constraint is required for every i from 1 to m minus 1.",
+        "The definition includes the special value U_0 of the empty sequence equal to 1."
+      ],
+      "normalized_claim": "For every nonnegative integer m and every sign sequence u of length m minus 1, the number of permutations of {1,...,m} whose adjacent differences match the sign pattern u is unchanged when every sign in the pattern is flipped. Equivalently, the count for u equals the count for -u. As a special case, the two alternating sign patterns of length m minus 1 give the same count.",
+      "quantifier_order": [
+        "Fix a nonnegative integer m.",
+        "Fix a sign sequence u of length m minus 1 with entries plus one or minus one; if m is 0 or 1, this sequence is empty.",
+        "For any sign sequence v of the same length, define U_m(v) as the number of permutations b of {1,...,m} such that for every index i from 1 to m minus 1, v_i times the difference b_{i+1} minus b_i is positive.",
+        "The theorem asserts that U_m(u) equals U_m of the sign-flipped sequence -u.",
+        "In particular, the same equality holds for the two alternating sign sequences alt_m^+ and alt_m^- of length m minus 1."
+      ],
+      "variables": [
+        {
+          "domain": "nonnegative integers",
+          "name": "m",
+          "role": "fixed length parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length m minus 1 with entries plus one or minus one",
+          "name": "u",
+          "role": "fixed input sign pattern",
+          "type": "sign sequence"
+        },
+        {
+          "domain": "sequences of the same length as u with entries plus one or minus one",
+          "name": "v",
+          "role": "arbitrary sign pattern used in the definition of U_m",
+          "type": "sign sequence"
+        },
+        {
+          "domain": "permutations of the set {1,...,m}",
+          "name": "b",
+          "role": "counted object in the definition of U_m",
+          "type": "permutation sequence"
+        },
+        {
+          "domain": "integers from 1 to m minus 1",
+          "name": "i",
+          "role": "adjacency index in the inequality constraints",
+          "type": "integer index"
+        }
+      ],
+      "witness_dependencies": [
+        "There is no existential witness in the theorem statement itself; the only existentially quantified objects are the permutations counted in the definition of U_m(v).",
+        "Any counted permutation b depends on both m and the chosen sign sequence v.",
+        "The sign-flipped sequence -u is determined componentwise by u and has the same length as u."
+      ]
+    },
+    "statement_nl": "Let m be an integer with m >= 0, and let u = (u_1,...,u_{m-1}) be a sign sequence with each u_i in {+1,-1}; when m <= 1 this sequence is empty. For any sign sequence v of the same length, define U_m(v) to be the number of permutations (b_1,...,b_m) of {1,...,m} satisfying v_i * (b_{i+1} - b_i) > 0 for all 1 <= i <= m-1, and set U_0(empty) = 1. Let -u denote the sign sequence (-u_1,...,-u_{m-1}). Then U_m(u) = U_m(-u). In particular, if alt_m^+ = (+1,-1,+1,-1,...) and alt_m^- = (-1,+1,-1,+1,...) are the two alternating sign sequences of length m-1, then U_m(alt_m^+) = U_m(alt_m^-).",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "notes": "The proof uses only the definition of U_m, the explicit map x \u21a6 m+1-x on {1,...,m}, and direct verification of a bijection. No undeclared or forbidden theorem-level dependencies are invoked.",
+      "uses_only_allowed_material": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The main argument constructs the involution T(b_1,...,b_m)=(m+1-b_1,...,m+1-b_m), and verifies that it flips the sign of every adjacent difference, yielding a bijection A(u) \u2194 A(-u).",
+        "location": "main bijection argument",
+        "severity": "low"
+      },
+      {
+        "finding": "The special case m=0 is correctly discharged using the convention U_0(empty)=1; the case m=1 is covered by the general m>=1 argument since all sign constraints are vacuous.",
+        "location": "base case handling",
+        "severity": "low"
+      },
+      {
+        "finding": "The final alternating-pattern conclusion is a direct corollary of the proved identity together with the definition alt_m^- = -alt_m^+.",
+        "location": "final corollary",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260326190416_2b9e7f17",
+    "proof_status": "complete",
+    "reason": "The proof is correct and complete. It gives an explicit involution on permutations, b_i \u21a6 m+1-b_i, which reverses each adjacent difference and therefore sends realizations of u exactly to realizations of -u. The m=0 edge case is handled using the stated convention U_0(empty)=1, and the alternating-pattern corollary follows immediately from alt_m^- = -alt_m^+. The argument matches the lemma sketch and stays within legal dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260326190416_2b9e7f17",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-26T23:21:10.458592Z",
+  "worker_job_id": "wrk_lem_20260326190416_2b9e7f17_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

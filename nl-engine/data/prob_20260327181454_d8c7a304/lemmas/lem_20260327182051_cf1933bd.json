@@ -1,0 +1,104 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327182156_c56d1fd9",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T18:21:04.586655Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.14,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T18:48:11.933286Z",
+  "last_dependency_check_id": "depchk_20260327182248_f44e1aa2",
+  "last_submitted_lean_job_id": "lean_job_lem_20260327182051_cf1933bd_formalize_lemma_from_nl_1",
+  "last_submitted_lean_proof_fingerprint": "a65da9567dba7c6b186de158d44f222ffac49426bab23b03bfdfe124f771efef",
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "split_existing_proof attempt 1 submitted",
+  "latest_lean_issue_class": "tactic_failure",
+  "latest_lean_issue_kind": "lean_issue",
+  "latest_lean_result_id": "lean_res_20260327184811_38438183",
+  "latest_nl_proof": "Let n>1 and let r be real with (n-1)/n <= r < 1. We show that every floor term in the definition of f_n(r) is determined explicitly.\n\nFix k with 1 <= k <= n. From r >= (n-1)/n we get kr >= k(n-1)/n. Since k <= n, we have k(n-1)/n >= k-1. Also r < 1 implies kr < k. Therefore\nk-1 <= kr < k.\nHence floor(k r) = k-1 for every k=1,2,...,n.\n\nIn particular, floor(nr)=n-1, and\nsum_{k=1}^n floor(k r)/k = sum_{k=1}^n (k-1)/k = sum_{k=1}^n (1 - 1/k) = n - H_n,\nwhere H_n = sum_{k=1}^n 1/k.\nTherefore\nf_n(r) = floor(nr) - sum_{k=1}^n floor(k r)/k = (n-1) - (n - H_n) = H_n - 1.\nThis is exactly the desired identity.",
+  "latest_vetted_proof_fingerprint": "a65da9567dba7c6b186de158d44f222ffac49426bab23b03bfdfe124f771efef",
+  "latest_vetter_report_id": "rep_20260327182248_40030ab2",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327182051_cf1933bd",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_split_existing_proof",
+  "parent_id": "thm_root_20260327181454_61717cff",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_bundle_artifact_id": "problems/prob_20260327181454_d8c7a304/proof_bundles/lemmas/lem_20260327182051_cf1933bd.json",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Turns the floor pattern into the exact maximal value.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": "2026-03-27T18:48:11.933279Z",
+  "statement_lean": null,
+  "statement_nl": "Let n > 1, define H_n = sum_{k=1}^n 1/k, and let f_n be defined by f_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k. If r is a real number with (n-1)/n <= r < 1, then f_n(r) = H_n - 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n > 1",
+      "in the definition of H_n, k ranges over integers from 1 to n",
+      "in the definition of f_n(x), x is a real number so that floor(n*x) and floor(k*x) are well-defined",
+      "r satisfies (n-1)/n <= r and r < 1"
+    ],
+    "normalized_claim": "For every natural number n greater than 1, define H_n as the sum from k = 1 to n of 1 divided by k, and define f_n on real numbers by f_n(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Then for every real number r with (n minus 1) divided by n less than or equal to r and r less than 1, it holds that f_n(r) equals H_n minus 1.",
+    "quantifier_order": [
+      "for all natural numbers n with n > 1",
+      "for all real numbers r with (n-1)/n <= r and r < 1"
+    ],
+    "variables": [
+      {
+        "domain": "natural numbers",
+        "name": "n",
+        "role": "parameter for the definitions of H_n and f_n; also bounds the index set for k",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "summation index running from 1 to n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "argument of the function f_n used in its definition",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "r",
+        "role": "input at which the equality f_n(r) = H_n - 1 is asserted",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "H_n",
+        "role": "harmonic-sum quantity defined from n",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "f_n",
+        "role": "function defined from n, using floor and a weighted sum",
+        "type": "function from real to real"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses are introduced; the statement is a universal implication from the condition on r to the equality"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T18:48:11.933286Z"
+}

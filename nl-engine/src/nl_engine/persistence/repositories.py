@@ -1,4 +1,4 @@
-"""File-based repository implementations, replacing SQLAlchemy queries."""
+"""File-based repository implementations over JSON-backed state."""
 from __future__ import annotations
 
 from collections import Counter
@@ -201,6 +201,8 @@ class ProblemExecutionRepository:
         row.blocking_kind = "none"
         row.blocking_ref_id = None
         row.wake_requested_at = datetime.now(UTC)
+        row.lease_owner = None
+        row.lease_expires_at = None
         row.updated_at = datetime.now(UTC)
         self.save(row)
         return row
@@ -660,6 +662,7 @@ class LeanJobRepository:
         return job
 
     def save(self, job: LeanJobORM) -> LeanJobORM:
+        _stamp_for_save(job)
         with self.store.lock_for(job.problem_id):
             self.store.atomic_write(self._path(job.problem_id, job.job_id), job.model_dump(mode="json"))
         return job
@@ -718,7 +721,7 @@ class LeanResultRepository:
         # For simplicity, store in all problem dirs by scanning for the job.
         for pid in self.store.list_problem_ids():
             job_path = self.store.problem_dir(pid) / "lean_jobs" / f"{result.job_id}.json"
-            if job_path.exists():
+            if self.store.read_json(job_path) is not None:
                 with self.store.lock_for(pid):
                     self.store.atomic_write(self._path(pid, result.result_id), result.model_dump(mode="json"))
                 return result
@@ -726,6 +729,7 @@ class LeanResultRepository:
         return result
 
     def save(self, result: LeanResultORM) -> LeanResultORM:
+        _stamp_for_save(result)
         return self.create(result)
 
     def get(self, result_id: str) -> LeanResultORM | None:
@@ -1010,7 +1014,13 @@ class EventRepository:
     def __init__(self, store: FileStore):
         self.store = store
 
-    def _path(self, problem_id: str):
+    def _dir(self, problem_id: str):
+        return self.store.problem_dir(problem_id) / "events"
+
+    def _path(self, problem_id: str, event_id: int):
+        return self._dir(problem_id) / f"{event_id:08d}.json"
+
+    def _legacy_path(self, problem_id: str):
         return self.store.problem_dir(problem_id) / "events.jsonl"
 
     def append(self, problem_id: str, stage: str, old_status: str | None, new_status: str | None, *, target_node_id: str | None = None, worker_job_id: str | None = None, reason: str | None = None) -> EventORM:
@@ -1026,21 +1036,24 @@ class EventRepository:
                 worker_job_id=worker_job_id,
                 reason=reason,
             )
-            self.store.append_jsonl(self._path(problem_id), event.model_dump(mode="json"))
+            self.store.atomic_write(self._path(problem_id, event_id), event.model_dump(mode="json"))
         return event
 
     def list_for_problem(self, problem_id: str, after_event_id: int | None = None, limit: int = 100) -> list[EventORM]:
-        rows = [EventORM.model_validate(d) for d in self.store.read_jsonl(self._path(problem_id))]
+        rows = [EventORM.model_validate(d) for d in self.store.glob_read(self._dir(problem_id))]
+        rows.extend(EventORM.model_validate(d) for d in self.store.read_jsonl(self._legacy_path(problem_id)))
         if after_event_id is not None:
             rows = [r for r in rows if r.event_id > after_event_id]
         rows.sort(key=lambda r: r.event_id)
         return rows[:limit]
 
     def latest_for_problem(self, problem_id: str) -> EventORM | None:
-        rows = self.store.read_jsonl(self._path(problem_id))
+        rows = [EventORM.model_validate(d) for d in self.store.glob_read(self._dir(problem_id))]
+        rows.extend(EventORM.model_validate(d) for d in self.store.read_jsonl(self._legacy_path(problem_id)))
         if not rows:
             return None
-        return EventORM.model_validate(rows[-1])
+        rows.sort(key=lambda r: r.event_id)
+        return rows[-1]
 
 
 class WorkerJobRepository:
@@ -1136,6 +1149,8 @@ class WorkerJobRepository:
                     # Clear stale terminal metadata when reclaiming a retryable job.
                     row.error_payload = None
                     row.attempt_count += 1
+                    if row.started_at is None:
+                        row.started_at = now
                     row.updated_at = now
                     self.store.atomic_write(self._path(pid, row.worker_job_id), row.model_dump(mode="json"))
                     return row
@@ -1153,7 +1168,9 @@ class WorkerJobRepository:
         row.error_payload = None
         row.lease_owner = None
         row.lease_expires_at = None
-        row.updated_at = datetime.now(UTC)
+        now = datetime.now(UTC)
+        row.completed_at = now
+        row.updated_at = now
         self.save(row)
         return row
 
@@ -1189,7 +1206,9 @@ class WorkerJobRepository:
             row.error_payload = error_payload
             row.lease_owner = None
             row.lease_expires_at = None
-            row.updated_at = datetime.now(UTC)
+            now = datetime.now(UTC)
+            row.completed_at = now
+            row.updated_at = now
             self.save(row)
             return row
         error_class = str(error_payload.get("error_class") or "")
@@ -1203,7 +1222,9 @@ class WorkerJobRepository:
         row.error_payload = error_payload
         row.lease_owner = None
         row.lease_expires_at = None
-        row.updated_at = datetime.now(UTC)
+        now = datetime.now(UTC)
+        row.completed_at = now
+        row.updated_at = now
         self.save(row)
         return row
 
@@ -1314,14 +1335,29 @@ class LlmUsageRepository:
     def __init__(self, store: FileStore):
         self.store = store
 
+    def _dir(self, problem_id: str) -> Any:
+        return self.store.problem_dir(problem_id) / "llm_usage"
+
+    def _path(self, problem_id: str, usage_id: str) -> Any:
+        return self._dir(problem_id) / f"{usage_id}.json"
+
+    def _legacy_path(self, problem_id: str) -> Any:
+        return self.store.problem_dir(problem_id) / "llm_usage.jsonl"
+
     def create(self, usage: LlmUsageRecordORM) -> LlmUsageRecordORM:
         pid = usage.problem_id or "_global"
         with self.store.lock_for(pid):
-            self.store.append_jsonl(self.store.problem_dir(pid) / "llm_usage.jsonl", usage.model_dump(mode="json"))
+            self.store.atomic_write(self._path(pid, usage.usage_id), usage.model_dump(mode="json"))
         return usage
 
     def list_by_problem(self, problem_id: str) -> list[LlmUsageRecordORM]:
-        return [LlmUsageRecordORM.model_validate(d) for d in self.store.read_jsonl(self.store.problem_dir(problem_id) / "llm_usage.jsonl")]
+        rows = [LlmUsageRecordORM.model_validate(d) for d in self.store.glob_read(self._dir(problem_id))]
+        rows.extend(
+            LlmUsageRecordORM.model_validate(d)
+            for d in self.store.read_jsonl(self._legacy_path(problem_id))
+        )
+        rows.sort(key=lambda row: row.created_at)
+        return rows
 
 
 class RunCostRollupRepository:

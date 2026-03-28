@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -13,23 +15,24 @@ import logging
 
 from .artifact_io import RunPaths, sanitize_component, write_json, write_text
 from .claude_runner import ClaudeRunner
-from .config import RuntimeConfig
+from .config import RuntimeConfig, current_code_origin, load_runtime_config
 from .contracts import NormalizedProblemBundle
 from .lean_checks import rebuild_module_olean
 from .lean4_skills_refs import get_all_proving_refs, get_compact_proving_refs
 from .lemma_phase import (
+    AssumptionCapsule,
     LemmaFormalizationResult,
     PinnedLemmaSignature,
-    SharedTrustedContext,
     TrustedContextEntry,
     classify_lemma_failure,
+    derive_trusted_entries_from_lemmas_file,
     lemma_id_to_path_token,
     load_pinned_lemma_signatures,
-    load_trusted_manifest,
     merge_declaration_into_lemmas_file,
     run_lemma_formalization,
     write_trusted_manifest,
 )
+from .workspace import clone_workspace, snapshot_workspace, write_project_mcp_config
 
 SubprocessRunner = Callable[..., subprocess.CompletedProcess[str]]
 
@@ -46,6 +49,13 @@ class Phase04RunResult:
     phase_summary_path: Path
     lemma_order: tuple[str, ...]
     lemma_results: tuple[LemmaFormalizationResult, ...]
+    code_origin: dict[str, Any] | None = None
+    workspace_revision: str | None = None
+    merge_revision: int | None = None
+    verifier_revision: int | None = None
+    dependency_graph: dict[str, list[str]] | None = None
+    dependency_closure: dict[str, list[str]] | None = None
+    layer_order: list[list[str]] | None = None
     error_class: str | None = None
     message: str | None = None
     failed_lemma_id: str | None = None
@@ -60,6 +70,13 @@ class Phase04RunResult:
             "phase_summary_path": str(self.phase_summary_path),
             "lemma_order": list(self.lemma_order),
             "lemma_results": [item.to_dict() for item in self.lemma_results],
+            "code_origin": self.code_origin,
+            "workspace_revision": self.workspace_revision,
+            "merge_revision": self.merge_revision,
+            "verifier_revision": self.verifier_revision,
+            "dependency_graph": self.dependency_graph,
+            "dependency_closure": self.dependency_closure,
+            "layer_order": self.layer_order,
             "error_class": self.error_class,
             "message": self.message,
             "failed_lemma_id": self.failed_lemma_id,
@@ -85,6 +102,7 @@ def run_phase04(
 ) -> Phase04RunResult:
     if lemma_workers <= 0:
         raise ValueError("lemma_workers must be > 0")
+    code_origin = current_code_origin()
     effective_lean_check_timeout = timeout_seconds if lean_check_timeout_seconds is None else lean_check_timeout_seconds
     lean4_skills_refs = get_all_proving_refs(runtime_config.integrations.lean4_skills_root)
     lean4_skills_refs_compact = get_compact_proving_refs(runtime_config.integrations.lean4_skills_root)
@@ -102,9 +120,36 @@ def run_phase04(
         lemma_order = (normalized_target,)
     else:
         lemma_order = tuple(full_lemma_order)
+    phase_summary_path = _phase04_summary_path(
+        run_paths=run_paths,
+        lemma_order=lemma_order,
+        target_lemma_id=target_lemma_id,
+        target_lemma_ids=target_lemma_ids,
+    )
+    try:
+        dependency_graph, dependency_closure, lemma_layer_index = build_dependency_graph(
+            bundle=bundle,
+            lemma_order=lemma_order,
+        )
+    except ValueError as exc:
+        result = Phase04RunResult(
+            status="fatal",
+            problem_id=bundle.problem_id,
+            run_root=run_paths.run_root,
+            pinned_signatures_path=pinned_signatures_path,
+            trusted_manifest_path=run_paths.run_root / "trusted_context_manifest.json",
+            phase_summary_path=phase_summary_path,
+            lemma_order=lemma_order,
+            lemma_results=(),
+            code_origin=current_code_origin(),
+            workspace_revision=run_paths.run_name,
+            error_class="dependency_graph_invalid",
+            message=str(exc),
+        )
+        write_json(result.phase_summary_path, result.to_dict())
+        return result
     trusted_manifest_path = run_paths.run_root / "trusted_context_manifest.json"
     manifest_problem_id = sanitize_component(bundle.problem_id)
-    phase_summary_path = run_paths.summaries_dir / "phase04_summary.json"
     # Cap parallel workers at 4 to prevent CPU/RAM saturation (Phase 3).
     _MAX_LEMMA_WORKERS = 4
     effective_lemma_workers = lemma_workers if parallel_lemmas else 1
@@ -122,6 +167,7 @@ def run_phase04(
             phase_summary_path=phase_summary_path,
             lemma_order=lemma_order,
             lemma_results=(),
+            code_origin=code_origin,
             error_class="problem_binding_mismatch",
             message=(
                 "run directory problem binding mismatch: "
@@ -147,31 +193,12 @@ def run_phase04(
             phase_summary_path=phase_summary_path,
             lemma_order=lemma_order,
             lemma_results=(),
+            code_origin=code_origin,
             error_class="pinned_signature_binding_mismatch",
             message=str(exc),
         )
         write_json(phase_summary_path, result.to_dict())
         return result
-
-    try:
-        trusted_entries = load_trusted_manifest(trusted_manifest_path, expected_problem_id=manifest_problem_id)
-    except ValueError as exc:
-        result = Phase04RunResult(
-            status="fatal",
-            problem_id=bundle.problem_id,
-            run_root=run_paths.run_root,
-            pinned_signatures_path=pinned_signatures_path,
-            trusted_manifest_path=trusted_manifest_path,
-            phase_summary_path=phase_summary_path,
-            lemma_order=lemma_order,
-            lemma_results=(),
-            error_class="manifest_problem_mismatch",
-            message=str(exc),
-        )
-        write_json(phase_summary_path, result.to_dict())
-        return result
-    if not trusted_entries:
-        write_trusted_manifest(trusted_manifest_path, manifest_problem_id, trusted_entries)
 
     # --- Workspace preparation: prevent axiom/theorem name conflicts ---
     # Remove AssemblyCheck.lean BEFORE Phase 04 — it declares axiom stubs that
@@ -226,6 +253,7 @@ def run_phase04(
             phase_summary_path=phase_summary_path,
             lemma_order=lemma_order,
             lemma_results=(),
+            code_origin=code_origin,
             error_class="stale_olean",
             message=(
                 "Failed to rebuild Orthos.Statements olean after neutralization. "
@@ -264,6 +292,7 @@ def run_phase04(
             phase_summary_path=phase_summary_path,
             lemma_order=lemma_order,
             lemma_results=(),
+            code_origin=code_origin,
             error_class="stale_olean",
             message=(
                 "Orthos.Statements olean is stale after rebuild — lake build "
@@ -273,6 +302,13 @@ def run_phase04(
         )
         write_json(phase_summary_path, result.to_dict())
         return result
+
+    pinned_by_decl_name = {sig.decl_name: sig for sig in pinned_map.values()}
+    trusted_entries = derive_trusted_entries_from_lemmas_file(
+        run_paths.workspace_dir / "Orthos" / "Lemmas.lean",
+        pinned_by_decl_name=pinned_by_decl_name,
+    )
+    write_trusted_manifest(trusted_manifest_path, manifest_problem_id, trusted_entries)
 
     # Validate all lemma/pinned pairs up-front.
     for lemma_id in lemma_order:
@@ -284,6 +320,7 @@ def run_phase04(
                 bundle=bundle,
                 pinned_signatures_path=pinned_signatures_path,
                 trusted_manifest_path=trusted_manifest_path,
+                phase_summary_path=phase_summary_path,
                 lemma_order=lemma_order,
                 lemma_results=[],
                 lemma_id=lemma_id,
@@ -292,93 +329,59 @@ def run_phase04(
             return result
 
     lemma_results: list[LemmaFormalizationResult] = []
-
-    if effective_lemma_workers > 1 and len(lemma_order) > 1:
-        # --- DAG-layered parallel mode (Phase 3) ---
-        # Sort lemmas into dependency layers, then prove each layer in parallel
-        # with commit_on_success=False. Batch-merge successful proofs at layer end.
-        execution_groups = _lemma_execution_groups(
+    execution_groups = (
+        _lemma_execution_groups(
             bundle=bundle,
             lemma_order=lemma_order,
             lemma_workers=effective_lemma_workers,
         )
-        _log.info(
-            "Phase 04 parallel: %d lemma(s) in %d DAG layer(s), %d workers.",
-            len(lemma_order), len(execution_groups), effective_lemma_workers,
+        if effective_lemma_workers > 1 and len(lemma_order) > 1
+        else tuple((lemma_id,) for lemma_id in lemma_order)
+    )
+    _log.info(
+        "Phase 04 proving %d lemma(s) across %d DAG layer(s) with up to %d worker(s).",
+        len(lemma_order),
+        len(execution_groups),
+        effective_lemma_workers,
+    )
+
+    nproc = os.cpu_count() or 8
+    worker_count = max(1, effective_lemma_workers)
+    parallel_lake_jobs = max(2, nproc // worker_count)
+    parallel_runtime_config = replace(runtime_config, lean=replace(runtime_config.lean, lake_jobs=parallel_lake_jobs))
+
+    all_layer_results: dict[str, LemmaFormalizationResult] = {}
+    merge_revision = len(trusted_entries)
+    for layer_idx, layer_ids in enumerate(execution_groups, start=1):
+        layer_results, merge_revision = _run_parallel_lemma_group(
+            run_paths=run_paths,
+            runtime_config=parallel_runtime_config,
+            lemma_ids=layer_ids,
+            bundle=bundle,
+            pinned_map=pinned_map,
+            pinned_by_decl_name=pinned_by_decl_name,
+            pinned_decl_names=pinned_decl_names,
+            trusted_manifest_path=trusted_manifest_path,
+            manifest_problem_id=manifest_problem_id,
+            max_attempts_per_lemma=max_attempts_per_lemma,
+            timeout_seconds=timeout_seconds,
+            lean_check_timeout_seconds=effective_lean_check_timeout,
+            model=model,
+            mock_candidates=mock_candidates or {},
+            runner=runner,
+            lemma_workers=worker_count if len(layer_ids) > 1 else 1,
+            layer_index=layer_idx,
+            starting_merge_revision=merge_revision,
+            lean4_skills_refs=lean4_skills_refs,
+            lean4_skills_refs_compact=lean4_skills_refs_compact,
+            dependency_graph=dependency_graph,
+            dependency_closure=dependency_closure,
+            lemma_layer_index=lemma_layer_index,
         )
-
-        # Couple lake_jobs with worker count so each worker gets a fair CPU share.
-        nproc = os.cpu_count() or 8
-        parallel_lake_jobs = max(2, nproc // effective_lemma_workers)
-
-        # Build a runtime config with constrained lake_jobs for parallel proving.
-        from dataclasses import replace as dc_replace
-        parallel_lean_config = dc_replace(runtime_config.lean, lake_jobs=parallel_lake_jobs)
-        parallel_runtime_config = dc_replace(runtime_config, lean=parallel_lean_config)
-
-        seen_fatal = False
-        fatal_reason: str | None = None
-        fatal_lemma_id: str | None = None
-        all_layer_results: dict[str, LemmaFormalizationResult] = {}
-
-        for layer_idx, layer_ids in enumerate(execution_groups):
-            _log.info("Phase 04: starting DAG layer %d/%d with %d lemma(s).", layer_idx + 1, len(execution_groups), len(layer_ids))
-
-            layer_results = _run_parallel_lemma_group(
-                run_paths=run_paths,
-                runtime_config=parallel_runtime_config,
-                lemma_ids=layer_ids,
-                bundle=bundle,
-                pinned_map=pinned_map,
-                trusted_entries=trusted_entries,
-                trusted_manifest_path=trusted_manifest_path,
-                manifest_problem_id=manifest_problem_id,
-                max_attempts_per_lemma=max_attempts_per_lemma,
-                timeout_seconds=timeout_seconds,
-                lean_check_timeout_seconds=effective_lean_check_timeout,
-                model=model,
-                mock_candidates=mock_candidates or {},
-                runner=runner,
-                lemma_workers=effective_lemma_workers,
-                lean4_skills_refs=lean4_skills_refs,
-                lean4_skills_refs_compact=lean4_skills_refs_compact,
-            )
-            all_layer_results.update(layer_results)
-
-            # Check for fatal results in this layer.
-            for lid in layer_ids:
-                lr = layer_results[lid]
-                if lr.error_class == "major_proof_gap":
-                    seen_fatal = True
-                    fatal_reason = f"Lemma {lid} identified a major proof gap in the NL proof."
-                    fatal_lemma_id = lid
-                    break
-
-            if seen_fatal:
-                _log.warning("Phase 04: fatal abort in DAG layer %d.", layer_idx + 1)
-                break
-
-            # Rebuild oleans after merging this layer's proofs (Phase 3 requirement).
-            # This ensures the next layer sees fresh state for sibling imports.
-            if layer_idx < len(execution_groups) - 1:
-                _log.info("Phase 04: rebuilding Orthos oleans after layer %d merge.", layer_idx + 1)
-                rebuild_module_olean(
-                    run_paths.workspace_dir,
-                    "Orthos/Statements.lean",
-                    "Orthos.Statements",
-                    timeout_seconds=effective_lean_check_timeout,
-                )
-
-        # Collect results in deterministic order.
-        for lemma_id in lemma_order:
-            if lemma_id in all_layer_results:
-                lemma_results.append(all_layer_results[lemma_id])
-
-        # If fatal abort was signalled, report it.
-        if seen_fatal:
-            first_fatal = next(
-                (r for r in lemma_results if r.error_class == "major_proof_gap"), None,
-            )
+        all_layer_results.update(layer_results)
+        layer_failed = next((layer_results[lid] for lid in layer_ids if layer_results[lid].status != "succeeded"), None)
+        if layer_failed is not None:
+            lemma_results = [all_layer_results[lid] for lid in lemma_order if lid in all_layer_results]
             result = Phase04RunResult(
                 status="fatal",
                 problem_id=bundle.problem_id,
@@ -388,83 +391,21 @@ def run_phase04(
                 phase_summary_path=phase_summary_path,
                 lemma_order=lemma_order,
                 lemma_results=tuple(lemma_results),
-                error_class="major_proof_gap",
-                message=fatal_reason or "A confirmed mathematical flaw was found.",
-                failed_lemma_id=first_fatal.lemma_id if first_fatal else None,
+                code_origin=code_origin,
+                workspace_revision=run_paths.run_name,
+                merge_revision=merge_revision,
+                verifier_revision=merge_revision,
+                dependency_graph={key: list(value) for key, value in dependency_graph.items()},
+                dependency_closure={key: list(value) for key, value in dependency_closure.items()},
+                layer_order=[list(group) for group in execution_groups],
+                error_class=layer_failed.error_class,
+                message=layer_failed.message or "lemma formalization failed",
+                failed_lemma_id=layer_failed.lemma_id,
             )
             write_json(phase_summary_path, result.to_dict())
             return result
 
-        # Check if all lemmas failed (non-fatal individually but collectively fatal).
-        all_failed = all(r.status != "ok" for r in lemma_results) if lemma_results else True
-        if all_failed:
-            first_failure = next((r for r in lemma_results if r.status != "ok"), None)
-            if first_failure is not None:
-                all_stale = all(
-                    r.error_class == "stale_olean"
-                    for r in lemma_results if r.status != "ok"
-                )
-                error_class = "stale_olean" if all_stale else first_failure.error_class
-                message = (
-                    "All lemma formalizations failed with 'already declared' errors — "
-                    "Orthos.Statements olean is stale."
-                ) if all_stale else "All lemma formalizations failed."
-                result = Phase04RunResult(
-                    status="fatal",
-                    problem_id=bundle.problem_id,
-                    run_root=run_paths.run_root,
-                    pinned_signatures_path=pinned_signatures_path,
-                    trusted_manifest_path=trusted_manifest_path,
-                    phase_summary_path=phase_summary_path,
-                    lemma_order=lemma_order,
-                    lemma_results=tuple(lemma_results),
-                    error_class=error_class,
-                    message=message,
-                    failed_lemma_id=first_failure.lemma_id,
-                )
-                write_json(phase_summary_path, result.to_dict())
-                return result
-    else:
-        # --- Sequential mode: one lemma at a time ---
-        claude_runner = ClaudeRunner(runtime_config)
-        for lemma_id in lemma_order:
-            lemma = bundle.lemma_map[lemma_id]
-            pinned = pinned_map[lemma_id]
-            lemma_result = run_lemma_formalization(
-                run_paths=run_paths,
-                runtime_config=runtime_config,
-                lemma=lemma,
-                pinned=pinned,
-                trusted_entries=trusted_entries,
-                manifest_path=trusted_manifest_path,
-                manifest_problem_id=manifest_problem_id,
-                max_attempts=max_attempts_per_lemma,
-                timeout_seconds=timeout_seconds,
-                lean_check_timeout_seconds=effective_lean_check_timeout,
-                model=model,
-                claude_runner=claude_runner,
-                runner=runner,
-                mock_candidates=(mock_candidates or {}).get(lemma_id),
-                lean4_skills_refs=lean4_skills_refs,
-                lean4_skills_refs_compact=lean4_skills_refs_compact,
-            )
-            lemma_results.append(lemma_result)
-            if lemma_result.status != "ok":
-                result = Phase04RunResult(
-                    status="fatal",
-                    problem_id=bundle.problem_id,
-                    run_root=run_paths.run_root,
-                    pinned_signatures_path=pinned_signatures_path,
-                    trusted_manifest_path=trusted_manifest_path,
-                    phase_summary_path=phase_summary_path,
-                    lemma_order=lemma_order,
-                    lemma_results=tuple(lemma_results),
-                    error_class=lemma_result.error_class,
-                    message=lemma_result.message or "lemma formalization failed",
-                    failed_lemma_id=lemma_result.lemma_id,
-                )
-                write_json(phase_summary_path, result.to_dict())
-                return result
+    lemma_results = [all_layer_results[lid] for lid in lemma_order if lid in all_layer_results]
 
     _cleanup_scratch_files(run_paths.workspace_dir)
 
@@ -477,6 +418,13 @@ def run_phase04(
         phase_summary_path=phase_summary_path,
         lemma_order=lemma_order,
         lemma_results=tuple(lemma_results),
+        code_origin=code_origin,
+        workspace_revision=run_paths.run_name,
+        merge_revision=merge_revision,
+        verifier_revision=merge_revision,
+        dependency_graph={key: list(value) for key, value in dependency_graph.items()},
+        dependency_closure={key: list(value) for key, value in dependency_closure.items()},
+        layer_order=[list(group) for group in execution_groups],
     )
     write_json(phase_summary_path, result.to_dict())
     return result
@@ -573,7 +521,8 @@ def _run_parallel_lemma_group(
     lemma_ids: tuple[str, ...],
     bundle: NormalizedProblemBundle,
     pinned_map: dict[str, PinnedLemmaSignature],
-    trusted_entries: list[TrustedContextEntry],
+    pinned_by_decl_name: dict[str, PinnedLemmaSignature],
+    pinned_decl_names: set[str],
     trusted_manifest_path: Path,
     manifest_problem_id: str,
     max_attempts_per_lemma: int,
@@ -583,37 +532,70 @@ def _run_parallel_lemma_group(
     mock_candidates: dict[str, list[str]],
     runner: SubprocessRunner,
     lemma_workers: int = 1,
+    layer_index: int = 1,
+    starting_merge_revision: int = 0,
     lean4_skills_refs: str = "",
     lean4_skills_refs_compact: str = "",
-) -> dict[str, LemmaFormalizationResult]:
+    dependency_graph: dict[str, tuple[str, ...]] | None = None,
+    dependency_closure: dict[str, tuple[str, ...]] | None = None,
+    lemma_layer_index: dict[str, int] | None = None,
+) -> tuple[dict[str, LemmaFormalizationResult], int]:
     worker_count = max(1, min(lemma_workers, len(lemma_ids)))
     batch_results: dict[str, LemmaFormalizationResult] = {}
+    worker_run_paths: dict[str, RunPaths] = {}
     with ThreadPoolExecutor(max_workers=worker_count) as executor:
         futures = {}
         for lemma_id in lemma_ids:
             lemma = bundle.lemma_map[lemma_id]
             pinned = pinned_map[lemma_id]
-            trusted_snapshot = list(trusted_entries)
-            worker_manifest_path = (
-                run_paths.run_root
-                / "lemmas"
-                / lemma_id_to_path_token(lemma_id)
-                / "parallel_worker_manifest.json"
+            trusted_snapshot = derive_trusted_entries_from_lemmas_file(
+                run_paths.workspace_dir / "Orthos" / "Lemmas.lean",
+                pinned_by_decl_name=pinned_by_decl_name,
             )
+            resolved_ids = {entry.lemma_id for entry in trusted_snapshot}
+            declared_dependencies = tuple((dependency_graph or {}).get(lemma_id, ()))
+            closure_dependencies = tuple((dependency_closure or {}).get(lemma_id, declared_dependencies))
+            unresolved_dependencies = tuple(dep for dep in declared_dependencies if dep not in resolved_ids)
+            statements_by_lemma = {
+                dep: pinned_map[dep].signature
+                for dep in closure_dependencies
+                if dep in pinned_map
+            }
+            assumption_capsule = AssumptionCapsule(
+                lemma_id=lemma_id,
+                direct_predecessors=declared_dependencies,
+                transitive_predecessors=closure_dependencies,
+                resolved_predecessors=tuple(dep for dep in declared_dependencies if dep in resolved_ids),
+                unresolved_predecessors=unresolved_dependencies,
+                statements_by_lemma=statements_by_lemma,
+                dependency_source_revision=f"{run_paths.run_name}:layer_{layer_index:02d}",
+                authoritative_workspace_revision=run_paths.run_name,
+                worker_workspace_revision=f"{run_paths.run_name}:worker:{lemma_id}",
+            )
+            worker_paths = _create_worker_run_paths(
+                authoritative_run_paths=run_paths,
+                runtime_config=runtime_config,
+                lemma_id=lemma_id,
+                layer_index=layer_index,
+            )
+            worker_run_paths[lemma_id] = worker_paths
+            worker_manifest_path = worker_paths.run_root / "workers" / f"layer_{layer_index:02d}" / lemma_id_to_path_token(lemma_id) / "trusted_context_manifest.json"
             write_trusted_manifest(worker_manifest_path, manifest_problem_id, trusted_snapshot)
             future = executor.submit(
                 run_lemma_formalization,
-                run_paths=run_paths,
+                run_paths=worker_paths,
                 runtime_config=runtime_config,
                 lemma=lemma,
                 pinned=pinned,
                 trusted_entries=trusted_snapshot,
+                assumption_capsule=assumption_capsule,
                 manifest_path=worker_manifest_path,
                 manifest_problem_id=manifest_problem_id,
                 max_attempts=max_attempts_per_lemma,
                 timeout_seconds=timeout_seconds,
                 lean_check_timeout_seconds=lean_check_timeout_seconds,
                 model=model,
+                pinned_decl_names=pinned_decl_names,
                 runner=runner,
                 mock_candidates=mock_candidates.get(lemma_id),
                 commit_on_success=False,
@@ -628,51 +610,205 @@ def _run_parallel_lemma_group(
 
     committed_results: dict[str, LemmaFormalizationResult] = {}
     seen_failure = False
+    merge_revision = starting_merge_revision
+    code_origin = current_code_origin()
     for lemma_id in lemma_ids:
-        lemma_result = batch_results[lemma_id]
+        lemma_result = replace(
+            batch_results[lemma_id],
+            layer_index=layer_index,
+            worker_workspace=worker_run_paths[lemma_id].workspace_dir,
+            code_origin=code_origin,
+        )
         if seen_failure:
             committed_results[lemma_id] = lemma_result
             continue
-        if lemma_result.status != "ok":
+        if lemma_result.status != "proved_under_assumptions":
             committed_results[lemma_id] = lemma_result
+            seen_failure = True
+            continue
+        unresolved_predecessors = [
+            dependency
+            for dependency in (dependency_graph or {}).get(lemma_id, ())
+            if dependency not in {
+                result.lemma_id
+                for result in committed_results.values()
+                if result.status == "succeeded"
+            } and dependency not in {
+                entry.lemma_id
+                for entry in derive_trusted_entries_from_lemmas_file(
+                    run_paths.workspace_dir / "Orthos" / "Lemmas.lean",
+                    pinned_by_decl_name=pinned_by_decl_name,
+                )
+            }
+        ]
+        if unresolved_predecessors:
+            blocked = replace(
+                lemma_result,
+                status="blocked_on_predecessors",
+                terminal=False,
+                message=(
+                    "lemma verified provisionally but cannot merge until predecessors are merged: "
+                    + ", ".join(unresolved_predecessors)
+                ),
+            )
+            write_json(blocked.result_path, blocked.to_dict())
+            committed_results[lemma_id] = blocked
             seen_failure = True
             continue
         committed = _commit_parallel_lemma_result(
             run_paths=run_paths,
+            runtime_config=runtime_config,
             lemma_result=lemma_result,
-            lemma_id=lemma_id,
             pinned=pinned_map[lemma_id],
-            trusted_entries=trusted_entries,
+            pinned_by_decl_name=pinned_by_decl_name,
             trusted_manifest_path=trusted_manifest_path,
             manifest_problem_id=manifest_problem_id,
             timeout_seconds=timeout_seconds,
+            layer_index=layer_index,
+            next_merge_revision=merge_revision + 1,
             runner=runner,
         )
         committed_results[lemma_id] = committed
-        if committed.status != "ok":
+        if committed.status != "succeeded":
             seen_failure = True
-    return committed_results
+            continue
+        merge_revision += 1
+    return committed_results, merge_revision
+
+
+def _create_worker_run_paths(
+    *,
+    authoritative_run_paths: RunPaths,
+    runtime_config: RuntimeConfig,
+    lemma_id: str,
+    layer_index: int,
+) -> RunPaths:
+    lemma_token = lemma_id_to_path_token(lemma_id)
+    worker_root = authoritative_run_paths.run_root / "workers" / f"layer_{layer_index:02d}" / lemma_token
+    worker_workspace = worker_root / "workspace"
+    clone_workspace(
+        authoritative_run_paths.workspace_dir,
+        worker_workspace,
+        mode=runtime_config.phase04.worker_snapshot_mode,
+    )
+    prompts_dir = worker_root / "prompts"
+    claude_raw_dir = worker_root / "claude_raw"
+    diagnostics_dir = worker_root / "diagnostics"
+    summaries_dir = worker_root / "summaries"
+    for directory in (prompts_dir, claude_raw_dir, diagnostics_dir, summaries_dir):
+        directory.mkdir(parents=True, exist_ok=True)
+    if runtime_config.mcp.enabled:
+        write_project_mcp_config(
+            worker_workspace,
+            runtime_config,
+            mcp_log_dir=worker_root / ".mcp_logs",
+        )
+    runtime_config_path = worker_root / "runtime_config.json"
+    write_json(runtime_config_path, runtime_config.to_dict())
+    workspace_snapshot_path = worker_root / "workspace_snapshot_pre_phase.json"
+    write_json(workspace_snapshot_path, snapshot_workspace(worker_workspace))
+    return replace(
+        authoritative_run_paths,
+        workspace_dir=worker_workspace,
+        prompts_dir=prompts_dir,
+        claude_raw_dir=claude_raw_dir,
+        diagnostics_dir=diagnostics_dir,
+        summaries_dir=summaries_dir,
+        runtime_config_path=runtime_config_path,
+        workspace_snapshot_path=workspace_snapshot_path,
+    )
+
+
+def _create_merge_validation_workspace(
+    *,
+    authoritative_run_paths: RunPaths,
+    lemma_id: str,
+    layer_index: int,
+    runtime_config: RuntimeConfig | None,
+) -> Path:
+    validation_root = authoritative_run_paths.run_root / "merge_validation" / f"layer_{layer_index:02d}" / lemma_id_to_path_token(lemma_id)
+    validation_workspace = validation_root / "workspace"
+    if validation_root.exists():
+        shutil.rmtree(validation_root, ignore_errors=True)
+    if runtime_config is None:
+        runtime_config = load_runtime_config(authoritative_run_paths.runtime_config_path)
+    clone_workspace(
+        authoritative_run_paths.workspace_dir,
+        validation_workspace,
+        mode=runtime_config.phase04.worker_snapshot_mode,
+    )
+    return validation_workspace
 
 
 def _commit_parallel_lemma_result(
     *,
     run_paths: RunPaths,
+    runtime_config: RuntimeConfig,
     lemma_result: LemmaFormalizationResult,
-    lemma_id: str,
     pinned: PinnedLemmaSignature,
-    trusted_entries: list[TrustedContextEntry],
+    pinned_by_decl_name: dict[str, PinnedLemmaSignature],
     trusted_manifest_path: Path,
     manifest_problem_id: str,
     timeout_seconds: int,
+    layer_index: int,
+    next_merge_revision: int,
     runner: SubprocessRunner,
 ) -> LemmaFormalizationResult:
-    if lemma_result.final_success_path is None or not lemma_result.final_success_path.exists():
+    if lemma_result.verified_candidate_path is None or not lemma_result.verified_candidate_path.exists():
         return _replace_with_commit_failure(
             lemma_result,
-            diagnostics_text="Parallel commit failed: missing final_success declaration artifact.",
+            diagnostics_text="Parallel commit failed: missing provisional verified declaration artifact.",
         )
 
-    declaration = lemma_result.final_success_path.read_text(encoding="utf-8")
+    declaration = lemma_result.verified_candidate_path.read_text(encoding="utf-8")
+    if re.search(r"(?m)^\\s*(?:private\\s+|protected\\s+)?axiom\\b", declaration):
+        return _replace_with_commit_failure(
+            lemma_result,
+            diagnostics_text="Parallel commit failed: merged output must not contain dependency axioms.",
+        )
+    validation_workspace = _create_merge_validation_workspace(
+        authoritative_run_paths=run_paths,
+        lemma_id=lemma_result.lemma_id,
+        layer_index=layer_index,
+        runtime_config=runtime_config,
+    )
+    validation_lemmas_path = validation_workspace / "Orthos" / "Lemmas.lean"
+    validation_original_text = validation_lemmas_path.read_text(encoding="utf-8")
+    try:
+        validation_merged_text = merge_declaration_into_lemmas_file(
+            original_text=validation_original_text,
+            declaration_block=declaration,
+        )
+    except ValueError as exc:
+        return _replace_with_commit_failure(
+            lemma_result,
+            diagnostics_text=f"Parallel commit failed: {exc}",
+        )
+    write_text(validation_lemmas_path, validation_merged_text)
+    if _contains_disallowed_proof_tokens(validation_merged_text):
+        return _replace_with_commit_failure(
+            lemma_result,
+            diagnostics_text="policy_violation: disallowed token `sorry` or `admit` in merged Lemmas.lean.",
+        )
+    validation_check = rebuild_module_olean(
+        validation_workspace,
+        "Orthos/Lemmas.lean",
+        "Orthos.Lemmas",
+        timeout_seconds=timeout_seconds,
+        runner=runner,
+    )
+    if not validation_check.ok:
+        return _replace_with_commit_failure(
+            lemma_result,
+            diagnostics_text=validation_check.stderr or "authoritative merge replay failed",
+        )
+    validation_warnings = _validate_workspace_integrity(validation_workspace)
+    if any("Duplicate declarations" in warning or "Unresolved assumption stubs" in warning for warning in validation_warnings):
+        return _replace_with_commit_failure(
+            lemma_result,
+            diagnostics_text="authoritative merge replay failed workspace integrity checks",
+        )
+
     lemmas_file_path = run_paths.workspace_dir / "Orthos" / "Lemmas.lean"
     original_text = lemmas_file_path.read_text(encoding="utf-8")
     try:
@@ -691,19 +827,65 @@ def _commit_parallel_lemma_result(
         write_text(lemmas_file_path, original_text)
         diagnostics_text = "policy_violation: disallowed token `sorry` or `admit` in merged Lemmas.lean."
         return _replace_with_commit_failure(lemma_result, diagnostics_text=diagnostics_text)
-
-    trusted_entries.append(
-        TrustedContextEntry(
-            lemma_id=lemma_id,
-            decl_name=pinned.decl_name,
-            status="compiled",
-            source_file="Orthos/Lemmas.lean",
-            signature=pinned.signature,
-            declaration=declaration.strip(),
+    authoritative_check = rebuild_module_olean(
+        run_paths.workspace_dir,
+        "Orthos/Lemmas.lean",
+        "Orthos.Lemmas",
+        timeout_seconds=timeout_seconds,
+        runner=runner,
+    )
+    if not authoritative_check.ok:
+        write_text(lemmas_file_path, original_text)
+        rebuild_module_olean(
+            run_paths.workspace_dir,
+            "Orthos/Lemmas.lean",
+            "Orthos.Lemmas",
+            timeout_seconds=timeout_seconds,
+            runner=runner,
         )
+        return _replace_with_commit_failure(
+            lemma_result,
+            diagnostics_text=authoritative_check.stderr or "authoritative merge check failed",
+        )
+    authoritative_warnings = _validate_workspace_integrity(run_paths.workspace_dir)
+    if any("Duplicate declarations" in warning or "Unresolved assumption stubs" in warning for warning in authoritative_warnings):
+        write_text(lemmas_file_path, original_text)
+        rebuild_module_olean(
+            run_paths.workspace_dir,
+            "Orthos/Lemmas.lean",
+            "Orthos.Lemmas",
+            timeout_seconds=timeout_seconds,
+            runner=runner,
+        )
+        return _replace_with_commit_failure(
+            lemma_result,
+            diagnostics_text="authoritative merge created invalid workspace state",
+        )
+    trusted_entries = derive_trusted_entries_from_lemmas_file(
+        lemmas_file_path,
+        pinned_by_decl_name=pinned_by_decl_name,
     )
     write_trusted_manifest(trusted_manifest_path, manifest_problem_id, trusted_entries)
-    return lemma_result
+    merged_authoritative_path = lemma_result.lemma_artifact_dir / "merged_authoritative.lean"
+    write_text(merged_authoritative_path, declaration.strip() + "\n")
+    committed = replace(
+        lemma_result,
+        status="succeeded",
+        terminal=True,
+        merged_authoritative_path=merged_authoritative_path,
+        resolved_dependencies=lemma_result.declared_dependencies,
+        merge_revision=next_merge_revision,
+        verifier_revision=next_merge_revision,
+        merge_replay_result={
+            "status": "passed",
+            "workspace": str(validation_workspace),
+            "merge_revision": next_merge_revision,
+            "validation_check": validation_check.to_dict(),
+            "authoritative_check": authoritative_check.to_dict(),
+        },
+    )
+    write_json(committed.result_path, committed.to_dict())
+    return committed
 
 
 def _replace_with_commit_failure(
@@ -715,10 +897,12 @@ def _replace_with_commit_failure(
     replaced = replace(
         lemma_result,
         status="failed",
+        terminal=True,
         error_class=error_class,
         message="Lemma candidate could not be committed to shared trusted context.",
         diagnostics=tuple(_diagnostic_lines(diagnostics_text)),
-        final_success_path=None,
+        merged_authoritative_path=None,
+        merge_replay_result={"status": "failed", "diagnostics": _diagnostic_lines(diagnostics_text)},
     )
     write_json(replaced.result_path, replaced.to_dict())
     return replaced
@@ -764,6 +948,102 @@ def _deterministic_lemma_order(bundle: NormalizedProblemBundle) -> list[str]:
     if bundle.topologically_sorted_lemma_ids:
         return list(bundle.topologically_sorted_lemma_ids)
     return [lemma.lemma_id for lemma in bundle.lemmas]
+
+
+def _phase04_summary_path(
+    *,
+    run_paths: RunPaths,
+    lemma_order: tuple[str, ...],
+    target_lemma_id: str | None,
+    target_lemma_ids: set[str] | None,
+) -> Path:
+    if target_lemma_id is None and target_lemma_ids is None:
+        return run_paths.summaries_dir / "phase04_summary.json"
+    if len(lemma_order) == 1:
+        return run_paths.summaries_dir / f"phase04_{lemma_id_to_path_token(lemma_order[0])}.json"
+    digest_input = ",".join(sorted(lemma_order))
+    digest = hashlib.sha1(digest_input.encode("utf-8")).hexdigest()[:10]
+    return run_paths.summaries_dir / f"phase04_subset_{digest}.json"
+
+
+def build_dependency_graph(
+    *,
+    bundle: NormalizedProblemBundle,
+    lemma_order: tuple[str, ...],
+) -> tuple[dict[str, tuple[str, ...]], dict[str, tuple[str, ...]], dict[str, int]]:
+    lemma_set = set(lemma_order)
+    graph: dict[str, set[str]] = {lemma_id: set() for lemma_id in lemma_order}
+    layer_index: dict[str, int] = {lemma_id: 0 for lemma_id in lemma_order}
+
+    for lemma_id in lemma_order:
+        lemma = bundle.lemma_map.get(lemma_id)
+        if lemma is None:
+            continue
+        graph[lemma_id].update(dep for dep in lemma.depends_on if dep in lemma_set)
+        if lemma.layer_index is not None:
+            layer_index[lemma_id] = lemma.layer_index
+
+    steps = list(bundle.selected_decomposition.assembly_plan.steps)
+    step_by_id = {step.step_id: step for step in steps if step.step_id}
+    step_levels: dict[str, int] = {}
+    for step in steps:
+        if not step.step_id:
+            continue
+        parents = [parent for parent in step.uses_prior_steps if parent in step_by_id]
+        parent_levels = [step_levels.get(parent, 0) for parent in parents]
+        step_levels[step.step_id] = (max(parent_levels) + 1) if parent_levels else 0
+        predecessor_lemmas: set[str] = set()
+        for parent in parents:
+            predecessor_lemmas.update(
+                lemma_id for lemma_id in step_by_id[parent].uses_lemmas if lemma_id in lemma_set
+            )
+        for lemma_id in step.uses_lemmas:
+            if lemma_id not in lemma_set:
+                continue
+            graph[lemma_id].update(dep for dep in predecessor_lemmas if dep != lemma_id)
+            layer_index[lemma_id] = max(layer_index.get(lemma_id, 0), step_levels[step.step_id])
+
+    unknown_dependencies = {
+        lemma_id: sorted(dep for dep in deps if dep not in bundle.lemma_map)
+        for lemma_id, deps in graph.items()
+        if any(dep not in bundle.lemma_map for dep in deps)
+    }
+    if unknown_dependencies:
+        raise ValueError(f"phase04 dependency graph references unknown lemmas: {unknown_dependencies}")
+
+    closure: dict[str, tuple[str, ...]] = {}
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def _visit(lemma_id: str) -> tuple[str, ...]:
+        if lemma_id in closure:
+            return closure[lemma_id]
+        if lemma_id in visiting:
+            raise ValueError(f"phase04 dependency graph has a cycle involving `{lemma_id}`")
+        visiting.add(lemma_id)
+        expanded: list[str] = []
+        seen: set[str] = set()
+        for dep in sorted(graph[lemma_id], key=lambda item: lemma_order.index(item) if item in lemma_order else item):
+            if dep not in seen:
+                expanded.append(dep)
+                seen.add(dep)
+            for transitive in _visit(dep):
+                if transitive not in seen:
+                    expanded.append(transitive)
+                    seen.add(transitive)
+        visiting.remove(lemma_id)
+        visited.add(lemma_id)
+        closure[lemma_id] = tuple(expanded)
+        return closure[lemma_id]
+
+    for lemma_id in lemma_order:
+        _visit(lemma_id)
+
+    return (
+        {lemma_id: tuple(sorted(graph[lemma_id], key=lambda item: lemma_order.index(item))) for lemma_id in lemma_order},
+        closure,
+        layer_index,
+    )
 
 
 def _extract_round_index(filename: str) -> int | None:
@@ -956,6 +1236,21 @@ def _validate_workspace_integrity(workspace_dir: Path) -> list[str]:
             root_lean.write_text(repaired, encoding="utf-8")
             warnings.append("Removed unexpected 'import Orthos.Statements' from Root.lean")
 
+    lemmas_path = workspace_dir / "Orthos" / "Lemmas.lean"
+    if lemmas_path.exists():
+        content = lemmas_path.read_text(encoding="utf-8")
+        decl_names: list[str] = []
+        for match in re.finditer(
+            r"(?m)^\\s*(?:private\\s+|protected\\s+)?(?:noncomputable\\s+)?(?:theorem|lemma|axiom|def|abbrev)\\s+([A-Za-z0-9_'.]+)\\b",
+            content,
+        ):
+            decl_names.append(match.group(1))
+        duplicates = sorted({name for name in decl_names if decl_names.count(name) > 1})
+        if duplicates:
+            warnings.append(f"Duplicate declarations detected in Orthos/Lemmas.lean: {', '.join(duplicates)}")
+        if re.search(r"(?m)^\\s*(?:private\\s+|protected\\s+)?axiom\\b", content):
+            warnings.append("Unresolved assumption stubs detected in Orthos/Lemmas.lean")
+
     for warning in warnings:
         _log.warning("Workspace integrity: %s", warning)
     return warnings
@@ -1019,11 +1314,11 @@ def _fatal_missing_lemma_result(
     bundle: NormalizedProblemBundle,
     pinned_signatures_path: Path,
     trusted_manifest_path: Path,
+    phase_summary_path: Path,
     lemma_order: tuple[str, ...],
     lemma_results: list[LemmaFormalizationResult],
     lemma_id: str,
 ) -> Phase04RunResult:
-    phase_summary_path = run_paths.summaries_dir / "phase04_summary.json"
     return Phase04RunResult(
         status="fatal",
         problem_id=bundle.problem_id,

@@ -1,0 +1,269 @@
+{
+  "artifact_prefix": "problems/prob_20260326184616_abfe1ff0/lemmas/lem_20260326190353_f4ff61a3/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 1,
+  "controller_consumed_at": "2026-03-27T03:16:14.791320Z",
+  "controller_consumed_by_execution_id": "exec_20260327031537_c88045a1",
+  "created_at": "2026-03-27T03:15:47.153632Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327031537_c88045a1",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is at least 2",
+            "s has exactly n minus 1 entries",
+            "each entry of s is either plus 1 or minus 1",
+            "a is a permutation of the set {1, 2, ..., n}",
+            "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+            "the inequality condition is required for every index i from 1 to n minus 1"
+          ],
+          "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+          "quantifier_order": [
+            "For each integer n with n at least 2",
+            "For each sign sequence s of length n minus 1",
+            "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+            "Determine which sign sequences s maximize this count f(s)"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter with n at least 2",
+              "type": "integer"
+            },
+            {
+              "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+              "name": "s",
+              "role": "parameter over which the maximization is taken",
+              "type": "finite sign sequence"
+            },
+            {
+              "domain": "integers from 1 to n minus 1",
+              "name": "i",
+              "role": "index for adjacent comparisons in the sign sequence and permutation",
+              "type": "integer index"
+            },
+            {
+              "domain": "all permutations of {1, 2, ..., n}",
+              "name": "a",
+              "role": "counted object satisfying the sign constraints",
+              "type": "permutation"
+            },
+            {
+              "domain": "elements of {1, 2, ..., n}",
+              "name": "a_i",
+              "role": "ith entry of the permutation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The counted permutation a depends on the chosen n and sign sequence s",
+            "The maximality question is over s for each fixed n",
+            "There is no existential witness in the statement, only a counting definition and a maximization problem"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260326190353_f4ff61a3",
+    "proof_nl": "Proof.\n\nIf m = 1, then t is empty. There is exactly one permutation of {1}, namely (1), and it satisfies the vacuous sign conditions, so U_1(t) = 1. Also Peak(t) = {1}, t^{<1} and t^{>1} are empty, and the right-hand side is binom(0,0) U_0(empty) U_0(empty) = 1. So the identity holds.\n\nNow assume m >= 2. Let S be the set of permutations b = (b_1,...,b_m) of {1,...,m} such that t_i (b_{i+1} - b_i) > 0 for all 1 <= i <= m-1. Then |S| = U_m(t).\n\nFor each j with 1 <= j <= m, let S_j = { b in S : b_j = m }. Since every permutation of {1,...,m} contains m in exactly one position, the sets S_1,...,S_m are disjoint and their union is S. Hence\nU_m(t) = sum from j=1 to m of |S_j|.\n\nWe first determine when S_j can be nonempty.\n\n1. If j = 1 and b is in S_1, then b_2 - b_1 = b_2 - m < 0. Since t_1 (b_2 - m) > 0, necessarily t_1 = -1. Thus 1 is in Peak(t).\n\n2. If j = m and b is in S_m, then b_m - b_{m-1} = m - b_{m-1} > 0. Since t_{m-1} (m - b_{m-1}) > 0, necessarily t_{m-1} = +1. Thus m is in Peak(t).\n\n3. If 2 <= j <= m-1 and b is in S_j, then m - b_{j-1} > 0 and b_{j+1} - m < 0. The conditions at indices j-1 and j give\nt_{j-1} (m - b_{j-1}) > 0 and t_j (b_{j+1} - m) > 0,\nso necessarily t_{j-1} = +1 and t_j = -1. Thus j is in Peak(t).\n\nTherefore S_j is empty whenever j is not in Peak(t).\n\nNow fix j in Peak(t). We count S_j.\n\nFor b in S_j, let A = {b_1,...,b_{j-1}}, the set of values appearing to the left of m. Then A is a subset of {1,...,m-1} with size j-1. Conversely, any subset A of {1,...,m-1} with size j-1 can serve as the left value-set. There are binom(m-1,j-1) choices for A. Once A is fixed, the set B = {1,...,m-1} minus A is forced; it has size m-j and is the set of values to the right of m.\n\nWe now count, for fixed A, the possible left block (b_1,...,b_{j-1}).\n\nIf j = 1, there is no left block, so there is exactly one possibility, and this equals U_0(empty) by definition.\n\nAssume j > 1. Write A = {a_1 < a_2 < ... < a_{j-1}}. Any ordering of A is uniquely of the form\n(a_{c_1},...,a_{c_{j-1}})\nfor some permutation c = (c_1,...,c_{j-1}) of {1,...,j-1}. For each i with 1 <= i <= j-2, because the map k -> a_k is strictly increasing, we have\na_{c_{i+1}} > a_{c_i} exactly when c_{i+1} > c_i,\nand\na_{c_{i+1}} < a_{c_i} exactly when c_{i+1} < c_i.\nSo the sign of a_{c_{i+1}} - a_{c_i} is the same as the sign of c_{i+1} - c_i. Therefore\nt_i (a_{c_{i+1}} - a_{c_i}) > 0 exactly when t_i (c_{i+1} - c_i) > 0.\nHence the number of left blocks using exactly the set A and satisfying the sign conditions at indices 1,...,j-2 is exactly U_{j-1}(t^{<j}), since t^{<j} = (t_1,...,t_{j-2}).\n\nSimilarly, for the fixed set B, the number of possible right blocks (b_{j+1},...,b_m) satisfying the sign conditions at indices j+1,...,m-1 is exactly U_{m-j}(t^{>j}), because t^{>j} = (t_{j+1},...,t_{m-1}) and the same increasing-relabeling argument applies. If j = m, there is no right block, and this number is U_0(empty) = 1.\n\nIt remains to check the sign conditions involving the entry m itself. Since j is in Peak(t), these are automatic:\n- if j > 1, then t_{j-1} = +1, and because b_{j-1} < m we have t_{j-1} (m - b_{j-1}) > 0;\n- if j < m, then t_j = -1, and because b_{j+1} < m we have t_j (b_{j+1} - m) > 0.\n\nSo, once A is fixed, every valid left block and every valid right block combine uniquely with m in position j to form an element of S_j, and every element of S_j arises uniquely in this way. Therefore\n|S_j| = binom(m-1,j-1) U_{j-1}(t^{<j}) U_{m-j}(t^{>j}).\n\nSince |S_j| = 0 for j not in Peak(t), we conclude that\nU_m(t) = sum over j in Peak(t) of binom(m-1,j-1) U_{j-1}(t^{<j}) U_{m-j}(t^{>j}).\nThis is exactly the claimed identity.",
+    "role_in_assembly": "Primary recursive decomposition of the counting function by placing the largest element.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "each entry of s is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}",
+        "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+        "the inequality condition is required for every index i from 1 to n minus 1"
+      ],
+      "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+      "quantifier_order": [
+        "For each integer n with n at least 2",
+        "For each sign sequence s of length n minus 1",
+        "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+        "Determine which sign sequences s maximize this count f(s)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with n at least 2",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "parameter over which the maximization is taken",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "index for adjacent comparisons in the sign sequence and permutation",
+          "type": "integer index"
+        },
+        {
+          "domain": "all permutations of {1, 2, ..., n}",
+          "name": "a",
+          "role": "counted object satisfying the sign constraints",
+          "type": "permutation"
+        },
+        {
+          "domain": "elements of {1, 2, ..., n}",
+          "name": "a_i",
+          "role": "ith entry of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The counted permutation a depends on the chosen n and sign sequence s",
+        "The maximality question is over s for each fixed n",
+        "There is no existential witness in the statement, only a counting definition and a maximization problem"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is an integer and m is at least 1.",
+        "t is a sign sequence of length m minus 1, with each entry equal to plus 1 or minus 1.",
+        "When m equals 1, the sequence t is empty and Peak(t) is exactly the set containing 1.",
+        "r is an integer and r is at least 0.",
+        "When r is 0, the sign sequence u is empty and U_0 of the empty sequence is defined to be 1.",
+        "When r is at least 1, u has length r minus 1 and the counted object is a permutation of 1 through r.",
+        "The defining inequalities for U_r(u) require all indices i from 1 to r minus 1.",
+        "For Peak(t) with m at least 2, 1 is a peak exactly when t_1 equals minus 1, m is a peak exactly when t_{m minus 1} equals plus 1, and interior j are peaks exactly when the left sign is plus 1 and the right sign is minus 1.",
+        "For each j from 1 to m, t left of j means the prefix ending at index j minus 2, and t right of j means the suffix starting at index j plus 1; either is empty if the indicated index range is invalid."
+      ],
+      "normalized_claim": "For every integer m at least 1 and every sign sequence t of length m minus 1, the quantity U_m of t equals the sum over all peak positions j in Peak(t) of binomial coefficient m minus 1 choose j minus 1 times U_{j minus 1} of the left truncated sign sequence times U_{m minus j} of the right truncated sign sequence.",
+      "quantifier_order": [
+        "For every integer m at least 1, choose a sign sequence t of length m minus 1 with entries plus 1 or minus 1.",
+        "For every integer r at least 0 and every compatible sign sequence u, define U_r(u) by counting permutations of 1 through r that satisfy the sign inequalities.",
+        "For every integer j from 1 to m, define the truncated sequences t left of j and t right of j, and define membership in Peak(t) from the neighboring signs.",
+        "Then the identity U_m(t) equals the sum over j in Peak(t) of the stated product holds."
+      ],
+      "variables": [
+        {
+          "domain": "integers at least 1",
+          "name": "m",
+          "role": "main size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequence of length m minus 1, with each entry equal to plus 1 or minus 1; empty when m equals 1",
+          "name": "t",
+          "role": "input sign sequence for the main identity",
+          "type": "sign sequence"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "r",
+          "role": "auxiliary size parameter in the definition of U",
+          "type": "integer"
+        },
+        {
+          "domain": "sequence of length r minus 1 when r is at least 1; empty when r equals 0",
+          "name": "u",
+          "role": "input sign sequence for the definition of U_r",
+          "type": "sign sequence"
+        },
+        {
+          "domain": "permutations of 1 through r",
+          "name": "b",
+          "role": "object being counted by U_r",
+          "type": "tuple of integers"
+        },
+        {
+          "domain": "integers from 1 to r minus 1",
+          "name": "i",
+          "role": "index in the sign constraint for permutations",
+          "type": "integer index"
+        },
+        {
+          "domain": "integers from 1 to m",
+          "name": "j",
+          "role": "summation index and peak location",
+          "type": "integer index"
+        }
+      ],
+      "witness_dependencies": [
+        "There is no existential witness in the main claim; the statement is a universal recursive identity.",
+        "The summand indexed by j depends on j through Peak(t), t left of j, and t right of j."
+      ]
+    },
+    "statement_nl": "Let m be an integer with m >= 1, and let t = (t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}; when m = 1 this sequence is empty. For an integer r >= 0 and a sign sequence u of length r-1 when r >= 1 (and u empty when r = 0), define U_r(u) to be the number of permutations (b_1,...,b_r) of {1,...,r} satisfying u_i * (b_{i+1} - b_i) > 0 for all 1 <= i <= r-1, and set U_0(empty) = 1. Define Peak(t) subseteq {1,...,m} by: if m = 1 then Peak(t) = {1}; if m >= 2 then 1 belongs to Peak(t) exactly when t_1 = -1, m belongs to Peak(t) exactly when t_{m-1} = +1, and for each integer j with 2 <= j <= m-1, j belongs to Peak(t) exactly when t_{j-1} = +1 and t_j = -1. For each integer j with 1 <= j <= m, define t^{<j} = (t_1,...,t_{j-2}) and t^{>j} = (t_{j+1},...,t_{m-1}), interpreting these as the empty sequence when the lower index exceeds the upper. Then U_m(t) = sum over j in Peak(t) of binom(m-1, j-1) * U_{j-1}(t^{<j}) * U_{m-j}(t^{>j}).",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.97,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "notes": "No external citations were used; the argument is self-contained and does not rely on forbidden ancestry results.",
+      "uses_only_declared_or_self_contained": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The base case m = 1 is explicitly verified, including the conventions Peak(t) = {1} and U_0(empty) = 1.",
+        "location": "base case",
+        "severity": "low"
+      },
+      {
+        "finding": "The partition S = disjoint union of S_j by the position of the maximal element m is valid and exhaustive.",
+        "location": "middle of proof",
+        "severity": "low"
+      },
+      {
+        "finding": "The relabeling argument on a fixed subset A (and similarly B) correctly preserves comparison signs because the chosen labels are in increasing order.",
+        "location": "count of S_j for fixed j in Peak(t)",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260326190353_f4ff61a3",
+    "proof_status": "complete",
+    "reason": "The proof is a correct and complete combinatorial decomposition by the position of the maximum element m. It handles the base case m=1, partitions counted permutations by the index j where m appears, proves that nonemptiness forces j to be a peak, and for each peak j counts permutations by choosing the left value-set and then relabeling left and right blocks in an order-preserving way to obtain the factors U_{j-1}(t^{<j}) and U_{m-j}(t^{>j}). Boundary conditions and the constraints adjacent to m are checked explicitly. No semantic drift or illegal dependency use is present.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260326190353_f4ff61a3",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T03:16:14.791325Z",
+  "worker_job_id": "wrk_lem_20260326190353_f4ff61a3_g1_vet_1",
+  "worker_kind": "lemma_vetter"
+}

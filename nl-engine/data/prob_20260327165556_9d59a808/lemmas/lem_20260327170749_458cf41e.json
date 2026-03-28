@@ -1,0 +1,95 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327170942_5eee31b3",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:08:00.419650Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.22,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:09:45.067206Z",
+  "last_dependency_check_id": null,
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": null,
+  "last_transition_reason": "solver attempt 1 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327170749_458cf41e",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327170749_458cf41e.json",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "proof_status": "open",
+  "role_in_parent": "Move from the raw residue order to the best possible ordering of the same residue multiset.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 0,
+  "solver_series_started_at": "2026-03-27T17:09:43.890822Z",
+  "statement_lean": null,
+  "statement_nl": "Let n>1. If b_1,...,b_{n-1} are nonnegative real numbers, and u_1,...,u_{n-1} is a nonincreasing reordering of the same multiset of numbers, then sum_{k=1}^{n-1} b_k/k <= sum_{k=1}^{n-1} u_k/k. If equality holds, then the original list b_1,...,b_{n-1} is already nonincreasing.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n greater than 1",
+      "b_k are nonnegative real numbers for each k in 1 to n-1",
+      "u is obtained by reordering b, so u_1 to u_(n-1) has the same multiset of values as b_1 to b_(n-1)",
+      "u is nonincreasing, meaning u_k >= u_(k+1) for all k in 1 to n-2",
+      "weights 1/k are used in the sums for k in 1 to n-1"
+    ],
+    "normalized_claim": "For every integer n greater than 1 and every nonnegative real sequence b_1,...,b_(n-1), let u_1,...,u_(n-1) be any nonincreasing reordering of the same multiset of values. Then the weighted sum of b with weights 1 over k is at most the weighted sum of u with the same weights: sum over k from 1 to n-1 of b_k divided by k is <= sum over k from 1 to n-1 of u_k divided by k. Moreover, if equality holds for this comparison, then the original sequence b_1,...,b_(n-1) is itself nonincreasing (b_1 >= b_2 >= ... >= b_(n-1)).",
+    "quantifier_order": [
+      "For all integers n with n greater than 1",
+      "For all sequences b_1 to b_(n-1) of nonnegative real numbers",
+      "For all sequences u_1 to u_(n-1) that are a permutation of the multiset of b values and satisfy u_1 >= u_2 >= ... >= u_(n-1)"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "sequence length parameter; inequality is over indices k = 1 to n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "index in the sums, restricted by 1 <= k <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative real numbers",
+        "name": "b",
+        "role": "original list (b_1,...,b_{n-1}) whose weighted sum uses weights 1/k",
+        "type": "sequence of real numbers"
+      },
+      {
+        "domain": "nonnegative real numbers",
+        "name": "u",
+        "role": "nonincreasing reordering (u_1,...,u_{n-1}) of the same multiset as b, used on the right-hand side",
+        "type": "sequence of real numbers"
+      }
+    ],
+    "witness_dependencies": [
+      "u depends on b: u is a reordering (permutation) of the multiset of values of b",
+      "the conditional conclusion about b (nonincreasing property) depends on the truth of the equality of the two weighted sums for the chosen u"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:09:45.067206Z"
+}

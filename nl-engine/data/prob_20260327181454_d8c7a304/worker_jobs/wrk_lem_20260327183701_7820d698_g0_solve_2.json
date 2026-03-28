@@ -1,0 +1,178 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327183701_7820d698/solver_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-27T18:48:20.641809Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:48:31.338096Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:48:14.891923Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 2,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327182156_c4df4dce",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327182156_a23a7b30",
+        "label": "lem_20260327182037_d1cd11e0",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n)."
+      }
+    ],
+    "lemma_id": "lem_20260327183701_7820d698",
+    "previous_feedback": "Previous vetter reason: The proof exactly restates the hypothesis of nonincreasing monotonicity on [a,b) and applies it to the arbitrary x,y in the required order. No missing step or semantic deviation is present.",
+    "previous_proof_nl": "Assume the hypothesis: g is nonincreasing on [a,b), meaning that for all real x,y with a <= x <= y < b, one has g(y) <= g(x). Now let x,y be any real numbers satisfying a <= x <= y < b. Applying the hypothesis directly to this pair (x,y), we obtain g(y) <= g(x). This is exactly the conclusion. Therefore the statement holds.",
+    "proof_attempt_node_id": "pnode_20260327184814_f2b91dc5",
+    "role_in_assembly": "Converts a monotonicity statement on an interval into the desired endpoint comparison.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "a < b",
+        "x is between a and y inclusive: a <= x",
+        "x is not greater than y: x <= y",
+        "y is strictly less than b: y < b",
+        "x and y are real numbers",
+        "g is defined on all real numbers"
+      ],
+      "normalized_claim": "For all real numbers x and y such that a <= x <= y < b, one has g(y) <= g(x).",
+      "quantifier_order": [
+        "for all real x, y with a <= x <= y < b: g(y) <= g(x)"
+      ],
+      "variables": [
+        {
+          "domain": "real numbers",
+          "name": "g",
+          "role": "the function whose monotonicity is assumed and then restated",
+          "type": "function from real numbers to real numbers"
+        },
+        {
+          "domain": "real numbers",
+          "name": "a",
+          "role": "left endpoint of the interval",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "b",
+          "role": "right endpoint of the interval",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "point in the interval used as the smaller argument",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "point in the interval used as the larger argument",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced; the statement is purely universal in x and y."
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let g : R -> R be a function and let a < b be real numbers. If g is nonincreasing on [a,b) in the sense that for all real x,y with a <= x <= y < b one has g(y) <= g(x), then for any real x,y with a <= x <= y < b one has g(y) <= g(x).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": "The previous feedback noted that the proof already matched the hypothesis exactly. This revision keeps that valid skeleton and makes the equivalence explicit: the assumed definition of nonincreasing on [a,b) is precisely the desired conclusion.",
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "relied_only_on_statement_and_definition": true,
+      "used_allowed_dependency_manifest": true,
+      "used_forbidden_claims": false
+    },
+    "lemma_id": "lem_20260327183701_7820d698",
+    "proof_nl": "Assume that g is nonincreasing on [a,b) in the stated sense. By definition, this means that for all real numbers x and y satisfying a <= x <= y < b, we have g(y) <= g(x). The conclusion of the lemma is exactly the same statement. Therefore, for any real x,y with a <= x <= y < b, one has g(y) <= g(x).",
+    "proof_summary": "The lemma is an exact restatement of the hypothesis, so the conclusion follows immediately from the definition of nonincreasing on [a,b).",
+    "self_report": {
+      "confidence": 0.999999,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T18:48:15.829321Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327183701_7820d698",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:48:31.338105Z",
+  "worker_job_id": "wrk_lem_20260327183701_7820d698_g0_solve_2",
+  "worker_kind": "lemma_solver"
+}

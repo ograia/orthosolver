@@ -365,6 +365,41 @@ def snapshot_workspace(workspace_root: Path) -> dict[str, Any]:
     }
 
 
+def clone_workspace(
+    source_root: Path,
+    destination_root: Path,
+    *,
+    mode: str = "copy",
+) -> Path:
+    source = source_root.expanduser().resolve()
+    destination = destination_root.expanduser().resolve()
+    if not source.exists() or not source.is_dir():
+        raise ValueError(f"workspace source does not exist: {source}")
+    if destination.exists():
+        raise ValueError(f"workspace clone destination must not already exist: {destination}")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    cp_command = ["cp", "-a"]
+    normalized_mode = mode.strip().lower()
+    if normalized_mode == "hardlink":
+        cp_command = ["cp", "-al"]
+    elif normalized_mode == "reflink":
+        cp_command = ["cp", "-a", "--reflink=always"]
+    elif normalized_mode != "copy":
+        raise ValueError("workspace clone mode must be one of: copy, hardlink, reflink")
+
+    command = [*cp_command, str(source), str(destination)]
+    try:
+        subprocess.run(command, check=True, capture_output=True)
+    except (subprocess.CalledProcessError, OSError) as exc:
+        if destination.exists():
+            shutil.rmtree(destination, ignore_errors=True)
+        raise ValueError(
+            f"failed to clone workspace `{source}` -> `{destination}` using mode `{normalized_mode}`: {exc}"
+        ) from exc
+    return destination
+
+
 def _rewrite_statements_imports(workspace_root: Path, *, imports: tuple[str, ...]) -> None:
     target = workspace_root / "Orthos" / "Statements.lean"
     if not target.exists():

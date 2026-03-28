@@ -1,0 +1,196 @@
+{
+  "assembly_plan_id": "asm_20260326145514_6cb82a0e",
+  "created_at": "2026-03-26T15:00:02.832842Z",
+  "decomposition_id": "dec_20260326145514_94bfedcb",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260326142247_f1e3c295",
+  "proof_skeleton_nl": "Proceed by strong induction on n. For a fixed pattern s, use L2 to decompose F(s) by the position of the smallest value 1. The previously omitted small cases are now handled explicitly: size 0 contributes E_0=1, and size 1 contributes E_1=1 by L7. For larger left and right subproblems, the induction hypothesis bounds each factor by the alternating count E_m. This turns F(s) into a weighted sum over the valley set V(s), with weights w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}. By L1 the set V(s) has no consecutive elements. L4 gives the parity convolution identities satisfied by the alternating counts, and L7 together with the abstract recurrence lemma L8 yields the missing positivity hypotheses. Therefore all assumptions of the weighted independent-set bottleneck L5 are satisfied, so every sign pattern obeys F(s) <= E_n. The two alternating patterns attain E_n, by definition for Alt_n^+ and by L3 for Alt_n^-. If s is any maximizer, equality in the bottleneck forces V(s) to be the full odd class or the full even class, and L6 then reconstructs s as one of the two alternating patterns. Hence the maximizing sign sequences are exactly the alternating ones.",
+  "root_node_id": "thm_root_20260326142247_6714b56a",
+  "steps": [
+    {
+      "derives": "Set up a strong induction on n. For each integer m at least 1, let Alt_m^+ be the alternating sign sequence and define E_0 = 1 and E_m = F(Alt_m^+). The base case n = 2 is immediate: the only sign sequences of length 1 are (+1) and (-1), both are alternating, and each is realized by exactly one permutation, so the theorem holds for n = 2.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This is the induction setup together with a direct check of the first nontrivial size.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Fix n >= 3 and assume as induction hypothesis that the theorem already holds for every size m with 2 <= m < n. Let s be any sign sequence of length n-1, and write f(s)=F(s) for the theorem's counting function. Applying L2 to s gives the exact decomposition F(s) = sum over j in V(s) of binomial(n-1,j-1) times left_count(j) times right_count(j), where V(s) is the valley set of s.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "L2 is the exact recursion obtained by placing the smallest value 1.",
+      "uses_lemmas": [
+        "lem_20260326145523_12465799"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Isolate the small subproblem sizes that are not covered by the induction hypothesis. If one side of the decomposition in A2 has size 0, its contribution is 1 = E_0 by the definition from A1. If one side has size 1, then its sign sequence is the unique empty sequence, so its count is 1 = E_1 by L7.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "This is the explicit missing size-0 and size-1 analysis; the induction hypothesis only applies once the side size is at least 2.",
+      "uses_lemmas": [
+        "lem_20260326145700_ee5eec74"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "For each j in V(s), let m_left = j-1 and m_right = n-j. The factor left_count(j) is the count of a sign pattern of size m_left, and right_count(j) is the count of a sign pattern of size m_right. If one of these sizes is 0 or 1, A3 identifies its count with E_0 or E_1. If one of these sizes is at least 2, the induction hypothesis says that every sign pattern of that size has count at most the alternating maximum for that size, namely E_{m_left} or E_{m_right}. Therefore every summand in A2 is at most w_j := binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "This step performs the required three-case analysis for each side of each summand: size 0, size 1, or size at least 2.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "Summing the termwise bounds from A4 over all j in V(s) yields F(s) <= sum over j in V(s) of w_j, where w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "Replace each summand in the exact formula of A2 by the upper bound from A4 and sum over the same index set.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A4"
+      ]
+    },
+    {
+      "derives": "By L1, the valley set V(s) has no two consecutive elements. Hence V(s) is a valid subset of {1,...,n} for the optimization problem in L5.",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "The no-consecutive property is exactly one of the conclusions of L1.",
+      "uses_lemmas": [
+        "lem_20260326145514_f1b67e7b"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "The numbers E_0,E_1,...,E_n are natural numbers because they are defined as counting numbers together with the convention E_0=1. Moreover E_0 = 1 by definition from A1, and E_1 = 1 by L7.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "This packages the base values and the numeric type information needed for the later recurrence and optimization lemmas.",
+      "uses_lemmas": [
+        "lem_20260326145700_ee5eec74"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "By instantiating L4 separately at each size m = 2,3,...,n, the finite sequence E_0,E_1,...,E_n satisfies both parity convolution identities required in the hypotheses of L5 for every m in that range. In particular, it satisfies the odd-indexed recurrence hypotheses required by L8.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "A8 is a finite family of direct applications of the universal statement of L4.",
+      "uses_lemmas": [
+        "lem_20260326145604_4b9d21e2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Apply L8 to the sequence E_0,E_1,...,E_n. Using A7 for the base values E_0=1 and E_1=1, and using the odd recurrence part of A8, conclude that E_m > 0 for every m with 0 <= m <= n.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "L8 is exactly the abstract positivity lemma for a sequence satisfying the odd convolution recurrence.",
+      "uses_lemmas": [
+        "lem_20260326145707_ad56536b"
+      ],
+      "uses_prior_steps": [
+        "A7",
+        "A8"
+      ]
+    },
+    {
+      "derives": "The hypotheses of L5 are now all verified for the weights w_j from A4: V(s) has no consecutive elements by A6, E_0 = 1 by A7, every E_m is positive by A9, and the parity convolution identities hold by A8. Therefore L5 gives sum over j in V(s) of w_j <= max( sum over odd j with 1 <= j <= n of w_j, sum over even j with 1 <= j <= n of w_j ). Combining this with A5 also gives F(s) <= max( sum over odd j of w_j, sum over even j of w_j ).",
+      "is_trivial": false,
+      "step_id": "A10",
+      "trivial_justification": "This is the corrected application of the bottleneck lemma with all previously missing hypotheses now explicit.",
+      "uses_lemmas": [
+        "lem_20260326145626_35de6c2f"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9"
+      ]
+    },
+    {
+      "derives": "Taking m = n in the identities obtained in A8, and using the definition w_j = binomial(n-1,j-1) E_{j-1} E_{n-j} from A4, we get sum over odd j with 1 <= j <= n of w_j = E_n and sum over even j with 1 <= j <= n of w_j = E_n.",
+      "is_trivial": true,
+      "step_id": "A11",
+      "trivial_justification": "The formulas in A8 at size n are exactly the odd and even parity sums of the weights w_j.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4",
+        "A8"
+      ]
+    },
+    {
+      "derives": "Substituting the equalities from A11 into the inequality from A10 yields the global upper bound F(s) <= E_n for every sign sequence s of length n-1.",
+      "is_trivial": true,
+      "step_id": "A12",
+      "trivial_justification": "Replace each parity sum in A10 by E_n using A11.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A10",
+        "A11"
+      ]
+    },
+    {
+      "derives": "By definition from A1, E_n = F(Alt_n^+). By L3, the opposite alternating sequence Alt_n^- has the same count E_n. Since A12 shows that no sign sequence can have count larger than E_n, the maximal value of the counting function is exactly E_n and both alternating sign sequences are maximizers.",
+      "is_trivial": false,
+      "step_id": "A13",
+      "trivial_justification": "This combines the universal upper bound from A12 with the fact that Alt_n^+ attains E_n by definition and Alt_n^- attains the same value by symmetry.",
+      "uses_lemmas": [
+        "lem_20260326145538_1a43ddff"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A12"
+      ]
+    },
+    {
+      "derives": "Let s be any sign sequence whose count is maximal. By A13, its count must equal the maximal value E_n. Then A5 gives E_n = F(s) <= sum over j in V(s) of w_j, while A10 and A11 give sum over j in V(s) of w_j <= E_n. Hence sum over j in V(s) of w_j = E_n = max( sum over odd j of w_j, sum over even j of w_j ). The equality clause of L5 therefore forces V(s) to be exactly the set of odd positions in {1,...,n} or exactly the set of even positions in {1,...,n}.",
+      "is_trivial": false,
+      "step_id": "A14",
+      "trivial_justification": "This is the equality-case extraction: maximality gives equality in the chain of bounds, and the equality clause of L5 identifies the only possible optimal valley sets.",
+      "uses_lemmas": [
+        "lem_20260326145626_35de6c2f"
+      ],
+      "uses_prior_steps": [
+        "A5",
+        "A10",
+        "A11",
+        "A13"
+      ]
+    },
+    {
+      "derives": "Apply L6 to the two valley-set possibilities from A14. If V(s) is the odd set, then s = Alt_n^+; if V(s) is the even set, then s = Alt_n^-. Conversely, A13 already showed that both Alt_n^+ and Alt_n^- are maximizers. Therefore, for every integer n at least 2, if s=(s_1,...,s_{n-1}) with each s_i equal to plus 1 or minus 1 and f(s)=F(s) counts permutations a of {1,...,n} satisfying s_i(a_{i+1}-a_i) > 0 for all i, then f(s) is maximal exactly for the two alternating sign sequences, equivalently exactly when s_i s_{i+1} = -1 for every i=1,...,n-2.",
+      "is_trivial": false,
+      "step_id": "A15",
+      "trivial_justification": "A14 proves that any maximizer has a full parity valley set, L6 converts that into an alternating sign pattern, and A13 gives the converse attainment. Together with the base case in A1, this completes the induction and yields the exact root theorem.",
+      "uses_lemmas": [
+        "lem_20260326145645_1e8ed3bb"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A13",
+        "A14"
+      ]
+    }
+  ]
+}

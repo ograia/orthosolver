@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from .artifact_io import RunPaths, write_json, write_text
-from .config import RuntimeConfig, resolve_model_id
+from .config import RuntimeConfig
 
 _log = logging.getLogger(__name__)
 
@@ -27,6 +27,25 @@ def _kill_process_group(proc: subprocess.Popen) -> None:
             proc.kill()
         except OSError:
             pass
+
+
+def phase_timeout_overrides(timeout_seconds: int | None) -> dict[str, int]:
+    """Map a phase timeout to Claude runner kwargs.
+
+    A non-positive phase timeout means "no timeout" for the whole Claude turn,
+    including init/idleness watchdogs. Positive values keep the configured
+    sub-timeouts and only override the hard wall-clock timeout.
+    """
+    if timeout_seconds is None:
+        return {}
+    if timeout_seconds <= 0:
+        return {
+            "timeout_seconds": 0,
+            "idle_timeout_seconds": 0,
+            "tool_wait_timeout_seconds": 0,
+            "init_timeout_seconds": 0,
+        }
+    return {"timeout_seconds": timeout_seconds}
 
 
 @dataclass(frozen=True)
@@ -146,7 +165,7 @@ class ClaudeRunner:
         tool_wait_timeout_seconds: int | None = None,
         init_timeout_seconds: int | None = None,
     ) -> ClaudeRunResult:
-        effective_model = resolve_model_id(model or self._runtime_config.claude.model)
+        effective_model = model or self._runtime_config.claude.model
         configured_timeout = (
             self._runtime_config.claude.timeout_seconds if timeout_seconds is None else timeout_seconds
         )

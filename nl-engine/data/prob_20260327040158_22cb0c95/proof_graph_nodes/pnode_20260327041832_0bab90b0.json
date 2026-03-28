@@ -1,0 +1,101 @@
+{
+  "created_at": "2026-03-27T04:18:32.170125Z",
+  "graph_node_id": "pnode_20260327041832_0bab90b0",
+  "metadata": {
+    "parent_id": "thm_root_20260327040158_5065188f"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "0fcced7fce2daf2f1048a20eb6bfaee9f87ae333d1580074458346a2d695cbba",
+  "owner_id": "lem_20260327041428_11f47d05",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m and r are positive integers.",
+      "The input vector x has exactly m entries.",
+      "Each sign t_q is either plus one or minus one.",
+      "For a generic vector y of length ell, U(y) and D(y) have length ell plus 1.",
+      "Empty sums are interpreted as 0.",
+      "The coefficients w_1 through w_m are positive integers.",
+      "The coefficients satisfy strict decrease: w_1 greater than w_2 greater than ... greater than w_m.",
+      "The final identities are required for every real vector x of length m."
+    ],
+    "normalized_claim": "For each positive integers m and r, there exists a strictly decreasing sequence of positive integers w_1 through w_m, depending only on m and r, such that for every real vector x of length m, the total sum of the entries after applying the alternating plus-first sign pattern r times equals the linear form with coefficients w_1 through w_m, and the total sum after applying the alternating minus-first sign pattern r times equals the linear form with the same coefficients in reversed order.",
+    "quantifier_order": [
+      "Fix positive integers m and r.",
+      "For every sign string t of length r with entries plus one or minus one, the recursive map T_t is defined on vectors of length m.",
+      "There exists a vector w_{m,r} of length m with positive integer entries such that w_1 is greater than w_2 and so on down to w_m.",
+      "For every real vector x of length m, the two stated identities hold for the alternating sign strings of length r."
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "fixed parameter controlling vector length",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter controlling the number of sign steps",
+        "type": "integer"
+      },
+      {
+        "domain": "real vectors of length m",
+        "name": "x",
+        "role": "input vector for the transformation and the linear identities",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "strings of length r with entries plus one or minus one",
+        "name": "t",
+        "role": "controls whether each step applies U or D",
+        "type": "sign string"
+      },
+      {
+        "domain": "1 through r",
+        "name": "q",
+        "role": "step index in the recursive definition",
+        "type": "integer index"
+      },
+      {
+        "domain": "vectors of length ell",
+        "name": "y",
+        "role": "generic input to U and D",
+        "type": "vector"
+      },
+      {
+        "domain": "positive integers",
+        "name": "ell",
+        "role": "length of the generic vector y",
+        "type": "integer"
+      },
+      {
+        "domain": "indices in the coordinate sums",
+        "name": "i",
+        "role": "summation index in the formulas for U, D, and the final linear forms",
+        "type": "integer index"
+      },
+      {
+        "domain": "1 through ell plus 1",
+        "name": "j",
+        "role": "coordinate index in U(y) and D(y)",
+        "type": "integer index"
+      },
+      {
+        "domain": "positive integers of length m",
+        "name": "w",
+        "role": "coefficient vector whose existence is asserted",
+        "type": "vector of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "The witness vector w_{m,r} may depend on m and r.",
+      "The witness does not depend on the particular choice of x.",
+      "The same witness vector must work simultaneously for both alternating sign strings Alt_r^+ and Alt_r^-."
+    ]
+  },
+  "statement_nl": "Fix positive integers m and r. For a vector x of length m and a sign string t=(t_1,...,t_r) with each t_q in {+1,-1}, define x^(0)=x and for q=1,...,r define x^(q) by x^(q)=U(x^(q-1)) when t_q=+1 and x^(q)=D(x^(q-1)) when t_q=-1, where for any vector y=(y_1,...,y_ell), the vectors U(y) and D(y) of length ell+1 are given by U(y)_j = sum_{i=1}^{j-1} y_i and D(y)_j = sum_{i=j}^{ell} y_i for 1 <= j <= ell+1, with empty sums equal to 0. Write T_t(x)=x^(r). Let Alt_r^+=(+1,-1,+1,-1,...) and Alt_r^-=(-1,+1,-1,+1,...) be the two alternating sign strings of length r. Then there exists a vector w_{m,r}=(w_1,...,w_m) of positive integers with w_1 > w_2 > ... > w_m such that for every real vector x=(x_1,...,x_m), Total(T_{Alt_r^+}(x)) = sum_{i=1}^m w_i x_i and Total(T_{Alt_r^-}(x)) = sum_{i=1}^m w_{m+1-i} x_i, where Total(y) denotes the sum of the entries of y.",
+  "updated_at": "2026-03-27T04:18:32.170126Z"
+}

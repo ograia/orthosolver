@@ -1,0 +1,244 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/lemmas/lem_20260327172828_3075c939/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T17:56:24.468812Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T17:56:35.640032Z",
+  "controller_consumed_by_execution_id": "exec_20260327165556_006dee7c",
+  "created_at": "2026-03-27T17:55:51.693667Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+        "item_id": "pnode_20260327172943_c469307d",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327165556_b210f785",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327165556_b210f785",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer",
+            "n greater than 1",
+            "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+            "x is a real number",
+            "floor is the greatest integer less than or equal to its real input"
+          ],
+          "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+          "quantifier_order": [
+            "for all integers n with n greater than 1",
+            "there exists a real number x_star",
+            "for all real numbers y",
+            "E_n(x_star) is at least E_n(y)"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter with constraint n greater than 1",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index, restricted to k from 1 through n",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "variable over which the expression is maximized",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "y",
+              "role": "arbitrary competitor value to define maximality",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "E_n(x)",
+              "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "M(n)",
+              "role": "the maximal value of E_n(x) over all real x, depends on n",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x_star",
+              "role": "a real number where the maximum is achieved; may depend on n",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+            "M(n) depends on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327172828_3075c939",
+    "proof_nl": "Let H_n := 1 + 1/2 + \\cdots + 1/n. If a = 0, then E_n(0) = 0 < H_n - 1 because n > 1, so the claim is trivial. Assume 1 \\le a \\le n-1.\n\nWrite d = gcd(a,n), and set n = dm and a = db with gcd(b,m) = 1. For x = a/n we have\nE_n(a/n) = floor(n(a/n)) - \\sum_{k=1}^n floor(ka/n)/k = a - \\sum_{k=1}^n floor(ka/n)/k.\nSince \\sum_{k=1}^n (ka/n)/k = a, this is\nE_n(a/n) = \\sum_{k=1}^n \\{ka/n\\}/k.\nNow write k = qm + r with 0 \\le q \\le d-1 and 1 \\le r \\le m. Then\n\\{ka/n\\} = \\{k b/m\\} = \\{rb/m\\},\nbecause qm\\,b/m = qb is an integer. As r runs through 1,\\dots,m, the values \\{rb/m\\} run through the set {0, 1/m, 2/m, \\dots, (m-1)/m} exactly once, since multiplication by b permutes the residue classes modulo m. Therefore the n numbers m\\{ka/n\\} form a multiset consisting of d copies of each integer 0,1,\\dots,m-1.\n\nLet c_1,\\dots,c_n be these integers, so E_n(a/n) = (1/m)\\sum_{k=1}^n c_k/k. Among all permutations of a fixed multiset, the sum \\sum c_k/k is maximized when the c_k are arranged in nonincreasing order: whenever i < j but c_i < c_j, swapping c_i and c_j increases the sum by (c_j-c_i)(1/i - 1/j) > 0. Hence\nE_n(a/n) \\le (1/m)\\sum_{k=1}^n c_k^*/k,\nwhere c_1^* \\ge \\cdots \\ge c_n^* is the decreasing rearrangement of the multiset. Because there are d copies of each integer 0,1,\\dots,m-1, this rearrangement is\nc_k^* = m - \\lceil k/d \\rceil.\nThus\nc_k^*/m = 1 - \\lceil k/d \\rceil/m \\le 1 - k/(dm) = (n-k)/n.\nSo\nE_n(a/n) \\le \\sum_{k=1}^n \\frac{n-k}{n k} = \\sum_{k=1}^{n-1}\\left(\\frac1k - \\frac1n\\right) = H_{n-1} - \\frac{n-1}{n} = H_n - 1.\nThis proves the inequality.\n\nFor equality, we must have equality in both steps above. In particular, from k=1 in the termwise bound we get\n(m-1)/m = (n-1)/n,\nso d = 1. Hence gcd(a,n) = 1, and the multiset m\\{ka/n\\} is just {0,1,\\dots,n-1}. Equality in the rearrangement step then forces the sequence to already be nonincreasing, so it must be n-1,n-2,\\dots,0. In particular the first term equals a = n-1. Conversely, if a = n-1, then for k < n,\nfloor(k(n-1)/n) = k-1,\nand floor(n(n-1)/n) = n-1, so\nE_n((n-1)/n) = (n-1) - \\left(\\sum_{k=1}^{n-1}\\frac{k-1}{k} + \\frac{n-1}{n}\\right) = H_n - 1.\nTherefore E_n(a/n) \\le H_n - 1, with equality if and only if a = n-1.",
+    "role_in_assembly": "Provide the sharp global upper bound at the discrete endpoints a/n; this is the main frontier step.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "a is an integer and 0 <= a <= n - 1",
+        "E_n is defined at the rational number a divided by n",
+        "H_n is defined as an object that can be compared to E_n(a/n) (and subtracted by 1)"
+      ],
+      "normalized_claim": "For all integers n with n > 1 and for all integers a with 0 <= a <= n - 1: E_n(a divided by n) is at most H_n minus 1, and E_n(a divided by n) equals H_n minus 1 if and only if a equals n - 1.",
+      "quantifier_order": [
+        "for all integers n with n > 1",
+        "for all integers a with 0 <= a <= n - 1"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "parameter indexing E_n and H_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "a",
+          "role": "input index controlling the rational argument a divided by n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses are introduced",
+        "the equality condition depends only on whether a equals n - 1"
+      ]
+    },
+    "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) <= H_n - 1, and equality holds if and only if a = n-1.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.96,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327172828_3075c939",
+    "proof_status": "complete",
+    "reason": "The proof establishes the stated bound for all 0 <= a <= n-1 by converting E_n(a/n) into a weighted sum of a fixed multiset of fractional parts, maximizing via rearrangement, and then deriving the sharp bound H_n - 1. The equality case is correctly isolated at a = n - 1. No semantic drift or dependency issues are present.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T17:55:51.973007Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327172828_3075c939",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T17:56:35.640037Z",
+  "worker_job_id": "wrk_lem_20260327172828_3075c939_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

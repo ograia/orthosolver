@@ -1,0 +1,87 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327172937_a6bac09b",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:28:08.792617Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:53:33.528550Z",
+  "last_dependency_check_id": "depchk_20260327175332_fc008835",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly establishes 1-periodicity of E_n by applying floor(a+integer)=floor(a)+integer to each term and canceling the added nm contributions. It matches the lemma statement exactly and uses no forbidden dependencies.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n>1, a real number x, and an integer m. Define E_n(x)=floor(nx)-sum_{k=1}^n floor(kx)/k. We show E_n(x+m)=E_n(x).\n\nFor the first term, nx+nm differs from nx by the integer nm, so floor(n(x+m))=floor(nx+nm)=floor(nx)+nm.\n\nFor each k with 1<=k<=n, k(x+m)=kx+km differs from kx by the integer km, hence floor(k(x+m))=floor(kx+km)=floor(kx)+km. Dividing by k gives floor(k(x+m))/k = floor(kx)/k + m.\n\nSumming this over k=1,2,...,n yields sum_{k=1}^n floor(k(x+m))/k = sum_{k=1}^n floor(kx)/k + nm.\n\nTherefore\nE_n(x+m)=floor(n(x+m)) - sum_{k=1}^n floor(k(x+m))/k\n=(floor(nx)+nm) - (sum_{k=1}^n floor(kx)/k + nm)\n=floor(nx)-sum_{k=1}^n floor(kx)/k\n=E_n(x).\n\nSo E_n is periodic with period 1 on real inputs, as claimed.",
+  "latest_vetted_proof_fingerprint": "7808834a2185b984bb610bdd785f818b3ddfe3f10c61fbe2b890481bfada9d6f",
+  "latest_vetter_report_id": "rep_20260327175332_30ef0aa9",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327172803_147be4b4",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327172803_147be4b4.json",
+  "proof_graph_id": "pgraph_20260327172936_9fcd13e5",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Reduce an arbitrary real input x to its fractional part frac(x).",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n greater than 1",
+      "x is any real number",
+      "m is any integer",
+      "the expression E_n(x+m) is defined for the given n and input x+m"
+    ],
+    "normalized_claim": "For all integers n with n greater than 1, for all real numbers x, and for all integers m, the value of E_n at input x plus m equals the value of E_n at input x.",
+    "quantifier_order": [
+      "for all n in integers with n greater than 1",
+      "for all x in real numbers",
+      "for all m in integers"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "index/parameter of the function E_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "input variable to the function E_n",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "integer shift added to x",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "none (the equality must hold uniformly for all n, x, and m)"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:53:33.528550Z"
+}

@@ -315,7 +315,7 @@ At a high level, the system executes the following loop (under standard mode; se
 \node[aux]  (lean) at (23.8,0) {\Lean{} Engine};
 \node[comp] (done) at (27.7,0) {Verified\\Result};
 
-\node[db] (state) at (12,-3.0) {Cloud SQL State Store};
+\node[db] (state) at (12,-3.0) {Shared JSON State Store};
 \node[db] (gcs) at (20,-3.0) {Artifact Store / GCS};
 
 \draw[arrow] (submit) -- (decomp);
@@ -736,11 +736,11 @@ Written to GCS when \texttt{problem.status = failed}. Also written as a partial 
 \end{lstlisting}
 
 %% ═══════════════════════════════════════════════════════════════════════════════
-\section{Relational Database Schema}
+\section{Persisted State Schema}
 \label{sec:db_schema}
 %% ═══════════════════════════════════════════════════════════════════════════════
 
-This section translates the data model into PostgreSQL DDL for Cloud SQL. JSONB is used only for semi-structured fields not queried by subfield in SQL. All routing-critical fields are first-class columns with indexes.
+This section records an older structured schema view of the data model. The active runtime now persists the same routing-critical fields in JSON object storage.
 
 \subsection{Enum Types}
 
@@ -1728,14 +1728,14 @@ All worker prompts, injected inputs, and raw outputs are stored as GCS artifacts
   \item Cloud Run: public API + orchestrator
   \item Cloud Run: decomposition worker, decomposition vetter worker, lemma solver worker, lemma vetter worker
   \item Cloud Run: \Lean{} engine (separate team, see companion doc)
-  \item Cloud SQL (Postgres 16): canonical relational state
+  \item Shared object storage: canonical state
   \item GCS: artifacts, transcripts, logs, \Lean{} files
   \item Pub/Sub: internal job dispatch (with dead letter queue)
   \item Secret Manager: API keys and credentials
 \end{itemize}
 
 \subsection{Stateless Services}
-All services are stateless. The only source of truth is Cloud SQL plus GCS artifacts.
+All services are stateless. The only source of truth is object-backed state plus GCS artifacts.
 
 \subsection{Idempotency}
 All worker APIs are idempotent on \texttt{job\_id}. Before executing, check for existing result. This guarantees exactly-once state transitions under Pub/Sub at-least-once delivery.
@@ -1841,7 +1841,7 @@ resource "google_vpc_access_connector" "connector" {
 }
 \end{lstlisting}
 
-\subsubsection{Cloud SQL}
+\subsubsection{Shared State Bucket}
 
 \begin{lstlisting}[language=hcl]
 resource "google_sql_database_instance" "main" {
@@ -2001,7 +2001,7 @@ resource "google_cloud_run_domain_mapping" "api" {
 %% ═══════════════════════════════════════════════════════════════════════════════
 
 \subsection{Phase 1: NL Pipeline End-to-End (NL-Only Mode)}
-Postgres schema + migrations, controller tick loop, Agent 1 (sketch), Agent 2 (decomposer), Agent 3 (decomposition vetter), Agent 4 (solver), Agent 5 (proof vetter), GCS artifact storage, public API. All testing in \texttt{nl\_only\_mode}.
+JSON object storage, controller tick loop, Agent 1 (sketch), Agent 2 (decomposer), Agent 3 (decomposition vetter), Agent 4 (solver), Agent 5 (proof vetter), GCS artifact storage, public API. All testing in \texttt{nl\_only\_mode}.
 
 \subsection{Phase 2: Lean Engine Integration}
 Deploy mock \Lean{} service. Wire orchestrator to call mock via API contract. Test standard-mode code paths (assembly check, formalize, assemble root) with mock responses. Test forced failure modes via \texttt{X-Mock-Behavior} header.

@@ -148,6 +148,8 @@ class NormalizedLemma:
     proof_status: str | None = None
     routing_status: str | None = None
     role_in_parent: str | None = None
+    depends_on: list[str] = field(default_factory=list)
+    layer_index: int | None = None
     extra: JsonDict = field(default_factory=dict)
 
     def to_dict(self) -> JsonDict:
@@ -161,6 +163,8 @@ class NormalizedLemma:
                 "proof_status": self.proof_status,
                 "routing_status": self.routing_status,
                 "role_in_parent": self.role_in_parent,
+                "depends_on": list(self.depends_on),
+                "layer_index": self.layer_index,
             }
         )
         return data

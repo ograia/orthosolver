@@ -1,0 +1,600 @@
+{
+  "artifact_prefix": "problems/prob_20260326142247_f1e3c295/decomposer/attempt_20260326142337_04da89d4_track_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-26T14:23:37.387386Z",
+  "error_payload": null,
+  "execution_id": "exec_20260326142315_e1449e19",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 5,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "Each entry s_i is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}",
+        "The inequality must hold for every index i from 1 to n minus 1",
+        "The expression a_{i+1} minus a_i is compared through strict inequality, so equality is not allowed"
+      ],
+      "normalized_claim": "For each integer n at least 2, characterize all length n minus 1 sequences of signs plus 1 or minus 1 that maximize the number of permutations of {1, 2, ..., n} whose successive differences have the prescribed signs.",
+      "quantifier_order": [
+        "For each integer n at least 2",
+        "For each sign sequence s of length n minus 1 with entries plus 1 or minus 1",
+        "Define f(s) as the number of permutations a of {1, 2, ..., n} such that for every i from 1 to n minus 1, s_i times (a_{i+1} minus a_i) is greater than 0",
+        "Among all such sequences s for the fixed n, find those that maximize f(s)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "parameter controlling the length of the sequence and the permutation size",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries plus 1 or minus 1",
+          "name": "s",
+          "role": "object being optimized over",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "for each i from 1 to n minus 1, s_i is plus 1 or minus 1",
+          "name": "s_i",
+          "role": "ith entry of the sign sequence",
+          "type": "integer sign"
+        },
+        {
+          "domain": "permutations of {1, 2, ..., n}",
+          "name": "a",
+          "role": "witness counted by f(s)",
+          "type": "permutation"
+        },
+        {
+          "domain": "for each i from 1 to n, a_i is an element of {1, 2, ..., n} with all values distinct",
+          "name": "a_i",
+          "role": "ith value of the permutation",
+          "type": "integer"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "index for adjacent differences and sign constraints",
+          "type": "integer index"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "f(s)",
+          "role": "number of permutations satisfying the sign constraints",
+          "type": "counting function"
+        }
+      ],
+      "witness_dependencies": [
+        "Any permutation counted by f(s) depends on the chosen sequence s and on n",
+        "The maximizing sequence s depends on the fixed value of n",
+        "The maximizing property is global over all sign sequences of length n minus 1 for that n"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260326142247_f1e3c295",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "The proof is by strong induction on n. For a fixed sign sequence s, look at the position of the smallest value 1. It can occur only at a valley of s, and summing over the possible valley positions gives an exact recursion for f(s). By the induction hypothesis, each left or right subproblem is bounded by the corresponding alternating count E_m, so f(s) is bounded by a weighted sum over the valley set V(s). The weights are w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}. A separate weighted independent-set theorem shows that among all subsets of {1,...,n} with no consecutive elements, the largest possible total weight is achieved exactly by the odd positions or the even positions. The alternating patterns realize those two parity valley sets, and their counts are exactly E_n by the alternating recurrence. Hence they attain the global maximum. If equality holds for some s, then its valley set must be one of those two parity classes, which forces s itself to alternate. Therefore the maximizers are exactly the two alternating sign sequences.",
+          "steps": [
+            {
+              "derives": "Prove the theorem by strong induction on n. For the induction, keep the auxiliary conventions E_0 = 1 and E_1 = 1. The base case n = 2 is immediate: the only sign sequences have length 1, namely (+1) and (-1), both satisfy the alternating condition vacuously, and each is realized by exactly one permutation, so both are maximal.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "This is the induction setup together with a direct check of the first nontrivial size.",
+              "uses_lemmas": [],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Fix n >= 3 and assume the theorem already holds for every smaller size 2 <= m < n. Let s be any sign sequence of length n-1, and write f(s) for the theorem's counting function. Applying L2 to s gives an exact decomposition f(s) = sum_{j in V(s)} binomial(n-1,j-1) left_count(j) right_count(j), where V(s) is the valley set of s and left_count(j), right_count(j) count the valid left and right subpatterns obtained after placing the value 1 at position j.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "L2 is the exact recursion by the position of the smallest value 1.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "For each j in V(s), the left factor left_count(j) is a count for a sign sequence on j-1 positions, and the right factor right_count(j) is a count for a sign sequence on n-j positions. By the induction hypothesis, each such count is at most the alternating maximum for that size, namely E_{j-1} on the left and E_{n-j} on the right. In the boundary cases j=1 or j=n, the missing side contributes 1, which is exactly E_0 by convention. Therefore every summand in A2 is at most w_j := binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "This step applies the induction hypothesis separately to the two smaller subproblems in each summand and handles the empty-side cases by the convention E_0 = 1.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "Summing the termwise bounds from A3 over all j in V(s) yields f(s) <= sum_{j in V(s)} w_j, where w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "A4 is obtained by replacing each summand in the exact formula from A2 by the corresponding upper bound from A3 and summing.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A2",
+                "A3"
+              ]
+            },
+            {
+              "derives": "By L1, the valley set V(s) has no two consecutive elements, so it is an independent set in the path {1,...,n}. Also, by instantiating L4 at each size m = 2,3,...,n, the sequence E_0,E_1,...,E_n satisfies the parity convolution identities required in the hypotheses of L5.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "The first conclusion is exactly the structural part of L1. The second conclusion comes from applying the universal statement of L4 to every size up to n.",
+              "uses_lemmas": [
+                "L1",
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A4"
+              ]
+            },
+            {
+              "derives": "Applying L5 to the independent set V(s) and the weights w_j from A4 gives f(s) <= sum_{j in V(s)} w_j <= max( sum_{j odd} w_j, sum_{j even} w_j ).",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "L5 is applicable because A5 verifies exactly its hypotheses: the set V(s) has no consecutive elements and the sequence E satisfies the required convolution identities.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A4",
+                "A5"
+              ]
+            },
+            {
+              "derives": "By L4, both parity sums are equal to the alternating count E_n: sum_{j odd} w_j = E_n and sum_{j even} w_j = E_n.",
+              "is_trivial": true,
+              "step_id": "A7",
+              "trivial_justification": "This is exactly the conclusion of L4 at size n after identifying w_j with binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Combining A6 with A7 yields the global upper bound f(s) <= E_n for every sign sequence s of length n-1.",
+              "is_trivial": true,
+              "step_id": "A8",
+              "trivial_justification": "Substitute the value E_n for the parity sums in the inequality from A6.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A6",
+                "A7"
+              ]
+            },
+            {
+              "derives": "By definition, E_n is the count of the alternating sequence Alt_n^+. By L3, the opposite alternating sequence Alt_n^- has the same count E_n. Since A8 shows that no sign sequence can have count larger than E_n, both alternating sequences are maximizers.",
+              "is_trivial": false,
+              "step_id": "A9",
+              "trivial_justification": "This step combines the definition of E_n, the symmetry from L3, and the universal upper bound from A8.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A8"
+              ]
+            },
+            {
+              "derives": "Now assume in addition that f(s) = E_n. The inequalities from A4, A6, and A7 then force equality throughout: sum_{j in V(s)} w_j = E_n = max( sum_{j odd} w_j, sum_{j even} w_j ). Therefore, by the equality clause in L5, the valley set V(s) must be exactly the odd positions in {1,...,n} or exactly the even positions in {1,...,n}.",
+              "is_trivial": false,
+              "step_id": "A10",
+              "trivial_justification": "If the final value equals the upper bound from A8, then the intermediate bound in A4 and the independent-set bound in A6 must also be equalities. L5 characterizes when that can happen.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A4",
+                "A6",
+                "A7",
+                "A8"
+              ]
+            },
+            {
+              "derives": "By L6, if V(s) is the full odd class then s is Alt_n^+, and if V(s) is the full even class then s is Alt_n^-. Together with A9, this proves that for every integer n at least 2, the sign sequences s for which f(s) is maximal are exactly the two alternating sequences, equivalently exactly those satisfying s_i s_{i+1} = -1 for every i = 1,...,n-2.",
+              "is_trivial": false,
+              "step_id": "A11",
+              "trivial_justification": "A10 gives the only two possible valley sets for a maximizer, L6 converts those valley sets into the two alternating sign sequences, and A9 already showed that those two sequences do attain the maximum.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A9",
+                "A10"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer m at least 1 and a sign sequence t=(t_1,...,t_{m-1}) with each t_i equal to plus 1 or minus 1, F(t) denotes the number of permutations b=(b_1,...,b_m) of {1,...,m} such that t_i(b_{i+1}-b_i) > 0 for every 1 <= i <= m-1. For m=1, t is the empty sequence and F(t)=1.",
+            "kind": "definition",
+            "label": "Generic counting function F"
+          },
+          {
+            "content": "For m at least 1, Alt_m^+ is the length m-1 sign sequence with entries plus 1, minus 1, plus 1, minus 1, ...; Alt_m^- is defined by Alt_m^- = -Alt_m^+. Set E_0 = 1 and E_m = F(Alt_m^+) for m >= 1.",
+            "kind": "definition",
+            "label": "Alternating sign sequences and E_m"
+          },
+          {
+            "content": "For s=(s_1,...,s_{n-1}), the valley set Val(s) is the subset of {1,...,n} defined by: 1 belongs to Val(s) iff s_1 = plus 1; n belongs to Val(s) iff s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to Val(s) iff s_{j-1} = minus 1 and s_j = plus 1.",
+            "kind": "definition",
+            "label": "Valley set"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.78,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.22,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Identifies the only possible positions of the smallest value and supplies the no-consecutive property needed for the weighted independent-set bound.",
+            "self_check_notes": "All notation, including the valley set, is defined inside the statement; there is no reference to any other lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n >= 2",
+                "s has exactly n-1 entries",
+                "each s_i is plus 1 or minus 1",
+                "a is a permutation of {1,...,n}",
+                "s_i(a_{i+1}-a_i) > 0 for every i from 1 to n-1"
+              ],
+              "normalized_claim": "In every permutation realizing the sign pattern s, the entry 1 can occur only at a valley position of s; the set of valley positions is an independent set in the path {1,...,n}.",
+              "quantifier_order": [
+                "For each integer n at least 2",
+                "For each sign sequence s of length n-1 with entries plus 1 or minus 1",
+                "Define the valley set V(s) by the endpoint rules and the internal pattern minus-then-plus",
+                "For each permutation a of {1,...,n} satisfying the sign inequalities",
+                "Claim that if a_j = 1 then j belongs to V(s), and that V(s) has no consecutive elements"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sequences of length n-1 with entries plus 1 or minus 1",
+                  "name": "s",
+                  "role": "prescribed adjacent-sign pattern",
+                  "type": "finite sign sequence"
+                },
+                {
+                  "domain": "permutations of {1,2,...,n}",
+                  "name": "a",
+                  "role": "witness satisfying the sign inequalities",
+                  "type": "permutation"
+                },
+                {
+                  "domain": "integers from 1 to n",
+                  "name": "j",
+                  "role": "position of the smallest entry 1",
+                  "type": "integer index"
+                }
+              ],
+              "witness_dependencies": [
+                "The admissible position j for the value 1 depends on the chosen sign sequence s"
+              ]
+            },
+            "statement_nl": "Let n be an integer with n at least 2, and let s=(s_1,...,s_{n-1}) be a sign sequence with each s_i equal to plus 1 or minus 1. Define the valley set V(s) subset of {1,...,n} by: 1 belongs to V(s) exactly when s_1 = plus 1; n belongs to V(s) exactly when s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to V(s) exactly when s_{j-1} = minus 1 and s_j = plus 1. Then no two consecutive integers belong to V(s). Moreover, if a=(a_1,...,a_n) is a permutation of {1,...,n} such that s_i(a_{i+1}-a_i) > 0 for every i=1,...,n-1, and if a_j = 1, then j belongs to V(s).",
+            "strictly_easier_reason": "This is a local structural statement about where the minimum may appear; it does not compare counts of different sign sequences."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.46,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Provides the exact recursive decomposition of the counting function into smaller sign-pattern counts.",
+            "self_check_notes": "The statement defines F(s), the valley set, and the left/right counts locally; no hidden notation is used.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n >= 2",
+                "s has length n-1",
+                "each s_i is plus 1 or minus 1",
+                "binomial(n-1,j-1) counts the choice of which values greater than 1 lie to the left of position j"
+              ],
+              "normalized_claim": "The count F(s) satisfies an exact recursion obtained by placing the smallest value 1 at each valley j, choosing the left value-set in binomial(n-1,j-1) ways, and multiplying the independent left and right subcounts.",
+              "quantifier_order": [
+                "For each integer n at least 2",
+                "For each sign sequence s of length n-1 with entries plus 1 or minus 1",
+                "Define F(s), the valley set V(s), and the counts left_count(j), right_count(j) for each valley j",
+                "Claim the exact decomposition formula for F(s) by the position of the value 1"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sequences of length n-1 with entries plus 1 or minus 1",
+                  "name": "s",
+                  "role": "pattern being counted",
+                  "type": "finite sign sequence"
+                },
+                {
+                  "domain": "elements of the valley set V(s)",
+                  "name": "j",
+                  "role": "position occupied by the smallest entry 1",
+                  "type": "integer index"
+                },
+                {
+                  "domain": "counts of shorter sign-pattern permutations",
+                  "name": "left_count(j)",
+                  "role": "number of valid left subconfigurations",
+                  "type": "nonnegative integer"
+                },
+                {
+                  "domain": "counts of shorter sign-pattern permutations",
+                  "name": "right_count(j)",
+                  "role": "number of valid right subconfigurations",
+                  "type": "nonnegative integer"
+                }
+              ],
+              "witness_dependencies": [
+                "left_count(j) depends on the prefix s_1,...,s_{j-2}",
+                "right_count(j) depends on the suffix s_{j+1},...,s_{n-1}",
+                "the summand indexed by j depends on n, s, and j"
+              ]
+            },
+            "statement_nl": "Let n be an integer with n at least 2, and let s=(s_1,...,s_{n-1}) be a sign sequence with each s_i equal to plus 1 or minus 1. Let F(s) be the number of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i) > 0 for every i=1,...,n-1. Define the valley set V(s) subset of {1,...,n} by: 1 belongs to V(s) exactly when s_1 = plus 1; n belongs to V(s) exactly when s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to V(s) exactly when s_{j-1} = minus 1 and s_j = plus 1. For j in V(s), define left_count(j) as follows: if j=1 then left_count(j)=1; if j>=2 then left_count(j) is the number of permutations b=(b_1,...,b_{j-1}) of {1,...,j-1} satisfying s_i(b_{i+1}-b_i) > 0 for every i=1,...,j-2. Define right_count(j) as follows: if j=n then right_count(j)=1; if j<=n-1 then right_count(j) is the number of permutations c=(c_1,...,c_{n-j}) of {1,...,n-j} satisfying s_{j+i}(c_{i+1}-c_i) > 0 for every i=1,...,n-j-1. Then F(s) = sum over j in V(s) of binomial(n-1, j-1) times left_count(j) times right_count(j).",
+            "strictly_easier_reason": "It reduces the size from n to smaller subproblems but does not by itself identify which global pattern is extremal."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.14,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Shows that the two alternating candidates have the same count, so either one may be used to define E_n and both attain the same extremal value.",
+            "self_check_notes": "The counting function and the negated sign sequence are defined locally; the lemma is completely standalone.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "m >= 1",
+                "t has length m-1",
+                "each t_i is plus 1 or minus 1"
+              ],
+              "normalized_claim": "Negating every sign in a pattern does not change its count; in particular the two alternating patterns of a fixed size have equal counts.",
+              "quantifier_order": [
+                "For each integer m at least 1",
+                "For each sign sequence t of length m-1 with entries plus 1 or minus 1",
+                "Define F(t) and the negated sequence -t",
+                "Claim that F(t)=F(-t)"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sequences of length m-1 with entries plus 1 or minus 1",
+                  "name": "t",
+                  "role": "pattern being compared with its sign-negation",
+                  "type": "finite sign sequence"
+                }
+              ],
+              "witness_dependencies": [
+                "The involution proving equality sends each value b_k to m+1-b_k"
+              ]
+            },
+            "statement_nl": "Let m be an integer with m at least 1, and let t=(t_1,...,t_{m-1}) be a sign sequence with each t_i equal to plus 1 or minus 1; when m=1, t is the empty sequence. Let F(t) be the number of permutations b=(b_1,...,b_m) of {1,...,m} such that t_i(b_{i+1}-b_i) > 0 for every i=1,...,m-1. Let -t denote the sign sequence (-t_1,...,-t_{m-1}). Then F(t)=F(-t). In particular, if Alt_m^+ is the length m-1 sequence plus 1, minus 1, plus 1, minus 1, ... and Alt_m^- = -Alt_m^+, then F(Alt_m^+)=F(Alt_m^-).",
+            "strictly_easier_reason": "This is a simple symmetry statement valid for every sign pattern and does not address maximization."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.33,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Identifies the special weight sequence E_n coming from alternating patterns and computes the parity-sum upper bounds exactly.",
+            "self_check_notes": "Alternating patterns, E_m, and both recurrences are defined entirely within the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n >= 2",
+                "E_0 = 1",
+                "for m >= 1, E_m counts permutations realizing an alternating sign pattern"
+              ],
+              "normalized_claim": "The alternating counts E_n satisfy both an odd-indexed and an even-indexed smallest-element convolution recurrence.",
+              "quantifier_order": [
+                "For each integer n at least 2",
+                "Define the alternating sign sequences Alt_m^+ and Alt_m^- for every m and define E_m from their counts with E_0=1",
+                "Claim both parity-restricted convolution formulas for E_n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "target size for the alternating count",
+                  "type": "integer"
+                },
+                {
+                  "domain": "E_0 = 1 and for m >= 1, E_m is the number of alternating-pattern permutations of size m",
+                  "name": "E",
+                  "role": "reference sequence used in the extremal bound",
+                  "type": "sequence of nonnegative integers"
+                },
+                {
+                  "domain": "integers from 1 to n",
+                  "name": "j",
+                  "role": "summation index in the convolution formulas",
+                  "type": "integer index"
+                }
+              ],
+              "witness_dependencies": [
+                "The summand indexed by j depends on E_{j-1} and E_{n-j}"
+              ]
+            },
+            "statement_nl": "For each integer m at least 1, let Alt_m^+ be the sign sequence of length m-1 whose ith entry is plus 1 when i is odd and minus 1 when i is even, and let Alt_m^- = -Alt_m^+. Set E_0 = 1, and for m at least 1 let E_m be the number of permutations of {1,...,m} satisfying Alt_m^+; equivalently, by the complement involution, E_m is also the number of permutations satisfying Alt_m^-. Then for every integer n at least 2, E_n = sum over odd j with 1 <= j <= n of binomial(n-1,j-1) E_{j-1} E_{n-j}, and also E_n = sum over even j with 1 <= j <= n of binomial(n-1,j-1) E_{j-1} E_{n-j}.",
+            "strictly_easier_reason": "It analyzes only the alternating patterns themselves and gives their internal recursion, without comparing them to arbitrary competitors."
+          },
+          {
+            "bottleneck_reason": "After the smallest-element recursion, the original permutation problem reduces to this weighted independent-set optimization. Proving that only the two parity classes maximize the weight is the main new difficulty.",
+            "formalization_cost_estimate": 0.88,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "This is the core extremal step: it turns the recursive upper bound into the sharp statement that only the two parity valley sets can be optimal.",
+            "self_check_notes": "All hypotheses needed to prove the weighted inequality are built into the statement; there is no hidden dependency on the alternating recurrence lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n >= 2",
+                "E_0 = 1",
+                "E_m > 0 for 1 <= m <= n",
+                "for each m from 2 to n, both parity convolution formulas hold",
+                "V has no consecutive elements"
+              ],
+              "normalized_claim": "For the path weights w_j = binomial(n-1,j-1)E_{j-1}E_{n-j} generated by a sequence satisfying the alternating convolution recurrences, the maximum independent-set weight is attained exactly by the odd vertices or the even vertices.",
+              "quantifier_order": [
+                "For each integer n at least 2",
+                "For each positive sequence E_0,...,E_n satisfying the parity convolution identities for every m from 2 to n",
+                "Define the weights w_j",
+                "For each subset V of {1,...,n} with no consecutive integers",
+                "Claim the parity-class upper bound and its equality characterization"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "size of the path on which independent sets are taken",
+                  "type": "integer"
+                },
+                {
+                  "domain": "indexed by {0,1,...,n} with E_0 = 1 and satisfying the two parity convolution identities for every m from 2 to n",
+                  "name": "E",
+                  "role": "abstract weight-defining sequence",
+                  "type": "finite sequence of positive real numbers"
+                },
+                {
+                  "domain": "subsets of {1,...,n} with no two consecutive integers",
+                  "name": "V",
+                  "role": "candidate independent set of the path",
+                  "type": "finite subset"
+                },
+                {
+                  "domain": "defined for j in {1,...,n} by binomial(n-1,j-1) E_{j-1} E_{n-j}",
+                  "name": "w_j",
+                  "role": "vertex weight at position j",
+                  "type": "positive real number"
+                }
+              ],
+              "witness_dependencies": [
+                "The weights w_j depend on n and the sequence E",
+                "The parity sums depend on n and E"
+              ]
+            },
+            "statement_nl": "Fix an integer n with n at least 2. Let E_0,E_1,...,E_n be positive real numbers such that E_0 = 1 and, for every integer m with 2 <= m <= n, one has both identities E_m = sum over odd j with 1 <= j <= m of binomial(m-1,j-1) E_{j-1} E_{m-j} and E_m = sum over even j with 1 <= j <= m of binomial(m-1,j-1) E_{j-1} E_{m-j}. For each j in {1,...,n}, define w_j = binomial(n-1,j-1) E_{j-1} E_{n-j}. If V is any subset of {1,...,n} with no two consecutive integers, then sum over j in V of w_j is at most max( sum over odd j of w_j, sum over even j of w_j ). Moreover, equality holds if and only if V is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Converts the equality case for the optimal valley set back into the exact sign sequences that maximize the original counting function.",
+            "self_check_notes": "The valley-set definition is fully restated, and the conclusion explicitly identifies the resulting sign pattern.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n >= 2",
+                "s has length n-1",
+                "each s_i is plus 1 or minus 1"
+              ],
+              "normalized_claim": "A sign sequence whose valley set is the full odd class or the full even class must be one of the two alternating sign sequences.",
+              "quantifier_order": [
+                "For each integer n at least 2",
+                "For each sign sequence s of length n-1 with entries plus 1 or minus 1",
+                "Define the valley set V(s)",
+                "Assume V(s) is all odd positions or all even positions",
+                "Conclude that s alternates sign at every adjacent pair"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "sequences of length n-1 with entries plus 1 or minus 1",
+                  "name": "s",
+                  "role": "sequence reconstructed from its valley set",
+                  "type": "finite sign sequence"
+                }
+              ],
+              "witness_dependencies": [
+                "The starting sign of s is determined by which parity class equals V(s)"
+              ]
+            },
+            "statement_nl": "Let n be an integer with n at least 2, and let s=(s_1,...,s_{n-1}) be a sign sequence with each s_i equal to plus 1 or minus 1. Define the valley set V(s) subset of {1,...,n} by: 1 belongs to V(s) exactly when s_1 = plus 1; n belongs to V(s) exactly when s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to V(s) exactly when s_{j-1} = minus 1 and s_j = plus 1. If V(s) is exactly the set of odd integers in {1,...,n}, then s_i = plus 1 for odd i and s_i = minus 1 for even i. If V(s) is exactly the set of even integers in {1,...,n}, then s_i = minus 1 for odd i and s_i = plus 1 for even i. Equivalently, if V(s) is a full parity class, then s_i s_{i+1} = -1 for every i=1,...,n-2.",
+            "strictly_easier_reason": "This is a deterministic reconstruction of the sign pattern from its valley set and involves no counting argument."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer m at least 1 and a sign sequence t=(t_1,...,t_{m-1}) with each t_i equal to plus 1 or minus 1, F(t) denotes the number of permutations b=(b_1,...,b_m) of {1,...,m} such that t_i(b_{i+1}-b_i) > 0 for every 1 <= i <= m-1. For m=1, t is the empty sequence and F(t)=1.",
+            "kind": "definition",
+            "label": "Generic counting function F"
+          },
+          {
+            "content": "For m at least 1, Alt_m^+ is the length m-1 sign sequence with entries plus 1, minus 1, plus 1, minus 1, ...; Alt_m^- is defined by Alt_m^- = -Alt_m^+. Set E_0 = 1 and E_m = F(Alt_m^+) for m >= 1.",
+            "kind": "definition",
+            "label": "Alternating sign sequences and E_m"
+          },
+          {
+            "content": "For s=(s_1,...,s_{n-1}), the valley set Val(s) is the subset of {1,...,n} defined by: 1 belongs to Val(s) iff s_1 = plus 1; n belongs to Val(s) iff s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to Val(s) iff s_{j-1} = minus 1 and s_j = plus 1.",
+            "kind": "definition",
+            "label": "Valley set"
+          }
+        ],
+        "strategy_summary": "Use strong induction on n via the position of the smallest value 1. For any sign pattern, 1 can only occur at a locally minimal position (a valley), and summing over the possible valley positions gives an exact recursion for the counting function. The induction hypothesis bounds the left and right subproblems by alternating-pattern counts E_m, turning the problem into a weighted independent-set problem on the path {1,...,n}. The bottleneck is to show that for the special weights coming from the alternating counts, the maximum independent-set weight is attained uniquely by the odd or even parity classes. Those parity valley sets force the original sign sequence itself to alternate."
+      }
+    ],
+    "status": "completed"
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260326142247_6714b56a",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-26T14:40:15.897821Z",
+  "worker_job_id": "wrk_thm_root_20260326142247_6714b56a_decompose_0_track_1_req_20260326142337_567dfaa3",
+  "worker_kind": "decomposition_generation"
+}

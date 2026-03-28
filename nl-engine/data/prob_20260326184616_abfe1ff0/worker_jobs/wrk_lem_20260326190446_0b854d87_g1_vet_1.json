@@ -1,0 +1,294 @@
+{
+  "artifact_prefix": "problems/prob_20260326184616_abfe1ff0/lemmas/lem_20260326190446_0b854d87/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 1,
+  "controller_consumed_at": "2026-03-27T03:17:56.816613Z",
+  "controller_consumed_by_execution_id": "exec_20260327031537_c88045a1",
+  "created_at": "2026-03-27T03:15:47.420572Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327031537_c88045a1",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is at least 2",
+            "s has exactly n minus 1 entries",
+            "each entry of s is either plus 1 or minus 1",
+            "a is a permutation of the set {1, 2, ..., n}",
+            "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+            "the inequality condition is required for every index i from 1 to n minus 1"
+          ],
+          "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+          "quantifier_order": [
+            "For each integer n with n at least 2",
+            "For each sign sequence s of length n minus 1",
+            "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+            "Determine which sign sequences s maximize this count f(s)"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter with n at least 2",
+              "type": "integer"
+            },
+            {
+              "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+              "name": "s",
+              "role": "parameter over which the maximization is taken",
+              "type": "finite sign sequence"
+            },
+            {
+              "domain": "integers from 1 to n minus 1",
+              "name": "i",
+              "role": "index for adjacent comparisons in the sign sequence and permutation",
+              "type": "integer index"
+            },
+            {
+              "domain": "all permutations of {1, 2, ..., n}",
+              "name": "a",
+              "role": "counted object satisfying the sign constraints",
+              "type": "permutation"
+            },
+            {
+              "domain": "elements of {1, 2, ..., n}",
+              "name": "a_i",
+              "role": "ith entry of the permutation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The counted permutation a depends on the chosen n and sign sequence s",
+            "The maximality question is over s for each fixed n",
+            "There is no existential witness in the statement, only a counting definition and a maximization problem"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260326190446_0b854d87",
+    "proof_nl": "Write an alternating permutation of length r as a permutation c_1,...,c_r with c_1 < c_2 > c_3 < c_4 > ... . First note that the number of reverse-alternating permutations c_1 > c_2 < c_3 > ... of {1,...,r} is also E_r, by the bijection c_i -> r+1-c_i.\n\nFor odd j, the number of alternating permutations of {1,...,n} with 1 in position j is exactly w_j. Indeed, in any alternating permutation the odd positions are valleys, so the minimum 1 can occur only at an odd position. Fix such a j. Choose the j-1 values lying to the left of 1; there are binom(n-1,j-1) choices. After order-preserving relabelling, the left block becomes an alternating permutation of length j-1, so there are E_{j-1} possibilities. The right block starts with a descent, hence is reverse-alternating; after complementing its values it becomes alternating, so there are E_{n-j} possibilities. Conversely these data reconstruct the original permutation uniquely. Therefore the count is binom(n-1,j-1) E_{j-1} E_{n-j} = w_j.\n\nSimilarly, for even j, the number of alternating permutations of {1,...,n} with n in position j is also w_j. Indeed, in an alternating permutation the even positions are peaks, so the maximum n can occur only at an even position. Fix such a j. Choose the j-1 values lying to the left of n; there are binom(n-1,j-1) choices. After standardization, both the left block and the right block are alternating permutations of lengths j-1 and n-j, so the count is again binom(n-1,j-1) E_{j-1} E_{n-j} = w_j.\n\nSumming over all odd positions of 1 gives S_odd = E_n, and summing over all even positions of n gives S_even = E_n. So in fact S_odd = S_even = E_n for every n.\n\nNow set F(x) = sum_{r>=0} E_r x^r/r!, and W_n(z) = sum_{j=1}^n w_j z^{j-1}. From the previous paragraph, with m = n-1, we get\n2 E_{m+1} = sum_{k=0}^m binom(m,k) E_k E_{m-k}.\nTherefore 2 F'(x) = 1 + F(x)^2.\n\nLet G(x) = sec x + tan x. A direct calculation gives 2 G'(x) = 1 + G(x)^2 and G(0)=1. For a power series H(x)=1+h_1 x+h_2 x^2+..., the equation 2 H' = 1+H^2 determines h_{m+1} recursively from h_0,...,h_m by comparing coefficients of x^m. Hence the solution with constant term 1 is unique, so F(x)=G(x)=sec x + tan x.\n\nAlso, by the Cauchy product,\nsum_{n>=1} W_n(z) x^{n-1}/(n-1)! = F(zx) F(x).\n\nSince S_odd = S_even, we have W_n(-1)=0 for every n>=2, so W_n(z) is divisible by 1+z. Write W_n(z)=(1+z) Q_n(z).\n\nNext we show that Q_n has strictly positive coefficients. Using F(t)=tan(pi/4+t/2), let A=pi/4+u/2 and B=pi/4+v/2. Then\n(F(u)F(v)-1)/(F(u)+F(v)) = (tan A tan B - 1)/(tan A + tan B) = -cot(A+B) = tan((u+v)/2).\nSo\nF(u)F(v)-1 = tan((u+v)/2) (F(u)+F(v)).\nWith u=zx and v=x this becomes\nsum_{n>=2} Q_n(z) x^{n-1}/(n-1)! = [tan((1+z)x/2)/(1+z)] * (F(zx)+F(x)).\n\nNow tan t = sum_{m>=0} E_{2m+1} t^{2m+1}/(2m+1)!, because F(t)-F(-t)=2 tan t and the odd coefficients of F are exactly E_{2m+1}. Hence\n tan((1+z)x/2)/(1+z) = sum_{m>=0} E_{2m+1} (1+z)^{2m} x^{2m+1} / ((2m+1)! 2^{2m+1}),\nwhich has nonnegative coefficients in x and z. The series\n F(zx)+F(x) = sum_{r>=0} E_r (z^r+1) x^r/r!\nalso has nonnegative coefficients. Therefore every polynomial Q_n(z) has nonnegative coefficients.\n\nIn fact those coefficients are all positive. If n is even, then in the product above the constant term 2 from F(zx)+F(x) multiplied by the x^{n-1} term of tan((1+z)x/2)/(1+z) contributes a positive multiple of (1+z)^{n-2} x^{n-1}; hence every coefficient of Q_n is positive. If n is odd, the x-term (1+z)x from F(zx)+F(x) multiplied by the x^{n-2} term of tan((1+z)x/2)/(1+z) contributes a positive multiple of (1+z)^{n-2} x^{n-1}; again every coefficient of Q_n is positive.\n\nSo write Q_n(z)=q_1+q_2 z+...+q_{n-1} z^{n-2} with q_i>0. Because W_n(z)=(1+z)Q_n(z), if we set q_0=q_n=0 then\nw_j = q_{j-1}+q_j for every 1<=j<=n.\n\nNow let P be any subset of {1,...,n} with no two consecutive elements. Then\nsum_{j in P} w_j = sum_{j in P} (q_{j-1}+q_j)\n= sum_{i=1}^{n-1} q_i (1_{i in P} + 1_{i+1 in P}).\nSince P has no consecutive integers, for each i at most one of i and i+1 lies in P, so 1_{i in P} + 1_{i+1 in P} <= 1. Therefore\nsum_{j in P} w_j <= sum_{i=1}^{n-1} q_i = Q_n(1) = W_n(1)/2 = (S_odd+S_even)/2 = E_n.\nBut E_n = S_odd = S_even, so\nsum_{j in P} w_j <= max(S_odd,S_even).\nThis proves the first assertion.\n\nFor the equality statement, the extra hypothesis S_odd = S_even is automatic from the first part. Because every q_i is strictly positive, equality in the displayed inequality holds exactly when 1_{i in P} + 1_{i+1 in P} = 1 for every i=1,...,n-1; that is, every adjacent pair {i,i+1} contains exactly one element of P. On a path this forces P to be one of the two parity classes: if 1 is in P, then 2 is not, then 3 is, and so on, so P is exactly the odd-index set; if 1 is not in P, then 2 is, then 3 is not, etc., so P is exactly the even-index set. Conversely those two sets have weights S_odd and S_even respectively, hence they do attain equality.\n\nTherefore the lemma is proved.",
+    "role_in_assembly": "This is the extremal weighted independent-set inequality that turns the recurrence bound into the alternating upper bound.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "each entry of s is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}",
+        "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+        "the inequality condition is required for every index i from 1 to n minus 1"
+      ],
+      "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+      "quantifier_order": [
+        "For each integer n with n at least 2",
+        "For each sign sequence s of length n minus 1",
+        "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+        "Determine which sign sequences s maximize this count f(s)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with n at least 2",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "parameter over which the maximization is taken",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "index for adjacent comparisons in the sign sequence and permutation",
+          "type": "integer index"
+        },
+        {
+          "domain": "all permutations of {1, 2, ..., n}",
+          "name": "a",
+          "role": "counted object satisfying the sign constraints",
+          "type": "permutation"
+        },
+        {
+          "domain": "elements of {1, 2, ..., n}",
+          "name": "a_i",
+          "role": "ith entry of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The counted permutation a depends on the chosen n and sign sequence s",
+        "The maximality question is over s for each fixed n",
+        "There is no existential witness in the statement, only a counting definition and a maximization problem"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a fixed integer and n is at least 2.",
+        "r is an integer at least 1 in the definition of E_r.",
+        "E_0 is defined separately to be 1.",
+        "For E_r, the tuple b_1 through b_r must be a permutation of the set {1,...,r}.",
+        "For every i from 1 to r minus 1, the quantity b_{i+1} minus b_i has sign alternating with i: it is positive for odd i and negative for even i.",
+        "j ranges over integers from 1 to n when defining w_j.",
+        "The binomial coefficient uses n minus 1 and j minus 1, so the index range ensures the parameters are in the standard valid range.",
+        "P is a subset of {1,...,n} and contains no two consecutive integers.",
+        "The odd and even sums are taken over indices in {1,...,n} of the corresponding parity."
+      ],
+      "normalized_claim": "For a fixed integer n at least 2, define the numbers E_r by counting alternating permutations of {1,...,r}, with E_0 equal to 1, and define weights w_j from E_{j-1} and E_{n-j}. Then every subset P of {1,...,n} with no consecutive integers has total weight at most the larger of the total weight on odd indices and the total weight on even indices. Moreover, if the odd-index total and even-index total are equal, then a subset P achieves this maximum exactly when P is precisely the odd-index set or precisely the even-index set.",
+      "quantifier_order": [
+        "Fix an integer n at least 2.",
+        "For each integer r at least 1, define E_r by counting permutations of {1,...,r} whose consecutive differences alternate in sign, and set E_0 equal to 1.",
+        "For each j from 1 to n, define w_j using n, j, E_{j-1}, and E_{n-j}.",
+        "Define S_odd as the sum of w_j over odd j in {1,...,n}, and S_even as the sum of w_j over even j in {1,...,n}.",
+        "For every subset P of {1,...,n} with no consecutive integers, the sum of w_j over j in P is at most the larger of S_odd and S_even.",
+        "If S_odd equals S_even, then for every such P, equality with the maximum holds exactly when P is the set of odd integers in {1,...,n} or the set of even integers in {1,...,n}."
+      ],
+      "variables": [
+        {
+          "domain": "fixed integer with n at least 2",
+          "name": "n",
+          "role": "global parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "integer at least 1",
+          "name": "r",
+          "role": "index for the definition of E_r",
+          "type": "integer"
+        },
+        {
+          "domain": "integer from 1 to r minus 1",
+          "name": "i",
+          "role": "index in the alternating sign condition",
+          "type": "integer"
+        },
+        {
+          "domain": "a permutation of {1,...,r}",
+          "name": "b_1 through b_r",
+          "role": "counted object in the definition of E_r",
+          "type": "ordered tuple of integers"
+        },
+        {
+          "domain": "nonnegative integer sequence defined for r at least 0",
+          "name": "E_r",
+          "role": "counts permutations satisfying the alternating inequality condition",
+          "type": "integer"
+        },
+        {
+          "domain": "integer from 1 to n",
+          "name": "j",
+          "role": "index for the weights w_j",
+          "type": "integer"
+        },
+        {
+          "domain": "defined for each j from 1 to n",
+          "name": "w_j",
+          "role": "weight attached to index j",
+          "type": "integer"
+        },
+        {
+          "domain": "sum of the weights at odd indices in {1,...,n}",
+          "name": "S_odd",
+          "role": "odd-parity total weight",
+          "type": "integer"
+        },
+        {
+          "domain": "sum of the weights at even indices in {1,...,n}",
+          "name": "S_even",
+          "role": "even-parity total weight",
+          "type": "integer"
+        },
+        {
+          "domain": "subset of {1,...,n} with no two consecutive integers",
+          "name": "P",
+          "role": "arbitrary admissible subset in the inequality",
+          "type": "subset of integers"
+        }
+      ],
+      "witness_dependencies": [
+        "There is no existential witness in the main inequality; the statement is universally quantified over all admissible subsets P.",
+        "E_r depends only on r and on the existence and count of permutations b_1 through b_r satisfying the alternating sign condition.",
+        "w_j depends on n, j, E_{j-1}, and E_{n-j}.",
+        "S_odd and S_even depend on the full family of weights w_j and the parity partition of {1,...,n}.",
+        "In the equality characterization under S_odd equal to S_even, the only maximizing subsets are exactly the odd-index set and exactly the even-index set; no additional witness choice is involved."
+      ]
+    },
+    "statement_nl": "Fix an integer n >= 2. For each integer r >= 1, let E_r be the number of permutations (b_1,...,b_r) of {1,...,r} such that (-1)^(i-1) * (b_{i+1} - b_i) > 0 for every 1 <= i <= r-1, and set E_0 = 1. Define w_j = binom(n-1, j-1) * E_{j-1} * E_{n-j} for 1 <= j <= n, define S_odd = sum over odd j in {1,...,n} of w_j, and define S_even = sum over even j in {1,...,n} of w_j. If P is a subset of {1,...,n} containing no two consecutive integers, then sum over j in P of w_j is at most max(S_odd, S_even). If, in addition, S_odd = S_even, then equality sum over j in P of w_j = max(S_odd, S_even) holds if and only if P is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.83,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "external_dependencies_detected": false,
+      "forbidden_dependencies_used": false,
+      "notes": "No forbidden ancestor theorem is cited. The proof is essentially self-contained, using only standard algebraic/trigonometric manipulations.",
+      "solver_citations_used": []
+    },
+    "detailed_findings": [
+      {
+        "finding": "The claim 'S_odd = S_even = E_n for every n' is not correct at n = 1; the combinatorial argument only proves it for n >= 2.",
+        "location": "paragraph beginning 'Summing over all odd positions of 1 gives S_odd = E_n'",
+        "severity": "medium"
+      },
+      {
+        "finding": "The recurrence 2 E_{m+1} = sum_{k=0}^m binom(m,k) E_k E_{m-k} is only justified for m >= 1, so the deduction of 2 F'(x) = 1 + F(x)^2 requires a separate constant-term check.",
+        "location": "paragraph beginning 'Now set F(x) = sum_{r>=0} E_r x^r/r!'",
+        "severity": "medium"
+      },
+      {
+        "finding": "Aside from the indexing issue above, the proof's decomposition counts, the divisibility W_n(-1)=0, positivity of Q_n, and the independent-set equality characterization all match the lemma's intended content.",
+        "location": "overall",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": "Keep the same proof, but fix the generating-function step explicitly: (1) state that the counting argument gives S_odd = S_even = E_n for n >= 2; (2) deduce 2 E_{m+1} = sum_{k=0}^m binom(m,k) E_k E_{m-k} only for m >= 1; (3) then verify the missing constant term separately, namely 2 E_1 = 2 = 1 + E_0^2, so coefficientwise 2 F'(x) = 1 + F(x)^2. Also avoid the phrase 'for every n' when referring to S_odd = S_even.",
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260326190446_0b854d87",
+    "proof_status": "localized_gap",
+    "reason": "The proof strategy is on target and the main combinatorial/generating-function argument appears mathematically sound, but there is a localized indexing gap in the transition to the differential equation. The proof establishes S_odd = S_even = E_n only for n >= 2, not for n = 1, so the derived recurrence 2 E_{m+1} = sum_{k=0}^m binom(m,k) E_k E_{m-k} is justified only for m >= 1. The step 'Therefore 2 F'(x) = 1 + F(x)^2' needs an explicit separate check of the constant term m = 0. With that repair, the rest of the proof supports the lemma.",
+    "recommended_action": "retry_solver",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260326190446_0b854d87",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T03:17:56.816621Z",
+  "worker_job_id": "wrk_lem_20260326190446_0b854d87_g1_vet_1",
+  "worker_kind": "lemma_vetter"
+}

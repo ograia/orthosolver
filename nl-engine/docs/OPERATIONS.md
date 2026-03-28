@@ -1,114 +1,84 @@
 # Operations Guide
 
-Operational guide for running the orchestrator in local/staging/prod style environments.
+## Health Surfaces
 
-## 1. Health Surfaces
-- API process health: FastAPI app boot + endpoint responses
-- Lean boundary health: `GET /v1/health` on Lean service (mock or real)
-- Orchestrator health signals:
+- NL API health: app boot and request success
+- Lean service health: `GET /v1/health` or `GET /v2/health`
+- Problem health:
   - `GET /v1/problems/{id}/progress`
+  - `GET /v1/problems/{id}/lean-jobs`
   - `GET /v1/problems/{id}/events`
   - `GET /v1/problems/{id}/cost`
 
-## 2. Typical Incident Classes
-### A) Runs not advancing
-Checks:
-1. Is `/execution` present and nonterminal for the problem?
-2. Is the problem shown as active in the debug execution list or request log?
-3. Does `/events` continue appending transitions?
+## Storage and Deployment Model
 
-Likely causes:
-- in-flight durable execution waiting on worker/Lean work
-- process interruption during background execution
-- upstream agent/Lean latency
+There is no SQL deployment dependency.
 
-Actions:
-1. Inspect debug request log entry state (`completed|pending|failed`).
-2. Inspect `GET /v1/problems/{id}/execution` and `GET /v1/debug/problems/{id}/executions`.
-3. Run `POST /v1/debug/problems/{id}/reconcile-incomplete-runs` only for legacy compatibility `/run` artifacts left incomplete.
-3. Verify API process stability and no restart loops.
+- NL state uses JSON objects under the configured state prefix.
+- NL artifacts use a separate artifact prefix.
+- Lean service job state uses JSON objects under its own state prefix.
+- Shared deployments should use GCS-backed storage for both services.
 
-### B) Agent infrastructure errors
-Symptoms:
-- `agent.infrastructure_retry` (transient upstream request failure; problem remains `running`)
-- `agent_infrastructure_fatal` (non-retryable infrastructure/config failure)
-- missing or invalid OpenAI credential/config
+## Common Incident Classes
 
-Actions:
-1. Confirm `OPENAI_API_KEY` available in running environment.
-2. Check model names and per-agent overrides.
-3. Inspect artifacts for request-state attempts and `*_request_error_attempt_*.json` retry metadata.
-4. If only retry events appear, keep the execution active; transient errors do not consume decomposition/solver logical attempt budgets.
-5. For root-parallel decomposition, a single accepted track is allowed to proceed even if sibling tracks hit transient transport failures.
+### Execution not advancing
 
-### C) DB contention (local SQLite)
-Symptoms:
-- `db_locked` responses
+Check:
 
-Actions:
-1. Retry request.
-2. Avoid excessive concurrent worker/API activity and heavy debug polling in the same process.
-3. Keep WAL/busy-timeout defaults enabled.
+1. `/execution`
+2. `/progress`
+3. `/lean-jobs`
+4. debug request log and snapshot
 
-### D) Lean route failures (standard mode)
-Symptoms:
-- repeated `repairable`/`fatal` Lean statuses
+Typical causes:
 
-Actions:
-1. Inspect `lean_jobs` + `lean_results` for error classes.
-2. Confirm routing classes in `config.routing`.
-3. Validate Lean auth mode and endpoint reachability.
+- waiting on agent work
+- waiting on Lean `prepare_track` or lemma formalization
+- infrastructure restart during execution
 
-## 3. Rollout Checklist (Cloud-Oriented)
-1. Apply SQL migrations (`database/migrations`).
-2. Deploy orchestrator and worker services.
-3. Verify secret/access setup:
-   - OpenAI key
-   - DB credentials
-   - Lean auth settings (if OIDC)
-4. Run smoke flow:
-   - create problem
-   - start durable execution and wait to terminal in NL-only mode
-   - run standard-mode sample with mock/real Lean
-5. Confirm logs/events/cost data are emitted.
+### Repeated `proof_issue`
 
-Reference deployment skeleton:
-- [`infra/cloudbuild/deploy.yaml`](/Users/Omar/orthos-ai/nl-engine/infra/cloudbuild/deploy.yaml)
-- [`infra/terraform/main.tf`](/Users/Omar/orthos-ai/nl-engine/infra/terraform/main.tf)
+Treat this as an NL-quality or decomposition-quality problem first:
 
-## 4. Rollback Strategy
-1. Roll back Cloud Run revision to last known-good image.
-2. If migration-related issue: apply compatible down migration and redeploy.
-3. Re-run smoke flow and regression tests.
+1. inspect the accepted decomposition
+2. inspect lemma statements and pinned signatures
+3. inspect Lean classification confidence
 
-## 5. On-Call Triage Flow
-1. Identify failing `problem_id`.
-2. Pull:
-   - `/progress`
-   - `/events?limit=...`
-   - `/failure-report` (if terminal failed)
-3. If needed, use `/debug`:
-   - request log to identify stalled stage
-   - artifact viewer for exact payload/response trail
-4. Classify root cause:
-   - agent infra
-   - routing logic
-   - Lean result class
-   - environment/config
-5. Mitigate and document.
+### Repeated `lean_issue`
 
-## 6. Useful Commands
-Run full tests:
+Treat this as Lean-search or Lean-environment trouble first:
+
+1. inspect artifact links from `/lean-jobs` or `/debug`
+2. inspect `error_class` and `progress_snapshot`
+3. verify Lean service health and auth
+
+### Storage issues
+
+If using GCS-backed storage:
+
+1. verify `GCS_BUCKET`
+2. verify state and artifact prefixes
+3. verify service-account storage permissions
+
+## Rollout Checklist
+
+1. Deploy NL API and worker services with GCS state/artifact env vars.
+2. Deploy the Lean service with GCS-backed job-state env vars.
+3. Verify secrets and service-account permissions.
+4. Run NL-only smoke.
+5. Run standard-mode smoke with `lean_mode=true`.
+6. Verify `/progress`, `/lean-jobs`, SSE, and `/debug`.
+
+## Rollback
+
+1. Roll back Cloud Run revisions.
+2. Keep the existing object-store prefixes intact.
+3. Re-run the smoke tests before reopening traffic.
+
+## Useful Commands
+
 ```bash
 pytest -q
-```
-
-Regression subset:
-```bash
 pytest -q -m regression
-```
-
-Local NL-only one-shot:
-```bash
 bash scripts/run_nl_only_local.sh --create
 ```

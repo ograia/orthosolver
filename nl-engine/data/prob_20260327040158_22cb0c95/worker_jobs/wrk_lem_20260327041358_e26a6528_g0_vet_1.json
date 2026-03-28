@@ -1,0 +1,269 @@
+{
+  "artifact_prefix": "problems/prob_20260327040158_22cb0c95/lemmas/lem_20260327041358_e26a6528/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T04:20:31.927931Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T04:20:34.628092Z",
+  "controller_consumed_by_execution_id": "exec_20260327040158_2f750a29",
+  "created_at": "2026-03-27T04:19:41.766604Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327040158_2f750a29",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+        "item_id": "pnode_20260327041842_33999f03",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327040158_5065188f",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327040158_5065188f",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is at least 2.",
+            "The sequence s has exactly n minus 1 entries.",
+            "Each entry of s is either plus 1 or minus 1.",
+            "The tuple a is a permutation of {1, 2, ..., n}, so all entries are distinct and each integer from 1 to n appears exactly once.",
+            "The inequality si times (a(i+1) - ai) greater than 0 means ai+1 is greater than ai when si is plus 1, and ai+1 is less than ai when si is minus 1.",
+            "The constraint must hold for every index i from 1 to n minus 1."
+          ],
+          "normalized_claim": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+          "quantifier_order": [
+            "First fix an integer n with n at least 2.",
+            "Then range over all sign sequences s of length n minus 1.",
+            "For a given s, count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every i from 1 to n minus 1.",
+            "Finally, for each n, identify which sequences s maximize this count."
+          ],
+          "variables": [
+            {
+              "domain": "integers with n at least 2",
+              "name": "n",
+              "role": "problem size parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+              "name": "s",
+              "role": "candidate sign pattern to optimize over",
+              "type": "sequence of signs"
+            },
+            {
+              "domain": "each entry is plus 1 or minus 1",
+              "name": "si",
+              "role": "the i-th sign controlling the i-th adjacent comparison",
+              "type": "sign"
+            },
+            {
+              "domain": "ordered n-tuples containing each element of {1, 2, ..., n} exactly once",
+              "name": "a",
+              "role": "object being counted by f(s)",
+              "type": "permutation sequence"
+            },
+            {
+              "domain": "values from 1 to n appearing in the permutation",
+              "name": "ai",
+              "role": "the i-th term of the permutation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing sign sequence depends on n.",
+            "No existential witness is built into the counting definition of f(s); the only counted witnesses are permutations a satisfying the inequalities.",
+            "Any characterization of maximizers must be valid uniformly for all sign sequences of the specified length for the fixed n."
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260327041358_e26a6528",
+    "proof_nl": "Let\nD := \u03a3_{i=1}^m x_i w_i - \u03a3_{i=1}^m x_i w_{m+1-i}.\n\nFor the second sum, reindex by j = m+1-i. Then\n\u03a3_{i=1}^m x_i w_{m+1-i} = \u03a3_{j=1}^m x_{m+1-j} w_j,\nso\nD = \u03a3_{i=1}^m (x_i - x_{m+1-i}) w_i.\n\nNow pair the terms with indices i and m+1-i. For each i = 1, ..., \u230am/2\u230b, the contribution of this pair is\n(x_i - x_{m+1-i}) w_i + (x_{m+1-i} - x_i) w_{m+1-i}\n= (x_i - x_{m+1-i})(w_i - w_{m+1-i}).\nIf m is odd, the middle term i = (m+1)/2 is 0 because x_i - x_{m+1-i} = 0 there. Hence\nD = \u03a3_{i=1}^{\u230am/2\u230b} (x_i - x_{m+1-i})(w_i - w_{m+1-i}).\n\nAssume first that x_1 \u2265 x_2 \u2265 ... \u2265 x_m. Then for every i \u2264 \u230am/2\u230b we have i < m+1-i, so\nx_i \u2265 x_{m+1-i}\nand, because w_1 > w_2 > ... > w_m,\nw_i > w_{m+1-i}.\nTherefore every summand in the last expression for D is nonnegative, so D \u2265 0. This is exactly\n\u03a3_{i=1}^m x_i w_i \u2265 \u03a3_{i=1}^m x_i w_{m+1-i}.\n\nIf in addition x is nonconstant, then a nonincreasing nonconstant vector must satisfy x_1 > x_m. Since also w_1 > w_m, the i=1 summand\n(x_1 - x_m)(w_1 - w_m)\nis strictly positive. All other summands are nonnegative, so D > 0. Thus the inequality is strict when x is nonconstant.\n\nNow assume instead that x_1 \u2264 x_2 \u2264 ... \u2264 x_m. Define\nE := \u03a3_{i=1}^m x_i w_{m+1-i} - \u03a3_{i=1}^m x_i w_i.\nReindex the first sum exactly as above:\n\u03a3_{i=1}^m x_i w_{m+1-i} = \u03a3_{i=1}^m x_{m+1-i} w_i.\nHence\nE = \u03a3_{i=1}^m (x_{m+1-i} - x_i) w_i.\nPairing i with m+1-i gives\nE = \u03a3_{i=1}^{\u230am/2\u230b} (x_{m+1-i} - x_i)(w_i - w_{m+1-i}).\nFor each i \u2264 \u230am/2\u230b we have x_{m+1-i} \u2265 x_i because x is nondecreasing, and still w_i > w_{m+1-i} because w is strictly decreasing. So each summand is nonnegative, and therefore E \u2265 0. This is exactly\n\u03a3_{i=1}^m x_i w_{m+1-i} \u2265 \u03a3_{i=1}^m x_i w_i.\n\nIf x is nonconstant, then a nondecreasing nonconstant vector satisfies x_m > x_1. Since w_1 > w_m, the i=1 summand\n(x_m - x_1)(w_1 - w_m)\nis strictly positive, so E > 0. Thus the inequality is strict when x is nonconstant.\n\nThis proves both assertions.",
+    "role_in_assembly": "This is a support lemma for comparing the two alternating continuations; it is used inside the proof chain leading to L6.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2.",
+        "The sequence s has exactly n minus 1 entries.",
+        "Each entry of s is either plus 1 or minus 1.",
+        "The tuple a is a permutation of {1, 2, ..., n}, so all entries are distinct and each integer from 1 to n appears exactly once.",
+        "The inequality si times (a(i+1) - ai) greater than 0 means ai+1 is greater than ai when si is plus 1, and ai+1 is less than ai when si is minus 1.",
+        "The constraint must hold for every index i from 1 to n minus 1."
+      ],
+      "normalized_claim": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+      "quantifier_order": [
+        "First fix an integer n with n at least 2.",
+        "Then range over all sign sequences s of length n minus 1.",
+        "For a given s, count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every i from 1 to n minus 1.",
+        "Finally, for each n, identify which sequences s maximize this count."
+      ],
+      "variables": [
+        {
+          "domain": "integers with n at least 2",
+          "name": "n",
+          "role": "problem size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "candidate sign pattern to optimize over",
+          "type": "sequence of signs"
+        },
+        {
+          "domain": "each entry is plus 1 or minus 1",
+          "name": "si",
+          "role": "the i-th sign controlling the i-th adjacent comparison",
+          "type": "sign"
+        },
+        {
+          "domain": "ordered n-tuples containing each element of {1, 2, ..., n} exactly once",
+          "name": "a",
+          "role": "object being counted by f(s)",
+          "type": "permutation sequence"
+        },
+        {
+          "domain": "values from 1 to n appearing in the permutation",
+          "name": "ai",
+          "role": "the i-th term of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing sign sequence depends on n.",
+        "No existential witness is built into the counting definition of f(s); the only counted witnesses are permutations a satisfying the inequalities.",
+        "Any characterization of maximizers must be valid uniformly for all sign sequences of the specified length for the fixed n."
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "m is a positive integer",
+        "x has exactly m components",
+        "w has exactly m components",
+        "each entry of x is nonnegative",
+        "each entry of w is positive",
+        "w_1 is greater than w_2, which is greater than w_3, and so on down to w_m",
+        "the comparisons among the x_i are entrywise comparisons of real numbers",
+        "nonconstant means not all entries of x are equal"
+      ],
+      "normalized_claim": "For every positive integer m, every nonnegative real vector x of length m, and every positive real vector w of length m that is strictly decreasing, the following hold. If x is nonincreasing, then the dot product of x with w is at least the dot product of x with the reversed vector w, and this is strict when x is not constant. If x is nondecreasing, then the dot product of x with the reversed vector w is at least the dot product of x with w, and this is strict when x is not constant.",
+      "quantifier_order": [
+        "For every positive integer m",
+        "for every real vector x of length m with nonnegative entries",
+        "for every real vector w of length m with positive entries and strict decrease from first to last entry",
+        "if x is nonincreasing, then the sum with matching order is at least the sum with reversed weights, and the inequality is strict when x is not constant",
+        "if x is nondecreasing, then the sum with reversed weights is at least the sum with matching order, and the inequality is strict when x is not constant"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "m",
+          "role": "length of the vectors",
+          "type": "integer"
+        },
+        {
+          "domain": "real vectors of length m with all entries nonnegative",
+          "name": "x",
+          "role": "input vector whose monotonicity controls the comparison",
+          "type": "vector of real numbers"
+        },
+        {
+          "domain": "real vectors of length m with all entries positive and strictly decreasing",
+          "name": "w",
+          "role": "weight vector",
+          "type": "vector of real numbers"
+        },
+        {
+          "domain": "the i-th component of x for each index i from 1 to m",
+          "name": "x_i",
+          "role": "coordinate of x",
+          "type": "real number"
+        },
+        {
+          "domain": "the i-th component of w for each index i from 1 to m",
+          "name": "w_i",
+          "role": "coordinate of w",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "There are no existential witnesses in the statement",
+        "The strictness clause depends on the same x and w as the weak inequality, with the extra condition that x is not constant"
+      ]
+    },
+    "statement_nl": "Let m be a positive integer. Let x=(x_1,...,x_m) be a nonnegative vector and let w=(w_1,...,w_m) be a positive vector with w_1 > w_2 > ... > w_m. If x_1 >= x_2 >= ... >= x_m, then sum_{i=1}^m x_i w_i >= sum_{i=1}^m x_i w_{m+1-i}, and the inequality is strict when x is nonconstant. If x_1 <= x_2 <= ... <= x_m, then sum_{i=1}^m x_i w_{m+1-i} >= sum_{i=1}^m x_i w_i, and the inequality is strict when x is nonconstant.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "citation_issues": "none",
+      "citations_declared": 0,
+      "uses_only_elementary_algebra": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The pairing/reindexing argument is mathematically correct and covers both even and odd m, including the middle term in the odd case.",
+        "location": "difference expansion and pairing steps",
+        "severity": "low"
+      },
+      {
+        "finding": "The strictness argument is valid: for a monotone nonconstant vector x, one has x_1 > x_m in the nonincreasing case and x_m > x_1 in the nondecreasing case, making the i=1 paired term strictly positive.",
+        "location": "strictness clauses in both cases",
+        "severity": "low"
+      },
+      {
+        "finding": "The assumptions that x is nonnegative and w is positive are stronger than needed for this proof; only the strict decrease of w is actually used.",
+        "location": "global assumptions",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260327041358_e26a6528",
+    "proof_status": "complete",
+    "reason": "The proof correctly rewrites the difference of the two dot products, pairs indices i and m+1-i, and reduces the claim to a sum of terms of the form (x_i-x_{m+1-i})(w_i-w_{m+1-i}). Under monotonicity of x and strict decrease of w, each paired term has the claimed sign, and the strictness argument from the i=1 pair is valid when x is nonconstant. No unsupported external dependencies are used.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-27T04:19:42.644843Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327041358_e26a6528",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T04:20:34.628097Z",
+  "worker_job_id": "wrk_lem_20260327041358_e26a6528_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

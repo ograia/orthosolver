@@ -1,15 +1,19 @@
 steps:
-  - id: "Run SQL migrations"
-    name: "migrate/migrate:v4.17.1"
+  - id: "Deploy Lean Service"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     entrypoint: "sh"
     args:
       - "-c"
       - >
-        migrate -path database/migrations
-        -database "$$DATABASE_URL"
-        up
+        gcloud run deploy orthos-lean-engine
+        --project "$PROJECT_ID"
+        --region "$_REGION"
+        --image "$_LEAN_ENGINE_IMAGE"
+        --platform managed
+        --set-env-vars
+        "LEAN_ENGINE_STORAGE_BACKEND=gcs,GCS_BUCKET=$_GCS_BUCKET,LEAN_ENGINE_GCS_STATE_PREFIX=$_LEAN_STATE_PREFIX,LEAN_ENGINE_GCS_ARTIFACT_PREFIX=$_LEAN_ARTIFACT_PREFIX,PORT=8080"
 
-  - id: "Deploy orchestrator"
+  - id: "Deploy Orchestrator"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     entrypoint: "sh"
     args:
@@ -20,21 +24,36 @@ steps:
         --region "$_REGION"
         --image "$_ORCHESTRATOR_IMAGE"
         --platform managed
+        --set-env-vars
+        "STORAGE_BACKEND=gcs,GCS_BUCKET=$_GCS_BUCKET,GCS_STATE_PREFIX=$_NL_STATE_PREFIX,GCS_ARTIFACT_PREFIX=$_NL_ARTIFACT_PREFIX,LEAN_ENGINE_BASE_URL=$_LEAN_ENGINE_URL"
 
-  - id: "Deploy workers"
+  - id: "Deploy Workers"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     entrypoint: "sh"
     args:
       - "-c"
       - >
         for svc in decomposition-worker decomposition-vetter-worker lemma-solver-worker lemma-vetter-worker; do
-          gcloud run deploy "orthos-$$svc" --project "$PROJECT_ID" --region "$_REGION" --image "$_WORKER_IMAGE" --platform managed;
+          gcloud run deploy "orthos-$$svc"
+          --project "$PROJECT_ID"
+          --region "$_REGION"
+          --image "$_WORKER_IMAGE"
+          --platform managed
+          --set-env-vars
+          "STORAGE_BACKEND=gcs,GCS_BUCKET=$_GCS_BUCKET,GCS_STATE_PREFIX=$_NL_STATE_PREFIX,GCS_ARTIFACT_PREFIX=$_NL_ARTIFACT_PREFIX,LEAN_ENGINE_BASE_URL=$_LEAN_ENGINE_URL";
         done
 
 substitutions:
   _REGION: "us-east1"
   _ORCHESTRATOR_IMAGE: "gcr.io/$PROJECT_ID/orthos-orchestrator:latest"
   _WORKER_IMAGE: "gcr.io/$PROJECT_ID/orthos-worker:latest"
+  _LEAN_ENGINE_IMAGE: "gcr.io/$PROJECT_ID/orthos-lean-engine:latest"
+  _GCS_BUCKET: "orthos-runtime-prod"
+  _NL_STATE_PREFIX: "nl-engine/state/prod"
+  _NL_ARTIFACT_PREFIX: "nl-engine/artifacts/prod"
+  _LEAN_STATE_PREFIX: "lean-engine/state/prod"
+  _LEAN_ARTIFACT_PREFIX: "lean-engine/artifacts/prod"
+  _LEAN_ENGINE_URL: "https://orthos-lean-engine-xxxxx-uc.a.run.app"
 
 options:
   logging: CLOUD_LOGGING_ONLY

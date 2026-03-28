@@ -1,0 +1,162 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327183705_dca565ff/solver_attempt_3",
+  "attempt_count": 5,
+  "attempt_number": 3,
+  "completed_at": "2026-03-27T18:45:28.609755Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:45:41.479498Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:45:11.608562Z",
+  "error_payload": {
+    "agent_key": "agent4",
+    "class": "AgentExecutionError",
+    "error_class": "invalid_agent_output",
+    "message": "agent4 output failed schema validation: 1 validation error for Agent4Output\ncitations.0\n  Input should be a valid dictionary or instance of DependencyCitation [type=model_type, input_value='pnode_20260327182209_d69d68f1', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.12/v/model_type"
+  },
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 3,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327182156_c4df4dce",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327182156_a23a7b30",
+        "label": "lem_20260327182037_d1cd11e0",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n)."
+      }
+    ],
+    "lemma_id": "lem_20260327183705_dca565ff",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327184511_cd7124bd",
+    "role_in_assembly": "Supplies the function-specific comparison on the grid cell containing m/n and r.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "k is an integer",
+        "k satisfies 0 <= k and k < n",
+        "division is well-defined: n is not 0",
+        "x and y are real numbers",
+        "x satisfies k/n <= x",
+        "y satisfies x <= y",
+        "y satisfies y < (k + 1)/n",
+        "the monotonicity condition is only required when both x and y lie in the half-open interval [k/n, (k + 1)/n)"
+      ],
+      "normalized_claim": "Fix an index n (so f_n is fixed). For every integer k with 0 <= k < n, and for all real numbers x and y with k/n <= x <= y < (k + 1)/n, it holds that f_n(y) <= f_n(x).",
+      "quantifier_order": [
+        "for all n (implicitly)",
+        "for every integer k",
+        "for all real x",
+        "for all real y"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index of the function f_n; also determines subinterval endpoints via division",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "subinterval selector",
+          "type": "integer"
+        },
+        {
+          "domain": "reals",
+          "name": "x",
+          "role": "left point in the monotonicity comparison within a subinterval",
+          "type": "real"
+        },
+        {
+          "domain": "reals",
+          "name": "y",
+          "role": "right point in the monotonicity comparison within a subinterval",
+          "type": "real"
+        },
+        {
+          "domain": "reals",
+          "name": "f_n",
+          "role": "maps real inputs to real outputs; property asserted on each subinterval",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer k with 0 <= k < n, the function f_n is nonincreasing on the half-open interval [k/n, (k + 1)/n): whenever x and y are real numbers with k/n <= x <= y < (k + 1)/n, one has f_n(y) <= f_n(x).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_solver",
+  "result_payload": null,
+  "started_at": "2026-03-27T18:45:14.070251Z",
+  "status": "failed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327183705_dca565ff",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:45:41.479507Z",
+  "worker_job_id": "wrk_lem_20260327183705_dca565ff_g0_solve_3",
+  "worker_kind": "lemma_solver"
+}

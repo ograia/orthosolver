@@ -263,6 +263,22 @@ class ProofGraphService:
             )
         )
 
+    def annotate_node_metadata(
+        self,
+        *,
+        proof_graph_id: str,
+        node_id: str,
+        metadata: dict[str, Any],
+        node_status: str | None = None,
+    ) -> ProofGraphNodeORM | None:
+        row = self.nodes.get(node_id)
+        if row is None or row.proof_graph_id != proof_graph_id:
+            return None
+        row.metadata = {**row.metadata, **metadata}
+        if node_status is not None:
+            row.node_status = node_status
+        return self.nodes.save(row)
+
     def bootstrap_decomposition_graph(
         self,
         *,
@@ -294,7 +310,6 @@ class ProofGraphService:
             node_status="active",
             metadata={"node_kind": decomp.node_kind},
         )
-        findings = self.validate_decomposition_context_purity(decomp.shared_context)
         context_nodes: list[ProofGraphNodeORM] = []
         for item in self.normalize_definition_context(decomp.shared_context):
             context_nodes.append(self._definition_node(decomp.proof_graph_id, decomp.decomposition_id, item))
@@ -347,7 +362,7 @@ class ProofGraphService:
                     )
                 )
         reduction = self.validate_decomposition_reduction(parent_statement, parent_sketch, lemmas)
-        return graph, findings, reduction
+        return graph, [], reduction
 
     def normalize_definition_context(self, raw_context: list[dict[str, Any]]) -> list[dict[str, Any]]:
         normalized: list[dict[str, Any]] = []

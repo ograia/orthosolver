@@ -10,8 +10,11 @@ class Settings(BaseSettings):
     env: str = "dev"
     api_host: str = "0.0.0.0"
     api_port: int = 8000
-    database_url: str = "sqlite+pysqlite:///./nl_engine.db"  # legacy, unused
     data_dir: str = "data"
+    storage_backend: Literal["filesystem", "gcs"] = "filesystem"
+    gcs_bucket: str | None = None
+    gcs_state_prefix: str = "orthosolver/state"
+    gcs_artifact_prefix: str = "orthosolver/artifacts"
 
     openai_api_key: str | None = None
     openai_model_agent1: str = "gpt-5-mini"
@@ -20,15 +23,21 @@ class Settings(BaseSettings):
     openai_model_agent4: str = "gpt-5-mini"
     openai_model_agent5: str = "gpt-5-mini"
     openai_model_agent6: str = "gpt-5-mini"
+    openai_model_agent7: str = "gpt-5-mini"
+    openai_model_agent8: str = "gpt-5-mini"
     openai_reasoning_effort: Literal["none", "low", "medium", "high", "xhigh"] = "none"
     openai_text_verbosity: Literal["low", "medium", "high"] = "medium"
     openai_timeout_seconds: int = 180
-    # For local SQLite reliability, default to buffering worker-thread usage writes.
+    # Buffer worker-thread usage writes by default to reduce local I/O churn.
     openai_usage_persistence_mode: Literal["immediate", "buffered", "disabled"] = "buffered"
 
     lean_engine_base_url: str = "http://localhost:8081"
+    lean_engine_runtime_mode: Literal["managed", "external"] = "managed"
     lean_engine_api_version: str = "v1"
     lean_engine_timeout_seconds: int = 30
+    lean_engine_submit_http_retries: int = 3
+    lean_engine_poll_http_retries: int = 3
+    lean_engine_retry_backoff_seconds: float = 0.5
     lean_poll_interval_seconds: int = 5
     lean_engine_auth_mode: str = "none"  # none | oidc
     lean_engine_oidc_audience: str | None = None

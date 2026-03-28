@@ -77,6 +77,8 @@ class RoutingStatus(StrEnum):
     OPEN = "open"
     RETRY_SOLVER = "retry_solver"
     DECOMPOSE_FURTHER = "decompose_further"
+    SPLIT_EXISTING_PROOF = "split_existing_proof"
+    READY_FOR_LEAN = "ready_for_lean"
     SEND_TO_LEAN = "send_to_lean"
     BLOCKED = "blocked"
     DONE = "done"

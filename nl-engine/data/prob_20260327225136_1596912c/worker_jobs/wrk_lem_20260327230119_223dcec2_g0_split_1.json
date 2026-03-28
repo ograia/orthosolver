@@ -1,0 +1,194 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260327230119_223dcec2/split_existing_proof_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": null,
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-28T00:12:49.906907Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent7_split_existing_proof",
+  "lease_expires_at": "2026-03-28T00:15:21.353575Z",
+  "lease_owner": "embedded-stage-140452711872192",
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260327225136_2b86db27",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n greater than 1",
+            "k ranges over integers from 1 through n inclusive",
+            "x ranges over all real numbers",
+            "y ranges over all real numbers",
+            "floor(t) denotes the greatest integer less than or equal to t"
+          ],
+          "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+          "quantifier_order": [
+            "for all integers n with n greater than 1",
+            "there exists a real number x that maximizes the expression",
+            "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+          ],
+          "variables": [
+            {
+              "domain": "integers greater than 1",
+              "name": "n",
+              "role": "fixed parameter for the maximization problem",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 1 <= k <= n",
+              "name": "k",
+              "role": "summation index",
+              "type": "integer"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "argument to be maximized over",
+              "type": "real number"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "y",
+              "role": "comparison point for defining maximality of x",
+              "type": "real number"
+            },
+            {
+              "domain": "real numbers",
+              "name": "m",
+              "role": "maximal value of the expression",
+              "type": "real number"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizing x may depend on n",
+            "the maximal value m may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lean_failure": {
+      "artifact_keys": {},
+      "confidence": 0.9,
+      "error_class": "service_execution_error",
+      "fatality": "fatal",
+      "issue_kind": "lean_issue",
+      "job_id": "lean_job_lem_20260327230119_223dcec2_formalize_lemma_from_nl_1",
+      "recommended_next_step": null
+    },
+    "lemma_id": "lem_20260327230119_223dcec2",
+    "parent_proof_nl": "Assume the standing definitions are\nF_n(x) = floor(nx) - sum_{k=1}^n floor(kx)/k\nand\nH_n = sum_{k=1}^n 1/k.\nLet x satisfy (n-1)/n <= x < 1.\n\nFor each k with 1 <= k < n, we have\nk(n-1)/n <= kx < k,\nso in fact k-1 < kx < k. Hence floor(kx) = k-1.\nFor k = n, we have\nn-1 <= nx < n,\nso floor(nx) = n-1.\n\nTherefore\nF_n(x) = (n-1) - sum_{k=1}^{n-1} (k-1)/k - (n-1)/n.\nNow\nsum_{k=1}^{n-1} (k-1)/k = sum_{k=1}^{n-1} (1 - 1/k) = (n-1) - sum_{k=1}^{n-1} 1/k,\nso\nF_n(x) = (n-1) - [(n-1) - sum_{k=1}^{n-1} 1/k] - (n-1)/n\n= sum_{k=1}^{n-1} 1/k - (n-1)/n\n= H_{n-1} - (n-1)/n.\nUsing H_n = H_{n-1} + 1/n, we get\nH_{n-1} - (n-1)/n = H_n - 1.\nThus F_n(x) = H_n - 1 for every x in [(n-1)/n, 1).",
+    "parent_semantic_sketch": {
+      "domain_restrictions": [
+        "n is not zero (so that (n-1)/n is defined), intended as positive integer",
+        "x is real",
+        "x satisfies (n-1)/n <= x and x < 1",
+        "F_n is defined at x for such n and x",
+        "H_n is defined for such n"
+      ],
+      "normalized_claim": "For all positive integers n and all real numbers x with (n minus 1) divided by n less than or equal to x and x less than 1, the value of F_n at x equals H_n minus 1.",
+      "quantifier_order": [
+        "for all n",
+        "for all x"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "index parameter for functions/values F_n and H_n; denominator in (n-1)/n",
+          "type": "positive integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "input to the function F_n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "none (no existential witnesses are introduced); the conclusion depends only on the given n and x satisfying the premise"
+      ]
+    },
+    "parent_statement_nl": "If (n-1)/n <= x < 1, then F_n(x) = H_n - 1.",
+    "previous_attempt_summaries": [],
+    "role_in_parent": "Shows that the candidate maximizing interval actually attains the global upper bound.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "split_existing_proof_generation",
+  "result_payload": null,
+  "started_at": "2026-03-28T00:12:49.946022Z",
+  "status": "running",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327230119_223dcec2",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-28T00:13:21.353575Z",
+  "worker_job_id": "wrk_lem_20260327230119_223dcec2_g0_split_1",
+  "worker_kind": "proof_split_generation"
+}

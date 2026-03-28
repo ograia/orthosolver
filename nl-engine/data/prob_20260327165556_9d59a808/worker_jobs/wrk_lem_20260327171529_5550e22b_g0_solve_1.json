@@ -1,0 +1,184 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/lemmas/lem_20260327171529_5550e22b/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T17:17:52.397914Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-27T17:16:15.677636Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+        "item_id": "pnode_20260327171613_e9a3c72b",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327171612_4e7f6f6d",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260327171529_5550e22b",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327171615_9d2a1c81",
+    "role_in_assembly": "Provide the sharp global upper bound at rational endpoints and identify the unique endpoint achieving equality.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "a is an integer satisfying 0 <= a <= n-1",
+        "the expression a/n is a rational number in the interval from 0 up to but not including 1",
+        "E_n(x) and H_n are defined (and yield numbers comparable with <= and =) for x = a/n and for index n"
+      ],
+      "normalized_claim": "For every integer n with n > 1 and every integer a with 0 <= a <= n-1, the inequality E_n(a divided by n) <= H_n minus 1 holds. Moreover, E_n(a divided by n) equals H_n minus 1 if and only if a equals n minus 1.",
+      "quantifier_order": [
+        "for all n",
+        "for all a"
+      ],
+      "variables": [
+        {
+          "domain": "all integers with n > 1",
+          "name": "n",
+          "role": "outer universally quantified parameter indexing E and H",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers with 0 <= a <= n-1 (depending on n)",
+          "name": "a",
+          "role": "inner universally quantified parameter controlling the argument a/n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "none (no existential quantifiers); the equality condition depends only on the universally quantified variable a and the universally quantified parameter n"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, one has E_n(a/n) <= H_n - 1, and equality holds if and only if a = n-1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "defined_H_n_in_proof": true,
+      "equality_case_checked": true,
+      "used_fractional_part_identity": true,
+      "used_gcd_decomposition": true,
+      "used_rearrangement_via_swaps": true
+    },
+    "lemma_id": "lem_20260327171529_5550e22b",
+    "proof_nl": "Let H_n = sum_{j=1}^n 1/j and {t} = t - floor(t). For x = a/n with integer a, floor(nx) = a, so E_n(a/n) = a - sum_{k=1}^n floor(ak/n)/k = sum_{k=1}^n {ak/n}/k, since floor(ak/n) = ak/n - {ak/n}. If a = 0, then E_n(0) = 0 < H_n - 1, so assume 1 <= a <= n - 1. Write d = gcd(a,n), n = dm, a = d alpha with gcd(alpha,m) = 1. For k = qm + r with 0 <= q <= d - 1 and 1 <= r <= m, we have {ak/n} = {alpha r / m}; in particular, it is 0 when r = m. For 1 <= r <= m - 1 define rho_r in {1,...,m - 1} by rho_r \u2261 alpha r (mod m). Because alpha is invertible modulo m, the numbers rho_r are a permutation of 1,...,m - 1. Hence E_n(a/n) = (1/m) sum_{r=1}^{m-1} rho_r S_r, where S_r = sum_{q=0}^{d-1} 1/(qm+r). The sequence S_r is strictly decreasing in r. Now compare permutations: if i < j but rho_i < rho_j, swapping rho_i and rho_j changes the sum by (rho_j - rho_i)(S_i - S_j) > 0. Therefore the maximum over all permutations rho_r is attained when rho_1 > rho_2 > ... > rho_{m-1}, i.e. when rho_r = m - r. So E_n(a/n) <= (1/m) sum_{r=1}^{m-1} (m-r) S_r = sum_{r=1}^{m-1} sum_{q=0}^{d-1} (m-r)/(m(qm+r)). For each q,r we have dm - (qm + r) = (d-q)m - r >= m - r, so (m-r)/(m(qm+r)) <= (dm-(qm+r))/(dm(qm+r)) = (n-k)/(nk), with k = qm + r. Therefore E_n(a/n) <= sum_{k=1}^{n-1} (n-k)/(nk) = sum_{k=1}^{n-1}(1/k - 1/n) = H_n - 1. This proves the inequality. For equality: if a = n - 1, then d = 1, m = n, alpha = n - 1, and rho_r = n - r, so every step above is an equality and E_n((n-1)/n) = H_n - 1. Conversely, if equality holds, then the last comparison must be an equality, which forces d = 1, because if d > 1 then the omitted multiples of m contribute positive terms to H_n - 1. Thus m = n and S_r = 1/r. Equality in the swap argument then forces rho_1 > rho_2 > ... > rho_{n-1}, so rho_r = n - r for all r. In particular rho_1 = a = n - 1. Hence equality holds iff a = n - 1.",
+    "proof_summary": "Express E_n(a/n) as a weighted sum of fractional parts. After factoring out gcd(a,n), the fractional parts form a permutation with decreasing weights, so a swap/rearrangement argument gives the reverse-order maximum. A termwise comparison with (n-k)/(nk) yields H_n-1, and equality forces a=n-1.",
+    "self_report": {
+      "confidence": 0.98,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "standard identity floor(t)=t-{t}",
+        "pairwise-swap proof of the rearrangement principle"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T17:16:15.241634Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327171529_5550e22b",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T17:17:52.397914Z",
+  "worker_job_id": "wrk_lem_20260327171529_5550e22b_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

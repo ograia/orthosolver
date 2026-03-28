@@ -1,0 +1,114 @@
+{
+  "created_at": "2026-03-27T04:18:32.227762Z",
+  "graph_node_id": "pnode_20260327041832_c1487a49",
+  "metadata": {
+    "parent_id": "thm_root_20260327040158_5065188f"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "b701db5f88b28fb8051eb38e42176b51ebf8fac316a933a01d9ecd0cb9d4c910",
+  "owner_id": "lem_20260327041458_0bee5e74",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m and r are positive integers.",
+      "The vector x has length m and all entries are nonnegative.",
+      "Nonincreasing means x_1 is at least x_2, x_2 is at least x_3, and so on through x_m.",
+      "Nondecreasing means x_1 is at most x_2, x_2 is at most x_3, and so on through x_m.",
+      "Nonconstant means not all entries of x are equal.",
+      "A sign string t has length r and each entry is either plus one or minus one.",
+      "For y of length ell, U(y) and D(y) each have length ell plus 1.",
+      "Empty sums are interpreted as 0.",
+      "The text does not explicitly state which sign corresponds to U and which corresponds to D, although an intended convention is required for T_t."
+    ],
+    "normalized_claim": "For a nonnegative length-m vector x, the maximum possible total after applying r successive choices between the two sum-expansion operators is achieved by the alternating sign pattern. When x is nonincreasing, the maximizing pattern is the alternating string starting with plus one; when x is nondecreasing, the maximizing pattern is the alternating string starting with minus one. If x is not constant, this maximizer is unique in each case.",
+    "quantifier_order": [
+      "Fix positive integers m and r.",
+      "For every vector y of length ell, U(y) and D(y) are defined by the stated prefix-sum and suffix-sum formulas, with empty sums equal to 0.",
+      "For every sign string t of length r, T_t is formed by successive application of U or D according to the signs in t.",
+      "For every nonnegative vector x of length m, if x is nonincreasing then for every sign string t of length r, Total(T_t(x)) is at most Total(T_Alt_r_plus(x)); if x is nonconstant, equality holds exactly when t is Alt_r_plus.",
+      "For every nonnegative vector x of length m, if x is nondecreasing then for every sign string t of length r, Total(T_t(x)) is at most Total(T_Alt_r_minus(x)); if x is nonconstant, equality holds exactly when t is Alt_r_minus."
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "ell",
+        "role": "local length parameter for a vector y in the definitions",
+        "type": "integer"
+      },
+      {
+        "domain": "vectors of length ell with ordered numeric entries",
+        "name": "y",
+        "role": "input vector for the definitions of U and D",
+        "type": "vector"
+      },
+      {
+        "domain": "nonnegative vectors of length m",
+        "name": "x",
+        "role": "main object being transformed",
+        "type": "vector"
+      },
+      {
+        "domain": "strings of length r with entries plus one or minus one",
+        "name": "t",
+        "role": "index for the transformation sequence",
+        "type": "sign string"
+      },
+      {
+        "domain": "finite vectors",
+        "name": "U",
+        "role": "prefix-sum expansion operator",
+        "type": "operator"
+      },
+      {
+        "domain": "finite vectors",
+        "name": "D",
+        "role": "suffix-sum expansion operator",
+        "type": "operator"
+      },
+      {
+        "domain": "vectors together with a sign string t",
+        "name": "T_t",
+        "role": "iterated operator determined by t",
+        "type": "operator"
+      },
+      {
+        "domain": "finite vectors",
+        "name": "Total",
+        "role": "sum of coordinates",
+        "type": "function"
+      },
+      {
+        "domain": "length r alternating string starting with plus one",
+        "name": "Alt_r_plus",
+        "role": "distinguished comparison string",
+        "type": "sign string"
+      },
+      {
+        "domain": "length r alternating string starting with minus one",
+        "name": "Alt_r_minus",
+        "role": "distinguished comparison string",
+        "type": "sign string"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement.",
+      "In the equality clauses, the only specified sign string is the alternating one determined solely by r, so the equality case is a uniqueness claim about t rather than a witness-existence claim."
+    ]
+  },
+  "statement_nl": "Fix positive integers m and r. Define U, D, T_t, Total, Alt_r^+, and Alt_r^- exactly as follows: if y=(y_1,...,y_ell), then U(y) and D(y) are length ell+1 vectors given by U(y)_j = sum_{i=1}^{j-1} y_i and D(y)_j = sum_{i=j}^{ell} y_i for 1 <= j <= ell+1, with empty sums equal to 0; for a sign string t=(t_1,...,t_r) with each t_q in {+1,-1}, T_t(x) is obtained by applying U or D successively according to the signs; Alt_r^+=(+1,-1,+1,-1,...) and Alt_r^-=(-1,+1,-1,+1,...) have length r; and Total(y) is the sum of the entries of y. Let x be a nonnegative vector of length m. If x is nonincreasing, then for every sign string t of length r, Total(T_t(x)) <= Total(T_{Alt_r^+}(x)). If x is nonconstant, equality holds if and only if t = Alt_r^+. If x is nondecreasing, then for every sign string t of length r, Total(T_t(x)) <= Total(T_{Alt_r^-}(x)). If x is nonconstant, equality holds if and only if t = Alt_r^-.",
+  "updated_at": "2026-03-27T04:18:32.227763Z"
+}

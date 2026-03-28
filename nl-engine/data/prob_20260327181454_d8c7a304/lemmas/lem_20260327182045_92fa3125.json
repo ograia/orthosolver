@@ -1,0 +1,91 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327182156_36a89b16",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T18:20:51.521403Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T18:46:43.982770Z",
+  "last_dependency_check_id": "depchk_20260327184613_bd1994fa",
+  "last_submitted_lean_job_id": "lean_job_lem_20260327182045_92fa3125_formalize_lemma_from_nl_2",
+  "last_submitted_lean_proof_fingerprint": "d3ded1d562db73a61b7acaf56f8c5a1374a49d7e7e1897139963ba870dee6d6c",
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "split_existing_proof attempt 2 submitted",
+  "latest_lean_issue_class": "service_execution_error",
+  "latest_lean_issue_kind": "lean_issue",
+  "latest_lean_result_id": "lean_res_20260327184643_f244850e",
+  "latest_nl_proof": "Let n > 1 be an integer and let r be a real number with (n - 1)/n <= r < 1.\n\nWe first handle integers k with 1 <= k < n. From r < 1, multiplying by the positive integer k gives kr < k. Also, from r >= (n - 1)/n we get\nkr >= k(n - 1)/n = k - k/n.\nSince k < n, we have k/n < 1, hence k - k/n > k - 1. Therefore\nk - 1 < kr < k.\nBecause k - 1 and k are consecutive integers, any real number strictly between them has floor equal to k - 1. Thus floor(kr) = k - 1 for every integer k with 1 <= k < n.\n\nNow take k = n. From r >= (n - 1)/n we obtain nr >= n - 1, and from r < 1 we obtain nr < n. Hence\nn - 1 <= nr < n.\nTherefore floor(nr) = n - 1.\n\nThis proves the stated floor identities.",
+  "latest_vetted_proof_fingerprint": "d3ded1d562db73a61b7acaf56f8c5a1374a49d7e7e1897139963ba870dee6d6c",
+  "latest_vetter_report_id": "rep_20260327184613_af5877ab",
+  "lean_attempt_count": 2,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327182045_92fa3125",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_split_existing_proof",
+  "parent_id": "thm_root_20260327181454_61717cff",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_bundle_artifact_id": "problems/prob_20260327181454_d8c7a304/proof_bundles/lemmas/lem_20260327182045_92fa3125.json",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Computes the floor pattern on the candidate maximizing interval.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 2,
+  "solver_series_started_at": "2026-03-27T18:46:43.982756Z",
+  "statement_lean": null,
+  "statement_nl": "Let n > 1 and let r be a real number with (n-1)/n <= r < 1. Then for every integer k with 1 <= k < n, floor(k*r) = k - 1, and also floor(n*r) = n - 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer",
+      "n > 1",
+      "r is a real number",
+      "(n-1)/n <= r",
+      "r < 1",
+      "k is an integer",
+      "1 <= k",
+      "k < n"
+    ],
+    "normalized_claim": "For every integer n > 1 and every real r with (n-1)/n <= r < 1, for every integer k with 1 <= k < n, the floor of k times r equals k minus 1; additionally, the floor of n times r equals n minus 1.",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all real numbers r with (n-1)/n <= r and r < 1",
+      "for all integers k with 1 <= k and k < n"
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "n",
+        "role": "parameter constrained by n > 1",
+        "type": "integer"
+      },
+      {
+        "domain": "all real numbers",
+        "name": "r",
+        "role": "parameter constrained by (n-1)/n <= r < 1",
+        "type": "real number"
+      },
+      {
+        "domain": "all integers",
+        "name": "k",
+        "role": "quantified variable with 1 <= k < n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses; all quantities are asserted for given n and r and for every eligible k."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T18:46:43.982770Z"
+}

@@ -1,0 +1,104 @@
+{
+  "assembly_plan_id": "asm_20260326125846_1c5854fa",
+  "created_at": "2026-03-26T13:03:37.715674Z",
+  "decomposition_id": "dec_20260326125846_dc85bfd4",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260326124749_deb90b24",
+  "proof_skeleton_nl": "Use L1 to encode f(s) as an iterated Volterra integral. For a single local move that flips the first sign of an equal adjacent pair, isolate the changed two-step block inside the operator word. L2 shows that the inner word applied to 1 and the adjoint outer word applied to 1 are both strictly positive on (0,1). L3 shows that replacing ++ by +- or -- by -+ makes the middle block pointwise larger on (0,1). L4 transfers the outer word to the other side of the integral pairing, so the difference of the two counts is the integral of a product of two strictly positive functions; hence the count strictly increases at every allowed local move. L5 gives a finite right-to-left chain of such local moves from any sign sequence to the alternating sequence with the same last sign. Therefore every nonalternating pattern is strictly dominated by an alternating one. Finally, L6 shows that negating every sign leaves f unchanged, so the two alternating sequences have equal count. Therefore the maximizers are exactly the alternating sign sequences.",
+  "root_node_id": "thm_root_20260326124749_c952dad1",
+  "steps": [
+    {
+      "derives": "Fix n >= 2 and an arbitrary sign sequence s of length n - 1. Apply L5 with m = n - 1. Obtain an alternating sequence t of length n - 1, characterized by t_{n-1} = s_{n-1} and t_i t_{i+1} = -1 for all 1 <= i <= n - 2, together with a chain u^(0),u^(1),...,u^(r) such that u^(0)=s, u^(r)=t, and each transition u^(k) -> u^(k+1) flips exactly one entry j_k for which u^(k)_{j_k} = u^(k)_{j_k+1}. If s is not alternating, then r >= 1.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This step uses the explicit combinatorial construction in L5 to produce both the alternating endpoint and the full chain of local moves.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Fix one transition u^(k) -> u^(k+1) from A1, and let j_k be its changed index. Define V_k to be the operator word T_{u^(k)_{j_k-1}} o ... o T_{u^(k)_1}, with V_k = Id when j_k = 1, and define U_k to be the operator word T_{u^(k)_{n-1}} o ... o T_{u^(k)_{j_k+2}}, with U_k = Id when j_k = n - 2. Because only the sign at position j_k changes and because u^(k)_{j_k} = u^(k)_{j_k+1}, L1 gives the two formulas f(u^(k)) / n! = int_0^1 (U_k(B_k(V_k 1)))(x) dx and f(u^(k+1)) / n! = int_0^1 (U_k(B'_k(V_k 1)))(x) dx, where in the case u^(k)_{j_k} = u^(k)_{j_k+1} = +1 one has B_k = T_+ o T_+ and B'_k = T_+ o T_-, and in the case u^(k)_{j_k} = u^(k)_{j_k+1} = -1 one has B_k = T_- o T_- and B'_k = T_- o T_+.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "This is the operator-word decomposition at the modified index furnished by L1; it isolates the unchanged outer words U_k and V_k and the two-step middle block that differs between the two sign sequences.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For the same k, let g_k = V_k 1 and let h_k = U_k^* 1, where U_k^* is the reversed sign-swapped word from L4. By L2, both g_k and h_k are continuous, nonnegative on [0,1], and strictly positive on (0,1). This remains true when U_k or V_k is the empty word, because L2 includes the empty-word case and then the resulting function is the constant 1.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "L2 applies directly to the two finite words V_k and U_k^*; the positivity conclusions are needed on both sides of the later pairing.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "Define d_k = (B'_k - B_k) g_k. In the ++ case, d_k = T_+(T_- g_k) - T_+(T_+ g_k); in the -- case, d_k = T_-(T_+ g_k) - T_-(T_- g_k). Since g_k is strictly positive on (0,1) by A3, L3 gives d_k(x) > 0 for every x in (0,1).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "This is exactly the strict pointwise comparison from L3, applied to the positive function g_k produced in A3.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "From A2, f(u^(k+1)) - f(u^(k)) = n! * int_0^1 (U_k d_k)(x) dx. Apply L4 with u = d_k, v = 1, and operator word U = U_k to rewrite this as n! * int_0^1 d_k(x) h_k(x) dx, where h_k = U_k^* 1 is the positive function from A3. Because both d_k and h_k are strictly positive on (0,1), their product has strictly positive integral over [0,1]. Therefore f(u^(k+1)) > f(u^(k)).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "The adjoint identity from L4 transfers U_k to the other side of the pairing, and the positivity information from A3-A4 then makes the resulting integral strictly positive.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "If s is not alternating, then A1 gives r >= 1. Applying A5 successively to each of the r local moves in the chain yields f(u^(1)) > f(u^(0)), f(u^(2)) > f(u^(1)), ..., f(u^(r)) > f(u^(r-1)). By transitivity, f(t) = f(u^(r)) > f(u^(0)) = f(s). Hence every nonalternating sign sequence has strictly smaller count than some alternating sign sequence and therefore cannot be a maximizer.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "This is a finite induction along the chain produced in A1, using the strict increase from A5 at each link.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A5"
+      ]
+    },
+    {
+      "derives": "Let u^+ and u^- be the two alternating sign sequences of length n - 1. They satisfy u^- = -u^+. By L6, f(u^+) = f(u^-). Denote this common value by M.",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "This is a direct application of the sign-negation symmetry in L6 to the pair of alternating sequences, which are negatives of each other.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If s is alternating, then s is one of the two sequences u^+ or u^- and therefore f(s) = M by A7. If s is not alternating, then A6 gives an alternating sequence t with f(s) < f(t), and A7 shows f(t) = M. Hence f(s) is maximal exactly when s is alternating, equivalently exactly when s_i s_{i+1} = -1 for every 1 <= i <= n - 2. This is precisely the characterization of the maximizing sequences required in the theorem.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "A6 rules out every nonalternating pattern, while A7 identifies the common maximal value attained by the two alternating patterns.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6",
+        "A7"
+      ]
+    }
+  ]
+}

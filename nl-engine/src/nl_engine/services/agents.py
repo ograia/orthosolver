@@ -35,6 +35,10 @@ from nl_engine.domain.contracts import (
     Agent5Output,
     Agent6Input,
     Agent6Output,
+    Agent7Input,
+    Agent7Output,
+    Agent8Input,
+    Agent8Output,
 )
 from nl_engine.persistence.repositories import RequestRecordRepository
 from nl_engine.settings import get_settings
@@ -130,6 +134,8 @@ class AgentService:
             "agent4": repo_root / "prompts" / "agent4_lemma_solver" / "system.txt",
             "agent5": repo_root / "prompts" / "agent5_lemma_vetter" / "system.txt",
             "agent6": repo_root / "prompts" / "agent6_final_checker" / "system.txt",
+            "agent7": repo_root / "prompts" / "agent7_split_existing_proof" / "system.txt",
+            "agent8": repo_root / "prompts" / "agent8_split_bundle_vetter" / "system.txt",
         }
 
     @classmethod
@@ -210,6 +216,9 @@ class AgentService:
         if agent_key == "agent2":
             theorem = str(payload.get("theorem_nl") or "").strip()
             return theorem[:240] if theorem else None
+        if agent_key in {"agent7", "agent8"}:
+            statement = str(payload.get("parent_statement_nl") or "").strip()
+            return statement[:240] if statement else None
         lemma_id = str(payload.get("lemma_id") or "").strip()
         if lemma_id:
             return f"lemma_id={lemma_id}"
@@ -1710,6 +1719,64 @@ class AgentService:
         except Exception as exc:
             self._raise_validation_error(
                 agent_key="agent6",
+                artifact_prefix=artifact_prefix,
+                payload=normalized,
+                exc=exc,
+            )
+
+    def split_existing_proof(self, payload: Agent7Input, artifact_prefix: str) -> Agent7Output:
+        model, reasoning_effort, text_verbosity, timeout_seconds, max_attempts = self._resolve_agent_model_and_effort(
+            agent_key="agent7",
+            default_model=self.settings.openai_model_agent7,
+        )
+        parsed = self._run_json_agent(
+            agent_key="agent7",
+            model=model,
+            reasoning_effort=reasoning_effort,
+            text_verbosity=text_verbosity,
+            timeout_seconds=timeout_seconds,
+            max_attempts=max_attempts,
+            payload=payload.model_dump(),
+            artifact_prefix=artifact_prefix,
+            temperature=0,
+        )
+        normalized = self._coerce_dict(parsed)
+        if "status" not in normalized:
+            normalized["status"] = "completed"
+        try:
+            return Agent7Output.model_validate(normalized)
+        except Exception as exc:
+            self._raise_validation_error(
+                agent_key="agent7",
+                artifact_prefix=artifact_prefix,
+                payload=normalized,
+                exc=exc,
+            )
+
+    def vet_split_existing_proof(self, payload: Agent8Input, artifact_prefix: str) -> Agent8Output:
+        model, reasoning_effort, text_verbosity, timeout_seconds, max_attempts = self._resolve_agent_model_and_effort(
+            agent_key="agent8",
+            default_model=self.settings.openai_model_agent8,
+        )
+        parsed = self._run_json_agent(
+            agent_key="agent8",
+            model=model,
+            reasoning_effort=reasoning_effort,
+            text_verbosity=text_verbosity,
+            timeout_seconds=timeout_seconds,
+            max_attempts=max_attempts,
+            payload=payload.model_dump(),
+            artifact_prefix=artifact_prefix,
+            temperature=0,
+        )
+        normalized = self._coerce_dict(parsed)
+        if "status" not in normalized:
+            normalized["status"] = "completed"
+        try:
+            return Agent8Output.model_validate(normalized)
+        except Exception as exc:
+            self._raise_validation_error(
+                agent_key="agent8",
                 artifact_prefix=artifact_prefix,
                 payload=normalized,
                 exc=exc,

@@ -1,0 +1,113 @@
+{
+  "assembly_plan_id": "asm_20260326131126_bc6228e6",
+  "created_at": "2026-03-26T13:15:17.209306Z",
+  "decomposition_id": "dec_20260326131126_24921eac",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260326124749_deb90b24",
+  "proof_skeleton_nl": "Fix n and encode f(s) by the Volterra operator formula from L1. Normalize any sign sequence to the alternating sequence with the same first sign by repeatedly flipping the second sign in an equal adjacent pair, using L4. For one such move, isolate the changed two-step block inside the operator word. The prefix output g_k is positive by L2. The corrected comparison L3 shows that replacing ++ by +-, or -- by -+, makes that two-step block larger by a function d_k that is nonnegative on [0,1] and strictly positive on (0,1). Apply L2 again to the unchanged suffix word to deduce that the whole operator-word difference U_k d_k is still positive on (0,1), so its integral is strictly positive. Therefore each local move strictly increases f, and by chaining the moves every nonalternating pattern is strictly dominated by an alternating one. Finally, L5 shows that the two alternating patterns have equal count because they are negatives of each other. Hence the maximal sign patterns are exactly the alternating ones.",
+  "root_node_id": "thm_root_20260326124749_c952dad1",
+  "steps": [
+    {
+      "derives": "Fix an arbitrary integer n >= 2 and an arbitrary sign sequence s = (s_1,...,s_{n-1}) with each s_i in {+1,-1}. Apply L4 with m = n - 1. Obtain an alternating sequence t = (t_1,...,t_{n-1}) satisfying t_1 = s_1 and t_i t_{i+1} = -1 for all 1 <= i <= n - 2, together with a chain u^(0),u^(1),...,u^(r) of sign sequences of length n - 1 such that u^(0) = s, u^(r) = t, and for each k < r there exists j_k with 1 <= j_k <= n - 2, u^(k)_{j_k} = u^(k)_{j_k+1}, and u^(k+1) is obtained from u^(k) by changing only the entry at position j_k + 1 to its negative. If s is not alternating, then r >= 1.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This is the combinatorial normalization chain supplied by L4.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Fix an index k with 0 <= k < r, and let j_k be the index given by A1. Define V_k to be the operator word T_{u^(k)_{j_k-1}} o ... o T_{u^(k)_1}, with V_k equal to the identity operator when j_k = 1. Define U_k to be the operator word T_{u^(k)_{n-1}} o ... o T_{u^(k)_{j_k+2}}, with U_k equal to the identity operator when j_k = n - 2. Because u^(k+1) differs from u^(k) only at the coordinate j_k + 1, L1 gives f(u^(k)) / n! = integral from 0 to 1 of (U_k(B_k(V_k 1)))(x) dx and f(u^(k+1)) / n! = integral from 0 to 1 of (U_k(B'_k(V_k 1)))(x) dx, where in the case u^(k)_{j_k} = u^(k)_{j_k+1} = +1 one has B_k = T_+ o T_+ and B'_k = T_- o T_+, and in the case u^(k)_{j_k} = u^(k)_{j_k+1} = -1 one has B_k = T_- o T_- and B'_k = T_+ o T_-.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "L1 is applied to the two sign sequences u^(k) and u^(k+1), and the common prefix and suffix operator words are explicitly factored out.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Let g_k = V_k 1. Since the constant function 1 is continuous, nonnegative on [0,1], and strictly positive on (0,1), L2 applied to the sign word defining V_k shows that g_k is continuous on [0,1], satisfies g_k(x) >= 0 for every x in [0,1], and satisfies g_k(x) > 0 for every x in (0,1). This also covers the empty-word case j_k = 1, where g_k is just the constant function 1.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "This is a direct application of the positivity-preservation lemma L2 to the prefix word V_k.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "Define d_k = (B'_k - B_k) g_k. In the ++ case from A2, d_k = T_-(T_+ g_k) - T_+(T_+ g_k). In the -- case from A2, d_k = T_+(T_- g_k) - T_-(T_- g_k). Because g_k satisfies the hypotheses of L3 by A3, L3 shows that d_k is continuous on [0,1], d_k(x) >= 0 for every x in [0,1], and d_k(x) > 0 for every x in (0,1).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "A3 provides the positivity hypothesis on g_k, and the corrected local comparison lemma L3 turns that into positivity of the block difference d_k.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "Apply L2 again, now to the input function d_k and to the sign word defining U_k. Since A4 shows that d_k is continuous, nonnegative on [0,1], and strictly positive on (0,1), L2 yields that U_k d_k is continuous on [0,1], satisfies (U_k d_k)(x) >= 0 for every x in [0,1], and satisfies (U_k d_k)(x) > 0 for every x in (0,1). This also covers the empty-word case U_k = identity.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "This step propagates the positivity of the local block difference through the unchanged suffix word.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "Subtract the two formulas in A2 to obtain f(u^(k+1)) - f(u^(k)) = n! times the integral from 0 to 1 of (U_k d_k)(x) dx. By A5, the integrand U_k d_k is continuous, nonnegative on [0,1], and strictly positive on the whole open interval (0,1). Therefore its integral over [0,1] is strictly positive; since n! > 0, it follows that f(u^(k+1)) > f(u^(k)).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "The equality comes from algebraic subtraction of the integral representations in A2. The strict positivity of the integral follows because a continuous function that is positive on the nonempty open interval (0,1) cannot have zero integral on [0,1].",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A5"
+      ]
+    },
+    {
+      "derives": "Assume s is not alternating. Then A1 gives r >= 1. Apply A6 to each transition u^(0) -> u^(1), u^(1) -> u^(2), ..., u^(r-1) -> u^(r). This yields f(u^(1)) > f(u^(0)), f(u^(2)) > f(u^(1)), ..., f(u^(r)) > f(u^(r-1)). By transitivity, f(t) = f(u^(r)) > f(u^(0)) = f(s). Hence every nonalternating sign sequence has strictly smaller count than some alternating sign sequence and therefore cannot be a maximizer.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "This is a finite induction along the chain from A1, using the strict local increase established in A6 at each link.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A6"
+      ]
+    },
+    {
+      "derives": "Let u^+ = (+1,-1,+1,-1,...) and u^- = (-1,+1,-1,+1,...) be the two alternating sign sequences of length n - 1. They satisfy u^- = -u^+. Applying L5 to the sequence u^+ gives f(u^-) = f(u^+).",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "Once the two alternating sequences are explicitly named, L5 immediately identifies their f-values.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let n be an integer with n >= 2. For a sequence s = (s_1,...,s_{n-1}) where each s_i = +/- 1, let f(s) be the number of permutations (a_1,...,a_n) of {1,2,...,n} such that s_i(a_{i+1}-a_i) > 0 for all i. Then f(s) is maximal exactly for the alternating sign sequences, equivalently exactly for those s satisfying s_i s_{i+1} = -1 for every 1 <= i <= n - 2.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "If s is alternating, then once s_1 is chosen all later entries are forced by the relation s_i s_{i+1} = -1, so s is either u^+ or u^- and A8 gives its value. If s is not alternating, A7 shows f(s) is strictly smaller than the value at some alternating sequence. Therefore the maximizers are precisely the alternating sequences.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A7",
+        "A8"
+      ]
+    }
+  ]
+}

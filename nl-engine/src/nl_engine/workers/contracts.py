@@ -6,10 +6,13 @@ from pydantic import BaseModel
 
 
 WorkerKind = Literal[
+    "root_semantic_sketch",
     "decomposition_generation",
     "decomposition_vetting",
     "lemma_solver",
     "lemma_vetter",
+    "proof_split_generation",
+    "proof_split_vetting",
     "final_check",
     "lean_dispatch",
 ]

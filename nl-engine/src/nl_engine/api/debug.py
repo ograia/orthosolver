@@ -10,7 +10,6 @@ import zipfile
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, StreamingResponse
-from fastapi.staticfiles import StaticFiles
 from nl_engine.persistence.db import FileStore
 
 from nl_engine.api.deps import get_db
@@ -26,6 +25,8 @@ from nl_engine.domain.contracts import (
     DebugExecutionItem,
     DebugExecutionListResponse,
     DebugLlmUsageStage,
+    DebugLeanFileEntry,
+    DebugLeanFilesResponse,
     DebugLlmUsageSummaryResponse,
     DebugNodeGraph,
     DebugNodeGraphEdge,
@@ -43,6 +44,7 @@ from nl_engine.domain.contracts import (
 from nl_engine.domain.enums import NodeKind, ProblemStatus, ProofStatus, RoutingStatus
 from nl_engine.domain.models import EventORM, LlmUsageRecordORM, ProblemORM, TheoremORM, WorkerJobORM
 from nl_engine.execution.runtime import start_embedded_supervisor_if_enabled
+from nl_engine.lean_client.sessions import LeanSessionManager
 from nl_engine.observability.costs import cached_input_tokens_from_raw_usage
 from nl_engine.persistence.repositories import (
     AssemblyPlanRepository,
@@ -79,8 +81,6 @@ DEBUG_STATIC_DIR = Path(__file__).resolve().parent / "static" / "debug"
 
 
 def register_debug_ui(app: FastAPI) -> None:
-    app.mount("/debug/static", StaticFiles(directory=str(DEBUG_STATIC_DIR)), name="debug-static")
-
     @app.get("/debug", include_in_schema=False)
     def debug_index() -> FileResponse:
         index = DEBUG_STATIC_DIR / "index.html"
@@ -90,6 +90,29 @@ def register_debug_ui(app: FastAPI) -> None:
                 detail={"code": "debug_ui_not_found", "message": "debug UI is not available", "details": {}},
             )
         return FileResponse(index)
+
+    @app.get("/debug/static/{asset_path:path}", include_in_schema=False)
+    def debug_static_asset(asset_path: str) -> FileResponse:
+        cleaned = str(asset_path or "").strip("/")
+        if not cleaned:
+            raise HTTPException(
+                status_code=404,
+                detail={"code": "debug_asset_not_found", "message": "debug asset not found", "details": {}},
+            )
+        candidate = (DEBUG_STATIC_DIR / cleaned).resolve()
+        try:
+            candidate.relative_to(DEBUG_STATIC_DIR.resolve())
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail={"code": "invalid_debug_asset_path", "message": "invalid debug asset path", "details": {}},
+            ) from None
+        if not candidate.exists() or not candidate.is_file():
+            raise HTTPException(
+                status_code=404,
+                detail={"code": "debug_asset_not_found", "message": "debug asset not found", "details": {}},
+            )
+        return FileResponse(candidate)
 
 
 def _now_utc() -> datetime:
@@ -156,7 +179,7 @@ def _build_node_graph(
     problem_id: str,
     theorem: TheoremORM | None,
     lemmas_payload: list[dict[str, Any]],
-    logical_decompositions_payload: list[dict[str, Any]],
+    decompositions_payload: list[dict[str, Any]],
     lean_jobs_payload: list[dict[str, Any]],
     *,
     visible_lemma_ids: set[str] | None = None,
@@ -176,26 +199,31 @@ def _build_node_graph(
             )
         )
 
-    for dec in logical_decompositions_payload:
+    for dec in decompositions_payload:
         nodes.append(
             DebugNodeGraphNode(
-                id=dec["logical_decomposition_id"],
+                id=dec["decomposition_id"],
                 kind="decomposition",
-                label=f"decomposition: {dec['logical_decomposition_id']}",
+                label=f"decomposition: {dec['decomposition_id']}",
                 status=dec["controller_status"],
                 parent_id=dec["node_id"],
                 metadata={
+                    "decomposition_id": dec["decomposition_id"],
+                    "logical_decomposition_id": dec.get("logical_decomposition_id"),
                     "node_id": dec["node_id"],
                     "node_kind": dec["node_kind"],
                     "llm_vetting_status": dec["llm_vetting_status"],
                     "lean_assembly_status": dec["lean_assembly_status"],
+                    "decomposition_origin": dec.get("decomposition_origin"),
+                    "decomposition_origin_reason": dec.get("decomposition_origin_reason"),
+                    "lean_v2_prepare_status": dec.get("lean_v2_prepare_status"),
                     "revision_count": dec.get("revision_count", 1),
                     "current_revision_id": dec.get("current_revision_id"),
                     "current_revision_number": dec.get("current_revision_number"),
                 },
             )
         )
-        edges.append(DebugNodeGraphEdge(from_id=dec["node_id"], to=dec["logical_decomposition_id"], relation="decomposed_into"))
+        edges.append(DebugNodeGraphEdge(from_id=dec["node_id"], to=dec["decomposition_id"], relation="decomposed_into"))
 
     for lemma in lemmas_payload:
         if visible_lemma_ids is not None and lemma["lemma_id"] not in visible_lemma_ids:
@@ -238,7 +266,7 @@ def _build_node_graph(
         edges.append(DebugNodeGraphEdge(from_id=job["target_id"], to=job["job_id"], relation="formalization_job"))
 
     # Add final_check nodes as children of decompositions
-    for dec in logical_decompositions_payload:
+    for dec in decompositions_payload:
         fc_job_id = dec.get("final_check_job_id")
         if fc_job_id:
             fc_data = dec.get("agent6_final_check") or {}
@@ -251,14 +279,14 @@ def _build_node_graph(
                     kind="final_check",
                     label="final_vetter",
                     status=fc_status,
-                    parent_id=dec["logical_decomposition_id"],
+                    parent_id=dec["decomposition_id"],
                     metadata={
                         "verdict": fc_verdict,
                         "final_check_passed": dec.get("final_check_passed", False),
                     },
                 )
             )
-            edges.append(DebugNodeGraphEdge(from_id=dec["logical_decomposition_id"], to=fc_job_id, relation="final_check"))
+            edges.append(DebugNodeGraphEdge(from_id=dec["decomposition_id"], to=fc_job_id, relation="final_check"))
 
     return DebugNodeGraph(nodes=nodes, edges=edges)
 
@@ -329,10 +357,19 @@ def _build_logical_decompositions(decomposition_rows: list[dict[str, Any]]) -> t
                 "lean_v2_track_id": current.get("lean_v2_track_id"),
                 "lean_v2_lemma_handles": current.get("lean_v2_lemma_handles"),
                 "lean_v2_prepare_status": current.get("lean_v2_prepare_status"),
+                "lean_prepare_issue_kind": current.get("lean_prepare_issue_kind"),
+                "lean_prepare_error_class": current.get("lean_prepare_error_class"),
+                "lean_prepare_confidence": current.get("lean_prepare_confidence"),
+                "lean_prepare_fatality": current.get("lean_prepare_fatality"),
                 "lemma_ids": current.get("lemma_ids", []),
                 "strategy_summary": current.get("strategy_summary"),
+                "decomposition_origin": current.get("decomposition_origin"),
+                "decomposition_origin_reason": current.get("decomposition_origin_reason"),
+                "decomposition_origin_job_id": current.get("decomposition_origin_job_id"),
                 "proof_bundle_artifact_id": current.get("proof_bundle_artifact_id"),
                 "proof_bundle": current.get("proof_bundle"),
+                "lean_artifact_index": current.get("lean_artifact_index"),
+                "lean_bottlenecks": current.get("lean_bottlenecks", []),
                 "current_revision": current,
                 "revisions": rows,
                 "final_check_job_id": current.get("final_check_job_id"),
@@ -427,6 +464,209 @@ def _load_optional_json_artifact(artifacts: ArtifactStore, artifact_key: str | N
     return payload if isinstance(payload, dict) else None
 
 
+def _safe_path(path_value: Any) -> Path | None:
+    raw = str(path_value or "").strip()
+    if not raw:
+        return None
+    try:
+        return Path(raw).expanduser().resolve()
+    except Exception:
+        return None
+
+
+def _read_text_if_exists(path: Path | None) -> tuple[bool, str | None]:
+    if path is None or not path.exists() or not path.is_file():
+        return False, None
+    try:
+        return True, path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        return True, path.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return True, None
+
+
+def _seconds_between(start: datetime | None, end: datetime | None) -> float | None:
+    if start is None or end is None:
+        return None
+    return round(max(0.0, (end - start).total_seconds()), 6)
+
+
+def _timing_summary(
+    *,
+    created_at: datetime | None,
+    started_at: datetime | None,
+    completed_at: datetime | None,
+    controller_harvested_at: datetime | None,
+    timing_breakdown: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    summary = {
+        "submitted_at": created_at,
+        "started_at": started_at,
+        "completed_at": completed_at,
+        "controller_harvested_at": controller_harvested_at,
+        "queue_duration_seconds": _seconds_between(created_at, started_at),
+        "service_run_duration_seconds": _seconds_between(started_at, completed_at),
+        "controller_handoff_lag_seconds": _seconds_between(completed_at, controller_harvested_at),
+        "end_to_end_duration_seconds": _seconds_between(created_at, controller_harvested_at or completed_at),
+        "timing_breakdown": timing_breakdown or {},
+    }
+    return summary
+
+
+def _lean_compile_summary(result_row: Any | None) -> dict[str, Any]:
+    if result_row is None:
+        return {
+            "artifact_check_status": None,
+            "artifact_check_diagnostics": [],
+            "integration_check_status": None,
+            "integration_check_diagnostics": [],
+        }
+    return {
+        "artifact_check_status": result_row.artifact_check_status,
+        "artifact_check_diagnostics": result_row.artifact_check_diagnostics,
+        "integration_check_status": result_row.integration_check_status,
+        "integration_check_diagnostics": result_row.integration_check_diagnostics,
+    }
+
+
+def _lean_workspace_paths(run_dir: Any) -> dict[str, Path | None]:
+    run_root = _safe_path(run_dir)
+    workspace_dir = run_root / "workspace" if run_root else None
+    return {
+        "run_root": run_root,
+        "workspace_dir": workspace_dir,
+        "statements_file": workspace_dir / "Orthos" / "Statements.lean" if workspace_dir else None,
+        "lemmas_file": workspace_dir / "Orthos" / "Lemmas.lean" if workspace_dir else None,
+    }
+
+
+def _lean_file_entry(
+    *,
+    kind: str,
+    label: str,
+    path: Path | None,
+    compile_status: str | None,
+    compile_diagnostics: list[dict[str, Any]] | None,
+    source_job_id: str | None,
+    updated_at: datetime | None,
+    include_content: bool,
+) -> DebugLeanFileEntry:
+    exists, content = _read_text_if_exists(path) if include_content else ((path.exists() and path.is_file()) if path else False, None)
+    return DebugLeanFileEntry(
+        kind=kind,
+        label=label,
+        path=str(path) if path else None,
+        content=content,
+        exists=bool(exists),
+        compile_status=compile_status,
+        compile_diagnostics=list(compile_diagnostics or []),
+        source_job_id=source_job_id,
+        updated_at=updated_at,
+    )
+
+
+def _prepare_track_lean_files(
+    *,
+    run_dir: Any,
+    compile_summary: dict[str, Any],
+    source_job_id: str | None,
+    updated_at: datetime | None,
+    include_content: bool,
+) -> list[DebugLeanFileEntry]:
+    paths = _lean_workspace_paths(run_dir)
+    return [
+        _lean_file_entry(
+            kind="track_statements",
+            label="Orthos/Statements.lean",
+            path=paths["statements_file"],
+            compile_status=compile_summary.get("artifact_check_status"),
+            compile_diagnostics=compile_summary.get("artifact_check_diagnostics"),
+            source_job_id=source_job_id,
+            updated_at=updated_at,
+            include_content=include_content,
+        ),
+        _lean_file_entry(
+            kind="track_lemmas",
+            label="Orthos/Lemmas.lean",
+            path=paths["lemmas_file"],
+            compile_status=compile_summary.get("integration_check_status"),
+            compile_diagnostics=compile_summary.get("integration_check_diagnostics"),
+            source_job_id=source_job_id,
+            updated_at=updated_at,
+            include_content=include_content,
+        ),
+    ]
+
+
+def _formalize_lean_files(
+    *,
+    lemma_id: str,
+    run_dir: Any,
+    final_success_path: Any,
+    compile_summary: dict[str, Any],
+    source_job_id: str | None,
+    updated_at: datetime | None,
+    include_content: bool,
+) -> list[DebugLeanFileEntry]:
+    paths = _lean_workspace_paths(run_dir)
+    final_path = _safe_path(final_success_path)
+    if final_path is None:
+        run_root = paths["run_root"]
+        final_path = (run_root / "lemmas" / f"lemma_{lemma_id}" / "final_success.lean") if run_root else None
+    return [
+        _lean_file_entry(
+            kind="lemma_final",
+            label="final_success.lean",
+            path=final_path,
+            compile_status=compile_summary.get("artifact_check_status"),
+            compile_diagnostics=compile_summary.get("artifact_check_diagnostics"),
+            source_job_id=source_job_id,
+            updated_at=updated_at,
+            include_content=include_content,
+        ),
+        _lean_file_entry(
+            kind="workspace_lemmas",
+            label="Orthos/Lemmas.lean",
+            path=paths["lemmas_file"],
+            compile_status=compile_summary.get("integration_check_status"),
+            compile_diagnostics=compile_summary.get("integration_check_diagnostics"),
+            source_job_id=source_job_id,
+            updated_at=updated_at,
+            include_content=include_content,
+        ),
+    ]
+
+
+def _load_job_result_payload(artifacts: ArtifactStore, job_row: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(job_row, dict):
+        return None
+    return _load_optional_json_artifact(artifacts, job_row.get("result_artifact_id"))
+
+
+def _latest_lean_job(
+    job_rows: list[dict[str, Any]],
+    *,
+    target_id: str,
+    operations: set[str],
+) -> dict[str, Any] | None:
+    candidates = [
+        row
+        for row in job_rows
+        if row.get("target_id") == target_id and str(row.get("operation") or "") in operations
+    ]
+    if not candidates:
+        return None
+    candidates.sort(
+        key=lambda row: (
+            row.get("created_at") or datetime.min.replace(tzinfo=UTC),
+            row.get("updated_at") or datetime.min.replace(tzinfo=UTC),
+            row.get("job_id") or "",
+        ),
+        reverse=True,
+    )
+    return candidates[0]
+
+
 def _root_track_decomposition_ids(
     *,
     problem: ProblemORM,
@@ -446,10 +686,11 @@ def _root_track_decomposition_ids(
             continue
         if row.get("controller_status") == "failed":
             continue
-        if problem.nl_only_mode and row.get("lean_assembly_status") == "skipped":
-            ready.append(row)
-        if not problem.nl_only_mode and row.get("lean_assembly_status") == "success":
-            ready.append(row)
+        if problem.nl_only_mode:
+            if row.get("lean_assembly_status") == "skipped":
+                ready.append(row)
+            continue
+        ready.append(row)
 
     ready.sort(key=lambda row: (row.get("created_at"), row.get("decomposition_id")))
     selected = [str(row["decomposition_id"]) for row in ready[:take_k]]
@@ -469,7 +710,7 @@ def _request_source_from_key(key: str) -> tuple[str | None, str | None]:
         return "api_resume", None
     if "/api/run_requests/" in key and key.endswith(".request.json"):
         return "api_run", None
-    for agent in ("agent1", "agent2", "agent3", "agent4", "agent5", "agent6"):
+    for agent in ("agent1", "agent2", "agent3", "agent4", "agent5", "agent6", "agent7", "agent8"):
         if key.endswith(f"/{agent}_input.json"):
             return agent, None
     if "/lean_jobs/" in key and key.endswith("/request.json"):
@@ -703,9 +944,40 @@ def _request_completion_status(
         return ("pending", "waiting for agent output") if problem_running else ("failed", "agent output artifact missing")
 
     if source == "lean":
-        result_key = artifact_key.replace("/request.json", "/result.json")
-        if _has_key(result_key):
-            return "completed", "lean result artifact present"
+        response_key = artifact_key.replace("/request.json", "/response.json")
+        legacy_result_key = artifact_key.replace("/request.json", "/result.json")
+        for result_key in (response_key, legacy_result_key):
+            if not _has_key(result_key):
+                continue
+            detail = "lean result artifact present"
+            try:
+                payload = browser.read(result_key).content
+            except Exception:
+                payload = None
+            if isinstance(payload, dict):
+                terminal_status = str(payload.get("status", "")).strip().lower()
+                result_payload = payload.get("result")
+                error_class = (
+                    str(result_payload.get("error_class", "")).strip()
+                    if isinstance(result_payload, dict)
+                    else ""
+                )
+                issue_kind = (
+                    str(result_payload.get("issue_kind", "")).strip()
+                    if isinstance(result_payload, dict)
+                    else ""
+                )
+                if terminal_status:
+                    detail = f"lean result {terminal_status}"
+                    extras = [value for value in (issue_kind, error_class) if value]
+                    if extras:
+                        detail = f"{detail} ({', '.join(extras)})"
+                    if terminal_status in {"success", "completed", "succeeded"}:
+                        return "completed", detail
+                    if terminal_status in {"queued", "running", "pending", "in_progress"}:
+                        return "pending", detail
+                    return "failed", detail
+            return "completed", detail
         return "pending", "lean result pending"
 
     return "unknown", None
@@ -1374,8 +1646,12 @@ def get_problem_create_template() -> DebugProblemCreateTemplateResponse:
         "config": {
             "mode": {
                 "nl_only_mode": cfg.mode.nl_only_mode,
-                "lean_mode": cfg.mode.lean_mode,
-                "lean": cfg.mode.lean.model_dump(by_alias=True),
+                "lean": {
+                    "max_track_attempts": cfg.mode.lean.max_track_attempts,
+                    "auto_split_sublemmas": cfg.mode.lean.auto_split_sublemmas,
+                    "strict_proof_issue_fail_fast": cfg.mode.lean.strict_proof_issue_fail_fast,
+                    "proof_issue_confidence_threshold": cfg.mode.lean.proof_issue_confidence_threshold,
+                },
             },
             "budget": {
                 "max_estimated_cost_usd_per_problem": cfg.budget.max_estimated_cost_usd_per_problem,
@@ -1398,14 +1674,15 @@ def get_problem_create_template() -> DebugProblemCreateTemplateResponse:
             },
             "lean_engine": {
                 "model": cfg.lean_engine.model,
+                "no_lean4_refs": cfg.lean_engine.no_lean4_refs,
                 "max_repair_rounds": cfg.lean_engine.max_repair_rounds,
-                "max_lean_jobs_per_lemma": cfg.lean_engine.max_lean_jobs_per_lemma,
-                "repair_context_token_budget": cfg.lean_engine.repair_context_token_budget,
+                "max_workers": cfg.lean_engine.max_workers,
+                "internal_packaging_retry_count": cfg.lean_engine.internal_packaging_retry_count,
                 "assemble_root_repair_rounds": cfg.lean_engine.assemble_root_repair_rounds,
-                "assembly_check_timeout_seconds": cfg.lean_engine.assembly_check_timeout_seconds,
                 "lean_job_timeout_seconds": cfg.lean_engine.lean_job_timeout_seconds,
-                "plausibility_check_timeout_seconds": cfg.lean_engine.plausibility_check_timeout_seconds,
                 "assemble_root_timeout_seconds": cfg.lean_engine.assemble_root_timeout_seconds,
+                "claude_activity_timeout_seconds": cfg.lean_engine.claude_activity_timeout_seconds,
+                "claude_init_timeout_seconds": cfg.lean_engine.claude_init_timeout_seconds,
             },
             "final_check": {
                 "fail_problem_on_fatal": cfg.final_check.fail_problem_on_fatal,
@@ -1541,6 +1818,8 @@ def get_debug_problem_snapshot(
     job_rows = lean_jobs.list_by_problem(problem_id)
     event_rows = _tail_events(db, problem_id, events_limit)
     event_items = [_to_event_item(row) for row in event_rows]
+    session_manager = LeanSessionManager(db)
+    lean_session = session_manager.session_snapshot(problem)
 
     artifact_refs: set[str] = set()
     if problem.failure_report_artifact_id:
@@ -1566,6 +1845,7 @@ def get_debug_problem_snapshot(
         artifact_refs.add(legacy_reconstructed_key)
 
     lean_jobs_payload: list[dict[str, Any]] = []
+    lean_results_by_job_id: dict[str, Any] = {}
     for job in job_rows:
         if job.request_artifact_id:
             artifact_refs.add(job.request_artifact_id)
@@ -1573,10 +1853,54 @@ def get_debug_problem_snapshot(
             artifact_refs.add(job.result_artifact_id)
 
         result_row = LeanResultRepository(db).get_for_job(job.job_id)
+        lean_results_by_job_id[job.job_id] = result_row
         if result_row and result_row.lean_code_artifact_id:
             artifact_refs.add(result_row.lean_code_artifact_id)
         if result_row and result_row.compiler_log_artifact_id:
             artifact_refs.add(result_row.compiler_log_artifact_id)
+
+        compile_summary = _lean_compile_summary(result_row)
+        timing_summary = _timing_summary(
+            created_at=job.created_at,
+            started_at=job.started_at,
+            completed_at=job.completed_at,
+            controller_harvested_at=job.controller_harvested_at,
+            timing_breakdown=result_row.timing_breakdown if result_row else None,
+        )
+        result_payload = _load_job_result_payload(artifacts, {"result_artifact_id": job.result_artifact_id})
+        result_run_dir = None
+        if isinstance(result_payload, dict):
+            result_run_dir = result_payload.get("run_dir")
+        lean_files: list[dict[str, Any]] = []
+        if job.operation == "prepare_track":
+            lean_files = [
+                entry.model_dump(mode="json")
+                for entry in _prepare_track_lean_files(
+                    run_dir=result_run_dir,
+                    compile_summary=compile_summary,
+                    source_job_id=job.job_id,
+                    updated_at=result_row.updated_at if result_row else job.updated_at,
+                    include_content=False,
+                )
+            ]
+        elif job.operation == "formalize_lemma_from_nl":
+            final_success_path = None
+            if isinstance(result_payload, dict):
+                lemma_payload = result_payload.get("lemma")
+                if isinstance(lemma_payload, dict):
+                    final_success_path = lemma_payload.get("final_success_path")
+            lean_files = [
+                entry.model_dump(mode="json")
+                for entry in _formalize_lean_files(
+                    lemma_id=job.target_id,
+                    run_dir=result_run_dir,
+                    final_success_path=final_success_path,
+                    compile_summary=compile_summary,
+                    source_job_id=job.job_id,
+                    updated_at=result_row.updated_at if result_row else job.updated_at,
+                    include_content=False,
+                )
+            ]
 
         lean_jobs_payload.append(
             {
@@ -1594,6 +1918,12 @@ def get_debug_problem_snapshot(
                 "last_error": job.last_error,
                 "request_artifact_id": job.request_artifact_id,
                 "result_artifact_id": job.result_artifact_id,
+                "started_at": job.started_at,
+                "completed_at": job.completed_at,
+                "controller_harvested_at": job.controller_harvested_at,
+                "lean_compile_summary": compile_summary,
+                "timing_summary": timing_summary,
+                "lean_files": lean_files,
                 "created_at": job.created_at,
                 "updated_at": job.updated_at,
                 "result": (
@@ -1610,8 +1940,15 @@ def get_debug_problem_snapshot(
                         "diagnostics": result_row.diagnostics,
                         "decl_name": result_row.decl_name,
                         "artifact_index": result_row.artifact_index,
+                        "artifact_check_status": result_row.artifact_check_status,
+                        "artifact_check_diagnostics": result_row.artifact_check_diagnostics,
+                        "integration_check_status": result_row.integration_check_status,
+                        "integration_check_diagnostics": result_row.integration_check_diagnostics,
+                        "timing_breakdown": result_row.timing_breakdown,
+                        "controller_harvested_at": result_row.controller_harvested_at,
                         "recommended_next_step": result_row.recommended_next_step,
                         "routing_confidence": result_row.routing_confidence,
+                        "updated_at": result_row.updated_at,
                     }
                     if result_row
                     else None
@@ -1619,10 +1956,27 @@ def get_debug_problem_snapshot(
             }
         )
 
+    prepare_job_by_decomposition: dict[str, dict[str, Any]] = {}
+    formalize_job_by_lemma: dict[str, dict[str, Any]] = {}
+    for job_payload in lean_jobs_payload:
+        operation = str(job_payload.get("operation") or "")
+        target_id = str(job_payload.get("target_id") or "")
+        if operation == "prepare_track" and target_id:
+            current = prepare_job_by_decomposition.get(target_id)
+            if current is None or (job_payload.get("created_at") or datetime.min.replace(tzinfo=UTC)) > (current.get("created_at") or datetime.min.replace(tzinfo=UTC)):
+                prepare_job_by_decomposition[target_id] = job_payload
+        if operation == "formalize_lemma_from_nl" and target_id:
+            current = formalize_job_by_lemma.get(target_id)
+            if current is None or (job_payload.get("created_at") or datetime.min.replace(tzinfo=UTC)) > (current.get("created_at") or datetime.min.replace(tzinfo=UTC)):
+                formalize_job_by_lemma[target_id] = job_payload
+
     lemmas_payload: list[dict[str, Any]] = []
     for lemma in lemma_rows:
         latest_report = vetter_reports.get(lemma.latest_vetter_report_id) if lemma.latest_vetter_report_id else None
         latest_lean_result = LeanResultRepository(db).get(lemma.latest_lean_result_id) if lemma.latest_lean_result_id else None
+        latest_formalize_job = formalize_job_by_lemma.get(lemma.lemma_id)
+        latest_formalize_result = lean_results_by_job_id.get(latest_formalize_job["job_id"]) if latest_formalize_job else None
+        latest_formalize_payload = _load_job_result_payload(artifacts, latest_formalize_job) if latest_formalize_job else None
         active_counterexample = counterexamples.get(lemma.active_counterexample_id) if lemma.active_counterexample_id else None
         proof_attempt_rows = proof_attempts.list_by_lemma(problem_id, lemma.lemma_id)
         if lemma.proof_bundle_artifact_id:
@@ -1746,11 +2100,55 @@ def get_debug_problem_snapshot(
                         "progress_snapshot": latest_lean_result.progress_snapshot,
                         "decl_name": latest_lean_result.decl_name,
                         "artifact_index": latest_lean_result.artifact_index,
+                        "artifact_check_status": latest_lean_result.artifact_check_status,
+                        "artifact_check_diagnostics": latest_lean_result.artifact_check_diagnostics,
+                        "integration_check_status": latest_lean_result.integration_check_status,
+                        "integration_check_diagnostics": latest_lean_result.integration_check_diagnostics,
+                        "timing_breakdown": latest_lean_result.timing_breakdown,
+                        "controller_harvested_at": latest_lean_result.controller_harvested_at,
                         "recommended_next_step": latest_lean_result.recommended_next_step,
                         "routing_confidence": latest_lean_result.routing_confidence,
+                        "updated_at": latest_lean_result.updated_at,
                     }
                     if latest_lean_result
                     else None
+                ),
+                "latest_formalize_job": latest_formalize_job,
+                "lean_wait_reason": (
+                    "waiting_for_decomposition_track"
+                    if lemma.routing_status == RoutingStatus.READY_FOR_LEAN.value and latest_formalize_job is None
+                    else None
+                ),
+                "lean_compile_summary": _lean_compile_summary(latest_formalize_result),
+                "timing_summary": (
+                    latest_formalize_job.get("timing_summary")
+                    if latest_formalize_job
+                    else _timing_summary(
+                        created_at=None,
+                        started_at=None,
+                        completed_at=None,
+                        controller_harvested_at=None,
+                    )
+                ),
+                "lean_files": (
+                    [
+                        entry.model_dump(mode="json")
+                        for entry in _formalize_lean_files(
+                            lemma_id=lemma.lemma_id,
+                            run_dir=latest_formalize_payload.get("run_dir") if isinstance(latest_formalize_payload, dict) else None,
+                            final_success_path=(
+                                (latest_formalize_payload.get("lemma") or {}).get("final_success_path")
+                                if isinstance(latest_formalize_payload, dict) and isinstance(latest_formalize_payload.get("lemma"), dict)
+                                else None
+                            ),
+                            compile_summary=_lean_compile_summary(latest_formalize_result),
+                            source_job_id=latest_formalize_job.get("job_id") if latest_formalize_job else None,
+                            updated_at=latest_formalize_result.updated_at if latest_formalize_result else (latest_formalize_job.get("updated_at") if latest_formalize_job else None),
+                            include_content=False,
+                        )
+                    ]
+                    if latest_formalize_job
+                    else []
                 ),
             }
         )
@@ -1814,6 +2212,22 @@ def get_debug_problem_snapshot(
             except Exception:
                 pass
 
+        latest_prepare_track_job = prepare_job_by_decomposition.get(row.decomposition_id)
+        latest_prepare_result = lean_results_by_job_id.get(latest_prepare_track_job["job_id"]) if latest_prepare_track_job else None
+        latest_prepare_payload = _load_job_result_payload(artifacts, latest_prepare_track_job) if latest_prepare_track_job else None
+        ready_for_lean_count = sum(
+            1
+            for lemma_id in row.lemma_ids
+            if any(
+                lemma.lemma_id == lemma_id and lemma.routing_status == RoutingStatus.READY_FOR_LEAN.value
+                for lemma in lemma_rows
+            )
+        )
+        blocked_reason = (
+            "waiting_for_prepare_track"
+            if ready_for_lean_count > 0 and row.lean_v2_prepare_status != "success"
+            else None
+        )
         decompositions_payload.append(
             {
                 "decomposition_id": row.decomposition_id,
@@ -1828,6 +2242,9 @@ def get_debug_problem_snapshot(
                 "llm_vetting_status": row.llm_vetting_status,
                 "lean_assembly_status": row.lean_assembly_status,
                 "controller_status": row.controller_status,
+                "decomposition_origin": row.decomposition_origin,
+                "decomposition_origin_reason": row.decomposition_origin_reason,
+                "decomposition_origin_job_id": row.decomposition_origin_job_id,
                 "proof_graph_id": row.proof_graph_id,
                 "dependency_status": row.dependency_status,
                 "equivalence_risk": row.equivalence_risk,
@@ -1836,6 +2253,40 @@ def get_debug_problem_snapshot(
                 "lean_v2_track_id": row.lean_v2_track_id,
                 "lean_v2_lemma_handles": row.lean_v2_lemma_handles,
                 "lean_v2_prepare_status": row.lean_v2_prepare_status,
+                "lean_prepare_issue_kind": row.lean_prepare_issue_kind,
+                "lean_prepare_error_class": row.lean_prepare_error_class,
+                "lean_prepare_confidence": row.lean_prepare_confidence,
+                "lean_prepare_fatality": row.lean_prepare_fatality,
+                "lean_artifact_index": row.lean_artifact_index,
+                "lean_bottlenecks": row.lean_bottlenecks,
+                "ready_for_lean_count": ready_for_lean_count,
+                "blocked_reason": blocked_reason,
+                "latest_prepare_track_job": latest_prepare_track_job,
+                "lean_compile_summary": _lean_compile_summary(latest_prepare_result),
+                "timing_summary": (
+                    latest_prepare_track_job.get("timing_summary")
+                    if latest_prepare_track_job
+                    else _timing_summary(
+                        created_at=None,
+                        started_at=None,
+                        completed_at=None,
+                        controller_harvested_at=None,
+                    )
+                ),
+                "lean_files": (
+                    [
+                        entry.model_dump(mode="json")
+                        for entry in _prepare_track_lean_files(
+                            run_dir=latest_prepare_payload.get("run_dir") if isinstance(latest_prepare_payload, dict) else row.lean_run_dir,
+                            compile_summary=_lean_compile_summary(latest_prepare_result),
+                            source_job_id=latest_prepare_track_job.get("job_id") if latest_prepare_track_job else None,
+                            updated_at=latest_prepare_result.updated_at if latest_prepare_result else (latest_prepare_track_job.get("updated_at") if latest_prepare_track_job else None),
+                            include_content=False,
+                        )
+                    ]
+                    if latest_prepare_track_job or row.lean_run_dir
+                    else []
+                ),
                 "created_at": row.created_at,
                 "updated_at": row.updated_at,
                 "assembly_plan": (
@@ -1884,6 +2335,11 @@ def get_debug_problem_snapshot(
     problem_spend = float(usage_totals.get("estimated_cost_usd", 0.0) or 0.0)
     problem_budget = cfg.budget.max_estimated_cost_usd_per_problem
     remaining_problem_budget = None if problem_budget is None else round(float(problem_budget) - problem_spend, 8)
+    total_ready_for_lean = sum(
+        1
+        for row in lemmas_payload
+        if row.get("routing_status") == RoutingStatus.READY_FOR_LEAN.value
+    )
 
     lemma_by_id = {row["lemma_id"]: row for row in lemmas_payload}
     decomposition_by_id = {row["decomposition_id"]: row for row in decompositions_payload}
@@ -1907,7 +2363,7 @@ def get_debug_problem_snapshot(
         problem_id,
         theorem,
         lemmas_payload,
-        logical_decompositions_payload,
+        decompositions_payload,
         lean_jobs_payload,
         visible_lemma_ids=set(visible_lemma_ids),
     )
@@ -1947,6 +2403,8 @@ def get_debug_problem_snapshot(
             "failure_report_artifact_id": problem.failure_report_artifact_id,
             "running_final_proof_artifact_id": problem.running_final_proof_artifact_id,
             "final_proof_artifact_id": problem.final_proof_artifact_id,
+            "lean_session": lean_session,
+            "ready_for_lean_count": total_ready_for_lean,
             "budget_guardrails": cfg.budget.model_dump(),
             "llm_profile": cfg.llm.model_dump(exclude_none=True),
             "cost_summary": {
@@ -2002,6 +2460,146 @@ def get_debug_problem_snapshot(
         proof_dependency_checks=proof_dependency_check_rows,
         events=event_items,
         artifact_refs=sorted(artifact_refs),
+    )
+
+
+@router.get("/problems/{problem_id}/lean-files/{node_id}", response_model=DebugLeanFilesResponse)
+def get_problem_lean_files(
+    problem_id: str,
+    node_id: str,
+    db: FileStore = Depends(get_db),
+) -> DebugLeanFilesResponse:
+    if not ProblemRepository(db).get(problem_id):
+        _raise_api_error(404, code="problem_not_found", message="problem not found")
+
+    artifacts = ArtifactStore()
+    decomposition_repo = DecompositionRepository(db)
+    lemma_repo = LemmaRepository(db)
+    lean_job_repo = LeanJobRepository(db)
+    lean_result_repo = LeanResultRepository(db)
+
+    decomposition = decomposition_repo.get(node_id)
+    lemma = lemma_repo.get(node_id)
+    lean_job = next((row for row in lean_job_repo.list_by_problem(problem_id) if row.job_id == node_id), None)
+
+    entries: list[DebugLeanFileEntry] = []
+    if decomposition is not None:
+        latest_prepare_job = None
+        if decomposition.latest_prepare_track_job_id:
+            latest_prepare_job = next(
+                (row for row in lean_job_repo.list_by_problem(problem_id) if row.job_id == decomposition.latest_prepare_track_job_id),
+                None,
+            )
+        if latest_prepare_job is None:
+            latest_prepare_payload = _latest_lean_job(
+                [
+                    {
+                        "job_id": row.job_id,
+                        "target_id": row.target_id,
+                        "operation": row.operation,
+                        "created_at": row.created_at,
+                        "updated_at": row.updated_at,
+                    }
+                    for row in lean_job_repo.list_by_problem(problem_id)
+                ],
+                target_id=decomposition.decomposition_id,
+                operations={"prepare_track"},
+            )
+            if latest_prepare_payload is not None:
+                latest_prepare_job = next(
+                    (row for row in lean_job_repo.list_by_problem(problem_id) if row.job_id == latest_prepare_payload["job_id"]),
+                    None,
+                )
+        latest_prepare_result = lean_result_repo.get_for_job(latest_prepare_job.job_id) if latest_prepare_job else None
+        latest_prepare_result_payload = _load_optional_json_artifact(
+            artifacts,
+            latest_prepare_job.result_artifact_id if latest_prepare_job else None,
+        )
+        entries = _prepare_track_lean_files(
+            run_dir=(
+                latest_prepare_result_payload.get("run_dir")
+                if isinstance(latest_prepare_result_payload, dict)
+                else decomposition.lean_run_dir
+            ),
+            compile_summary=_lean_compile_summary(latest_prepare_result),
+            source_job_id=latest_prepare_job.job_id if latest_prepare_job else decomposition.latest_prepare_track_job_id,
+            updated_at=latest_prepare_result.updated_at if latest_prepare_result else (latest_prepare_job.updated_at if latest_prepare_job else decomposition.updated_at),
+            include_content=True,
+        )
+    elif lemma is not None:
+        latest_formalize_payload = _latest_lean_job(
+            [
+                {
+                    "job_id": row.job_id,
+                    "target_id": row.target_id,
+                    "operation": row.operation,
+                    "created_at": row.created_at,
+                    "updated_at": row.updated_at,
+                }
+                for row in lean_job_repo.list_by_problem(problem_id)
+            ],
+            target_id=lemma.lemma_id,
+            operations={"formalize_lemma_from_nl"},
+        )
+        latest_formalize_job = (
+            next((row for row in lean_job_repo.list_by_problem(problem_id) if row.job_id == latest_formalize_payload["job_id"]), None)
+            if latest_formalize_payload is not None
+            else None
+        )
+        latest_formalize_result = lean_result_repo.get_for_job(latest_formalize_job.job_id) if latest_formalize_job else None
+        latest_formalize_result_payload = _load_optional_json_artifact(
+            artifacts,
+            latest_formalize_job.result_artifact_id if latest_formalize_job else None,
+        )
+        lemma_payload = (
+            latest_formalize_result_payload.get("lemma")
+            if isinstance(latest_formalize_result_payload, dict) and isinstance(latest_formalize_result_payload.get("lemma"), dict)
+            else {}
+        )
+        entries = _formalize_lean_files(
+            lemma_id=lemma.lemma_id,
+            run_dir=latest_formalize_result_payload.get("run_dir") if isinstance(latest_formalize_result_payload, dict) else None,
+            final_success_path=lemma_payload.get("final_success_path"),
+            compile_summary=_lean_compile_summary(latest_formalize_result),
+            source_job_id=latest_formalize_job.job_id if latest_formalize_job else None,
+            updated_at=latest_formalize_result.updated_at if latest_formalize_result else (latest_formalize_job.updated_at if latest_formalize_job else lemma.updated_at),
+            include_content=True,
+        )
+    elif lean_job is not None:
+        result_row = lean_result_repo.get_for_job(lean_job.job_id)
+        result_payload = _load_optional_json_artifact(artifacts, lean_job.result_artifact_id)
+        if lean_job.operation == "prepare_track":
+            entries = _prepare_track_lean_files(
+                run_dir=result_payload.get("run_dir") if isinstance(result_payload, dict) else None,
+                compile_summary=_lean_compile_summary(result_row),
+                source_job_id=lean_job.job_id,
+                updated_at=result_row.updated_at if result_row else lean_job.updated_at,
+                include_content=True,
+            )
+        elif lean_job.operation == "formalize_lemma_from_nl":
+            lemma_payload = (
+                result_payload.get("lemma")
+                if isinstance(result_payload, dict) and isinstance(result_payload.get("lemma"), dict)
+                else {}
+            )
+            entries = _formalize_lean_files(
+                lemma_id=lean_job.target_id,
+                run_dir=result_payload.get("run_dir") if isinstance(result_payload, dict) else None,
+                final_success_path=lemma_payload.get("final_success_path"),
+                compile_summary=_lean_compile_summary(result_row),
+                source_job_id=lean_job.job_id,
+                updated_at=result_row.updated_at if result_row else lean_job.updated_at,
+                include_content=True,
+            )
+    else:
+        _raise_api_error(404, code="node_not_found", message="node not found for problem")
+
+    return DebugLeanFilesResponse(
+        request_id=new_id("req"),
+        server_time=_now_utc(),
+        problem_id=problem_id,
+        node_id=node_id,
+        entries=entries,
     )
 
 
@@ -2287,6 +2885,8 @@ def download_problem_logs(
 
     settings = get_settings()
     buf = io.BytesIO()
+    artifacts = ArtifactStore()
+    db.sync_problem(problem_id)
 
     with zipfile.ZipFile(buf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
         # 1. Data dir: all JSON / JSONL files for this problem
@@ -2298,13 +2898,21 @@ def download_problem_logs(
                     zf.write(file_path, arc_name)
 
         # 2. Artifact store: everything under problems/{problem_id}/
-        artifact_root = Path(settings.artifact_store_dir)
-        artifact_problem_dir = artifact_root / "problems" / problem_id
-        if artifact_problem_dir.exists():
-            for file_path in sorted(artifact_problem_dir.rglob("*")):
-                if file_path.is_file():
-                    arc_name = f"artifacts/problems/{problem_id}/{file_path.relative_to(artifact_problem_dir)}"
-                    zf.write(file_path, arc_name)
+        artifact_prefix = f"problems/{problem_id}"
+        for key in artifacts.list_keys(prefix=artifact_prefix):
+            if not key.startswith(f"{artifact_prefix}/"):
+                continue
+            try:
+                stat = artifacts.stat(key)
+                if stat is None:
+                    continue
+                if (stat.content_type or "").startswith("application/json") or key.endswith(".json"):
+                    body = json.dumps(artifacts.load_json(key), indent=2, sort_keys=True, default=str)
+                else:
+                    body = artifacts.load_text(key)
+                zf.writestr(f"artifacts/{key}", body)
+            except Exception:
+                continue
 
     buf.seek(0)
     filename = f"{problem_id}_logs.zip"

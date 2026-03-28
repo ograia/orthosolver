@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-03-27T17:09:42.269107Z",
+  "graph_node_id": "pnode_20260327170942_96bdcbac",
+  "metadata": {
+    "parent_id": "thm_root_20260327165556_b210f785"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "6a3193df4d138ab9a6ad44667ce0d2cc8ea9c901f307fa65bd8cd10ce6749c56",
+  "owner_id": "lem_20260327170800_7ae8cda9",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer with n > 1",
+      "a is an integer with 0 <= a <= n-1",
+      "d is defined as gcd(a,n) and is treated as a positive integer",
+      "m is defined as n/d and is therefore an integer",
+      "Res_n(a,k) is defined for each integer k with 1 <= k <= n-1",
+      "each least residue Res_n(a,k) is an integer in the standard least-residue range (typically 0 through n-1)",
+      "the sequence u_1 through u_{n-1} is arranged so that u_1 >= u_2 >= ... >= u_{n-1}"
+    ],
+    "normalized_claim": "For all integers n with n > 1, for all integers a with 0 <= a <= n-1: define d = gcd(a,n) and m = n/d. Consider the multiset of least residues of a*k modulo n for k = 1,...,n-1, and sort them in nonincreasing order to obtain u_1,...,u_{n-1}. Then for every integer j with 1 <= j <= n-1, the inequality u_j <= n - j holds.",
+    "quantifier_order": [
+      "for all n (integer, n > 1)",
+      "for all a (integer, 0 <= a <= n-1)",
+      "for all j (integer, 1 <= j <= n-1)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter; modulus",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= n-1",
+        "name": "a",
+        "role": "multiplier for residue computation",
+        "type": "integer"
+      },
+      {
+        "domain": "positive divisor of n",
+        "name": "d",
+        "role": "d = gcd(a,n)",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integer",
+        "name": "m",
+        "role": "m = n/d (derived value)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= j <= n-1",
+        "name": "j",
+        "role": "index in the sorted residue list",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "u_j",
+        "role": "j-th element of the multiset of least residues Res_n(a,1) through Res_n(a,n-1), sorted in nonincreasing order",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "d depends on n and a via d = gcd(a,n)",
+      "m depends on n and d via m = n/d",
+      "the multiset being sorted that defines u_1 through u_{n-1} depends on n and a via the values Res_n(a,k) for k from 1 to n-1",
+      "u_j depends on n, a, and the sorting (nonincreasing order) of those residue values"
+    ]
+  },
+  "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, let d = gcd(a,n) and m = n/d. Let u_1 >= u_2 >= ... >= u_{n-1} be the least residues Res_n(a,1), ..., Res_n(a,n-1) arranged in nonincreasing order. Then u_j <= n-j for every integer j with 1 <= j <= n-1.",
+  "updated_at": "2026-03-27T17:09:42.269107Z"
+}

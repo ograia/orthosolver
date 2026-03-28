@@ -1,0 +1,117 @@
+{
+  "created_at": "2026-03-27T04:18:32.194115Z",
+  "graph_node_id": "pnode_20260327041832_dcdc5e8f",
+  "metadata": {
+    "parent_id": "thm_root_20260327040158_5065188f"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "ac19fd8e0c7495359564ba17e64cb2fea97dc7690bdde23830086415fc3dae9d",
+  "owner_id": "lem_20260327041441_897fae09",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m and r are positive integers.",
+      "The generic vector y has length ell, where ell is a positive integer.",
+      "The sign string t has length r and each entry is either plus one or minus one.",
+      "Empty sums are defined to be zero.",
+      "x has length m.",
+      "All entries of x are nonnegative.",
+      "In the first comparison, x is nonincreasing, meaning its entries do not increase as the index increases.",
+      "In the second comparison, x is nondecreasing, meaning its entries do not decrease as the index increases.",
+      "The strict inequality clauses apply only when x is nonconstant, meaning not all entries of x are equal."
+    ],
+    "normalized_claim": "With m and r fixed as positive integers, define U, D, T_t, Total, and the two alternating sign strings as stated. Then every nonnegative weakly decreasing vector x of length m satisfies that the total after the plus-starting alternating composition is at least the total after the minus-starting alternating composition, and the inequality is strict when x is not constant. Likewise, every nonnegative weakly increasing vector x of length m satisfies the reverse inequality, again strict when x is not constant.",
+    "quantifier_order": [
+      "For each positive integer m and each positive integer r, the operators and sign strings are defined in terms of these fixed parameters.",
+      "For every vector y of length ell, U(y), D(y), and Total(y) are defined using the given formulas, with empty sums interpreted as zero.",
+      "For every sign string t of length r, T_t is obtained by applying U or D successively according to the signs in t.",
+      "For every vector x of length m that is nonnegative and nonincreasing, Total applied to T_Alt_r_plus of x is at least Total applied to T_Alt_r_minus of x.",
+      "If such an x is nonconstant, the previous inequality is strict.",
+      "For every vector x of length m that is nonnegative and nondecreasing, Total applied to T_Alt_r_minus of x is at least Total applied to T_Alt_r_plus of x.",
+      "If such an x is nonconstant, the previous inequality is strict."
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "ell",
+        "role": "length parameter for the generic vector y",
+        "type": "integer"
+      },
+      {
+        "domain": "vectors of length ell over the underlying scalar domain",
+        "name": "y",
+        "role": "generic input for the operators U, D, and Total",
+        "type": "vector"
+      },
+      {
+        "domain": "strings of length r with entries plus one or minus one",
+        "name": "t",
+        "role": "instruction string determining the composition T_t",
+        "type": "sign string"
+      },
+      {
+        "domain": "vectors of length m over the underlying scalar domain",
+        "name": "x",
+        "role": "quantified input vector subject to monotonicity and nonnegativity conditions",
+        "type": "vector"
+      },
+      {
+        "domain": "vectors to vectors",
+        "name": "U",
+        "role": "prefix-sum operator that increases length by one",
+        "type": "operator"
+      },
+      {
+        "domain": "vectors to vectors",
+        "name": "D",
+        "role": "suffix-sum operator that increases length by one",
+        "type": "operator"
+      },
+      {
+        "domain": "vectors to vectors",
+        "name": "T_t",
+        "role": "composition of U and D determined by the sign string t",
+        "type": "operator family"
+      },
+      {
+        "domain": "vectors to scalars",
+        "name": "Total",
+        "role": "sum of all entries of a vector",
+        "type": "function"
+      },
+      {
+        "domain": "length r strings",
+        "name": "Alt_r_plus",
+        "role": "alternating pattern starting with plus one",
+        "type": "sign string"
+      },
+      {
+        "domain": "length r strings",
+        "name": "Alt_r_minus",
+        "role": "alternating pattern starting with minus one",
+        "type": "sign string"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are present in the statement.",
+      "The strictness conclusion depends only on the same vector x being nonconstant; there is no separate witness to choose.",
+      "The operator T_t depends on the chosen sign string t, and in the theorem the two special choices are Alt_r_plus and Alt_r_minus."
+    ]
+  },
+  "statement_nl": "Fix positive integers m and r. Define U, D, T_t, Total, Alt_r^+, and Alt_r^- exactly as follows: if y=(y_1,...,y_ell), then U(y) and D(y) are length ell+1 vectors given by U(y)_j = sum_{i=1}^{j-1} y_i and D(y)_j = sum_{i=j}^{ell} y_i for 1 <= j <= ell+1, with empty sums equal to 0; for a sign string t=(t_1,...,t_r), T_t(x) is obtained by applying U or D successively according to the signs; Alt_r^+=(+1,-1,+1,-1,...) and Alt_r^-=(-1,+1,-1,+1,...) have length r; and Total(y) is the sum of the entries of y. If x is a nonnegative nonincreasing vector of length m, then Total(T_{Alt_r^+}(x)) >= Total(T_{Alt_r^-}(x)), with strict inequality if x is nonconstant. If x is a nonnegative nondecreasing vector of length m, then Total(T_{Alt_r^-}(x)) >= Total(T_{Alt_r^+}(x)), with strict inequality if x is nonconstant.",
+  "updated_at": "2026-03-27T04:18:32.194116Z"
+}

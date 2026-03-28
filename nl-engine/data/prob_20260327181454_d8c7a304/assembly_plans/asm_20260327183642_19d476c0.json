@@ -1,0 +1,48 @@
+{
+  "assembly_plan_id": "asm_20260327183642_19d476c0",
+  "created_at": "2026-03-27T18:38:32.562429Z",
+  "decomposition_id": "dec_20260327183642_79ba2774",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_skeleton_nl": "First normalize the floor condition to get m/n <= r < (m+1)/n. Next use the fact that m is between 0 and n-1 to apply the cellwise nonincreasing property of f_n on the interval [m/n,(m+1)/n). Finally, specialize the abstract monotonicity lemma to x = m/n and y = r to obtain f_n(r) <= f_n(m/n), which is exactly the desired conclusion.",
+  "root_node_id": "lem_20260327182037_d1cd11e0",
+  "steps": [
+    {
+      "derives": "From m = floor(n*r), conclude m/n <= r < (m + 1)/n.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This combines the floor bounds with division by the positive integer n, so it is a short arithmetic chain rather than a single inference.",
+      "uses_lemmas": [
+        "lem_20260327183642_4bee1f3c",
+        "lem_20260327183648_15ed795b"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The index m is admissible for the cellwise monotonicity statement, and f_n is nonincreasing on the interval [m/n, (m + 1)/n).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "This requires instantiating the universal statement in L5 at k = m and checking the range condition using L3.",
+      "uses_lemmas": [
+        "lem_20260327183656_888cd722",
+        "lem_20260327183705_dca565ff"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Applying the interval monotonicity principle to g = f_n, a = m/n, b = (m + 1)/n, x = m/n, and y = r yields f_n(r) <= f_n(m/n).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "This is a direct but nontrivial specialization of the abstract monotonicity lemma after the interval membership has been established.",
+      "uses_lemmas": [
+        "lem_20260327183701_7820d698"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    }
+  ]
+}

@@ -16,10 +16,11 @@ from nl_engine.api.run_state import (
 from nl_engine.artifacts.store import ArtifactStore
 from nl_engine.controller.orchestrator import Orchestrator
 from nl_engine.domain.config import ProblemConfig
-from nl_engine.domain.contracts import Agent2Input, Agent3Input, Agent4Input, Agent5Input, Agent6Input
+from nl_engine.domain.contracts import Agent1Input, Agent2Input, Agent3Input, Agent4Input, Agent5Input, Agent6Input, Agent7Input, Agent8Input
 from nl_engine.domain.enums import ExecutionDesiredState, ExecutionStatus, ProblemStatus
+from nl_engine.lean_client.sessions import LeanSessionManager
 from nl_engine.persistence.db import get_file_store
-from nl_engine.persistence.repositories import EventRepository, ProblemExecutionRepository, ProblemRepository, WorkerJobRepository
+from nl_engine.persistence.repositories import EventRepository, LeanJobRepository, ProblemExecutionRepository, ProblemRepository, WorkerJobRepository
 from nl_engine.settings import get_settings
 from nl_engine.workers import WorkerFacade
 from nl_engine.workers import facade as workers_facade
@@ -47,7 +48,7 @@ class ExecutionDriver:
     @staticmethod
     def _reconcile_expired_worker_jobs(worker_jobs: WorkerJobRepository, *, now: datetime) -> int:
         changed = 0
-        for worker_kind in ("decomposition_generation", "decomposition_vetting", "lemma_solver", "lemma_vetter", "final_check"):
+        for worker_kind in ("root_semantic_sketch", "decomposition_generation", "decomposition_vetting", "lemma_solver", "lemma_vetter", "proof_split_generation", "proof_split_vetting", "final_check"):
             changed += worker_jobs.requeue_expired(worker_kind, now)
         return changed
 
@@ -312,6 +313,9 @@ class StageWorkerRuntime:
         if worker_kind == "decomposition_generation":
             output = self.facade.run_decomposition_generation(job, Agent2Input.model_validate(payload), resolved_artifact_prefix, override_key=llm_override_key)
             return output.model_dump()
+        if worker_kind == "root_semantic_sketch":
+            output = self.facade.run_root_semantic_sketch(job, Agent1Input.model_validate(payload), resolved_artifact_prefix)
+            return output.model_dump()
         if worker_kind == "decomposition_vetting":
             output = self.facade.run_decomposition_vetting(job, Agent3Input.model_validate(payload), resolved_artifact_prefix)
             return output.model_dump()
@@ -321,6 +325,12 @@ class StageWorkerRuntime:
         if worker_kind == "lemma_vetter":
             output = self.facade.run_lemma_vetter(job, Agent5Input.model_validate(payload), resolved_artifact_prefix)
             return output.model_dump()
+        if worker_kind == "proof_split_generation":
+            output = self.facade.run_proof_split_generation(job, Agent7Input.model_validate(payload), resolved_artifact_prefix)
+            return output.model_dump()
+        if worker_kind == "proof_split_vetting":
+            output = self.facade.run_proof_split_vetting(job, Agent8Input.model_validate(payload), resolved_artifact_prefix)
+            return output.model_dump()
         if worker_kind == "final_check":
             output = self.facade.run_final_check(job, Agent6Input.model_validate(payload), resolved_artifact_prefix)
             return output.model_dump()
@@ -329,7 +339,7 @@ class StageWorkerRuntime:
     def process_next(self, worker_id: str, *, problem_id: str | None = None) -> bool:
         if is_global_stop_active():
             return False
-        for worker_kind in ("decomposition_generation", "decomposition_vetting", "lemma_solver", "lemma_vetter", "final_check"):
+        for worker_kind in ("root_semantic_sketch", "decomposition_generation", "decomposition_vetting", "lemma_solver", "lemma_vetter", "proof_split_generation", "proof_split_vetting", "final_check"):
             claimed: dict[str, Any] | None = None
             store = get_file_store()
             repo = WorkerJobRepository(store)
@@ -446,14 +456,15 @@ class WorkerSupervisor:
 
     def start(self) -> None:
         stage_workers = max(1, int(self.settings.worker_default_max_concurrency))
-        expected_threads = 1 + stage_workers
+        expected_threads = 2 + stage_workers
         if self._threads:
             if len(self._threads) == expected_threads and all(thread.is_alive() for thread in self._threads):
                 return
             self.stop()
         self._stop.clear()
         self._threads = [
-            threading.Thread(target=self._run_execution_loop, name="nl_engine_execution_supervisor", daemon=True)
+            threading.Thread(target=self._run_execution_loop, name="nl_engine_execution_supervisor", daemon=True),
+            threading.Thread(target=self._run_reconcile_loop, name="nl_engine_reconcile_supervisor", daemon=True),
         ]
         self._threads.extend(
             threading.Thread(target=self._run_stage_loop, name=f"nl_engine_stage_supervisor_{index}", daemon=True)
@@ -514,6 +525,66 @@ class WorkerSupervisor:
             if not did_work:
                 time.sleep(poll_sleep)
 
+    def _reconcile_external_progress(self) -> bool:
+        store = get_file_store()
+        executions = ProblemExecutionRepository(store)
+        worker_jobs = WorkerJobRepository(store)
+        lean_jobs = LeanJobRepository(store)
+        changed = False
+
+        for problem_id in sorted(store.list_problem_ids()):
+            execution = executions.get_active_for_problem(problem_id)
+            if execution is None:
+                continue
+            problem = ProblemRepository(store).get(problem_id)
+            if problem is None:
+                continue
+
+            has_unconsumed_worker = any(
+                row.status in {"completed", "failed"} and row.controller_consumed_at is None
+                for row in worker_jobs.list_by_problem(problem_id)
+            )
+            has_terminal_lean_ready = False
+            orch = Orchestrator(store)
+            lean_client = LeanSessionManager(store).client_for_problem(problem, create_if_missing=True)
+            for job in lean_jobs.list_non_terminal(problem_id):
+                try:
+                    if job.remote_operation_id and hasattr(lean_client, "get_operation"):
+                        try:
+                            polled = lean_client.get_operation(job.remote_operation_id, version="v2")
+                        except Exception:
+                            polled = lean_client.get_job(job.job_id)
+                    else:
+                        polled = lean_client.get_job(job.job_id)
+                except Exception:
+                    continue
+                if polled.get("status") not in {"queued", "running"}:
+                    has_terminal_lean_ready = True
+                    break
+
+            if not has_unconsumed_worker and not has_terminal_lean_ready:
+                continue
+
+            if execution.status in {"waiting", "queued", "cancel_requested"}:
+                executions.wake(
+                    execution.execution_id,
+                    current_stage="execution.external_progress_reconciled",
+                )
+                changed = True
+
+        return changed
+
+    def _run_reconcile_loop(self) -> None:
+        poll_sleep = max(0.05, float(self.settings.worker_poll_interval_seconds))
+        while not self._stop.is_set():
+            try:
+                did_work = self._reconcile_external_progress()
+            except Exception:
+                log.exception("Reconcile loop error")
+                did_work = False
+            if not did_work:
+                time.sleep(poll_sleep)
+
     def _run_stage_loop(self) -> None:
         worker_id = f"embedded-stage-{threading.get_ident()}"
         poll_sleep = max(0.05, float(self.settings.worker_poll_interval_seconds))
@@ -543,6 +614,7 @@ def start_embedded_supervisor_if_enabled() -> None:
     settings = get_settings()
     if not settings.worker_enable_embedded_supervisor:
         return
+    LeanSessionManager(get_file_store()).recover_active_problem_sessions()
     get_worker_supervisor().start()
 
 

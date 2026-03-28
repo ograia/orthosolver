@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import json
-import sqlite3
 import threading
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from .object_store import JsonObjectStore
 
 ACTIVE_JOB_STATUSES = ("queued", "running")
 TERMINAL_JOB_STATUSES = ("success", "repairable", "fatal", "cancelled")
@@ -78,6 +79,7 @@ class JobRecord:
                 "elapsed_seconds": elapsed_seconds,
                 "updated_at": self.updated_at,
                 "created_at": self.created_at,
+                "started_at": self.started_at,
             }
             response["progress_snapshot"] = self._default_progress_snapshot()
             return response
@@ -88,6 +90,8 @@ class JobRecord:
             "mode": self.mode,
             "result": self.result,
             "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "started_at": self.started_at,
             "completed_at": self.completed_at,
         }
         if self.error_class:
@@ -105,15 +109,22 @@ class JobRecord:
 
 
 class JobStore:
-    def __init__(self, db_path: Path) -> None:
-        self._db_path = db_path.expanduser().resolve()
-        self._db_path.parent.mkdir(parents=True, exist_ok=True)
+    def __init__(self, store_root: Path) -> None:
+        self._store_root = store_root.expanduser().resolve()
+        self._store_root.mkdir(parents=True, exist_ok=True)
+        self._objects = JsonObjectStore(self._store_root)
         self._lock = threading.Lock()
-        self._init_db()
 
     @property
-    def db_path(self) -> Path:
-        return self._db_path
+    def store_root(self) -> Path:
+        return self._store_root
+
+    @property
+    def storage_mode(self) -> str:
+        return self._objects.mode
+
+    def _job_key(self, job_id: str) -> str:
+        return f"jobs/{job_id}.json"
 
     def create_or_get(self, *, job_id: str, mode: str, request: dict[str, Any]) -> tuple[JobRecord, bool]:
         with self._lock:
@@ -122,80 +133,50 @@ class JobStore:
                 return existing, False
 
             now = utc_now_iso()
-            with self._connect() as conn:
-                conn.execute(
-                    """
-                    INSERT INTO jobs (
-                        job_id,
-                        mode,
-                        status,
-                        request_json,
-                        result_json,
-                        error_class,
-                        message,
-                        created_at,
-                        updated_at,
-                        started_at,
-                        completed_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """,
-                    (
-                        job_id,
-                        mode,
-                        "queued",
-                        json.dumps(request, ensure_ascii=True, sort_keys=True),
-                        None,
-                        None,
-                        None,
-                        now,
-                        now,
-                        None,
-                        None,
-                    ),
-                )
+            created = self._objects.create_json_if_absent(
+                self._job_key(job_id),
+                {
+                    "job_id": job_id,
+                    "mode": mode,
+                    "status": "queued",
+                    "request": request,
+                    "result": None,
+                    "error_class": None,
+                    "message": None,
+                    "created_at": now,
+                    "updated_at": now,
+                    "started_at": None,
+                    "completed_at": None,
+                },
+            )
+            if not created:
+                existing = self.get(job_id)
+                if existing is None:
+                    raise RuntimeError(f"failed to load existing job `{job_id}`")
+                return existing, False
 
-            created = self.get(job_id)
-            if created is None:
+            record = self.get(job_id)
+            if record is None:
                 raise RuntimeError(f"failed to load newly inserted job `{job_id}`")
-            return created, True
+            return record, True
 
     def get(self, job_id: str) -> JobRecord | None:
-        with self._connect() as conn:
-            row = conn.execute(
-                """
-                SELECT
-                    job_id,
-                    mode,
-                    status,
-                    request_json,
-                    result_json,
-                    error_class,
-                    message,
-                    created_at,
-                    updated_at,
-                    started_at,
-                    completed_at
-                FROM jobs
-                WHERE job_id = ?
-                """,
-                (job_id,),
-            ).fetchone()
-        if row is None:
+        payload = self._objects.read_json(self._job_key(job_id))
+        if payload is None:
             return None
-        return _row_to_record(row)
+        return _payload_to_record(payload)
 
     def mark_running(self, job_id: str) -> None:
         with self._lock:
+            row = self.get(job_id)
+            if row is None or row.status != "queued":
+                return
             now = utc_now_iso()
-            with self._connect() as conn:
-                conn.execute(
-                    """
-                    UPDATE jobs
-                    SET status = ?, started_at = ?, updated_at = ?
-                    WHERE job_id = ? AND status = ?
-                    """,
-                    ("running", now, now, job_id, "queued"),
-                )
+            payload = _record_to_payload(row)
+            payload["status"] = "running"
+            payload["started_at"] = now
+            payload["updated_at"] = now
+            self._objects.write_json(self._job_key(job_id), payload)
 
     def cancel_job(self, job_id: str) -> JobRecord | None:
         """Best-effort cancellation for queued/running jobs."""
@@ -207,15 +188,11 @@ class JobStore:
                 return row
 
             now = utc_now_iso()
-            with self._connect() as conn:
-                conn.execute(
-                    """
-                    UPDATE jobs
-                    SET status = ?, updated_at = ?, completed_at = ?
-                    WHERE job_id = ? AND status IN (?, ?)
-                    """,
-                    ("cancelled", now, now, job_id, "queued", "running"),
-                )
+            payload = _record_to_payload(row)
+            payload["status"] = "cancelled"
+            payload["updated_at"] = now
+            payload["completed_at"] = now
+            self._objects.write_json(self._job_key(job_id), payload)
 
         return self.get(job_id)
 
@@ -229,99 +206,84 @@ class JobStore:
         message: str | None,
     ) -> None:
         with self._lock:
+            row = self.get(job_id)
+            if row is None or row.status == "cancelled":
+                return
             now = utc_now_iso()
-            with self._connect() as conn:
-                conn.execute(
-                    """
-                    UPDATE jobs
-                    SET
-                        status = ?,
-                        result_json = ?,
-                        error_class = ?,
-                        message = ?,
-                        updated_at = ?,
-                        completed_at = ?
-                    WHERE job_id = ? AND status != 'cancelled'
-                    """,
-                    (
-                        status,
-                        json.dumps(result, ensure_ascii=True, sort_keys=True),
-                        error_class,
-                        message,
-                        now,
-                        now,
-                        job_id,
-                    ),
-                )
+            payload = _record_to_payload(row)
+            payload["status"] = status
+            payload["result"] = result
+            payload["error_class"] = error_class
+            payload["message"] = message
+            payload["updated_at"] = now
+            payload["completed_at"] = now
+            self._objects.write_json(self._job_key(job_id), payload)
 
     def active_job_count(self) -> int:
-        with self._connect() as conn:
-            row = conn.execute(
-                "SELECT COUNT(*) AS c FROM jobs WHERE status IN (?, ?)",
-                ACTIVE_JOB_STATUSES,
-            ).fetchone()
-        return int(row["c"]) if row is not None else 0
+        return sum(1 for record in self._list_records() if record.status in ACTIVE_JOB_STATUSES)
 
     def queue_depth(self) -> int:
-        with self._connect() as conn:
-            row = conn.execute(
-                "SELECT COUNT(*) AS c FROM jobs WHERE status = ?",
-                ("queued",),
-            ).fetchone()
-        return int(row["c"]) if row is not None else 0
+        return sum(1 for record in self._list_records() if record.status == "queued")
 
-    def _connect(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(str(self._db_path), check_same_thread=False)
-        conn.row_factory = sqlite3.Row
-        return conn
+    def _list_records(self) -> list[JobRecord]:
+        rows: list[JobRecord] = []
+        for key in self._objects.list_keys(prefix="jobs"):
+            payload = self._objects.read_json(key)
+            if isinstance(payload, dict):
+                rows.append(_payload_to_record(payload))
+        rows.sort(key=lambda row: row.created_at)
+        return rows
 
-    def _init_db(self) -> None:
-        with self._connect() as conn:
-            conn.execute(
-                """
-                CREATE TABLE IF NOT EXISTS jobs (
-                    job_id TEXT PRIMARY KEY,
-                    mode TEXT NOT NULL,
-                    status TEXT NOT NULL,
-                    request_json TEXT NOT NULL,
-                    result_json TEXT,
-                    error_class TEXT,
-                    message TEXT,
-                    created_at TEXT NOT NULL,
-                    updated_at TEXT NOT NULL,
-                    started_at TEXT,
-                    completed_at TEXT
-                )
-                """
-            )
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status)")
+    def list_records(self) -> list[JobRecord]:
+        return self._list_records()
+
+    def requeue_for_recovery(self, job_id: str) -> JobRecord | None:
+        with self._lock:
+            row = self.get(job_id)
+            if row is None or row.status not in ACTIVE_JOB_STATUSES:
+                return row
+            now = utc_now_iso()
+            payload = _record_to_payload(row)
+            payload["status"] = "queued"
+            payload["updated_at"] = now
+            payload["completed_at"] = None
+            self._objects.write_json(self._job_key(job_id), payload)
+        return self.get(job_id)
 
 
-def _row_to_record(row: sqlite3.Row) -> JobRecord:
-    request_raw = row["request_json"]
-    result_raw = row["result_json"]
-
-    request = json.loads(request_raw) if isinstance(request_raw, str) and request_raw else {}
+def _payload_to_record(payload: dict[str, Any]) -> JobRecord:
+    request = payload.get("request")
     if not isinstance(request, dict):
         request = {}
-
-    result: dict[str, Any] | None
-    if isinstance(result_raw, str) and result_raw:
-        parsed_result = json.loads(result_raw)
-        result = parsed_result if isinstance(parsed_result, dict) else {"value": parsed_result}
-    else:
-        result = None
-
+    result = payload.get("result")
+    if result is not None and not isinstance(result, dict):
+        result = {"value": result}
     return JobRecord(
-        job_id=str(row["job_id"]),
-        mode=str(row["mode"]),
-        status=str(row["status"]),
+        job_id=str(payload.get("job_id", "")),
+        mode=str(payload.get("mode", "")),
+        status=str(payload.get("status", "")),
         request=request,
         result=result,
-        error_class=str(row["error_class"]) if row["error_class"] else None,
-        message=str(row["message"]) if row["message"] else None,
-        created_at=str(row["created_at"]),
-        updated_at=str(row["updated_at"]),
-        started_at=str(row["started_at"]) if row["started_at"] else None,
-        completed_at=str(row["completed_at"]) if row["completed_at"] else None,
+        error_class=str(payload.get("error_class")) if payload.get("error_class") else None,
+        message=str(payload.get("message")) if payload.get("message") else None,
+        created_at=str(payload.get("created_at", utc_now_iso())),
+        updated_at=str(payload.get("updated_at", utc_now_iso())),
+        started_at=str(payload.get("started_at")) if payload.get("started_at") else None,
+        completed_at=str(payload.get("completed_at")) if payload.get("completed_at") else None,
     )
+
+
+def _record_to_payload(record: JobRecord) -> dict[str, Any]:
+    return {
+        "job_id": record.job_id,
+        "mode": record.mode,
+        "status": record.status,
+        "request": record.request,
+        "result": record.result,
+        "error_class": record.error_class,
+        "message": record.message,
+        "created_at": record.created_at,
+        "updated_at": record.updated_at,
+        "started_at": record.started_at,
+        "completed_at": record.completed_at,
+    }

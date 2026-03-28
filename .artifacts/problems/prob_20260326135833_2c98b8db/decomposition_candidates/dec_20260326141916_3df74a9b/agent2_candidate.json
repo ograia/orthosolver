@@ -1,0 +1,504 @@
+{
+  "assembly_plan": {
+    "final_step_yields_exact_root": true,
+    "proof_skeleton_nl": "Use strong induction on n. For n=2 the claim is immediate. For n>=3, fix any sign sequence s. Split counted permutations by the position p of the maximum value n; this gives the recurrence of L1. The left and right parts are smaller sign-pattern problems, so the induction hypothesis bounds each term by the corresponding alternating maxima M_{p-1} and M_{n-p}. This yields an upper bound by a weighted sum over Peak(s). By L2, Peak(s) is a subset with no adjacent elements. The bottleneck lemma L5 says that among all such subsets, the weighted sum is maximized exactly by one entire parity class. L4 identifies each parity-class sum with M_n, the count of an alternating pattern. Hence every sign sequence satisfies F_n(s) <= M_n, while the two alternating patterns both achieve M_n by definition and the symmetry L3. Finally, if some s is maximizing, then every inequality in the upper-bound chain is tight; the equality clause in L5 forces Peak(s) to be a full parity class, and L6 reconstructs s as one of the two alternating sign sequences. Therefore the maximizing sign sequences are exactly the alternating ones.",
+    "steps": [
+      {
+        "derives": "Base case n=2: the only length-1 sign sequences are (+1) and (-1), each has count 1, so both are maximal and both are alternating.",
+        "is_trivial": false,
+        "step_id": "A1",
+        "trivial_justification": "This is the explicit base-case computation supplied by L7.",
+        "uses_lemmas": [
+          "L7"
+        ],
+        "uses_prior_steps": []
+      },
+      {
+        "derives": "Induction setup for n >= 3: assume as strong induction hypothesis that for every integer m with 2 <= m < n and every sign sequence u of length m-1, one has F_m(u) <= M_m, and equality holds only for the two alternating sign sequences alt_m^+ and alt_m^-. Also note separately that F_0(empty)=M_0=1 and F_1(empty)=M_1=1 by definition.",
+        "is_trivial": false,
+        "step_id": "A2",
+        "trivial_justification": "This is the standard strong induction assumption specialized to the statement being proved.",
+        "uses_lemmas": [],
+        "uses_prior_steps": []
+      },
+      {
+        "derives": "Fix an arbitrary sign sequence s of length n-1. Applying the recurrence by the position of the value n gives F_n(s)=sum_{p in Peak(s)} binomial(n-1,p-1) F_{p-1}(s^{<p}) F_{n-p}(s^{>p}).",
+        "is_trivial": false,
+        "step_id": "A3",
+        "trivial_justification": "L1 is applied with m=n and t=s.",
+        "uses_lemmas": [
+          "L1"
+        ],
+        "uses_prior_steps": []
+      },
+      {
+        "derives": "For each p in Peak(s), the factors F_{p-1}(s^{<p}) and F_{n-p}(s^{>p}) involve sizes strictly smaller than n. If one factor has size 0 or 1, it equals M_0 or M_1 by definition; otherwise it is at most the corresponding M-value by the strong induction hypothesis from A2. Therefore each summand in A3 is at most w_p^(n)=binomial(n-1,p-1) M_{p-1} M_{n-p}, and summing over p yields F_n(s) <= sum_{p in Peak(s)} w_p^(n).",
+        "is_trivial": false,
+        "step_id": "A4",
+        "trivial_justification": "This step combines the recurrence from A3 with the strong induction hypothesis for the smaller left and right subproblems.",
+        "uses_lemmas": [],
+        "uses_prior_steps": [
+          "A2",
+          "A3"
+        ]
+      },
+      {
+        "derives": "The set Peak(s) has no consecutive integers.",
+        "is_trivial": true,
+        "step_id": "A5",
+        "trivial_justification": "Immediate from L2 applied to the fixed sign sequence s.",
+        "uses_lemmas": [
+          "L2"
+        ],
+        "uses_prior_steps": []
+      },
+      {
+        "derives": "Because Peak(s) is a subset of {1,...,n} with no consecutive integers, the weighted independent-set inequality applies and gives sum_{p in Peak(s)} w_p^(n) <= max(sum_{1 <= p <= n, p even} w_p^(n), sum_{1 <= p <= n, p odd} w_p^(n)).",
+        "is_trivial": true,
+        "step_id": "A6",
+        "trivial_justification": "This is exactly L5 with m=n and P=Peak(s).",
+        "uses_lemmas": [
+          "L5"
+        ],
+        "uses_prior_steps": [
+          "A5"
+        ]
+      },
+      {
+        "derives": "For the same weights w_p^(n), the maximum of the even-parity sum and the odd-parity sum is M_n, because L4 states that both parity sums are equal to M_n.",
+        "is_trivial": true,
+        "step_id": "A7",
+        "trivial_justification": "Direct application of L4 with m=n.",
+        "uses_lemmas": [
+          "L4"
+        ],
+        "uses_prior_steps": []
+      },
+      {
+        "derives": "Combining A4 and A6 gives F_n(s) <= max(sum_{p even} w_p^(n), sum_{p odd} w_p^(n)).",
+        "is_trivial": true,
+        "step_id": "A8",
+        "trivial_justification": "This is a single transitive comparison of the inequalities already obtained.",
+        "uses_lemmas": [],
+        "uses_prior_steps": [
+          "A4",
+          "A6"
+        ]
+      },
+      {
+        "derives": "Substituting the value of the parity maximum from A7 into the inequality from A8 yields F_n(s) <= M_n for every sign sequence s of length n-1.",
+        "is_trivial": true,
+        "step_id": "A9",
+        "trivial_justification": "A8 gives an upper bound by the parity maximum, and A7 identifies that parity maximum with M_n.",
+        "uses_lemmas": [],
+        "uses_prior_steps": [
+          "A7",
+          "A8"
+        ]
+      },
+      {
+        "derives": "By definition, F_n(alt_n^+)=M_n. By L3, negating the sign pattern preserves the count, so F_n(alt_n^-)=F_n(alt_n^+)=M_n. Thus both alternating sign sequences attain the upper bound M_n.",
+        "is_trivial": false,
+        "step_id": "A10",
+        "trivial_justification": "This step uses the definition of M_n together with the symmetry from L3 to get both alternating witnesses.",
+        "uses_lemmas": [
+          "L3"
+        ],
+        "uses_prior_steps": []
+      },
+      {
+        "derives": "Therefore the maximal value of F_n among all sign sequences of length n-1 is exactly M_n, and both alternating sign sequences are maximizing.",
+        "is_trivial": true,
+        "step_id": "A11",
+        "trivial_justification": "A9 gives the universal upper bound M_n, and A10 provides sign sequences that attain it.",
+        "uses_lemmas": [],
+        "uses_prior_steps": [
+          "A9",
+          "A10"
+        ]
+      },
+      {
+        "derives": "Now assume s is any maximizing sign sequence of length n-1. Since the maximal value is M_n by A11, we have F_n(s)=M_n.",
+        "is_trivial": true,
+        "step_id": "A12",
+        "trivial_justification": "A maximizing sequence must attain the maximum value identified in A11.",
+        "uses_lemmas": [],
+        "uses_prior_steps": [
+          "A11"
+        ]
+      },
+      {
+        "derives": "From A4, A6, and A7 we have a chain F_n(s) <= sum_{p in Peak(s)} w_p^(n) <= M_n. Because A12 says the left endpoint already equals M_n, both inequalities in that chain are equalities. In particular, equality holds in the L5 inequality used in A6, so the equality clause of L5 forces Peak(s) to be exactly the even integers in {1,...,n} or exactly the odd integers in {1,...,n}.",
+        "is_trivial": false,
+        "step_id": "A13",
+        "trivial_justification": "This step extracts the equality information from the sharp upper-bound chain and then invokes the equality characterization in L5.",
+        "uses_lemmas": [
+          "L5"
+        ],
+        "uses_prior_steps": [
+          "A4",
+          "A6",
+          "A7",
+          "A12"
+        ]
+      },
+      {
+        "derives": "If Peak(s) is the even set, then L6 gives s=alt_n^+. If Peak(s) is the odd set, then L6 gives s=alt_n^-. Hence every maximizing sign sequence is alternating.",
+        "is_trivial": true,
+        "step_id": "A14",
+        "trivial_justification": "This is exactly the reconstruction statement of L6 applied to the two peak-set possibilities from A13.",
+        "uses_lemmas": [
+          "L6"
+        ],
+        "uses_prior_steps": [
+          "A13"
+        ]
+      },
+      {
+        "derives": "The base case A1 handles n=2. For arbitrary n >= 3, steps A11 and A14 prove the induction step: among all sign sequences s=(s_1,...,s_{n-1}) with each s_i=\u00b11, the quantity f(s)=F_n(s) is maximal exactly for the alternating sequences s=(+1,-1,+1,-1,...) and s=(-1,+1,-1,+1,...), equivalently exactly for those s satisfying s_i s_{i+1}=-1 for every 1 <= i <= n-2. This is exactly the theorem statement.",
+        "is_trivial": false,
+        "step_id": "A15",
+        "trivial_justification": "This closes the strong induction by combining the base case with the full induction step and then rewriting F_n as the theorem's f.",
+        "uses_lemmas": [],
+        "uses_prior_steps": [
+          "A1",
+          "A2",
+          "A11",
+          "A14"
+        ]
+      }
+    ]
+  },
+  "candidate_index": 0,
+  "context_items": [],
+  "drift_self_check": {
+    "all_lemmas_consistent_with_root_sketch": true,
+    "inconsistencies_noted": []
+  },
+  "formalization_cost_estimate_total": 0.8,
+  "lemmas": [
+    {
+      "bottleneck_reason": null,
+      "formalization_cost_estimate": 0.58,
+      "lemma_relation_to_parent": "orthogonal",
+      "local_id": "L1",
+      "proof_nl": null,
+      "role_in_assembly": "This gives the exact recursive decomposition used in the induction step.",
+      "self_check_notes": "The statement locally defines F_m, Peak(t), and the truncated sequences t^{<p}, t^{>p}; it does not rely on any external lemma text.",
+      "self_check_true": true,
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "m >= 2.",
+          "t has exactly m-1 entries.",
+          "Each entry of t is either +1 or -1."
+        ],
+        "normalized_claim": "If Peak(t) is defined by local boundary/internal conditions for where the value m can occur, then F_m(t)=sum_{p in Peak(t)} binomial(m-1,p-1) F_{p-1}(t^{<p}) F_{m-p}(t^{>p}), where t^{<p}=(t_1,...,t_{p-2}), t^{>p}=(t_{p+1},...,t_{m-1}), and F_0(empty)=F_1(empty)=1.",
+        "quantifier_order": [
+          "Choose m.",
+          "Choose t.",
+          "Form Peak(t) and sum over p in Peak(t)."
+        ],
+        "variables": [
+          {
+            "domain": "integers at least 2",
+            "name": "m",
+            "role": "size of the permutation",
+            "type": "integer"
+          },
+          {
+            "domain": "sequences of length m-1 with entries +1 or -1",
+            "name": "t",
+            "role": "prescribed up/down pattern",
+            "type": "sequence of signs"
+          },
+          {
+            "domain": "integers from 1 to m",
+            "name": "p",
+            "role": "candidate position of the maximal value m",
+            "type": "index"
+          }
+        ],
+        "witness_dependencies": []
+      },
+      "statement_nl": "Let m be an integer with m >= 2, and let t=(t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}. Let F_m(t) be the number of permutations a=(a_1,...,a_m) of {1,...,m} such that t_i(a_{i+1}-a_i) > 0 for every 1 <= i <= m-1. Define Peak(t) subseteq {1,...,m} by: 1 in Peak(t) iff t_1=-1; m in Peak(t) iff t_{m-1}=+1; and for 2 <= p <= m-1, p in Peak(t) iff t_{p-1}=+1 and t_p=-1. For p in Peak(t), define t^{<p}=(t_1,...,t_{p-2}) with the convention that this is the empty sequence when p <= 2, and define t^{>p}=(t_{p+1},...,t_{m-1}) with the convention that this is the empty sequence when p >= m-1. Then, with F_0(empty)=F_1(empty)=1, one has\nF_m(t) = sum over p in Peak(t) of binomial(m-1,p-1) * F_{p-1}(t^{<p}) * F_{m-p}(t^{>p}).",
+      "strictly_easier_reason": "It is a structural recurrence for one fixed sign pattern; it does not compare different patterns or identify maximizers."
+    },
+    {
+      "bottleneck_reason": null,
+      "formalization_cost_estimate": 0.1,
+      "lemma_relation_to_parent": "orthogonal",
+      "local_id": "L2",
+      "proof_nl": null,
+      "role_in_assembly": "This verifies that Peak(s) is an admissible subset for the weighted independent-set inequality.",
+      "self_check_notes": "Peak(t) is defined inside the statement; no hidden notation remains.",
+      "self_check_true": true,
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "m >= 2.",
+          "t has length m-1.",
+          "Each entry of t is +1 or -1."
+        ],
+        "normalized_claim": "For every sign sequence t, the set Peak(t) defined by boundary peaks and internal +1 followed by -1 transitions is an independent set in the path {1,...,m}; equivalently, it has no consecutive integers.",
+        "quantifier_order": [
+          "Choose m.",
+          "Choose t."
+        ],
+        "variables": [
+          {
+            "domain": "integers at least 2",
+            "name": "m",
+            "role": "size parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "sequences of length m-1 with entries +1 or -1",
+            "name": "t",
+            "role": "sign pattern",
+            "type": "sequence of signs"
+          }
+        ],
+        "witness_dependencies": []
+      },
+      "statement_nl": "Let m be an integer with m >= 2, and let t=(t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}. Define Peak(t) subseteq {1,...,m} by: 1 in Peak(t) iff t_1=-1; m in Peak(t) iff t_{m-1}=+1; and for 2 <= p <= m-1, p in Peak(t) iff t_{p-1}=+1 and t_p=-1. Then Peak(t) contains no two consecutive integers.",
+      "strictly_easier_reason": "It is a purely local property of the peak-set encoding and does not involve counting permutations or maximizing counts."
+    },
+    {
+      "bottleneck_reason": null,
+      "formalization_cost_estimate": 0.15,
+      "lemma_relation_to_parent": "orthogonal",
+      "local_id": "L3",
+      "proof_nl": null,
+      "role_in_assembly": "This identifies the two alternating patterns as having the same count, so both are candidates for the maximum value M_n.",
+      "self_check_notes": "All notation, including -t and the definition of F_m, is introduced locally.",
+      "self_check_true": true,
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "m >= 1.",
+          "t has length m-1.",
+          "Each entry of t is +1 or -1."
+        ],
+        "normalized_claim": "Negating every sign in the pattern preserves the count: F_m(t)=F_m(-t). Therefore the two alternating sign sequences have equal counts.",
+        "quantifier_order": [
+          "Choose m.",
+          "Choose t."
+        ],
+        "variables": [
+          {
+            "domain": "integers at least 1",
+            "name": "m",
+            "role": "size of the permutation",
+            "type": "integer"
+          },
+          {
+            "domain": "sequences of length m-1 with entries +1 or -1",
+            "name": "t",
+            "role": "prescribed sign pattern",
+            "type": "sequence of signs"
+          }
+        ],
+        "witness_dependencies": []
+      },
+      "statement_nl": "Let m be an integer with m >= 1, and let t=(t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}. Let F_m(t) be the number of permutations a=(a_1,...,a_m) of {1,...,m} such that t_i(a_{i+1}-a_i) > 0 for every 1 <= i <= m-1. Let -t=(-t_1,...,-t_{m-1}). Then F_m(t)=F_m(-t). In particular, if alt_m^+=(+1,-1,+1,-1,...) and alt_m^-=(-1,+1,-1,+1,...) are the two alternating sign sequences of length m-1, then F_m(alt_m^+)=F_m(alt_m^-).",
+      "strictly_easier_reason": "This is a simple involutive symmetry via complementation of permutation values, independent of the extremal comparison."
+    },
+    {
+      "bottleneck_reason": null,
+      "formalization_cost_estimate": 0.42,
+      "lemma_relation_to_parent": "strictly_weaker",
+      "local_id": "L4",
+      "proof_nl": null,
+      "role_in_assembly": "This computes the target upper bound produced by the parity classes of peak positions and identifies it with the alternating count M_m.",
+      "self_check_notes": "The statement locally defines F_k, alt_k^+, M_k, and w_p; it can be solved independently.",
+      "self_check_true": true,
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "m >= 2.",
+          "For each k >= 1, alt_k^+ is the alternating sign sequence +1,-1,+1,-1,... of length k-1.",
+          "M_0=1 and M_k=F_k(alt_k^+)."
+        ],
+        "normalized_claim": "If w_p=binomial(m-1,p-1) M_{p-1} M_{m-p}, then M_m equals the sum of the even-indexed w_p and also equals the sum of the odd-indexed w_p.",
+        "quantifier_order": [
+          "Choose m.",
+          "Define M_k from alternating sign patterns.",
+          "Define w_p for 1 <= p <= m."
+        ],
+        "variables": [
+          {
+            "domain": "integers at least 2",
+            "name": "m",
+            "role": "size parameter for the alternating count",
+            "type": "integer"
+          },
+          {
+            "domain": "integers from 1 to m",
+            "name": "p",
+            "role": "summation index",
+            "type": "index"
+          },
+          {
+            "domain": "defined by M_0=1 and M_k=F_k(alt_k^+) for k>=1",
+            "name": "M",
+            "role": "alternating-pattern counts",
+            "type": "sequence of integers"
+          }
+        ],
+        "witness_dependencies": []
+      },
+      "statement_nl": "For each integer k >= 1, let alt_k^+=(+1,-1,+1,-1,...) be the alternating sign sequence of length k-1, let F_k(u) denote the number of permutations of {1,...,k} with prescribed sign sequence u, and set M_k=F_k(alt_k^+). Also set M_0=1. Fix an integer m >= 2, and for 1 <= p <= m define w_p = binomial(m-1,p-1) M_{p-1} M_{m-p}. Then\nM_m = sum of w_p over all even p in {1,...,m} = sum of w_p over all odd p in {1,...,m}.",
+      "strictly_easier_reason": "It only analyzes the distinguished alternating patterns and their recurrence; it does not compare arbitrary sign sequences."
+    },
+    {
+      "bottleneck_reason": "After the recurrence and induction reduce arbitrary sign patterns to weighted peak sets, this inequality is exactly the remaining hard comparison. It is the frontier step that identifies parity classes\u2014and hence alternating patterns\u2014as the unique maximizers.",
+      "formalization_cost_estimate": 0.93,
+      "lemma_relation_to_parent": "bottleneck",
+      "local_id": "L5",
+      "proof_nl": null,
+      "role_in_assembly": "This is the main extremal comparison: it turns the recursive upper bound into a sharp global upper bound and supplies the equality characterization needed for uniqueness.",
+      "self_check_notes": "The statement defines F_k, M_k, and w_p locally and does not refer to any other lemma.",
+      "self_check_true": true,
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "m >= 2.",
+          "P subseteq {1,...,m}.",
+          "No two elements of P are consecutive.",
+          "M_0=1 and M_k=F_k(alt_k^+) for k>=1."
+        ],
+        "normalized_claim": "For w_p=binomial(m-1,p-1) M_{p-1} M_{m-p}, every no-consecutive subset P satisfies sum_{p in P} w_p <= max(sum_{p even} w_p, sum_{p odd} w_p), with equality exactly for the full even set or the full odd set.",
+        "quantifier_order": [
+          "Choose m.",
+          "Choose P.",
+          "Define M_k and then define the weights w_p."
+        ],
+        "variables": [
+          {
+            "domain": "integers at least 2",
+            "name": "m",
+            "role": "size parameter for the weight system",
+            "type": "integer"
+          },
+          {
+            "domain": "subsets of {1,...,m} with no consecutive integers",
+            "name": "P",
+            "role": "candidate peak set",
+            "type": "finite subset"
+          },
+          {
+            "domain": "integers from 1 to m",
+            "name": "p",
+            "role": "summation index",
+            "type": "index"
+          },
+          {
+            "domain": "defined by M_0=1 and M_k=F_k(alt_k^+) for k>=1",
+            "name": "M",
+            "role": "alternating-pattern counts used to define the weights",
+            "type": "sequence of integers"
+          }
+        ],
+        "witness_dependencies": []
+      },
+      "statement_nl": "For each integer k >= 1, let alt_k^+=(+1,-1,+1,-1,...) be the alternating sign sequence of length k-1, let F_k(u) denote the number of permutations of {1,...,k} with prescribed sign sequence u, and set M_k=F_k(alt_k^+). Also set M_0=1. Fix an integer m >= 2, and for 1 <= p <= m define w_p = binomial(m-1,p-1) M_{p-1} M_{m-p}. Let P be a subset of {1,...,m} with no two consecutive integers. Then\nsum over p in P of w_p <= max( sum of w_p over even p in {1,...,m}, sum of w_p over odd p in {1,...,m} ).\nMoreover, equality holds if and only if P is exactly the set of even integers in {1,...,m} or exactly the set of odd integers in {1,...,m}.",
+      "strictly_easier_reason": null
+    },
+    {
+      "bottleneck_reason": null,
+      "formalization_cost_estimate": 0.18,
+      "lemma_relation_to_parent": "strictly_weaker",
+      "local_id": "L6",
+      "proof_nl": null,
+      "role_in_assembly": "This converts the equality information on the peak set back into the original sign sequence, yielding the exact maximizing patterns.",
+      "self_check_notes": "The definition of Peak(t) is restated inside the lemma, so the statement is self-contained.",
+      "self_check_true": true,
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "m >= 2.",
+          "t has length m-1.",
+          "Each entry of t is +1 or -1."
+        ],
+        "normalized_claim": "If Peak(t) is the full even subset of {1,...,m}, then t is the alternating word +1,-1,+1,-1,.... If Peak(t) is the full odd subset, then t is the alternating word -1,+1,-1,+1,....",
+        "quantifier_order": [
+          "Choose m.",
+          "Choose t."
+        ],
+        "variables": [
+          {
+            "domain": "integers at least 2",
+            "name": "m",
+            "role": "size parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "sequences of length m-1 with entries +1 or -1",
+            "name": "t",
+            "role": "sign pattern to be reconstructed from its peak set",
+            "type": "sequence of signs"
+          }
+        ],
+        "witness_dependencies": []
+      },
+      "statement_nl": "Let m be an integer with m >= 2, and let t=(t_1,...,t_{m-1}) be a sign sequence with each t_i in {+1,-1}. Define Peak(t) subseteq {1,...,m} by: 1 in Peak(t) iff t_1=-1; m in Peak(t) iff t_{m-1}=+1; and for 2 <= p <= m-1, p in Peak(t) iff t_{p-1}=+1 and t_p=-1. If Peak(t) is exactly the set of even integers in {1,...,m}, then t_i=+1 for odd i and t_i=-1 for even i, so t=(+1,-1,+1,-1,...). If Peak(t) is exactly the set of odd integers in {1,...,m}, then t_i=-1 for odd i and t_i=+1 for even i, so t=(-1,+1,-1,+1,...).",
+      "strictly_easier_reason": "It is only a reconstruction statement from a very special form of peak set; it does not count permutations or prove maximality."
+    },
+    {
+      "bottleneck_reason": null,
+      "formalization_cost_estimate": 0.03,
+      "lemma_relation_to_parent": "strictly_weaker",
+      "local_id": "L7",
+      "proof_nl": null,
+      "role_in_assembly": "This supplies the base case for the induction.",
+      "self_check_notes": "The statement fully specifies n=2, the two possible sign sequences, and the meaning of F_2.",
+      "self_check_true": true,
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "n=2.",
+          "t is either (+1) or (-1)."
+        ],
+        "normalized_claim": "At size 2, both possible sign sequences have count 1, so both are maximizing and alternating.",
+        "quantifier_order": [
+          "Fix n=2.",
+          "Check the two possible sign sequences t."
+        ],
+        "variables": [
+          {
+            "domain": "the singleton value 2",
+            "name": "n",
+            "role": "base-case size parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "the two length-1 sign sequences (+1) and (-1)",
+            "name": "t",
+            "role": "base-case sign pattern",
+            "type": "sequence of signs"
+          }
+        ],
+        "witness_dependencies": []
+      },
+      "statement_nl": "For n=2, the only sign sequences of length 1 are (+1) and (-1). If F_2(t) denotes the number of permutations of {1,2} whose adjacent difference has the prescribed sign t_1, then F_2((+1))=1 and F_2((-1))=1. Hence for n=2 both sign sequences are maximizing, and both are alternating.",
+      "strictly_easier_reason": "It is a direct finite computation in the smallest case."
+    }
+  ],
+  "shared_context": [
+    {
+      "content": "For each integer m >= 0, define F_m on sign sequences of length m-1 (and on the empty sequence when m=0 or m=1) by: F_m(t) is the number of permutations a=(a_1,...,a_m) of {1,...,m} such that t_i (a_{i+1}-a_i) > 0 for every admissible i. Set F_0(empty)=1 and F_1(empty)=1.",
+      "kind": "definition",
+      "label": "Permutation-count function F_m"
+    },
+    {
+      "content": "If t=(t_1,...,t_{m-1}) with each t_i in {+1,-1}, define Peak(t) subseteq {1,...,m} by: 1 is in Peak(t) iff t_1=-1; m is in Peak(t) iff t_{m-1}=+1; and for 2 <= p <= m-1, p is in Peak(t) iff t_{p-1}=+1 and t_p=-1.",
+      "kind": "definition",
+      "label": "Peak set of a sign sequence"
+    },
+    {
+      "content": "For m >= 1, let alt_m^+ be the sign sequence of length m-1 with entries +1,-1,+1,-1,..., so alt_m^+(i)=+1 for odd i and alt_m^+(i)=-1 for even i. Let alt_m^-=-alt_m^+, i.e. -1,+1,-1,+1,....",
+      "kind": "definition",
+      "label": "Alternating sign sequences"
+    },
+    {
+      "content": "Set M_0=1 and, for m >= 1, set M_m = F_m(alt_m^+). For fixed m >= 2 and 1 <= p <= m, write w_p^(m) = binomial(m-1,p-1) M_{p-1} M_{m-p}.",
+      "kind": "notation",
+      "label": "Alternating counts and Euler weights"
+    }
+  ],
+  "strategy_summary": "Strong induction on n using the position of the maximum entry. A recurrence expresses the count for an arbitrary sign pattern as a sum over the positions where the value n can occur. After replacing the smaller factors by the corresponding alternating-pattern maxima, the problem becomes a weighted independent-set problem on the path {1,...,n}. A bottleneck lemma says those Euler-type weights are maximized exactly by one full parity class of vertices, and those parity classes correspond exactly to the two alternating sign sequences."
+}

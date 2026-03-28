@@ -467,6 +467,16 @@ def _build_normalized_bundle(payload: JsonDict, provenance: NormalizationProvena
             proof_status=_optional_string(lemma_raw.get("proof_status")),
             routing_status=_optional_string(lemma_raw.get("routing_status")),
             role_in_parent=_optional_string(lemma_raw.get("role_in_parent")),
+            depends_on=[
+                str(item).strip()
+                for item in lemma_raw.get("depends_on", [])
+                if str(item).strip()
+            ] if isinstance(lemma_raw.get("depends_on"), list) else [],
+            layer_index=(
+                int(lemma_raw.get("layer_index"))
+                if isinstance(lemma_raw.get("layer_index"), int)
+                else None
+            ),
             extra=_extra_fields(
                 lemma_raw,
                 {
@@ -477,6 +487,8 @@ def _build_normalized_bundle(payload: JsonDict, provenance: NormalizationProvena
                     "proof_status",
                     "routing_status",
                     "role_in_parent",
+                    "depends_on",
+                    "layer_index",
                 },
             ),
         )

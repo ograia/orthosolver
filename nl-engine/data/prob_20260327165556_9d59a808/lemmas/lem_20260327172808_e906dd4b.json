@@ -1,0 +1,88 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327172938_e587799a",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:28:15.323590Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:55:07.163692Z",
+  "last_dependency_check_id": "depchk_20260327175506_e903beaa",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The argument correctly fixes n and an arbitrary t in [0,1), defines a=floor(nt), and proves E_n(t) <= E_n(a/n) by termwise monotonicity of floor under multiplication by positive k, followed by summation. The conclusion matches the lemma exactly and no forbidden dependencies are used.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let n>1 be fixed, let t be real with 0<=t<1, and set a=floor(n t). Then by definition of the floor function,\na <= n t < a+1,\nso dividing by n gives\na/n <= t < (a+1)/n.\nIn particular, t >= a/n.\n\nNow for each k=1,...,n, since k>0 we have k t >= k(a/n), and the floor function is monotone increasing, hence\nfloor(k t) >= floor(k a/n).\nDividing by the positive integer k preserves the inequality:\nfloor(k t)/k >= floor(k a/n)/k.\nSumming over k=1,...,n yields\nsum_{k=1}^n floor(k t)/k >= sum_{k=1}^n floor(k a/n)/k.\n\nAlso, because a/n is a real number with n(a/n)=a, we have\nfloor(n(a/n)) = a = floor(n t).\nTherefore\nE_n(t) = floor(n t) - sum_{k=1}^n floor(k t)/k\n<= a - sum_{k=1}^n floor(k a/n)/k\n= E_n(a/n).\nThis is exactly the desired inequality.",
+  "latest_vetted_proof_fingerprint": "ea597c3ea794b9b5dbec1ef28b4b40db1f7be30b9b6a286a5e3b23dc28509e4c",
+  "latest_vetter_report_id": "rep_20260327175506_adcc5f1f",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327172808_e906dd4b",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327172808_e906dd4b.json",
+  "proof_graph_id": "pgraph_20260327172936_9fcd13e5",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Compare the value at an arbitrary fractional input with the left endpoint of its 1/n-interval.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 3,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n > 1",
+      "t is real and satisfies 0 <= t and t < 1",
+      "a equals floor(n*t) so a is an integer",
+      "since t < 1, n*t < n, hence a <= n-1",
+      "since t >= 0, n*t >= 0, hence a >= 0",
+      "therefore a divided by n lies in the interval [0, 1)"
+    ],
+    "normalized_claim": "For all integers n with n > 1 and all real numbers t with 0 <= t < 1, let a be floor(n*t). Then E_n(t) is less than or equal to E_n(a divided by n).",
+    "quantifier_order": [
+      "for all integers n",
+      "for all real numbers t"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter; quantifier subject",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "t",
+        "role": "input variable to the function E_n",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "auxiliary witness defined as floor(n*t)",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "a depends on n and t via the rule a = floor(n*t)"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:55:07.163692Z"
+}

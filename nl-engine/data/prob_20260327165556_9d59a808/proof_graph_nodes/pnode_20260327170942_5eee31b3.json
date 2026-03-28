@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-03-27T17:09:42.215060Z",
+  "graph_node_id": "pnode_20260327170942_5eee31b3",
+  "metadata": {
+    "parent_id": "thm_root_20260327165556_b210f785"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "29f8ada00df9bc558f407cbcd6da44b6975ec228ed0661bcc46b0c1ae38ffcc3",
+  "owner_id": "lem_20260327170749_458cf41e",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer with n greater than 1",
+      "b_k are nonnegative real numbers for each k in 1 to n-1",
+      "u is obtained by reordering b, so u_1 to u_(n-1) has the same multiset of values as b_1 to b_(n-1)",
+      "u is nonincreasing, meaning u_k >= u_(k+1) for all k in 1 to n-2",
+      "weights 1/k are used in the sums for k in 1 to n-1"
+    ],
+    "normalized_claim": "For every integer n greater than 1 and every nonnegative real sequence b_1,...,b_(n-1), let u_1,...,u_(n-1) be any nonincreasing reordering of the same multiset of values. Then the weighted sum of b with weights 1 over k is at most the weighted sum of u with the same weights: sum over k from 1 to n-1 of b_k divided by k is <= sum over k from 1 to n-1 of u_k divided by k. Moreover, if equality holds for this comparison, then the original sequence b_1,...,b_(n-1) is itself nonincreasing (b_1 >= b_2 >= ... >= b_(n-1)).",
+    "quantifier_order": [
+      "For all integers n with n greater than 1",
+      "For all sequences b_1 to b_(n-1) of nonnegative real numbers",
+      "For all sequences u_1 to u_(n-1) that are a permutation of the multiset of b values and satisfy u_1 >= u_2 >= ... >= u_(n-1)"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "sequence length parameter; inequality is over indices k = 1 to n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "index in the sums, restricted by 1 <= k <= n-1",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative real numbers",
+        "name": "b",
+        "role": "original list (b_1,...,b_{n-1}) whose weighted sum uses weights 1/k",
+        "type": "sequence of real numbers"
+      },
+      {
+        "domain": "nonnegative real numbers",
+        "name": "u",
+        "role": "nonincreasing reordering (u_1,...,u_{n-1}) of the same multiset as b, used on the right-hand side",
+        "type": "sequence of real numbers"
+      }
+    ],
+    "witness_dependencies": [
+      "u depends on b: u is a reordering (permutation) of the multiset of values of b",
+      "the conditional conclusion about b (nonincreasing property) depends on the truth of the equality of the two weighted sums for the chosen u"
+    ]
+  },
+  "statement_nl": "Let n>1. If b_1,...,b_{n-1} are nonnegative real numbers, and u_1,...,u_{n-1} is a nonincreasing reordering of the same multiset of numbers, then sum_{k=1}^{n-1} b_k/k <= sum_{k=1}^{n-1} u_k/k. If equality holds, then the original list b_1,...,b_{n-1} is already nonincreasing.",
+  "updated_at": "2026-03-27T17:09:42.215060Z"
+}

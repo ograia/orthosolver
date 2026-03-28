@@ -55,15 +55,11 @@ def test_run_reuses_existing_execution_instead_of_409(monkeypatch) -> None:
 
 
 def test_db_locked_maps_to_structured_503(monkeypatch) -> None:
-    """When db_locked hits during /run but execution is still active, return 200.
+    """Legacy lock-behavior coverage retained only as a placeholder.
 
-    The embedded supervisor will continue driving the execution, so a transient
-    lock is not a user-visible error.
-
-    NOTE: This test is for SQLite lock behavior. With the file-based store,
-    database locks no longer occur.
+    The file-backed runtime no longer produces relational-lock behavior.
     """
-    pytest.skip("SQLite lock behavior test — not applicable with file-based store")
+    pytest.skip("Legacy lock behavior test is not applicable with the file-based store")
 
     # No-op path kept to satisfy static analysis in this skipped test.
     assert monkeypatch is not None

@@ -1,0 +1,108 @@
+{
+  "assembly_plan_id": "asm_20260327041325_34be95d7",
+  "created_at": "2026-03-27T04:18:31.948994Z",
+  "decomposition_id": "dec_20260327041325_779a5923",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "proof_skeleton_nl": "Refine the count by recording the rank of the last entry of a valid partial permutation. Lemma L1 shows that extending the sign pattern by +1 applies the prefix-sum operator U to this rank-count vector, while extending by -1 applies the suffix-sum operator D. The hard lemma L6, proved by induction on the remaining length using L2 through L5, says that from any monotone nonnegative state the unique best future sign string is alternating, beginning with the sign opposite to the monotonicity direction. After one initial +1 step the state is (0,1), so L6 forces the rest of the pattern to be -1,+1,-1,... and gives uniqueness in the class of patterns starting with +1. Lemma L7 transports this result by termwise sign negation to patterns starting with -1 and shows that the two alternating patterns have equal counts. Hence the global maximizers are exactly the two alternating sign sequences.",
+  "root_node_id": "thm_root_20260327040158_5065188f",
+  "steps": [
+    {
+      "derives": "If n=2, the two possible sign sequences are (+1) and (-1), each has exactly one valid permutation, so the maximizing sequences are exactly the two alternating sequences of length 1.",
+      "is_trivial": false,
+      "step_id": "A0",
+      "trivial_justification": "When n=2 there are only two permutations, (1,2) and (2,1). The pattern (+1) is satisfied only by (1,2), and the pattern (-1) is satisfied only by (2,1). Thus both counts are 1, and these are exactly the two alternating sign patterns of length 1.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Assume n>=3 and let s be a sign sequence of length n-1 with first sign s_1=+1. Write t=(s_2,...,s_{n-1}), so t has length n-2. Then f(s)=Total(T_t(x_plus)) where x_plus=(0,1).",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Apply L1 to the sign sequence s. The initial refined vector is v^(1)=(1). Because s_1=+1, the recurrence gives v^(2)=U((1))=(0,1). The remaining signs s_2,...,s_{n-1} act on this state exactly by the iterated operator T_t, and the final total of the resulting vector is f(s).",
+      "uses_lemmas": [
+        "lem_20260327041325_fd93be4e"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The vector x_plus=(0,1) is nonnegative, nondecreasing, and nonconstant.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is immediate from the explicit coordinates 0 and 1.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Still assuming n>=3, among all sign sequences s of length n-1 with first sign +1, the value f(s) is maximized uniquely when t equals Alt_(n-2)^-. Equivalently, the unique maximizer in the class s_1=+1 is the full alternating pattern (+1,-1,+1,-1,...).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "By A1, every sequence with first sign +1 has count f(s)=Total(T_t(x_plus)) for some length-(n-2) suffix t. By A2, x_plus is nonnegative, nondecreasing, and nonconstant. Therefore L6 applies in its nondecreasing case and yields Total(T_t(x_plus)) <= Total(T_(Alt_(n-2)^-)(x_plus)), with equality if and only if t=Alt_(n-2)^-. Appending the fixed initial sign +1 shows that the unique maximizing full pattern in this class is (+1,-1,+1,-1,...).",
+      "uses_lemmas": [
+        "lem_20260327041458_0bee5e74"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "For every sign sequence s of length n-1 with first sign -1, if s'=-s then s' has first sign +1 and f(s)=f(s').",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "The first sign changes from -1 to +1 under termwise negation, and L7 gives f(s)=f(-s)=f(s').",
+      "uses_lemmas": [
+        "lem_20260327041528_ad159b87"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Still assuming n>=3, among all sign sequences of length n-1 with first sign -1, the value f(s) is maximized uniquely by the full alternating pattern (-1,+1,-1,+1,...).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Take any sign sequence s with first sign -1 and set s'=-s. By A4, f(s)=f(s') and s' starts with +1. By A3, among all patterns starting with +1, the unique maximizer is (+1,-1,+1,-1,...). Therefore s is maximal in the class of patterns starting with -1 exactly when s' is that +1-starting alternating pattern, equivalently when s is its termwise negation (-1,+1,-1,+1,...). Uniqueness is preserved because negation is a bijection on sign sequences.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "The two alternating sequences (+1,-1,+1,-1,...) and (-1,+1,-1,+1,...) have the same value of f.",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "The second alternating sequence is the termwise negation of the first, so L7 implies their counts are equal.",
+      "uses_lemmas": [
+        "lem_20260327041528_ad159b87"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Assume n>=3. Over all sign sequences of length n-1, the global maximizers of f are exactly the two alternating sequences (+1,-1,+1,-1,...) and (-1,+1,-1,+1,...).",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "Every sign sequence starts either with +1 or with -1. By A3, the unique maximizer in the +1 class is the +1-starting alternating pattern. By A5, the unique maximizer in the -1 class is the -1-starting alternating pattern. By A6, these two classwise maxima have the same value, so both are global maximizers and no other sequence can be a global maximizer.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3",
+        "A5",
+        "A6"
+      ]
+    },
+    {
+      "derives": "For every integer n at least 2, the sequences s for which f(s) is maximal are exactly the two alternating sign patterns, namely those satisfying s_i s_{i+1} = -1 for every 1 <= i <= n-2; equivalently, s_i = (-1)^(i-1) for all i or s_i = -(-1)^(i-1) for all i.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "A0 handles the case n=2 directly. A7 handles all cases n>=3. The two explicit formulas are exactly the two length-(n-1) sign sequences whose consecutive signs always alternate, so this gives the full characterization demanded in the theorem.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A0",
+        "A7"
+      ]
+    }
+  ]
+}

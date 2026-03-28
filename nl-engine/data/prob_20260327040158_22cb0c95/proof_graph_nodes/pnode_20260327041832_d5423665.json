@@ -1,0 +1,71 @@
+{
+  "created_at": "2026-03-27T04:18:32.142158Z",
+  "graph_node_id": "pnode_20260327041832_d5423665",
+  "metadata": {
+    "parent_id": "thm_root_20260327040158_5065188f"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "dcd839d8ad5bc9bca9847c087726ad4be76df6cced0efe814ae6dd6fc1d7d0f5",
+  "owner_id": "lem_20260327041358_e26a6528",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m is a positive integer",
+      "x has exactly m components",
+      "w has exactly m components",
+      "each entry of x is nonnegative",
+      "each entry of w is positive",
+      "w_1 is greater than w_2, which is greater than w_3, and so on down to w_m",
+      "the comparisons among the x_i are entrywise comparisons of real numbers",
+      "nonconstant means not all entries of x are equal"
+    ],
+    "normalized_claim": "For every positive integer m, every nonnegative real vector x of length m, and every positive real vector w of length m that is strictly decreasing, the following hold. If x is nonincreasing, then the dot product of x with w is at least the dot product of x with the reversed vector w, and this is strict when x is not constant. If x is nondecreasing, then the dot product of x with the reversed vector w is at least the dot product of x with w, and this is strict when x is not constant.",
+    "quantifier_order": [
+      "For every positive integer m",
+      "for every real vector x of length m with nonnegative entries",
+      "for every real vector w of length m with positive entries and strict decrease from first to last entry",
+      "if x is nonincreasing, then the sum with matching order is at least the sum with reversed weights, and the inequality is strict when x is not constant",
+      "if x is nondecreasing, then the sum with reversed weights is at least the sum with matching order, and the inequality is strict when x is not constant"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "length of the vectors",
+        "type": "integer"
+      },
+      {
+        "domain": "real vectors of length m with all entries nonnegative",
+        "name": "x",
+        "role": "input vector whose monotonicity controls the comparison",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "real vectors of length m with all entries positive and strictly decreasing",
+        "name": "w",
+        "role": "weight vector",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "the i-th component of x for each index i from 1 to m",
+        "name": "x_i",
+        "role": "coordinate of x",
+        "type": "real number"
+      },
+      {
+        "domain": "the i-th component of w for each index i from 1 to m",
+        "name": "w_i",
+        "role": "coordinate of w",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement",
+      "The strictness clause depends on the same x and w as the weak inequality, with the extra condition that x is not constant"
+    ]
+  },
+  "statement_nl": "Let m be a positive integer. Let x=(x_1,...,x_m) be a nonnegative vector and let w=(w_1,...,w_m) be a positive vector with w_1 > w_2 > ... > w_m. If x_1 >= x_2 >= ... >= x_m, then sum_{i=1}^m x_i w_i >= sum_{i=1}^m x_i w_{m+1-i}, and the inequality is strict when x is nonconstant. If x_1 <= x_2 <= ... <= x_m, then sum_{i=1}^m x_i w_{m+1-i} >= sum_{i=1}^m x_i w_i, and the inequality is strict when x is nonconstant.",
+  "updated_at": "2026-03-27T04:18:32.142159Z"
+}

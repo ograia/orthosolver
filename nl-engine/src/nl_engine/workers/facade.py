@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from nl_engine.api.run_state import is_problem_stop_requested
 from nl_engine.artifacts.store import ArtifactStore
-from nl_engine.domain.contracts import Agent2Input, Agent2Output, Agent3Input, Agent3Output, Agent4Input, Agent4Output, Agent5Input, Agent5Output, Agent6Input, Agent6Output
+from nl_engine.domain.contracts import Agent1Input, Agent1Output, Agent2Input, Agent2Output, Agent3Input, Agent3Output, Agent4Input, Agent4Output, Agent5Input, Agent5Output, Agent6Input, Agent6Output, Agent7Input, Agent7Output, Agent8Input, Agent8Output
 from nl_engine.services.agents import AgentExecutionError, AgentService
 from nl_engine.settings import get_settings
 from nl_engine.observability.metrics import MetricsExporter
@@ -33,10 +33,13 @@ class WorkerFacade:
         self.agent_service_kwargs = agent_service_kwargs or {}
         settings = get_settings()
         worker_kinds = [
+            "root_semantic_sketch",
             "decomposition_generation",
             "decomposition_vetting",
             "lemma_solver",
             "lemma_vetter",
+            "proof_split_generation",
+            "proof_split_vetting",
             "final_check",
             "lean_dispatch",
         ]
@@ -71,10 +74,13 @@ class WorkerFacade:
             if not is_problem_stop_requested(job.problem_id):
                 return
             agent_key = {
+                "root_semantic_sketch": "agent1",
                 "decomposition_generation": "agent2",
                 "decomposition_vetting": "agent3",
                 "lemma_solver": "agent4",
                 "lemma_vetter": "agent5",
+                "proof_split_generation": "agent7",
+                "proof_split_vetting": "agent8",
             }.get(job.worker_kind, job.worker_kind)
             raise AgentExecutionError(
                 agent_key=agent_key,
@@ -93,7 +99,7 @@ class WorkerFacade:
                 if error_class == "infrastructure_transient":
                     # Retryable transport failures must not permanently poison this job id.
                     try:
-                        (self.store.root / key).unlink()
+                        self.store.delete(key)
                     except OSError:
                         pass
                 else:
@@ -163,6 +169,19 @@ class WorkerFacade:
 
         self.store.save_json(key, result.model_dump())
         return result
+
+    def run_root_semantic_sketch(self, job: WorkerJob, payload: Agent1Input, artifact_prefix: str) -> Agent1Output:
+        service = self._agent_service()
+        llm_overrides = getattr(job, "llm_overrides", None)
+        if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
+            service.set_llm_overrides(llm_overrides)
+        if hasattr(service, "set_runtime_context"):
+            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+        result = self._run_idempotent(
+            job,
+            lambda: service.semantic_sketch(payload.statement_nl, artifact_prefix),
+        )
+        return Agent1Output.model_validate(result.output or {})
 
     def run_decomposition_generation(self, job: WorkerJob, payload: Agent2Input, artifact_prefix: str, *, override_key: str | None = None) -> Agent2Output:
         service = self._agent_service()
@@ -258,3 +277,29 @@ class WorkerFacade:
             lambda: service.final_check(payload, artifact_prefix),
         )
         return Agent6Output.model_validate(result.output or {})
+
+    def run_proof_split_generation(self, job: WorkerJob, payload: Agent7Input, artifact_prefix: str) -> Agent7Output:
+        service = self._agent_service()
+        llm_overrides = getattr(job, "llm_overrides", None)
+        if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
+            service.set_llm_overrides(llm_overrides)
+        if hasattr(service, "set_runtime_context"):
+            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+        result = self._run_idempotent(
+            job,
+            lambda: service.split_existing_proof(payload, artifact_prefix),
+        )
+        return Agent7Output.model_validate(result.output or {})
+
+    def run_proof_split_vetting(self, job: WorkerJob, payload: Agent8Input, artifact_prefix: str) -> Agent8Output:
+        service = self._agent_service()
+        llm_overrides = getattr(job, "llm_overrides", None)
+        if llm_overrides is not None and hasattr(service, "set_llm_overrides"):
+            service.set_llm_overrides(llm_overrides)
+        if hasattr(service, "set_runtime_context"):
+            service.set_runtime_context(worker_job_id=job.job_id, execution_id=job.execution_id)
+        result = self._run_idempotent(
+            job,
+            lambda: service.vet_split_existing_proof(payload, artifact_prefix),
+        )
+        return Agent8Output.model_validate(result.output or {})

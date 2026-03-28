@@ -1,4 +1,4 @@
-# Agent I/O Rules (docs/nl_engine.tex authoritative)
+# Agent I/O Rules
 
 ## Global requirements
 - Agents 1-5 must output valid JSON only (no markdown, no prose preamble).

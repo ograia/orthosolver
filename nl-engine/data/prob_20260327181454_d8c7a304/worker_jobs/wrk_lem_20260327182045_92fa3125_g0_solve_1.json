@@ -1,0 +1,165 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327182045_92fa3125/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T18:22:23.948483Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:22:24.521048Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:22:10.204978Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327182156_c4df4dce",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260327182045_92fa3125",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327182210_a99a6d93",
+    "role_in_assembly": "Computes the floor pattern on the candidate maximizing interval.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n > 1",
+        "r is a real number",
+        "(n-1)/n <= r",
+        "r < 1",
+        "k is an integer",
+        "1 <= k",
+        "k < n"
+      ],
+      "normalized_claim": "For every integer n > 1 and every real r with (n-1)/n <= r < 1, for every integer k with 1 <= k < n, the floor of k times r equals k minus 1; additionally, the floor of n times r equals n minus 1.",
+      "quantifier_order": [
+        "for all integers n with n > 1",
+        "for all real numbers r with (n-1)/n <= r and r < 1",
+        "for all integers k with 1 <= k and k < n"
+      ],
+      "variables": [
+        {
+          "domain": "all integers",
+          "name": "n",
+          "role": "parameter constrained by n > 1",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "r",
+          "role": "parameter constrained by (n-1)/n <= r < 1",
+          "type": "real number"
+        },
+        {
+          "domain": "all integers",
+          "name": "k",
+          "role": "quantified variable with 1 <= k < n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "There are no existential witnesses; all quantities are asserted for given n and r and for every eligible k."
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n > 1 and let r be a real number with (n-1)/n <= r < 1. Then for every integer k with 1 <= k < n, floor(k*r) = k - 1, and also floor(n*r) = n - 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "used_allowed_dependency_manifest": [
+        "pnode_20260327182209_d69d68f1"
+      ],
+      "used_forbidden_claims": []
+    },
+    "lemma_id": "lem_20260327182045_92fa3125",
+    "proof_nl": "Let n > 1 be an integer and let r be a real number with (n - 1)/n <= r < 1.\n\nFirst, let k be any integer with 1 <= k < n. From r < 1 we get kr < k. Also, since r >= (n - 1)/n, we have\nkr >= k(n - 1)/n = k - k/n.\nBecause k < n and n > 0, we have k/n < 1, so k - k/n > k - 1. Therefore\nk - 1 < kr < k.\nSince k - 1 is an integer, this implies floor(kr) = k - 1.\n\nNow take k = n. From r >= (n - 1)/n we get\nnr >= n - 1,\nand from r < 1 we get nr < n. Hence\nn - 1 <= nr < n,\nso floor(nr) = n - 1.\n\nThis proves that for every integer k with 1 <= k < n, floor(k r) = k - 1, and also floor(n r) = n - 1.",
+    "proof_summary": "Sandwich kr between k-1 and k for k<n, using (n-1)/n <= r < 1; then handle k=n similarly to obtain floor(nr)=n-1.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T18:22:10.772335Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327182045_92fa3125",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:22:24.521055Z",
+  "worker_job_id": "wrk_lem_20260327182045_92fa3125_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

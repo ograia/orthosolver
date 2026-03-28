@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-03-27T23:02:43.871174Z",
+  "graph_node_id": "pnode_20260327230243_50028cd3",
+  "metadata": {
+    "artifact_keys": {},
+    "confidence": 0.9,
+    "error_class": "service_execution_error",
+    "fatality": "fatal",
+    "issue_kind": "lean_issue",
+    "job_id": "lean_job_lem_20260327230112_3abd729f_formalize_lemma_from_nl_1",
+    "parent_id": "thm_root_20260327225136_2b86db27"
+  },
+  "node_kind": "claim",
+  "node_status": "blocked",
+  "normalized_claim_hash": "d8bc4e11fb42415e22f7c0e1cfa2e4d8a2b09f65b3bdbf23af0fede1120a5636",
+  "owner_id": "lem_20260327230112_3abd729f",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327230243_9306a265",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n is at least 2 (so that n-1 >= 1 and division by n is valid)",
+      "x is real",
+      "x satisfies (n-1)/n <= x and x < 1",
+      "k is an integer",
+      "k satisfies 1 <= k <= n-1"
+    ],
+    "normalized_claim": "For every integer n at least 2 and every real x with (n-1)/n <= x < 1: for every integer k with 1 <= k <= n-1, floor of (k times x) equals k minus 1, and floor of (n times x) equals n minus 1.",
+    "quantifier_order": [
+      "for all integers n with n at least 2",
+      "for all real numbers x with (n-1)/n <= x < 1",
+      "for all integers k with 1 <= k <= n-1"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "fixed parameter appearing in bounds for x and k",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "variable constrained by an interval",
+        "type": "real number"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "quantified variable indexing the first floor identity",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "The value k is independent of x beyond the fact that the conclusion uses the same n and x; k only ranges over integers with 1 <= k <= n-1.",
+      "The second conclusion floor(n x) = n - 1 depends only on the same n and x; it is not an additional existential choice."
+    ]
+  },
+  "statement_nl": "If (n-1)/n <= x < 1, then floor(k x) = k - 1 for every integer k with 1 <= k <= n - 1, and floor(n x) = n - 1.",
+  "updated_at": "2026-03-28T00:12:49.128453Z"
+}

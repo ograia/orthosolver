@@ -1,0 +1,67 @@
+{
+  "active_decomposition_id": null,
+  "artifact_ids": [],
+  "created_at": "2026-03-26T13:58:33.552076Z",
+  "final_decl_name": null,
+  "kind": "theorem",
+  "problem_id": "prob_20260326135833_2c98b8db",
+  "statement_lean": null,
+  "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n must be an integer and must satisfy n at least 2.",
+      "The sequence s has exactly n minus 1 entries.",
+      "Each entry of s is either plus 1 or minus 1.",
+      "The tuple a is a permutation of 1 through n, so its entries are distinct and each of 1 through n appears exactly once.",
+      "The condition s_i times (a(i+1) minus a_i) greater than 0 is required for every i from 1 to n minus 1.",
+      "The comparison is strict, so equal adjacent values are forbidden, though this is automatic for permutations."
+    ],
+    "normalized_claim": "For each integer n at least 2, among all length n minus 1 sign sequences with entries plus or minus 1, determine exactly which sign sequences maximize the number of permutations of 1 through n whose adjacent differences have the prescribed signs.",
+    "quantifier_order": [
+      "Choose an integer n with n at least 2.",
+      "For that fixed n, range over all sign sequences s of length n minus 1 with entries plus or minus 1.",
+      "For each such s, count all permutations a of 1 through n that satisfy the adjacent inequalities for every i from 1 to n minus 1.",
+      "For each fixed n, identify the sequences s that maximize f(s) among all allowed sign sequences."
+    ],
+    "variables": [
+      {
+        "domain": "integers at least 2",
+        "name": "n",
+        "role": "main parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length n minus 1 with each entry plus or minus 1",
+        "name": "s",
+        "role": "input sign pattern",
+        "type": "sequence of signs"
+      },
+      {
+        "domain": "integers from 1 to n minus 1",
+        "name": "i",
+        "role": "adjacent position index in the inequalities",
+        "type": "index"
+      },
+      {
+        "domain": "permutations of 1 through n",
+        "name": "a",
+        "role": "counted object in the definition of f",
+        "type": "permutation sequence"
+      },
+      {
+        "domain": "sign sequences of length n minus 1",
+        "name": "f",
+        "role": "count of permutations satisfying the sign constraints",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witness is singled out in the statement; f(s) is a count over all valid permutations a once s is fixed.",
+      "Any maximizing sequence s depends on the chosen value of n.",
+      "If more than one sign sequence attains the maximum, all such sequences are included in the requested answer."
+    ]
+  },
+  "status": "failed",
+  "theorem_id": "thm_root_20260326135833_6934938a",
+  "updated_at": "2026-03-26T13:58:33.552077Z"
+}

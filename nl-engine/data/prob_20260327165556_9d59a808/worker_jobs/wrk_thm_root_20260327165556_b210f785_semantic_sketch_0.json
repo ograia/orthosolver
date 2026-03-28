@@ -1,0 +1,108 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/root_theorem/thm_root_20260327165556_b210f785/semantic_sketch",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T16:56:12.972753Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T16:56:18.493655Z",
+  "controller_consumed_by_execution_id": "exec_20260327165556_006dee7c",
+  "created_at": "2026-03-27T16:56:03.507321Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent1_root_semantic_sketch",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "root_semantic_sketch",
+  "result_payload": {
+    "ambiguities": [
+      "Whether the maximizing x values are intended to be characterized as a single value, a finite set, or an interval/set (the phrase \"For which real numbers x\" allows multiple maximizers)",
+      "Whether the maximal value is meant as an explicit formula in terms of n (the question asks \"what is the maximal value\" without specifying form)"
+    ],
+    "implicit_assumptions_surfaced": [
+      "The expression E_n(x) is bounded above on the real line for each fixed integer n greater than 1",
+      "The supremum is achieved by some real x (not merely approached), i.e., a maximum exists rather than only a supremum"
+    ],
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "statement_nl_received": "Let n be an integer greater than 1. For which real numbers x is floor(n x) minus the sum from k = 1 to n of floor(k x) divided by k maximal, and what is the maximal value that this expression can take?",
+    "status": "completed"
+  },
+  "started_at": "2026-03-27T16:56:03.518892Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260327165556_b210f785",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-27T16:56:18.493675Z",
+  "worker_job_id": "wrk_thm_root_20260327165556_b210f785_semantic_sketch_0",
+  "worker_kind": "root_semantic_sketch"
+}

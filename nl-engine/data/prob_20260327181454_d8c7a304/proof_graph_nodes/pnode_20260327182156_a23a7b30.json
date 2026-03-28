@@ -1,0 +1,59 @@
+{
+  "created_at": "2026-03-27T18:21:56.580319Z",
+  "graph_node_id": "pnode_20260327182156_a23a7b30",
+  "metadata": {
+    "node_kind": "lemma"
+  },
+  "node_kind": "claim",
+  "node_status": "active",
+  "normalized_claim_hash": "757f491f2297206051b33a8bbca27d0b9787cb423e6fc1818b6eeebc65644ea3",
+  "owner_id": "lem_20260327182037_d1cd11e0",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and satisfies n > 1",
+      "r is real and satisfies 0 <= r < 1",
+      "m is defined as floor of n times r, hence m is an integer",
+      "m divided by n is an input value for f_n (assumes f_n is defined on it)"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every real r with 0 <= r < 1, if m is defined as the floor of n times r, then f_n(r) is at most f_n(m divided by n).",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all real numbers r with 0 <= r < 1",
+      "let m be floor of n times r",
+      "claim: f_n(r) <= f_n(m divided by n)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "fixed parameter for the function f_n; assumed to satisfy n > 1",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "r",
+        "role": "input variable to f_n constrained by 0 <= r < 1",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "auxiliary integer defined by m = floor(n*r); used to form the point m/n",
+        "type": "integer"
+      },
+      {
+        "domain": "unspecified set of inputs where f_n is defined (at least includes r and m/n)",
+        "name": "f_n",
+        "role": "parameterized function indexed by n",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "m depends on both n and r via m = floor(n*r)"
+    ]
+  },
+  "statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n).",
+  "updated_at": "2026-03-27T18:38:32.644578Z"
+}

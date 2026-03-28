@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 from pathlib import Path
@@ -11,8 +12,10 @@ from lean_engine.claude_runner import ClaudeRunResult, ClaudeRunTrace, FileUpdat
 from lean_engine.config import load_runtime_config
 from lean_engine.lean_checks import LeanCommandResult
 from lean_engine.lemma_phase import (
+    AssumptionCapsule,
     PinnedLemmaSignature,
     TrustedContextEntry,
+    validate_lemma_candidate_structure,
     build_lemma_formalization_prompt,
     extract_proof_block_with_helpers,
     extract_target_declaration_block,
@@ -23,7 +26,7 @@ from lean_engine.lemma_phase import (
     run_lemma_formalization,
 )
 from lean_engine.normalize import normalize_problem_artifact
-from lean_engine.phase04 import run_phase04
+from lean_engine.phase04 import build_dependency_graph, run_phase04
 from lean_engine.statement_phase import sanitize_lean_decl_suffix
 from lean_engine.workspace import create_workspace_from_template
 
@@ -50,10 +53,12 @@ def _mock_lean_compilation(monkeypatch: pytest.MonkeyPatch) -> None:
     """
     import lean_engine.phase04 as _phase04
     import lean_engine.lemma_phase as _lemma_phase
+    import lean_engine.workspace as _workspace
 
     monkeypatch.setattr(_phase04, "rebuild_module_olean", lambda *_a, **_kw: _ok_lean_result("rebuild_module_olean"))
     monkeypatch.setattr(_phase04, "_validate_olean_freshness", lambda *_a, **_kw: True)
     monkeypatch.setattr(_lemma_phase, "check_lean_file", lambda *_a, **_kw: _ok_lean_result("check_lean_file"))
+    monkeypatch.setattr(_workspace, "link_lake_cache", lambda *_a, **_kw: False)
 
 
 def _single_lemma_payload(problem_id: str = "prob_phase04") -> dict:
@@ -174,8 +179,66 @@ def _two_lemma_collision_payload(problem_id: str = "prob_phase04_collision") -> 
     return payload
 
 
+def _reused_lemma_payload(problem_id: str = "prob_phase04_reused") -> dict:
+    return {
+        "problem_id": problem_id,
+        "title": "Phase 04 reused lemma",
+        "verification_level": "nl_only",
+        "root_theorem": {
+            "theorem_id": "thm_root",
+            "statement_nl": "Root statement",
+            "semantic_sketch": {"normalized_claim": "root"},
+        },
+        "selected_decomposition": {
+            "decomposition_id": "dec_1",
+            "assembly_plan": {
+                "assembly_plan_id": "asm_1",
+                "steps": [
+                    {
+                        "step_id": "A1",
+                        "uses_lemmas": ["lem_a"],
+                        "uses_prior_steps": [],
+                        "derives": "first",
+                        "is_trivial": True,
+                        "trivial_justification": "given",
+                    },
+                    {
+                        "step_id": "A2",
+                        "uses_lemmas": ["lem_b"],
+                        "uses_prior_steps": ["A1"],
+                        "derives": "second",
+                        "is_trivial": True,
+                        "trivial_justification": "given",
+                    },
+                    {
+                        "step_id": "A4",
+                        "uses_lemmas": ["lem_c", "lem_b"],
+                        "uses_prior_steps": ["A1", "A2"],
+                        "derives": "reuse lemma b later",
+                        "is_trivial": True,
+                        "trivial_justification": "given",
+                    },
+                ],
+                "proof_skeleton_nl": "Reuse lem_b in a later assembly step.",
+                "is_trivially_composable": True,
+            },
+        },
+        "lemmas": [
+            {"lemma_id": "lem_a", "statement_nl": "lemma a", "semantic_sketch": {"normalized_claim": "a"}, "proof_nl": "proof a"},
+            {"lemma_id": "lem_b", "statement_nl": "lemma b", "semantic_sketch": {"normalized_claim": "b"}, "proof_nl": "proof b"},
+            {"lemma_id": "lem_c", "statement_nl": "lemma c", "semantic_sketch": {"normalized_claim": "c"}, "proof_nl": "proof c"},
+        ],
+        "all_visible_lemmas_nl_accepted": True,
+    }
+
+
 def _ok_runner(command, **kwargs):
     return subprocess.CompletedProcess(command, 0, stdout="ok", stderr="")
+
+
+def _latest_working_scratch(workspace_dir: Path, fallback: Path) -> Path:
+    matches = sorted((workspace_dir / "Orthos").glob("Scratch_*_working_round_*.lean"))
+    return matches[-1] if matches else fallback
 
 
 class _LemmaTraceRunner:
@@ -196,6 +259,8 @@ class _LemmaTraceRunner:
         **_: object,
     ) -> ClaudeRunResult:
         _ = (timeout_seconds, permission_mode)
+        target_path = _latest_working_scratch(run_paths.workspace_dir, self._target_path)
+        target_path.write_text(self._candidate_text, encoding="utf-8")
         timestamp = "trace"
         prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
         raw_path = run_paths.claude_raw_dir / f"{phase_name}_{timestamp}.jsonl"
@@ -208,7 +273,7 @@ class _LemmaTraceRunner:
         trace = ClaudeRunTrace(
             result_text=self._result_text,
             assistant_text_chunks=(),
-            file_updates=(FileUpdateEvent(file_path=str(self._target_path), content=self._candidate_text),),
+            file_updates=(FileUpdateEvent(file_path=str(target_path), content=self._candidate_text),),
             target_file_latest_update=None,
         )
         return ClaudeRunResult(
@@ -252,9 +317,11 @@ class _SequentialLemmaTraceRunner:
         candidate = self._candidates[self._index]
         result_text = self._result_texts[self._index]
         self._index += 1
-        self.seed_texts.append(self._target_path.read_text(encoding="utf-8"))
+        target_path = _latest_working_scratch(run_paths.workspace_dir, self._target_path)
+        self.seed_texts.append(target_path.read_text(encoding="utf-8"))
         self.prompts.append(prompt)
         self.phase_names.append(phase_name)
+        target_path.write_text(candidate, encoding="utf-8")
         timestamp = f"trace_{self._index:02d}"
         prompt_path = run_paths.prompts_dir / f"{phase_name}_{timestamp}.txt"
         raw_path = run_paths.claude_raw_dir / f"{phase_name}_{timestamp}.jsonl"
@@ -267,7 +334,7 @@ class _SequentialLemmaTraceRunner:
         trace = ClaudeRunTrace(
             result_text=result_text,
             assistant_text_chunks=(),
-            file_updates=(FileUpdateEvent(file_path=str(self._target_path), content=candidate),),
+            file_updates=(FileUpdateEvent(file_path=str(target_path), content=candidate),),
             target_file_latest_update=None,
         )
         return ClaudeRunResult(
@@ -336,12 +403,84 @@ def test_scratch_generation_for_one_lemma(tmp_path: Path) -> None:
         mock_candidates=[_success_candidate(pinned.signature, lemma_id=lemma.lemma_id)],
     )
 
-    assert result.status == "ok"
+    assert result.status == "succeeded"
+    authoritative_round = result.lemma_artifact_dir / "working_round_01.lean"
+    assert authoritative_round.exists()
+    authoritative_text = authoritative_round.read_text(encoding="utf-8")
+    assert pinned.signature in authoritative_text
+    assert "import Orthos.Statements" not in authoritative_text
+    assert "import Orthos.ScratchContext_lemma_lem_1" not in authoritative_text
     scratch_round = result.lemma_artifact_dir / "scratch_round_01.lean"
-    assert scratch_round.exists()
-    scratch_text = scratch_round.read_text(encoding="utf-8")
-    assert pinned.signature in scratch_text
+    assert scratch_round.read_text(encoding="utf-8") == authoritative_text
+    manifest = json.loads((result.lemma_artifact_dir / "round_01.json").read_text(encoding="utf-8"))
+    assert manifest["authoritative_round_path"].endswith("working_round_01.lean")
+    assert manifest["authoritative_check_ok"] is True
+
+
+def test_candidate_imports_are_sanitized_to_scratch_context(tmp_path: Path) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+    candidate = "\n".join(
+        [
+            "import Mathlib",
+            "import Orthos.Statements",
+            "",
+            f"{pinned.signature} := by",
+            "  trivial",
+            "",
+        ]
+    )
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=1,
+        timeout_seconds=10,
+        model=None,
+        runner=_ok_runner,
+        mock_candidates=[candidate],
+    )
+
+    assert result.status == "succeeded"
+    scratch_text = (result.lemma_artifact_dir / "scratch_round_01.lean").read_text(encoding="utf-8")
     assert "import Orthos.Statements" not in scratch_text
+    assert "import Orthos.ScratchContext_lemma_lem_1" in scratch_text
+
+
+def test_engine_does_not_reintroduce_removed_scratch_context_import(tmp_path: Path) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+    candidate = "\n".join(
+        [
+            "import Mathlib",
+            "import Orthos.ScratchContext_lemma_lem_1",
+            "",
+            f"{pinned.signature} := by",
+            "  trivial",
+            "",
+        ]
+    ).replace("import Orthos.ScratchContext_lemma_lem_1\n", "")
+
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=1,
+        timeout_seconds=10,
+        model=None,
+        runner=_ok_runner,
+        mock_candidates=[candidate],
+    )
+
+    assert result.status == "succeeded"
+    authoritative_text = (result.lemma_artifact_dir / "working_round_01.lean").read_text(encoding="utf-8")
+    assert "import Orthos.ScratchContext_lemma_lem_1" not in authoritative_text
 
 
 def test_phase04_prefers_tool_update_candidate_over_prose_result(tmp_path: Path) -> None:
@@ -368,7 +507,7 @@ def test_phase04_prefers_tool_update_candidate_over_prose_result(tmp_path: Path)
         runner=_ok_runner,
     )
 
-    assert result.status == "ok"
+    assert result.status == "succeeded"
     assert result.attempts
     assert result.attempts[0].candidate_source == "tool_update"
 
@@ -397,6 +536,7 @@ def test_prompt_assembly_includes_pinned_signature_and_trusted_context() -> None
         lemma=lemma,
         pinned=pinned,
         trusted_entries=trusted,
+        assumption_capsule=None,
         scratch_relative_path="Orthos/Scratch_lem_1.lean",
         repair_round=1,
     )
@@ -428,6 +568,7 @@ def test_prompt_marks_latest_draft_as_current_scratch_file() -> None:
         lemma=lemma,
         pinned=pinned,
         trusted_entries=[],
+        assumption_capsule=None,
         scratch_relative_path="Orthos/Scratch_lem_1.lean",
         repair_round=3,
         previous_candidate=latest_draft,
@@ -436,10 +577,11 @@ def test_prompt_marks_latest_draft_as_current_scratch_file() -> None:
         diagnostics_text="some diagnostic",
     )
 
-    assert "LATEST DRAFT FROM ROUND 2 (this is what is currently in the scratch file)." in prompt
-    assert "OLDER COMPILING REFERENCE (best partial so far; compiles with 1 sorry placeholder(s))." in prompt
+    assert "LATEST DRAFT FROM ROUND 2 is already in `Orthos/Scratch_lem_1.lean`." in prompt
+    assert "fewest sorry placeholders seen so far: 1" in prompt
     assert "CURRENT BEST" not in prompt
-    assert "This proof is in the scratch file." not in prompt
+    assert latest_draft not in prompt
+    assert best_partial not in prompt
 
 
 def test_progress_guard_rejects_declarations_after_target() -> None:
@@ -525,7 +667,7 @@ def test_successful_merge_updates_trusted_manifest(tmp_path: Path) -> None:
         mock_candidates=[_success_candidate(pinned.signature, lemma_id=lemma.lemma_id)],
     )
 
-    assert result.status == "ok"
+    assert result.status == "succeeded"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     assert manifest["entry_count"] == 1
     assert manifest["entries"][0]["lemma_id"] == "lem_1"
@@ -719,7 +861,10 @@ def test_bounded_retry_behavior(tmp_path: Path) -> None:
     assert len(result.attempts) == 2
 
 
-def test_repair_round_seeds_from_latest_noncompiling_draft(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_repair_round_keeps_last_compiling_canonical_after_compile_failure(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
     scratch_target = run_paths.workspace_dir / f"Orthos/Scratch_{lemma_id_to_path_token(lemma.lemma_id)}.lean"
     round_1 = _success_candidate(pinned.signature, lemma_id=lemma.lemma_id).replace(
@@ -777,14 +922,248 @@ def test_repair_round_seeds_from_latest_noncompiling_draft(tmp_path: Path, monke
         runner=_ok_runner,
     )
 
-    assert result.status == "ok"
+    assert result.status == "succeeded"
     assert len(claude_runner.seed_texts) == 3
     assert "sorry" in claude_runner.seed_texts[1]
-    assert "round 2 richer draft" in claude_runner.seed_texts[2]
+    assert "round 2 richer draft" not in claude_runner.seed_texts[2]
+    assert "sorry" in claude_runner.seed_texts[2]
     prompt_round_03 = (result.lemma_artifact_dir / "prompt_round_03.md").read_text(encoding="utf-8")
-    assert "LATEST DRAFT FROM ROUND 2 (this is what is currently in the scratch file)." in prompt_round_03
-    assert "round 2 richer draft" in prompt_round_03
-    assert "This proof is in the scratch file." not in prompt_round_03
+    assert "LATEST DRAFT FROM ROUND 2 is already in `Orthos/Scratch_lemma_lem_1_working_round_03.lean`." in prompt_round_03
+    assert "round 2 richer draft" not in prompt_round_03
+
+
+def test_duplicate_declaration_false_negative_records_checker_mismatch_metadata(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+    scratch_target = run_paths.workspace_dir / f"Orthos/Scratch_{lemma_id_to_path_token(lemma.lemma_id)}.lean"
+    candidate = "\n".join(
+        [
+            "import Mathlib",
+            "import Orthos.Statements",
+            "",
+            f"{pinned.signature} := by",
+            "  trivial",
+            "",
+        ]
+    )
+    claude_runner = _SequentialLemmaTraceRunner(
+        target_path=scratch_target,
+        candidates=[candidate, _success_candidate(pinned.signature, lemma_id=lemma.lemma_id)],
+        result_texts=["[STATUS: clean]", "[STATUS: clean]"],
+    )
+
+    state = {"calls": 0}
+
+    def _check_duplicate_then_ok(workspace_root: Path, relative_path: str, **_: object) -> LeanCommandResult:
+        state["calls"] += 1
+        if state["calls"] == 1:
+            return LeanCommandResult(
+                check_name="check_lean_file",
+                command=("lake", "env", "lean", relative_path),
+                cwd=workspace_root,
+                returncode=1,
+                stdout=f"{relative_path}:9:8: error: `lem_1` has already been declared\n",
+                stderr="",
+                duration_seconds=0.0,
+            )
+        return _ok_lean_result("check_lean_file", workspace_root)
+
+    monkeypatch.setattr("lean_engine.lemma_phase.check_lean_file", _check_duplicate_then_ok)
+
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=2,
+        timeout_seconds=10,
+        model=None,
+        claude_runner=claude_runner,
+        runner=_ok_runner,
+    )
+
+    assert result.status == "succeeded"
+    assert result.attempts[0].classification == "duplicate_declaration_context"
+    assert result.attempts[0].mcp_check_status == "clean"
+    assert result.attempts[0].batch_check_status == "failed"
+
+
+def test_generated_scratch_context_is_rebuilt_before_round_one(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+    rebuild_calls: list[tuple[str, str]] = []
+
+    def _record_rebuild(
+        workspace_root: Path,
+        relative_file: str,
+        module_name: str,
+        **_: object,
+    ) -> LeanCommandResult:
+        rebuild_calls.append((relative_file, module_name))
+        return _ok_lean_result("rebuild_module_olean", workspace_root)
+
+    monkeypatch.setattr("lean_engine.lemma_phase.rebuild_module_olean", _record_rebuild)
+
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=1,
+        timeout_seconds=10,
+        model=None,
+        runner=_ok_runner,
+        mock_candidates=[_success_candidate(pinned.signature, lemma_id=lemma.lemma_id)],
+    )
+
+    assert result.status == "succeeded"
+    assert rebuild_calls[0] == ("Orthos/ScratchContext_lemma_lem_1.lean", "Orthos.ScratchContext_lemma_lem_1")
+
+
+def test_generated_module_preflight_failure_aborts_before_spending_round(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+
+    def _fail_rebuild(
+        workspace_root: Path,
+        relative_file: str,
+        module_name: str,
+        **_: object,
+    ) -> LeanCommandResult:
+        return LeanCommandResult(
+            check_name=f"rebuild_olean_{module_name}",
+            command=("lake", "env", "lean", relative_file),
+            cwd=workspace_root,
+            returncode=1,
+            stdout="",
+            stderr=f"missing olean for {module_name}",
+            duration_seconds=0.0,
+        )
+
+    monkeypatch.setattr("lean_engine.lemma_phase.rebuild_module_olean", _fail_rebuild)
+
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=3,
+        timeout_seconds=10,
+        model=None,
+        runner=_ok_runner,
+        mock_candidates=[_success_candidate(pinned.signature, lemma_id=lemma.lemma_id)],
+    )
+
+    assert result.status == "failed"
+    assert result.error_class == "workspace_preparation_failed"
+    assert result.attempts_used == 0
+    assert not result.attempts
+
+
+def test_repeated_checker_mismatch_stops_early(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+    scratch_target = run_paths.workspace_dir / f"Orthos/Scratch_{lemma_id_to_path_token(lemma.lemma_id)}.lean"
+    candidate = "\n".join(
+        [
+            "import Mathlib",
+            "import Orthos.Statements",
+            "",
+            f"{pinned.signature} := by",
+            "  trivial",
+            "",
+        ]
+    )
+    claude_runner = _SequentialLemmaTraceRunner(
+        target_path=scratch_target,
+        candidates=[candidate, candidate, candidate],
+        result_texts=["[STATUS: clean]", "[STATUS: clean]", "[STATUS: clean]"],
+    )
+
+    def _same_checker_failure(workspace_root: Path, relative_path: str, **_: object) -> LeanCommandResult:
+        return LeanCommandResult(
+            check_name="check_lean_file",
+            command=("lake", "env", "lean", relative_path),
+            cwd=workspace_root,
+            returncode=1,
+            stdout="",
+            stderr="error: object file '/tmp/fake.olean' of module Orthos.ScratchContext_lemma_lem_1 does not exist",
+            duration_seconds=0.0,
+        )
+
+    monkeypatch.setattr("lean_engine.lemma_phase.check_lean_file", _same_checker_failure)
+
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=5,
+        timeout_seconds=10,
+        model=None,
+        claude_runner=claude_runner,
+        runner=_ok_runner,
+    )
+
+    assert result.status == "failed"
+    assert result.error_class == "checker_mismatch"
+    assert result.attempts_used == 2
+    assert len(result.attempts) == 2
+
+
+def test_empty_batch_failure_output_is_structured(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+    candidate = _success_candidate(pinned.signature, lemma_id=lemma.lemma_id)
+
+    def _empty_failure(workspace_root: Path, relative_path: str, **_: object) -> LeanCommandResult:
+        return LeanCommandResult(
+            check_name="check_lean_file",
+            command=("lake", "env", "lean", relative_path),
+            cwd=workspace_root,
+            returncode=17,
+            stdout="",
+            stderr="",
+            duration_seconds=0.0,
+        )
+
+    monkeypatch.setattr("lean_engine.lemma_phase.check_lean_file", _empty_failure)
+
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=1,
+        timeout_seconds=10,
+        model=None,
+        runner=_ok_runner,
+        mock_candidates=[candidate],
+    )
+
+    assert result.status == "failed"
+    diagnostics = (result.lemma_artifact_dir / "diagnostics_round_01.txt").read_text(encoding="utf-8")
+    assert "target_file:" in diagnostics
+    assert "returncode: 17" in diagnostics
 
 
 def test_repair_round_seeds_from_latest_rejected_draft(tmp_path: Path) -> None:
@@ -828,12 +1207,12 @@ def test_repair_round_seeds_from_latest_rejected_draft(tmp_path: Path) -> None:
         runner=_ok_runner,
     )
 
-    assert result.status == "ok"
+    assert result.status == "succeeded"
     assert len(claude_runner.seed_texts) == 3
-    assert "rejected round 2 draft" in claude_runner.seed_texts[2]
+    assert "sorry" in claude_runner.seed_texts[2]
     prompt_round_03 = (result.lemma_artifact_dir / "prompt_round_03.md").read_text(encoding="utf-8")
-    assert "LATEST DRAFT FROM ROUND 2 (this is what is currently in the scratch file)." in prompt_round_03
-    assert "rejected round 2 draft" in prompt_round_03
+    assert "LATEST DRAFT FROM ROUND 2 is already in `Orthos/Scratch_lemma_lem_1_working_round_03.lean`." in prompt_round_03
+    assert "rejected round 2 draft" not in prompt_round_03
 
 
 def test_load_pinned_signatures_rejects_keyword_signature_mismatch(tmp_path: Path) -> None:
@@ -1039,7 +1418,7 @@ def test_phase04_manifest_problem_id_uses_sanitized_bundle_id(tmp_path: Path) ->
     assert manifest["problem_id"] == sanitize_component(bundle.problem_id)
 
 
-def test_phase04_rejects_trusted_manifest_from_different_problem(tmp_path: Path) -> None:
+def test_phase04_rederives_stale_trusted_manifest_from_authoritative_lemmas(tmp_path: Path) -> None:
     runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
     run_paths = create_run_paths("prob_phase04_binding", artifacts_root=runtime_config.artifacts.root)
     create_workspace_from_template(run_paths.workspace_dir, runtime_config=runtime_config)
@@ -1096,8 +1475,11 @@ def test_phase04_rejects_trusted_manifest_from_different_problem(tmp_path: Path)
         mock_candidates={"lem_1": [_success_candidate("theorem lem_1 : True", lemma_id="lem_1")]},
     )
 
-    assert result.status == "fatal"
-    assert result.error_class == "manifest_problem_mismatch"
+    assert result.status == "ok"
+    manifest = json.loads(trusted_manifest.read_text(encoding="utf-8"))
+    assert manifest["problem_id"] == "prob_phase04_binding"
+    assert manifest["entry_count"] == 1
+    assert manifest["entries"][0]["lemma_id"] == "lem_1"
 
 
 def test_phase04_rejects_pinned_signatures_from_different_problem(tmp_path: Path) -> None:
@@ -1283,6 +1665,8 @@ def test_phase04_parallel_workers_commit_multiple_lemmas(tmp_path: Path) -> None
     assert len(result.lemma_results) == 2
     manifest = json.loads((run_paths.run_root / "trusted_context_manifest.json").read_text(encoding="utf-8"))
     assert manifest["entry_count"] == 2
+    assert all(item.worker_workspace is not None for item in result.lemma_results)
+    assert all(Path(item.worker_workspace) != run_paths.workspace_dir for item in result.lemma_results)
 
 
 # ---------------------------------------------------------------------------
@@ -1373,14 +1757,14 @@ def test_validate_olean_freshness_missing_olean(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Fix 3: classify "already declared" as stale_olean
+# Fix 3: classify duplicate declarations as context collisions
 # ---------------------------------------------------------------------------
 
-def test_classify_already_declared_as_stale_olean() -> None:
+def test_classify_already_declared_as_duplicate_declaration_context() -> None:
     from lean_engine.lemma_phase import classify_lemma_failure
 
-    assert classify_lemma_failure("error: 'lem_x' has already been declared") == "stale_olean"
-    assert classify_lemma_failure("'foo' has already been declared\nother stuff") == "stale_olean"
+    assert classify_lemma_failure("error: 'lem_x' has already been declared") == "duplicate_declaration_context"
+    assert classify_lemma_failure("'foo' has already been declared\nother stuff") == "duplicate_declaration_context"
 
 
 def test_classify_tactic_failure_not_stale_olean() -> None:
@@ -1584,3 +1968,140 @@ def test_lemma_execution_groups_unreferenced_share_one_group() -> None:
     unreferenced_groups = [g for g in groups if set(g) & unreferenced]
     assert len(unreferenced_groups) == 1, f"Expected 1 group for unreferenced lemmas, got {len(unreferenced_groups)}: {unreferenced_groups}"
     assert set(unreferenced_groups[0]) == unreferenced
+
+
+def test_build_dependency_graph_rejects_cycles() -> None:
+    payload = _two_lemma_payload(problem_id="prob_cycle")
+    payload["lemmas"][0]["depends_on"] = ["lem_2"]
+    payload["lemmas"][1]["depends_on"] = ["lem_1"]
+    bundle = normalize_problem_artifact(payload)
+
+    with pytest.raises(ValueError, match="cycle"):
+        build_dependency_graph(bundle=bundle, lemma_order=("lem_1", "lem_2"))
+
+
+def test_build_dependency_graph_excludes_self_edge_for_reused_lemma_single_target() -> None:
+    payload = _reused_lemma_payload(problem_id="prob_reused_single")
+    bundle = normalize_problem_artifact(payload)
+
+    graph, closure, layer_index = build_dependency_graph(bundle=bundle, lemma_order=("lem_b",))
+
+    assert graph["lem_b"] == ()
+    assert closure["lem_b"] == ()
+    assert layer_index["lem_b"] == 2
+
+
+def test_build_dependency_graph_excludes_self_edge_for_reused_lemma_full_order() -> None:
+    payload = _reused_lemma_payload(problem_id="prob_reused_full")
+    bundle = normalize_problem_artifact(payload)
+
+    graph, closure, layer_index = build_dependency_graph(bundle=bundle, lemma_order=("lem_a", "lem_b", "lem_c"))
+
+    assert graph["lem_a"] == ()
+    assert graph["lem_b"] == ("lem_a",)
+    assert graph["lem_c"] == ("lem_a", "lem_b")
+    assert "lem_b" not in graph["lem_b"]
+    assert closure["lem_b"] == ("lem_a",)
+    assert closure["lem_c"] == ("lem_a", "lem_b")
+    assert layer_index["lem_b"] == 2
+    assert layer_index["lem_c"] == 2
+
+
+def test_phase04_summary_path_namespaces_targeted_runs(tmp_path: Path) -> None:
+    from lean_engine.phase04 import _phase04_summary_path
+
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+    run_paths = create_run_paths("prob_phase04_summary_paths", artifacts_root=runtime_config.artifacts.root)
+
+    assert _phase04_summary_path(
+        run_paths=run_paths,
+        lemma_order=("lem_1", "lem_2"),
+        target_lemma_id=None,
+        target_lemma_ids=None,
+    ).name == "phase04_summary.json"
+    assert _phase04_summary_path(
+        run_paths=run_paths,
+        lemma_order=("lem_1",),
+        target_lemma_id="lem_1",
+        target_lemma_ids=None,
+    ).name == f"phase04_{lemma_id_to_path_token('lem_1')}.json"
+    subset_digest = hashlib.sha1("lem_1,lem_2".encode("utf-8")).hexdigest()[:10]
+    assert _phase04_summary_path(
+        run_paths=run_paths,
+        lemma_order=("lem_1", "lem_2"),
+        target_lemma_id=None,
+        target_lemma_ids={"lem_1", "lem_2"},
+    ).name == f"phase04_subset_{subset_digest}.json"
+
+
+def test_dependency_scoped_worker_result_is_provisional(tmp_path: Path) -> None:
+    runtime_config, run_paths, bundle, lemma, pinned, manifest_path = _prepare_runtime(tmp_path)
+    capsule = AssumptionCapsule(
+        lemma_id=lemma.lemma_id,
+        direct_predecessors=("lem_dep",),
+        transitive_predecessors=("lem_dep",),
+        resolved_predecessors=(),
+        unresolved_predecessors=("lem_dep",),
+        statements_by_lemma={"lem_dep": "theorem lem_dep : True"},
+        dependency_source_revision="run_x:layer_01",
+        authoritative_workspace_revision=run_paths.run_name,
+        worker_workspace_revision=f"{run_paths.run_name}:worker",
+    )
+
+    result = run_lemma_formalization(
+        run_paths=run_paths,
+        runtime_config=runtime_config,
+        lemma=lemma,
+        pinned=pinned,
+        trusted_entries=[],
+        assumption_capsule=capsule,
+        manifest_path=manifest_path,
+        manifest_problem_id=sanitize_component(bundle.problem_id),
+        max_attempts=1,
+        timeout_seconds=10,
+        model=None,
+        runner=_ok_runner,
+        mock_candidates=[_success_candidate(pinned.signature, lemma_id=lemma.lemma_id)],
+        commit_on_success=False,
+    )
+
+    assert result.status == "proved_under_assumptions"
+    assert result.terminal is False
+    assert result.provisional_verified_path is not None
+    assert result.provisional_verified_path.exists()
+    assert result.merged_authoritative_path is None
+    assert result.assumption_capsule_path is not None
+    capsule_payload = json.loads(result.assumption_capsule_path.read_text(encoding="utf-8"))
+    assert capsule_payload["unresolved_predecessors"] == ["lem_dep"]
+
+
+def test_structural_validation_rejects_out_of_dag_assumptions() -> None:
+    validation = validate_lemma_candidate_structure(
+        candidate_text="\n".join(
+            [
+                "import Mathlib",
+                "import Orthos.ScratchContext_lemma_lem_1",
+                "",
+                "theorem lem_1 : True := by",
+                "  trivial",
+                "",
+            ]
+        ),
+        pinned_signature="theorem lem_1 : True",
+        target_decl_name="lem_1",
+        trusted_entries=[],
+        assumption_capsule=AssumptionCapsule(
+            lemma_id="lem_1",
+            direct_predecessors=("lem_dep",),
+            transitive_predecessors=("lem_dep",),
+            resolved_predecessors=(),
+            unresolved_predecessors=("lem_dep",),
+            statements_by_lemma={},
+            dependency_source_revision="rev",
+            authoritative_workspace_revision="rev",
+            worker_workspace_revision="worker",
+        ),
+    )
+
+    assert validation["ok"] is False
+    assert validation["error_class"] == "out_of_dag_assumption"

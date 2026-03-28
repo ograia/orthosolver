@@ -11,7 +11,8 @@ from typing import Any, Callable
 
 from .artifact_io import RunPaths, sanitize_component, workspace_file_digest, write_json, write_text
 from .assembly_phase import validate_assembly_plan
-from .claude_runner import ClaudeRunResult, ClaudeRunner
+from .claude_candidate_selection import select_lean_candidate
+from .claude_runner import ClaudeRunResult, ClaudeRunner, phase_timeout_overrides
 from .config import RuntimeConfig
 from .contracts import NormalizedProblemBundle
 from .final_output import write_fatal_output_bundle, write_success_output_bundle
@@ -19,6 +20,7 @@ from .lean_checks import LeanCommandResult, check_lean_file
 from .lemma_phase import load_pinned_lemma_signatures, load_trusted_manifest
 from .lean4_skills_refs import get_all_proving_refs
 from .lean4_skills_scripts import check_axioms
+from .prompting import build_edit_first_status_only_contract
 from .statement_phase import Phase03DeclNaming, extract_statement_signature, normalize_lean_text, summarize_diagnostics_from_check
 
 SubprocessRunner = Callable[..., subprocess.CompletedProcess[str]]
@@ -37,6 +39,9 @@ class RootAssemblyRoundResult:
     prompt_path: Path
     raw_path: Path
     candidate_path: Path
+    canonical_before_path: Path
+    working_copy_path: Path
+    canonical_after_path: Path
     diagnostics_path: Path
     status: str
     diagnostics: tuple[str, ...]
@@ -47,6 +52,8 @@ class RootAssemblyRoundResult:
     candidate_lean_score: int | None = None
     root_check_result: dict[str, Any] | None = None
     project_check_result: dict[str, Any] | None = None
+    promotion_status: str = "rejected"
+    promotion_reason: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -54,6 +61,9 @@ class RootAssemblyRoundResult:
             "prompt_path": str(self.prompt_path),
             "raw_path": str(self.raw_path),
             "candidate_path": str(self.candidate_path),
+            "canonical_before_path": str(self.canonical_before_path),
+            "working_copy_path": str(self.working_copy_path),
+            "canonical_after_path": str(self.canonical_after_path),
             "diagnostics_path": str(self.diagnostics_path),
             "status": self.status,
             "diagnostics": list(self.diagnostics),
@@ -64,6 +74,8 @@ class RootAssemblyRoundResult:
             "candidate_lean_score": self.candidate_lean_score,
             "root_check_result": self.root_check_result,
             "project_check_result": self.project_check_result,
+            "promotion_status": self.promotion_status,
+            "promotion_reason": self.promotion_reason,
         }
 
 
@@ -314,7 +326,14 @@ def run_phase06(
         prompt_path = root_assembly_dir / f"prompt_round_{round_index:02d}.md"
         raw_path = root_assembly_dir / f"claude_round_{round_index:02d}.jsonl"
         candidate_path = root_assembly_dir / f"root_round_{round_index:02d}.lean"
+        canonical_before_path = root_assembly_dir / f"canonical_before_round_{round_index:02d}.lean"
+        working_copy_artifact_path = root_assembly_dir / f"working_round_{round_index:02d}.lean"
         diagnostics_path = root_assembly_dir / f"diagnostics_round_{round_index:02d}.txt"
+        working_relative_path = f"Orthos/Root_working_round_{round_index:02d}.lean"
+        working_root_path = run_paths.workspace_dir / working_relative_path
+        canonical_before_text = root_file_path.read_text(encoding="utf-8") if root_file_path.exists() else ""
+        write_text(canonical_before_path, canonical_before_text)
+        write_text(working_root_path, canonical_before_text)
 
         prompt = build_root_assembly_prompt(
             bundle=bundle,
@@ -322,6 +341,7 @@ def run_phase06(
             trusted_entries=[accepted_by_lemma[lemma_id] for lemma_id in expected_lemma_order],
             round_index=round_index,
             prior_diagnostics=latest_diagnostics,
+            target_relative_path=working_relative_path,
             lean4_skills_refs=lean4_skills_refs,
         )
         write_text(prompt_path, prompt)
@@ -345,49 +365,59 @@ def run_phase06(
             candidate_source = "mock_candidate"
             candidate_selection_reasons = ("selected mock candidate",)
             _write_mock_raw(raw_path, candidate_text)
+            write_text(working_root_path, candidate_text)
         else:
-            baseline_root_text = root_file_path.read_text(encoding="utf-8") if root_file_path.exists() else ""
             claude_result = claude.run_prompt(
                 run_paths=run_paths,
                 prompt=prompt,
                 phase_name=f"phase06_root_round_{round_index:02d}",
                 model=model,
-                timeout_seconds=runtime_config.claude.timeout_seconds,
                 permission_mode="bypassPermissions",
+                **phase_timeout_overrides(timeout_seconds),
             )
             _copy_raw(claude_result, raw_path)
-            # Extract candidate from Claude's trace (latest write to Root.lean)
-            trace_text = (
-                claude_result.trace.latest_update_for_target(root_file_path)
-                if claude_result.trace is not None
-                else None
+            selected = select_lean_candidate(
+                trace=claude_result.trace,
+                target_path=working_root_path,
+                baseline_text=canonical_before_text,
+                normalize_text=normalize_lean_text,
             )
-            if trace_text and trace_text.strip():
-                candidate_text = normalize_lean_text(trace_text)
-                candidate_source = "claude_trace"
-            elif root_file_path.exists():
-                candidate_text = normalize_lean_text(root_file_path.read_text(encoding="utf-8"))
-                candidate_source = "file_on_disk"
-            else:
-                candidate_text = baseline_root_text
-                candidate_source = "baseline"
-            candidate_selection_reasons = (f"source={candidate_source}",)
-            candidate_lean_score = 0
+            candidate_text = selected.text
+            candidate_source = selected.source
+            candidate_selection_reasons = selected.reasons
+            candidate_lean_score = selected.lean_score
             if not claude_result.ok:
                 round_diagnostics.append(
                     f"Claude call failed (returncode={claude_result.returncode}, timed_out={claude_result.timed_out})."
                 )
 
-        write_text(candidate_path, candidate_text)
-        # Claude's Write tool may set Root.lean to read-only (0o444) — restore write permission.
-        if root_file_path.exists():
-            root_file_path.chmod(0o644)
-        write_text(root_file_path, candidate_text)
+        working_snapshot_text = working_root_path.read_text(encoding="utf-8") if working_root_path.exists() else canonical_before_text
+        write_text(working_copy_artifact_path, working_snapshot_text)
+
+        if not candidate_text.strip():
+            promotion_status = "rejected_structural"
+            promotion_reason = "candidate selection produced empty text"
+            canonical_after_text = canonical_before_text
+        else:
+            guard_error = _root_signature_guard_error(candidate_text, pinned_root)
+            if guard_error is not None:
+                promotion_status = "rejected_structural"
+                promotion_reason = guard_error
+                canonical_after_text = canonical_before_text
+            elif re.search(r"\bsorry\b", candidate_text) or re.search(r"\badmit\b", candidate_text):
+                promotion_status = "rejected_structural"
+                promotion_reason = "disallowed token in root working copy: `sorry` or `admit`"
+                canonical_after_text = canonical_before_text
+            else:
+                promotion_status = "pending_authoritative_check"
+                promotion_reason = "selected + stage-valid + awaiting authoritative compile"
+                canonical_after_text = candidate_text
+
+        write_text(candidate_path, canonical_after_text)
         latest_candidate_path = candidate_path
 
-        guard_error = _root_signature_guard_error(candidate_text, pinned_root)
-        if guard_error is not None:
-            round_diagnostics.append(guard_error)
+        if promotion_status != "pending_authoritative_check":
+            round_diagnostics.append(promotion_reason)
             write_text(diagnostics_path, _render_diagnostics(round_diagnostics))
             rounds.append(
                 RootAssemblyRoundResult(
@@ -395,6 +425,9 @@ def run_phase06(
                     prompt_path=prompt_path,
                     raw_path=raw_path,
                     candidate_path=candidate_path,
+                    canonical_before_path=canonical_before_path,
+                    working_copy_path=working_copy_artifact_path,
+                    canonical_after_path=candidate_path,
                     diagnostics_path=diagnostics_path,
                     status="failed",
                     diagnostics=tuple(round_diagnostics),
@@ -403,14 +436,21 @@ def run_phase06(
                     candidate_source=candidate_source,
                     candidate_selection_reasons=candidate_selection_reasons,
                     candidate_lean_score=candidate_lean_score,
+                    promotion_status=promotion_status,
+                    promotion_reason=promotion_reason,
                 )
             )
             latest_diagnostics = round_diagnostics
             continue
 
+        if root_file_path.exists():
+            root_file_path.chmod(0o644)
+        write_text(root_file_path, canonical_after_text)
+
         # Check for sorry/admit in any Orthos file.
         token_issues = find_disallowed_final_tokens(run_paths.workspace_dir)
         if token_issues:
+            write_text(root_file_path, canonical_before_text)
             round_diagnostics.extend(token_issues)
             write_text(diagnostics_path, _render_diagnostics(round_diagnostics))
             rounds.append(
@@ -419,6 +459,9 @@ def run_phase06(
                     prompt_path=prompt_path,
                     raw_path=raw_path,
                     candidate_path=candidate_path,
+                    canonical_before_path=canonical_before_path,
+                    working_copy_path=working_copy_artifact_path,
+                    canonical_after_path=candidate_path,
                     diagnostics_path=diagnostics_path,
                     status="failed",
                     diagnostics=tuple(round_diagnostics),
@@ -427,6 +470,8 @@ def run_phase06(
                     candidate_source=candidate_source,
                     candidate_selection_reasons=candidate_selection_reasons,
                     candidate_lean_score=candidate_lean_score,
+                    promotion_status="rejected_compile",
+                    promotion_reason="combined/root policy verification failed",
                 )
             )
             latest_diagnostics = round_diagnostics
@@ -451,6 +496,7 @@ def run_phase06(
         root_check_dict = latest_root_check.to_dict()
 
         if not latest_root_check.ok:
+            write_text(root_file_path, canonical_before_text)
             # Classify errors by section (Statements / Lemmas / Root) and tell
             # Claude where the errors are so it can fix the right file.
             check_diagnostics = summarize_diagnostics_from_check(latest_root_check)
@@ -467,6 +513,9 @@ def run_phase06(
                     prompt_path=prompt_path,
                     raw_path=raw_path,
                     candidate_path=candidate_path,
+                    canonical_before_path=canonical_before_path,
+                    working_copy_path=working_copy_artifact_path,
+                    canonical_after_path=candidate_path,
                     diagnostics_path=diagnostics_path,
                     status="failed",
                     diagnostics=tuple(round_diagnostics),
@@ -476,11 +525,16 @@ def run_phase06(
                     candidate_selection_reasons=candidate_selection_reasons,
                     candidate_lean_score=candidate_lean_score,
                     root_check_result=root_check_dict,
+                    promotion_status="rejected_compile",
+                    promotion_reason="authoritative combined compile failed",
                 )
             )
             latest_diagnostics = round_diagnostics
             continue
 
+        current_text = candidate_text
+        promotion_status = "promoted"
+        promotion_reason = "authoritative compile passed"
         write_text(diagnostics_path, "success\n")
         rounds.append(
             RootAssemblyRoundResult(
@@ -488,6 +542,9 @@ def run_phase06(
                 prompt_path=prompt_path,
                 raw_path=raw_path,
                 candidate_path=candidate_path,
+                canonical_before_path=canonical_before_path,
+                working_copy_path=working_copy_artifact_path,
+                canonical_after_path=candidate_path,
                 diagnostics_path=diagnostics_path,
                 status="ok",
                 diagnostics=(),
@@ -497,6 +554,8 @@ def run_phase06(
                 candidate_selection_reasons=candidate_selection_reasons,
                 candidate_lean_score=candidate_lean_score,
                 root_check_result=root_check_dict,
+                promotion_status=promotion_status,
+                promotion_reason=promotion_reason,
             )
         )
 
@@ -647,6 +706,7 @@ def build_root_assembly_prompt(
     trusted_entries: list[Any],
     round_index: int,
     prior_diagnostics: list[str],
+    target_relative_path: str,
     lean4_skills_refs: str = "",
 ) -> str:
     trusted_payload = [
@@ -676,9 +736,9 @@ def build_root_assembly_prompt(
         "",
         "WORKFLOW — FOLLOW EXACTLY:",
         "1. Read Orthos/Statements.lean and Orthos/Lemmas.lean to understand available definitions.",
-        "2. Write the COMPLETE Orthos/Root.lean file using the Write tool in ONE shot.",
-        "3. Call `lean_diagnostic_messages` on Orthos/Root.lean ONCE to check for errors.",
-        "4. If there are errors in Root.lean, fix them with the Edit tool and check again.",
+        f"2. Read `{target_relative_path}` and edit it in place as the round-local working root file.",
+        f"3. Call `lean_diagnostic_messages` on `{target_relative_path}` to check for errors.",
+        f"4. If there are errors in `{target_relative_path}`, fix them with the Edit tool and check again.",
         "5. If prior diagnostics mention errors in Lemmas.lean, also read and fix those.",
         "6. Stop. Do NOT call more than 3 diagnostic checks total.",
         "",
@@ -695,6 +755,8 @@ def build_root_assembly_prompt(
         "",
         f"Root assembly round: {round_index}",
         f"problem_id: {bundle.problem_id}",
+        "",
+        *build_edit_first_status_only_contract(target_relative_path=target_relative_path),
         "",
         "Pinned root signature (copy EXACTLY as the theorem header):",
         "```lean",
@@ -731,8 +793,7 @@ def build_root_assembly_prompt(
     lines.extend(
         [
             "",
-            "Write Orthos/Root.lean now. The file must start with `import Orthos.Lemmas`.",
-            "Write the COMPLETE file content using the Write tool — do not use Edit on the placeholder.",
+            f"Update `{target_relative_path}` now. The file must start with `import Orthos.Lemmas`.",
         ]
     )
     return "\n".join(lines).strip() + "\n"

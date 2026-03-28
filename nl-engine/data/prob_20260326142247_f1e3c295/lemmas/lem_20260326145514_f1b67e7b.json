@@ -1,0 +1,110 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260326150002_b77209e5",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-26T14:55:23.708450Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.22,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-26T15:00:03.317743Z",
+  "last_dependency_check_id": null,
+  "last_terminal_worker_result": null,
+  "last_transition_reason": null,
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260326145514_f1b67e7b",
+  "minor_rejection_count": 0,
+  "next_action": null,
+  "parent_id": "thm_root_20260326142247_6714b56a",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260326142247_f1e3c295",
+  "proof_bundle_artifact_id": "problems/prob_20260326142247_f1e3c295/proof_bundles/lemmas/lem_20260326145514_f1b67e7b.json",
+  "proof_graph_id": "pgraph_20260326150002_c70d2559",
+  "proof_status": "open",
+  "role_in_parent": "Shows that valley sets are independent sets in the path {1,...,n}, which is the structural input for the weighted independent-set bound.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 0,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer with n at least 2, and let s=(s_1,...,s_{n-1}) be a sign sequence with each s_i equal to plus 1 or minus 1. Define the valley set V(s) subset of {1,...,n} by: 1 belongs to V(s) exactly when s_1 = plus 1; n belongs to V(s) exactly when s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to V(s) exactly when s_{j-1} = minus 1 and s_j = plus 1. Then no two consecutive integers belong to V(s). Moreover, if a=(a_1,...,a_n) is a permutation of {1,...,n} such that s_i(a_{i+1}-a_i) > 0 for every i=1,...,n-1, and if a_j = 1, then j belongs to V(s).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n is at least 2",
+      "s has exactly n minus 1 entries",
+      "Each entry s_i is either plus 1 or minus 1",
+      "V(s) contains only integers from 1 through n",
+      "a is a permutation of 1 through n, so it is a rearrangement of those integers with no repeats",
+      "The inequality s_i times the difference a_{i+1} minus a_i is required for every i from 1 through n minus 1",
+      "The clause a_j equals 1 only makes sense for indices j from 1 through n"
+    ],
+    "normalized_claim": "Given any integer n at least 2 and any sign sequence s of length n minus 1 with entries plus 1 or minus 1, the valley set V(s) has no adjacent integers. Also, for any permutation a of 1 through n that strictly increases or decreases according to the signs s_i between consecutive entries, whenever the value 1 appears at position j in a, that position j must lie in V(s).",
+    "quantifier_order": [
+      "For all integers n with n at least 2",
+      "For all sign sequences s of length n minus 1 with each entry equal to plus 1 or minus 1",
+      "Define V(s) by the stated endpoint and interior rules",
+      "Then no two consecutive integers are both in V(s)",
+      "For all permutations a of 1 through n such that for every i from 1 to n minus 1, s_i times the difference a_{i+1} minus a_i is positive",
+      "For all indices j from 1 to n, if a_j equals 1 then j is in V(s)"
+    ],
+    "variables": [
+      {
+        "domain": "integers with n at least 2",
+        "name": "n",
+        "role": "main size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "length n minus 1 sequence with each entry equal to plus 1 or minus 1",
+        "name": "s",
+        "role": "sign sequence",
+        "type": "finite sequence of integers"
+      },
+      {
+        "domain": "subset of the integers from 1 to n",
+        "name": "V(s)",
+        "role": "valley set defined from s",
+        "type": "set of integers"
+      },
+      {
+        "domain": "a permutation of the integers from 1 to n",
+        "name": "a",
+        "role": "permutation used in the second claim",
+        "type": "finite sequence of integers"
+      },
+      {
+        "domain": "integers from 1 to n minus 1",
+        "name": "i",
+        "role": "adjacent position index in the permutation condition",
+        "type": "integer index"
+      },
+      {
+        "domain": "integers from 1 to n",
+        "name": "j",
+        "role": "candidate element or position for membership in V(s)",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are stated",
+      "The second conclusion does not introduce a witness; it is a direct implication from the existence of a valid permutation a and a position j with a_j equal to 1",
+      "Membership in V(s) is determined solely by s and the index j, not by a"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-26T15:00:03.317743Z"
+}

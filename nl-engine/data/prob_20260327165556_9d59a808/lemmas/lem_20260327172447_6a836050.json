@@ -1,0 +1,81 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327172526_237e4e6a",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:24:50.347600Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:26:01.917586Z",
+  "last_dependency_check_id": "depchk_20260327172601_c2f35063",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof is a direct and correct application of the floor characterization: floor(n t)=n-1 iff n-1 <= n t < n, which is equivalent to (n-1)/n <= t < 1 for n>1. The argument is complete and matches the lemma exactly.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let n>1 be an integer and let t be a real number with 0<=t<1.\n\nBy the defining property of the floor function, floor(n t)=n-1 if and only if\nn-1 <= n t < n.\nSo it remains to translate these inequalities into a condition on t.\n\nFirst, if floor(n t)=n-1, then n-1 <= n t. Since n>0, dividing by n gives\n(n-1)/n <= t.\nBecause t already satisfies t<1 by hypothesis, we obtain (n-1)/n <= t <1.\n\nConversely, if (n-1)/n <= t <1, then multiplying by the positive integer n yields\nn-1 <= n t < n.\nApplying the floor characterization again, this implies floor(n t)=n-1.\n\nThus, for every integer n>1 and every real t with 0<=t<1,\nfloor(n t)=n-1 if and only if (n-1)/n <= t <1.",
+  "latest_vetted_proof_fingerprint": "b88a2e1854ba2facb73cd30fb5f0c96c632ff5933a0e3a78e673af055d9e4968",
+  "latest_vetter_report_id": "rep_20260327172601_a77f92f6",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327172447_6a836050",
+  "minor_rejection_count": 0,
+  "next_action": "formalize_in_lean",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327172447_6a836050.json",
+  "proof_graph_id": "pgraph_20260327172523_80961515",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "Translate the equality case in the endpoint lemma into the corresponding interval description.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, floor(n*t) = n-1 if and only if (n-1)/n <= t < 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer",
+      "n > 1",
+      "t is a real number",
+      "0 <= t < 1",
+      "floor is the greatest integer less than or equal to its argument"
+    ],
+    "normalized_claim": "For all integers n with n > 1 and all real numbers t with 0 <= t < 1: floor(n*t) equals n-1 exactly when t is at least (n-1)/n and still less than 1.",
+    "quantifier_order": [
+      "for every integer n",
+      "for every real number t"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter with lower bound n > 1",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "t",
+        "role": "input variable constrained by 0 <= t < 1",
+        "type": "real number"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses are introduced; the statement is a pure equivalence between a condition on floor(n*t) and a condition on t"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:26:01.917586Z"
+}

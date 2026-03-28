@@ -210,12 +210,127 @@ def get_job(job_id: str) -> dict[str, Any]:
             "completed_at": now_utc().isoformat(),
         }
 
+    payload = job.get("payload") if isinstance(job.get("payload"), dict) else {}
     pinned_signatures = None
     if job["mode"] == "check_assembly":
         pinned_signatures = {}
-        for lemma in job["payload"].get("lemmas", []):
+        for lemma in payload.get("lemmas", []):
             local_id = lemma.get("local_id", "L1")
             pinned_signatures[local_id] = f"theorem {local_id} : True"
+
+    if job["mode"] == "prepare_track":
+        source = payload.get("source") if isinstance(payload.get("source"), dict) else {}
+        lemma_rows = source.get("lemmas") if isinstance(source.get("lemmas"), list) else []
+        lemma_handles = {
+            str(item.get("lemma_id")): f"handle_{item.get('lemma_id')}"
+            for item in lemma_rows
+            if item.get("lemma_id")
+        }
+        pinned_signatures = {
+            str(item.get("lemma_id")): f"theorem {item.get('lemma_id')} : True"
+            for item in lemma_rows
+            if item.get("lemma_id")
+        }
+        track_id = str(payload.get("track_id") or f"track_{job_id}")
+        return {
+            "job_id": job_id,
+            "operation_id": job.get("operation_id", job_id),
+            "operation": job.get("operation", job["mode"]),
+            "status": "success",
+            "mode": job["mode"],
+            "result": {
+                "track_id": track_id,
+                "run_dir": f".mock_runs/{track_id}",
+                "lemma_handles": lemma_handles,
+                "pinned_statement_signatures": pinned_signatures,
+                "issue_kind": None,
+                "confidence": 0.95,
+                "fatality": "none",
+                "error_class": None,
+                "error_message": None,
+                "artifact_index": {
+                    "run_root": f".mock_runs/{track_id}",
+                    "statements_file": f".mock_runs/{track_id}/Orthos/Statements.lean",
+                },
+                "progress_snapshot": {
+                    "phase": job.get("operation", job["mode"]),
+                    "round": 1,
+                    "attempt": 1,
+                    "last_error": None,
+                },
+            },
+            "created_at": job["created_at"],
+            "completed_at": now_utc().isoformat(),
+        }
+
+    if job["mode"] == "split_proof_into_sublemmas":
+        lemma_id = str(payload.get("lemma_id") or job.get("target_id") or "lemma")
+        return {
+            "job_id": job_id,
+            "operation_id": job.get("operation_id", job_id),
+            "operation": job.get("operation", job["mode"]),
+            "status": "success",
+            "mode": job["mode"],
+            "result": {
+                "sublemmas": [
+                    {
+                        "local_id": f"{lemma_id}_s1",
+                        "statement_nl": f"Establish the first supporting fact needed for {lemma_id}.",
+                        "proof_hint": "Isolate the first monotonicity or bounding subgoal.",
+                        "source": "mock_auto_split",
+                    },
+                    {
+                        "local_id": f"{lemma_id}_s2",
+                        "statement_nl": f"Establish the second supporting fact needed for {lemma_id}.",
+                        "proof_hint": "Combine the split facts to recover the parent lemma.",
+                        "source": "mock_auto_split",
+                    },
+                ],
+                "split_count": 2,
+                "issue_kind": None,
+                "fatality": "none",
+                "error_class": None,
+                "error_message": None,
+                "progress_snapshot": {
+                    "phase": job.get("operation", job["mode"]),
+                    "round": 1,
+                    "attempt": 1,
+                    "last_error": None,
+                },
+            },
+            "created_at": job["created_at"],
+            "completed_at": now_utc().isoformat(),
+        }
+
+    if job["mode"] == "assemble_root_from_track":
+        track_id = str(payload.get("track_id") or f"track_{job_id}")
+        return {
+            "job_id": job_id,
+            "operation_id": job.get("operation_id", job_id),
+            "operation": job.get("operation", job["mode"]),
+            "status": "success",
+            "mode": job["mode"],
+            "result": {
+                "decl_name": f"root_{track_id}",
+                "lean_code": "theorem root_dummy : True := by trivial",
+                "compiler_ok": True,
+                "issue_kind": None,
+                "fatality": "none",
+                "error_class": None,
+                "error_message": None,
+                "artifact_index": {
+                    "combined_file": f".mock_runs/{track_id}/Combined.lean",
+                },
+                "progress_snapshot": {
+                    "phase": job.get("operation", job["mode"]),
+                    "round": 1,
+                    "attempt": 1,
+                    "last_error": None,
+                },
+            },
+            "created_at": job["created_at"],
+            "completed_at": now_utc().isoformat(),
+        }
 
     return {
         "job_id": job_id,

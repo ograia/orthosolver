@@ -1,0 +1,94 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327182156_a23a7b30",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T18:20:45.513330Z",
+  "decomposition_count": 2,
+  "decomposition_round_count": 1,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.18,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T18:43:22.493908Z",
+  "last_dependency_check_id": "depchk_20260327182928_1e638964",
+  "last_submitted_lean_job_id": "lean_job_lem_20260327182037_d1cd11e0_formalize_lemma_from_nl_3",
+  "last_submitted_lean_proof_fingerprint": "6478fe65c3a7d4976f0c1c11a155446a757ba9ed5d79735806797c266da1e377",
+  "last_terminal_worker_result": "agent4:failed",
+  "last_transition_reason": "accepted decomposition candidate exists",
+  "latest_lean_issue_class": "dependency_graph_invalid",
+  "latest_lean_issue_kind": "lean_issue",
+  "latest_lean_result_id": "lean_res_20260327182944_9f685462",
+  "latest_nl_proof": "Fix an integer n > 1 and define f_n(x) = floor(nx) - sum_{k=1}^n floor(kx)/k. Let r be any real number with 0 <= r < 1, and set m = floor(nr). We will show that f_n(r) <= f_n(m/n).\n\nSince m = floor(nr), we have m <= nr < m+1. Dividing by n > 0 gives m/n <= r. Now fix any k in {1,2,...,n}. Multiplying by the positive number k preserves the inequality, so k(m/n) <= kr. Because the floor function is nondecreasing on the real numbers, it follows that floor(k(m/n)) <= floor(kr) for every such k.\n\nAlso, m is an integer, so floor(n(m/n)) = floor(m) = m = floor(nr).\n\nTherefore, term by term,\nsum_{k=1}^n floor(k(m/n))/k <= sum_{k=1}^n floor(kr)/k.\nUsing the equality of the first terms, we obtain\nf_n(r) = floor(nr) - sum_{k=1}^n floor(kr)/k = m - sum_{k=1}^n floor(kr)/k\n<= m - sum_{k=1}^n floor(k(m/n))/k\n= floor(n(m/n)) - sum_{k=1}^n floor(k(m/n))/k\n= f_n(m/n).\n\nThis is exactly the claimed inequality.",
+  "latest_vetted_proof_fingerprint": "6478fe65c3a7d4976f0c1c11a155446a757ba9ed5d79735806797c266da1e377",
+  "latest_vetter_report_id": "rep_20260327182928_93b34ad5",
+  "lean_attempt_count": 3,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327182037_d1cd11e0",
+  "minor_rejection_count": 0,
+  "next_action": "process_child_decomposition",
+  "parent_id": "thm_root_20260327181454_61717cff",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_bundle_artifact_id": "problems/prob_20260327181454_d8c7a304/proof_bundles/lemmas/lem_20260327182037_d1cd11e0.json",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "proof_status": "proof_flawed",
+  "role_in_parent": "Moves an arbitrary point in [0,1) to the left endpoint of its n-slice.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 8,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and satisfies n > 1",
+      "r is real and satisfies 0 <= r < 1",
+      "m is defined as floor of n times r, hence m is an integer",
+      "m divided by n is an input value for f_n (assumes f_n is defined on it)"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every real r with 0 <= r < 1, if m is defined as the floor of n times r, then f_n(r) is at most f_n(m divided by n).",
+    "quantifier_order": [
+      "for all integers n with n > 1",
+      "for all real numbers r with 0 <= r < 1",
+      "let m be floor of n times r",
+      "claim: f_n(r) <= f_n(m divided by n)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "fixed parameter for the function f_n; assumed to satisfy n > 1",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "r",
+        "role": "input variable to f_n constrained by 0 <= r < 1",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "auxiliary integer defined by m = floor(n*r); used to form the point m/n",
+        "type": "integer"
+      },
+      {
+        "domain": "unspecified set of inputs where f_n is defined (at least includes r and m/n)",
+        "name": "f_n",
+        "role": "parameterized function indexed by n",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "m depends on both n and r via m = floor(n*r)"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T18:43:22.493908Z"
+}

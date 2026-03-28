@@ -1,0 +1,186 @@
+{
+  "artifact_prefix": "problems/prob_20260327040158_22cb0c95/lemmas/lem_20260327041528_ad159b87/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T04:19:32.021260Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T04:19:35.177578Z",
+  "controller_consumed_by_execution_id": "exec_20260327040158_2f750a29",
+  "created_at": "2026-03-27T04:18:43.082020Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327040158_2f750a29",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+        "item_id": "pnode_20260327041842_33999f03",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327041832_92c03bca",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "lemma_id": "lem_20260327041528_ad159b87",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327041843_60f32259",
+    "role_in_assembly": "This symmetry reduces the analysis of patterns starting with -1 to the already solved case of patterns starting with +1, and it also shows the two alternating maximizers have equal value.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2.",
+        "The sequence s has exactly n minus 1 entries.",
+        "Each entry of s is either plus 1 or minus 1.",
+        "The tuple a is a permutation of {1, 2, ..., n}, so all entries are distinct and each integer from 1 to n appears exactly once.",
+        "The inequality si times (a(i+1) - ai) greater than 0 means ai+1 is greater than ai when si is plus 1, and ai+1 is less than ai when si is minus 1.",
+        "The constraint must hold for every index i from 1 to n minus 1."
+      ],
+      "normalized_claim": "For each integer n at least 2, among all length n minus 1 sequences of plus or minus 1, determine exactly which sign patterns maximize the number of permutations of 1 through n whose consecutive differences have the prescribed signs.",
+      "quantifier_order": [
+        "First fix an integer n with n at least 2.",
+        "Then range over all sign sequences s of length n minus 1.",
+        "For a given s, count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every i from 1 to n minus 1.",
+        "Finally, for each n, identify which sequences s maximize this count."
+      ],
+      "variables": [
+        {
+          "domain": "integers with n at least 2",
+          "name": "n",
+          "role": "problem size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "candidate sign pattern to optimize over",
+          "type": "sequence of signs"
+        },
+        {
+          "domain": "each entry is plus 1 or minus 1",
+          "name": "si",
+          "role": "the i-th sign controlling the i-th adjacent comparison",
+          "type": "sign"
+        },
+        {
+          "domain": "ordered n-tuples containing each element of {1, 2, ..., n} exactly once",
+          "name": "a",
+          "role": "object being counted by f(s)",
+          "type": "permutation sequence"
+        },
+        {
+          "domain": "values from 1 to n appearing in the permutation",
+          "name": "ai",
+          "role": "the i-th term of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing sign sequence depends on n.",
+        "No existential witness is built into the counting definition of f(s); the only counted witnesses are permutations a satisfying the inequalities.",
+        "Any characterization of maximizers must be valid uniformly for all sign sequences of the specified length for the fixed n."
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 components",
+        "Each component of s is either plus 1 or minus 1",
+        "The negated sequence -s is formed entry by entry",
+        "a is a permutation of the integers from 1 through n",
+        "The inequality is strict: the product must be greater than 0 for every index i from 1 to n minus 1",
+        "The index i ranges over all integers from 1 to n minus 1"
+      ],
+      "normalized_claim": "For every integer n at least 2 and every sign sequence s of length n minus 1, the number of permutations a of 1 through n for which each adjacent difference has the sign prescribed by s is equal to the number of permutations counted using the coordinatewise negated sign sequence -s.",
+      "quantifier_order": [
+        "For every integer n at least 2",
+        "For every sign sequence s of length n minus 1 with entries plus 1 or minus 1",
+        "For the count defining f(s), consider all permutations a of 1 through n",
+        "For each index i from 1 to n minus 1, require that the i-th sign times the difference between the next two entries of a is positive"
+      ],
+      "variables": [
+        {
+          "domain": "integers with n at least 2",
+          "name": "n",
+          "role": "size parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with each entry equal to plus 1 or minus 1",
+          "name": "s",
+          "role": "input parameter for the counting function",
+          "type": "sign sequence"
+        },
+        {
+          "domain": "ordered n-tuples whose entries are exactly the integers from 1 through n, each used once",
+          "name": "a",
+          "role": "object being counted",
+          "type": "permutation tuple"
+        },
+        {
+          "domain": "integers from 1 through n minus 1",
+          "name": "i",
+          "role": "index for the adjacency condition",
+          "type": "integer index"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses appear in the statement; the only object being quantified over inside the definition of f(s) is the counted permutation a."
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be an integer at least 2, and let s=(s_1,...,s_{n-1}) with each s_i in {+1,-1}. Define -s=(-s_1,...,-s_{n-1}). Let f(s) be the number of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i)>0 for every 1 <= i <= n-1. Then f(s)=f(-s).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "only_used_statement_definition": true,
+      "used_allowed_dependencies": [],
+      "used_forbidden_claims": []
+    },
+    "lemma_id": "lem_20260327041528_ad159b87",
+    "proof_nl": "Fix n at least 2 and a sign sequence s=(s_1,...,s_{n-1}) with each s_i in {+1,-1}. Let A_s be the set of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i)>0 for every i=1,...,n-1. By definition, |A_s|=f(s). Similarly define A_{-s}.\n\nDefine a map T on permutations of {1,...,n} by\nT(a_1,...,a_n)=(n+1-a_1,...,n+1-a_n).\nBecause the map x -> n+1-x is a bijection from {1,...,n} to itself, T sends permutations of {1,...,n} to permutations of {1,...,n}. Also T is an involution, since applying it twice gives back the original permutation:\nT(T(a_1,...,a_n))=(a_1,...,a_n).\nHence T is a bijection on the set of all permutations of {1,...,n}.\n\nNow take any a=(a_1,...,a_n) in A_s, and write b=T(a). For each i=1,...,n-1 we have\nb_{i+1}-b_i=(n+1-a_{i+1})-(n+1-a_i)=-(a_{i+1}-a_i).\nTherefore\n(-s_i)(b_{i+1}-b_i)=(-s_i)(-(a_{i+1}-a_i))=s_i(a_{i+1}-a_i)>0.\nSo b satisfies the defining inequalities for A_{-s}, and thus T(a) is in A_{-s}.\n\nConversely, if b is in A_{-s}, the same calculation applied to T(b) shows that T(b) is in A_s, because T is its own inverse. Therefore T restricts to a bijection from A_s onto A_{-s}.\n\nSince bijective finite sets have the same cardinality, |A_s|=|A_{-s}|. Equivalently, f(s)=f(-s). This is exactly the claimed statement.",
+    "proof_summary": "Use the involution T(a_1,...,a_n)=(n+1-a_1,...,n+1-a_n). It is a bijection on permutations of {1,...,n}, and it negates every adjacent difference: b_{i+1}-b_i=-(a_{i+1}-a_i). Hence a satisfies s_i(a_{i+1}-a_i)>0 for all i iff T(a) satisfies (-s_i)(b_{i+1}-b_i)>0 for all i. So T gives a bijection between the permutations counted by f(s) and those counted by f(-s), proving f(s)=f(-s).",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T04:18:47.070763Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327041528_ad159b87",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T04:19:35.177581Z",
+  "worker_job_id": "wrk_lem_20260327041528_ad159b87_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

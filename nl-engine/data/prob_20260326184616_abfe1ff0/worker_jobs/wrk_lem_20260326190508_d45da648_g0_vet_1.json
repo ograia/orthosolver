@@ -1,0 +1,243 @@
+{
+  "artifact_prefix": "problems/prob_20260326184616_abfe1ff0/lemmas/lem_20260326190508_d45da648/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-26T19:27:00.114711Z",
+  "controller_consumed_by_execution_id": "exec_20260326184651_e3d7b613",
+  "created_at": "2026-03-26T19:26:44.760387Z",
+  "error_payload": null,
+  "execution_id": "exec_20260326184651_e3d7b613",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+        "item_id": "pnode_20260326192603_195dbcd0",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260326184616_b94d02f6",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer and n is at least 2",
+            "s has exactly n minus 1 entries",
+            "each entry of s is either plus 1 or minus 1",
+            "a is a permutation of the set {1, 2, ..., n}",
+            "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+            "the inequality condition is required for every index i from 1 to n minus 1"
+          ],
+          "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+          "quantifier_order": [
+            "For each integer n with n at least 2",
+            "For each sign sequence s of length n minus 1",
+            "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+            "Determine which sign sequences s maximize this count f(s)"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter with n at least 2",
+              "type": "integer"
+            },
+            {
+              "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+              "name": "s",
+              "role": "parameter over which the maximization is taken",
+              "type": "finite sign sequence"
+            },
+            {
+              "domain": "integers from 1 to n minus 1",
+              "name": "i",
+              "role": "index for adjacent comparisons in the sign sequence and permutation",
+              "type": "integer index"
+            },
+            {
+              "domain": "all permutations of {1, 2, ..., n}",
+              "name": "a",
+              "role": "counted object satisfying the sign constraints",
+              "type": "permutation"
+            },
+            {
+              "domain": "elements of {1, 2, ..., n}",
+              "name": "a_i",
+              "role": "ith entry of the permutation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The counted permutation a depends on the chosen n and sign sequence s",
+            "The maximality question is over s for each fixed n",
+            "There is no existential witness in the statement, only a counting definition and a maximization problem"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer with $n \\\\geq 2$. For a sequence $s = (s_1,\\\\dots,s_{n-1})$ where each $s_i = \\\\pm 1$, let $f(s)$ be the number of permutations $(a_1,\\\\dots,a_n)$ of $\\\\{1,2,\\\\dots,n\\\\}$ such that $s_i(a_{i+1}-a_i) > 0$ for all $i$. For each $n$, determine the sequences $s$ for which $f(s)$ is maximal."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260326190508_d45da648",
+    "proof_nl": "Fix n = 2. Then a sign sequence has length n - 1 = 1, so it consists of a single entry, and that entry must be either +1 or -1. Therefore the only sign sequences of length 1 are (+1) and (-1).\n\nEach of these sequences is alternating: a sequence of length 1 has no adjacent pair of entries, so there is no possible violation of alternation.\n\nNow consider the counting function f. For a sign sequence s = (s_1), f(s) counts the permutations (a_1,a_2) of {1,2} such that s_1(a_2-a_1) > 0. The only permutations of {1,2} are (1,2) and (2,1).\n\nFor s = (+1), the condition is a_2 - a_1 > 0. This is true for (1,2), since 2 - 1 = 1 > 0, and false for (2,1), since 1 - 2 = -1 < 0. Hence f((+1)) = 1.\n\nFor s = (-1), the condition is -(a_2-a_1) > 0, equivalently a_2 - a_1 < 0. This is true for (2,1), since 1 - 2 = -1 < 0, and false for (1,2), since 2 - 1 = 1 > 0. Hence f((-1)) = 1.\n\nSo each of the two sign sequences is satisfied by exactly one permutation of {1,2}. Since (+1) and (-1) are the only sign sequences of length 1, the maximum possible value of the counting function is 1, and both of these sequences attain it. Therefore, when n = 2, both sign sequences maximize the counting function.",
+    "role_in_assembly": "Provides the base case for the induction on n.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is at least 2",
+        "s has exactly n minus 1 entries",
+        "each entry of s is either plus 1 or minus 1",
+        "a is a permutation of the set {1, 2, ..., n}",
+        "the entries a1 through an are all distinct and each lies in {1, 2, ..., n}",
+        "the inequality condition is required for every index i from 1 to n minus 1"
+      ],
+      "normalized_claim": "For each fixed integer n at least 2, consider all sign sequences of length n minus 1 with entries plus or minus 1. Define f(s) as the number of permutations of {1, 2, ..., n} whose consecutive differences have the prescribed signs. The task is to identify exactly which sign sequences s maximize f(s).",
+      "quantifier_order": [
+        "For each integer n with n at least 2",
+        "For each sign sequence s of length n minus 1",
+        "Count all permutations a of {1, 2, ..., n} satisfying the adjacent sign constraints for every index i from 1 to n minus 1",
+        "Determine which sign sequences s maximize this count f(s)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with n at least 2",
+          "type": "integer"
+        },
+        {
+          "domain": "sequences of length n minus 1 with entries in plus or minus 1",
+          "name": "s",
+          "role": "parameter over which the maximization is taken",
+          "type": "finite sign sequence"
+        },
+        {
+          "domain": "integers from 1 to n minus 1",
+          "name": "i",
+          "role": "index for adjacent comparisons in the sign sequence and permutation",
+          "type": "integer index"
+        },
+        {
+          "domain": "all permutations of {1, 2, ..., n}",
+          "name": "a",
+          "role": "counted object satisfying the sign constraints",
+          "type": "permutation"
+        },
+        {
+          "domain": "elements of {1, 2, ..., n}",
+          "name": "a_i",
+          "role": "ith entry of the permutation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The counted permutation a depends on the chosen n and sign sequence s",
+        "The maximality question is over s for each fixed n",
+        "There is no existential witness in the statement, only a counting definition and a maximization problem"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a natural number, and here n equals 2.",
+        "Sign sequences under discussion have length 1.",
+        "The only sign sequences mentioned are plus one and minus one.",
+        "Permutations are taken of the set {1,2}.",
+        "The counting function is evaluated on sign sequences of length 1.",
+        "Maximize means among all sign sequences of the relevant length, ties allowed."
+      ],
+      "normalized_claim": "In the special case n equals 2, there are exactly two sign sequences of length 1, plus one and minus one. Both are alternating, and each has exactly one satisfying permutation of {1,2}. Therefore both sequences achieve the maximum possible value of the counting function for that case.",
+      "quantifier_order": [
+        "Fix n equal to 2.",
+        "Consider the two sign sequences of length 1, namely plus one and minus one.",
+        "For each such sign sequence, it is alternating.",
+        "For each such sign sequence, there exists exactly one permutation of {1,2} that satisfies it.",
+        "Therefore each of the two sign sequences attains the maximum value of the counting function for n equal to 2."
+      ],
+      "variables": [
+        {
+          "domain": "natural numbers",
+          "name": "n",
+          "role": "length parameter fixed to 2",
+          "type": "integer"
+        },
+        {
+          "domain": "sign sequences of length 1 with entries plus one or minus one",
+          "name": "sigma",
+          "role": "a sign sequence being compared",
+          "type": "sign sequence"
+        },
+        {
+          "domain": "permutations of the set {1,2}",
+          "name": "pi",
+          "role": "witness permutation satisfying a sign sequence",
+          "type": "permutation"
+        },
+        {
+          "domain": "sign sequences of length 1 to nonnegative integers",
+          "name": "count",
+          "role": "number of permutations satisfying a sign sequence",
+          "type": "integer-valued function"
+        }
+      ],
+      "witness_dependencies": [
+        "The unique satisfying permutation depends on the chosen sign sequence.",
+        "The maximizing conclusion depends on the fact that each sign sequence has counting value 1.",
+        "No additional witness is needed beyond the unique permutation for each sign sequence."
+      ]
+    },
+    "statement_nl": "When n = 2, the two sign sequences of length 1 are (+1) and (-1). Each of them is alternating, and each is satisfied by exactly one permutation of {1,2}. Hence for n = 2 both sign sequences maximize the counting function.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "dependency_legality": "legal",
+      "summary": "No external lemmas or forbidden theorem content are cited; the argument is self-contained."
+    },
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260326190508_d45da648",
+    "proof_status": "complete",
+    "reason": "The proof is correct and complete for the n = 2 base case. It exhausts the two length-1 sign sequences, verifies the vacuous alternation claim, computes f((+1)) = 1 and f((-1)) = 1 by checking the only two permutations of {1,2}, and concludes maximality since these are the only sequences under consideration.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260326190508_d45da648",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-26T19:27:00.114719Z",
+  "worker_job_id": "wrk_lem_20260326190508_d45da648_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

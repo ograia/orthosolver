@@ -1,0 +1,102 @@
+{
+  "assembly_plan_id": "asm_20260327231004_c543c00b",
+  "created_at": "2026-03-27T23:11:06.858718Z",
+  "decomposition_id": "dec_20260327231004_dd914b75",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260327225136_1596912c",
+  "proof_skeleton_nl": "First prove the unit-shift identity for F_n. Then iterate it upward to all nonnegative integer shifts and downward to all nonpositive integer shifts. Use the integer decomposition lemma to split an arbitrary z into the nonnegative or negative-successor form, apply the corresponding shift lemma in each case, and finally unfold the notation f = F_n to obtain the exact theorem.",
+  "root_node_id": "lem_20260327230106_ecdda6c8",
+  "steps": [
+    {
+      "derives": "For every real x, f(x + 1) = f(x).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the conclusion of L1.",
+      "uses_lemmas": [
+        "lem_20260327231004_c8b0b174"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every real x and every natural m, f(x + (m : \u211d)) = f(x).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "The lemma L2 is applied with the unit-shift identity from A1 as its hypothesis, yielding invariance under all nonnegative integer shifts by induction on m.",
+      "uses_lemmas": [
+        "lem_20260327231006_3763fefd"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For every real x and every natural m, f(x - (m : \u211d)) = f(x).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "The lemma L4 is applied with the unit-shift identity from A1 as its hypothesis, yielding invariance under all nonpositive integer shifts.",
+      "uses_lemmas": [
+        "lem_20260327231017_4dc50744"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For an arbitrary integer z, either z = (m : \u2124) for some natural m or z = -((m + 1 : \u2124)) for some natural m.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "This is a direct case split on z using the integer decomposition lemma L5.",
+      "uses_lemmas": [
+        "lem_20260327231024_791c7ce1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "In the case z = (m : \u2124), f(x + z) = f(x) for the chosen real x.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "After rewriting z as a natural cast, A2 applies immediately to give the desired equality.",
+      "uses_lemmas": [
+        "lem_20260327231012_4527a447"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A4"
+      ]
+    },
+    {
+      "derives": "In the case z = -((m + 1 : \u2124)), f(x + z) = f(x) for the chosen real x.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "L3 rewrites x + z into subtraction by a natural number, and A3 then gives invariance under that backward shift.",
+      "uses_lemmas": [
+        "lem_20260327231012_4527a447",
+        "A3"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every real x and every integer z, f(x + z) = f(x).",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "The two cases from A4 cover all integers z; combining the branch conclusions and then universally quantifying over x and z yields the desired statement for f.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5",
+        "A6"
+      ]
+    },
+    {
+      "derives": "For every real number x and every integer z, F_n(x + z) = F_n(x).",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "This is just unfolding the notation f = F_n.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A7"
+      ]
+    }
+  ]
+}

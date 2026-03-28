@@ -1,0 +1,67 @@
+{
+  "created_at": "2026-03-27T18:38:33.015105Z",
+  "graph_node_id": "pnode_20260327183833_f9059792",
+  "metadata": {
+    "parent_id": "lem_20260327182037_d1cd11e0"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "745906126ec42e1d66cf92958f73f188d0b5cefa784800865b6e5073af34bbbc",
+  "owner_id": "lem_20260327183705_dca565ff",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "k is an integer",
+      "k satisfies 0 <= k and k < n",
+      "division is well-defined: n is not 0",
+      "x and y are real numbers",
+      "x satisfies k/n <= x",
+      "y satisfies x <= y",
+      "y satisfies y < (k + 1)/n",
+      "the monotonicity condition is only required when both x and y lie in the half-open interval [k/n, (k + 1)/n)"
+    ],
+    "normalized_claim": "Fix an index n (so f_n is fixed). For every integer k with 0 <= k < n, and for all real numbers x and y with k/n <= x <= y < (k + 1)/n, it holds that f_n(y) <= f_n(x).",
+    "quantifier_order": [
+      "for all n (implicitly)",
+      "for every integer k",
+      "for all real x",
+      "for all real y"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "index of the function f_n; also determines subinterval endpoints via division",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "k",
+        "role": "subinterval selector",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "x",
+        "role": "left point in the monotonicity comparison within a subinterval",
+        "type": "real"
+      },
+      {
+        "domain": "reals",
+        "name": "y",
+        "role": "right point in the monotonicity comparison within a subinterval",
+        "type": "real"
+      },
+      {
+        "domain": "reals",
+        "name": "f_n",
+        "role": "maps real inputs to real outputs; property asserted on each subinterval",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": []
+  },
+  "statement_nl": "For every integer k with 0 <= k < n, the function f_n is nonincreasing on the half-open interval [k/n, (k + 1)/n): whenever x and y are real numbers with k/n <= x <= y < (k + 1)/n, one has f_n(y) <= f_n(x).",
+  "updated_at": "2026-03-27T18:38:33.015106Z"
+}

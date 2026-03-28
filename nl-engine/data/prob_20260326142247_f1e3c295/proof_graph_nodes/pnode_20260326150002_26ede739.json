@@ -1,0 +1,77 @@
+{
+  "created_at": "2026-03-26T15:00:02.917075Z",
+  "graph_node_id": "pnode_20260326150002_26ede739",
+  "metadata": {
+    "parent_id": "thm_root_20260326142247_6714b56a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "32e5b58d928f85c718d962305f4cdc97edd38b73e4e32badf3ce914d120c32f2",
+  "owner_id": "lem_20260326145645_1e8ed3bb",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326150002_c70d2559",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and n is at least 2.",
+      "s has exactly n minus 1 entries.",
+      "Each entry s_i is restricted to the two values plus 1 and minus 1.",
+      "V(s) is a subset of the indices from 1 to n.",
+      "The valley condition at j is only defined for interior indices j from 2 to n minus 1.",
+      "The adjacent product conclusion only ranges over i from 1 to n minus 2.",
+      "Odd and even integers are interpreted relative to the set of integers from 1 to n."
+    ],
+    "normalized_claim": "For every integer n at least 2 and every length n minus 1 sign sequence with entries plus 1 or minus 1, the valley set definition has the following rigidity property: if V(s) is exactly the odd indices, then the sequence alternates starting with plus 1; if V(s) is exactly the even indices, then the sequence alternates starting with minus 1; equivalently, whenever V(s) is exactly one parity class, consecutive entries of the sequence always have opposite signs.",
+    "quantifier_order": [
+      "For every integer n with n at least 2.",
+      "For every sign sequence s of length n minus 1 with each entry equal to plus 1 or minus 1.",
+      "If the valley set V(s) is exactly the odd indices in the range from 1 to n, then every entry s_i is plus 1 for odd i and minus 1 for even i.",
+      "If the valley set V(s) is exactly the even indices in the range from 1 to n, then every entry s_i is minus 1 for odd i and plus 1 for even i.",
+      "Equivalently, if V(s) is exactly one parity class, then for every i from 1 to n minus 2, the adjacent entries satisfy s_i times s_{i+1} equals minus 1."
+    ],
+    "variables": [
+      {
+        "domain": "integers with n at least 2",
+        "name": "n",
+        "role": "global size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "a sequence of length n minus 1 with each entry equal to plus 1 or minus 1",
+        "name": "s",
+        "role": "main object under study",
+        "type": "sign sequence"
+      },
+      {
+        "domain": "plus 1 or minus 1 for each index i from 1 to n minus 1",
+        "name": "s_i",
+        "role": "entries of the sign sequence",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of the index set from 1 to n",
+        "name": "V(s)",
+        "role": "valley set determined by s",
+        "type": "set of indices"
+      },
+      {
+        "domain": "integers from 2 to n minus 1",
+        "name": "j",
+        "role": "interior index used in the definition of V(s)",
+        "type": "index"
+      },
+      {
+        "domain": "integers from 1 to n minus 2",
+        "name": "i",
+        "role": "index for adjacent products in the conclusion",
+        "type": "index"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement; all assertions are universal implications.",
+      "The conclusion about each s_i is determined directly by the assumption on V(s), with no additional chosen parameters.",
+      "The adjacent product conclusion depends only on the given sequence s and the parity-class assumption on V(s)."
+    ]
+  },
+  "statement_nl": "Let n be an integer with n at least 2, and let s=(s_1,...,s_{n-1}) be a sign sequence with each s_i equal to plus 1 or minus 1. Define the valley set V(s) subset of {1,...,n} by: 1 belongs to V(s) exactly when s_1 = plus 1; n belongs to V(s) exactly when s_{n-1} = minus 1; and for 2 <= j <= n-1, j belongs to V(s) exactly when s_{j-1} = minus 1 and s_j = plus 1. If V(s) is exactly the set of odd integers in {1,...,n}, then s_i = plus 1 for odd i and s_i = minus 1 for even i. If V(s) is exactly the set of even integers in {1,...,n}, then s_i = minus 1 for odd i and s_i = plus 1 for even i. Equivalently, if V(s) is a full parity class, then s_i s_{i+1} = -1 for every i=1,...,n-2.",
+  "updated_at": "2026-03-26T15:00:02.917076Z"
+}

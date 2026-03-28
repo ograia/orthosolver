@@ -50,7 +50,7 @@ cd lean-engine && pip install -e ".[dev]"
 #    Option B: manual seed
 cp -r templates/lean_project /tmp/lean_cache_seed
 cd /tmp/lean_cache_seed && lake update && lake cache get && lake build
-cd /opt/compiled-lean-engine/lean-engine
+cd /path/to/compiled-lean-engine/lean-engine
 #    The first successful pipeline run saves the compiled .lake/ to the cache
 #    at .artifacts/lean_engine/_lake_cache/<hash>/.lake/ (~12GB, 23K oleans).
 #    All subsequent runs copy from this cache with cp -a (isolated workspace).
@@ -70,7 +70,7 @@ cd lean-engine && pip install -e ".[dev]"
 cd lean-engine && pytest -q
 
 # Full pipeline run (use screen to survive terminal disconnect)
-screen -S run bash -c 'cd /opt/compiled-lean-engine/lean-engine && \
+screen -S run bash -c 'cd /path/to/compiled-lean-engine/lean-engine && \
   PYTHONPATH=src python3 -m lean_engine.cli run ../docs/putnam-nl/a2.json \
   --input-kind path --model claude-opus-4-6 --timeout 0 --workspace-timeout 0 \
   --parallel-lemmas --json 2>&1 | tee run.log; exec bash'
@@ -110,7 +110,7 @@ The engine follows a strict 8-phase pipeline. Phases run in order; later phases 
 5. **Phase 05** — Semantic guards: per-lemma equivalence judge, fatal gap detection (`major_proof_gap`, `false_lemma_suspected`, `bad_statement_translation`)
 6. **Phase 06** — Root assembly + final gates: Combined.lean compiles, no `sorry`/`admit`
 7. **Phase 07** — Full pipeline orchestration with timing, integration tracking, pause/resume, and run inspection
-8. **Phase 08** — HTTP service: `POST /v1/jobs`, `GET /v1/jobs/<id>`, `GET /v1/health`, SQLite-backed job store
+8. **Phase 08** — HTTP service: `POST /v1/jobs`, `GET /v1/jobs/<id>`, `POST /v2/operations/<op>`, JSON object-backed job store
 
 Primary docs for implementation context: `architecture.md`, `PLAN.md`, `plan-3-19.md`, `lean-engine/docs/runbook_phase07.md`, `lean-engine/docs/runbook_phase08.md`.
 
@@ -227,7 +227,7 @@ Integrations:
 Service (Phase 08):
 - `lean-engine/src/lean_engine/service/app.py` — HTTP request handlers
 - `lean-engine/src/lean_engine/service/jobs.py` — Job queue management
-- `lean-engine/src/lean_engine/service/store.py` — SQLite-backed job persistence
+- `lean-engine/src/lean_engine/service/store.py` — JSON object-backed job persistence
 
 ## Workspace cache system
 

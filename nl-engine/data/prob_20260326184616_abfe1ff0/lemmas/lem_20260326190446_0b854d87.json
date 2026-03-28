@@ -1,0 +1,138 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260326190750_861dbd04",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-26T19:05:08.175270Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.9,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T03:24:50.952608Z",
+  "last_dependency_check_id": "depchk_20260327032450_69bf8b1f",
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "For each integer N >= 1, set w_j^(N) = C(N-1,j-1) E_{j-1} E_{N-j} for 1 <= j <= N, and W_N(z) = sum_{j=1}^N w_j^(N) z^(j-1). For N = n these are exactly the weights in the statement.\n\nCall a permutation c_1,...,c_r reverse-alternating if c_1 > c_2 < c_3 > c_4 < ... . The map c_i -> r+1-c_i is a bijection from reverse-alternating permutations of {1,...,r} to alternating permutations of {1,...,r}, so the number of reverse-alternating permutations of length r is also E_r.\n\nFix N >= 2. We first count alternating permutations by the position of 1 and by the position of N.\n\nIf j is odd, then in an alternating permutation a_1 < a_2 > a_3 < a_4 > ... the odd positions are valleys, so the minimum 1 can occur only at an odd position. Count the alternating permutations of {1,...,N} with a_j = 1. Choose the j-1 values lying to the left of 1; there are C(N-1,j-1) choices. After standardization, the left block a_1,...,a_{j-1} is an alternating permutation of length j-1, hence has E_{j-1} possibilities. The right block a_{j+1},...,a_N begins with a descent and then alternates, so after standardization it is reverse-alternating of length N-j, hence has E_{N-j} possibilities. Conversely, from the chosen left-value set, an alternating left block, and a reverse-alternating right block, one reconstructs the original permutation uniquely. Therefore the number of alternating permutations with 1 in position j is exactly w_j^(N).\n\nSimilarly, if j is even, then the even positions are peaks, so the maximum N can occur only at an even position. Count the alternating permutations of {1,...,N} with a_j = N. Choose the j-1 values lying to the left of N; again there are C(N-1,j-1) choices. After standardization, both the left block and the right block are alternating permutations, of lengths j-1 and N-j. Hence the number of such permutations is again w_j^(N).\n\nSumming over all odd positions of 1 and over all even positions of N, we obtain, for this fixed N >= 2,\nS_odd^(N) := sum over odd j of w_j^(N) = E_N,\nand\nS_even^(N) := sum over even j of w_j^(N) = E_N.\nSo for each fixed N >= 2 we have S_odd^(N) = S_even^(N) = E_N.\n\nNow define the exponential generating series F(x) = sum_{r>=0} E_r x^r/r!.\nTake any m >= 1 and apply the previous identity with N = m+1. Since\nsum_{j=1}^{m+1} w_j^(m+1) = sum_{k=0}^m C(m,k) E_k E_{m-k},\nwe get\n2 E_{m+1} = sum_{k=0}^m C(m,k) E_k E_{m-k}    for every m >= 1.\nThis is exactly the recurrence coming from the counting argument, but only for m >= 1.\n\nThe constant term must be checked separately. We have E_1 = 1, because there is only one permutation of {1}, and E_0 = 1 by definition. Hence\n2 E_1 = 2 = 1 + E_0^2.\nTherefore, for every m >= 0, the coefficient of x^m/m! in 2 F'(x) equals the coefficient of x^m/m! in 1 + F(x)^2. Thus\n2 F'(x) = 1 + F(x)^2.\n\nLet G(x) = sec x + tan x. A direct calculation gives 2 G'(x) = 1 + G(x)^2, and G(0) = 1. If H(x) = sum_{r>=0} h_r x^r/r! satisfies 2 H' = 1 + H^2 and h_0 = 1, then comparing coefficients of x^0 gives 2 h_1 = 1 + h_0^2, and for every m >= 1, comparing coefficients of x^m/m! gives\n2 h_{m+1} = sum_{k=0}^m C(m,k) h_k h_{m-k}.\nSo h_{m+1} is determined recursively by h_0,...,h_m. Hence there is only one power series solution with constant term 1. Since both F and G satisfy that condition, F(x) = G(x) = sec x + tan x.\n\nNext, for every N >= 1,\nF(zx) F(x) = sum_{a,b>=0} E_a E_b z^a x^{a+b}/(a! b!)\n= sum_{N>=1} W_N(z) x^{N-1}/(N-1)!,\nby the Cauchy product. Thus\nsum_{N>=1} W_N(z) x^{N-1}/(N-1)! = F(zx) F(x).\n\nFor N >= 2 we already know W_N(-1) = S_odd^(N) - S_even^(N) = 0, so W_N(z) is divisible by 1+z. Write\nW_N(z) = (1+z) Q_N(z).\nSince W_1(z) = 1, subtracting the N = 1 term yields\nsum_{N>=2} Q_N(z) x^{N-1}/(N-1)! = (F(zx) F(x) - 1)/(1+z).\n\nNow use the identity F(t) = sec t + tan t = tan(pi/4 + t/2). Let A = pi/4 + u/2 and B = pi/4 + v/2. Then\n(F(u) F(v) - 1)/(F(u) + F(v))\n= (tan A tan B - 1)/(tan A + tan B)\n= -cot(A+B)\n= tan((u+v)/2),\nbecause A+B = pi/2 + (u+v)/2. Hence\nF(u) F(v) - 1 = tan((u+v)/2) (F(u) + F(v)).\nWith u = zx and v = x this becomes\nsum_{N>=2} Q_N(z) x^{N-1}/(N-1)! = [tan((1+z)x/2)/(1+z)] (F(zx) + F(x)).\n\nAlso,\nF(t) - F(-t) = 2 tan t,\nso\n tan t = sum_{m>=0} E_{2m+1} t^{2m+1}/(2m+1)!.\nTherefore\n tan((1+z)x/2)/(1+z)\n= sum_{m>=0} E_{2m+1} (1+z)^{2m} x^{2m+1} / ((2m+1)! 2^{2m+1}).\nEvery coefficient here is nonnegative. Likewise,\nF(zx) + F(x) = sum_{r>=0} E_r (z^r + 1) x^r/r!\nhas nonnegative coefficients. Hence every coefficient of every polynomial Q_N(z) is nonnegative.\n\nIn fact they are all strictly positive. First note that E_r > 0 for every r >= 1; for example, the permutation 1, r, 2, r-1, 3, ... is alternating. If N is even, then the constant term 2 from F(zx)+F(x), multiplied by the x^{N-1} term of tan((1+z)x/2)/(1+z), contributes a positive multiple of (1+z)^{N-2} to the coefficient of x^{N-1}, hence to Q_N(z). Since every coefficient of (1+z)^{N-2} is positive and all other contributions are nonnegative, every coefficient of Q_N(z) is positive. If N is odd, then the x-term (1+z)x from F(zx)+F(x), multiplied by the x^{N-2} term of tan((1+z)x/2)/(1+z), again contributes a positive multiple of (1+z)^{N-2}; the same conclusion follows. So for every N >= 2 we may write\nQ_N(z) = q_1 + q_2 z + ... + q_{N-1} z^{N-2}\nwith q_i > 0 for all i.\n\nNow return to the fixed n of the theorem, and write q_0 = q_n = 0. Since W_n(z) = (1+z) Q_n(z), comparing coefficients of z^{j-1} gives\nw_j = q_{j-1} + q_j    for 1 <= j <= n.\nLet P be a subset of {1,...,n} containing no two consecutive integers. Then\nsum over j in P of w_j\n= sum over j in P of (q_{j-1} + q_j)\n= sum_{i=1}^{n-1} q_i (1_{i in P} + 1_{i+1 in P}).\nBecause P has no consecutive elements, each number 1_{i in P} + 1_{i+1 in P} is at most 1. Therefore\nsum over j in P of w_j <= sum_{i=1}^{n-1} q_i = Q_n(1) = W_n(1)/2 = (S_odd + S_even)/2 <= max(S_odd,S_even).\nThis proves the first assertion.\n\nNow assume in addition that S_odd = S_even. Then max(S_odd,S_even) = Q_n(1) = sum_{i=1}^{n-1} q_i. Since every q_i is strictly positive and each alpha_i := 1_{i in P} + 1_{i+1 in P} belongs to {0,1}, equality\nsum over j in P of w_j = max(S_odd,S_even)\nholds if and only if alpha_i = 1 for every i = 1,...,n-1. Equivalently, every adjacent pair {i,i+1} contains exactly one element of P. On the path 1,2,...,n this forces P to be one of the two parity classes: if 1 is in P, then 2 is not, then 3 is, and so on, so P is exactly the odd-index set; if 1 is not in P, then 2 is, then 3 is not, and so on, so P is exactly the even-index set. Conversely, those two sets contain no consecutive integers, and their total weights are S_odd and S_even respectively; under the assumption S_odd = S_even they both attain the common maximum. Therefore equality holds if and only if P is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.\n\nThis proves the lemma.",
+  "latest_vetter_report_id": "rep_20260327032450_d27e8ae2",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260326190446_0b854d87",
+  "minor_rejection_count": 1,
+  "next_action": "wait_on_lean_formalization",
+  "parent_id": "thm_root_20260326184616_b94d02f6",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "proof_bundle_artifact_id": "problems/prob_20260326184616_abfe1ff0/proof_bundles/lemmas/lem_20260326190446_0b854d87.json",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "This is the extremal weighted independent-set inequality that turns the recurrence bound into the alternating upper bound.",
+  "routing_status": "send_to_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 2,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Fix an integer n >= 2. For each integer r >= 1, let E_r be the number of permutations (b_1,...,b_r) of {1,...,r} such that (-1)^(i-1) * (b_{i+1} - b_i) > 0 for every 1 <= i <= r-1, and set E_0 = 1. Define w_j = binom(n-1, j-1) * E_{j-1} * E_{n-j} for 1 <= j <= n, define S_odd = sum over odd j in {1,...,n} of w_j, and define S_even = sum over even j in {1,...,n} of w_j. If P is a subset of {1,...,n} containing no two consecutive integers, then sum over j in P of w_j is at most max(S_odd, S_even). If, in addition, S_odd = S_even, then equality sum over j in P of w_j = max(S_odd, S_even) holds if and only if P is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is a fixed integer and n is at least 2.",
+      "r is an integer at least 1 in the definition of E_r.",
+      "E_0 is defined separately to be 1.",
+      "For E_r, the tuple b_1 through b_r must be a permutation of the set {1,...,r}.",
+      "For every i from 1 to r minus 1, the quantity b_{i+1} minus b_i has sign alternating with i: it is positive for odd i and negative for even i.",
+      "j ranges over integers from 1 to n when defining w_j.",
+      "The binomial coefficient uses n minus 1 and j minus 1, so the index range ensures the parameters are in the standard valid range.",
+      "P is a subset of {1,...,n} and contains no two consecutive integers.",
+      "The odd and even sums are taken over indices in {1,...,n} of the corresponding parity."
+    ],
+    "normalized_claim": "For a fixed integer n at least 2, define the numbers E_r by counting alternating permutations of {1,...,r}, with E_0 equal to 1, and define weights w_j from E_{j-1} and E_{n-j}. Then every subset P of {1,...,n} with no consecutive integers has total weight at most the larger of the total weight on odd indices and the total weight on even indices. Moreover, if the odd-index total and even-index total are equal, then a subset P achieves this maximum exactly when P is precisely the odd-index set or precisely the even-index set.",
+    "quantifier_order": [
+      "Fix an integer n at least 2.",
+      "For each integer r at least 1, define E_r by counting permutations of {1,...,r} whose consecutive differences alternate in sign, and set E_0 equal to 1.",
+      "For each j from 1 to n, define w_j using n, j, E_{j-1}, and E_{n-j}.",
+      "Define S_odd as the sum of w_j over odd j in {1,...,n}, and S_even as the sum of w_j over even j in {1,...,n}.",
+      "For every subset P of {1,...,n} with no consecutive integers, the sum of w_j over j in P is at most the larger of S_odd and S_even.",
+      "If S_odd equals S_even, then for every such P, equality with the maximum holds exactly when P is the set of odd integers in {1,...,n} or the set of even integers in {1,...,n}."
+    ],
+    "variables": [
+      {
+        "domain": "fixed integer with n at least 2",
+        "name": "n",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integer at least 1",
+        "name": "r",
+        "role": "index for the definition of E_r",
+        "type": "integer"
+      },
+      {
+        "domain": "integer from 1 to r minus 1",
+        "name": "i",
+        "role": "index in the alternating sign condition",
+        "type": "integer"
+      },
+      {
+        "domain": "a permutation of {1,...,r}",
+        "name": "b_1 through b_r",
+        "role": "counted object in the definition of E_r",
+        "type": "ordered tuple of integers"
+      },
+      {
+        "domain": "nonnegative integer sequence defined for r at least 0",
+        "name": "E_r",
+        "role": "counts permutations satisfying the alternating inequality condition",
+        "type": "integer"
+      },
+      {
+        "domain": "integer from 1 to n",
+        "name": "j",
+        "role": "index for the weights w_j",
+        "type": "integer"
+      },
+      {
+        "domain": "defined for each j from 1 to n",
+        "name": "w_j",
+        "role": "weight attached to index j",
+        "type": "integer"
+      },
+      {
+        "domain": "sum of the weights at odd indices in {1,...,n}",
+        "name": "S_odd",
+        "role": "odd-parity total weight",
+        "type": "integer"
+      },
+      {
+        "domain": "sum of the weights at even indices in {1,...,n}",
+        "name": "S_even",
+        "role": "even-parity total weight",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of {1,...,n} with no two consecutive integers",
+        "name": "P",
+        "role": "arbitrary admissible subset in the inequality",
+        "type": "subset of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "There is no existential witness in the main inequality; the statement is universally quantified over all admissible subsets P.",
+      "E_r depends only on r and on the existence and count of permutations b_1 through b_r satisfying the alternating sign condition.",
+      "w_j depends on n, j, E_{j-1}, and E_{n-j}.",
+      "S_odd and S_even depend on the full family of weights w_j and the parity partition of {1,...,n}.",
+      "In the equality characterization under S_odd equal to S_even, the only maximizing subsets are exactly the odd-index set and exactly the even-index set; no additional witness choice is involved."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T03:24:50.952608Z"
+}

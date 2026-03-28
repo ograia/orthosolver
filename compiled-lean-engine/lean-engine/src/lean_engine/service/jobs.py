@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import json
+import mimetypes
+import os
 from concurrent.futures import Future, ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from pathlib import Path
-from threading import Lock
+from threading import Condition, Event, Lock, Thread
 from typing import Any
 
 from ..artifact_io import create_run_paths, load_run_paths, write_json
-from ..config import RuntimeConfig, load_runtime_config
+from ..config import RuntimeConfig, current_code_origin, load_runtime_config
+from ..lean_checks import check_lean_file
 from ..lemma_phase import (
     load_pinned_lemma_signatures,
     load_trusted_manifest,
@@ -17,7 +20,7 @@ from ..lemma_phase import (
 )
 from ..normalize import normalize_problem_artifact_result
 from ..phase03 import load_normalized_bundle, run_phase03
-from ..phase04 import load_mock_candidates_dir
+from ..phase04 import load_mock_candidates_dir, run_phase04
 from ..phase06 import load_mock_root_candidates_dir, run_phase06
 from ..phase07 import run_phase07
 from ..result_types import FatalResult
@@ -72,6 +75,15 @@ LEAN_ISSUE_CLASSES = {
     "service_execution_error",
 }
 
+DETERMINISTIC_PHASE04_SETUP_ERRORS = {
+    "dependency_graph_invalid",
+    "problem_binding_mismatch",
+    "pinned_signature_binding_mismatch",
+    "stale_olean",
+}
+
+_GCS_ARTIFACT_CLIENT = None
+
 
 @dataclass(frozen=True)
 class JobExecutionResult:
@@ -79,6 +91,110 @@ class JobExecutionResult:
     result: dict[str, Any]
     error_class: str | None = None
     message: str | None = None
+
+
+def _normalize_check_diagnostics(check_result: Any) -> list[dict[str, Any]]:
+    if check_result is None:
+        return []
+    stderr = str(getattr(check_result, "stderr", "") or "").strip()
+    stdout = str(getattr(check_result, "stdout", "") or "").strip()
+    diagnostics: list[dict[str, Any]] = []
+    if stderr:
+        diagnostics.append({"stream": "stderr", "message": stderr})
+    elif stdout:
+        diagnostics.append({"stream": "stdout", "message": stdout})
+    return diagnostics
+
+
+def _is_deterministic_phase04_setup_error(error_class: str | None) -> bool:
+    return bool(error_class) and error_class in DETERMINISTIC_PHASE04_SETUP_ERRORS
+
+
+def _formalize_failure_status(error_class: str | None) -> str:
+    if _is_deterministic_phase04_setup_error(error_class):
+        return "fatal"
+    return "fatal" if error_class in FATAL_CLASSES else "repairable"
+
+
+def _formalize_failure_next_step(error_class: str | None, *, status: str) -> str:
+    if error_class == "false_lemma_suspected":
+        return "check_statement_plausibility"
+    if _is_deterministic_phase04_setup_error(error_class):
+        return "decompose_current"
+    return "decompose_current" if status == "fatal" else "retry_lean_only"
+
+
+def _phase03_timing_breakdown(phase03_result: Any) -> dict[str, Any]:
+    statement_phase = phase03_result.to_dict().get("statement_phase", {}) if hasattr(phase03_result, "to_dict") else {}
+    claude_runs = statement_phase.get("claude_runs") if isinstance(statement_phase, dict) else []
+    check_history = statement_phase.get("check_history") if isinstance(statement_phase, dict) else []
+    assembly = phase03_result.to_dict().get("assembly_precheck", {}) if hasattr(phase03_result, "to_dict") else {}
+    assembly_check = assembly.get("check_result") if isinstance(assembly, dict) else {}
+    return {
+        "statement_llm_duration_seconds": sum(
+            float(item.get("duration_seconds") or 0.0)
+            for item in claude_runs
+            if isinstance(item, dict)
+        ),
+        "statements_check_duration_seconds": sum(
+            float(item.get("duration_seconds") or 0.0)
+            for item in check_history
+            if isinstance(item, dict)
+        ),
+        "assembly_precheck_duration_seconds": float(assembly_check.get("duration_seconds") or 0.0)
+        if isinstance(assembly_check, dict)
+        else 0.0,
+    }
+
+
+def _formalize_compile_checks(
+    *,
+    run_root: Path,
+    merged_authoritative_path: Path | None,
+    timeout_seconds: int | None,
+    lake_jobs: int,
+) -> dict[str, Any]:
+    run_paths = load_run_paths(run_root)
+    artifact_check = None
+    if merged_authoritative_path is not None and merged_authoritative_path.exists():
+        artifact_check = check_lean_file(
+            run_paths.workspace_dir,
+            str(merged_authoritative_path),
+            timeout_seconds=timeout_seconds,
+            lake_jobs=lake_jobs,
+        )
+    integration_check = check_lean_file(
+        run_paths.workspace_dir,
+        "Orthos/Lemmas.lean",
+        timeout_seconds=timeout_seconds,
+        lake_jobs=lake_jobs,
+    )
+    return {
+        "artifact_check": artifact_check,
+        "integration_check": integration_check,
+    }
+
+
+def _compile_checks_ok(checks: dict[str, Any]) -> bool:
+    artifact_check = checks.get("artifact_check")
+    integration_check = checks.get("integration_check")
+    artifact_ok = bool(getattr(artifact_check, "ok", False)) if artifact_check is not None else False
+    integration_ok = bool(getattr(integration_check, "ok", False))
+    return artifact_ok and integration_ok
+
+
+def _service_job_priority(record: JobRecord) -> tuple[int, str, str]:
+    mode = str(record.request.get("operation") or record.mode or "").strip()
+    priority = {
+        "prepare_track": 0,
+        "assemble_root": 1,
+        "assemble_root_from_track": 1,
+        "check_root_assembly": 1,
+        "formalize_lemma_from_nl": 2,
+        "formalize_lemma": 2,
+        "check_statement_plausibility": 3,
+    }.get(mode, 4)
+    return (priority, record.created_at, record.job_id)
 
 
 class ServiceJobManager:
@@ -96,8 +212,18 @@ class ServiceJobManager:
         self._default_config_path = default_config_path
         self._default_runtime_config = default_runtime_config
         self._executor = ThreadPoolExecutor(max_workers=max_workers)
+        self._max_workers = max_workers
         self._futures: dict[str, Future[None]] = {}
         self._lock = Lock()
+        self._dispatch_condition = Condition(self._lock)
+        self._stop_dispatch = Event()
+        self._dispatcher = Thread(target=self._dispatch_loop, name="lean-service-dispatcher", daemon=True)
+        self._recover_incomplete_jobs()
+        self._dispatcher.start()
+
+    @property
+    def max_workers(self) -> int:
+        return self._max_workers
 
     def submit(self, request: dict[str, Any]) -> tuple[JobRecord, bool]:
         validated = _validate_submit_request(request)
@@ -107,18 +233,29 @@ class ServiceJobManager:
         record, created = self._store.create_or_get(job_id=job_id, mode=mode, request=validated)
         if created:
             with self._lock:
-                self._futures[job_id] = self._executor.submit(self._run_job, job_id)
+                self._dispatch_condition.notify_all()
 
         refreshed = self._store.get(job_id)
         if refreshed is None:
             raise RuntimeError(f"job disappeared from store: {job_id}")
         return refreshed, created
 
+    def _recover_incomplete_jobs(self) -> None:
+        for record in self._store.list_records():
+            if record.status not in {"queued", "running"}:
+                continue
+            recovered = self._store.requeue_for_recovery(record.job_id) if record.status == "running" else record
+            if recovered is None:
+                continue
+            with self._lock:
+                self._dispatch_condition.notify_all()
+
     def cancel(self, job_id: str) -> JobRecord:
         with self._lock:
             future = self._futures.get(job_id)
             if future is not None and future.cancel():
                 self._futures.pop(job_id, None)
+            self._dispatch_condition.notify_all()
 
         cancelled = self._store.cancel_job(job_id)
         if cancelled is None:
@@ -126,7 +263,37 @@ class ServiceJobManager:
         return cancelled
 
     def shutdown(self) -> None:
+        self._stop_dispatch.set()
+        with self._lock:
+            self._dispatch_condition.notify_all()
+        self._dispatcher.join(timeout=5)
         self._executor.shutdown(wait=True)
+
+    def _dispatch_loop(self) -> None:
+        while not self._stop_dispatch.is_set():
+            job_id: str | None = None
+            with self._lock:
+                while not self._stop_dispatch.is_set():
+                    job_id = self._next_dispatchable_job_id()
+                    if job_id is not None:
+                        self._futures[job_id] = self._executor.submit(self._run_job, job_id)
+                        break
+                    self._dispatch_condition.wait(timeout=0.5)
+            if self._stop_dispatch.is_set():
+                return
+
+    def _next_dispatchable_job_id(self) -> str | None:
+        if len(self._futures) >= self._max_workers:
+            return None
+        queued_records = [
+            record
+            for record in self._store.list_records()
+            if record.status == "queued" and record.job_id not in self._futures
+        ]
+        if not queued_records:
+            return None
+        queued_records.sort(key=_service_job_priority)
+        return queued_records[0].job_id
 
     def _run_job(self, job_id: str) -> None:
         record = self._store.get(job_id)
@@ -170,6 +337,7 @@ class ServiceJobManager:
         if latest is not None and latest.status == "cancelled":
             with self._lock:
                 self._futures.pop(job_id, None)
+                self._dispatch_condition.notify_all()
             return
 
         self._store.mark_terminal(
@@ -182,6 +350,7 @@ class ServiceJobManager:
 
         with self._lock:
             self._futures.pop(job_id, None)
+            self._dispatch_condition.notify_all()
 
     def _execute_request(self, request: dict[str, Any]) -> JobExecutionResult:
         mode = str(request["mode"])
@@ -558,6 +727,7 @@ def _execute_prepare_track(
     )
 
     if phase03_result.status == "ok":
+        timing_breakdown = _phase03_timing_breakdown(phase03_result)
         return JobExecutionResult(
             status="success",
             result={
@@ -577,6 +747,11 @@ def _execute_prepare_track(
                 "recommended_next_step": "formalize_lemma_from_nl",
                 "routing_confidence": 0.95,
                 "artifact_index": artifact_index,
+                "timing_breakdown": timing_breakdown,
+                "artifact_check_status": "success",
+                "artifact_check_diagnostics": [],
+                "integration_check_status": "success",
+                "integration_check_diagnostics": [],
             },
         )
 
@@ -604,6 +779,11 @@ def _execute_prepare_track(
             "recommended_next_step": "decompose_current" if status == "fatal" else "retry_lean_only",
             "routing_confidence": 0.85 if status == "repairable" else 0.75,
             "artifact_index": artifact_index,
+            "timing_breakdown": _phase03_timing_breakdown(phase03_result),
+            "artifact_check_status": "failed",
+            "artifact_check_diagnostics": list(phase03_result.diagnostics),
+            "integration_check_status": "failed",
+            "integration_check_diagnostics": list(phase03_result.diagnostics),
         },
     )
 
@@ -630,6 +810,30 @@ def _execute_formalize_lemma(
     run_dir_value = payload.get("run_dir")
     if run_dir_value is None:
         run_dir_value = payload.get("track_run_dir")
+    shared_run_request = run_dir_value is not None
+
+    if shared_run_request and operation == "formalize_lemma":
+        message = (
+            "shared-run lemma proving is only allowed through `formalize_lemma_from_nl`; "
+            "direct `formalize_lemma` against an authoritative run_dir is disabled"
+        )
+        return JobExecutionResult(
+            status="fatal",
+            error_class="service_execution_error",
+            message=message,
+            result={
+                "mode": "formalize_lemma",
+                "operation": operation,
+                "compiler_ok": False,
+                "decl_name": None,
+                "lean_code": None,
+                "error_class": "service_execution_error",
+                "error_scope": "service",
+                "error_message": message,
+                "diagnostics": [],
+                "recommended_next_step": "prepare_track",
+            },
+        )
 
     if run_dir_value is not None:
         run_dir = _optional_path(run_dir_value)
@@ -721,6 +925,14 @@ def _execute_formalize_lemma(
         expected_problem_id=bundle.problem_id,
         expected_run_name=run_paths.run_name,
     )
+    pinned_decl_names = {sig.decl_name for sig in pinned_map.values()}
+    try:
+        pinned_payload = json.loads(pinned_signatures_path.read_text(encoding="utf-8"))
+    except Exception:
+        pinned_payload = {}
+    root_decl_name = str(pinned_payload.get("root", {}).get("decl_name", "")).strip()
+    if root_decl_name:
+        pinned_decl_names.add(root_decl_name)
 
     lemma = bundle.lemma_map.get(lemma_id)
     pinned = pinned_map.get(lemma_id)
@@ -748,6 +960,154 @@ def _execute_formalize_lemma(
     if proof_nl_override:
         lemma = replace(lemma, proof_nl=proof_nl_override)
 
+    mock_candidates = _resolve_single_lemma_mock_candidates(payload, lemma_id)
+
+    if shared_run_request and operation == "formalize_lemma_from_nl":
+        if proof_nl_override:
+            updated_lemmas = [lemma if item.lemma_id == lemma_id else item for item in bundle.lemmas]
+            updated_lemma_map = dict(bundle.lemma_map)
+            updated_lemma_map[lemma_id] = lemma
+            bundle = replace(bundle, lemmas=updated_lemmas, lemma_map=updated_lemma_map)
+
+        phase04_result = run_phase04(
+            run_paths=run_paths,
+            runtime_config=runtime_config,
+            bundle=bundle,
+            pinned_signatures_path=pinned_signatures_path,
+            max_attempts_per_lemma=_int_option(options, "max_attempts_per_lemma", 5),
+            timeout_seconds=_int_option(options, "timeout_seconds", 180),
+            lean_check_timeout_seconds=_int_option(options, "timeout_seconds", 180),
+            model=_optional_string(options.get("model")),
+            target_lemma_id=lemma_id,
+            mock_candidates={lemma_id: mock_candidates} if mock_candidates else None,
+            parallel_lemmas=False,
+            lemma_workers=1,
+        )
+        lemma_result = phase04_result.lemma_results[0] if phase04_result.lemma_results else None
+        if lemma_result is None:
+            message = phase04_result.message or "phase04 did not return a lemma result"
+            error_class = phase04_result.error_class or "service_execution_error"
+            return JobExecutionResult(
+                status="fatal",
+                error_class=error_class,
+                message=message,
+                result={
+                    "mode": "formalize_lemma",
+                    "operation": operation,
+                    "phase04": phase04_result.to_dict(),
+                    "run_dir": str(run_paths.run_root),
+                    "compiler_ok": False,
+                    "decl_name": None,
+                    "lean_code": None,
+                    "error_class": error_class,
+                    "error_scope": "proof",
+                    "error_message": message,
+                    "diagnostics": [],
+                    "recommended_next_step": (
+                        "decompose_current"
+                        if _is_deterministic_phase04_setup_error(error_class)
+                        else "retry_lean_only"
+                    ),
+                    "message": message,
+                },
+            )
+
+        decl_name = lemma_result.decl_name
+        lean_code = _read_optional_text(lemma_result.merged_authoritative_path or lemma_result.provisional_verified_path)
+        if lemma_result.status == "succeeded":
+            compile_checks = _formalize_compile_checks(
+                run_root=run_paths.run_root,
+                merged_authoritative_path=lemma_result.merged_authoritative_path,
+                timeout_seconds=_int_option(options, "timeout_seconds", 180),
+                lake_jobs=runtime_config.lean.lake_jobs,
+            )
+            artifact_check = compile_checks.get("artifact_check")
+            integration_check = compile_checks.get("integration_check")
+            artifact_ok = bool(getattr(artifact_check, "ok", False)) if artifact_check is not None else False
+            integration_ok = bool(getattr(integration_check, "ok", False))
+            if artifact_ok and integration_ok:
+                return JobExecutionResult(
+                    status="success",
+                    result={
+                        "mode": "formalize_lemma",
+                        "operation": operation,
+                        "lemma_handle": lemma_handle,
+                        "lemma": lemma_result.to_dict(),
+                        "phase04": phase04_result.to_dict(),
+                        "run_dir": str(run_paths.run_root),
+                        "decl_name": decl_name,
+                        "lean_code": lean_code,
+                        "compiler_ok": True,
+                        "error_class": None,
+                        "error_scope": None,
+                        "error_message": None,
+                        "diagnostics": list(lemma_result.diagnostics),
+                        "artifact_check_status": "success",
+                        "artifact_check_diagnostics": [],
+                        "integration_check_status": "success",
+                        "integration_check_diagnostics": [],
+                        "recommended_next_step": "accept",
+                        "routing_confidence": 0.95,
+                    },
+                )
+            diagnostics = (
+                _normalize_check_diagnostics(artifact_check)
+                if not artifact_ok
+                else _normalize_check_diagnostics(integration_check)
+            )
+            error_scope = "packaging" if not artifact_ok else "integration"
+            error_class = "packaging_failed" if not artifact_ok else "integration_failed"
+            return JobExecutionResult(
+                status="repairable",
+                error_class=error_class,
+                message=f"{error_scope} check failed after proof search succeeded",
+                result={
+                    "mode": "formalize_lemma",
+                    "operation": operation,
+                    "lemma_handle": lemma_handle,
+                    "lemma": lemma_result.to_dict(),
+                    "phase04": phase04_result.to_dict(),
+                    "run_dir": str(run_paths.run_root),
+                    "decl_name": decl_name,
+                    "lean_code": lean_code,
+                    "compiler_ok": False,
+                    "issue_kind": "lean_issue",
+                    "error_class": error_class,
+                    "error_scope": error_scope,
+                    "error_message": f"{error_scope} check failed after proof search succeeded",
+                    "diagnostics": diagnostics,
+                    "recommended_next_step": "retry_lean_only",
+                    "routing_confidence": 0.9,
+                },
+            )
+
+        error_class = lemma_result.error_class or phase04_result.error_class or "tactic_failure"
+        status = _formalize_failure_status(error_class)
+        message = lemma_result.message or phase04_result.message or f"formalize_lemma failed with `{error_class}`"
+        return JobExecutionResult(
+            status=status,
+            error_class=error_class,
+            message=message,
+            result={
+                "mode": "formalize_lemma",
+                "operation": operation,
+                "lemma_handle": lemma_handle,
+                "lemma": lemma_result.to_dict(),
+                "phase04": phase04_result.to_dict(),
+                "run_dir": str(run_paths.run_root),
+                "decl_name": decl_name,
+                "lean_code": lean_code,
+                "compiler_ok": False,
+                "error_class": error_class,
+                "error_scope": "proof",
+                "error_message": message,
+                "diagnostics": list(lemma_result.diagnostics),
+                "recommended_next_step": _formalize_failure_next_step(error_class, status=status),
+                "routing_confidence": 0.9 if status == "repairable" else 0.8,
+                "message": message,
+            },
+        )
+
     trusted_manifest_path = (
         _optional_path(payload.get("trusted_manifest")) or (run_paths.run_root / "trusted_context_manifest.json")
     )
@@ -756,28 +1116,98 @@ def _execute_formalize_lemma(
     if not trusted_manifest_path.exists():
         write_trusted_manifest(trusted_manifest_path, manifest_problem_id, trusted_entries)
 
-    mock_candidates = _resolve_single_lemma_mock_candidates(payload, lemma_id)
+    internal_packaging_retry_count = max(0, _int_option(options, "internal_packaging_retry_count", 1))
+    lemma_result = None
+    compile_checks: dict[str, Any] | None = None
+    packaging_retry_used = 0
+    for packaging_attempt in range(internal_packaging_retry_count + 1):
+        lemma_result = run_lemma_formalization(
+            run_paths=run_paths,
+            runtime_config=runtime_config,
+            lemma=lemma,
+            pinned=pinned,
+            trusted_entries=trusted_entries,
+            manifest_path=trusted_manifest_path,
+            manifest_problem_id=manifest_problem_id,
+            max_attempts=_int_option(options, "max_attempts_per_lemma", 5),
+            timeout_seconds=_int_option(options, "timeout_seconds", 180),
+            model=_optional_string(options.get("model")),
+            pinned_decl_names=pinned_decl_names,
+            mock_candidates=mock_candidates,
+        )
+        if lemma_result.status != "succeeded":
+            break
+        compile_checks = _formalize_compile_checks(
+            run_root=run_paths.run_root,
+            merged_authoritative_path=lemma_result.merged_authoritative_path,
+            timeout_seconds=_int_option(options, "timeout_seconds", 180),
+            lake_jobs=runtime_config.lean.lake_jobs,
+        )
+        if _compile_checks_ok(compile_checks):
+            packaging_retry_used = packaging_attempt
+            break
+        if packaging_attempt >= internal_packaging_retry_count:
+            packaging_retry_used = packaging_attempt
+            break
 
-    lemma_result = run_lemma_formalization(
-        run_paths=run_paths,
-        runtime_config=runtime_config,
-        lemma=lemma,
-        pinned=pinned,
-        trusted_entries=trusted_entries,
-        manifest_path=trusted_manifest_path,
-        manifest_problem_id=manifest_problem_id,
-        max_attempts=_int_option(options, "max_attempts_per_lemma", 5),
-        timeout_seconds=_int_option(options, "timeout_seconds", 180),
-        model=_optional_string(options.get("model")),
-        mock_candidates=mock_candidates,
-    )
-
+    assert lemma_result is not None
     decl_name = lemma_result.decl_name
-    lean_code = _read_optional_text(lemma_result.final_success_path)
+    lean_code = _read_optional_text(lemma_result.merged_authoritative_path or lemma_result.provisional_verified_path)
 
-    if lemma_result.status == "ok":
+    if lemma_result.status == "succeeded":
+        if compile_checks is None:
+            compile_checks = _formalize_compile_checks(
+                run_root=run_paths.run_root,
+                merged_authoritative_path=lemma_result.merged_authoritative_path,
+                timeout_seconds=_int_option(options, "timeout_seconds", 180),
+                lake_jobs=runtime_config.lean.lake_jobs,
+            )
+        artifact_check = compile_checks.get("artifact_check")
+        integration_check = compile_checks.get("integration_check")
+        artifact_ok = bool(getattr(artifact_check, "ok", False)) if artifact_check is not None else False
+        integration_ok = bool(getattr(integration_check, "ok", False))
+        timing_breakdown = {
+            "artifact_check_duration_seconds": getattr(artifact_check, "duration_seconds", None),
+            "integration_check_duration_seconds": getattr(integration_check, "duration_seconds", None),
+            "internal_packaging_retries_used": packaging_retry_used,
+        }
+        if artifact_ok and integration_ok:
+            return JobExecutionResult(
+                status="success",
+                result={
+                    "mode": "formalize_lemma",
+                    "operation": operation,
+                    "lemma_handle": lemma_handle,
+                    "lemma": lemma_result.to_dict(),
+                    "run_dir": str(run_paths.run_root),
+                    "decl_name": decl_name,
+                    "lean_code": lean_code,
+                    "compiler_ok": True,
+                    "error_class": None,
+                    "error_scope": None,
+                    "error_message": None,
+                    "diagnostics": list(lemma_result.diagnostics),
+                    "artifact_check_status": "success",
+                    "artifact_check_diagnostics": [],
+                    "integration_check_status": "success",
+                    "integration_check_diagnostics": [],
+                    "timing_breakdown": timing_breakdown,
+                    "recommended_next_step": "accept",
+                    "routing_confidence": 0.95,
+                },
+            )
+
+        error_scope = "packaging" if not artifact_ok else "integration"
+        error_class = "packaging_failed" if not artifact_ok else "integration_failed"
+        diagnostics = (
+            _normalize_check_diagnostics(artifact_check)
+            if not artifact_ok
+            else _normalize_check_diagnostics(integration_check)
+        )
         return JobExecutionResult(
-            status="success",
+            status="repairable",
+            error_class=error_class,
+            message=f"{error_scope} check failed after proof search succeeded",
             result={
                 "mode": "formalize_lemma",
                 "operation": operation,
@@ -786,22 +1216,26 @@ def _execute_formalize_lemma(
                 "run_dir": str(run_paths.run_root),
                 "decl_name": decl_name,
                 "lean_code": lean_code,
-                "compiler_ok": True,
-                "error_class": None,
-                "error_scope": None,
-                "error_message": None,
-                "diagnostics": list(lemma_result.diagnostics),
-                "recommended_next_step": "accept",
-                "routing_confidence": 0.95,
+                "compiler_ok": False,
+                "issue_kind": "lean_issue",
+                "error_class": error_class,
+                "error_scope": error_scope,
+                "error_message": f"{error_scope} check failed after proof search succeeded",
+                "diagnostics": diagnostics,
+                "artifact_check_status": "success" if artifact_ok else "failed",
+                "artifact_check_diagnostics": [] if artifact_ok else diagnostics,
+                "integration_check_status": "success" if integration_ok else "failed",
+                "integration_check_diagnostics": [] if integration_ok else diagnostics,
+                "timing_breakdown": timing_breakdown,
+                "recommended_next_step": "retry_lean_only",
+                "routing_confidence": 0.9,
             },
         )
 
     error_class = lemma_result.error_class or "tactic_failure"
-    status = "fatal" if error_class in FATAL_CLASSES else "repairable"
+    status = _formalize_failure_status(error_class)
     message = lemma_result.message or f"formalize_lemma failed with `{error_class}`"
-    recommended_next_step = "check_statement_plausibility" if error_class == "false_lemma_suspected" else (
-        "decompose_current" if status == "fatal" else "retry_lean_only"
-    )
+    recommended_next_step = _formalize_failure_next_step(error_class, status=status)
 
     return JobExecutionResult(
         status=status,
@@ -1003,21 +1437,49 @@ def _resolve_runtime_config(
     config_path = _optional_path(options.get("config")) or default_config_path
     model = _optional_string(options.get("model"))
     fallback_model = _optional_string(options.get("fallback_model"))
+    timeout_seconds = _normalized_timeout_option(options, "timeout_seconds")
+    activity_timeout_seconds = _normalized_timeout_option(options, "claude_activity_timeout_seconds")
+    stall_timeout_seconds = _normalized_timeout_option(options, "claude_stall_timeout_seconds")
+    tool_wait_timeout_seconds = _normalized_timeout_option(options, "claude_tool_wait_timeout_seconds")
+    init_timeout_seconds = _normalized_timeout_option(options, "claude_init_timeout_seconds")
     artifact_root = _optional_path(options.get("artifact_root"))
     mcp_command = _optional_string(options.get("mcp_command"))
+    no_lean4_refs = _bool_option(options, "no_lean4_refs", False)
     repo_paths = options.get("repo_paths")
     if repo_paths is not None and not isinstance(repo_paths, dict):
         raise ValueError("options.repo_paths must be an object when provided")
     repo_paths = repo_paths or {}
 
+    if activity_timeout_seconds is not None:
+        if stall_timeout_seconds is None:
+            stall_timeout_seconds = activity_timeout_seconds
+        if tool_wait_timeout_seconds is None:
+            tool_wait_timeout_seconds = activity_timeout_seconds
+
+    if timeout_seconds == 0:
+        if stall_timeout_seconds is None:
+            stall_timeout_seconds = 0
+        if tool_wait_timeout_seconds is None:
+            tool_wait_timeout_seconds = 0
+        if init_timeout_seconds is None:
+            init_timeout_seconds = 0
+
+    lean4_skills_root = _optional_path(repo_paths.get("lean4_skills")) if repo_paths else None
+    if no_lean4_refs:
+        lean4_skills_root = Path("/dev/null/no-lean4-refs")
+
     return load_runtime_config(
         config_path,
         model=model,
         fallback_model=fallback_model,
+        timeout_seconds=timeout_seconds,
+        stall_timeout_seconds=stall_timeout_seconds,
+        tool_wait_timeout_seconds=tool_wait_timeout_seconds,
+        init_timeout_seconds=init_timeout_seconds,
         artifact_root=artifact_root,
         mcp_command=mcp_command,
         repo_lean_lsp_mcp_root=_optional_path(repo_paths.get("lean_lsp_mcp")) if repo_paths else None,
-        lean4_skills_root=_optional_path(repo_paths.get("lean4_skills")) if repo_paths else None,
+        lean4_skills_root=lean4_skills_root,
     )
 
 
@@ -1043,6 +1505,15 @@ def _initialize_run_workspace(
     write_json(run_paths.runtime_config_path, runtime_config.to_dict())
     write_json(run_paths.workspace_snapshot_path, snapshot_workspace(run_paths.workspace_dir))
     write_json(run_paths.normalized_problem_path, bundle_dict)
+    write_json(
+        run_paths.run_root / "run_metadata.json",
+        {
+            "code_origin": current_code_origin(),
+            "canonical_code_root": str(runtime_config.phase04.canonical_code_root),
+            "worker_snapshot_mode": runtime_config.phase04.worker_snapshot_mode,
+            "merge_order": runtime_config.phase04.merge_order,
+        },
+    )
     return run_paths
 
 
@@ -1453,6 +1924,13 @@ def _optional_timeout_option(options: dict[str, Any], key: str) -> int | None:
     return value
 
 
+def _normalized_timeout_option(options: dict[str, Any], key: str) -> int | None:
+    value = _optional_timeout_option(options, key)
+    if value is None:
+        return None
+    return max(0, value)
+
+
 def _bool_option(options: dict[str, Any], key: str, default: bool) -> bool:
     value = options.get(key, default)
     if isinstance(value, bool):
@@ -1544,6 +2022,9 @@ def _build_artifact_index(run_root: Path | None, *, extra_paths: dict[str, Path]
     index: dict[str, Any] = {
         "run_root": str(resolved_root),
     }
+    run_root_gcs_prefix = _mirror_artifact_path_to_gcs(resolved_root, run_root=resolved_root)
+    if run_root_gcs_prefix:
+        index["run_root_gcs_prefix"] = run_root_gcs_prefix
     for key, relative in {
         "workspace": Path("workspace"),
         "summaries": Path("summaries"),
@@ -1555,6 +2036,10 @@ def _build_artifact_index(run_root: Path | None, *, extra_paths: dict[str, Path]
         candidate = resolved_root / relative
         if candidate.exists():
             index[key] = str(candidate)
+            gcs_pointer = _mirror_artifact_path_to_gcs(candidate, run_root=resolved_root)
+            if gcs_pointer:
+                suffix = "_gcs_prefix" if candidate.is_dir() else "_gcs_uri"
+                index[f"{key}{suffix}"] = gcs_pointer
 
     if extra_paths:
         for key, path in extra_paths.items():
@@ -1564,8 +2049,73 @@ def _build_artifact_index(run_root: Path | None, *, extra_paths: dict[str, Path]
                 continue
             if candidate.exists():
                 index[key] = str(candidate)
+                gcs_pointer = _mirror_artifact_path_to_gcs(candidate, run_root=resolved_root)
+                if gcs_pointer:
+                    suffix = "_gcs_prefix" if candidate.is_dir() else "_gcs_uri"
+                    index[f"{key}{suffix}"] = gcs_pointer
 
     return index
+
+
+def _artifact_gcs_config() -> tuple[Any, str, str] | None:
+    mode = os.getenv("LEAN_ENGINE_STORAGE_BACKEND", "filesystem").strip().lower()
+    bucket_name = os.getenv("GCS_BUCKET", "").strip()
+    prefix = os.getenv("LEAN_ENGINE_GCS_ARTIFACT_PREFIX", "").strip("/")
+    if mode != "gcs" or not bucket_name or not prefix:
+        return None
+    global _GCS_ARTIFACT_CLIENT
+    if _GCS_ARTIFACT_CLIENT is None:
+        try:
+            from google.cloud import storage
+        except ModuleNotFoundError:
+            return None
+        _GCS_ARTIFACT_CLIENT = storage.Client()
+    return _GCS_ARTIFACT_CLIENT, bucket_name, prefix
+
+
+def _artifact_relative_key(run_root: Path, target: Path) -> str:
+    run_root_resolved = run_root.expanduser().resolve()
+    target_resolved = target.expanduser().resolve()
+    run_prefix = f"{run_root_resolved.parent.name}/{run_root_resolved.name}".strip("/")
+    if target_resolved == run_root_resolved:
+        return run_prefix
+    try:
+        relative = target_resolved.relative_to(run_root_resolved).as_posix()
+    except ValueError:
+        relative = target_resolved.name
+    return f"{run_prefix}/{relative}".strip("/")
+
+
+def _mirror_artifact_path_to_gcs(target: Path, *, run_root: Path) -> str | None:
+    config = _artifact_gcs_config()
+    if config is None:
+        return None
+    client, bucket_name, prefix = config
+    bucket = client.bucket(bucket_name)
+    resolved_target = target.expanduser().resolve()
+    base_key = _artifact_relative_key(run_root, resolved_target)
+    try:
+        if resolved_target.is_file():
+            blob = bucket.blob(f"{prefix}/{base_key}")
+            blob.upload_from_filename(
+                str(resolved_target),
+                content_type=mimetypes.guess_type(str(resolved_target))[0] or "application/octet-stream",
+            )
+            return f"gs://{bucket_name}/{prefix}/{base_key}"
+        if resolved_target.is_dir():
+            for child in resolved_target.rglob("*"):
+                if not child.is_file():
+                    continue
+                child_key = _artifact_relative_key(run_root, child)
+                blob = bucket.blob(f"{prefix}/{child_key}")
+                blob.upload_from_filename(
+                    str(child),
+                    content_type=mimetypes.guess_type(str(child))[0] or "application/octet-stream",
+                )
+            return f"gs://{bucket_name}/{prefix}/{base_key}"
+    except Exception:
+        return None
+    return None
 
 
 def _ensure_result_metadata(

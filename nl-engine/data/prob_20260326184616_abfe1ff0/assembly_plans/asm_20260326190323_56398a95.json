@@ -1,0 +1,196 @@
+{
+  "assembly_plan_id": "asm_20260326190323_56398a95",
+  "created_at": "2026-03-26T19:07:50.521158Z",
+  "decomposition_id": "dec_20260326190323_a8d94ac9",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "proof_skeleton_nl": "Write U_n(s) for the counting function in the theorem and define E_n to be the count of the alternating pattern (+,-,+,-,...) on n letters. Proceed by strong induction on n. The base case n = 2 is immediate. For the inductive step, fix n >= 3 and a sign sequence s. Place the largest value n in a permutation counted by U_n(s). It can only appear at a peak position j of s, and once j is fixed, the values on the left and right of n can be chosen independently after standardization; this gives the recurrence of L2. By the induction hypothesis, each smaller factor is bounded by the corresponding alternating count E_m, so U_n(s) is bounded by a weighted sum over Peak(s), with weights w_j = binom(n-1,j-1) E_{j-1} E_{n-j}. By L1, Peak(s) is a nonadjacent subset of {1,...,n}. The bottleneck lemma L5 says that among all such nonadjacent subsets, the largest possible weight is one of the two full parity-class sums. Lemma L4 identifies each of those parity sums with E_n, so U_n(s) <= E_n for all s. The alternating pattern (+,-,+,-,...) has count E_n by definition, and the opposite alternating pattern (-,+,-,+,...) has the same count by the sign-flip symmetry L3; hence both alternating patterns are maximizers. Finally, if s is any maximizer, then every inequality in the chain must be an equality. The equality case of L5 forces Peak(s) to be exactly the odd positions or exactly the even positions, and L1 translates those two possibilities back into the two alternating sign sequences. Thus the maximizers are exactly the alternating sign sequences.",
+  "root_node_id": "thm_root_20260326184616_b94d02f6",
+  "steps": [
+    {
+      "derives": "Base case: the theorem holds for n = 2, since the only two sign sequences are (+1) and (-1), both are alternating, and both have maximal count 1.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the content of L6.",
+      "uses_lemmas": [
+        "lem_20260326190508_d45da648"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Set up the strong inductive step. Fix an arbitrary integer n >= 3 and assume as induction hypothesis that for every integer m with 2 <= m < n and every sign sequence u of length m-1, the count U_m(u) is at most E_m, with equality exactly when u is alternating. Also record the boundary conventions U_0(empty) = E_0 = 1 and U_1(empty) = E_1 = 1.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "This is the standard strong-induction setup for the statement, together with the size-0 and size-1 conventions needed for boundary terms in the recurrence.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let s be any sign sequence of length n-1. Define P = Peak(s). For each j in P, let p_j = s^{<j} and q_j = s^{>j}. Then U_n(s) = sum over j in P of binom(n-1, j-1) * U_{j-1}(p_j) * U_{n-j}(q_j).",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is a direct application of L2 to the size n pattern s.",
+      "uses_lemmas": [
+        "lem_20260326190353_f4ff61a3"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "For each j in P, the sizes j-1 and n-j are both less than n. If one of these sizes is at least 2, apply the induction hypothesis from A2 to the corresponding subpattern; if it is 0 or 1, use the direct equalities U_0(empty) = E_0 = 1 and U_1(empty) = E_1 = 1. Therefore, for every j in P, U_{j-1}(p_j) <= E_{j-1} and U_{n-j}(q_j) <= E_{n-j}. Hence each summand in A3 is at most w_j := binom(n-1, j-1) * E_{j-1} * E_{n-j}.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "This is the essential inductive comparison of each recurrence term with the corresponding Euler weight.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "Summing the termwise inequalities from A4 over all j in P gives U_n(s) <= sum over j in P of w_j.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "Apply monotonicity of finite sums to the common index set P.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "The set P = Peak(s) contains no two consecutive integers.",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "This is the first conclusion of L1.",
+      "uses_lemmas": [
+        "lem_20260326190323_6fff1b77"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Define S_odd = sum over odd j in {1,...,n} of w_j and S_even = sum over even j in {1,...,n} of w_j. Since P has no consecutive integers, L5 gives sum over j in P of w_j <= max(S_odd, S_even).",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "A direct application of L5 with the nonadjacent set P and the weights w_j constructed in A4.",
+      "uses_lemmas": [
+        "lem_20260326190446_0b854d87"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A6"
+      ]
+    },
+    {
+      "derives": "For the same weights w_j from A4, L4 yields S_odd = E_n and S_even = E_n.",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "This is exactly the parity-sum identity from L4.",
+      "uses_lemmas": [
+        "lem_20260326190432_1aed23ca"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "Combining A5, A7, and A8 gives U_n(s) <= E_n for every sign sequence s of length n-1.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "Chain the inequalities U_n(s) <= sum_{j in P} w_j <= max(S_odd,S_even) = E_n.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5",
+        "A7",
+        "A8"
+      ]
+    },
+    {
+      "derives": "The alternating sign sequence alt_n^+ has count E_n by definition of E_n. The opposite alternating sign sequence alt_n^- equals -alt_n^+, so by L3 it also has count E_n.",
+      "is_trivial": true,
+      "step_id": "A10",
+      "trivial_justification": "Use the definition of E_n for alt_n^+ and then apply the sign-flip symmetry from L3.",
+      "uses_lemmas": [
+        "lem_20260326190416_2b9e7f17"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For this fixed n >= 3, both alternating sign sequences are maximizers of the map s -> U_n(s), because A9 gives the universal upper bound E_n and A10 shows that both alternating patterns attain that bound.",
+      "is_trivial": false,
+      "step_id": "A11",
+      "trivial_justification": "A global upper bound together with explicit attainment identifies maximizers.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A9",
+        "A10"
+      ]
+    },
+    {
+      "derives": "Now let s be any maximizer for this fixed n, and keep P = Peak(s). By A9 and A10, every maximizer has value E_n. Therefore E_n = U_n(s) <= sum over j in P of w_j <= max(S_odd, S_even) = E_n, so in fact sum over j in P of w_j = E_n = max(S_odd, S_even).",
+      "is_trivial": false,
+      "step_id": "A12",
+      "trivial_justification": "This is the equality chain obtained by combining the recurrence bound with the already identified maximal value E_n.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5",
+        "A7",
+        "A8",
+        "A9",
+        "A10"
+      ]
+    },
+    {
+      "derives": "Since P has no consecutive integers by A6 and the parity sums are equal by A8, the equality case in L5 implies that P is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+      "is_trivial": true,
+      "step_id": "A13",
+      "trivial_justification": "All hypotheses of the equality clause in L5 are now verified.",
+      "uses_lemmas": [
+        "lem_20260326190446_0b854d87"
+      ],
+      "uses_prior_steps": [
+        "A6",
+        "A8",
+        "A12"
+      ]
+    },
+    {
+      "derives": "By the converse characterization in L1, if P is the odd set then s_i = (-1)^i for all i, and if P is the even set then s_i = (-1)^(i-1) for all i. Hence every maximizer s is alternating.",
+      "is_trivial": true,
+      "step_id": "A14",
+      "trivial_justification": "Apply the second half of L1 to the two possible parity peak sets obtained in A13.",
+      "uses_lemmas": [
+        "lem_20260326190323_6fff1b77"
+      ],
+      "uses_prior_steps": [
+        "A13"
+      ]
+    },
+    {
+      "derives": "For this fixed n >= 3, a sign sequence s maximizes U_n if and only if s is alternating; equivalently, s_i = (-1)^(i-1) for all i or s_i = (-1)^i for all i.",
+      "is_trivial": false,
+      "step_id": "A15",
+      "trivial_justification": "A11 gives the existence and maximality of alternating patterns, while A14 gives the converse uniqueness statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A11",
+        "A14"
+      ]
+    },
+    {
+      "derives": "Step A1 proves the theorem for n = 2. Steps A2-A15 establish the strong inductive step from all smaller sizes to an arbitrary n >= 3. Therefore, for every integer n >= 2, if f(s) denotes the number of permutations (a_1,...,a_n) of {1,...,n} such that s_i * (a_{i+1} - a_i) > 0 for all i, then the sequences s for which f(s) is maximal are exactly the alternating sign sequences, equivalently those satisfying s_i * s_{i+1} = -1 for every 1 <= i <= n-2.",
+      "is_trivial": false,
+      "step_id": "A16",
+      "trivial_justification": "This is the final strong-induction conclusion, together with the identification f(s) = U_n(s).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A15"
+      ]
+    }
+  ]
+}

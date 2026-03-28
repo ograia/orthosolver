@@ -1,0 +1,200 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/lemmas/lem_20260327172422_2c8f5439/solver_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-27T17:26:09.998120Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T17:26:15.007660Z",
+  "controller_consumed_by_execution_id": "exec_20260327165556_006dee7c",
+  "created_at": "2026-03-27T17:26:00.312653Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+        "item_id": "pnode_20260327172528_d7e38fae",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 2,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327172524_4a4d7746",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260327172422_2c8f5439",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327172600_6ad821ad",
+    "role_in_assembly": "Compare the value at an arbitrary fractional input with the left endpoint of its 1/n-interval.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n > 1",
+        "t is a real number with 0 <= t and t < 1",
+        "a is defined as floor(n times t), hence a is an integer and satisfies a <= n times t and n times t < a + 1",
+        "t is within the intended input domain of E_n",
+        "a divided by n is within the intended input domain of E_n"
+      ],
+      "normalized_claim": "For all integers n with n > 1 and for all real numbers t with 0 <= t < 1, letting a be floor of n times t, it holds that E_n(t) <= E_n(a divided by n).",
+      "quantifier_order": [
+        "for all n: integer with n greater than 1",
+        "for all t: real with 0 less than or equal to t and t less than 1",
+        "define a as floor of n times t"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "outer universal parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "t",
+          "role": "inner universal parameter",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "a",
+          "role": "auxiliary value defined by floor of n times t",
+          "type": "integer"
+        },
+        {
+          "domain": "unspecified (at least defined on inputs t and a divided by n)",
+          "name": "E_n",
+          "role": "real-valued (or orderable) quantity indexed by n",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "a depends on both n and t via a = floor(n times t)",
+        "the argument a divided by n depends on n and t through a"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer n>1 and every real number t with 0 <= t < 1, if a = floor(n*t), then E_n(t) <= E_n(a/n).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": "No previous feedback was provided; this revision gives a direct proof from the definition of a=floor(nt) and monotonicity of the floor function.",
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "conclusion": "Summing termwise inequalities gives E_n(t)<=E_n(a/n).",
+      "key_observations": [
+        "a<=nt<a+1 implies a/n<=t and 0<=a<=n-1",
+        "floor is monotone, so floor(ka/n)<=floor(kt) for each k",
+        "floor(n(a/n))=floor(a)=a=floor(nt)"
+      ],
+      "lemma_statement_used": "For every integer n>1 and every real t with 0<=t<1, if a=floor(n*t), then E_n(t) <= E_n(a/n)."
+    },
+    "lemma_id": "lem_20260327172422_2c8f5439",
+    "proof_nl": "Let n>1 and let t be any real number with 0<=t<1. Set a=floor(n t). Then a<=n t<a+1, so 0<=a<=n-1. In particular, a/n is a real number in [0,1), and floor(n(a/n))=floor(a)=a.\n\nAlso, from a<=n t we get a/n<=t. Since the floor function is monotone nondecreasing on R, for each integer k with 1<=k<=n we have\nfloor(k a/n) <= floor(k t).\nDividing by the positive integer k preserves the inequality, so\nfloor(k a/n)/k <= floor(k t)/k.\nSumming over k=1,2,...,n gives\nsum_{k=1}^n floor(k a/n)/k <= sum_{k=1}^n floor(k t)/k.\n\nNow compute E_n at the two points. Because floor(n t)=a and floor(n(a/n))=a,\nE_n(t) = a - sum_{k=1}^n floor(k t)/k,\nE_n(a/n) = a - sum_{k=1}^n floor(k a/n)/k.\nUsing the summed inequality above, we obtain\nE_n(t) <= E_n(a/n).\nThis is exactly the claimed inequality.",
+    "proof_summary": "Since a=floor(nt), we have a/n<=t. By monotonicity of floor, floor(ka/n)<=floor(kt) for every k=1,...,n. Summing and using floor(nt)=floor(n(a/n))=a yields E_n(t)<=E_n(a/n).",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Monotonicity of the floor function on real inputs"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T17:26:00.790536Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327172422_2c8f5439",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T17:26:15.007667Z",
+  "worker_job_id": "wrk_lem_20260327172422_2c8f5439_g0_solve_2",
+  "worker_kind": "lemma_solver"
+}

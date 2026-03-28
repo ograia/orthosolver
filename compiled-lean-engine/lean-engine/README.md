@@ -1,8 +1,8 @@
 # lean-engine
 
-**Version 1.01**
+Lean runtime and HTTP service for Orthosolver.
 
-Phase-based Lean engine pipeline for normalized NL proof artifacts.
+The engine still supports the phase-based full pipeline, and it now also serves the unified Lean v2 operations used continuously by the NL orchestrator.
 
 ## Phase 01
 
@@ -175,6 +175,7 @@ Notes:
 - Any timeout flag set to `0` or a negative value disables that timeout.
 - `--lemma-id` targets one lemma.
 - `--lemma-only` stops after semantic lemma acceptance/rejection (Phase 05), which matches the lemma statement+proof core loop.
+- The runtime uses only the repo-local workspace cache under `.artifacts/lean_engine/_lake_cache`.
 
 Runbook:
 
@@ -182,20 +183,23 @@ Runbook:
 
 ## Phase 08
 
-Optional local HTTP service wrapper with async job polling:
+Local or deployed HTTP service wrapper with async job polling and v2 operation endpoints:
 
 - `POST /v1/jobs` and `POST /v2/jobs`
 - `GET /v1/jobs/{job_id}` and `GET /v2/jobs/{job_id}`
 - `POST /v1/jobs/{job_id}/cancel` and `POST /v2/jobs/{job_id}/cancel`
 - `DELETE /v1/jobs/{job_id}` and `DELETE /v2/jobs/{job_id}`
 - `GET /v1/health` and `GET /v2/health`
-- SQLite-backed idempotent job tracking (`job_id`)
+- JSON object-backed idempotent job tracking (`job_id`)
 - background execution that reuses the same Phase 01-07 modules
 
 Run locally:
 
 ```bash
-PYTHONPATH=src python -m lean_engine.cli service --host 127.0.0.1 --port 8081
+PYTHONPATH=src python -m lean_engine.cli service \
+  --host 127.0.0.1 \
+  --port 8081 \
+  --store-root .artifacts/lean_engine/service/state
 ```
 
 Submit a full-pipeline job:
@@ -213,3 +217,30 @@ curl -sS -X POST http://127.0.0.1:8081/v1/jobs \
     }
   }'
 ```
+
+Submit a v2 operation:
+
+```bash
+curl -sS -X POST http://127.0.0.1:8081/v2/operations/prepare_track \
+  -H 'Content-Type: application/json' \
+  -H 'X-Idempotency-Key: op_prepare_demo' \
+  -d '{
+    "operation_id": "op_prepare_demo",
+    "problem_id": "prob_demo",
+    "target_id": "root",
+    "target_kind": "decomposition",
+    "payload": {
+      "statement_nl": "For all n, n = n",
+      "decomposition": {
+        "lemmas": []
+      }
+    }
+  }'
+```
+
+Shared-storage env vars:
+
+- `LEAN_ENGINE_STORAGE_BACKEND=filesystem|gcs`
+- `GCS_BUCKET`
+- `LEAN_ENGINE_GCS_STATE_PREFIX`
+- `LEAN_ENGINE_GCS_ARTIFACT_PREFIX`

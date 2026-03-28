@@ -1,0 +1,85 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327183832_bbc90024",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T18:37:01.711361Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T18:48:30.947689Z",
+  "last_dependency_check_id": "depchk_20260327184830_0024ca4e",
+  "last_submitted_lean_job_id": "lean_job_lem_20260327183656_888cd722_formalize_lemma_from_nl_1",
+  "last_submitted_lean_proof_fingerprint": "acf1440743343a6d010bb9782de2be0eb7a48303ca1c9aafc434bfd288f788a3",
+  "last_terminal_worker_result": "agent4:proved",
+  "last_transition_reason": "vetter attempt 2 submitted",
+  "latest_lean_issue_class": "checker_mismatch",
+  "latest_lean_issue_kind": "lean_issue",
+  "latest_lean_result_id": "lean_res_20260327184705_5829dffd",
+  "latest_nl_proof": "Let m = floor(nr). Since n > 1, in particular n is positive. From 0 <= r, multiplying by the positive \u09b8\u0982\u0996\u09cd\u09af\u09be n gives 0 <= nr. Because m = floor(nr) is the greatest integer less than or equal to nr, and 0 is an integer with 0 <= nr, it follows that m >= 0.\n\nAlso, since r < 1 and n > 0, multiplying by n gives nr < n. Again by the floor property, m <= nr, so m < n.\n\nTherefore 0 <= m < n, as required.",
+  "latest_vetted_proof_fingerprint": "acf1440743343a6d010bb9782de2be0eb7a48303ca1c9aafc434bfd288f788a3",
+  "latest_vetter_report_id": "rep_20260327184106_e19e49e7",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327183656_888cd722",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_vetter",
+  "parent_id": "lem_20260327182037_d1cd11e0",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "proof_bundle_artifact_id": "problems/prob_20260327181454_d8c7a304/proof_bundles/lemmas/lem_20260327183656_888cd722.json",
+  "proof_graph_id": "pgraph_20260327182156_a69b2121",
+  "proof_status": "proof_found",
+  "role_in_parent": "Ensures the cell index m is in the range covered by the cellwise property of f_n.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 2,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Under the hypotheses n > 1, 0 <= r < 1, and m = floor(n*r), the integer m satisfies 0 <= m < n.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n > 1",
+      "0 <= r < 1",
+      "m is defined as floor of n*r (so m is an integer and equals the greatest integer less than or equal to n*r)"
+    ],
+    "normalized_claim": "For all integers n and all real numbers r with n > 1 and 0 <= r < 1, if m is defined by m = floor(n*r), then 0 <= m and m < n.",
+    "quantifier_order": [
+      "for all n",
+      "for all r"
+    ],
+    "variables": [
+      {
+        "domain": "integers (implicitly positive, at least n > 1)",
+        "name": "n",
+        "role": "scaling parameter in n*r; input to the floor expression via n*r",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "r",
+        "role": "scaling factor constrained by 0 <= r < 1",
+        "type": "real"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "defined as floor(n*r); the quantity to be bounded",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "m depends on n and r through the definition m = floor(n*r)"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T18:48:30.947689Z"
+}

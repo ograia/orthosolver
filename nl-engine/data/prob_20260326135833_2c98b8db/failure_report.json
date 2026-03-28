@@ -1,0 +1,99 @@
+{
+  "all_decomposition_attempts": [
+    {
+      "decomposition_id": "dec_20260326141037_19897b03",
+      "failed_lemma_id": null,
+      "failure_mode": "failed",
+      "last_error_class": "interrupted",
+      "retry_count": 0
+    }
+  ],
+  "created_at": "2026-03-26T14:21:54.745849Z",
+  "failure_reason": "unknown",
+  "failure_report_id": "fail_20260326142154_e15e3961",
+  "partial_tree": {
+    "root": {
+      "children": [],
+      "id": "thm_root_20260326135833_6934938a",
+      "kind": "theorem",
+      "status": "failed"
+    }
+  },
+  "problem_id": "prob_20260326135833_2c98b8db",
+  "routing_log_summary": [
+    {
+      "event_id": 1,
+      "new_status": "created",
+      "old_status": null,
+      "reason": null,
+      "stage": "problem.created"
+    },
+    {
+      "event_id": 2,
+      "new_status": "queued",
+      "old_status": null,
+      "reason": "trigger=manual; generation=0",
+      "stage": "execution.created"
+    },
+    {
+      "event_id": 3,
+      "new_status": "running",
+      "old_status": "created",
+      "reason": "controller start",
+      "stage": "problem.start"
+    },
+    {
+      "event_id": 4,
+      "new_status": "queued",
+      "old_status": null,
+      "reason": "queued durable semantic sketch worker",
+      "stage": "problem.semantic_sketch_submitted"
+    },
+    {
+      "event_id": 5,
+      "new_status": "ready",
+      "old_status": null,
+      "reason": "durable semantic sketch worker completed",
+      "stage": "problem.semantic_sketch_ready"
+    },
+    {
+      "event_id": 6,
+      "new_status": "queued",
+      "old_status": null,
+      "reason": "request_count=1",
+      "stage": "decomposition.parallel_generation_enqueued"
+    },
+    {
+      "event_id": 7,
+      "new_status": "rejected_fatal",
+      "old_status": null,
+      "reason": "The decomposition is coherent and, assuming the lemmas, the induction skeleton proves the theorem exactly. All lemmas are plausible on direct inspection and small-case testing; L5 is the genuine hard bottleneck, but it is not a disguised restatement of the root theorem.",
+      "stage": "decomposition.generated"
+    },
+    {
+      "event_id": 8,
+      "new_status": "queued",
+      "old_status": null,
+      "reason": "request_count=1",
+      "stage": "decomposition.parallel_generation_enqueued"
+    },
+    {
+      "event_id": 9,
+      "new_status": "paused",
+      "old_status": "running",
+      "reason": "api pause requested",
+      "stage": "problem.paused"
+    },
+    {
+      "event_id": 10,
+      "new_status": "cancel_requested",
+      "old_status": "running",
+      "reason": "api pause requested",
+      "stage": "execution.pause_requested"
+    }
+  ],
+  "terminal_error_class": "interrupted",
+  "terminal_error_message": "OpenAI request failed for agent2: TimeoutError: Background response resp_0db36aa279ad09590069c53f385bdc81a2a02d534303d71a7c for agent2 cancelled: problem prob_20260326135833_2c98b8db stop requested",
+  "terminal_lemma_id": null,
+  "trusted_context_at_failure": []
+}

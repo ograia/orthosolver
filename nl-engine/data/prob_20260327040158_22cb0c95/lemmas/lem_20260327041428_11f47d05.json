@@ -1,0 +1,136 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327041832_0bab90b0",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T04:14:41.104359Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.47,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T06:48:27.665762Z",
+  "last_dependency_check_id": "depchk_20260327042140_5f21c64c",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "We prove a stronger statement by induction on r. For each positive integer r, let P(r) be: for every positive integer n there exists a vector w_{n,r}=(w_1,...,w_n) of positive integers with w_1>w_2>...>w_n such that for every real vector x=(x_1,...,x_n), Total(T_{Alt_r^+}(x)) = sum_{i=1}^n w_i x_i and Total(T_{Alt_r^-}(x)) = sum_{i=1}^n w_{n+1-i} x_i. The lemma is exactly P(r) with n=m.\n\nBase case r=1. Here Alt_1^+=(+1) and Alt_1^-=(-1), so T_{Alt_1^+}(x)=U(x) and T_{Alt_1^-}(x)=D(x). If x has length n, then by the definitions of U and D, Total(U(x)) = sum_{j=1}^{n+1} sum_{i=1}^{j-1} x_i = sum_{i=1}^n (n+1-i)x_i, because x_i appears in U(x)_j exactly when j>i, namely for n+1-i values of j. Likewise, Total(D(x)) = sum_{j=1}^{n+1} sum_{i=j}^{n} x_i = sum_{i=1}^n i x_i, because x_i appears in D(x)_j exactly when j<=i, namely for i values of j. Therefore P(1) holds with w_{n,1}=(n,n-1,...,1), which is a strictly decreasing vector of positive integers.\n\nInductive step. Assume P(r) holds for some r>=1. Fix a positive integer n. Apply P(r) with length n+1, and denote the resulting vector by v=(v_1,...,v_{n+1})=w_{n+1,r}. Then v_1>v_2>...>v_{n+1}>0, and for every real vector z of length n+1, Total(T_{Alt_r^+}(z)) = sum_{j=1}^{n+1} v_j z_j and Total(T_{Alt_r^-}(z)) = sum_{j=1}^{n+1} v_{n+2-j} z_j.\n\nDefine a length n vector w=(w_1,...,w_n) by w_i = sum_{k=1}^{n+1-i} v_k for 1<=i<=n. Since each v_k is a positive integer, each w_i is a positive integer. Also, for 1<=i<n, w_i-w_{i+1} = v_{n+1-i}>0, so w_1>w_2>...>w_n.\n\nNow let x be any real vector of length n. Deleting the first sign from Alt_{r+1}^+ leaves Alt_r^-, so by the recursive definition of T_t, T_{Alt_{r+1}^+}(x)=T_{Alt_r^-}(U(x)). Hence Total(T_{Alt_{r+1}^+}(x)) = sum_{j=1}^{n+1} v_{n+2-j} U(x)_j = sum_{j=1}^{n+1} v_{n+2-j} sum_{i=1}^{j-1} x_i = sum_{i=1}^n (sum_{j=i+1}^{n+1} v_{n+2-j}) x_i = sum_{i=1}^n w_i x_i, because sum_{j=i+1}^{n+1} v_{n+2-j} = sum_{k=1}^{n+1-i} v_k = w_i.\n\nSimilarly, deleting the first sign from Alt_{r+1}^- leaves Alt_r^+, so T_{Alt_{r+1}^-}(x)=T_{Alt_r^+}(D(x)). Therefore Total(T_{Alt_{r+1}^-}(x)) = sum_{j=1}^{n+1} v_j D(x)_j = sum_{j=1}^{n+1} v_j sum_{i=j}^{n} x_i = sum_{i=1}^{n} (sum_{j=1}^{i} v_j) x_i. But by the definition of w, w_{n+1-i} = sum_{k=1}^{i} v_k. Thus Total(T_{Alt_{r+1}^-}(x)) = sum_{i=1}^{n} w_{n+1-i} x_i.\n\nSo P(r+1) holds. By induction, P(r) is true for every positive integer r. Taking n=m gives the required vector w_{m,r}, and the lemma follows.",
+  "latest_vetted_proof_fingerprint": "7fc3ba28f5192f1b315b7eb4387fc7ee41b7b3838350fa241bd274c1c284e992",
+  "latest_vetter_report_id": "rep_20260327042140_b8b26566",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327041428_11f47d05",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "thm_root_20260327040158_5065188f",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "proof_bundle_artifact_id": "problems/prob_20260327040158_22cb0c95/proof_bundles/lemmas/lem_20260327041428_11f47d05.json",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "This is a support lemma for L5; it converts alternating continuations into explicit dot products so that rearrangement can be applied.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Fix positive integers m and r. For a vector x of length m and a sign string t=(t_1,...,t_r) with each t_q in {+1,-1}, define x^(0)=x and for q=1,...,r define x^(q) by x^(q)=U(x^(q-1)) when t_q=+1 and x^(q)=D(x^(q-1)) when t_q=-1, where for any vector y=(y_1,...,y_ell), the vectors U(y) and D(y) of length ell+1 are given by U(y)_j = sum_{i=1}^{j-1} y_i and D(y)_j = sum_{i=j}^{ell} y_i for 1 <= j <= ell+1, with empty sums equal to 0. Write T_t(x)=x^(r). Let Alt_r^+=(+1,-1,+1,-1,...) and Alt_r^-=(-1,+1,-1,+1,...) be the two alternating sign strings of length r. Then there exists a vector w_{m,r}=(w_1,...,w_m) of positive integers with w_1 > w_2 > ... > w_m such that for every real vector x=(x_1,...,x_m), Total(T_{Alt_r^+}(x)) = sum_{i=1}^m w_i x_i and Total(T_{Alt_r^-}(x)) = sum_{i=1}^m w_{m+1-i} x_i, where Total(y) denotes the sum of the entries of y.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "m and r are positive integers.",
+      "The input vector x has exactly m entries.",
+      "Each sign t_q is either plus one or minus one.",
+      "For a generic vector y of length ell, U(y) and D(y) have length ell plus 1.",
+      "Empty sums are interpreted as 0.",
+      "The coefficients w_1 through w_m are positive integers.",
+      "The coefficients satisfy strict decrease: w_1 greater than w_2 greater than ... greater than w_m.",
+      "The final identities are required for every real vector x of length m."
+    ],
+    "normalized_claim": "For each positive integers m and r, there exists a strictly decreasing sequence of positive integers w_1 through w_m, depending only on m and r, such that for every real vector x of length m, the total sum of the entries after applying the alternating plus-first sign pattern r times equals the linear form with coefficients w_1 through w_m, and the total sum after applying the alternating minus-first sign pattern r times equals the linear form with the same coefficients in reversed order.",
+    "quantifier_order": [
+      "Fix positive integers m and r.",
+      "For every sign string t of length r with entries plus one or minus one, the recursive map T_t is defined on vectors of length m.",
+      "There exists a vector w_{m,r} of length m with positive integer entries such that w_1 is greater than w_2 and so on down to w_m.",
+      "For every real vector x of length m, the two stated identities hold for the alternating sign strings of length r."
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "fixed parameter controlling vector length",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter controlling the number of sign steps",
+        "type": "integer"
+      },
+      {
+        "domain": "real vectors of length m",
+        "name": "x",
+        "role": "input vector for the transformation and the linear identities",
+        "type": "vector of real numbers"
+      },
+      {
+        "domain": "strings of length r with entries plus one or minus one",
+        "name": "t",
+        "role": "controls whether each step applies U or D",
+        "type": "sign string"
+      },
+      {
+        "domain": "1 through r",
+        "name": "q",
+        "role": "step index in the recursive definition",
+        "type": "integer index"
+      },
+      {
+        "domain": "vectors of length ell",
+        "name": "y",
+        "role": "generic input to U and D",
+        "type": "vector"
+      },
+      {
+        "domain": "positive integers",
+        "name": "ell",
+        "role": "length of the generic vector y",
+        "type": "integer"
+      },
+      {
+        "domain": "indices in the coordinate sums",
+        "name": "i",
+        "role": "summation index in the formulas for U, D, and the final linear forms",
+        "type": "integer index"
+      },
+      {
+        "domain": "1 through ell plus 1",
+        "name": "j",
+        "role": "coordinate index in U(y) and D(y)",
+        "type": "integer index"
+      },
+      {
+        "domain": "positive integers of length m",
+        "name": "w",
+        "role": "coefficient vector whose existence is asserted",
+        "type": "vector of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "The witness vector w_{m,r} may depend on m and r.",
+      "The witness does not depend on the particular choice of x.",
+      "The same witness vector must work simultaneously for both alternating sign strings Alt_r^+ and Alt_r^-."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T06:48:27.665762Z"
+}

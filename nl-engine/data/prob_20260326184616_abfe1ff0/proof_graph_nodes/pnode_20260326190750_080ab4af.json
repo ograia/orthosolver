@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-03-26T19:07:50.684738Z",
+  "graph_node_id": "pnode_20260326190750_080ab4af",
+  "metadata": {
+    "parent_id": "thm_root_20260326184616_b94d02f6"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "aee154c33632278d1777cd0dab5b38879b90d50f52315b6dfefc0c37ee3d068f",
+  "owner_id": "lem_20260326190432_1aed23ca",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "r is an integer with r at least 1",
+      "b_1 through b_r form a permutation of {1,...,r}",
+      "i ranges over integers from 1 to r minus 1",
+      "The condition on the permutation is alternating: when i is odd, b_{i+1} is greater than b_i, and when i is even, b_{i+1} is less than b_i",
+      "E_0 is assigned the value 1 by convention",
+      "n is an integer with n at least 2",
+      "j ranges over integers from 1 to n",
+      "The binomial coefficient is taken with parameters n minus 1 and j minus 1, so both are integers in the usual combinatorial range"
+    ],
+    "normalized_claim": "Define E_r for each positive integer r as the number of permutations of {1,...,r} whose entries alternate up and down, starting with an increase at the first step, and set E_0 to 1. For each integer n at least 2, define w_j as the binomial coefficient n minus 1 choose j minus 1 times E_{j-1} times E_{n-j}. Then, for that n, the sum of w_j over odd j from 1 to n equals E_n, and the sum of w_j over even j from 1 to n also equals E_n.",
+    "quantifier_order": [
+      "For each integer r at least 1, define E_r by counting permutations b_1 through b_r of {1,...,r} satisfying the alternating sign inequalities, and also set E_0 equal to 1.",
+      "For the fixed integer n at least 2, define w_j for each j from 1 to n.",
+      "For that same fixed n, the sum of w_j over odd j equals E_n.",
+      "For that same fixed n, the sum of w_j over even j equals E_n."
+    ],
+    "variables": [
+      {
+        "domain": "integers at least 1",
+        "name": "r",
+        "role": "index for the definition of E_r",
+        "type": "integer"
+      },
+      {
+        "domain": "a permutation of the set {1,...,r}",
+        "name": "b_1 through b_r",
+        "role": "one-line representation of a permutation counted by E_r",
+        "type": "sequence of integers"
+      },
+      {
+        "domain": "integers from 1 to r minus 1",
+        "name": "i",
+        "role": "index for the alternating inequality condition",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers, with E_0 fixed separately as 1",
+        "name": "E_r",
+        "role": "count of permutations satisfying the alternating sign condition",
+        "type": "integer"
+      },
+      {
+        "domain": "integers at least 2",
+        "name": "n",
+        "role": "fixed parameter in the main identity",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 1 to n",
+        "name": "j",
+        "role": "index for the quantities w_j and the parity split in the sums",
+        "type": "integer"
+      },
+      {
+        "domain": "defined for each j between 1 and n",
+        "name": "w_j",
+        "role": "summand built from a binomial coefficient and two E values",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "The permutation counted by E_r is an implicit witness object depending on r, but E_r is defined as a count, not by selecting a specific permutation",
+      "w_j depends on the fixed n and on the previously defined values E_{j-1} and E_{n-j}",
+      "The parity restricted sums do not introduce any additional existential witnesses"
+    ]
+  },
+  "statement_nl": "For each integer r >= 1, let E_r be the number of permutations (b_1,...,b_r) of {1,...,r} such that (-1)^(i-1) * (b_{i+1} - b_i) > 0 for every 1 <= i <= r-1, and set E_0 = 1. Fix an integer n >= 2 and define w_j = binom(n-1, j-1) * E_{j-1} * E_{n-j} for 1 <= j <= n. Then sum over odd j in {1,...,n} of w_j is equal to E_n, and sum over even j in {1,...,n} of w_j is also equal to E_n.",
+  "updated_at": "2026-03-26T19:07:50.684739Z"
+}

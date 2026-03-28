@@ -35,6 +35,7 @@ def select_lean_candidate(
     baseline_text: str,
     normalize_text: Normalizer,
     stage_validator: StageValidator | None = None,
+    prefer_workspace_fallback: bool = True,
 ) -> CandidateSelection:
     reasons: list[str] = []
     candidates: list[tuple[str, str]] = []
@@ -49,7 +50,7 @@ def select_lean_candidate(
         baseline_text=baseline_text,
         normalize_text=normalize_text,
     )
-    if workspace_fallback:
+    if prefer_workspace_fallback and workspace_fallback:
         candidates.append(("workspace_fallback", workspace_fallback))
 
     if resolved_trace is not None and resolved_trace.target_file_latest_update is not None:
@@ -60,6 +61,8 @@ def select_lean_candidate(
         assistant_text = "\n\n".join(resolved_trace.assistant_text_chunks).strip()
         if assistant_text:
             candidates.append(("assistant_text", assistant_text))
+    if not prefer_workspace_fallback and workspace_fallback:
+        candidates.append(("workspace_fallback", workspace_fallback))
 
     # Raw workspace file as last resort — Claude may have written a valid proof
     # via MCP tool_update that the normalization pipeline failed to extract.

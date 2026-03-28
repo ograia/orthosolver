@@ -1,0 +1,133 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327041832_4ab58843",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T04:13:45.168535Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.58,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T06:48:27.461526Z",
+  "last_dependency_check_id": "depchk_20260327042139_8aff3d90",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "formalize_lemma_from_nl submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "For k=1 there is only one permutation of {1}, namely (1). The sign condition is vacuous, and the last entry 1 is the first smallest element. Hence v^(1)_1=1, so v^(1)=(1).\n\nNow fix k with 1<=k<=n-1 and fix j with 1<=j<=k+1. Because a permutation of {1,...,k} has entries exactly 1,...,k, saying that its last entry is the i-th smallest is equivalent to saying that its last entry equals i. Likewise, for a permutation of {1,...,k+1}, saying that its last entry is the j-th smallest is equivalent to saying that its last entry equals j.\n\nFor 1<=i<=k, let C_i be the set of permutations c=(c_1,...,c_k) of {1,...,k} such that s_t(c_{t+1}-c_t)>0 for all 1<=t<k and c_k=i. Then |C_i|=v^(k)_i.\n\nLet B_j be the set of permutations b=(b_1,...,b_{k+1}) of {1,...,k+1} such that s_t(b_{t+1}-b_t)>0 for all 1<=t<=k and b_{k+1}=j. Then |B_j|=v^(k+1)_j.\n\nDefine phi_j on {1,...,k} by phi_j(x)=x if x<j and phi_j(x)=x+1 if x>=j. This is a strictly increasing bijection from {1,...,k} onto {1,...,k+1} minus {j}. For c in C_i, define T_j(c)=(phi_j(c_1),...,phi_j(c_k),j). Then T_j(c) is a permutation of {1,...,k+1} whose last entry is j.\n\nBecause phi_j is strictly increasing, it preserves all order comparisons: for 1<=t<k, c_{t+1}>c_t if and only if phi_j(c_{t+1})>phi_j(c_t), and similarly c_{t+1}<c_t if and only if phi_j(c_{t+1})<phi_j(c_t). Therefore for 1<=t<k we have s_t(phi_j(c_{t+1})-phi_j(c_t))>0 exactly when s_t(c_{t+1}-c_t)>0. So the first k-1 sign conditions are preserved.\n\nNow c_k=i. Hence the k-th entry of T_j(c) is phi_j(i), which equals i if i<j and equals i+1 if i>=j. Therefore j-phi_j(i)>0 exactly when i<j, and j-phi_j(i)<0 exactly when i>=j. It follows that:\nif s_k=+1, then T_j(c) belongs to B_j exactly for those c with i<j;\nif s_k=-1, then T_j(c) belongs to B_j exactly for those c with i>=j.\n\nConversely, suppose b belongs to B_j. Since the first k entries avoid j, define U_j(b)=(u_1,...,u_k) by u_t=b_t if b_t<j and u_t=b_t-1 if b_t>j. Then U_j(b) is a permutation of {1,...,k}, and U_j is the inverse of T_j on the set of all permutations with last entry j. Because U_j is the inverse of the strictly increasing map phi_j, it also preserves order comparisons, so the first k-1 sign conditions hold for U_j(b). If i is the last entry of U_j(b), then b_k=phi_j(i). The last sign condition s_k(b_{k+1}-b_k)>0 means s_k(j-phi_j(i))>0, so it forces i<j when s_k=+1 and i>=j when s_k=-1. Hence U_j(b) lies in the corresponding C_i.\n\nTherefore T_j is a bijection from the disjoint union of the relevant C_i onto B_j: from the union of C_i with 1<=i<=j-1 when s_k=+1, and from the union of C_i with j<=i<=k when s_k=-1. The sets C_i are disjoint because they have different last entries. Taking cardinalities gives\nif s_k=+1,\nv^(k+1)_j=|B_j|=sum_{i=1}^{j-1}|C_i|=sum_{i=1}^{j-1}v^(k)_i;\nif s_k=-1,\nv^(k+1)_j=|B_j|=sum_{i=j}^{k}|C_i|=sum_{i=j}^{k}v^(k)_i.\nIf the index set is empty, the corresponding union is empty and its cardinality is 0, exactly as stated by the empty-sum convention.\n\nFinally, let A be the set of permutations a=(a_1,...,a_n) of {1,...,n} such that s_i(a_{i+1}-a_i)>0 for all 1<=i<=n-1. By definition, |A|=f(s). For each j in {1,...,n}, let A_j be the subset of A with a_n=j. Since a permutation of {1,...,n} has entries exactly 1,...,n, the condition a_n=j is equivalent to saying that a_n is the j-th smallest element. Hence |A_j|=v^(n)_j. The sets A_1,...,A_n are disjoint and their union is A, so\nf(s)=|A|=sum_{j=1}^n |A_j|=sum_{j=1}^n v^(n)_j.\nThis proves the lemma.",
+  "latest_vetted_proof_fingerprint": "99693fbe3782fef1594065bf027cf91e6bb73a932d4dd7093cbc26c7da740b64",
+  "latest_vetter_report_id": "rep_20260327042139_d9829dc6",
+  "lean_attempt_count": 1,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327041325_fd93be4e",
+  "minor_rejection_count": 0,
+  "next_action": "wait_for_decomposition_track",
+  "parent_id": "thm_root_20260327040158_5065188f",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327040158_22cb0c95",
+  "proof_bundle_artifact_id": "problems/prob_20260327040158_22cb0c95/proof_bundles/lemmas/lem_20260327041325_fd93be4e.json",
+  "proof_graph_id": "pgraph_20260327041831_f27379ce",
+  "proof_status": "proof_vetted",
+  "role_in_parent": "This translates the original permutation count into an operator dynamic program; it is used directly to rewrite f(s) after the first sign.",
+  "routing_status": "ready_for_lean",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer at least 2, let s=(s_1,...,s_{n-1}) with each s_i in {+1,-1}, and for each k with 1 <= k <= n define a vector v^(k)=(v^(k)_1,...,v^(k)_k) by declaring v^(k)_j to be the number of permutations b=(b_1,...,b_k) of {1,...,k} such that s_i(b_{i+1}-b_i)>0 for every 1 <= i < k and b_k is the j-th smallest element of {b_1,...,b_k}. Then v^(1)=(1). Moreover, for each k with 1 <= k <= n-1 and each j with 1 <= j <= k+1, with empty sums interpreted as 0, if s_k=+1 then v^(k+1)_j = sum_{i=1}^{j-1} v^(k)_i, while if s_k=-1 then v^(k+1)_j = sum_{i=j}^{k} v^(k)_i. In particular, if f(s) denotes the number of permutations a=(a_1,...,a_n) of {1,...,n} with s_i(a_{i+1}-a_i)>0 for all 1 <= i <= n-1, then f(s)=sum_{j=1}^n v^(n)_j.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "The parameter n is an integer and n is at least 2.",
+      "Each sign entry s_i is exactly plus one or minus one.",
+      "For the definition of v at stage k, b must be a permutation of 1 through k, so its entries are distinct and each of 1 through k appears exactly once.",
+      "The sign condition for v at stage k uses indices i from 1 to k minus 1.",
+      "The phrase that b_k is the j-th smallest element means the rank of the final value among the k distinct entries of b.",
+      "The recurrence is only stated for k from 1 to n minus 1, so s_k is always available there.",
+      "Empty sums are interpreted as 0.",
+      "In the final count f of s, a must be a permutation of 1 through n and the sign condition runs over all i from 1 to n minus 1."
+    ],
+    "normalized_claim": "The statement gives a recursive rank-refined counting scheme for permutations whose adjacent differences follow a prescribed sign pattern, starting from the base case v at stage 1 equal to 1, updating by prefix sums when the current sign is plus one and by suffix sums when it is minus one, and concluding that the total number of full-length matching permutations equals the sum of the final vector entries.",
+    "quantifier_order": [
+      "Choose an integer n at least 2.",
+      "Choose a sign sequence s of length n minus 1 with entries plus one or minus one.",
+      "For each k from 1 to n, define the vector v at stage k by counting permutations b of 1 through k with the sign constraints and with final entry rank j.",
+      "For each k from 1 to n minus 1 and each j from 1 to k plus 1, compute the next vector from the current vector using the current sign s_k and the stated prefix or suffix sum rule.",
+      "Finally, define f of s as the number of length n permutations satisfying all sign constraints, and assert that it equals the sum of the entries of v at stage n."
+    ],
+    "variables": [
+      {
+        "domain": "integers at least 2",
+        "name": "n",
+        "role": "global size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "sequences of length n minus 1 with each entry equal to plus one or minus one",
+        "name": "s",
+        "role": "input sign pattern",
+        "type": "finite sign sequence"
+      },
+      {
+        "domain": "integers from 1 to n for the definition and from 1 to n minus 1 for the recurrence",
+        "name": "k",
+        "role": "stage index for the recursive construction",
+        "type": "integer index"
+      },
+      {
+        "domain": "for the vector definition, integers from 1 to k; for the recurrence, integers from 1 to k plus 1",
+        "name": "j",
+        "role": "component index and rank of the final entry",
+        "type": "integer index"
+      },
+      {
+        "domain": "summation index ranging over the stated intervals",
+        "name": "i",
+        "role": "dummy index in the recursive sums and in the sign constraints",
+        "type": "integer index"
+      },
+      {
+        "domain": "all permutations of the set {1,...,k}",
+        "name": "b",
+        "role": "counted permutation in the definition of the vector entries",
+        "type": "permutation of 1 through k"
+      },
+      {
+        "domain": "all permutations of the set {1,...,n}",
+        "name": "a",
+        "role": "counted permutation in the final counting function",
+        "type": "permutation of 1 through n"
+      },
+      {
+        "domain": "vectors whose j-th entry counts permutations satisfying the first k minus 1 sign conditions and final rank j",
+        "name": "v_k",
+        "role": "recursive count vector",
+        "type": "integer vector of length k"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "f_of_s",
+        "role": "total number of permutations matching the full sign pattern",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "Each entry of v at stage k depends only on the prefix s_1 through s_{k-1} and on permutations of 1 through k satisfying those prefix constraints.",
+      "The recurrence for v at stage k plus 1 depends only on the current vector v at stage k and on the single sign s_k; it does not depend on later signs.",
+      "The counted permutation b serves as the witness for each entry of v at stage k, with the witness condition split by the final entry rank j.",
+      "The permutation a counted by f of s depends on the full sign sequence s_1 through s_{n-1}.",
+      "The total count f of s is recovered by summing all rank-refined counts in v at stage n."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T06:48:27.461526Z"
+}

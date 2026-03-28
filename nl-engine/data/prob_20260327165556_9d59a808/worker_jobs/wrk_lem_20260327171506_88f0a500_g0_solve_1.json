@@ -1,0 +1,187 @@
+{
+  "artifact_prefix": "problems/prob_20260327165556_9d59a808/lemmas/lem_20260327171506_88f0a500/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T17:16:19.421176Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T17:16:21.600008Z",
+  "controller_consumed_by_execution_id": "exec_20260327165556_006dee7c",
+  "created_at": "2026-03-27T17:16:13.994788Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327165556_006dee7c",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+        "item_id": "pnode_20260327171613_e9a3c72b",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327171612_4e7f6f6d",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260327171506_88f0a500",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327171613_efd465cf",
+    "role_in_assembly": "Reduce an arbitrary real x to its fractional part frac(x).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n greater than 1",
+        "k is an integer summation index with 1 less than or equal to k and k less than or equal to n",
+        "x is a real number",
+        "floor is the greatest integer less than or equal to its real input"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, consider the function E_n(x) = floor(n x) minus the sum over integers k with 1 <= k <= n of floor(k x) divided by k. The task is to determine the set of real x values for which E_n(x) attains its maximum over all real x, and to determine the corresponding maximal value M(n).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x_star",
+        "for all real numbers y",
+        "E_n(x_star) is at least E_n(y)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter with constraint n greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index, restricted to k from 1 through n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "variable over which the expression is maximized",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "y",
+          "role": "arbitrary competitor value to define maximality",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "E_n(x)",
+          "role": "defined expression: floor(n x) minus sum from k = 1 to n of floor(k x) divided by k",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "M(n)",
+          "role": "the maximal value of E_n(x) over all real x, depends on n",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x_star",
+          "role": "a real number where the maximum is achieved; may depend on n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "x_star depends on n (the maximizing real numbers may vary with the given integer n)",
+        "M(n) depends on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "x ranges over all real numbers",
+        "m ranges over all integers"
+      ],
+      "normalized_claim": "For every integer n with n greater than 1, the function En has period 1 with respect to integer shifts: for all real x and all integers m, En(x plus m) equals En(x).",
+      "quantifier_order": [
+        "for all integers n with n > 1",
+        "for all real numbers x",
+        "for all integers m"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "period parameter (fixed for the equality)",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "input real argument",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "integer shift of the argument",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses: the statement is purely universal"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer n>1, every real number x, and every integer m, one has E_n(x + m) = E_n(x).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327165556_9d59a808",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "no_sibling_or_forbidden_lemmas_used": true,
+      "used_definition_from_anchor": true,
+      "used_only_integer_shift_property_of_floor": true
+    },
+    "lemma_id": "lem_20260327171506_88f0a500",
+    "proof_nl": "Fix an integer n > 1, a real number x, and an integer m. By the definition of E_n,\n\nE_n(x+m) = floor(n(x+m)) - sum_{k=1}^n floor(k(x+m))/k.\n\nSince m is an integer, nm is an integer and km is an integer for every integer k. Therefore, using floor(t+z)=floor(t)+z whenever z is an integer,\n\nfloor(n(x+m)) = floor(nx+nm) = floor(nx) + nm,\n\nand for each k = 1, ..., n,\n\nfloor(k(x+m)) = floor(kx+km) = floor(kx) + km.\n\nHence\n\nfloor(k(x+m))/k = floor(kx)/k + m.\n\nSubstituting these identities into the definition gives\n\nE_n(x+m) = (floor(nx)+nm) - sum_{k=1}^n (floor(kx)/k + m).\n\nBecause there are n terms in the sum,\n\nE_n(x+m) = floor(nx) + nm - sum_{k=1}^n floor(kx)/k - nm = E_n(x).\n\nThus E_n(x+m) = E_n(x) for every real x and every integer m.",
+    "proof_summary": "Apply floor(t+z)=floor(t)+z for integer z to each term; the nm shift cancels with the n copies of m in the sum.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "For any real t and integer z, floor(t+z)=floor(t)+z."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T17:16:13.321796Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327171506_88f0a500",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T17:16:21.600015Z",
+  "worker_job_id": "wrk_lem_20260327171506_88f0a500_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

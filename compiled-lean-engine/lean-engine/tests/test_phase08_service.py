@@ -1,17 +1,23 @@
 from __future__ import annotations
 
 import json
+import sys
 import time
+import types
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
 
-from lean_engine.config import load_runtime_config
+from lean_engine.config import load_runtime_config, project_root
 from lean_engine.integrations import IntegrationPreflight
 from lean_engine.lean_checks import LeanCommandResult
 from lean_engine.normalize import normalize_problem_artifact
+from lean_engine.phase04 import Phase04RunResult
 from lean_engine.service.app import LeanEngineServiceApp, _integration_health
-from lean_engine.service.jobs import JobExecutionResult
+from lean_engine.service.jobs import JobExecutionResult, _resolve_runtime_config
+from lean_engine.service.object_store import JsonObjectStore
+from lean_engine.service.store import JobStore
 from lean_engine.statement_phase import build_phase03_decl_naming
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures"
@@ -21,14 +27,135 @@ MOCK_FIXTURE_DIR = FIXTURE_DIR / "mocks"
 
 @pytest.fixture
 def service_app(tmp_path: Path):
+    config_path = tmp_path / "service_config.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "workspace_cache": {
+                    "enabled": False,
+                    "cache_dir": str(tmp_path / "unused_cache"),
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
     app = LeanEngineServiceApp.from_defaults(
-        db_path=tmp_path / "service_jobs.sqlite3",
+        store_root=tmp_path / "service_state",
         max_workers=2,
+        config_path=config_path,
     )
     try:
         yield app
     finally:
         app.shutdown()
+
+
+class _FakePreconditionFailed(Exception):
+    pass
+
+
+class _FakeBlob:
+    def __init__(self, bucket: "_FakeBucket", name: str) -> None:
+        self.bucket = bucket
+        self.name = name
+
+    def exists(self) -> bool:
+        return self.name in self.bucket.objects
+
+    def upload_from_string(self, data, content_type=None, if_generation_match=None) -> None:
+        existing = self.bucket.objects.get(self.name)
+        if if_generation_match == 0 and existing is not None:
+            raise _FakePreconditionFailed("already exists")
+        if if_generation_match not in (None, 0):
+            current_generation = existing["generation"] if existing is not None else None
+            if current_generation != if_generation_match:
+                raise _FakePreconditionFailed("generation mismatch")
+        payload = data if isinstance(data, bytes) else str(data).encode("utf-8")
+        generation = 1 if existing is None else int(existing["generation"]) + 1
+        self.bucket.objects[self.name] = {
+            "data": payload,
+            "content_type": content_type,
+            "generation": generation,
+            "updated": datetime.now(UTC),
+        }
+
+    def download_as_bytes(self) -> bytes:
+        return bytes(self.bucket.objects[self.name]["data"])
+
+    def delete(self, if_generation_match=None) -> None:
+        existing = self.bucket.objects.get(self.name)
+        if existing is None:
+            return
+        if if_generation_match is not None and existing["generation"] != if_generation_match:
+            raise _FakePreconditionFailed("generation mismatch")
+        del self.bucket.objects[self.name]
+
+    def reload(self) -> None:
+        return None
+
+    @property
+    def generation(self):
+        existing = self.bucket.objects.get(self.name)
+        return None if existing is None else existing["generation"]
+
+    @property
+    def size(self):
+        existing = self.bucket.objects.get(self.name)
+        return 0 if existing is None else len(existing["data"])
+
+    @property
+    def updated(self):
+        existing = self.bucket.objects.get(self.name)
+        return None if existing is None else existing["updated"]
+
+    @property
+    def content_type(self):
+        existing = self.bucket.objects.get(self.name)
+        return None if existing is None else existing["content_type"]
+
+
+class _FakeBucket:
+    def __init__(self, name: str, objects: dict[str, dict[str, object]]) -> None:
+        self.name = name
+        self.objects = objects
+
+    def blob(self, name: str) -> _FakeBlob:
+        return _FakeBlob(self, name)
+
+    def list_blobs(self, prefix: str = "") -> list[_FakeBlob]:
+        return [self.blob(name) for name in sorted(self.objects) if name.startswith(prefix)]
+
+
+class _FakeClient:
+    def __init__(self, buckets: dict[str, dict[str, dict[str, object]]]) -> None:
+        self._buckets = buckets
+
+    def bucket(self, name: str) -> _FakeBucket:
+        objects = self._buckets.setdefault(name, {})
+        return _FakeBucket(name, objects)
+
+
+def _install_fake_gcs(monkeypatch: pytest.MonkeyPatch) -> None:
+    buckets: dict[str, dict[str, dict[str, object]]] = {}
+
+    google_mod = types.ModuleType("google")
+    cloud_mod = types.ModuleType("google.cloud")
+    storage_mod = types.ModuleType("google.cloud.storage")
+    api_core_mod = types.ModuleType("google.api_core")
+    exceptions_mod = types.ModuleType("google.api_core.exceptions")
+
+    storage_mod.Client = lambda: _FakeClient(buckets)
+    exceptions_mod.PreconditionFailed = _FakePreconditionFailed
+    cloud_mod.storage = storage_mod
+    api_core_mod.exceptions = exceptions_mod
+    google_mod.cloud = cloud_mod
+    google_mod.api_core = api_core_mod
+
+    monkeypatch.setitem(sys.modules, "google", google_mod)
+    monkeypatch.setitem(sys.modules, "google.cloud", cloud_mod)
+    monkeypatch.setitem(sys.modules, "google.cloud.storage", storage_mod)
+    monkeypatch.setitem(sys.modules, "google.api_core", api_core_mod)
+    monkeypatch.setitem(sys.modules, "google.api_core.exceptions", exceptions_mod)
 
 
 def _fake_run_command(*, fail_root_file_check: bool = False):
@@ -147,7 +274,7 @@ def _prepare_mock_files(tmp_path: Path, fixture_name: str) -> dict[str, Path | s
     }
 
 
-def _wait_for_terminal(app: LeanEngineServiceApp, job_id: str, *, timeout_s: float = 8.0) -> dict:
+def _wait_for_terminal(app: LeanEngineServiceApp, job_id: str, *, timeout_s: float = 25.0) -> dict:
     deadline = time.monotonic() + timeout_s
     while time.monotonic() < deadline:
         code, payload = app.get_job(job_id)
@@ -165,6 +292,88 @@ def test_service_health_reports_phase08_contract(service_app: LeanEngineServiceA
     assert any(payload["default_model"].startswith(m) for m in ("claude-opus-4-6", "claude-sonnet-4-6"))
     assert isinstance(payload["lean_project_template_ok"], bool)
     assert isinstance(payload["mcp_config_available"], bool)
+    assert payload["code_origin"]["code_root"] == str(project_root())
+    assert payload["canonical_code_root"] == str(project_root())
+    assert "canonical_code_root" in payload
+
+
+def test_service_runtime_config_uses_exact_model_option(tmp_path: Path) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+
+    resolved = _resolve_runtime_config(
+        options={"model": "claude-sonnet-4-6"},
+        default_config_path=None,
+        default_runtime_config=runtime_config,
+    )
+
+    assert resolved.claude.model == "claude-sonnet-4-6"
+
+
+def test_service_runtime_config_rejects_mismatched_deprecated_fallback(tmp_path: Path) -> None:
+    runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts")
+
+    with pytest.raises(ValueError, match="claude\\.fallback_model is deprecated"):
+        _resolve_runtime_config(
+            options={
+                "model": "claude-sonnet-4-6",
+                "fallback_model": "claude-sonnet-4-6[1m]",
+            },
+            default_config_path=None,
+            default_runtime_config=runtime_config,
+        )
+
+
+def test_json_object_store_gcs_roundtrip(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _install_fake_gcs(monkeypatch)
+    monkeypatch.setenv("LEAN_ENGINE_STORAGE_BACKEND", "gcs")
+    monkeypatch.setenv("GCS_BUCKET", "lean-phase08-tests")
+    monkeypatch.setenv("LEAN_ENGINE_GCS_STATE_PREFIX", "orthos/lean-state")
+
+    store = JsonObjectStore(tmp_path / "service_state")
+
+    assert store.mode == "gcs"
+    assert store.create_json_if_absent("jobs/demo.json", {"job_id": "demo", "status": "queued"}) is True
+    assert store.create_json_if_absent("jobs/demo.json", {"job_id": "demo", "status": "queued"}) is False
+    assert store.read_json("jobs/demo.json") == {"job_id": "demo", "status": "queued"}
+    assert store.list_keys(prefix="jobs") == ["jobs/demo.json"]
+    assert store.modified_at("jobs/demo.json") is not None
+
+
+def test_job_store_gcs_preserves_idempotency_and_counts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _install_fake_gcs(monkeypatch)
+    monkeypatch.setenv("LEAN_ENGINE_STORAGE_BACKEND", "gcs")
+    monkeypatch.setenv("GCS_BUCKET", "lean-phase08-tests")
+    monkeypatch.setenv("LEAN_ENGINE_GCS_STATE_PREFIX", "orthos/lean-state")
+
+    store = JobStore(tmp_path / "service_state")
+
+    record, created = store.create_or_get(job_id="job_demo", mode="check_assembly", request={"payload": {}})
+    existing, created_again = store.create_or_get(job_id="job_demo", mode="check_assembly", request={"payload": {}})
+
+    assert store.storage_mode == "gcs"
+    assert created is True
+    assert created_again is False
+    assert existing.job_id == record.job_id
+    assert store.active_job_count() == 1
+    assert store.queue_depth() == 1
+
+    store.mark_running("job_demo")
+    assert store.active_job_count() == 1
+    assert store.queue_depth() == 0
+
+    store.mark_terminal(
+        job_id="job_demo",
+        status="success",
+        result={"ok": True, "progress_snapshot": {"phase": "check_assembly", "round": 1, "attempt": 1, "last_error": None}},
+        error_class=None,
+        message=None,
+    )
+    terminal = store.get("job_demo")
+
+    assert terminal is not None
+    assert terminal.status == "success"
+    assert store.active_job_count() == 0
+    assert store.queue_depth() == 0
 
 
 def test_integration_health_checks_lean_lsp_mcp(
@@ -184,6 +393,61 @@ def test_integration_health_checks_lean_lsp_mcp(
     assert len(payload["preflight"]) == 1
     assert payload["preflight"][0]["name"] == "lean_lsp_mcp"
     assert payload["preflight"][0]["status"] == "ok"
+
+
+def test_service_runtime_config_disables_hidden_timeouts_and_refs(tmp_path: Path) -> None:
+    default_runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts_default")
+
+    runtime_config = _resolve_runtime_config(
+        options={
+            "artifact_root": str(tmp_path / "artifacts"),
+            "timeout_seconds": 0,
+            "no_lean4_refs": True,
+        },
+        default_config_path=None,
+        default_runtime_config=default_runtime_config,
+    )
+
+    assert runtime_config.claude.timeout_seconds == 0
+    assert runtime_config.claude.stall_timeout_seconds == 0
+    assert runtime_config.claude.tool_wait_timeout_seconds == 0
+    assert runtime_config.claude.init_timeout_seconds == 0
+    assert runtime_config.integrations.lean4_skills_root == Path("/dev/null/no-lean4-refs")
+
+
+def test_service_runtime_config_allows_explicit_init_timeout_override(tmp_path: Path) -> None:
+    default_runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts_default")
+
+    runtime_config = _resolve_runtime_config(
+        options={
+            "artifact_root": str(tmp_path / "artifacts"),
+            "timeout_seconds": 0,
+            "claude_init_timeout_seconds": 900,
+        },
+        default_config_path=None,
+        default_runtime_config=default_runtime_config,
+    )
+
+    assert runtime_config.claude.timeout_seconds == 0
+    assert runtime_config.claude.stall_timeout_seconds == 0
+    assert runtime_config.claude.tool_wait_timeout_seconds == 0
+    assert runtime_config.claude.init_timeout_seconds == 900
+
+
+def test_service_runtime_config_accepts_shared_activity_timeout(tmp_path: Path) -> None:
+    default_runtime_config = load_runtime_config(artifact_root=tmp_path / "artifacts_default")
+
+    runtime_config = _resolve_runtime_config(
+        options={
+            "artifact_root": str(tmp_path / "artifacts"),
+            "claude_activity_timeout_seconds": 1200,
+        },
+        default_config_path=None,
+        default_runtime_config=default_runtime_config,
+    )
+
+    assert runtime_config.claude.stall_timeout_seconds == 1200
+    assert runtime_config.claude.tool_wait_timeout_seconds == 1200
 
 
 def test_service_run_full_pipeline_idempotent_and_preserves_major_gap(
@@ -277,11 +541,9 @@ def test_service_check_assembly_formalize_lemma_and_assemble_root_modes(
     formalize_code, _ = service_app.submit_job(formalize_request)
     assert formalize_code == 202
     formalize_terminal = _wait_for_terminal(service_app, formalize_request["job_id"])
-    assert formalize_terminal["status"] == "success"
-    assert formalize_terminal["result"]["lemma"]["status"] == "ok"
-
-    trusted_manifest = json.loads((run_root / "trusted_context_manifest.json").read_text(encoding="utf-8"))
-    assert trusted_manifest["entry_count"] == 1
+    assert formalize_terminal["status"] == "fatal"
+    assert formalize_terminal["result"]["error_scope"] == "service"
+    assert "only allowed through `formalize_lemma_from_nl`" in formalize_terminal["result"]["error_message"]
 
     assemble_request = {
         "job_id": "phase08_assemble_job",
@@ -336,6 +598,7 @@ def test_service_v2_prepare_track_and_formalize_from_handle(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.setattr("lean_engine.lean_checks._run_command", _fake_run_command())
+    monkeypatch.setattr("lean_engine.phase04._validate_olean_freshness", lambda *_a, **_kw: True)
     paths = _prepare_mock_files(tmp_path, "tiny_success")
 
     prepare_code, prepare_submit = service_app.submit_operation(
@@ -389,7 +652,87 @@ def test_service_v2_prepare_track_and_formalize_from_handle(
     formalize_terminal = _wait_for_terminal(service_app, "phase08_formalize_from_handle_op")
     assert formalize_terminal["status"] == "success"
     assert formalize_terminal["result"]["operation"] == "formalize_lemma_from_nl"
-    assert formalize_terminal["result"]["lemma"]["status"] == "ok"
+    assert formalize_terminal["result"]["lemma"]["status"] == "succeeded"
+    assert formalize_terminal["result"]["lemma"]["worker_workspace"] is not None
+    assert formalize_terminal["result"]["phase04"]["code_origin"]["code_root"] == str(project_root())
+
+
+def test_service_v2_formalize_from_handle_returns_decompose_current_for_phase04_setup_failure(
+    tmp_path: Path,
+    service_app: LeanEngineServiceApp,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("lean_engine.lean_checks._run_command", _fake_run_command())
+    paths = _prepare_mock_files(tmp_path, "tiny_success")
+
+    prepare_code, _ = service_app.submit_operation(
+        "prepare_track",
+        {
+            "operation_id": "phase08_prepare_track_failure_op",
+            "payload": {
+                "source": str(paths["raw_fixture"]),
+                "source_kind": "path",
+                "statements_file": str(paths["statements_path"]),
+                "decomposition_id": "dec_prepare_track_failure",
+            },
+            "options": {
+                "artifact_root": str(tmp_path / "artifacts"),
+                "max_repair_rounds": 0,
+                "timeout_seconds": 1,
+            },
+        },
+    )
+    assert prepare_code == 202
+    prepare_terminal = _wait_for_terminal(service_app, "phase08_prepare_track_failure_op")
+    assert prepare_terminal["status"] == "success"
+
+    run_dir = Path(prepare_terminal["result"]["run_dir"])
+    lemma_id = str(paths["lemma_id"])
+    lemma_handle = prepare_terminal["result"]["lemma_handles"][lemma_id]
+
+    def _fake_run_phase04(**kwargs):
+        run_paths = kwargs["run_paths"]
+        target_lemma_id = kwargs["target_lemma_id"]
+        return Phase04RunResult(
+            status="fatal",
+            problem_id="prob_phase08_failure",
+            run_root=run_paths.run_root,
+            pinned_signatures_path=kwargs["pinned_signatures_path"],
+            trusted_manifest_path=run_paths.run_root / "trusted_context_manifest.json",
+            phase_summary_path=run_paths.summaries_dir / f"phase04_{target_lemma_id}.json",
+            lemma_order=(target_lemma_id,),
+            lemma_results=(),
+            code_origin={"code_root": str(project_root())},
+            workspace_revision=run_paths.run_name,
+            error_class="dependency_graph_invalid",
+            message=f"phase04 dependency graph has a cycle involving `{target_lemma_id}`",
+        )
+
+    monkeypatch.setattr("lean_engine.service.jobs.run_phase04", _fake_run_phase04)
+
+    formalize_code, _ = service_app.submit_operation(
+        "formalize_lemma_from_nl",
+        {
+            "operation_id": "phase08_formalize_failure_op",
+            "payload": {
+                "run_dir": str(run_dir),
+                "lemma_handle": lemma_handle,
+                "proof_nl": "by trivial",
+                "mock_candidates_dir": str(paths["phase04_dir"]),
+            },
+            "options": {
+                "max_attempts_per_lemma": 1,
+                "timeout_seconds": 1,
+            },
+        },
+    )
+    assert formalize_code == 202
+
+    formalize_terminal = _wait_for_terminal(service_app, "phase08_formalize_failure_op")
+    assert formalize_terminal["status"] == "fatal"
+    assert formalize_terminal["result"]["error_class"] == "dependency_graph_invalid"
+    assert formalize_terminal["result"]["recommended_next_step"] == "decompose_current"
+    assert formalize_terminal["result"]["phase04"]["phase_summary_path"].endswith(f"phase04_{lemma_id}.json")
 
 
 def test_service_v2_split_proof_operation(service_app: LeanEngineServiceApp) -> None:

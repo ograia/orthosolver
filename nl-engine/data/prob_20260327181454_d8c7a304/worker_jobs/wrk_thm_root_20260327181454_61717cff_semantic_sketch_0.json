@@ -1,0 +1,84 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/root_theorem/thm_root_20260327181454_61717cff/semantic_sketch",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T18:15:20.540725Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:15:32.001651Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:15:08.598027Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent1_root_semantic_sketch",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "root_semantic_sketch",
+  "result_payload": {
+    "ambiguities": [
+      "Whether the problem expects a description for all n greater than 1 as a formula in terms of n, or a separate answer for each particular n.",
+      "Whether 'maximal' means global maximum (largest value) or could be interpreted as supremum; the statement asks for the maximal value, suggesting global maximum.",
+      "Whether the answer should specify all maximizers x (possibly a set) or only one maximizer."
+    ],
+    "implicit_assumptions_surfaced": [
+      "The expression f(x) is bounded above over all real x (so a maximum value exists, not just a supremum).",
+      "The maximum is attained by at least one real x (so there exists a maximizer rather than only approaching the supremum).",
+      "The question intends global maximality over all real numbers x, not maximality over a restricted interval."
+    ],
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "statement_nl_received": "Let n be an integer greater than 1. For which real numbers x is \\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k} maximal, and what is the maximal value that this expression can take?",
+    "status": "completed"
+  },
+  "started_at": "2026-03-27T18:15:09.604333Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260327181454_61717cff",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-27T18:15:32.001660Z",
+  "worker_job_id": "wrk_thm_root_20260327181454_61717cff_semantic_sketch_0",
+  "worker_kind": "root_semantic_sketch"
+}

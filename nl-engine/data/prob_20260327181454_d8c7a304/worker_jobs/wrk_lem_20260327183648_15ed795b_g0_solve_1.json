@@ -1,0 +1,162 @@
+{
+  "artifact_prefix": "problems/prob_20260327181454_d8c7a304/lemmas/lem_20260327183648_15ed795b/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-27T18:40:33.025328Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T18:40:43.020719Z",
+  "controller_consumed_by_execution_id": "exec_20260327181454_d2f02f61",
+  "created_at": "2026-03-27T18:40:22.314356Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327181454_d2f02f61",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+        "item_id": "pnode_20260327182209_d69d68f1",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327182156_c4df4dce",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "item_id": "pnode_20260327182156_a23a7b30",
+        "label": "lem_20260327182037_d1cd11e0",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "Let n > 1 and let f_n be defined as above. For any real r with 0 <= r < 1, if m = floor(n*r), then f_n(r) <= f_n(m/n)."
+      }
+    ],
+    "lemma_id": "lem_20260327183648_15ed795b",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327184022_b228ffd3",
+    "role_in_assembly": "Places r inside the same normalized interval as m/n.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n greater than 1",
+        "k ranges over integers with 1 less than or equal to k and k less than or equal to n",
+        "x is any real number",
+        "the floor function is applied to real numbers (so it is always defined)"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1. Define f(x) = floor of n times x minus the sum from k = 1 to n of (floor of k times x) divided by k. Determine the set of real numbers x for which f(x) is a global maximum among all real y, and determine the value of that global maximum.",
+      "quantifier_order": [
+        "for a given integer n greater than 1",
+        "find real x such that for all real y, expression at x is at least the expression at y",
+        "and there exists at least one real x achieving that maximal value"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem; assumes n is greater than 1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "optimization variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index in the expression, ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizer x (if it exists) may depend on the fixed parameter n",
+        "the maximal value may depend on the fixed parameter n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n > 0",
+        "division by n is valid (implicitly n is nonzero; stated as positive)"
+      ],
+      "normalized_claim": "Given the earlier hypotheses and assuming n > 0, the inequality m divided by n is at most r, and r is strictly less than (m plus 1) divided by n.",
+      "quantifier_order": [],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "numerator used in the bounds",
+          "type": "integer (assumed)"
+        },
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "positive divisor used to form the bounds",
+          "type": "integer (assumed)"
+        },
+        {
+          "domain": "reals",
+          "name": "r",
+          "role": "quantity bounded between two consecutive rationals",
+          "type": "real number (assumed)"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses introduced in the statement; r is taken from earlier hypotheses (definition/constraints not specified here)."
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Under the same hypotheses, because n > 0 one has m/n <= r < (m + 1)/n.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327181454_d8c7a304",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "relied_on_root_semantic_anchor_only": true,
+      "used_allowed_dependency_manifest": true,
+      "used_forbidden_claims": false
+    },
+    "lemma_id": "lem_20260327183648_15ed795b",
+    "proof_nl": "Let m = floor(nr). By the definition of the floor function, m is an integer satisfying m <= nr < m + 1. Since n > 1, we have n > 0, so dividing the inequality by the positive number n preserves the inequality signs. Therefore m/n <= r < (m + 1)/n. This is exactly the desired statement.",
+    "proof_summary": "Apply the floor definition to nr, then divide by the positive integer n.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Definition of the floor function"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T18:40:22.410082Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327183648_15ed795b",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T18:40:43.020734Z",
+  "worker_job_id": "wrk_lem_20260327183648_15ed795b_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

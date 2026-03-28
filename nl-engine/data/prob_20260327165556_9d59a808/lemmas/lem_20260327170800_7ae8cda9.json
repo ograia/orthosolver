@@ -1,0 +1,111 @@
+{
+  "active_counterexample_id": null,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260327170942_96bdcbac",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-27T17:08:08.935459Z",
+  "decomposition_count": 0,
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.32,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-27T17:10:27.020869Z",
+  "last_dependency_check_id": "depchk_20260327171026_31d1647f",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_terminal_worker_result": "agent4:proved",
+  "last_transition_reason": "vetter attempt 1 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let r_k denote the least residue of ak modulo n, for 1 <= k <= n-1. We must show that after sorting the multiset {r_1, ..., r_{n-1}} in nonincreasing order, the j-th term u_j satisfies u_j <= n-j.\n\nIf a = 0, then every r_k = 0, so u_j = 0 for all j. Since n-j >= 1 for 1 <= j <= n-1, the inequality holds.\n\nNow assume a > 0. Write n = dm, where d = gcd(a,n), and write a = da_0. Then gcd(a_0,m) = 1.\n\nFix s with 1 <= s <= m-1 and q with 0 <= q <= d-1, and set k = qm + s. Then 1 <= k <= n-1, and\nak = d a_0(qm+s) = d(a_0 q m + a_0 s) \u2261 d(a_0 s) (mod dm = n).\nLet \u03c1_s be the least residue of a_0 s modulo m. Then \u03c1_s lies in {1, ..., m-1} because gcd(a_0,m) = 1, and the least residue of ak modulo n is exactly d\u03c1_s.\n\nAs s runs through 1, ..., m-1, the residues \u03c1_s run through 1, ..., m-1 exactly once, because multiplication by a_0 is a permutation of the nonzero residue classes modulo m. Therefore, among the residues r_1, ..., r_{n-1}, each value d, 2d, ..., (m-1)d occurs exactly d times.\n\nWhat about 0? If k is a positive multiple of m, say k = qm with 1 <= q <= d-1, then ak = da_0(qm) is divisible by n = dm, so r_k = 0. There are exactly d-1 such k. Hence the multiset of residues consists of:\n- d copies of each value d, 2d, ..., (m-1)d;\n- d-1 copies of 0.\n\nAfter sorting in nonincreasing order, the list is therefore\nu_1 = ... = u_d = n-d,\nu_{d+1} = ... = u_{2d} = n-2d,\n...\nu_{(m-1)d+1} = ... = u_{n-1} = 0.\nEquivalently, for each i = 1, ..., m-1, we have u_j = n-id whenever (i-1)d < j <= id, and for j > (m-1)d we have u_j = 0.\n\nNow let j be any integer with 1 <= j <= n-1. If j <= (m-1)d, choose i with (i-1)d < j <= id. Then u_j = n-id <= n-j, since j <= id. If j > (m-1)d, then u_j = 0 <= n-j. Thus in all cases u_j <= n-j.\n\nThis proves the lemma.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260327170800_7ae8cda9",
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_vetter",
+  "parent_id": "thm_root_20260327165556_b210f785",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260327165556_9d59a808",
+  "proof_bundle_artifact_id": "problems/prob_20260327165556_9d59a808/proof_bundles/lemmas/lem_20260327170800_7ae8cda9.json",
+  "proof_graph_id": "pgraph_20260327170941_60588293",
+  "proof_status": "proof_found",
+  "role_in_parent": "Supply the pointwise majorization u_j <= n-j for the sorted residue list.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For every integer n>1 and every integer a with 0 <= a <= n-1, let d = gcd(a,n) and m = n/d. Let u_1 >= u_2 >= ... >= u_{n-1} be the least residues Res_n(a,1), ..., Res_n(a,n-1) arranged in nonincreasing order. Then u_j <= n-j for every integer j with 1 <= j <= n-1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n > 1",
+      "a is an integer with 0 <= a <= n-1",
+      "d is defined as gcd(a,n) and is treated as a positive integer",
+      "m is defined as n/d and is therefore an integer",
+      "Res_n(a,k) is defined for each integer k with 1 <= k <= n-1",
+      "each least residue Res_n(a,k) is an integer in the standard least-residue range (typically 0 through n-1)",
+      "the sequence u_1 through u_{n-1} is arranged so that u_1 >= u_2 >= ... >= u_{n-1}"
+    ],
+    "normalized_claim": "For all integers n with n > 1, for all integers a with 0 <= a <= n-1: define d = gcd(a,n) and m = n/d. Consider the multiset of least residues of a*k modulo n for k = 1,...,n-1, and sort them in nonincreasing order to obtain u_1,...,u_{n-1}. Then for every integer j with 1 <= j <= n-1, the inequality u_j <= n - j holds.",
+    "quantifier_order": [
+      "for all n (integer, n > 1)",
+      "for all a (integer, 0 <= a <= n-1)",
+      "for all j (integer, 1 <= j <= n-1)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter; modulus",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= n-1",
+        "name": "a",
+        "role": "multiplier for residue computation",
+        "type": "integer"
+      },
+      {
+        "domain": "positive divisor of n",
+        "name": "d",
+        "role": "d = gcd(a,n)",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integer",
+        "name": "m",
+        "role": "m = n/d (derived value)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= j <= n-1",
+        "name": "j",
+        "role": "index in the sorted residue list",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "u_j",
+        "role": "j-th element of the multiset of least residues Res_n(a,1) through Res_n(a,n-1), sorted in nonincreasing order",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "d depends on n and a via d = gcd(a,n)",
+      "m depends on n and d via m = n/d",
+      "the multiset being sorted that defines u_1 through u_{n-1} depends on n and a via the values Res_n(a,k) for k from 1 to n-1",
+      "u_j depends on n, a, and the sorting (nonincreasing order) of those residue values"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-27T17:10:27.020869Z"
+}

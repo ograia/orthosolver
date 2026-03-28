@@ -1,0 +1,172 @@
+{
+  "artifact_prefix": "problems/prob_20260327225136_1596912c/lemmas/lem_20260327230119_223dcec2/solver_attempt_2",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-27T23:03:43.921093Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-27T23:03:46.813268Z",
+  "controller_consumed_by_execution_id": "exec_20260327225136_290bb19e",
+  "created_at": "2026-03-27T23:03:36.449923Z",
+  "error_payload": null,
+  "execution_id": "exec_20260327225136_290bb19e",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+        "item_id": "pnode_20260327230254_b5b9f6e7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 2,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260327230243_146498d5",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260327230119_223dcec2",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260327230336_b899f447",
+    "role_in_assembly": "Shows that the candidate maximizing interval actually attains the global upper bound.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n greater than 1",
+        "k ranges over integers from 1 through n inclusive",
+        "x ranges over all real numbers",
+        "y ranges over all real numbers",
+        "floor(t) denotes the greatest integer less than or equal to t"
+      ],
+      "normalized_claim": "Fix an integer n greater than 1 and define f(x) = floor(n x) minus the sum from k=1 to n of floor(k x) divided by k. The task is to determine the set of real numbers x such that for every real y, f(x) is greater than or equal to f(y), and to compute the corresponding maximum value m equal to f(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "there exists a real number x that maximizes the expression",
+        "for all real numbers y, the expression at x is greater than or equal to the expression at y"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter for the maximization problem",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "argument to be maximized over",
+          "type": "real number"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "y",
+          "role": "comparison point for defining maximality of x",
+          "type": "real number"
+        },
+        {
+          "domain": "real numbers",
+          "name": "m",
+          "role": "maximal value of the expression",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing x may depend on n",
+        "the maximal value m may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is not zero (so that (n-1)/n is defined), intended as positive integer",
+        "x is real",
+        "x satisfies (n-1)/n <= x and x < 1",
+        "F_n is defined at x for such n and x",
+        "H_n is defined for such n"
+      ],
+      "normalized_claim": "For all positive integers n and all real numbers x with (n minus 1) divided by n less than or equal to x and x less than 1, the value of F_n at x equals H_n minus 1.",
+      "quantifier_order": [
+        "for all n",
+        "for all x"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "index parameter for functions/values F_n and H_n; denominator in (n-1)/n",
+          "type": "positive integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "input to the function F_n",
+          "type": "real number"
+        }
+      ],
+      "witness_dependencies": [
+        "none (no existential witnesses are introduced); the conclusion depends only on the given n and x satisfying the premise"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "If (n-1)/n <= x < 1, then F_n(x) = H_n - 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260327225136_1596912c",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": "No previous feedback was provided.",
+    "attempt_number": 2,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "allowed_dependency_manifest_used": [
+        "root_semantic_sketch"
+      ],
+      "definition_context_used": [],
+      "trusted_context_used": []
+    },
+    "lemma_id": "lem_20260327230119_223dcec2",
+    "proof_nl": null,
+    "proof_summary": null,
+    "self_report": {
+      "confidence": 0.97,
+      "every_step_justified": false,
+      "proves_exactly_the_statement": false,
+      "suspected_gaps": [
+        "The provided context does not define F_n or H_n, so the lemma cannot be proved self-containedly.",
+        "No trusted context or definition_context item supplies the meanings of these symbols."
+      ],
+      "used_external_facts": []
+    },
+    "status": "failed",
+    "stuck_point": "The statement 'If (n-1)/n <= x < 1, then F_n(x)=H_n-1' is not provable from the supplied data because F_n and H_n are undefined here.",
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-27T23:03:38.465041Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260327230119_223dcec2",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-27T23:03:46.813274Z",
+  "worker_job_id": "wrk_lem_20260327230119_223dcec2_g0_solve_2",
+  "worker_kind": "lemma_solver"
+}

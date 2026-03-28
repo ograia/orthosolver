@@ -1018,9 +1018,15 @@ def _phase04_results_by_lemma(phase04_summary: dict[str, Any]) -> dict[str, dict
 def _resolve_latest_candidate_path(phase04_lemma: dict[str, Any] | None) -> Path | None:
     if not isinstance(phase04_lemma, dict):
         return None
-    final_success = str(phase04_lemma.get("final_success_path", "")).strip()
-    if final_success:
-        return Path(final_success)
+    merged_authoritative = str(phase04_lemma.get("merged_authoritative_path", "")).strip()
+    if merged_authoritative:
+        return Path(merged_authoritative)
+    provisional_verified = str(phase04_lemma.get("provisional_verified_path", "")).strip()
+    if provisional_verified:
+        return Path(provisional_verified)
+    legacy_final_success = str(phase04_lemma.get("final_success_path", "")).strip()
+    if legacy_final_success:
+        return Path(legacy_final_success)
     attempts = phase04_lemma.get("attempts", [])
     if not isinstance(attempts, list) or not attempts:
         return None

@@ -5,13 +5,13 @@ import json
 import re
 import shutil
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable
 
 from .artifact_io import RunPaths, write_json, write_text
 from .claude_candidate_selection import CandidateSelection, select_lean_candidate
-from .claude_runner import ClaudeRunner
+from .claude_runner import ClaudeRunner, phase_timeout_overrides
 from .config import RuntimeConfig
 from .contracts import NormalizedProblemBundle
 from .lean_checks import LeanCommandResult, check_lean_file
@@ -62,6 +62,26 @@ class StatementSignature:
 
 
 @dataclass(frozen=True)
+class StatementRoundArtifact:
+    round_index: int
+    canonical_before_path: Path
+    working_copy_path: Path
+    canonical_after_path: Path
+    promotion_status: str
+    promotion_reason: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "round_index": self.round_index,
+            "canonical_before_path": str(self.canonical_before_path),
+            "working_copy_path": str(self.working_copy_path),
+            "canonical_after_path": str(self.canonical_after_path),
+            "promotion_status": self.promotion_status,
+            "promotion_reason": self.promotion_reason,
+        }
+
+
+@dataclass(frozen=True)
 class StatementPhaseResult:
     status: str
     statements_path: Path
@@ -77,6 +97,7 @@ class StatementPhaseResult:
     candidate_source: str | None = None
     candidate_selection_reasons: tuple[str, ...] = ()
     candidate_lean_score: int | None = None
+    round_artifacts: tuple[StatementRoundArtifact, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -94,6 +115,7 @@ class StatementPhaseResult:
             "candidate_source": self.candidate_source,
             "candidate_selection_reasons": list(self.candidate_selection_reasons),
             "candidate_lean_score": self.candidate_lean_score,
+            "round_artifacts": [item.to_dict() for item in self.round_artifacts],
         }
 
 
@@ -178,61 +200,176 @@ def _run_statement_phase_inner(
     statements_path = run_paths.workspace_dir / "Orthos" / "Statements.lean"
     check_history: list[dict[str, Any]] = []
     claude_runs: list[dict[str, Any]] = []
+    round_artifacts: list[StatementRoundArtifact] = []
     prompt_naming = decl_naming.to_prompt_naming()
 
     existing_statements_text = statements_path.read_text(encoding="utf-8") if statements_path.exists() else ""
-    current_text = ""
-    previous_text = existing_statements_text
+    current_text = existing_statements_text
     round_index = 0
     latest_candidate_selection = CandidateSelection(text="", source="none", reasons=(), lean_score=0)
     statement_validator = _build_statement_stage_validator(decl_naming)
+    last_working_relative_path = "Orthos/Statements.lean"
+    last_promotion_reason = "initial baseline"
+    last_round_promoted = False
+    pending_promoted_text: str | None = None
+    effective_model = model or runtime_config.claude.model
+
+    def _round_workspace_relative_path(index: int) -> str:
+        return f"Orthos/Statements_working_round_{index:02d}.lean"
+
+    def _record_round_artifacts(
+        *,
+        index: int,
+        canonical_before_text: str,
+        working_text: str,
+        canonical_after_text: str,
+        promotion_status: str,
+        promotion_reason: str,
+    ) -> None:
+        canonical_before_path = stmts_dir / f"canonical_before_round_{index:02d}.lean"
+        working_copy_path = stmts_dir / f"working_round_{index:02d}.lean"
+        canonical_after_path = stmts_dir / f"statements_round_{index:02d}.lean"
+        promotion_meta_path = stmts_dir / f"promotion_round_{index:02d}.json"
+        diff_path = stmts_dir / f"diff_round_{index:02d}.patch"
+        write_text(canonical_before_path, canonical_before_text)
+        write_text(working_copy_path, working_text)
+        write_text(canonical_after_path, canonical_after_text)
+        write_text(diff_path, _render_statement_diff(canonical_before_text, canonical_after_text))
+        write_json(
+            promotion_meta_path,
+            {
+                "round_index": index,
+                "promotion_status": promotion_status,
+                "promotion_reason": promotion_reason,
+                "working_relative_path": _round_workspace_relative_path(index),
+            },
+        )
+        round_artifacts.append(
+            StatementRoundArtifact(
+                round_index=index,
+                canonical_before_path=canonical_before_path,
+                working_copy_path=working_copy_path,
+                canonical_after_path=canonical_after_path,
+                promotion_status=promotion_status,
+                promotion_reason=promotion_reason,
+            )
+        )
+
+    def _candidate_promotion(
+        *,
+        candidate_text: str,
+        selection: CandidateSelection,
+    ) -> tuple[bool, str]:
+        if not candidate_text.strip():
+            return False, "candidate selection produced empty text"
+        if selection.source == "none":
+            reasons = "; ".join(selection.reasons) if selection.reasons else "stage validator rejected candidate"
+            return False, reasons
+        disallowed = find_disallowed_statement_tokens(candidate_text)
+        if disallowed:
+            return False, "; ".join(disallowed)
+        return True, "selected + stage-valid + policy-compliant"
+
+    def _promotion_failure_check(reason: str, working_relative_path: str) -> LeanCommandResult:
+        return LeanCommandResult(
+            check_name=f"file_{working_relative_path.replace('/', '_').replace('.', '_')}",
+            command=("internal", "statement_promotion_guard"),
+            cwd=run_paths.workspace_dir,
+            returncode=1,
+            stdout="",
+            stderr=reason,
+            duration_seconds=0.0,
+        )
+
     if provided_statements_text is not None:
-        current_text = normalize_lean_text(provided_statements_text)
+        working_relative_path = _round_workspace_relative_path(round_index)
+        working_path = run_paths.workspace_dir / working_relative_path
+        write_text(working_path, current_text)
+        candidate_text = normalize_lean_text(provided_statements_text)
         latest_candidate_selection = CandidateSelection(
-            text=current_text,
+            text=candidate_text,
             source="provided",
             reasons=("provided statements text used",),
             lean_score=0,
         )
-        # Save provided text as round 0 artifact.
-        write_text(stmts_dir / "statements_round_00.lean", current_text)
+        promoted, promotion_reason = _candidate_promotion(
+            candidate_text=candidate_text,
+            selection=latest_candidate_selection,
+        )
+        write_text(working_path, candidate_text)
+        last_working_relative_path = working_relative_path
+        last_promotion_reason = promotion_reason
+        last_round_promoted = promoted
+        pending_promoted_text = candidate_text if promoted else None
+        _record_round_artifacts(
+            index=round_index,
+            canonical_before_text=existing_statements_text,
+            working_text=candidate_text,
+            canonical_after_text=candidate_text if promoted else current_text,
+            promotion_status="pending_compile" if promoted else "rejected_structural",
+            promotion_reason=promotion_reason,
+        )
     else:
-        prompt = build_statement_translation_prompt(bundle, prompt_naming, lean4_skills_refs=lean4_skills_refs)
+        prompt = build_statement_translation_prompt(
+            bundle,
+            prompt_naming,
+            target_relative_path=_round_workspace_relative_path(round_index),
+            lean4_skills_refs=lean4_skills_refs,
+        )
         if claude_runner is None:
             claude_runner = ClaudeRunner(runtime_config)
 
-        # Save draft prompt as round 0.
         write_text(stmts_dir / "prompt_round_00.md", prompt)
 
-        # Retry draft generation up to 2 times if Claude fails (stall, crash, etc.)
         max_draft_attempts = 2
+        promoted = False
+        candidate_text = ""
         for draft_attempt in range(max_draft_attempts):
+            working_relative_path = _round_workspace_relative_path(round_index)
+            working_path = run_paths.workspace_dir / working_relative_path
+            write_text(working_path, current_text)
             phase_suffix = "" if draft_attempt == 0 else f"_retry{draft_attempt}"
             claude_result = claude_runner.run_prompt(
                 run_paths=run_paths,
                 prompt=prompt,
                 phase_name=f"phase03_statements_draft{phase_suffix}",
-                model=model,
-                timeout_seconds=runtime_config.claude.timeout_seconds,
+                model=effective_model,
                 permission_mode="bypassPermissions",
                 allowed_tools="mcp,Read,Write,Edit,Glob,Grep,Bash",
+                **phase_timeout_overrides(timeout_seconds),
             )
             claude_runs.append(claude_result.to_dict())
-            # Copy JSONL to statements dir.
             if claude_result.raw_output_path.exists():
                 jsonl_name = f"claude_round_00{'_retry' + str(draft_attempt) if draft_attempt > 0 else ''}.jsonl"
                 shutil.copy2(claude_result.raw_output_path, stmts_dir / jsonl_name)
             latest_candidate_selection = select_lean_candidate(
                 trace=claude_result.trace,
-                target_path=statements_path,
-                baseline_text=existing_statements_text,
+                target_path=working_path,
+                baseline_text=current_text,
                 normalize_text=normalize_lean_text,
                 stage_validator=statement_validator,
             )
-            draft_text = latest_candidate_selection.text
-            if draft_text.strip() or claude_result.ok:
-                break  # Got a usable candidate or Claude completed successfully
-            # Log retry
+            candidate_text = latest_candidate_selection.text
+            promoted, promotion_reason = _candidate_promotion(
+                candidate_text=candidate_text,
+                selection=latest_candidate_selection,
+            )
+            working_text = working_path.read_text(encoding="utf-8") if working_path.exists() else current_text
+            canonical_before_text = current_text
+            last_working_relative_path = working_relative_path
+            last_promotion_reason = promotion_reason
+            last_round_promoted = promoted
+            pending_promoted_text = candidate_text if promoted else None
+            _record_round_artifacts(
+                index=round_index,
+                canonical_before_text=canonical_before_text,
+                working_text=working_text,
+                canonical_after_text=candidate_text if promoted else current_text,
+                promotion_status="pending_compile" if promoted else "rejected_structural",
+                promotion_reason=promotion_reason,
+            )
+            if candidate_text.strip() or claude_result.ok:
+                break
             if draft_attempt < max_draft_attempts - 1:
                 import sys as _sys
                 print(
@@ -241,7 +378,7 @@ def _run_statement_phase_inner(
                     file=_sys.stderr, flush=True,
                 )
 
-        if not draft_text.strip() and not claude_result.ok:
+        if not candidate_text.strip() and not claude_result.ok:
             diagnostics = (
                 "Claude statement generation failed "
                 f"(phase={claude_result.phase_name}, returncode={claude_result.returncode}, "
@@ -263,34 +400,19 @@ def _run_statement_phase_inner(
                 candidate_source=latest_candidate_selection.source,
                 candidate_selection_reasons=latest_candidate_selection.reasons,
                 candidate_lean_score=latest_candidate_selection.lean_score,
+                round_artifacts=tuple(round_artifacts),
             )
-        current_text = draft_text if draft_text.strip() else existing_statements_text
-
-        # Save round 0 artifacts.
-        write_text(stmts_dir / "statements_round_00.lean", current_text)
-        write_text(stmts_dir / "diff_round_00.patch", _render_statement_diff(previous_text, current_text))
-
-    write_text(statements_path, current_text)
 
     attempts_used = 0
     latest_check: LeanCommandResult | None = None
     while True:
         attempts_used += 1
-        disallowed = find_disallowed_statement_tokens(current_text)
-        if disallowed:
-            latest_check = LeanCommandResult(
-                check_name="file_Orthos_Statements_lean",
-                command=("internal", "statement_guard"),
-                cwd=run_paths.workspace_dir,
-                returncode=1,
-                stdout="",
-                stderr="\n".join(disallowed),
-                duration_seconds=0.0,
-            )
+        if not last_round_promoted:
+            latest_check = _promotion_failure_check(last_promotion_reason, last_working_relative_path)
         else:
             latest_check = check_lean_file(
                 run_paths.workspace_dir,
-                "Orthos/Statements.lean",
+                last_working_relative_path,
                 timeout_seconds=timeout_seconds,
                 runner=runner,
                 lake_jobs=runtime_config.lean.lake_jobs,
@@ -302,7 +424,23 @@ def _run_statement_phase_inner(
         write_text(stmts_dir / f"diagnostics_round_{round_index:02d}.txt", diag_text)
 
         if latest_check.ok:
+            if last_round_promoted and pending_promoted_text is not None:
+                current_text = pending_promoted_text
+                write_text(statements_path, current_text)
+                if round_artifacts:
+                    round_artifacts[-1] = replace(
+                        round_artifacts[-1],
+                        promotion_status="promoted",
+                        promotion_reason="authoritative compile passed",
+                    )
             break
+        if last_round_promoted and round_artifacts:
+            round_artifacts[-1] = replace(
+                round_artifacts[-1],
+                promotion_status="rejected_compile",
+                promotion_reason=_lean_diagnostics_text(latest_check),
+            )
+        pending_promoted_text = None
 
         if attempts_used > max_repair_rounds:
             diagnostics = summarize_diagnostics_from_check(latest_check)
@@ -338,6 +476,7 @@ def _run_statement_phase_inner(
                 candidate_source=latest_candidate_selection.source,
                 candidate_selection_reasons=latest_candidate_selection.reasons,
                 candidate_lean_score=latest_candidate_selection.lean_score,
+                round_artifacts=tuple(round_artifacts),
             )
 
         if claude_runner is None:
@@ -370,16 +509,20 @@ def _run_statement_phase_inner(
                 candidate_source=latest_candidate_selection.source,
                 candidate_selection_reasons=latest_candidate_selection.reasons,
                 candidate_lean_score=latest_candidate_selection.lean_score,
+                round_artifacts=tuple(round_artifacts),
             )
 
         # --- Repair round ---
         round_index += 1
-        previous_text = current_text
+        canonical_before_text = current_text
+        working_relative_path = _round_workspace_relative_path(round_index)
+        working_path = run_paths.workspace_dir / working_relative_path
+        write_text(working_path, canonical_before_text)
 
         repair_prompt = build_statement_repair_prompt(
             bundle,
             prompt_naming,
-            current_statements_text=current_text,
+            target_relative_path=working_relative_path,
             diagnostics_text=_lean_diagnostics_text(latest_check),
             repair_round=attempts_used - 1,
             lean4_skills_refs=lean4_skills_refs,
@@ -391,10 +534,10 @@ def _run_statement_phase_inner(
             run_paths=run_paths,
             prompt=repair_prompt,
             phase_name=f"phase03_statements_repair_{attempts_used - 1}",
-            model=model,
-            timeout_seconds=runtime_config.claude.timeout_seconds,
+            model=effective_model,
             permission_mode="bypassPermissions",
             allowed_tools="mcp,Read,Write,Edit,Glob,Grep,Bash",
+            **phase_timeout_overrides(timeout_seconds),
         )
         claude_runs.append(repair_result.to_dict())
         # Copy JSONL to statements dir.
@@ -402,20 +545,29 @@ def _run_statement_phase_inner(
             shutil.copy2(repair_result.raw_output_path, stmts_dir / f"claude_round_{round_index:02d}.jsonl")
         latest_candidate_selection = select_lean_candidate(
             trace=repair_result.trace,
-            target_path=statements_path,
-            baseline_text=current_text,
+            target_path=working_path,
+            baseline_text=canonical_before_text,
             normalize_text=normalize_lean_text,
             stage_validator=statement_validator,
         )
         repaired_text = latest_candidate_selection.text
-        if repaired_text.strip():
-            current_text = repaired_text
-        write_text(statements_path, current_text)
-
-        # Save repair round artifacts.
-        write_text(stmts_dir / f"statements_round_{round_index:02d}.lean", current_text)
-        write_text(stmts_dir / f"diff_round_{round_index:02d}.patch",
-                    _render_statement_diff(previous_text, current_text))
+        promoted, promotion_reason = _candidate_promotion(
+            candidate_text=repaired_text,
+            selection=latest_candidate_selection,
+        )
+        working_text = working_path.read_text(encoding="utf-8") if working_path.exists() else canonical_before_text
+        last_working_relative_path = working_relative_path
+        last_promotion_reason = promotion_reason
+        last_round_promoted = promoted
+        pending_promoted_text = repaired_text if promoted else None
+        _record_round_artifacts(
+            index=round_index,
+            canonical_before_text=canonical_before_text,
+            working_text=working_text,
+            canonical_after_text=repaired_text if promoted else current_text,
+            promotion_status="pending_compile" if promoted else "rejected_structural",
+            promotion_reason=promotion_reason,
+        )
 
     # --- Auto-fix wrong declaration names before extracting signatures. ---
     # If Claude used wrong names (e.g. thm_root_XXXX instead of root_prob_XXXX),
@@ -462,6 +614,7 @@ def _run_statement_phase_inner(
             candidate_source=latest_candidate_selection.source,
             candidate_selection_reasons=latest_candidate_selection.reasons,
             candidate_lean_score=latest_candidate_selection.lean_score,
+            round_artifacts=tuple(round_artifacts),
         )
 
     pinned_payload["run_name"] = run_paths.run_name
@@ -481,6 +634,7 @@ def _run_statement_phase_inner(
         candidate_source=latest_candidate_selection.source,
         candidate_selection_reasons=latest_candidate_selection.reasons,
         candidate_lean_score=latest_candidate_selection.lean_score,
+        round_artifacts=tuple(round_artifacts),
     )
 
 

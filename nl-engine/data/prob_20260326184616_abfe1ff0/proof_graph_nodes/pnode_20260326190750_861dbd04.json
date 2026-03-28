@@ -1,0 +1,106 @@
+{
+  "created_at": "2026-03-26T19:07:50.713458Z",
+  "graph_node_id": "pnode_20260326190750_861dbd04",
+  "metadata": {
+    "parent_id": "thm_root_20260326184616_b94d02f6"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "13547a19575c7bae09745ccfab147dd87242d7cb522c063936efd51fc279cf93",
+  "owner_id": "lem_20260326190446_0b854d87",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260326190750_b9f48b9c",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is a fixed integer and n is at least 2.",
+      "r is an integer at least 1 in the definition of E_r.",
+      "E_0 is defined separately to be 1.",
+      "For E_r, the tuple b_1 through b_r must be a permutation of the set {1,...,r}.",
+      "For every i from 1 to r minus 1, the quantity b_{i+1} minus b_i has sign alternating with i: it is positive for odd i and negative for even i.",
+      "j ranges over integers from 1 to n when defining w_j.",
+      "The binomial coefficient uses n minus 1 and j minus 1, so the index range ensures the parameters are in the standard valid range.",
+      "P is a subset of {1,...,n} and contains no two consecutive integers.",
+      "The odd and even sums are taken over indices in {1,...,n} of the corresponding parity."
+    ],
+    "normalized_claim": "For a fixed integer n at least 2, define the numbers E_r by counting alternating permutations of {1,...,r}, with E_0 equal to 1, and define weights w_j from E_{j-1} and E_{n-j}. Then every subset P of {1,...,n} with no consecutive integers has total weight at most the larger of the total weight on odd indices and the total weight on even indices. Moreover, if the odd-index total and even-index total are equal, then a subset P achieves this maximum exactly when P is precisely the odd-index set or precisely the even-index set.",
+    "quantifier_order": [
+      "Fix an integer n at least 2.",
+      "For each integer r at least 1, define E_r by counting permutations of {1,...,r} whose consecutive differences alternate in sign, and set E_0 equal to 1.",
+      "For each j from 1 to n, define w_j using n, j, E_{j-1}, and E_{n-j}.",
+      "Define S_odd as the sum of w_j over odd j in {1,...,n}, and S_even as the sum of w_j over even j in {1,...,n}.",
+      "For every subset P of {1,...,n} with no consecutive integers, the sum of w_j over j in P is at most the larger of S_odd and S_even.",
+      "If S_odd equals S_even, then for every such P, equality with the maximum holds exactly when P is the set of odd integers in {1,...,n} or the set of even integers in {1,...,n}."
+    ],
+    "variables": [
+      {
+        "domain": "fixed integer with n at least 2",
+        "name": "n",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integer at least 1",
+        "name": "r",
+        "role": "index for the definition of E_r",
+        "type": "integer"
+      },
+      {
+        "domain": "integer from 1 to r minus 1",
+        "name": "i",
+        "role": "index in the alternating sign condition",
+        "type": "integer"
+      },
+      {
+        "domain": "a permutation of {1,...,r}",
+        "name": "b_1 through b_r",
+        "role": "counted object in the definition of E_r",
+        "type": "ordered tuple of integers"
+      },
+      {
+        "domain": "nonnegative integer sequence defined for r at least 0",
+        "name": "E_r",
+        "role": "counts permutations satisfying the alternating inequality condition",
+        "type": "integer"
+      },
+      {
+        "domain": "integer from 1 to n",
+        "name": "j",
+        "role": "index for the weights w_j",
+        "type": "integer"
+      },
+      {
+        "domain": "defined for each j from 1 to n",
+        "name": "w_j",
+        "role": "weight attached to index j",
+        "type": "integer"
+      },
+      {
+        "domain": "sum of the weights at odd indices in {1,...,n}",
+        "name": "S_odd",
+        "role": "odd-parity total weight",
+        "type": "integer"
+      },
+      {
+        "domain": "sum of the weights at even indices in {1,...,n}",
+        "name": "S_even",
+        "role": "even-parity total weight",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of {1,...,n} with no two consecutive integers",
+        "name": "P",
+        "role": "arbitrary admissible subset in the inequality",
+        "type": "subset of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "There is no existential witness in the main inequality; the statement is universally quantified over all admissible subsets P.",
+      "E_r depends only on r and on the existence and count of permutations b_1 through b_r satisfying the alternating sign condition.",
+      "w_j depends on n, j, E_{j-1}, and E_{n-j}.",
+      "S_odd and S_even depend on the full family of weights w_j and the parity partition of {1,...,n}.",
+      "In the equality characterization under S_odd equal to S_even, the only maximizing subsets are exactly the odd-index set and exactly the even-index set; no additional witness choice is involved."
+    ]
+  },
+  "statement_nl": "Fix an integer n >= 2. For each integer r >= 1, let E_r be the number of permutations (b_1,...,b_r) of {1,...,r} such that (-1)^(i-1) * (b_{i+1} - b_i) > 0 for every 1 <= i <= r-1, and set E_0 = 1. Define w_j = binom(n-1, j-1) * E_{j-1} * E_{n-j} for 1 <= j <= n, define S_odd = sum over odd j in {1,...,n} of w_j, and define S_even = sum over even j in {1,...,n} of w_j. If P is a subset of {1,...,n} containing no two consecutive integers, then sum over j in P of w_j is at most max(S_odd, S_even). If, in addition, S_odd = S_even, then equality sum over j in P of w_j = max(S_odd, S_even) holds if and only if P is exactly the set of odd integers in {1,...,n} or exactly the set of even integers in {1,...,n}.",
+  "updated_at": "2026-03-26T19:07:50.713459Z"
+}

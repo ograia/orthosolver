@@ -6,6 +6,7 @@ from nl_engine.api.run_state import request_problem_stop
 from nl_engine.domain.contracts import ProblemExecutionSummary
 from nl_engine.domain.enums import ExecutionDesiredState, ExecutionStatus, ProblemStatus
 from nl_engine.domain.models import ProblemExecutionORM
+from nl_engine.lean_client.sessions import LeanSessionManager
 from nl_engine.observability.events import EventLogger
 from nl_engine.persistence.db import FileStore
 from nl_engine.persistence.repositories import (
@@ -163,6 +164,12 @@ class ProblemExecutionService:
 
         active_rows = self._active_executions(problem_id)
         active_execution_ids = {row.execution_id for row in active_rows}
+        LeanSessionManager(self.store).cancel_problem_lean_work(
+            problem_id,
+            reason=supersede_reason,
+            terminate_session=True,
+            clear_metadata=True,
+        )
 
         problem.continuation_generation = self._problem_generation(problem) + 1
         if set_problem_running:
@@ -204,6 +211,12 @@ class ProblemExecutionService:
         return fresh_execution
 
     def request_cancel(self, problem_id: str) -> ProblemExecutionORM | None:
+        LeanSessionManager(self.store).cancel_problem_lean_work(
+            problem_id,
+            reason="api cancel requested",
+            terminate_session=True,
+            clear_metadata=True,
+        )
         row = self.executions.get_active_for_problem(problem_id)
         if row is None:
             return self.executions.get_latest_for_problem(problem_id)
@@ -238,6 +251,12 @@ class ProblemExecutionService:
                 problem.status,
                 reason="api pause requested",
             )
+        LeanSessionManager(self.store).cancel_problem_lean_work(
+            problem_id,
+            reason="api pause requested",
+            terminate_session=True,
+            clear_metadata=True,
+        )
         row = self.executions.get_active_for_problem(problem_id)
         if row is None:
             return self.executions.get_latest_for_problem(problem_id)

@@ -1,0 +1,11 @@
+{
+  "created_at": "2026-03-26T23:21:10.838903Z",
+  "event_id": 214,
+  "new_status": "proved",
+  "old_status": null,
+  "problem_id": "prob_20260326184616_abfe1ff0",
+  "reason": "Interpret w_j combinatorially: for odd j it counts alternating permutations with 1 in position j, and for even j it counts alternating permutations with n in position j. This gives S_odd=S_even=E_n and the convolution recurrence 2E_{m+1}=sum_k binom(m,k)E_kE_{m-k}. From this, the exponential generating function F(x)=sum E_r x^r/r! satisfies 2F'=1+F^2, hence F=sec x+tan x. For W_n(z)=sum_j w_j z^{j-1}, one has sum_n W_n(z)x^{n-1}/(n-1)!=F(zx)F(x). Using the identity F(u)F(v)-1=tan((u+v)/2)(F(u)+F(v)), we get W_n(z)=(1+z)Q_n(z) where Q_n has strictly positive coefficients. Writing Q_n(z)=sum_{i=1}^{n-1} q_i z^{i-1}, this means w_j=q_{j-1}+q_j with all q_i>0. For any P with no consecutive indices, each q_i can be counted by at most one of the adjacent vertices i and i+1, so sum_{j in P}w_j<=sum_i q_i=E_n=S_odd=S_even=max(S_odd,S_even). Equality requires every q_i to be counted exactly once, i.e. every adjacent pair contains exactly one chosen vertex, which forces P to be exactly the odd set or exactly the even set.",
+  "stage": "lemma.solver_attempt",
+  "target_node_id": "lem_20260326190446_0b854d87",
+  "worker_job_id": "wrk_lem_20260326190446_0b854d87_g0_solve_1"
+}

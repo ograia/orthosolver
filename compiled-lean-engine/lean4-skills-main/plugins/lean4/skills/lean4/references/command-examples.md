@@ -1005,8 +1005,8 @@ Claude: Running diagnostics...
 ✓ Lean LSP MCP tools available in this session (lean_goal)
 
 ### Plugin
-✓ LEAN4_PLUGIN_ROOT=/home/user/.claude/plugins/lean4
-✓ LEAN4_SCRIPTS=/home/user/.claude/plugins/lean4/lib/scripts
+✓ LEAN4_PLUGIN_ROOT=~/.claude/plugins/lean4
+✓ LEAN4_SCRIPTS=~/.claude/plugins/lean4/lib/scripts
 ✓ Hooks executable
 ✓ Scripts executable (12 files)
 

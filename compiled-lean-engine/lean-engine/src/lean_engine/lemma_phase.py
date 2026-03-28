@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Callable
 from urllib.parse import quote
 
-from .artifact_io import RunPaths, sanitize_component, write_json, write_text
+from .artifact_io import RunPaths, sanitize_component, workspace_file_digest, write_json, write_text
 from .claude_candidate_selection import select_lean_candidate
 from .claude_runner import (
     ClaudeRunResult,
@@ -26,13 +26,14 @@ from .claude_runner import (
 )
 from .config import RuntimeConfig
 from .contracts import NormalizedLemma
-from .lean_checks import LeanCommandResult, check_lean_file
+from .lean_checks import LeanCommandResult, check_lean_file, rebuild_module_olean
 from .statement_phase import (
     extract_statement_signature,
     normalize_lean_text,
     normalize_signature_text,
     sanitize_lean_decl_suffix,
 )
+from .prompting import build_edit_first_status_only_contract
 
 SubprocessRunner = Callable[..., subprocess.CompletedProcess[str]]
 
@@ -44,6 +45,15 @@ SIGNATURE_PREFIX_PATTERN = re.compile(r"^(theorem|lemma)\s+([A-Za-z0-9_'.]+)\b")
 ORTHOS_END_PATTERN = re.compile(r"^\s*end\s+Orthos(?:\.\w+)*\s*$")
 _LEMMA_END_MARKER = "-- END LEMMAS"
 MAJOR_GAP_PATTERN = re.compile(r"(major proof gap|missing mathematical step|cannot be justified)", re.IGNORECASE)
+_SCRATCH_DECL_START_RE = re.compile(
+    r"^\s*(?:noncomputable\s+)?(?:private\s+|protected\s+)?(axiom|theorem|lemma|def)\b"
+)
+_SCRATCH_DECL_NEUTRALIZE_RE = re.compile(
+    r"^\s*(?:noncomputable\s+)?(?:private\s+|protected\s+)?(axiom|theorem|lemma)\b"
+)
+_SCRATCH_DECL_NAME_RE = re.compile(
+    r"^\s*(?:noncomputable\s+)?(?:private\s+|protected\s+)?(?:axiom|theorem|lemma|def)\s+(\S+)"
+)
 
 _log = logging.getLogger(__name__)
 
@@ -133,9 +143,42 @@ class TrustedContextEntry:
 
 
 @dataclass(frozen=True)
+class AssumptionCapsule:
+    lemma_id: str
+    direct_predecessors: tuple[str, ...]
+    transitive_predecessors: tuple[str, ...]
+    resolved_predecessors: tuple[str, ...]
+    unresolved_predecessors: tuple[str, ...]
+    statements_by_lemma: dict[str, str]
+    dependency_source_revision: str
+    authoritative_workspace_revision: str | None
+    worker_workspace_revision: str | None
+    generated_module_name: str | None = None
+    generated_module_path: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "lemma_id": self.lemma_id,
+            "direct_predecessors": list(self.direct_predecessors),
+            "transitive_predecessors": list(self.transitive_predecessors),
+            "resolved_predecessors": list(self.resolved_predecessors),
+            "unresolved_predecessors": list(self.unresolved_predecessors),
+            "statements_by_lemma": dict(self.statements_by_lemma),
+            "dependency_source_revision": self.dependency_source_revision,
+            "authoritative_workspace_revision": self.authoritative_workspace_revision,
+            "worker_workspace_revision": self.worker_workspace_revision,
+            "generated_module_name": self.generated_module_name,
+            "generated_module_path": self.generated_module_path,
+        }
+
+
+@dataclass(frozen=True)
 class LemmaAttemptResult:
     round_index: int
     scratch_path: Path
+    canonical_before_path: Path
+    working_copy_path: Path
+    canonical_after_path: Path
     prompt_path: Path
     claude_raw_path: Path
     diagnostics_path: Path
@@ -150,11 +193,32 @@ class LemmaAttemptResult:
     candidate_source: str | None = None
     candidate_selection_reasons: tuple[str, ...] = ()
     candidate_lean_score: int | None = None
+    promotion_status: str = "rejected"
+    promotion_reason: str = ""
+    mcp_check_status: str | None = None
+    batch_check_status: str | None = None
+    assumption_capsule_path: Path | None = None
+    selected_candidate_path: Path | None = None
+    selected_candidate_hash: str | None = None
+    candidate_status: str | None = None
+    structural_validation_result: dict[str, Any] | None = None
+    authoritative_check_result: dict[str, Any] | None = None
+    advisory_check_result: dict[str, Any] | None = None
+    attempt_outcome: str | None = None
+    authoritative_round_path: Path | None = None
+    round_manifest_path: Path | None = None
+    workspace_file_hash: str | None = None
+    normalized_candidate_hash: str | None = None
+    compiled_file_hash: str | None = None
+    authoritative_check_ok: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "round_index": self.round_index,
             "scratch_path": str(self.scratch_path),
+            "canonical_before_path": str(self.canonical_before_path),
+            "working_copy_path": str(self.working_copy_path),
+            "canonical_after_path": str(self.canonical_after_path),
             "prompt_path": str(self.prompt_path),
             "claude_raw_path": str(self.claude_raw_path),
             "diagnostics_path": str(self.diagnostics_path),
@@ -169,6 +233,24 @@ class LemmaAttemptResult:
             "candidate_source": self.candidate_source,
             "candidate_selection_reasons": list(self.candidate_selection_reasons),
             "candidate_lean_score": self.candidate_lean_score,
+            "promotion_status": self.promotion_status,
+            "promotion_reason": self.promotion_reason,
+            "mcp_check_status": self.mcp_check_status,
+            "batch_check_status": self.batch_check_status,
+            "assumption_capsule_path": str(self.assumption_capsule_path) if self.assumption_capsule_path else None,
+            "selected_candidate_path": str(self.selected_candidate_path) if self.selected_candidate_path else None,
+            "selected_candidate_hash": self.selected_candidate_hash,
+            "candidate_status": self.candidate_status,
+            "structural_validation_result": self.structural_validation_result,
+            "authoritative_check_result": self.authoritative_check_result,
+            "advisory_check_result": self.advisory_check_result,
+            "attempt_outcome": self.attempt_outcome,
+            "authoritative_round_path": str(self.authoritative_round_path) if self.authoritative_round_path else None,
+            "round_manifest_path": str(self.round_manifest_path) if self.round_manifest_path else None,
+            "workspace_file_hash": self.workspace_file_hash,
+            "normalized_candidate_hash": self.normalized_candidate_hash,
+            "compiled_file_hash": self.compiled_file_hash,
+            "authoritative_check_ok": self.authoritative_check_ok,
         }
 
 
@@ -185,7 +267,23 @@ class LemmaFormalizationResult:
     message: str | None = None
     diagnostics: tuple[str, ...] = ()
     attempts: tuple[LemmaAttemptResult, ...] = ()
-    final_success_path: Path | None = None
+    verified_candidate_path: Path | None = None
+    provisional_verified_path: Path | None = None
+    merged_authoritative_path: Path | None = None
+    layer_index: int | None = None
+    worker_workspace: Path | None = None
+    merge_revision: int | None = None
+    verifier_revision: int | None = None
+    code_origin: dict[str, Any] | None = None
+    terminal: bool = False
+    declared_dependencies: tuple[str, ...] = ()
+    resolved_dependencies: tuple[str, ...] = ()
+    assumption_capsule_path: Path | None = None
+    selected_candidate_path: Path | None = None
+    selected_candidate_hash: str | None = None
+    authoritative_workspace_revision: str | None = None
+    worker_workspace_revision: str | None = None
+    merge_replay_result: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -200,7 +298,27 @@ class LemmaFormalizationResult:
             "message": self.message,
             "diagnostics": list(self.diagnostics),
             "attempts": [attempt.to_dict() for attempt in self.attempts],
-            "final_success_path": str(self.final_success_path) if self.final_success_path else None,
+            "verified_candidate_path": str(self.verified_candidate_path) if self.verified_candidate_path else None,
+            "provisional_verified_path": (
+                str(self.provisional_verified_path) if self.provisional_verified_path else None
+            ),
+            "merged_authoritative_path": (
+                str(self.merged_authoritative_path) if self.merged_authoritative_path else None
+            ),
+            "layer_index": self.layer_index,
+            "worker_workspace": str(self.worker_workspace) if self.worker_workspace else None,
+            "merge_revision": self.merge_revision,
+            "verifier_revision": self.verifier_revision,
+            "code_origin": self.code_origin,
+            "terminal": self.terminal,
+            "declared_dependencies": list(self.declared_dependencies),
+            "resolved_dependencies": list(self.resolved_dependencies),
+            "assumption_capsule_path": str(self.assumption_capsule_path) if self.assumption_capsule_path else None,
+            "selected_candidate_path": str(self.selected_candidate_path) if self.selected_candidate_path else None,
+            "selected_candidate_hash": self.selected_candidate_hash,
+            "authoritative_workspace_revision": self.authoritative_workspace_revision,
+            "worker_workspace_revision": self.worker_workspace_revision,
+            "merge_replay_result": self.merge_replay_result,
         }
 
 
@@ -257,6 +375,15 @@ class RoundMetrics:
 def _content_hash(text: str) -> str:
     """Short SHA256 hash for scratch file change detection."""
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+
+def _full_content_hash(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _normalized_diagnostic_hash(text: str) -> str:
+    normalized = "\n".join(line.strip() for line in text.splitlines() if line.strip())
+    return _full_content_hash(normalized)
 
 
 def _append_round_metrics(run_root: Path, metrics: RoundMetrics) -> None:
@@ -392,9 +519,40 @@ def write_trusted_manifest(path: Path, problem_id: str, entries: list[TrustedCon
     payload = {
         "problem_id": problem_id,
         "entry_count": len(entries),
+        "derived_only": True,
         "entries": [entry.to_dict() for entry in entries],
     }
     return write_json(path, payload)
+
+
+def write_assumption_capsule(path: Path, capsule: AssumptionCapsule) -> Path:
+    return write_json(path, capsule.to_dict())
+
+
+def assumption_signature_to_axiom(signature: str) -> str:
+    normalized = normalize_signature_text(signature)
+    replaced, count = re.subn(r"^\s*(theorem|lemma)\b", "axiom", normalized, count=1)
+    if count != 1:
+        raise ValueError(f"cannot convert signature to assumption axiom: `{signature}`")
+    return replaced
+
+
+def build_assumptions_module_text(
+    *,
+    lemma_id: str,
+    unresolved_dependency_signatures: list[PinnedLemmaSignature],
+) -> str:
+    lines = [
+        "import Mathlib",
+        "import Orthos.Lemmas",
+        "",
+        f"-- Generated unresolved dependency assumptions for {lemma_id}",
+        "",
+    ]
+    for dependency in unresolved_dependency_signatures:
+        lines.append(assumption_signature_to_axiom(dependency.signature))
+    lines.append("")
+    return "\n".join(lines)
 
 
 def _extract_open_lines(statements_path: Path | None) -> list[str]:
@@ -418,32 +576,227 @@ def _extract_open_lines(statements_path: Path | None) -> list[str]:
     return opens
 
 
+def _neutralize_statements_text_for_scratch(statements_text: str, decl_names_to_neutralize: set[str]) -> str:
+    """Comment out pinned theorem/lemma/axiom declarations for scratch imports."""
+    if not decl_names_to_neutralize:
+        return statements_text
+    lines = statements_text.splitlines()
+    neutralized: list[str] = []
+    inside_decl = False
+    doc_comment_buffer: list[str] = []
+    inside_doc_comment = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        if not inside_decl and not inside_doc_comment and stripped.startswith("/--"):
+            inside_doc_comment = True
+            doc_comment_buffer.append(line)
+            if "-/" in stripped[3:]:
+                inside_doc_comment = False
+            continue
+        if inside_doc_comment:
+            doc_comment_buffer.append(line)
+            if "-/" in stripped:
+                inside_doc_comment = False
+            continue
+
+        if _SCRATCH_DECL_START_RE.match(line):
+            name_match = _SCRATCH_DECL_NAME_RE.match(line)
+            decl_name = name_match.group(1) if name_match else ""
+            should_neutralize = (
+                _SCRATCH_DECL_NEUTRALIZE_RE.match(line) is not None
+                and decl_name in decl_names_to_neutralize
+            )
+            if should_neutralize:
+                for buf_line in doc_comment_buffer:
+                    neutralized.append(f"-- [pinned] {buf_line}")
+                doc_comment_buffer.clear()
+                inside_decl = True
+                neutralized.append(f"-- [pinned] {line}")
+                continue
+            neutralized.extend(doc_comment_buffer)
+            doc_comment_buffer.clear()
+            inside_decl = False
+            neutralized.append(line)
+            continue
+
+        if inside_decl:
+            if stripped:
+                neutralized.append(f"-- [pinned] {line}")
+                continue
+            inside_decl = False
+
+        if doc_comment_buffer:
+            neutralized.extend(doc_comment_buffer)
+            doc_comment_buffer.clear()
+
+        neutralized.append(line)
+
+    if doc_comment_buffer:
+        neutralized.extend(doc_comment_buffer)
+    return "\n".join(neutralized).rstrip() + "\n"
+
+
+def _context_declares_name(context_text: str, decl_name: str) -> bool:
+    pattern = re.compile(
+        rf"(?m)^\s*(?:noncomputable\s+)?(?:private\s+|protected\s+)?(?:axiom|theorem|lemma|def)\s+{re.escape(decl_name)}\b"
+    )
+    return pattern.search(context_text) is not None
+
+
+def _write_scratch_context_module(
+    *,
+    workspace_dir: Path,
+    module_basename: str,
+    statements_path: Path,
+    decl_names_to_neutralize: set[str],
+) -> tuple[str, Path]:
+    context_rel = Path("Orthos") / f"{module_basename}.lean"
+    context_path = workspace_dir / context_rel
+    try:
+        source_text = statements_path.read_text(encoding="utf-8")
+    except OSError:
+        source_text = "import Mathlib\n"
+    context_text = _neutralize_statements_text_for_scratch(source_text, decl_names_to_neutralize)
+    write_text(context_path, context_text)
+    module_name = f"Orthos.{module_basename}"
+    return module_name, context_path
+
+
+def _sanitize_candidate_imports_for_scratch_context(candidate_text: str, *, context_module_name: str) -> str:
+    """Rewrite scratch candidates away from shared workspace imports."""
+    safe_import = f"import {context_module_name}"
+    unsafe_imports = {"import Orthos.Statements"}
+    lines = candidate_text.splitlines()
+    rewritten: list[str] = []
+    seen_safe = False
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped in unsafe_imports:
+            if not seen_safe:
+                rewritten.append(safe_import)
+                seen_safe = True
+            continue
+        if stripped == safe_import:
+            if not seen_safe:
+                rewritten.append(line if line == safe_import else safe_import)
+                seen_safe = True
+            continue
+        rewritten.append(line)
+
+    return "\n".join(rewritten).rstrip() + "\n"
+
+
+def _contains_reintroduced_scratch_context_import(
+    *,
+    workspace_text: str,
+    normalized_text: str,
+    context_module_name: str,
+) -> bool:
+    safe_import = f"import {context_module_name}"
+    workspace_lines = workspace_text.splitlines()
+    normalized_lines = normalized_text.splitlines()
+    if safe_import in workspace_lines:
+        return False
+    if safe_import not in normalized_lines:
+        return False
+    removed = [line for line in workspace_lines if line not in normalized_lines]
+    added = [line for line in normalized_lines if line not in workspace_lines]
+    return not removed and added == [safe_import]
+
+
+def _is_workspace_build_state_issue(classification: str | None, diagnostics_text: str) -> bool:
+    if classification in {
+        "checker_mismatch",
+        "duplicate_declaration_context",
+        "missing_import",
+        "environment_dependency_missing",
+        "workspace_preparation_failed",
+    }:
+        return True
+    lowered = diagnostics_text.lower()
+    workspace_markers = (
+        ".olean",
+        "unknown module prefix",
+        "unknown import",
+        "unknown package",
+        "already been declared",
+        "already declared",
+        "duplicate declaration",
+    )
+    return any(marker in lowered for marker in workspace_markers)
+
+
+def _write_lemma_round_artifacts(
+    *,
+    canonical_before_path: Path,
+    scratch_path: Path,
+    working_copy_path: Path,
+    candidate_snapshot_path: Path,
+    diff_path: Path,
+    round_manifest_path: Path,
+    canonical_before_text: str,
+    authoritative_text: str,
+    round_manifest: dict[str, Any],
+) -> None:
+    write_text(working_copy_path, authoritative_text)
+    # Compatibility window: legacy paths are preserved as byte-identical copies
+    # of the authoritative round file. Historical "before/after/candidate"
+    # distinctions now live in the round manifest.
+    write_text(canonical_before_path, authoritative_text)
+    write_text(scratch_path, authoritative_text)
+    write_text(candidate_snapshot_path, authoritative_text)
+    write_text(diff_path, _render_diff(canonical_before_text, authoritative_text))
+    write_json(round_manifest_path, round_manifest)
+
+
+def _claude_reported_clean(raw_path: Path) -> bool:
+    if not raw_path.exists():
+        return False
+    try:
+        text = raw_path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    return "[STATUS: clean]" in text or "No errors or warnings found." in text
+
+
+def _render_batch_failure_text(check_result: LeanCommandResult, *, relative_path: str) -> str:
+    if check_result.stderr or check_result.stdout:
+        return check_result.stderr or check_result.stdout
+    lines = [
+        "lake env lean failed with no output",
+        f"target_file: {relative_path}",
+        f"returncode: {check_result.returncode}",
+        f"command: {' '.join(check_result.command)}",
+        f"cwd: {check_result.cwd}",
+    ]
+    return "\n".join(lines)
+
+
 def build_lemma_scratch_text(
     *,
     lemma_id: str,
     pinned_signature: str,
-    trusted_entries: list[TrustedContextEntry] | None = None,
+    context_module_name: str,
+    assumptions_module_name: str | None = None,
     statements_path: Path | None = None,
 ) -> str:
     sanitized = sanitize_lean_decl_suffix(lemma_id)
     lines = [
         "import Mathlib",
-        "import Orthos.Statements",
+        f"import {context_module_name}",
+        "import Orthos.Lemmas",
         "",
     ]
+    if assumptions_module_name:
+        lines.insert(2, f"import {assumptions_module_name}")
     # Replicate open declarations from Statements.lean so that unqualified
     # names (Icc, Tendsto, nhdsWithin, etc.) resolve in the scratch file.
     open_lines = _extract_open_lines(statements_path)
     if open_lines:
         lines.extend(open_lines)
-        lines.append("")
-    # Include sorry-stubbed signatures for previously-proven lemmas so that
-    # Lean elaborates the target proof in a context matching Combined.lean
-    # (all declarations in one flat namespace).
-    if trusted_entries:
-        lines.append("-- Trusted context: previously-proven lemma signatures")
-        for entry in trusted_entries:
-            lines.append(f"{entry.signature} := by sorry")
         lines.append("")
     lines.extend([
         f"-- Phase 04 scratch file for {lemma_id}.",
@@ -462,6 +815,7 @@ def build_lemma_formalization_prompt(
     lemma: NormalizedLemma,
     pinned: PinnedLemmaSignature,
     trusted_entries: list[TrustedContextEntry],
+    assumption_capsule: AssumptionCapsule | None,
     scratch_relative_path: str,
     repair_round: int,
     diagnostics_text: str | None = None,
@@ -481,12 +835,20 @@ def build_lemma_formalization_prompt(
         }
         for entry in trusted_entries
     ]
+    allowed_dependencies = {
+        "declared_dependencies": list(assumption_capsule.direct_predecessors) if assumption_capsule else [],
+        "resolved_dependencies": list(assumption_capsule.resolved_predecessors) if assumption_capsule else [],
+        "unresolved_dependency_axioms": list(assumption_capsule.unresolved_predecessors) if assumption_capsule else [],
+        "dependency_statements": dict(assumption_capsule.statements_by_lemma) if assumption_capsule else {},
+    }
     lines = [
         "You are formalizing one pinned Lean lemma (Phase 04).",
         "",
         "Hard rules:",
         "- Keep the target declaration header EXACTLY equal to the pinned signature.",
         "- Do not edit pinned signatures or trusted declarations.",
+        "- You may assume ONLY the explicitly listed dependency lemmas below.",
+        "- If you refer to any undeclared sibling, descendant, or future lemma, the candidate will be rejected.",
         "- You may freely adjust imports (add/remove `import` lines) to fix compilation.",
         "- Use `lean_diagnostic_messages` via MCP to check compilation. This is fast (~1-5s).",
         "- The final proof MUST NOT contain `sorry` or `admit`.",
@@ -581,6 +943,8 @@ def build_lemma_formalization_prompt(
         f"Target scratch file: `{scratch_relative_path}`",
         f"Repair round: {repair_round}",
         "",
+        *build_edit_first_status_only_contract(target_relative_path=scratch_relative_path),
+        "",
         "Pinned signature (CRITICAL — your theorem declaration MUST start with this EXACT text,",
         "character-for-character. Do NOT reformat, reorder, or expand `let` bindings):",
         "```",
@@ -595,24 +959,21 @@ def build_lemma_formalization_prompt(
         "",
         "Trusted context declarations (already compiler-accepted):",
         json.dumps(trusted_payload, ensure_ascii=True, sort_keys=True),
+        "",
+        "Allowed dependency assumptions (authoritative DAG-scoped contract):",
+        json.dumps(allowed_dependencies, ensure_ascii=True, sort_keys=True),
     ])
     if repair_round > 1 and previous_candidate:
         lines.extend([
             "",
-            f"LATEST DRAFT FROM ROUND {repair_round - 1} (this is what is currently in the scratch file).",
-            "Start from this draft and make targeted fixes instead of restarting from scratch.",
-            "```lean",
-            previous_candidate.rstrip(),
-            "```",
+            f"LATEST DRAFT FROM ROUND {repair_round - 1} is already in `{scratch_relative_path}`.",
+            "Read that file and make targeted fixes instead of restarting from scratch.",
         ])
-    if repair_round > 1 and best_partial_candidate and best_partial_candidate != previous_candidate:
+    if repair_round > 1 and best_partial_sorry_count is not None:
         lines.extend([
             "",
-            f"OLDER COMPILING REFERENCE (best partial so far; compiles with {best_partial_sorry_count} sorry placeholder(s)).",
-            "This is for reference only. It is NOT the current scratch file unless it matches the latest draft above.",
-            "```lean",
-            best_partial_candidate.rstrip(),
-            "```",
+            "Best partial progress summary:",
+            f"- fewest sorry placeholders seen so far: {best_partial_sorry_count}",
         ])
     if repair_round > 1:
         lines.extend([
@@ -653,15 +1014,6 @@ def build_lemma_formalization_prompt(
                 "",
                 "Make targeted edits to the scratch file to fix the errors above.",
                 "Do NOT rewrite the file from scratch — preserve working parts and only change what is broken.",
-                "Output Lean code only; no markdown fences and no commentary.",
-            ]
-        )
-    else:
-        lines.extend(
-            [
-                "",
-                "Return a COMPLETE replacement for the scratch Lean file.",
-                "Output Lean code only; no markdown fences and no commentary.",
             ]
         )
     return "\n".join(lines).strip() + "\n"
@@ -724,6 +1076,8 @@ def run_lemma_formalization(
     timeout_seconds: int,
     lean_check_timeout_seconds: int | None = None,
     model: str | None,
+    assumption_capsule: AssumptionCapsule | None = None,
+    pinned_decl_names: set[str] | None = None,
     claude_runner: ClaudeRunner | None = None,
     runner: SubprocessRunner = subprocess.run,
     mock_candidates: list[str] | None = None,
@@ -738,17 +1092,164 @@ def run_lemma_formalization(
     lemma_path_token = lemma_id_to_path_token(lemma.lemma_id)
     workspace_relative_scratch = f"Orthos/Scratch_{lemma_path_token}.lean"
     workspace_scratch_path = run_paths.workspace_dir / workspace_relative_scratch
-    lemmas_file_path = run_paths.workspace_dir / "Orthos" / "Lemmas.lean"
-
+    statements_path = run_paths.workspace_dir / "Orthos" / "Statements.lean"
+    context_module_basename = f"ScratchContext_{lemma_path_token}"
+    context_decl_names = set(pinned_decl_names or {pinned.decl_name})
+    context_decl_names.add(pinned.decl_name)
+    context_module_name, context_path = _write_scratch_context_module(
+        workspace_dir=run_paths.workspace_dir,
+        module_basename=context_module_basename,
+        statements_path=statements_path,
+        decl_names_to_neutralize=context_decl_names,
+    )
     lemma_artifact_dir = run_paths.run_root / "lemmas" / lemma_path_token
     lemma_artifact_dir.mkdir(parents=True, exist_ok=True)
     result_path = lemma_artifact_dir / "result.json"
+    if _context_declares_name(context_path.read_text(encoding="utf-8"), pinned.decl_name):
+        diagnostics = (
+            f"scratch context still declares target `{pinned.decl_name}` after neutralization",
+        )
+        result = LemmaFormalizationResult(
+            lemma_id=lemma.lemma_id,
+            decl_name=pinned.decl_name,
+            status="failed",
+            attempts_used=0,
+            lemma_artifact_dir=lemma_artifact_dir,
+            scratch_file=workspace_scratch_path,
+            result_path=result_path,
+            attempts=(),
+            error_class="import_context_conflict",
+            message="Failed to build a target-safe lemma scratch context.",
+            diagnostics=diagnostics,
+            terminal=True,
+            declared_dependencies=tuple(lemma.depends_on),
+        )
+        write_json(result.result_path, result.to_dict())
+        return result
+    lemmas_file_path = run_paths.workspace_dir / "Orthos" / "Lemmas.lean"
+    assumption_capsule_path = lemma_artifact_dir / "assumption_capsule.json"
+    if assumption_capsule is None:
+        assumption_capsule = AssumptionCapsule(
+            lemma_id=lemma.lemma_id,
+            direct_predecessors=tuple(lemma.depends_on),
+            transitive_predecessors=tuple(lemma.depends_on),
+            resolved_predecessors=tuple(entry.lemma_id for entry in trusted_entries),
+            unresolved_predecessors=(),
+            statements_by_lemma={},
+            dependency_source_revision=run_paths.run_name,
+            authoritative_workspace_revision=run_paths.run_name,
+            worker_workspace_revision=run_paths.run_name,
+        )
+    assumptions_module_name: str | None = None
+    unresolved_dependency_signatures: list[PinnedLemmaSignature] = []
+    if assumption_capsule.unresolved_predecessors:
+        assumptions_module_suffix = (
+            f"{lemma_path_token}_{sanitize_lean_decl_suffix(assumption_capsule.dependency_source_revision)}"
+        )
+        assumptions_module_rel = Path("Orthos") / f"Assumptions_{assumptions_module_suffix}.lean"
+        assumptions_module_name = f"Orthos.Assumptions_{assumptions_module_suffix}"
+        for dep_id in assumption_capsule.unresolved_predecessors:
+            dep_statement = assumption_capsule.statements_by_lemma.get(dep_id, "")
+            unresolved_dependency_signatures.append(
+                PinnedLemmaSignature(
+                    lemma_id=dep_id,
+                    decl_name=dep_id,
+                    signature=dep_statement,
+                    statement_nl=dep_id,
+                )
+            )
+        write_text(
+            run_paths.workspace_dir / assumptions_module_rel,
+            build_assumptions_module_text(
+                lemma_id=lemma.lemma_id,
+                unresolved_dependency_signatures=unresolved_dependency_signatures,
+            ),
+        )
+        assumption_capsule = AssumptionCapsule(
+            lemma_id=assumption_capsule.lemma_id,
+            direct_predecessors=assumption_capsule.direct_predecessors,
+            transitive_predecessors=assumption_capsule.transitive_predecessors,
+            resolved_predecessors=assumption_capsule.resolved_predecessors,
+            unresolved_predecessors=assumption_capsule.unresolved_predecessors,
+            statements_by_lemma=assumption_capsule.statements_by_lemma,
+            dependency_source_revision=assumption_capsule.dependency_source_revision,
+            authoritative_workspace_revision=assumption_capsule.authoritative_workspace_revision,
+            worker_workspace_revision=assumption_capsule.worker_workspace_revision,
+            generated_module_name=assumptions_module_name,
+            generated_module_path=str(assumptions_module_rel),
+        )
+    write_assumption_capsule(assumption_capsule_path, assumption_capsule)
+
+    effective_lean_check_timeout = (
+        lean_check_timeout_seconds
+        if isinstance(lean_check_timeout_seconds, int) and lean_check_timeout_seconds > 0
+        else timeout_seconds
+    )
+    generated_module_checks: list[tuple[str, str, LeanCommandResult]] = [
+        (
+            "scratch_context",
+            str(context_path.relative_to(run_paths.workspace_dir)),
+            rebuild_module_olean(
+                run_paths.workspace_dir,
+                str(context_path.relative_to(run_paths.workspace_dir)),
+                context_module_name,
+                timeout_seconds=effective_lean_check_timeout,
+                runner=runner,
+            ),
+        )
+    ]
+    if assumptions_module_name and assumption_capsule.generated_module_path:
+        generated_module_checks.append(
+            (
+                "assumptions_module",
+                assumption_capsule.generated_module_path,
+                rebuild_module_olean(
+                    run_paths.workspace_dir,
+                    assumption_capsule.generated_module_path,
+                    assumptions_module_name,
+                    timeout_seconds=effective_lean_check_timeout,
+                    runner=runner,
+                ),
+            )
+        )
+
+    preflight_failures: list[str] = []
+    for module_kind, relative_file, rebuild_check in generated_module_checks:
+        if rebuild_check.ok:
+            continue
+        preflight_failures.append(
+            f"{module_kind} rebuild failed for `{relative_file}`:\n"
+            f"{_render_batch_failure_text(rebuild_check, relative_path=relative_file)}"
+        )
+    if preflight_failures:
+        result = LemmaFormalizationResult(
+            lemma_id=lemma.lemma_id,
+            decl_name=pinned.decl_name,
+            status="failed",
+            attempts_used=0,
+            lemma_artifact_dir=lemma_artifact_dir,
+            scratch_file=workspace_scratch_path,
+            result_path=result_path,
+            attempts=(),
+            error_class="workspace_preparation_failed",
+            message="Generated lemma-support modules failed authoritative rebuild before round 1.",
+            diagnostics=tuple(preflight_failures),
+            terminal=True,
+            declared_dependencies=tuple(assumption_capsule.direct_predecessors),
+            resolved_dependencies=tuple(assumption_capsule.resolved_predecessors),
+            assumption_capsule_path=assumption_capsule_path,
+            authoritative_workspace_revision=assumption_capsule.authoritative_workspace_revision,
+            worker_workspace_revision=assumption_capsule.worker_workspace_revision,
+        )
+        write_json(result_path, result.to_dict())
+        return result
 
     previous_text = build_lemma_scratch_text(
         lemma_id=lemma.lemma_id,
         pinned_signature=pinned.signature,
-        trusted_entries=trusted_entries,
-        statements_path=run_paths.workspace_dir / "Orthos" / "Statements.lean",
+        context_module_name=context_module_name,
+        assumptions_module_name=assumptions_module_name,
+        statements_path=statements_path,
     )
     write_text(workspace_scratch_path, previous_text)
 
@@ -793,11 +1294,19 @@ def run_lemma_formalization(
             )
             if check.ok:
                 solved_text = workspace_scratch_path.read_text(encoding="utf-8")
+                verified_candidate_path = lemma_artifact_dir / "candidate_verified.lean"
+                write_text(verified_candidate_path, solved_text)
+                provisional_verified_path = lemma_artifact_dir / "provisional_verified.lean"
+                write_text(provisional_verified_path, solved_text)
+                merged_authoritative_path = None
+                if commit_on_success:
+                    merged_authoritative_path = lemma_artifact_dir / "merged_authoritative.lean"
+                    write_text(merged_authoritative_path, solved_text)
                 _restore_permissions()
                 result = LemmaFormalizationResult(
                     lemma_id=lemma.lemma_id,
                     decl_name=pinned.decl_name,
-                    status="ok",
+                    status="proved_under_assumptions" if not commit_on_success else "succeeded",
                     attempts_used=0,
                     lemma_artifact_dir=lemma_artifact_dir,
                     scratch_file=workspace_scratch_path,
@@ -805,6 +1314,15 @@ def run_lemma_formalization(
                     attempts=(),
                     message="Solved by lean4-skills solver cascade (zero LLM cost).",
                     diagnostics=(),
+                    verified_candidate_path=verified_candidate_path,
+                    provisional_verified_path=provisional_verified_path,
+                    merged_authoritative_path=merged_authoritative_path,
+                    terminal=commit_on_success,
+                    declared_dependencies=tuple(assumption_capsule.direct_predecessors),
+                    resolved_dependencies=tuple(assumption_capsule.resolved_predecessors),
+                    assumption_capsule_path=assumption_capsule_path,
+                    authoritative_workspace_revision=assumption_capsule.authoritative_workspace_revision,
+                    worker_workspace_revision=assumption_capsule.worker_workspace_revision,
                 )
                 write_json(result_path, result.to_dict())
                 return result
@@ -819,6 +1337,11 @@ def run_lemma_formalization(
     previous_sorry_count: int | None = None  # Track sorry count for partial progress.
     best_candidate_text: str | None = None  # Best compiling candidate across rounds.
     best_sorry_count: int | None = None  # Sorry count in best candidate.
+    repeated_workspace_failure_streak = 0
+    last_workspace_failure_key: tuple[str, str] | None = None
+    last_false_negative_signature: tuple[str, str] | None = None
+    terminal_error_override: str | None = None
+    terminal_message_override: str | None = None
 
     # Free retry tracking (Phase 2).
     productive_round_count = 0
@@ -846,8 +1369,13 @@ def run_lemma_formalization(
         prompt_path = lemma_artifact_dir / f"prompt_round_{round_index:02d}.md"
         raw_path = lemma_artifact_dir / f"claude_round_{round_index:02d}.jsonl"
         scratch_path = lemma_artifact_dir / f"scratch_round_{round_index:02d}.lean"
+        canonical_before_path = lemma_artifact_dir / f"canonical_before_round_{round_index:02d}.lean"
+        working_copy_artifact_path = lemma_artifact_dir / f"working_round_{round_index:02d}.lean"
+        round_manifest_path = lemma_artifact_dir / f"round_{round_index:02d}.json"
         diagnostics_path = lemma_artifact_dir / f"diagnostics_round_{round_index:02d}.txt"
         diff_path = lemma_artifact_dir / f"diff_round_{round_index:02d}.patch"
+        workspace_relative_working = f"Orthos/Scratch_{lemma_path_token}_working_round_{round_index:02d}.lean"
+        workspace_working_path = run_paths.workspace_dir / workspace_relative_working
 
         # --- Model/effort routing (Phase 2) ---
         has_prior_candidate = round_index > 1 and previous_text.strip() != ""
@@ -876,8 +1404,8 @@ def run_lemma_formalization(
         # Seed repair rounds from the latest draft, even if the last attempt
         # failed or was rejected. This preserves Claude's newest scaffolding
         # instead of rewinding to an older compiling partial proof.
-        if round_index > 1:
-            write_text(workspace_scratch_path, previous_text)
+        write_text(canonical_before_path, previous_text)
+        write_text(workspace_working_path, previous_text)
 
         # Round 1 gets the full reference library; repair rounds get compact refs.
         prompt_refs = lean4_skills_refs if round_index == 1 else lean4_skills_refs_compact
@@ -886,7 +1414,8 @@ def run_lemma_formalization(
             lemma=lemma,
             pinned=pinned,
             trusted_entries=trusted_entries,
-            scratch_relative_path=workspace_relative_scratch,
+            assumption_capsule=assumption_capsule,
+            scratch_relative_path=workspace_relative_working,
             repair_round=round_index,
             diagnostics_text=latest_diagnostics if round_index > 1 else None,
             previous_candidate=previous_text if round_index > 1 else None,
@@ -913,6 +1442,7 @@ def run_lemma_formalization(
             candidate_source = "mock_candidate"
             candidate_selection_reasons = ("selected mock candidate",)
             _write_mock_claude_raw(raw_path, candidate_text)
+            write_text(workspace_working_path, candidate_text)
         else:
             if claude_runner is None:
                 claude_runner = ClaudeRunner(runtime_config)
@@ -956,14 +1486,44 @@ def run_lemma_formalization(
                 # Snapshot the workspace scratch file so we preserve
                 # whatever partial work Claude produced before quota hit.
                 try:
-                    ws_text = workspace_scratch_path.read_text(encoding="utf-8")
+                    ws_text = workspace_working_path.read_text(encoding="utf-8")
                 except OSError:
                     ws_text = previous_text
-                write_text(scratch_path, ws_text)
-                write_text(diff_path, _render_diff(previous_text, ws_text))
+                quota_manifest = {
+                    "round_index": round_index,
+                    "authoritative_round_path": str(working_copy_artifact_path),
+                    "legacy_paths": {
+                        "canonical_before": str(canonical_before_path),
+                        "scratch": str(scratch_path),
+                        "candidate_snapshot": str(lemma_artifact_dir / f"candidate_snapshot_round_{round_index:02d}.lean"),
+                    },
+                    "canonical_before_hash": _full_content_hash(previous_text),
+                    "workspace_file_hash": _full_content_hash(ws_text),
+                    "normalized_candidate_hash": _full_content_hash(ws_text),
+                    "compiled_file_hash": None,
+                    "authoritative_check_ok": None,
+                    "mcp_reported_clean": False,
+                    "candidate_source": "none",
+                    "candidate_selection_reasons": ["provider quota exhausted"],
+                    "candidate_lean_score": 0,
+                }
+                _write_lemma_round_artifacts(
+                    canonical_before_path=canonical_before_path,
+                    scratch_path=scratch_path,
+                    working_copy_path=working_copy_artifact_path,
+                    candidate_snapshot_path=lemma_artifact_dir / f"candidate_snapshot_round_{round_index:02d}.lean",
+                    diff_path=diff_path,
+                    round_manifest_path=round_manifest_path,
+                    canonical_before_text=previous_text,
+                    authoritative_text=ws_text,
+                    round_manifest=quota_manifest,
+                )
                 attempt = LemmaAttemptResult(
                     round_index=round_index,
                     scratch_path=scratch_path,
+                    canonical_before_path=canonical_before_path,
+                    working_copy_path=working_copy_artifact_path,
+                    canonical_after_path=scratch_path,
                     prompt_path=prompt_path,
                     claude_raw_path=raw_path,
                     diagnostics_path=diagnostics_path,
@@ -978,6 +1538,20 @@ def run_lemma_formalization(
                     candidate_source="none",
                     candidate_selection_reasons=("provider quota exhausted",),
                     candidate_lean_score=0,
+                    promotion_status="rejected",
+                    promotion_reason=provider_text,
+                    assumption_capsule_path=assumption_capsule_path,
+                    candidate_status="none",
+                    structural_validation_result=None,
+                    authoritative_check_result=None,
+                    advisory_check_result={"provider_limit_detected": True},
+                    attempt_outcome="blocked_on_infra",
+                    authoritative_round_path=working_copy_artifact_path,
+                    round_manifest_path=round_manifest_path,
+                    workspace_file_hash=quota_manifest["workspace_file_hash"],
+                    normalized_candidate_hash=quota_manifest["normalized_candidate_hash"],
+                    compiled_file_hash=None,
+                    authoritative_check_ok=None,
                 )
                 attempt_results.append(attempt)
                 metrics.diagnostic_status = "provider_quota_exhausted"
@@ -995,6 +1569,12 @@ def run_lemma_formalization(
                     error_class="provider_quota_exhausted",
                     message="Claude provider quota was exhausted during lemma formalization.",
                     diagnostics=(provider_text,),
+                    terminal=True,
+                    declared_dependencies=tuple(assumption_capsule.direct_predecessors),
+                    resolved_dependencies=tuple(assumption_capsule.resolved_predecessors),
+                    assumption_capsule_path=assumption_capsule_path,
+                    authoritative_workspace_revision=assumption_capsule.authoritative_workspace_revision,
+                    worker_workspace_revision=assumption_capsule.worker_workspace_revision,
                 )
                 write_json(result_path, result.to_dict())
                 _restore_permissions()
@@ -1005,10 +1585,11 @@ def run_lemma_formalization(
                 accumulated_discoveries.extend(round_discoveries)
             selected = select_lean_candidate(
                 trace=claude_result.trace,
-                target_path=workspace_scratch_path,
+                target_path=workspace_working_path,
                 baseline_text=previous_text,
                 normalize_text=normalize_lean_text,
                 stage_validator=_build_lemma_stage_validator(pinned.decl_name),
+                prefer_workspace_fallback=False,
             )
             candidate_source = selected.source
             candidate_selection_reasons = selected.reasons
@@ -1018,14 +1599,104 @@ def run_lemma_formalization(
             # If candidate extraction scored 0 or returned empty, check if Claude
             # wrote a valid proof directly to the workspace file via MCP tool_update.
             if candidate_lean_score == 0 or not selected.text.strip():
-                workspace_current = workspace_scratch_path.read_text(encoding="utf-8")
+                workspace_current = workspace_working_path.read_text(encoding="utf-8")
                 if workspace_current.strip() and workspace_current != previous_text:
                     candidate_text = workspace_current
                     candidate_source = "workspace_mcp_edit"
                     candidate_selection_reasons = ("fallback: Claude wrote to workspace via MCP",)
 
+        workspace_snapshot_text = workspace_working_path.read_text(encoding="utf-8") if workspace_working_path.exists() else previous_text
+        if candidate_text.strip():
+            normalized_candidate_text = _sanitize_candidate_imports_for_scratch_context(
+                candidate_text,
+                context_module_name=context_module_name,
+            )
+            if _contains_reintroduced_scratch_context_import(
+                workspace_text=workspace_snapshot_text,
+                normalized_text=normalized_candidate_text,
+                context_module_name=context_module_name,
+            ):
+                candidate_source = "internal_normalization_error"
+                candidate_selection_reasons = (
+                    "internal normalization would reintroduce a scratch-context import Claude removed",
+                )
+                candidate_text = workspace_snapshot_text
+            else:
+                candidate_text = normalized_candidate_text
+                write_text(workspace_working_path, candidate_text)
+        candidate_snapshot_path = lemma_artifact_dir / f"candidate_snapshot_round_{round_index:02d}.lean"
+        selected_candidate_hash = None
+        if candidate_text.strip():
+            selected_candidate_hash = _full_content_hash(candidate_text)
+
+        structural_validation = validate_lemma_candidate_structure(
+            candidate_text=candidate_text,
+            pinned_signature=pinned.signature,
+            target_decl_name=pinned.decl_name,
+            trusted_entries=trusted_entries,
+            assumption_capsule=assumption_capsule,
+            previous_sorry_count=previous_sorry_count,
+        )
+
+        authoritative_round_text = candidate_text if candidate_text.strip() else workspace_snapshot_text
+        if not authoritative_round_text.strip():
+            authoritative_round_text = previous_text
+        write_text(workspace_working_path, authoritative_round_text)
+
+        round_manifest: dict[str, Any] = {
+            "round_index": round_index,
+            "authoritative_round_path": str(working_copy_artifact_path),
+            "legacy_paths": {
+                "canonical_before": str(canonical_before_path),
+                "scratch": str(scratch_path),
+                "candidate_snapshot": str(candidate_snapshot_path),
+            },
+            "canonical_before_hash": _full_content_hash(previous_text),
+            "workspace_file_hash": _full_content_hash(workspace_snapshot_text),
+            "normalized_candidate_hash": _full_content_hash(authoritative_round_text),
+            "compiled_file_hash": None,
+            "authoritative_check_ok": None,
+            "mcp_reported_clean": _claude_reported_clean(raw_path),
+            "candidate_source": candidate_source,
+            "candidate_selection_reasons": list(candidate_selection_reasons),
+            "candidate_lean_score": candidate_lean_score,
+        }
+
+        promotion_guard_error = (
+            structural_validation.get("message")
+            if candidate_text.strip()
+            else "candidate selection produced empty text"
+        )
+        if not candidate_text.strip():
+            promotion_status = "rejected_structural"
+            promotion_reason = "candidate selection produced empty text"
+        elif candidate_source in ("none", "", "internal_normalization_error"):
+            promotion_status = "rejected_structural"
+            promotion_reason = "; ".join(candidate_selection_reasons) if candidate_selection_reasons else "stage validator rejected candidate"
+        elif not structural_validation.get("ok", False):
+            promotion_status = "rejected_structural"
+            promotion_reason = promotion_guard_error
+        elif re.search(r"\badmit\b", candidate_text):
+            promotion_status = "rejected_structural"
+            promotion_reason = "policy_violation: disallowed token `admit` in promoted draft."
+        else:
+            promotion_status = "pending_authoritative_check"
+            promotion_reason = "selected + stage-valid + awaiting authoritative compile"
+
+        _write_lemma_round_artifacts(
+            canonical_before_path=canonical_before_path,
+            scratch_path=scratch_path,
+            working_copy_path=working_copy_artifact_path,
+            candidate_snapshot_path=candidate_snapshot_path,
+            diff_path=diff_path,
+            round_manifest_path=round_manifest_path,
+            canonical_before_text=previous_text,
+            authoritative_text=authoritative_round_text,
+            round_manifest=round_manifest,
+        )
+
         # --- Check for nonproductive round (Phase 2: free retries) ---
-        scratch_hash_after = _content_hash(candidate_text)
+        scratch_hash_after = _content_hash(previous_text if promotion_status == "rejected_structural" else authoritative_round_text)
         metrics.scratch_hash_after = scratch_hash_after
         metrics.candidate_source = candidate_source
         metrics.stall_killed = round_stall_killed
@@ -1058,42 +1729,45 @@ def run_lemma_formalization(
                 continue  # Don't count this round
 
         productive_round_count += 1
-
-        write_text(workspace_scratch_path, candidate_text)
-        write_text(scratch_path, candidate_text)
-        write_text(diff_path, _render_diff(previous_text, candidate_text))
-
-        guard_error = progress_guard_error(
-            candidate_text=candidate_text,
-            pinned_signature=pinned.signature,
-            target_decl_name=pinned.decl_name,
-            trusted_entries=trusted_entries,
-            previous_sorry_count=previous_sorry_count,
-        )
-        if guard_error:
-            latest_diagnostics = guard_error
-            write_text(diagnostics_path, guard_error + "\n")
-            classification = classify_lemma_failure(guard_error, guard_error=guard_error)
+        if promotion_status == "rejected_structural":
+            latest_diagnostics = promotion_reason
+            write_text(diagnostics_path, promotion_reason + "\n")
             attempt = LemmaAttemptResult(
                 round_index=round_index,
                 scratch_path=scratch_path,
+                canonical_before_path=canonical_before_path,
+                working_copy_path=working_copy_artifact_path,
+                canonical_after_path=scratch_path,
                 prompt_path=prompt_path,
                 claude_raw_path=raw_path,
                 diagnostics_path=diagnostics_path,
                 diff_path=diff_path,
                 status="rejected",
-                classification=classification,
-                diagnostics=(guard_error,),
+                classification=classify_lemma_failure(promotion_reason, guard_error=promotion_reason),
+                diagnostics=(promotion_reason,),
                 check_result=None,
-                progress_guard_error=guard_error,
+                progress_guard_error=promotion_reason,
                 used_mock_candidate=used_mock_candidate,
                 candidate_backend=candidate_backend,
                 candidate_source=candidate_source,
                 candidate_selection_reasons=candidate_selection_reasons,
                 candidate_lean_score=candidate_lean_score,
+                promotion_status=promotion_status,
+                promotion_reason=promotion_reason,
+                assumption_capsule_path=assumption_capsule_path,
+                selected_candidate_path=candidate_snapshot_path if authoritative_round_text.strip() else None,
+                selected_candidate_hash=selected_candidate_hash,
+                candidate_status="rejected",
+                structural_validation_result=structural_validation,
+                attempt_outcome="candidate_rejected_structural",
+                authoritative_round_path=working_copy_artifact_path,
+                round_manifest_path=round_manifest_path,
+                workspace_file_hash=round_manifest["workspace_file_hash"],
+                normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+                compiled_file_hash=None,
+                authoritative_check_ok=False,
             )
             attempt_results.append(attempt)
-            previous_text = candidate_text
             metrics.diagnostic_status = "rejected"
             metrics.finalize()
             _append_round_metrics(run_paths.run_root, metrics)
@@ -1105,7 +1779,7 @@ def run_lemma_formalization(
         _log.info("Lemma %s round %d: running lake env lean verification...", lemma.lemma_id, round_index)
         lean_check = check_lean_file(
             run_paths.workspace_dir,
-            workspace_relative_scratch,
+            workspace_relative_working,
             timeout_seconds=(
                 lean_check_timeout_seconds
                 if isinstance(lean_check_timeout_seconds, int) and lean_check_timeout_seconds > 0
@@ -1114,10 +1788,20 @@ def run_lemma_formalization(
             lake_jobs=runtime_config.lean.lake_jobs,
         )
         if not lean_check.ok:
-            diagnostics_text = lean_check.stderr or lean_check.stdout or "lake env lean failed with no output"
+            diagnostics_text = _render_batch_failure_text(
+                lean_check,
+                relative_path=workspace_relative_working,
+            )
             latest_diagnostics = diagnostics_text
             write_text(diagnostics_path, diagnostics_text)
-            classification = classify_lemma_failure(diagnostics_text)
+            mcp_reported_clean = bool(round_manifest["mcp_reported_clean"])
+            classification = classify_lemma_failure(
+                diagnostics_text,
+                mcp_reported_clean=mcp_reported_clean,
+            )
+            round_manifest["compiled_file_hash"] = workspace_file_digest(workspace_working_path)
+            round_manifest["authoritative_check_ok"] = False
+            write_json(round_manifest_path, round_manifest)
             # --- Structured error parsing + stuck detection ---
             from .lean4_skills_scripts import parse_lean_errors as _parse_errors
             if runtime_config.integrations.lean4_skills_root:
@@ -1144,6 +1828,9 @@ def run_lemma_formalization(
             attempt = LemmaAttemptResult(
                 round_index=round_index,
                 scratch_path=scratch_path,
+                canonical_before_path=canonical_before_path,
+                working_copy_path=working_copy_artifact_path,
+                canonical_after_path=scratch_path,
                 prompt_path=prompt_path,
                 claude_raw_path=raw_path,
                 diagnostics_path=diagnostics_path,
@@ -1158,13 +1845,77 @@ def run_lemma_formalization(
                 candidate_source=candidate_source,
                 candidate_selection_reasons=candidate_selection_reasons,
                 candidate_lean_score=candidate_lean_score,
+                promotion_status="rejected_compile",
+                promotion_reason=promotion_reason,
+                mcp_check_status="clean" if mcp_reported_clean else "unknown",
+                batch_check_status="failed",
+                assumption_capsule_path=assumption_capsule_path,
+                selected_candidate_path=candidate_snapshot_path if candidate_text.strip() else None,
+                selected_candidate_hash=selected_candidate_hash,
+                candidate_status="compile_failed",
+                structural_validation_result=structural_validation,
+                authoritative_check_result=lean_check.to_dict(),
+                advisory_check_result={"mcp_reported_clean": mcp_reported_clean},
+                attempt_outcome="candidate_rejected_compile",
+                authoritative_round_path=working_copy_artifact_path,
+                round_manifest_path=round_manifest_path,
+                workspace_file_hash=round_manifest["workspace_file_hash"],
+                normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+                compiled_file_hash=round_manifest["compiled_file_hash"],
+                authoritative_check_ok=False,
             )
             attempt_results.append(attempt)
-            previous_text = candidate_text
+            candidate_failure_key = (
+                round_manifest["normalized_candidate_hash"],
+                _normalized_diagnostic_hash(diagnostics_text),
+            )
+            if _is_workspace_build_state_issue(classification, diagnostics_text):
+                if last_workspace_failure_key == candidate_failure_key:
+                    repeated_workspace_failure_streak += 1
+                else:
+                    repeated_workspace_failure_streak = 1
+                    last_workspace_failure_key = candidate_failure_key
+                false_negative_signature = (
+                    _full_content_hash(previous_text),
+                    _normalized_diagnostic_hash(diagnostics_text),
+                )
+                repeated_false_negative = (
+                    mcp_reported_clean
+                    and last_false_negative_signature == false_negative_signature
+                )
+                last_false_negative_signature = false_negative_signature if mcp_reported_clean else None
+                if repeated_workspace_failure_streak >= 2 or repeated_false_negative:
+                    terminal_error_override = "checker_mismatch"
+                    terminal_message_override = (
+                        "Lemma formalization stopped early after repeated authoritative workspace/checker "
+                        "failures on an unchanged canonical draft."
+                    )
+                    _log.warning(
+                        "Lemma %s round %d: stopping early after repeated workspace/checker mismatch.",
+                        lemma.lemma_id,
+                        round_index,
+                    )
+                    metrics.finalize()
+                    _append_round_metrics(run_paths.run_root, metrics)
+                    break
+            else:
+                repeated_workspace_failure_streak = 0
+                last_workspace_failure_key = None
+                last_false_negative_signature = None
             _log.info("Lemma %s round %d: lake env lean FAILED, will retry.", lemma.lemma_id, round_index)
             metrics.finalize()
             _append_round_metrics(run_paths.run_root, metrics)
             continue
+        round_manifest["compiled_file_hash"] = workspace_file_digest(workspace_working_path)
+        round_manifest["authoritative_check_ok"] = True
+        write_json(round_manifest_path, round_manifest)
+        repeated_workspace_failure_streak = 0
+        last_workspace_failure_key = None
+        last_false_negative_signature = None
+        promotion_status = "promoted"
+        promotion_reason = "authoritative compile passed"
+        write_text(workspace_scratch_path, authoritative_round_text)
+        previous_text = authoritative_round_text
         diagnostics_text = "Verified: lake env lean passed."
         latest_diagnostics = diagnostics_text
         write_text(diagnostics_path, diagnostics_text)
@@ -1192,13 +1943,18 @@ def run_lemma_formalization(
 
         if current_sorry_count == 0 and block_sorry_count == 0 and not has_admit:
             # COMPLETE proof — no sorry, no admit.
-            final_success_path = lemma_artifact_dir / "final_success.lean"
-            write_text(final_success_path, target_declaration.strip() + "\n")
+            verified_candidate_path = lemma_artifact_dir / "candidate_verified.lean"
+            write_text(verified_candidate_path, target_declaration.strip() + "\n")
+            provisional_verified_path = lemma_artifact_dir / "provisional_verified.lean"
+            write_text(provisional_verified_path, target_declaration.strip() + "\n")
 
             if not commit_on_success:
                 attempt = LemmaAttemptResult(
                     round_index=round_index,
                     scratch_path=scratch_path,
+                    canonical_before_path=canonical_before_path,
+                    working_copy_path=working_copy_artifact_path,
+                    canonical_after_path=scratch_path,
                     prompt_path=prompt_path,
                     claude_raw_path=raw_path,
                     diagnostics_path=diagnostics_path,
@@ -1213,19 +1969,46 @@ def run_lemma_formalization(
                     candidate_source=candidate_source,
                     candidate_selection_reasons=candidate_selection_reasons,
                     candidate_lean_score=candidate_lean_score,
+                    promotion_status=promotion_status,
+                    promotion_reason=promotion_reason,
+                    mcp_check_status="clean",
+                    batch_check_status="passed",
+                    assumption_capsule_path=assumption_capsule_path,
+                    selected_candidate_path=candidate_snapshot_path,
+                    selected_candidate_hash=selected_candidate_hash,
+                    candidate_status="verified",
+                    structural_validation_result=structural_validation,
+                    authoritative_check_result=lean_check.to_dict(),
+                    advisory_check_result={"mcp_reported_clean": True},
+                    attempt_outcome="candidate_verified",
+                    authoritative_round_path=working_copy_artifact_path,
+                    round_manifest_path=round_manifest_path,
+                    workspace_file_hash=round_manifest["workspace_file_hash"],
+                    normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+                    compiled_file_hash=round_manifest["compiled_file_hash"],
+                    authoritative_check_ok=True,
                 )
                 attempt_results.append(attempt)
 
                 result = LemmaFormalizationResult(
                     lemma_id=lemma.lemma_id,
                     decl_name=pinned.decl_name,
-                    status="ok",
+                    status="proved_under_assumptions",
                     attempts_used=round_index,
                     lemma_artifact_dir=lemma_artifact_dir,
                     scratch_file=workspace_scratch_path,
                     result_path=result_path,
                     attempts=tuple(attempt_results),
-                    final_success_path=final_success_path,
+                    verified_candidate_path=verified_candidate_path,
+                    provisional_verified_path=provisional_verified_path,
+                    terminal=False,
+                    declared_dependencies=tuple(assumption_capsule.direct_predecessors),
+                    resolved_dependencies=tuple(assumption_capsule.resolved_predecessors),
+                    assumption_capsule_path=assumption_capsule_path,
+                    selected_candidate_path=candidate_snapshot_path,
+                    selected_candidate_hash=selected_candidate_hash,
+                    authoritative_workspace_revision=assumption_capsule.authoritative_workspace_revision,
+                    worker_workspace_revision=assumption_capsule.worker_workspace_revision,
                 )
                 write_json(result_path, result.to_dict())
                 metrics.finalize()
@@ -1263,10 +2046,15 @@ def run_lemma_formalization(
                     if shared_context is not None:
                         shared_context.add(new_entry)
                     write_trusted_manifest(manifest_path, manifest_problem_id, trusted_entries)
+                    merged_authoritative_path = lemma_artifact_dir / "merged_authoritative.lean"
+                    write_text(merged_authoritative_path, target_declaration.strip() + "\n")
 
                     attempt = LemmaAttemptResult(
                         round_index=round_index,
                         scratch_path=scratch_path,
+                        canonical_before_path=canonical_before_path,
+                        working_copy_path=working_copy_artifact_path,
+                        canonical_after_path=scratch_path,
                         prompt_path=prompt_path,
                         claude_raw_path=raw_path,
                         diagnostics_path=diagnostics_path,
@@ -1281,19 +2069,46 @@ def run_lemma_formalization(
                         candidate_source=candidate_source,
                         candidate_selection_reasons=candidate_selection_reasons,
                         candidate_lean_score=candidate_lean_score,
+                        promotion_status=promotion_status,
+                        promotion_reason=promotion_reason,
+                        assumption_capsule_path=assumption_capsule_path,
+                        selected_candidate_path=candidate_snapshot_path,
+                        selected_candidate_hash=selected_candidate_hash,
+                        candidate_status="merged",
+                        structural_validation_result=structural_validation,
+                        authoritative_check_result=lean_check.to_dict(),
+                        advisory_check_result={"mcp_reported_clean": True},
+                        attempt_outcome="candidate_verified",
+                        authoritative_round_path=working_copy_artifact_path,
+                        round_manifest_path=round_manifest_path,
+                        workspace_file_hash=round_manifest["workspace_file_hash"],
+                        normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+                        compiled_file_hash=round_manifest["compiled_file_hash"],
+                        authoritative_check_ok=True,
                     )
                     attempt_results.append(attempt)
 
                     result = LemmaFormalizationResult(
                         lemma_id=lemma.lemma_id,
                         decl_name=pinned.decl_name,
-                        status="ok",
+                        status="succeeded",
                         attempts_used=round_index,
                         lemma_artifact_dir=lemma_artifact_dir,
                         scratch_file=workspace_scratch_path,
                         result_path=result_path,
                         attempts=tuple(attempt_results),
-                        final_success_path=final_success_path,
+                        verified_candidate_path=verified_candidate_path,
+                        provisional_verified_path=provisional_verified_path,
+                        merged_authoritative_path=merged_authoritative_path,
+                        terminal=True,
+                        declared_dependencies=tuple(assumption_capsule.direct_predecessors),
+                        resolved_dependencies=tuple(assumption_capsule.resolved_predecessors),
+                        assumption_capsule_path=assumption_capsule_path,
+                        selected_candidate_path=candidate_snapshot_path,
+                        selected_candidate_hash=selected_candidate_hash,
+                        authoritative_workspace_revision=assumption_capsule.authoritative_workspace_revision,
+                        worker_workspace_revision=assumption_capsule.worker_workspace_revision,
+                        merge_replay_result={"status": "direct_commit"},
                     )
                     write_json(result_path, result.to_dict())
                     metrics.finalize()
@@ -1304,6 +2119,9 @@ def run_lemma_formalization(
             attempt = LemmaAttemptResult(
                 round_index=round_index,
                 scratch_path=scratch_path,
+                canonical_before_path=canonical_before_path,
+                working_copy_path=working_copy_artifact_path,
+                canonical_after_path=scratch_path,
                 prompt_path=prompt_path,
                 claude_raw_path=raw_path,
                 diagnostics_path=diagnostics_path,
@@ -1318,6 +2136,20 @@ def run_lemma_formalization(
                 candidate_source=candidate_source,
                 candidate_selection_reasons=candidate_selection_reasons,
                 candidate_lean_score=candidate_lean_score,
+                promotion_status=promotion_status,
+                promotion_reason=promotion_reason,
+                assumption_capsule_path=assumption_capsule_path,
+                selected_candidate_path=candidate_snapshot_path,
+                selected_candidate_hash=selected_candidate_hash,
+                candidate_status="merge_failed",
+                structural_validation_result=structural_validation,
+                attempt_outcome="merge_replay_failed",
+                authoritative_round_path=working_copy_artifact_path,
+                round_manifest_path=round_manifest_path,
+                workspace_file_hash=round_manifest["workspace_file_hash"],
+                normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+                compiled_file_hash=round_manifest["compiled_file_hash"],
+                authoritative_check_ok=True,
             )
             attempt_results.append(attempt)
             previous_text = candidate_text
@@ -1362,6 +2194,9 @@ def run_lemma_formalization(
                 attempt = LemmaAttemptResult(
                     round_index=round_index,
                     scratch_path=scratch_path,
+                    canonical_before_path=canonical_before_path,
+                    working_copy_path=working_copy_artifact_path,
+                    canonical_after_path=scratch_path,
                     prompt_path=prompt_path,
                     claude_raw_path=raw_path,
                     diagnostics_path=diagnostics_path,
@@ -1376,6 +2211,22 @@ def run_lemma_formalization(
                     candidate_source=candidate_source,
                     candidate_selection_reasons=candidate_selection_reasons,
                     candidate_lean_score=candidate_lean_score,
+                    promotion_status=promotion_status,
+                    promotion_reason=promotion_reason,
+                    assumption_capsule_path=assumption_capsule_path,
+                    selected_candidate_path=candidate_snapshot_path,
+                    selected_candidate_hash=selected_candidate_hash,
+                    candidate_status="partial_progress",
+                    structural_validation_result=structural_validation,
+                    authoritative_check_result=lean_check.to_dict(),
+                    advisory_check_result={"mcp_reported_clean": True},
+                    attempt_outcome="candidate_rejected_compile",
+                    authoritative_round_path=working_copy_artifact_path,
+                    round_manifest_path=round_manifest_path,
+                    workspace_file_hash=round_manifest["workspace_file_hash"],
+                    normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+                    compiled_file_hash=round_manifest["compiled_file_hash"],
+                    authoritative_check_ok=True,
                 )
                 attempt_results.append(attempt)
                 previous_text = candidate_text
@@ -1398,6 +2249,9 @@ def run_lemma_formalization(
                 attempt = LemmaAttemptResult(
                     round_index=round_index,
                     scratch_path=scratch_path,
+                    canonical_before_path=canonical_before_path,
+                    working_copy_path=working_copy_artifact_path,
+                    canonical_after_path=scratch_path,
                     prompt_path=prompt_path,
                     claude_raw_path=raw_path,
                     diagnostics_path=diagnostics_path,
@@ -1412,6 +2266,22 @@ def run_lemma_formalization(
                     candidate_source=candidate_source,
                     candidate_selection_reasons=candidate_selection_reasons,
                     candidate_lean_score=candidate_lean_score,
+                    promotion_status=promotion_status,
+                    promotion_reason=promotion_reason,
+                    assumption_capsule_path=assumption_capsule_path,
+                    selected_candidate_path=candidate_snapshot_path,
+                    selected_candidate_hash=selected_candidate_hash,
+                    candidate_status="partial_regression",
+                    structural_validation_result=structural_validation,
+                    authoritative_check_result=lean_check.to_dict(),
+                    advisory_check_result={"mcp_reported_clean": True},
+                    attempt_outcome="candidate_rejected_compile",
+                    authoritative_round_path=working_copy_artifact_path,
+                    round_manifest_path=round_manifest_path,
+                    workspace_file_hash=round_manifest["workspace_file_hash"],
+                    normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+                    compiled_file_hash=round_manifest["compiled_file_hash"],
+                    authoritative_check_ok=True,
                 )
                 attempt_results.append(attempt)
                 previous_text = candidate_text
@@ -1427,6 +2297,9 @@ def run_lemma_formalization(
         attempt = LemmaAttemptResult(
             round_index=round_index,
             scratch_path=scratch_path,
+            canonical_before_path=canonical_before_path,
+            working_copy_path=working_copy_artifact_path,
+            canonical_after_path=scratch_path,
             prompt_path=prompt_path,
             claude_raw_path=raw_path,
             diagnostics_path=diagnostics_path,
@@ -1441,13 +2314,27 @@ def run_lemma_formalization(
             candidate_source=candidate_source,
             candidate_selection_reasons=candidate_selection_reasons,
             candidate_lean_score=candidate_lean_score,
+            promotion_status=promotion_status,
+            promotion_reason=promotion_reason,
+            assumption_capsule_path=assumption_capsule_path,
+            selected_candidate_path=candidate_snapshot_path if candidate_text.strip() else None,
+            selected_candidate_hash=selected_candidate_hash,
+            candidate_status="policy_violation",
+            structural_validation_result=structural_validation,
+            attempt_outcome="candidate_rejected_structural",
+            authoritative_round_path=working_copy_artifact_path,
+            round_manifest_path=round_manifest_path,
+            workspace_file_hash=round_manifest["workspace_file_hash"],
+            normalized_candidate_hash=round_manifest["normalized_candidate_hash"],
+            compiled_file_hash=round_manifest["compiled_file_hash"],
+            authoritative_check_ok=round_manifest["authoritative_check_ok"],
         )
         attempt_results.append(attempt)
         previous_text = candidate_text
         metrics.finalize()
         _append_round_metrics(run_paths.run_root, metrics)
 
-    error_class = attempt_results[-1].classification if attempt_results else "tactic_failure"
+    error_class = terminal_error_override or (attempt_results[-1].classification if attempt_results else "tactic_failure")
     diagnostics = attempt_results[-1].diagnostics if attempt_results else ("no attempts executed",)
 
     # Signal fatal abort to other parallel workers on confirmed mathematical flaw.
@@ -1467,9 +2354,17 @@ def run_lemma_formalization(
         scratch_file=workspace_scratch_path,
         result_path=result_path,
         error_class=error_class,
-        message="Lemma formalization exhausted bounded retry budget without success.",
+        message=terminal_message_override or "Lemma formalization exhausted bounded retry budget without success.",
         diagnostics=diagnostics,
         attempts=tuple(attempt_results),
+        terminal=True,
+        declared_dependencies=tuple(assumption_capsule.direct_predecessors),
+        resolved_dependencies=tuple(assumption_capsule.resolved_predecessors),
+        assumption_capsule_path=assumption_capsule_path,
+        selected_candidate_path=attempt_results[-1].selected_candidate_path if attempt_results else None,
+        selected_candidate_hash=attempt_results[-1].selected_candidate_hash if attempt_results else None,
+        authoritative_workspace_revision=assumption_capsule.authoritative_workspace_revision,
+        worker_workspace_revision=assumption_capsule.worker_workspace_revision,
     )
     write_json(result_path, result.to_dict())
     return result
@@ -1544,6 +2439,11 @@ def progress_guard_error(
         if name in trusted_names:
             # Trusted entries appear as sorry-stubs in scratch files — allowed.
             continue
+        if block["keyword"] not in {"theorem", "lemma"}:
+            return (
+                "Progress guard rejected candidate: only theorem/lemma helpers may be promoted before "
+                f"the target, but `{name}` is a `{block['keyword']}` declaration."
+            )
         if i < target_idx:
             # Helper lemma defined BEFORE the target — allowed and encouraged.
             # It will be extracted alongside the target by extract_proof_block_with_helpers().
@@ -1567,6 +2467,62 @@ def progress_guard_error(
         )
 
     return None
+
+
+def validate_lemma_candidate_structure(
+    *,
+    candidate_text: str,
+    pinned_signature: str,
+    target_decl_name: str,
+    trusted_entries: list[TrustedContextEntry],
+    assumption_capsule: AssumptionCapsule | None,
+    previous_sorry_count: int | None = None,
+) -> dict[str, Any]:
+    if not candidate_text.strip():
+        return {
+            "ok": False,
+            "error_class": "malformed_candidate",
+            "message": "candidate selection produced empty text",
+        }
+
+    guard_error = progress_guard_error(
+        candidate_text=candidate_text,
+        pinned_signature=pinned_signature,
+        target_decl_name=target_decl_name,
+        trusted_entries=trusted_entries,
+        previous_sorry_count=previous_sorry_count,
+    )
+    if guard_error is not None:
+        error_class = "malformed_candidate"
+        lowered = guard_error.lower()
+        if "appears multiple times" in lowered:
+            error_class = "duplicate_target_declaration"
+        elif "drifted from pinned signature" in lowered:
+            error_class = "header_drift"
+        elif "only theorem/lemma helpers" in lowered:
+            error_class = "forbidden_declaration_kind"
+        elif "appears after the target" in lowered:
+            error_class = "declaration_after_target"
+        return {
+            "ok": False,
+            "error_class": error_class,
+            "message": guard_error,
+        }
+
+    if assumption_capsule is not None:
+        allowed_dependency_names = set(assumption_capsule.statements_by_lemma)
+        if set(assumption_capsule.unresolved_predecessors) - allowed_dependency_names:
+            return {
+                "ok": False,
+                "error_class": "out_of_dag_assumption",
+                "message": "assumption capsule contains unresolved predecessors without pinned statements",
+            }
+
+    return {
+        "ok": True,
+        "error_class": None,
+        "message": None,
+    }
 
 
 def extract_target_declaration_block(candidate_text: str, target_decl_name: str) -> str:
@@ -1645,6 +2601,11 @@ def extract_proof_block_with_helpers(
         if name in trusted_names:
             # Trusted-context sorry-stubs — already managed by the engine.
             continue
+        if block["keyword"] not in {"theorem", "lemma"}:
+            raise ValueError(
+                f"declaration `{name}` uses forbidden keyword `{block['keyword']}`; "
+                "only theorem/lemma helpers may be promoted"
+            )
         # Strip namespace/open lines from the individual block text.
         cleaned_lines = []
         for line in _strip_trailing_orthos_end(block["block"]).splitlines():
@@ -1700,6 +2661,41 @@ def merge_declaration_into_lemmas_file(*, original_text: str, declaration_block:
     return merged.rstrip() + "\n"
 
 
+def derive_trusted_entries_from_lemmas_file(
+    lemmas_file_path: Path,
+    *,
+    pinned_by_decl_name: dict[str, PinnedLemmaSignature],
+) -> list[TrustedContextEntry]:
+    if not lemmas_file_path.exists():
+        return []
+    try:
+        text = lemmas_file_path.read_text(encoding="utf-8")
+    except OSError:
+        return []
+
+    entries: list[TrustedContextEntry] = []
+    seen_decl_names: set[str] = set()
+    for block in _extract_declaration_blocks(text):
+        decl_name = str(block["name"])
+        if decl_name in seen_decl_names:
+            continue
+        pinned = pinned_by_decl_name.get(decl_name)
+        if pinned is None or block["keyword"] not in {"theorem", "lemma"}:
+            continue
+        seen_decl_names.add(decl_name)
+        entries.append(
+            TrustedContextEntry(
+                lemma_id=pinned.lemma_id,
+                decl_name=pinned.decl_name,
+                status="compiled",
+                source_file="Orthos/Lemmas.lean",
+                signature=pinned.signature,
+                declaration=_strip_trailing_orthos_end(str(block["block"])).strip(),
+            )
+        )
+    return entries
+
+
 def render_lean_check_diagnostics(check_result: LeanCommandResult) -> str:
     lines = [
         f"command: {' '.join(check_result.command)}",
@@ -1715,7 +2711,12 @@ def render_lean_check_diagnostics(check_result: LeanCommandResult) -> str:
     return "\n".join(lines)
 
 
-def classify_lemma_failure(diagnostics_text: str, *, guard_error: str | None = None) -> str:
+def classify_lemma_failure(
+    diagnostics_text: str,
+    *,
+    guard_error: str | None = None,
+    mcp_reported_clean: bool = False,
+) -> str:
     text = (guard_error or diagnostics_text or "").lower()
     if "provider_quota_exhausted" in text or "hit your limit" in text or "rate_limit_event" in text:
         return "provider_quota_exhausted"
@@ -1724,13 +2725,15 @@ def classify_lemma_failure(diagnostics_text: str, *, guard_error: str | None = N
     if MAJOR_GAP_PATTERN.search(text):
         return "major_proof_gap"
     if "has already been declared" in text or "already declared" in text:
-        return "stale_olean"
+        return "duplicate_declaration_context"
     if (
         "pinned signature" in text
         or "unrelated declaration" in text
         or "already-trusted declaration" in text
     ):
         return "false_lemma_suspected"
+    if "scratch context still declares target" in text:
+        return "import_context_conflict"
     if (
         "reservoir lookup failed" in text
         or "could not materialize package" in text
@@ -1752,6 +2755,8 @@ def classify_lemma_failure(diagnostics_text: str, *, guard_error: str | None = N
     if ("returncode: 139" in text or "sigsegv" in text or "signal 11" in text
             or "returncode: 135" in text or "sigbus" in text or "signal 7" in text):
         return "lean_crash"
+    if mcp_reported_clean:
+        return "checker_mismatch"
     if "tactic" in text or "unsolved goals" in text or "no goals to be solved" in text:
         return "tactic_failure"
     return "tactic_failure"
