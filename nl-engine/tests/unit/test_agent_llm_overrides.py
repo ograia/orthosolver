@@ -69,3 +69,22 @@ def test_zero_timeout_override_is_preserved() -> None:
     assert verbosity == "medium"
     assert timeout_seconds == 0
     assert max_attempts == 2
+
+
+def test_default_coding_mode_enabled_for_agents_two_through_six() -> None:
+    service = AgentService()
+
+    assert service._resolve_agent_coding_mode(agent_key="agent1") == "off"
+    assert service._resolve_agent_coding_mode(agent_key="agent2") == "code_interpreter"
+    assert service._resolve_agent_coding_mode(agent_key="agent3") == "code_interpreter"
+    assert service._resolve_agent_coding_mode(agent_key="agent4") == "code_interpreter"
+    assert service._resolve_agent_coding_mode(agent_key="agent5") == "code_interpreter"
+    assert service._resolve_agent_coding_mode(agent_key="agent6") == "code_interpreter"
+    assert service._resolve_agent_coding_mode(agent_key="agent7") == "off"
+    assert service._resolve_agent_coding_mode(agent_key="agent8") == "off"
+
+
+def test_per_agent_coding_alias_supported() -> None:
+    service = AgentService(llm_overrides={"agent2": {"tool_mode": "shell"}})
+
+    assert service._resolve_agent_coding_mode(agent_key="agent2") == "shell"

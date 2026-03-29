@@ -106,6 +106,55 @@ def test_false_invalidated_child_decomposition_is_detected_from_child_failure_or
     assert called == {"lemma_id": "lem_false_child", "reason": "child lemma is false"}
 
 
+def test_false_invalidated_child_decomposition_passes_counterexample_id() -> None:
+    orch = Orchestrator.__new__(Orchestrator)
+    orch.lemmas = _LemmaRepo()
+    orch.decompositions = SimpleNamespace(
+        list_by_node=lambda problem_id, node_id: [
+            DecompositionORM(
+                decomposition_id="dec_failed_false",
+                problem_id=problem_id,
+                node_id=node_id,
+                node_kind="lemma",
+                llm_vetting_status="accepted",
+                controller_status=ControllerStatus.FAILED.value,
+                failure_origin="child_lemma_false",
+                failure_reason="child lemma is false",
+                invalidated_by_counterexample_id="cex_123",
+            )
+        ]
+    )
+    orch.decomposition_candidates = SimpleNamespace(list_by_node=lambda problem_id, node_id: [])
+    orch.event_logger = SimpleNamespace(transition=lambda *args, **kwargs: None)
+    orch._select_active_decomposition_for_node = lambda *args, **kwargs: False
+    called: dict[str, str] = {}
+
+    def invalidate(problem: ProblemORM, lemma: LemmaORM, cfg: ProblemConfig, *, reason: str, counterexample_id: str | None = None) -> None:
+        called["lemma_id"] = lemma.lemma_id
+        called["reason"] = reason
+        called["counterexample_id"] = str(counterexample_id)
+
+    orch._invalidate_parent_decomposition = invalidate
+
+    problem = ProblemORM(problem_id="prob_test")
+    lemma = LemmaORM(
+        lemma_id="lem_false_child",
+        problem_id=problem.problem_id,
+        parent_id="dec_parent",
+        parent_kind="decomposition",
+        statement_nl="False statement",
+    )
+
+    changed = orch._process_child_decomposition_for_lemma(problem, None, lemma, ProblemConfig())
+
+    assert changed is True
+    assert called == {
+        "lemma_id": "lem_false_child",
+        "reason": "child lemma is false",
+        "counterexample_id": "cex_123",
+    }
+
+
 def test_pending_accepted_child_candidate_blocks_solver_fallback() -> None:
     orch = Orchestrator.__new__(Orchestrator)
     orch.lemmas = _LemmaRepo()
@@ -338,3 +387,96 @@ def test_previous_attempt_summaries_include_false_lemma_counterexample_constrain
     assert summary["false_lemma_findings"][0]["lemma_id"] == "lem_false_child"
     assert summary["false_lemma_findings"][0]["candidate_counterexample"] == "n = 1 violates the child claim"
     assert any("Do not reuse" in item for item in summary["hard_negative_constraints"])
+
+
+def test_previous_attempt_summaries_include_ancestor_branch_failures() -> None:
+    orch = Orchestrator.__new__(Orchestrator)
+    leaf = LemmaORM(
+        lemma_id="lem_leaf",
+        problem_id="prob_branch",
+        parent_id="dec_parent",
+        parent_kind="decomposition",
+        statement_nl="leaf statement",
+    )
+    parent = LemmaORM(
+        lemma_id="lem_parent",
+        problem_id="prob_branch",
+        parent_id="dec_root",
+        parent_kind="decomposition",
+        statement_nl="parent statement",
+    )
+    orch.lemmas = SimpleNamespace(get=lambda lemma_id: {"lem_leaf": leaf, "lem_parent": parent}.get(lemma_id))
+    orch.theorems = SimpleNamespace(get=lambda theorem_id: None)
+    orch.decompositions = SimpleNamespace(
+        list_by_node=lambda problem_id, node_id: [
+            DecompositionORM(
+                decomposition_id=f"dec_{node_id}",
+                problem_id=problem_id,
+                node_id=node_id,
+                node_kind="lemma",
+                strategy_summary=f"strategy-{node_id}",
+                llm_vetting_status="rejected_fatal" if node_id == "lem_leaf" else "accepted",
+                controller_status=ControllerStatus.FAILED.value if node_id == "lem_parent" else ControllerStatus.PENDING.value,
+                failure_origin="child_lemma_false" if node_id == "lem_parent" else None,
+                failure_reason="ancestor false frontier" if node_id == "lem_parent" else "current failure",
+            )
+        ]
+    )
+    orch.counterexamples = SimpleNamespace(get=lambda counterexample_id: None)
+    orch.artifacts = SimpleNamespace(exists=lambda key: False, load_json=lambda key: None)
+    orch._reconstruct_agent2_candidate = lambda *args, **kwargs: None
+    orch._load_decomposition_vetter_output = lambda *args, **kwargs: None
+    orch._find_owner_decomposition = lambda problem_id, lemma_id: (
+        DecompositionORM(
+            decomposition_id="dec_owner_parent",
+            problem_id=problem_id,
+            node_id="lem_parent",
+            node_kind="lemma",
+            lemma_ids=["lem_leaf"],
+        )
+        if lemma_id == "lem_leaf"
+        else None
+    )
+
+    summaries = orch._previous_attempt_summaries("prob_branch", "lem_leaf")
+
+    assert len(summaries) == 2
+    assert summaries[0]["source_relation"] == "current_node"
+    assert summaries[0]["source_node_id"] == "lem_leaf"
+    assert summaries[1]["source_relation"] == "ancestor"
+    assert summaries[1]["source_node_id"] == "lem_parent"
+    assert summaries[1]["failure_origin"] == "child_lemma_false"
+
+
+def test_remaining_decomposition_slots_respects_false_frontier_branch_cap() -> None:
+    orch = Orchestrator.__new__(Orchestrator)
+    lemma = LemmaORM(
+        lemma_id="lem_budget",
+        problem_id="prob_budget",
+        parent_id="dec_parent",
+        parent_kind="decomposition",
+        statement_nl="budget lemma",
+        decomposition_round_count=0,
+    )
+    orch.lemmas = SimpleNamespace(get=lambda lemma_id: lemma if lemma_id == "lem_budget" else None)
+    orch.decompositions = SimpleNamespace(
+        list_by_node=lambda problem_id, node_id: [
+            DecompositionORM(
+                decomposition_id="dec_false_frontier",
+                problem_id=problem_id,
+                node_id=node_id,
+                node_kind="lemma",
+                llm_vetting_status="accepted",
+                controller_status=ControllerStatus.FAILED.value,
+                failure_origin="child_lemma_false",
+            )
+        ]
+    )
+    orch.decomposition_candidates = SimpleNamespace(list_by_node=lambda problem_id, node_id: [])
+    orch._find_owner_decomposition = lambda *args, **kwargs: None
+
+    cfg = ProblemConfig.model_validate({"decomposition": {"max_false_frontier_hops_per_branch": 1}})
+
+    remaining = orch._remaining_decomposition_slots("prob_budget", "lem_budget", "lemma", cfg)
+
+    assert remaining == 0

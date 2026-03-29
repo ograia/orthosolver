@@ -84,3 +84,51 @@ def test_zero_timeout_disables_request_timeout(monkeypatch) -> None:
 
     assert kwargs["timeout"] is None
     get_settings.cache_clear()
+
+
+def test_code_interpreter_mode_attaches_tools(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_REASONING_EFFORT", "medium")
+    monkeypatch.setenv("OPENAI_TEXT_VERBOSITY", "medium")
+    get_settings.cache_clear()
+
+    service = AgentService()
+    kwargs = service._responses_create_kwargs(
+        model="gpt-5.4",
+        timeout_seconds=60,
+        system_prompt="system",
+        user_payload='{"x":1}',
+        coding_mode="code_interpreter",
+        temperature=0.0,
+    )
+
+    assert kwargs["tools"] == [
+        {
+            "type": "code_interpreter",
+            "container": {"type": "auto", "memory_limit": "1g"},
+        }
+    ]
+    get_settings.cache_clear()
+
+
+def test_shell_mode_attaches_tools(monkeypatch) -> None:
+    monkeypatch.setenv("OPENAI_REASONING_EFFORT", "medium")
+    monkeypatch.setenv("OPENAI_TEXT_VERBOSITY", "medium")
+    get_settings.cache_clear()
+
+    service = AgentService()
+    kwargs = service._responses_create_kwargs(
+        model="gpt-5.4",
+        timeout_seconds=60,
+        system_prompt="system",
+        user_payload='{"x":1}',
+        coding_mode="shell",
+        temperature=0.0,
+    )
+
+    assert kwargs["tools"] == [
+        {
+            "type": "shell",
+            "environment": {"type": "container_auto"},
+        }
+    ]
+    get_settings.cache_clear()

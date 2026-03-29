@@ -1901,6 +1901,7 @@ def get_problem_create_template() -> DebugProblemCreateTemplateResponse:
                 "lemma_decomposition_candidates_n": cfg.decomposition.lemma_decomposition_candidates_n,
                 "max_consecutive_fatal_rejections_per_node": cfg.decomposition.max_consecutive_fatal_rejections_per_node,
                 "max_decompositions_per_failed_lemma": cfg.decomposition.max_decompositions_per_failed_lemma,
+                "max_false_frontier_hops_per_branch": cfg.decomposition.max_false_frontier_hops_per_branch,
             },
             "lemma_solving": {
                 "max_consecutive_fatal_rejections_per_lemma": cfg.lemma_solving.max_consecutive_fatal_rejections_per_lemma,

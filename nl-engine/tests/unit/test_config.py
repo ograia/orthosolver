@@ -15,6 +15,7 @@ def test_config_defaults_and_caps_present() -> None:
     assert cfg.decomposition.lemma_decomposition_candidates_n == 1
     assert cfg.decomposition.max_consecutive_fatal_rejections_per_node >= 1
     assert cfg.decomposition.max_decompositions_per_failed_lemma >= 1
+    assert cfg.decomposition.max_false_frontier_hops_per_branch >= 1
     assert cfg.lemma_solving.max_recursive_decomposition_depth > 0
     assert cfg.lemma_solving.max_consecutive_fatal_rejections_per_lemma > 0
     assert cfg.lemma_solving.max_minor_rejections_per_lemma > 0
@@ -33,9 +34,14 @@ def test_config_defaults_and_caps_present() -> None:
     assert cfg.llm.agent1.timeout_seconds == 600
     assert cfg.llm.agent1.max_attempts == 2
     assert cfg.llm.agent2.timeout_seconds == 600
+    assert cfg.llm.agent2.coding_mode == "code_interpreter"
     assert cfg.llm.agent3.timeout_seconds == 600
+    assert cfg.llm.agent3.coding_mode == "code_interpreter"
     assert cfg.llm.agent4.timeout_seconds == 600
+    assert cfg.llm.agent4.coding_mode == "code_interpreter"
     assert cfg.llm.agent5.timeout_seconds == 600
+    assert cfg.llm.agent5.coding_mode == "code_interpreter"
+    assert cfg.llm.agent6.coding_mode == "code_interpreter"
 
 
 def test_user_facing_config_excludes_global_ops_and_hidden_knobs() -> None:
@@ -147,6 +153,19 @@ def test_llm_model_alias_and_verbosity_alias() -> None:
     assert cfg.llm.agent1.model == "gpt-5.4-mini"
     assert cfg.llm.agent1.thinking_level == "high"
     assert cfg.llm.agent1.verbosity == "low"
+
+
+def test_llm_coding_alias_maps_to_coding_mode() -> None:
+    cfg = ProblemConfig.model_validate(
+        {
+            "llm": {
+                "agent2": {
+                    "tool_mode": "shell",
+                }
+            }
+        }
+    )
+    assert cfg.llm.agent2.coding_mode == "shell"
 
 
 def test_llm_timeout_validation() -> None:

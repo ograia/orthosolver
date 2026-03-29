@@ -40,6 +40,7 @@ const FIRST_ATTEMPT_AGENT_SPECS = [
 ];
 const REQUEST_CONSOLE_HIDDEN_SOURCES = new Set(["api_create", "api_start", "api_pause", "api_resume", "api_run"]);
 const MODEL_OPTIONS = ["gpt-5.4", "gpt-5.4-pro", "gpt-5.4-mini", "gpt-5.4-nano"];
+const CODING_MODE_OPTIONS = ["off", "code_interpreter", "shell"];
 const MINI_MODELS = new Set(["gpt-5.4-mini", "gpt-5.4-nano"]);
 const EXCLUDED_CONFIG_PATHS = new Set([
   "llm",
@@ -63,6 +64,8 @@ const CONFIG_FIELD_HELP = {
     "How many Agent2 lemma decomposition candidates to request per failed-lemma decomposition round.",
   "decomposition.max_decompositions_per_failed_lemma":
     "Maximum decomposition attempts allowed for a failed lemma before the whole run fails.",
+  "decomposition.max_false_frontier_hops_per_branch":
+    "How many false-bottleneck redecomposition hops a single branch can take before the branch is treated as exhausted.",
   "decomposition.max_consecutive_fatal_rejections_per_node":
     "How many consecutive fatal decomposition rejections are allowed on the same node before failing it.",
   "lemma_solving.max_consecutive_fatal_rejections_per_lemma":
@@ -418,7 +421,7 @@ function enforceMiniReasoningConstraint(agentKey) {
 }
 
 function toggleFirstAttemptRow(key, enabled) {
-  ["model", "thinking", "verbosity", "timeout"].forEach((field) => {
+  ["model", "thinking", "verbosity", "coding", "timeout"].forEach((field) => {
     const el = byId(`form-${key}-${field}`);
     if (el) {
       el.disabled = !enabled;
@@ -462,6 +465,15 @@ function applyAgentLlmRowToForm(agentKey, row) {
       ? row.text.verbosity
       : "medium";
   byId(`form-${agentKey}-verbosity`).value = verbosity;
+  const codingMode =
+    typeof row.coding_mode === "string"
+      ? row.coding_mode
+      : typeof row.tool_mode === "string"
+      ? row.tool_mode
+      : typeof row.coding === "string"
+      ? row.coding
+      : "off";
+  byId(`form-${agentKey}-coding`).value = CODING_MODE_OPTIONS.includes(codingMode) ? codingMode : "off";
   const timeoutSeconds =
     typeof row.timeout_seconds === "number" && Number.isFinite(row.timeout_seconds) && row.timeout_seconds >= 0
       ? String(Math.floor(row.timeout_seconds))
@@ -491,6 +503,8 @@ function agentLlmRowFromForm(agentKey) {
   const model = normalizeModelSelection(byId(`form-${agentKey}-model`).value);
   const thinking = byId(`form-${agentKey}-thinking`).value.trim();
   const verbosity = byId(`form-${agentKey}-verbosity`).value.trim();
+  const codingModeRaw = byId(`form-${agentKey}-coding`).value.trim();
+  const codingMode = CODING_MODE_OPTIONS.includes(codingModeRaw) ? codingModeRaw : "off";
   const timeoutRaw = byId(`form-${agentKey}-timeout`).value.trim();
   const timeout = timeoutRaw === "" ? null : Number.parseInt(timeoutRaw, 10);
   if (timeoutRaw !== "" && (!Number.isFinite(timeout) || timeout < 0)) {
@@ -503,6 +517,7 @@ function agentLlmRowFromForm(agentKey) {
     model,
     thinking_level: thinking || "none",
     verbosity: verbosity || "medium",
+    coding_mode: codingMode,
   };
   if (timeout !== null) {
     entry.timeout_seconds = timeout;
@@ -843,6 +858,7 @@ function initialPayloadFromTemplate() {
         root_solutions_required_for_termination: 1,
         lemma_decomposition_candidates_n: 1,
         max_decompositions_per_failed_lemma: 10,
+        max_false_frontier_hops_per_branch: 4,
         max_consecutive_fatal_rejections_per_node: 5,
       },
       lemma_solving: {
@@ -852,14 +868,14 @@ function initialPayloadFromTemplate() {
       },
       mode: { nl_only_mode: true },
       llm: {
-        agent1: { model: "gpt-5.4-nano", thinking_level: "medium", verbosity: "medium", timeout_seconds: 600 },
-        agent2: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
-        agent3: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 600 },
-        agent4: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
-        agent5: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 600 },
-        agent6: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
-        agent7: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", timeout_seconds: 600 },
-        agent8: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", timeout_seconds: 600 },
+        agent1: { model: "gpt-5.4-nano", thinking_level: "medium", verbosity: "medium", coding_mode: "off", timeout_seconds: 600 },
+        agent2: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", coding_mode: "code_interpreter", timeout_seconds: 600 },
+        agent3: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", coding_mode: "code_interpreter", timeout_seconds: 600 },
+        agent4: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", coding_mode: "code_interpreter", timeout_seconds: 600 },
+        agent5: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", coding_mode: "code_interpreter", timeout_seconds: 600 },
+        agent6: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", coding_mode: "code_interpreter", timeout_seconds: 600 },
+        agent7: { model: "gpt-5.4", thinking_level: "xhigh", verbosity: "medium", coding_mode: "off", timeout_seconds: 600 },
+        agent8: { model: "gpt-5.4", thinking_level: "high", verbosity: "medium", coding_mode: "off", timeout_seconds: 600 },
       },
     },
   };

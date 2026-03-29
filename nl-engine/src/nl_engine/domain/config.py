@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, model_validator
 ReasoningEffort = Literal["none", "low", "medium", "high", "xhigh"]
 TextVerbosity = Literal["low", "medium", "high"]
 SupportedModel = Literal["gpt-5.4", "gpt-5.4-pro", "gpt-5.4-mini", "gpt-5.4-nano"]
+CodingMode = Literal["off", "code_interpreter", "shell"]
 
 
 class LeanModeConfig(BaseModel):
@@ -62,6 +63,7 @@ class DecompositionConfig(BaseModel):
     lemma_decomposition_candidates_n: int = Field(default=1, ge=1)
     max_consecutive_fatal_rejections_per_node: int = Field(default=10, ge=1)
     max_decompositions_per_failed_lemma: int = Field(default=10, ge=1)
+    max_false_frontier_hops_per_branch: int = Field(default=4, ge=1)
 
     @model_validator(mode="before")
     @classmethod
@@ -256,6 +258,7 @@ class AgentLlmConfig(BaseModel):
     model: SupportedModel | None = None
     thinking_level: ReasoningEffort | None = None
     verbosity: TextVerbosity | None = None
+    coding_mode: CodingMode = "off"
     timeout_seconds: int = Field(default=600, ge=0)
     max_attempts: int = Field(default=2, ge=1)
 
@@ -272,6 +275,11 @@ class AgentLlmConfig(BaseModel):
                 payload["verbosity"] = payload.get("text_verbosity")
             elif isinstance(payload.get("text"), dict):
                 payload["verbosity"] = payload["text"].get("verbosity")
+        if "coding_mode" not in payload:
+            if "tool_mode" in payload:
+                payload["coding_mode"] = payload.get("tool_mode")
+            elif "coding" in payload:
+                payload["coding_mode"] = payload.get("coding")
         return payload
 
     @model_validator(mode="after")
@@ -283,11 +291,11 @@ class AgentLlmConfig(BaseModel):
 
 class LlmConfig(BaseModel):
     agent1: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
-    agent2: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
-    agent3: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
-    agent4: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
-    agent5: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
-    agent6: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
+    agent2: AgentLlmConfig = Field(default_factory=lambda: AgentLlmConfig(coding_mode="code_interpreter"))
+    agent3: AgentLlmConfig = Field(default_factory=lambda: AgentLlmConfig(coding_mode="code_interpreter"))
+    agent4: AgentLlmConfig = Field(default_factory=lambda: AgentLlmConfig(coding_mode="code_interpreter"))
+    agent5: AgentLlmConfig = Field(default_factory=lambda: AgentLlmConfig(coding_mode="code_interpreter"))
+    agent6: AgentLlmConfig = Field(default_factory=lambda: AgentLlmConfig(coding_mode="code_interpreter"))
     agent7: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
     agent8: AgentLlmConfig = Field(default_factory=AgentLlmConfig)
     # First-attempt model overrides. When set, used for the first attempt

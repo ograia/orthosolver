@@ -926,7 +926,7 @@ class Orchestrator:
             constraints.append(str(finding_summary["do_not_repeat_pattern"]))
         return findings, constraints
 
-    def _previous_attempt_summaries(self, problem_id: str, node_id: str) -> list[dict[str, Any]]:
+    def _node_previous_attempt_summaries(self, problem_id: str, node_id: str) -> list[dict[str, Any]]:
         rows = self.decompositions.list_by_node(problem_id, node_id)
         summaries: list[dict[str, Any]] = []
         for row in rows:
@@ -1025,6 +1025,10 @@ class Orchestrator:
             invalidating_counterexample = self._counterexample_summary(row.invalidated_by_counterexample_id)
             if row.invalidated_by_lemma_id:
                 summary["invalidated_by_lemma_id"] = row.invalidated_by_lemma_id
+                lemma_repo = getattr(self, "lemmas", None)
+                invalidating_lemma = lemma_repo.get(row.invalidated_by_lemma_id) if lemma_repo is not None else None
+                if invalidating_lemma is not None:
+                    summary["invalidated_by_statement_nl"] = invalidating_lemma.statement_nl
             if row.invalidated_by_counterexample_id:
                 summary["invalidated_by_counterexample_id"] = row.invalidated_by_counterexample_id
             if invalidating_counterexample is not None:
@@ -1042,6 +1046,155 @@ class Orchestrator:
                 summary
             )
         return summaries
+
+    def _lineage_nodes(self, problem_id: str, node_id: str, *, depth_cap: int = 64) -> list[dict[str, Any]]:
+        lineage: list[dict[str, Any]] = []
+        seen: set[tuple[str, str]] = set()
+        current_node_id = node_id
+        lemma_repo = getattr(self, "lemmas", None)
+        theorem_repo = getattr(self, "theorems", None)
+        current_lemma = lemma_repo.get(node_id) if lemma_repo is not None else None
+        current_kind = NodeKind.LEMMA.value if current_lemma is not None else NodeKind.THEOREM.value
+        depth = 0
+
+        while current_node_id and depth < depth_cap:
+            seen_key = (current_kind, current_node_id)
+            if seen_key in seen:
+                break
+            seen.add(seen_key)
+
+            statement_nl = ""
+            if current_kind == NodeKind.LEMMA.value:
+                lemma = lemma_repo.get(current_node_id) if lemma_repo is not None else None
+                if lemma is not None:
+                    statement_nl = lemma.statement_nl
+            else:
+                theorem = theorem_repo.get(current_node_id) if theorem_repo is not None else None
+                if theorem is not None:
+                    statement_nl = theorem.statement_nl
+
+            lineage.append(
+                {
+                    "node_id": current_node_id,
+                    "node_kind": current_kind,
+                    "statement_nl": statement_nl,
+                    "depth": depth,
+                }
+            )
+
+            if current_kind != NodeKind.LEMMA.value:
+                break
+
+            owner = self._find_owner_decomposition(problem_id, current_node_id)
+            if owner is None:
+                break
+            current_node_id = owner.node_id
+            current_kind = owner.node_kind
+            depth += 1
+
+        return lineage
+
+    def _previous_attempt_summaries(self, problem_id: str, node_id: str) -> list[dict[str, Any]]:
+        summaries: list[dict[str, Any]] = []
+        seen: set[str] = set()
+        for lineage_row in self._lineage_nodes(problem_id, node_id):
+            lineage_depth = int(lineage_row.get("depth") or 0)
+            source_node_id = str(lineage_row.get("node_id") or "").strip()
+            source_node_kind = str(lineage_row.get("node_kind") or "").strip()
+            source_statement_nl = str(lineage_row.get("statement_nl") or "").strip()
+            for item in self._node_previous_attempt_summaries(problem_id, source_node_id):
+                summary = dict(item)
+                summary["source_node_id"] = source_node_id
+                summary["source_node_kind"] = source_node_kind
+                summary["source_statement_nl"] = source_statement_nl
+                summary["source_lineage_depth"] = lineage_depth
+                summary["source_relation"] = "current_node" if lineage_depth == 0 else "ancestor"
+                dedupe_key = (
+                    str(summary.get("decomposition_id") or "").strip()
+                    or f"{source_node_kind}:{source_node_id}:{summary.get('failure_mode')}:{summary.get('strategy_summary')}"
+                )
+                if dedupe_key in seen:
+                    continue
+                seen.add(dedupe_key)
+                summaries.append(summary)
+        return summaries
+
+    @staticmethod
+    def _risk_pattern_matches(text: str, patterns: list[tuple[str, str]]) -> list[dict[str, str]]:
+        normalized = text.lower()
+        matches: list[dict[str, str]] = []
+        for label, pattern in patterns:
+            if re.search(pattern, normalized):
+                matches.append({"label": label, "evidence": text[:240]})
+        return matches
+
+    def _decomposition_risk_audit(
+        self,
+        *,
+        theorem_nl: str,
+        decomposition: dict[str, Any],
+        previous_attempt_summaries: list[dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        patterns = [
+            ("existence_claim", r"\bthere exists\b|\bexists\b|\bfind\b|\bchoose\b"),
+            ("universal_integer_claim", r"\bfor all\b|\bfor every\b|\bfor each\b"),
+            ("divisibility_or_counting", r"\bdivisib|\bmultiple\b|\bcount\b|\bnumber of\b"),
+            ("bounded_certificate", r"\bbounded\b|\bcertificate\b|\bsupport\b|\bdegree\b"),
+            ("regular_sequence", r"\bregular sequence\b"),
+            ("coefficient_sign_claim", r"\bcoefficient\w*\b.*\b(nonnegative|positive)\b|\bnonnegative coefficients?\b"),
+        ]
+        matched_signals: list[dict[str, str]] = []
+        text_rows = [theorem_nl]
+        strategy_summary = str(decomposition.get("strategy_summary") or "").strip()
+        if strategy_summary:
+            text_rows.append(strategy_summary)
+        for lemma in decomposition.get("lemmas", []) if isinstance(decomposition.get("lemmas"), list) else []:
+            if not isinstance(lemma, dict):
+                continue
+            statement_nl = str(lemma.get("statement_nl") or "").strip()
+            if statement_nl:
+                text_rows.append(statement_nl)
+        for text in text_rows:
+            matched_signals.extend(self._risk_pattern_matches(text, patterns))
+
+        previous_attempt_summaries = list(previous_attempt_summaries or [])
+        prior_counterexamples: list[dict[str, Any]] = []
+        for attempt in previous_attempt_summaries:
+            invalidating_counterexample = attempt.get("invalidating_counterexample")
+            if isinstance(invalidating_counterexample, dict):
+                prior_counterexamples.append(invalidating_counterexample)
+            for finding in attempt.get("false_lemma_findings", []) if isinstance(attempt.get("false_lemma_findings"), list) else []:
+                if isinstance(finding, dict) and finding.get("candidate_counterexample"):
+                    prior_counterexamples.append(
+                        {
+                            "counterexample_text": finding.get("candidate_counterexample"),
+                            "summary": finding.get("evidence"),
+                        }
+                    )
+
+        unique_labels = {item["label"] for item in matched_signals}
+        if prior_counterexamples:
+            search_priority = "high"
+        elif len(unique_labels) >= 2:
+            search_priority = "high"
+        elif unique_labels:
+            search_priority = "medium"
+        else:
+            search_priority = "low"
+
+        recommended_checks = [
+            "Run bounded small-instance search before marking risky lemmas plausible.",
+            "Prefer direct counterexample search on bottleneck lemmas before auditing assembly details.",
+        ]
+        if prior_counterexamples:
+            recommended_checks.append("Do not re-emit any lemma family contradicted by the supplied prior counterexamples.")
+
+        return {
+            "search_priority": search_priority,
+            "matched_signals": matched_signals,
+            "prior_counterexamples": prior_counterexamples,
+            "recommended_checks": recommended_checks,
+        }
 
     def _reconstruct_agent2_candidate(self, problem_id: str, dec: DecompositionORM) -> dict[str, Any] | None:
         """Reconstruct the full Agent 2 candidate from stored data.
@@ -1401,12 +1554,54 @@ class Orchestrator:
             if row.llm_vetting_status == "accepted" and row.controller_status != ControllerStatus.FAILED.value
         )
 
+    def _false_frontier_hops_for_branch(self, problem_id: str, node_id: str) -> int:
+        hops = 0
+        for lineage_row in self._lineage_nodes(problem_id, node_id):
+            lineage_node_id = str(lineage_row.get("node_id") or "").strip()
+            hops += sum(
+                1
+                for row in self.decompositions.list_by_node(problem_id, lineage_node_id)
+                if self._child_decomposition_is_false_frontier(row)
+            )
+            hops += sum(
+                1
+                for row in self.decomposition_candidates.list_by_node(problem_id, lineage_node_id)
+                if self._child_decomposition_is_false_frontier(row)
+            )
+        return hops
+
+    def _decomposition_slot_limit_reason(self, problem_id: str, node_id: str, node_kind: str, cfg: ProblemConfig) -> str:
+        if node_kind == NodeKind.THEOREM.value:
+            return "decomposition slot limit reached"
+        lemma = self.lemmas.get(node_id)
+        consumed_rounds = int(lemma.decomposition_round_count) if lemma is not None else len(self.decompositions.list_by_node(problem_id, node_id))
+        per_node_remaining = max(0, self._max_decompositions_for_node(node_kind, cfg) - consumed_rounds)
+        if per_node_remaining <= 0:
+            return "decomposition slot limit reached"
+        branch_remaining = max(
+            0,
+            int(cfg.decomposition.max_false_frontier_hops_per_branch)
+            - self._false_frontier_hops_for_branch(problem_id, node_id),
+        )
+        if branch_remaining <= 0:
+            return (
+                "false-frontier branch redecomposition cap reached "
+                f"({cfg.decomposition.max_false_frontier_hops_per_branch})"
+            )
+        return "decomposition slot limit reached"
+
     def _remaining_decomposition_slots(self, problem_id: str, node_id: str, node_kind: str, cfg: ProblemConfig) -> int:
         if node_kind == NodeKind.THEOREM.value:
             return max(0, cfg.decomposition.parallel_root_decompositions_n - self._current_root_track_count(problem_id, node_id))
         lemma = self.lemmas.get(node_id)
         consumed_rounds = int(lemma.decomposition_round_count) if lemma is not None else len(self.decompositions.list_by_node(problem_id, node_id))
-        return max(0, self._max_decompositions_for_node(node_kind, cfg) - consumed_rounds)
+        per_node_remaining = max(0, self._max_decompositions_for_node(node_kind, cfg) - consumed_rounds)
+        branch_remaining = max(
+            0,
+            int(cfg.decomposition.max_false_frontier_hops_per_branch)
+            - self._false_frontier_hops_for_branch(problem_id, node_id),
+        )
+        return min(per_node_remaining, branch_remaining)
 
     def _refresh_lemma_decomposition_counters(self, lemma: LemmaORM) -> None:
         candidate_rows = self.decomposition_candidates.list_by_node(lemma.problem_id, lemma.lemma_id)
@@ -2094,25 +2289,32 @@ class Orchestrator:
 
         vet_job_id = decomposition_origin_job_id or f"wrk_{decomposition_id}_vet"
         if pre_vetted_bundle is None:
+            decomposition_payload = {
+                "candidate_index": candidate.candidate_index,
+                "strategy_summary": candidate.strategy_summary,
+                "shared_context": candidate.context_items or candidate.shared_context,
+                "lemmas": [
+                    {
+                        **lemma.model_dump(),
+                        "semantic_sketch": local_semantic_by_id.get(
+                            lemma.local_id,
+                            lemma.semantic_sketch.model_dump(),
+                        ),
+                    }
+                    for lemma in candidate.lemmas
+                ],
+                "assembly_plan": candidate.assembly_plan.model_dump(),
+            }
             decision_payload = Agent3Input(
                 theorem_nl=theorem_nl,
                 root_semantic_sketch=theorem_semantic_sketch,
-                decomposition={
-                    "candidate_index": candidate.candidate_index,
-                    "strategy_summary": candidate.strategy_summary,
-                    "shared_context": candidate.context_items or candidate.shared_context,
-                    "lemmas": [
-                        {
-                            **lemma.model_dump(),
-                            "semantic_sketch": local_semantic_by_id.get(
-                                lemma.local_id,
-                                lemma.semantic_sketch.model_dump(),
-                            ),
-                        }
-                        for lemma in candidate.lemmas
-                    ],
-                    "assembly_plan": candidate.assembly_plan.model_dump(),
-                },
+                decomposition=decomposition_payload,
+                previous_attempt_summaries=payload.previous_attempt_summaries,
+                risk_audit=self._decomposition_risk_audit(
+                    theorem_nl=theorem_nl,
+                    decomposition=decomposition_payload,
+                    previous_attempt_summaries=payload.previous_attempt_summaries,
+                ),
             )
             vet_job = WorkerJob(
                 job_id=vet_job_id,
@@ -2393,6 +2595,7 @@ class Orchestrator:
         if remaining_slots <= 0:
             return False, 0
 
+        local_previous_attempt_summaries = self._node_previous_attempt_summaries(problem.problem_id, node_id)
         if node_kind == NodeKind.THEOREM.value:
             num_candidates = remaining_slots
         else:
@@ -2408,7 +2611,7 @@ class Orchestrator:
         # Use the first-attempt lemma model override when this is
         # the first decomposition of a lemma (no previous attempts).
         override_key: str | None = None
-        if node_kind == NodeKind.LEMMA.value and not payload.previous_attempt_summaries:
+        if node_kind == NodeKind.LEMMA.value and not local_previous_attempt_summaries:
             override_key = self._consume_lemma_override_once(
                 node_id,
                 override_key="agent2_first_lemma",
@@ -2474,6 +2677,7 @@ class Orchestrator:
 
         if request_count > 0:
             prior_summaries = self._previous_attempt_summaries(problem.problem_id, root.theorem_id)
+            local_prior_summaries = self._node_previous_attempt_summaries(problem.problem_id, root.theorem_id)
             trusted_summaries = self._trusted_context_summaries(problem.problem_id)
             for idx in range(request_count):
                 payload = self._build_decomposition_generation_payload(
@@ -2501,7 +2705,7 @@ class Orchestrator:
                 # Use the first-root model override only when there are
                 # no previous attempts (first decomposition of the root).
                 root_override_key = None
-                if not prior_summaries:
+                if not local_prior_summaries:
                     root_override_key = self._consume_theorem_override_once(
                         root.theorem_id,
                         override_key="agent2_first_root",
@@ -2959,6 +3163,7 @@ class Orchestrator:
                     lemma,
                     cfg,
                     reason=false_candidate.failure_reason or "child decomposition candidate determined lemma is false",
+                    counterexample_id=false_candidate.invalidated_by_counterexample_id,
                 )
                 return True
         if false_child is not None:
@@ -2967,6 +3172,7 @@ class Orchestrator:
                 lemma,
                 cfg,
                 reason=false_child.failure_reason or "child decomposition determined lemma is false",
+                counterexample_id=false_child.invalidated_by_counterexample_id,
             )
             return True
 
@@ -3976,7 +4182,12 @@ class Orchestrator:
                 NodeKind.LEMMA.value,
                 cfg,
             ) <= 0:
-                return self._DECOMPOSE_OUTCOME_CANNOT_DECOMPOSE, "decomposition slot limit reached"
+                return self._DECOMPOSE_OUTCOME_CANNOT_DECOMPOSE, self._decomposition_slot_limit_reason(
+                    problem.problem_id,
+                    lemma.lemma_id,
+                    NodeKind.LEMMA.value,
+                    cfg,
+                )
 
         generated, accepted_count = self._generate_decompositions_for_node(
             problem=problem,
@@ -3989,7 +4200,19 @@ class Orchestrator:
             cfg=cfg,
         )
         if not generated:
-            return self._DECOMPOSE_OUTCOME_CANNOT_DECOMPOSE, "decomposition cap or depth reached"
+            if self._remaining_decomposition_slots(
+                problem.problem_id,
+                lemma.lemma_id,
+                NodeKind.LEMMA.value,
+                cfg,
+            ) <= 0:
+                return self._DECOMPOSE_OUTCOME_CANNOT_DECOMPOSE, self._decomposition_slot_limit_reason(
+                    problem.problem_id,
+                    lemma.lemma_id,
+                    NodeKind.LEMMA.value,
+                    cfg,
+                )
+            return self._DECOMPOSE_OUTCOME_CANNOT_DECOMPOSE, "decomposition generation produced no candidates"
         lemma.decomposition_round_count = int(lemma.decomposition_round_count) + 1
         lemma.materialized_candidate_count = len(self.decomposition_candidates.list_by_node(problem.problem_id, lemma.lemma_id))
         lemma.promoted_decomposition_count = sum(

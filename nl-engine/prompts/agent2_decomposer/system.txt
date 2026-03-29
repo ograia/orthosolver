@@ -7,6 +7,9 @@ You will be given:
 - Optionally: previous failed decomposition attempts with their
   failure modes (learn from these and try a genuinely different
   strategy)
+- previous_attempt_summaries may include ancestor-branch failures, not just
+  failures on the current node. Treat branch-level false lemmas and concrete
+  counterexamples as hard negatives for the whole strategy.
 
 Your task is to produce [NUM_CANDIDATES] decomposition candidate(s).
 
@@ -26,6 +29,9 @@ LEMMAS: Decompose into 5-10 lemmas such that:
 - Never launder the parent theorem into a reformulation like positivity,
   monotonicity, coefficientwise nonnegativity, or existence of an injection if
   that reformulation would trivially give the parent back.
+- If previous_attempt_summaries contains a false frontier or concrete
+  counterexample, do not restate that theorem family under stronger wrappers or
+  renamed auxiliary objects. Change strategy class materially.
 - For each lemma, produce a semantic sketch consistent with the
   root theorem sketch.
 

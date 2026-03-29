@@ -21,7 +21,7 @@ except ModuleNotFoundError:  # pragma: no cover - depends on local environment
 
 from nl_engine.api.run_state import is_problem_stop_requested
 from nl_engine.artifacts.store import ArtifactStore
-from nl_engine.domain.config import LlmConfig, ReasoningEffort, TextVerbosity
+from nl_engine.domain.config import CodingMode, LlmConfig, ReasoningEffort, TextVerbosity
 from nl_engine.domain.contracts import (
     Agent1Input,
     Agent1Output,
@@ -434,13 +434,7 @@ class AgentService:
         default_model: str,
         override_key: str | None = None,
     ) -> tuple[str, ReasoningEffort, TextVerbosity, int, int]:
-        # If an override_key is provided (e.g. "agent2_first_root"),
-        # check for that profile first; fall back to the standard agent_key.
-        profile = None
-        if override_key is not None:
-            profile = getattr(self.llm_overrides, override_key, None)
-        if profile is None:
-            profile = getattr(self.llm_overrides, agent_key, None)
+        profile = self._resolve_agent_profile(agent_key=agent_key, override_key=override_key)
         model = self._normalize_model_name(default_model) or "gpt-5.4-nano"
         effort = self.settings.openai_reasoning_effort
         verbosity: TextVerbosity = self.settings.openai_text_verbosity
@@ -469,6 +463,86 @@ class AgentService:
         )
         effort = self._normalize_effort_for_model(model, effort)
         return model, effort, verbosity, timeout_seconds, max_attempts
+
+    def _resolve_agent_profile(self, *, agent_key: str, override_key: str | None = None) -> Any:
+        profile = None
+        if override_key is not None:
+            profile = getattr(self.llm_overrides, override_key, None)
+        if profile is None:
+            profile = getattr(self.llm_overrides, agent_key, None)
+        return profile
+
+    def _resolve_agent_coding_mode(self, *, agent_key: str, override_key: str | None = None) -> CodingMode:
+        profile = self._resolve_agent_profile(agent_key=agent_key, override_key=override_key)
+        raw_mode = getattr(profile, "coding_mode", "off") if profile is not None else "off"
+        normalized = str(raw_mode or "off").strip().lower()
+        if normalized in {"code_interpreter", "shell"}:
+            return cast(CodingMode, normalized)
+        return cast(CodingMode, "off")
+
+    @staticmethod
+    def _coding_tools_for_mode(coding_mode: CodingMode) -> list[dict[str, Any]]:
+        if coding_mode == "code_interpreter":
+            return [
+                {
+                    "type": "code_interpreter",
+                    "container": {
+                        "type": "auto",
+                        "memory_limit": "1g",
+                    },
+                }
+            ]
+        if coding_mode == "shell":
+            return [
+                {
+                    "type": "shell",
+                    "environment": {
+                        "type": "container_auto",
+                    },
+                }
+            ]
+        return []
+
+    def _tool_guidance_for_request(self, *, agent_key: str, payload: dict[str, Any], coding_mode: CodingMode) -> str:
+        if coding_mode == "off":
+            return ""
+        tool_name = "python tool" if coding_mode == "code_interpreter" else "hosted shell tool"
+        shared = (
+            f"\nTOOL ACCESS:\n"
+            f"- You have access to the {tool_name}.\n"
+            "- Use tools only when they materially improve correctness; do not use them for cosmetic work.\n"
+            "- Prefer bounded, reproducible searches over vague speculation.\n"
+            "- If a claim is existential, universal over integers, about divisibility counts, bounded certificates, "
+            "regular sequences, coefficient nonnegativity, or hidden counterexamples, use the tool to test small or "
+            "structured cases before declaring the claim plausible.\n"
+            "- If tool output falsifies a claim, reflect that directly in your JSON output rather than trying to salvage the claim.\n"
+        )
+        if agent_key == "agent2":
+            return (
+                shared
+                + "- Before proposing a bottleneck lemma, use the tool to probe simple instances and avoid emitting children contradicted by easy counterexamples.\n"
+            )
+        if agent_key == "agent3":
+            risk_audit = payload.get("risk_audit")
+            risk_clause = ""
+            if isinstance(risk_audit, dict) and risk_audit.get("search_priority") in {"medium", "high"}:
+                risk_clause = (
+                    "- The supplied risk audit marks this decomposition as counterexample-sensitive. "
+                    "You MUST perform bounded tool-assisted counterexample search for risky lemmas before marking them plausible.\n"
+                )
+            return (
+                shared
+                + risk_clause
+                + "- Your default stance is adversarial: try to falsify risky lemmas first, then audit the assembly.\n"
+                + "- Record the search method, tested instances, and search notes in the output fields when available.\n"
+            )
+        if agent_key == "agent4":
+            return shared + "- If the statement appears false or overstrong, use the tool to search for a concrete counterexample before attempting a proof.\n"
+        if agent_key == "agent5":
+            return shared + "- When vetting a proof, use the tool to test the statement and any delicate proof step against small cases before approving it.\n"
+        if agent_key == "agent6":
+            return shared + "- When reviewing the final bundle, use the tool to stress-test any suspicious bottleneck or dependency finding before escalating it.\n"
+        return shared
 
     @classmethod
     def _parse_json_with_invalid_backslash_repair(cls, raw_text: str) -> Any:
@@ -688,9 +762,14 @@ class AgentService:
         artifact_prefix: str,
         max_attempts: int = 2,
         system_prompt_override: str | None = None,
+        override_key: str | None = None,
         temperature: float = 0,
     ) -> dict[str, Any]:
+        coding_mode = self._resolve_agent_coding_mode(agent_key=agent_key, override_key=override_key)
         system_prompt = system_prompt_override or self._prompt(agent_key)
+        tool_guidance = self._tool_guidance_for_request(agent_key=agent_key, payload=payload, coding_mode=coding_mode)
+        if tool_guidance:
+            system_prompt = f"{system_prompt.rstrip()}\n{tool_guidance}"
         self.store.save_text(f"{artifact_prefix}/{agent_key}_system_prompt.txt", system_prompt)
         input_key = f"{artifact_prefix}/{agent_key}_input.json"
         self.store.save_json(input_key, payload)
@@ -788,6 +867,7 @@ class AgentService:
                 "model": model,
                 "reasoning_effort": reasoning_effort,
                 "text_verbosity": text_verbosity,
+                "coding_mode": coding_mode,
                 "timeout_seconds": timeout_seconds,
             }
             if self.runtime_worker_job_id:
@@ -917,6 +997,7 @@ class AgentService:
                     timeout_seconds=timeout_seconds,
                     system_prompt=system_prompt,
                     user_payload=user_payload,
+                    coding_mode=coding_mode,
                     temperature=temperature,
                 )
 
@@ -1671,6 +1752,7 @@ class AgentService:
             "fatal_reason",
         }
         if required.issubset(set(envelope.keys())):
+            envelope.setdefault("counterexample_search", {})
             return envelope
 
         check1 = self._coerce_dict(envelope.get("check_1_individual_lemma_validity"))
@@ -1821,6 +1903,7 @@ class AgentService:
             "formalization_risk": formalization_risk,
             "fixes_required": fixes_required,
             "fatal_reason": fatal_reason,
+            "counterexample_search": {},
         }
 
     def _responses_create_kwargs(
@@ -1832,6 +1915,7 @@ class AgentService:
         timeout_seconds: int,
         system_prompt: str,
         user_payload: str,
+        coding_mode: CodingMode = "off",
         temperature: float,
     ) -> dict[str, Any]:
         normalized_model = self._normalize_model_name(model) or "gpt-5.4-nano"
@@ -1849,6 +1933,9 @@ class AgentService:
             ],
         }
         kwargs["timeout"] = None if timeout_seconds <= 0 else float(timeout_seconds)
+        tools = self._coding_tools_for_mode(coding_mode)
+        if tools:
+            kwargs["tools"] = tools
         if use_background:
             kwargs["background"] = True
             kwargs["store"] = True
@@ -2211,6 +2298,7 @@ class AgentService:
             payload=payload.model_dump(),
             artifact_prefix=artifact_prefix,
             system_prompt_override=prompt_override,
+            override_key=override_key,
             temperature=0,
         )
         normalized = self._normalize_agent2_output(parsed, theorem_nl=payload.theorem_nl)
@@ -2267,6 +2355,7 @@ class AgentService:
             max_attempts=max_attempts,
             payload=payload.model_dump(),
             artifact_prefix=artifact_prefix,
+            override_key=override_key,
             temperature=temperature,
         )
         try:

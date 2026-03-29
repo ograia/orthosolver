@@ -37,9 +37,16 @@ def test_debug_problem_template_list_and_limit() -> None:
     assert t["config"]["mode"]["nl_only_mode"] is False
     assert "budget" in t["config"]
     assert t["config"]["llm"]["agent1"]["timeout_seconds"] == 600
+    assert t["config"]["llm"]["agent1"]["coding_mode"] == "off"
+    assert t["config"]["llm"]["agent2"]["coding_mode"] == "code_interpreter"
+    assert t["config"]["llm"]["agent3"]["coding_mode"] == "code_interpreter"
+    assert t["config"]["llm"]["agent4"]["coding_mode"] == "code_interpreter"
+    assert t["config"]["llm"]["agent5"]["coding_mode"] == "code_interpreter"
+    assert t["config"]["llm"]["agent6"]["coding_mode"] == "code_interpreter"
     assert "parallel_root_decompositions_n" in t["config"]["decomposition"]
     assert "parallel_root_take_k" in t["config"]["decomposition"]
     assert t["config"]["decomposition"]["lemma_decomposition_candidates_n"] == 1
+    assert t["config"]["decomposition"]["max_false_frontier_hops_per_branch"] == 4
     assert "max_consecutive_fatal_rejections_per_lemma" in t["config"]["lemma_solving"]
     assert "max_minor_rejections_per_lemma" in t["config"]["lemma_solving"]
     assert "max_total_lemma_nodes" in t["config"]["lemma_solving"]

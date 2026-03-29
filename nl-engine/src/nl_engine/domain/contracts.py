@@ -550,6 +550,8 @@ class Agent3Input(BaseModel):
     theorem_nl: str
     root_semantic_sketch: dict[str, Any]
     decomposition: dict[str, Any]
+    previous_attempt_summaries: list[dict[str, Any]] = Field(default_factory=list)
+    risk_audit: dict[str, Any] = Field(default_factory=dict)
 
 
 class Agent3Output(BaseModel):
@@ -566,6 +568,7 @@ class Agent3Output(BaseModel):
     dependency_risk_assessment: dict[str, Any] = Field(default_factory=dict)
     equivalence_findings: list[dict[str, Any]] = Field(default_factory=list)
     context_purity_findings: list[dict[str, Any]] = Field(default_factory=list)
+    counterexample_search: dict[str, Any] = Field(default_factory=dict)
     accepted_bottleneck: bool = False
 
     @field_validator("lemma_findings", mode="before")
