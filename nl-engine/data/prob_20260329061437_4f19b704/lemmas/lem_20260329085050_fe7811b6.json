@@ -1,0 +1,134 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329085505_32870e52",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T08:51:04.410525Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.03,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T08:56:15.854483Z",
+  "last_dependency_check_id": "depchk_20260329085615_842521e0",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof is correct and complete: from the assumptions E = F - G and E = M*A/B with gcd(B,M)=1, one immediately gets F - G = M*A/B, so the witnesses required by the congruence definition are simply A' = A and B' = B. This matches the lemma sketch exactly and uses no undeclared or forbidden dependencies.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "By assumption, there exist polynomials A(q), B(q) in Z[q] such that gcd(B(q),M(q))=1 and\nE(q)=M(q)A(q)/B(q).\nWe are also given that E(q)=F(q)-G(q). Hence\nF(q)-G(q)=E(q)=M(q)A(q)/B(q).\nTo prove F(q) \\equiv G(q) mod M(q) in the stated sense, we must exhibit polynomials A'(q),B'(q) in Z[q] such that gcd(B'(q),M(q))=1 and\nF(q)-G(q)=M(q)A'(q)/B'(q).\nBut we may simply take\nA'(q)=A(q), \\quad B'(q)=B(q).\nThese are polynomials in Z[q], they satisfy gcd(B'(q),M(q))=gcd(B(q),M(q))=1 by the hypothesis, and the displayed identity above gives\nF(q)-G(q)=M(q)A'(q)/B'(q).\nTherefore the definition of congruence modulo M(q) is satisfied, so F(q) \\equiv G(q) mod M(q).",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329085615_2cfdf26e",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329085050_fe7811b6",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329061437_747e99b3",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329061437_4f19b704",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329061437_4f19b704/proof_bundles/lemmas/lem_20260329085050_fe7811b6.json",
+  "proof_graph_id": "pgraph_20260329085505_7fc53cae",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Translates the localized divisibility statement for the theorem difference into the final congruence between the finite sum and the claimed right-hand side.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let M(q) be a nonzero polynomial in Z[q], and let E(q), F(q), and G(q) be rational functions in Q(q). Assume that E(q) = F(q) - G(q). Assume also that there exist polynomials A(q) and B(q) in Z[q] such that gcd(B(q), M(q)) = 1 and E(q) = M(q) A(q) / B(q). Then F(q) \u2261 G(q) mod M(q), where by definition F(q) \u2261 G(q) mod M(q) means that F(q)-G(q) can be written as M(q) A'(q) / B'(q) for some polynomials A'(q), B'(q) in Z[q] with gcd(B'(q), M(q)) = 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "M must be nonzero",
+      "M, A, B, A_prime, and B_prime are polynomials with integer coefficients",
+      "E, F, and G are rational functions with rational coefficients",
+      "gcd of B and M is 1",
+      "gcd of B_prime and M is 1",
+      "The congruence relation is defined only through the existence of such a representation of the difference F minus G"
+    ],
+    "normalized_claim": "If a rational function E equals F minus G and E can be expressed as M times a polynomial numerator divided by a polynomial denominator that is coprime to M, then F and G are congruent modulo M in the stated sense, because their difference has such a representation.",
+    "quantifier_order": [
+      "For every nonzero polynomial M in Z[q]",
+      "for every rational functions E, F, and G in Q(q)",
+      "assuming E equals F minus G",
+      "assuming there exist polynomials A and B in Z[q] such that gcd of B and M is 1 and E equals M times A divided by B",
+      "then F is congruent to G modulo M, meaning there exist polynomials A_prime and B_prime in Z[q] such that gcd of B_prime and M is 1 and F minus G equals M times A_prime divided by B_prime"
+    ],
+    "variables": [
+      {
+        "domain": "indeterminate over the polynomial and rational function rings",
+        "name": "q",
+        "role": "shared polynomial variable",
+        "type": "symbol"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "M",
+        "role": "modulus polynomial, assumed nonzero",
+        "type": "polynomial"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "E",
+        "role": "difference expression to be represented with denominator coprime to M",
+        "type": "rational function"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "F",
+        "role": "one side of the target congruence",
+        "type": "rational function"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "G",
+        "role": "other side of the target congruence",
+        "type": "rational function"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "A",
+        "role": "witness numerator for the assumed representation of E",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "B",
+        "role": "witness denominator for the assumed representation of E",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "A_prime",
+        "role": "witness numerator in the congruence definition",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "B_prime",
+        "role": "witness denominator in the congruence definition",
+        "type": "polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "The assumed witnesses A and B depend on the pair M and E, not directly on F and G except through the identity E equals F minus G",
+      "The conclusion witnesses A_prime and B_prime can be taken to depend on the same earlier witnesses A and B; in fact the same A and B already witness the conclusion because F minus G equals E",
+      "No additional hidden witness beyond A, B, A_prime, and B_prime is required"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T08:56:15.854483Z"
+}

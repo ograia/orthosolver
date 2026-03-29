@@ -1,0 +1,31 @@
+{
+  "confidence": 0.98,
+  "created_at": "2026-03-29T07:45:05.046868Z",
+  "detailed_findings": [
+    {
+      "finding": "The contradiction argument is valid: from a < b and 2b <= n one gets a+b < n, so n-a-b > 0.",
+      "location": "middle of proof",
+      "severity": "low"
+    },
+    {
+      "finding": "The algebraic identity a(n-a)-b(n-b) = (a-b)(n-a-b) is correct and is used to force the contradiction.",
+      "location": "displayed calculation",
+      "severity": "low"
+    }
+  ],
+  "drift_assessment": {
+    "drift_description": null,
+    "drift_detected": false,
+    "drift_severity": "none",
+    "drift_type": null
+  },
+  "feedback_for_solver": null,
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_status": "complete",
+  "reason": "The proof is correct and complete. Assuming a < b, it derives a+b < 2b <= n, hence n-a-b > 0, and factors the difference as a(n-a)-b(n-b) = (a-b)(n-a-b). Since a-b < 0 and n-a-b > 0, the product is negative, contradicting the hypothesis a(n-a) >= b(n-b). This matches the lemma\u2019s intended monotonicity-on-the-first-half argument and introduces no illicit dependencies.",
+  "recommended_action": "send_to_lean",
+  "report_id": "rep_20260329074505_70b726c3",
+  "statement_status": "plausible",
+  "target_id": "lem_20260329073933_51291146",
+  "target_kind": "lemma"
+}

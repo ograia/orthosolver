@@ -1,0 +1,104 @@
+{
+  "created_at": "2026-03-29T11:04:05.458573Z",
+  "graph_node_id": "pnode_20260329110405_5bcd3cf8",
+  "metadata": {
+    "parent_id": "lem_20260329092547_6a64d34a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "02b8a3a9bce6913e1893d9fbcae4391afe2448322cf3fa96db65f73dc0b2a3b1",
+  "owner_id": "lem_20260329105924_711791c7",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a and b are integers with 0 <= a <= b.",
+      "r and j are nonnegative integers.",
+      "I is finite because it consists of the integers from a+1 through b.",
+      "Every i in the product lies in I, hence i is a positive integer since a >= 0.",
+      "m ranges over nonnegative integers.",
+      "S must be a subset of I.",
+      "lambda must be a finite multiset whose elements all lie in I.",
+      "The symbol |lambda| means the sum of the multiset elements, not the number of elements.",
+      "The constraint for membership in X_j is |lambda| plus the sum over s in S of r+s equals j.",
+      "The coefficient extraction [q^j] is understood in the formal power series sense."
+    ],
+    "normalized_claim": "For every integers a, b, r, j with 0 <= a <= b and r, j nonnegative, let I be the set of integers from a+1 through b and let F be the finite product over i in I of (1 minus q to the power r+i) times the geometric series in q to the power i. Then the coefficient of q to the j in F equals the sum over all pairs (S, lambda) where S is a subset of I and lambda is a finite multiset of elements of I whose element-sum plus the sum of r+s over s in S is j, with each pair weighted by minus one to the power of the size of S.",
+    "quantifier_order": [
+      "For all integers a, b, r, j satisfying 0 <= a <= b and r >= 0 and j >= 0.",
+      "Define I as the integers from a+1 through b.",
+      "Define F as the finite product over i in I of (1 minus q to the power r+i) times the geometric series sum over m >= 0 of q to the power m i.",
+      "Define X_j as the set of pairs (S, lambda) with S a subset of I and lambda a finite multiset of elements of I such that the total sum of lambda plus the sum of r+s over s in S equals j.",
+      "Then the coefficient of q to the j in F equals the signed sum over X_j of minus one to the power of the size of S."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "lower bound for the interval defining I",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with a <= b",
+        "name": "b",
+        "role": "upper bound for the interval defining I",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "shift parameter in the product and in the constraint defining X_j",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "j",
+        "role": "target coefficient index and total weight constraint",
+        "type": "integer"
+      },
+      {
+        "domain": "formal power series variable",
+        "name": "q",
+        "role": "series variable for F",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "integers from a+1 through b",
+        "name": "I",
+        "role": "index set for the product and for the combinatorial data",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "elements of I",
+        "name": "i",
+        "role": "product index",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m",
+        "role": "summation index in the geometric series factor",
+        "type": "integer"
+      },
+      {
+        "domain": "subsets of I",
+        "name": "S",
+        "role": "subset chosen in an indexed pair in X_j",
+        "type": "set"
+      },
+      {
+        "domain": "finite multisets of elements of I",
+        "name": "lambda",
+        "role": "multiset chosen in an indexed pair in X_j",
+        "type": "finite multiset"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses outside the indexed pairs in X_j; the statement is an equality of two expressions for each fixed a, b, r, j.",
+      "Membership in X_j depends jointly on S and lambda through the same total weight j.",
+      "The summand depends only on S through its cardinality, but the indexing set also counts all admissible lambda with the required total sum."
+    ]
+  },
+  "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Put I := {a+1, a+2, ..., b}. Define the formal power series F_{a,b,r}(q) := product_{i in I} ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).",
+  "updated_at": "2026-03-29T11:04:05.458574Z"
+}

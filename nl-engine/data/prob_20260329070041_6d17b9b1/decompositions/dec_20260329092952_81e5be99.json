@@ -1,0 +1,67 @@
+{
+  "assembly_plan_id": "asm_20260329092952_b707d3d0",
+  "controller_status": "failed",
+  "created_at": "2026-03-29T09:29:52.978436Z",
+  "decomposition_id": "dec_20260329092952_81e5be99",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "passed",
+  "equivalence_risk": "none",
+  "failure_origin": "child_lemma_false",
+  "failure_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.91,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": "lem_20260329092547_6a64d34a",
+  "latest_prepare_track_job_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "skipped",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [
+    "lem_20260329092458_c3931872",
+    "lem_20260329092508_dde83cd9",
+    "lem_20260329092532_2c3e34d7",
+    "lem_20260329092547_6a64d34a",
+    "lem_20260329092603_a2bb7a49"
+  ],
+  "llm_vetting_status": "accepted",
+  "logical_decomposition_id": "logdec_lem_20260329074016_d9949d95",
+  "node_id": "lem_20260329074016_d9949d95",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/decompositions/dec_20260329092952_81e5be99.json",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "raw_candidate_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/dec_20260329092458_2f223616/agent2_candidate.json",
+  "revision_number": 1,
+  "shared_context": [
+    {
+      "content": "For a nonnegative integer n, define (q;q)_n := product_{j=1}^n (1 - q^j), with the empty product (q;q)_0 := 1.",
+      "kind": "definition",
+      "label": "finite_q_factorial"
+    },
+    {
+      "content": "For a positive integer d, Phi_d(q) denotes the d-th cyclotomic polynomial in Z[q].",
+      "kind": "notation",
+      "label": "cyclotomic_polynomial"
+    },
+    {
+      "content": "A polynomial F(q) = sum_{j=0}^D c_j q^j is reciprocal of degree D if q^D F(q^{-1}) = F(q), equivalently c_j = c_{D-j} for all 0 <= j <= D.",
+      "kind": "definition",
+      "label": "reciprocal_polynomial"
+    }
+  ],
+  "strategy_summary": "Rewrite the product as a balanced two-term q-factorial ratio. Use cyclotomic exponents to get polynomiality from the floor condition. Then separate positivity into an explicit hard bottleneck: prove nonnegativity only for the first half of the coefficients. A simple reciprocity identity for the balanced ratio reflects those coefficients across the midpoint, yielding full coefficientwise nonnegativity.",
+  "updated_at": "2026-03-29T13:31:43.781258Z"
+}

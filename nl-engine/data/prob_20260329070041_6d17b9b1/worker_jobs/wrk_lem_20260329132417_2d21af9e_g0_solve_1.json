@@ -1,0 +1,225 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329132417_2d21af9e/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T13:32:31.704328Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-29T13:27:59.369741Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+        "item_id": "pnode_20260329074414_4227f7b7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329074401_1e378455",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "item_id": "pnode_20260329121139_ed717c6f",
+        "label": "lem_20260329120647_c4ea7dea",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family."
+      },
+      {
+        "item_id": "pnode_20260329110405_bc38715e",
+        "label": "lem_20260329110006_654a633e",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even."
+      },
+      {
+        "item_id": "pnode_20260329092953_e42ab733",
+        "label": "lem_20260329092547_6a64d34a",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer."
+      },
+      {
+        "item_id": "pnode_20260329074402_2097282d",
+        "label": "lem_20260329074016_d9949d95",
+        "reason": "ancestor unresolved claim is forbidden",
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative."
+      }
+    ],
+    "lemma_id": "lem_20260329132417_2d21af9e",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260329132759_6df0beb1",
+    "retry_context": {
+      "attempt_number": null,
+      "feedback_source": "none",
+      "proof_attempt_id": null,
+      "quality_rank": null,
+      "vetter_report_id": null
+    },
+    "role_in_assembly": "Normalizes the first a elements of the enlarged regular sequence so that quotienting by them literally kills the variables y_1,...,y_a.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "a and b are integers",
+        "0 <= a <= b",
+        "S is the polynomial ring over the rational numbers in b variables",
+        "The grading on S assigns degree i to y_i",
+        "Each g_i lies in S",
+        "Each g_i is homogeneous",
+        "The sequence g_1 through g_a is a regular sequence in S",
+        "For each i from 1 to a, the degree of g_i is i",
+        "phi is required to be a graded Q-algebra automorphism, not merely an algebra automorphism"
+      ],
+      "normalized_claim": "Every homogeneous regular sequence g_1 through g_a in the weighted polynomial ring Q[y_1 through y_b], with deg(y_i)=i and deg(g_i)=i, can be carried by a graded Q-algebra automorphism of the ring to the standard sequence y_1 through y_a. In the degenerate case a = 0, the identity automorphism is a valid choice.",
+      "quantifier_order": [
+        "For all integers a and b with 0 <= a <= b",
+        "Define S as the polynomial ring over Q in variables y_1 through y_b, graded by deg(y_i)=i",
+        "For all sequences g_1 through g_a of homogeneous elements of S such that they form a regular sequence and deg(g_i)=i for each i from 1 to a",
+        "There exists a graded Q-algebra automorphism phi of S",
+        "For every i from 1 to a, phi sends g_i to y_i",
+        "If a = 0, phi can be chosen to be the identity automorphism"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "a",
+          "role": "parameter controlling the length of the regular sequence and the target variables",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "b",
+          "role": "parameter controlling the number of polynomial generators",
+          "type": "integer"
+        },
+        {
+          "domain": "the polynomial ring over the rational numbers in b indeterminates with weighted grading",
+          "name": "S",
+          "type": "graded Q-algebra"
+        },
+        {
+          "domain": "the polynomial generators of S, indexed by i from 1 to b",
+          "name": "y_i",
+          "role": "generator with assigned degree i",
+          "type": "indeterminate"
+        },
+        {
+          "domain": "elements of S indexed by i from 1 to a",
+          "name": "g_i",
+          "role": "input regular sequence element",
+          "type": "homogeneous element of S"
+        },
+        {
+          "domain": "automorphisms of S as a graded Q-algebra",
+          "name": "phi",
+          "role": "witness automorphism",
+          "type": "graded Q-algebra automorphism of S"
+        }
+      ],
+      "witness_dependencies": [
+        "The automorphism phi may depend on the chosen integers a and b",
+        "The automorphism phi may depend on the specific graded ring S determined by b",
+        "The automorphism phi may depend on the particular regular sequence g_1 through g_a",
+        "The claim requires one single phi that simultaneously satisfies phi(g_i)=y_i for all i from 1 to a",
+        "In the special case a = 0, the witness phi may be chosen independently of any g_i, namely as the identity"
+      ]
+    },
+    "shared_context": [],
+    "solver_llm_override_key": "agent4_first",
+    "statement_nl": "Let a and b be integers with 0 <= a <= b, and let S := Q[y_1,...,y_b] be graded by deg(y_i)=i. Suppose g_1,...,g_a are homogeneous elements of S that form a regular sequence and satisfy deg(g_i)=i for each i=1,...,a. Then there exists a graded Q-algebra automorphism phi : S -> S such that phi(g_i)=y_i for every i=1,...,a. When a=0, phi may be taken to be the identity automorphism.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "forbidden_claims_used": false,
+      "self_contained": true
+    },
+    "lemma_id": "lem_20260329132417_2d21af9e",
+    "proof_nl": "Proof. We construct, by induction on m=0,1,...,a, a graded Q-algebra automorphism phi_m of S such that phi_m(g_i)=y_i for every i with 1<=i<=m.\n\nFor m=0, let phi_0 be the identity on S. This already gives the stated special case a=0.\n\nNow fix m with 1<=m<=a and assume phi_{m-1} has been constructed. Put h:=phi_{m-1}(g_m). Because phi_{m-1} is graded and deg(g_m)=m, the element h is homogeneous of weighted degree m.\n\nSince phi_{m-1} is an automorphism, it induces an isomorphism of quotient rings\nS/(g_1,...,g_{m-1}) -> S/(phi_{m-1}(g_1),...,phi_{m-1}(g_{m-1})) = S/(y_1,...,y_{m-1}),\nsending the class of g_m to the class of h. Because g_1,...,g_a is a regular sequence, the class of g_m is a nonzerodivisor in S/(g_1,...,g_{m-1}); therefore the class of h is a nonzerodivisor in S/(y_1,...,y_{m-1}).\n\nWe now determine the shape of h. Consider any monomial y_1^{e_1}...y_b^{e_b} occurring in h. Its weighted degree is sum_{j=1}^b j e_j = m. Hence e_j=0 for all j>m, because j>m would already contribute more than m. Also, if e_m>0, then m e_m<=m, so e_m=1; and then all e_j with j<m must be 0, since every degree is positive. Therefore any monomial of h that involves y_m is exactly y_m itself. It follows that\nh = c y_m + p\nfor some c in Q and some homogeneous polynomial p in Q[y_1,...,y_{m-1}] of degree m. (For m=1 this simply means p=0.)\n\nPassing to the quotient S/(y_1,...,y_{m-1}), the class of h becomes c y_m. But S/(y_1,...,y_{m-1}) is isomorphic to Q[y_m,...,y_b], so it is a nonzero ring. Since the class of h is a nonzerodivisor there, it is in particular nonzero. Thus c y_m is nonzero in Q[y_m,...,y_b], which forces c!=0.\n\nDefine tau_m on the generators of S by\n- tau_m(y_j)=y_j for j!=m,\n- tau_m(y_m)=c^{-1}(y_m-p).\nBy the universal property of the polynomial ring, this defines a Q-algebra endomorphism of S. Because p involves only y_1,...,y_{m-1}, which tau_m fixes, the inverse map is given on generators by\n- tau_m^{-1}(y_j)=y_j for j!=m,\n- tau_m^{-1}(y_m)=c y_m + p.\nHence tau_m is a Q-algebra automorphism. It is graded, because tau_m(y_j) is homogeneous of degree j for every j: this is obvious for j!=m, and for j=m both y_m and p have degree m.\n\nNow tau_m fixes y_1,...,y_{m-1}, so for i<m we have\nphi_m(g_i)=tau_m(phi_{m-1}(g_i))=tau_m(y_i)=y_i,\nwhere phi_m:=tau_m composed with phi_{m-1}. Also,\nphi_m(g_m)=tau_m(h)=tau_m(c y_m+p)=c c^{-1}(y_m-p)+p=y_m.\nThus phi_m is a graded Q-algebra automorphism satisfying phi_m(g_i)=y_i for all 1<=i<=m.\n\nThis completes the induction step. Therefore phi_a exists and is a graded Q-algebra automorphism of S with phi_a(g_i)=y_i for every i=1,...,a. When a=0, the identity automorphism works. This proves the lemma.",
+    "proof_summary": "Inductively normalize the sequence. After sending g_1,...,g_{m-1} to y_1,...,y_{m-1}, the image of g_m is a homogeneous degree-m polynomial h. Weighted-degree considerations force h=c y_m+p(y_1,...,y_{m-1}); regularity implies its class mod (y_1,...,y_{m-1}) is a nonzerodivisor, hence nonzero, so c!=0. A triangular graded automorphism fixing earlier variables and sending c y_m+p to y_m completes the induction.",
+    "self_report": {
+      "confidence": 0.98,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-29T13:27:58.301347Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329132417_2d21af9e",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T13:32:31.704328Z",
+  "worker_job_id": "wrk_lem_20260329132417_2d21af9e_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

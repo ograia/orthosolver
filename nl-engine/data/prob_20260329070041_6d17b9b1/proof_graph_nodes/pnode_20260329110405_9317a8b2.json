@@ -1,0 +1,65 @@
+{
+  "created_at": "2026-03-29T11:04:05.647676Z",
+  "graph_node_id": "pnode_20260329110405_9317a8b2",
+  "metadata": {
+    "parent_id": "lem_20260329092547_6a64d34a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "d8afc1db09c012c3007e41e83debd1c042fb7df89dbb6c95d3fc9ca25e61f417",
+  "owner_id": "lem_20260329105947_d7a87760",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "X must be finite so that the sum over X is well defined.",
+      "w takes only the two integer values plus 1 and minus 1.",
+      "iota maps each element of X back into X.",
+      "The relation iota of iota of x equals x holds for every x in X, so iota is an involution.",
+      "The sign reversal condition is required only for nonfixed points, meaning points x with iota of x not equal to x.",
+      "The value plus 1 is required at fixed points, meaning points x with iota of x equal to x."
+    ],
+    "normalized_claim": "For a finite set X, an involution iota on X, and a function w from X to plus or minus 1 that changes sign along nonfixed iota pairs and equals plus 1 at fixed points, the total sum of w over X is exactly the number of fixed points of iota. Therefore that sum is a nonnegative integer.",
+    "quantifier_order": [
+      "Let X be a finite set.",
+      "Let w be a function from X to plus or minus 1.",
+      "Let iota be a function from X to X.",
+      "For every x in X, iota of iota of x equals x.",
+      "For every x in X, if iota of x is not equal to x, then w of iota of x equals minus w of x.",
+      "For every x in X, if iota of x equals x, then w of x equals plus 1.",
+      "Then the sum of w over X equals the number of fixed points of iota."
+    ],
+    "variables": [
+      {
+        "domain": "finite sets",
+        "name": "X",
+        "role": "underlying finite set being summed over",
+        "type": "set"
+      },
+      {
+        "domain": "functions from X to plus or minus 1",
+        "name": "w",
+        "role": "sign assignment on X",
+        "type": "function"
+      },
+      {
+        "domain": "self maps from X to X",
+        "name": "iota",
+        "role": "involution on X",
+        "type": "function"
+      },
+      {
+        "domain": "elements of X",
+        "name": "x",
+        "role": "universally quantified element used in pointwise conditions",
+        "type": "element"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced in the statement.",
+      "The fixed-point set is determined solely by iota."
+    ]
+  },
+  "statement_nl": "Let X be a finite set and let w : X -> { -1, +1 } be a sign function. Suppose iota : X -> X satisfies iota(iota(x)) = x for every x in X, w(iota(x)) = -w(x) whenever iota(x) != x, and w(x) = +1 whenever iota(x) = x. Then sum_{x in X} w(x) = |{x in X : iota(x) = x}|. In particular, sum_{x in X} w(x) is a nonnegative integer.",
+  "updated_at": "2026-03-29T11:04:05.647677Z"
+}

@@ -1,0 +1,222 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329073933_51291146/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T07:45:04.838987Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T07:45:05.045695Z",
+  "controller_consumed_by_execution_id": "exec_20260329070041_7940b474",
+  "created_at": "2026-03-29T07:44:48.814307Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+        "item_id": "pnode_20260329074414_4227f7b7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329073933_51291146",
+    "proof_nl": "Assume the hypotheses: n, a, b are integers with 0 <= a, 0 <= b, 2*a <= n, 2*b <= n, and a(n-a) >= b(n-b). We must show a >= b.\n\nSuppose, for contradiction, that a < b. Then a-b < 0. Also, since a < b, we have a+b < 2b, and because 2b <= n, it follows that a+b < n. Hence n-a-b > 0.\n\nNow compute\n\na(n-a)-b(n-b)\n= an-a^2-bn+b^2\n= (a-b)n-(a^2-b^2)\n= (a-b)n-(a-b)(a+b)\n= (a-b)(n-a-b).\n\nBut we have shown that a-b < 0 and n-a-b > 0, so their product is negative. Therefore\n\na(n-a)-b(n-b) = (a-b)(n-a-b) < 0,\n\nwhich means\n\na(n-a) < b(n-b).\n\nThis contradicts the assumption that a(n-a) >= b(n-b).\n\nTherefore our assumption a < b was impossible, and so a >= b. This proves the statement.",
+    "role_in_assembly": "After symmetrization into the first half, turns the degree inequality into an ordering k' >= l'.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n, a, and b are integers.",
+        "a and b are nonnegative.",
+        "a is at most n divided by 2, and b is at most n divided by 2.",
+        "The stated bounds force n to be nonnegative as well."
+      ],
+      "normalized_claim": "For integers n, a, and b with a and b between 0 and n divided by 2 inclusive, if a times n minus a is at least b times n minus b, then a is at least b.",
+      "quantifier_order": [
+        "For every integer n, for every integer a, and for every integer b, if 0 less than or equal to a, 0 less than or equal to b, 2a less than or equal to n, and 2b less than or equal to n, then from a times (n minus a) being at least b times (n minus b), conclude that a is at least b."
+      ],
+      "variables": [
+        {
+          "domain": "all integers, further restricted by the stated inequalities",
+          "name": "n",
+          "role": "ambient parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers, further restricted by the stated inequalities",
+          "name": "a",
+          "role": "first compared value",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers, further restricted by the stated inequalities",
+          "name": "b",
+          "role": "second compared value",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are involved.",
+        "The conclusion depends only on the universally quantified inputs n, a, and b under the stated hypotheses."
+      ]
+    },
+    "statement_nl": "For all integers n, a, b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "citations_used": [],
+      "dependency_issues": [],
+      "uses_only_allowed_material": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The contradiction argument is valid: from a < b and 2b <= n one gets a+b < n, so n-a-b > 0.",
+        "location": "middle of proof",
+        "severity": "low"
+      },
+      {
+        "finding": "The algebraic identity a(n-a)-b(n-b) = (a-b)(n-a-b) is correct and is used to force the contradiction.",
+        "location": "displayed calculation",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329073933_51291146",
+    "proof_status": "complete",
+    "reason": "The proof is correct and complete. Assuming a < b, it derives a+b < 2b <= n, hence n-a-b > 0, and factors the difference as a(n-a)-b(n-b) = (a-b)(n-a-b). Since a-b < 0 and n-a-b > 0, the product is negative, contradicting the hypothesis a(n-a) >= b(n-b). This matches the lemma\u2019s intended monotonicity-on-the-first-half argument and introduces no illicit dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T07:44:48.882848Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329073933_51291146",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T07:45:05.045701Z",
+  "worker_job_id": "wrk_lem_20260329073933_51291146_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

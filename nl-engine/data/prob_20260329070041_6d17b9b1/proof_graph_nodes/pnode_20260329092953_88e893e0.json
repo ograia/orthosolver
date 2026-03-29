@@ -1,0 +1,98 @@
+{
+  "created_at": "2026-03-29T09:29:53.404808Z",
+  "graph_node_id": "pnode_20260329092953_88e893e0",
+  "metadata": {
+    "parent_id": "lem_20260329074016_d9949d95"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "2886af1e8e63c380acfdb74d9b65818d44ceb11a43a688f70403d605c408bbb4",
+  "owner_id": "lem_20260329092532_2c3e34d7",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a, b, and r are integers",
+      "The parameters satisfy 0 <= a <= b",
+      "r is nonnegative",
+      "q is treated as a formal indeterminate, not a specialized numeric value",
+      "n is a nonnegative integer in the q-Pochhammer definition",
+      "The product for (q;q)_0 is the empty product and equals 1",
+      "D is nonnegative because r is nonnegative and b minus a is nonnegative",
+      "The identity is an equality of rational functions over the integers, not a pointwise analytic statement",
+      "In the polynomial conclusion, R_{a,b,r}(q) is assumed to simplify to an element of the integer polynomial ring"
+    ],
+    "normalized_claim": "For any integers a, b, r with 0 <= a <= b and r >= 0, the rational function R_{a,b,r}(q) is self-reciprocal of degree D = r times (b minus a), meaning q to the power D times R_{a,b,r} at q inverse equals R_{a,b,r}(q) in the rational function field over the integers. If this rational function is in fact an integer polynomial, then its coefficients can be indexed from 0 to D so that the coefficient list is palindromic: c_j equals c_{D-j} for every j.",
+    "quantifier_order": [
+      "For all integers a, b, r satisfying 0 <= a <= b and r >= 0",
+      "Let q be an indeterminate",
+      "For all nonnegative integers n, define the q-Pochhammer symbol by the finite product over j from 1 to n, with the n = 0 case equal to 1",
+      "Define R_{a,b,r}(q) from these factors and define D as r times (b minus a)",
+      "The identity q to the power D times R_{a,b,r} evaluated at q inverse equals R_{a,b,r}(q) holds in the rational function field over the integers",
+      "If R_{a,b,r}(q) lies in the polynomial ring over the integers, then there exist integers c_0 through c_D such that R_{a,b,r}(q) equals the sum of c_j q^j from j = 0 to D and the coefficients satisfy c_j = c_{D-j} for every j from 0 to D"
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "b",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable over the integers",
+        "name": "q",
+        "role": "symbol used to define q-Pochhammer factors and the rational function R",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the definition of the q-Pochhammer symbol",
+        "type": "integer index"
+      },
+      {
+        "domain": "integers between 0 and D in the coefficient symmetry statement",
+        "name": "j",
+        "role": "coefficient index and product index",
+        "type": "integer index"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "D",
+        "role": "exponent defined as r times (b minus a)",
+        "type": "integer"
+      },
+      {
+        "domain": "rational functions over the integers in the variable q",
+        "name": "R",
+        "role": "defined rational function R_{a,b,r}(q)",
+        "type": "rational function in q"
+      },
+      {
+        "domain": "integers",
+        "name": "c_j",
+        "role": "coefficients of the polynomial expansion when R is actually a polynomial",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "The polynomial coefficients c_0 through c_D, when they exist, depend on the fixed parameters a, b, and r through the polynomial R_{a,b,r}(q)",
+      "The symmetry relation c_j = c_{D-j} uses the same coefficient list c_0 through c_D; there is no separate witness for each j",
+      "The integer D is determined uniquely by a, b, and r as r times (b minus a)"
+    ]
+  },
+  "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Then the rational-function identity q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q) holds in Z(q). Consequently, whenever R_{a,b,r}(q) belongs to Z[q], there exist integers c_0, ..., c_D such that R_{a,b,r}(q) = sum_{j=0}^D c_j q^j and c_j = c_{D-j} for every j with 0 <= j <= D.",
+  "updated_at": "2026-03-29T09:29:53.404809Z"
+}

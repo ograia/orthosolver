@@ -1,0 +1,90 @@
+{
+  "created_at": "2026-03-29T09:29:53.557705Z",
+  "graph_node_id": "pnode_20260329092953_e42ab733",
+  "metadata": {
+    "node_kind": "lemma"
+  },
+  "node_kind": "claim",
+  "node_status": "active",
+  "normalized_claim_hash": "9e50987e094d8fb76fd31b8b44a0a942c735173ef32f0fc26311ac0a9ec7e2f8",
+  "owner_id": "lem_20260329092547_6a64d34a",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a, b, and r are integers",
+      "0 <= a <= b",
+      "r >= 0",
+      "q is a formal indeterminate, not a specialized numeric value",
+      "n ranges over nonnegative integers in the product definition",
+      "D is nonnegative because r >= 0 and b - a >= 0",
+      "j is an integer with 0 <= j <= floor(D/2)",
+      "R is assumed to be a polynomial with integer coefficients"
+    ],
+    "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+    "quantifier_order": [
+      "For all integers a, b, r with 0 <= a <= b and r >= 0",
+      "Let q be an indeterminate",
+      "For each nonnegative integer n, define the q-factorial quantity",
+      "Define R from a, b, r, and q by the stated quotient",
+      "Define D as r times (b - a)",
+      "Assume the resulting R is an element of Z[q]",
+      "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+    ],
+    "variables": [
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "b",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable",
+        "name": "q",
+        "role": "symbol used to form q-factorials and the polynomial R",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the finite product defining the q-factorial",
+        "type": "integer"
+      },
+      {
+        "domain": "integer polynomials in q, assumed to lie in Z[q]",
+        "name": "R",
+        "role": "defined quantity from a, b, r, and q",
+        "type": "polynomial in q"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "D",
+        "role": "derived quantity equal to r times (b - a)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 0 through floor(D/2)",
+        "name": "j",
+        "role": "coefficient index",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+    ]
+  },
+  "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.",
+  "updated_at": "2026-03-29T11:04:05.039040Z"
+}

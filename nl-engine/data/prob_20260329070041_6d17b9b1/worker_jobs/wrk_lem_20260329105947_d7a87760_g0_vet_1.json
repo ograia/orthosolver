@@ -1,0 +1,391 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329105947_d7a87760/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T11:06:03.007740Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T11:06:06.720351Z",
+  "controller_consumed_by_execution_id": "exec_20260329070041_7940b474",
+  "created_at": "2026-03-29T11:05:31.212512Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+        "item_id": "pnode_20260329074414_4227f7b7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329092547_6a64d34a",
+        "role_in_parent": "This is the deep positivity input; together with reciprocity it yields full nonnegativity of all coefficients.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, and r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "q is a formal indeterminate, not a specialized numeric value",
+            "n ranges over nonnegative integers in the product definition",
+            "D is nonnegative because r >= 0 and b - a >= 0",
+            "j is an integer with 0 <= j <= floor(D/2)",
+            "R is assumed to be a polynomial with integer coefficients"
+          ],
+          "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Let q be an indeterminate",
+            "For each nonnegative integer n, define the q-factorial quantity",
+            "Define R from a, b, r, and q by the stated quotient",
+            "Define D as r times (b - a)",
+            "Assume the resulting R is an element of Z[q]",
+            "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+          ],
+          "variables": [
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "a",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "b",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable",
+              "name": "q",
+              "role": "symbol used to form q-factorials and the polynomial R",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "n",
+              "role": "index in the finite product defining the q-factorial",
+              "type": "integer"
+            },
+            {
+              "domain": "integer polynomials in q, assumed to lie in Z[q]",
+              "name": "R",
+              "role": "defined quantity from a, b, r, and q",
+              "type": "polynomial in q"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "D",
+              "role": "derived quantity equal to r times (b - a)",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from 0 through floor(D/2)",
+              "name": "j",
+              "role": "coefficient index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+          ]
+        },
+        "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329074016_d9949d95",
+        "role_in_parent": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "d ranges over positive integers",
+            "q is a formal indeterminate, not a numeric parameter",
+            "The product index i is an integer",
+            "If a = b, the product is empty and equals 1"
+          ],
+          "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+            "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+            "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable for the polynomial ring over the integers",
+              "name": "q",
+              "role": "variable in the generating product",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universally quantified test divisor",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "i",
+              "role": "product index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329105947_d7a87760",
+    "proof_nl": "Let F := {x in X : iota(x) = x} be the set of fixed points, and let M := X \\ F. Since X is finite, both F and M are finite, and X is the disjoint union F \u2294 M. Therefore\nsum_{x in X} w(x) = sum_{x in F} w(x) + sum_{x in M} w(x).\n\nFirst consider F. By hypothesis, whenever iota(x) = x we have w(x) = +1. Hence every term in the sum over F equals 1, so\nsum_{x in F} w(x) = |F|.\n\nNow consider M. If x belongs to M, then iota(x) != x. Also iota(iota(x)) = x, so iota(x) is again in M; thus each x in M belongs to a two-element set {x, iota(x)}. Let\nO := { {x, iota(x)} : x in M }.\nEach member of O has exactly two elements, because x != iota(x) for x in M. Moreover, O is a partition of M: every x in M lies in {x, iota(x)}, and if two such sets intersect, then they are equal. Indeed, if z lies in both {x, iota(x)} and {y, iota(y)}, then {x, iota(x)} = {z, iota(z)} and also {y, iota(y)} = {z, iota(z)}, so the two sets are equal.\n\nSince O partitions M, we may sum over its blocks:\nsum_{x in M} w(x) = sum_{A in O} sum_{x in A} w(x).\nFor any block A in O, write A = {x, iota(x)} with x in M. Then iota(x) != x, so the sign-reversal hypothesis applies and gives w(iota(x)) = -w(x). Therefore\nsum_{y in A} w(y) = w(x) + w(iota(x)) = w(x) - w(x) = 0.\nThus every block contributes 0, and consequently\nsum_{x in M} w(x) = 0.\n\nCombining the two parts,\nsum_{x in X} w(x) = |F| + 0 = |F| = |{x in X : iota(x) = x}|.\nThis proves the stated identity. In particular, the sum is the cardinality of a finite set, hence a nonnegative integer.",
+    "role_in_assembly": "Converts the bottleneck involution into nonnegativity of the signed coefficient formula.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "X must be finite so that the sum over X is well defined.",
+        "w takes only the two integer values plus 1 and minus 1.",
+        "iota maps each element of X back into X.",
+        "The relation iota of iota of x equals x holds for every x in X, so iota is an involution.",
+        "The sign reversal condition is required only for nonfixed points, meaning points x with iota of x not equal to x.",
+        "The value plus 1 is required at fixed points, meaning points x with iota of x equal to x."
+      ],
+      "normalized_claim": "For a finite set X, an involution iota on X, and a function w from X to plus or minus 1 that changes sign along nonfixed iota pairs and equals plus 1 at fixed points, the total sum of w over X is exactly the number of fixed points of iota. Therefore that sum is a nonnegative integer.",
+      "quantifier_order": [
+        "Let X be a finite set.",
+        "Let w be a function from X to plus or minus 1.",
+        "Let iota be a function from X to X.",
+        "For every x in X, iota of iota of x equals x.",
+        "For every x in X, if iota of x is not equal to x, then w of iota of x equals minus w of x.",
+        "For every x in X, if iota of x equals x, then w of x equals plus 1.",
+        "Then the sum of w over X equals the number of fixed points of iota."
+      ],
+      "variables": [
+        {
+          "domain": "finite sets",
+          "name": "X",
+          "role": "underlying finite set being summed over",
+          "type": "set"
+        },
+        {
+          "domain": "functions from X to plus or minus 1",
+          "name": "w",
+          "role": "sign assignment on X",
+          "type": "function"
+        },
+        {
+          "domain": "self maps from X to X",
+          "name": "iota",
+          "role": "involution on X",
+          "type": "function"
+        },
+        {
+          "domain": "elements of X",
+          "name": "x",
+          "role": "universally quantified element used in pointwise conditions",
+          "type": "element"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced in the statement.",
+        "The fixed-point set is determined solely by iota."
+      ]
+    },
+    "statement_nl": "Let X be a finite set and let w : X -> { -1, +1 } be a sign function. Suppose iota : X -> X satisfies iota(iota(x)) = x for every x in X, w(iota(x)) = -w(x) whenever iota(x) != x, and w(x) = +1 whenever iota(x) = x. Then sum_{x in X} w(x) = |{x in X : iota(x) = x}|. In particular, sum_{x in X} w(x) is a nonnegative integer.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "citations_declared": [],
+      "dependency_issues": "none"
+    },
+    "detailed_findings": [
+      {
+        "finding": "The decomposition X = F \u2294 M is valid and the sum splits accordingly because X is finite.",
+        "location": "opening decomposition",
+        "severity": "low"
+      },
+      {
+        "finding": "The proof correctly shows each nonfixed element lies in a 2-element orbit {x, iota(x)} and that these orbits partition M.",
+        "location": "definition and analysis of O",
+        "severity": "low"
+      },
+      {
+        "finding": "For each orbit A = {x, iota(x)} with x in M, the cancellation w(x) + w(iota(x)) = 0 follows directly from the sign-reversal hypothesis.",
+        "location": "orbit contribution computation",
+        "severity": "low"
+      },
+      {
+        "finding": "The fixed-point contribution is correctly identified as |F| because w(x) = +1 on fixed points.",
+        "location": "fixed-point sum",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329105947_d7a87760",
+    "proof_status": "complete",
+    "reason": "The proof is the standard sign-reversing involution argument and is complete. It cleanly decomposes X into fixed points and nonfixed points, shows the nonfixed part is partitioned into 2-element involution orbits, proves each such orbit contributes 0 by the sign-reversal hypothesis, and shows the fixed-point contribution is exactly the number of fixed points because fixed points have weight +1. This matches the lemma statement exactly and uses no undeclared or forbidden dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T11:05:31.504148Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329105947_d7a87760",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T11:06:06.720356Z",
+  "worker_job_id": "wrk_lem_20260329105947_d7a87760_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

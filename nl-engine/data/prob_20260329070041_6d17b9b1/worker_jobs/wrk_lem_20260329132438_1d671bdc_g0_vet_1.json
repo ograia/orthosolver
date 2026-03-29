@@ -1,0 +1,636 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329132438_1d671bdc/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T13:31:43.180955Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-29T13:30:36.935418Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+        "item_id": "pnode_20260329074414_4227f7b7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329120647_c4ea7dea",
+        "role_in_parent": "This is the key realization theorem that turns the interval quotient into the Hilbert series of a complete intersection.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, and r are integers.",
+            "The inequalities 0 <= a <= b and r >= 0 hold.",
+            "d ranges over positive integers only.",
+            "I is the finite set of integers from a+1 to b, inclusive.",
+            "R is the polynomial ring over the rational numbers in variables x_s indexed by I.",
+            "The grading is weighted: each x_s has degree s.",
+            "Each f_s must be homogeneous with respect to this grading.",
+            "If I is empty, the required family is the empty family.",
+            "The regular sequence is taken in the order of increasing s."
+          ],
+          "normalized_claim": "For any integers a, b, r with 0 <= a <= b and r >= 0, if the interval counting inequality M_d(r+a, r+b) >= M_d(a,b) holds for every positive integer d, then in the graded polynomial ring over the rational numbers with one variable x_s of degree s for each s in I = {a+1, ..., b}, there exists a family of homogeneous polynomials f_s such that each f_s has weighted degree r+s and the polynomials in increasing index order form a regular sequence; when I is empty, this means choosing no polynomials.",
+          "quantifier_order": [
+            "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+            "For every positive integer d, assume the counting inequality M_d(r+a, r+b) >= M_d(a,b).",
+            "There exists a family (f_s) indexed by s in I.",
+            "For each s in I, the polynomial f_s has weighted degree r+s.",
+            "The polynomials listed in increasing order of s form a regular sequence in R."
+          ],
+          "variables": [
+            {
+              "domain": "all integers satisfying 0 <= a <= b",
+              "name": "a",
+              "role": "global parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "all integers satisfying a <= b",
+              "name": "b",
+              "role": "global parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "global parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "the integers from a+1 through b, inclusive",
+              "name": "I",
+              "role": "index set for the polynomial family",
+              "type": "finite set of integers"
+            },
+            {
+              "domain": "all positive integers",
+              "name": "d",
+              "role": "universally quantified parameter in the counting condition",
+              "type": "positive integer"
+            },
+            {
+              "domain": "integer arguments of the counting function M_d",
+              "name": "u",
+              "role": "local argument in the definition of M_d",
+              "type": "integer"
+            },
+            {
+              "domain": "integer arguments of the counting function M_d",
+              "name": "v",
+              "role": "local argument in the definition of M_d",
+              "type": "integer"
+            },
+            {
+              "domain": "integers counted by M_d",
+              "name": "m",
+              "role": "bound variable in the counting definition",
+              "type": "integer"
+            },
+            {
+              "domain": "elements of I",
+              "name": "s",
+              "role": "index for the family of polynomials",
+              "type": "integer"
+            },
+            {
+              "domain": "one variable for each s in I",
+              "name": "x_s",
+              "role": "polynomial ring generator with weighted degree s",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "polynomial ring over the rational numbers in the variables x_s for s in I",
+              "name": "R",
+              "role": "ambient ring",
+              "type": "graded polynomial ring"
+            },
+            {
+              "domain": "elements of R indexed by s in I",
+              "name": "f_s",
+              "role": "witness family",
+              "type": "homogeneous polynomial"
+            }
+          ],
+          "witness_dependencies": [
+            "The existence of the family (f_s) depends on the chosen integers a, b, and r.",
+            "The witness family depends on the universal hypothesis that M_d(r+a, r+b) >= M_d(a,b) for every positive integer d.",
+            "There is one global family indexed by I, not separate witnesses for each d.",
+            "The order of the witness sequence is fixed by the natural increasing order on I.",
+            "If I is empty, the witness is uniquely the empty family."
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329110006_654a633e",
+        "role_in_parent": "This is the core combinatorial cancellation theorem that forces the low-degree signed count to be nonnegative.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a and b are integers with 0 <= a <= b.",
+            "r is a nonnegative integer.",
+            "j is an integer with 0 <= j <= floor(r (b - a) / 2).",
+            "d ranges over positive integers only.",
+            "M_d counts integers m in the interval with u < m <= v that are divisible by d.",
+            "S must be a subset of I.",
+            "lambda must be a finite multiset of elements of I, with repetition allowed.",
+            "The notation |lambda| means the sum of the elements of the multiset lambda, not its cardinality.",
+            "The set X_j includes exactly those pairs (S, lambda) whose total weighted sum equals j.",
+            "The parity statement uses |S| as the cardinality of S.",
+            "An involution means a self-map whose square is the identity."
+          ],
+          "normalized_claim": "Under the stated numerical and divisibility hypotheses, the set X_j admits an involution. Every non-fixed orbit pairs two elements whose subset parts have opposite parity, and every fixed point has an even-sized subset part.",
+          "quantifier_order": [
+            "Fix integers a, b, r, j with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2).",
+            "Define I as the integers from a + 1 through b.",
+            "For every positive integer d, define M_d(u, v) as the number of integers m such that u < m <= v and d divides m.",
+            "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+            "Define X_j to consist of all pairs (S, lambda) with S a subset of I, lambda a finite multiset of elements of I, and sum of elements of lambda plus sum over s in S of (r + s) equal to j.",
+            "There exists an involution iota_j from X_j to X_j satisfying the two parity conditions."
+          ],
+          "variables": [
+            {
+              "domain": "integers with 0 <= a <= b",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 0 <= a <= b",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 0 <= j <= floor(r (b - a) / 2)",
+              "name": "j",
+              "role": "parameter and index for X_j and iota_j",
+              "type": "integer"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universal index for the divisibility count",
+              "type": "positive integer"
+            },
+            {
+              "domain": "integer or real interval endpoint for M_d",
+              "name": "u",
+              "role": "left endpoint in the counting function",
+              "type": "integer endpoint"
+            },
+            {
+              "domain": "integer or real interval endpoint for M_d",
+              "name": "v",
+              "role": "right endpoint in the counting function",
+              "type": "integer endpoint"
+            },
+            {
+              "domain": "integers",
+              "name": "m",
+              "role": "counted variable in M_d",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "I",
+              "role": "ambient ground set",
+              "type": "finite set of integers"
+            },
+            {
+              "domain": "subsets of I",
+              "name": "S",
+              "role": "subset component of an element of X_j",
+              "type": "subset of I"
+            },
+            {
+              "domain": "finite multisets drawn from I",
+              "name": "lambda",
+              "role": "multiset component of an element of X_j",
+              "type": "finite multiset of elements of I"
+            },
+            {
+              "domain": "subset of I",
+              "name": "S prime",
+              "role": "image subset under iota_j",
+              "type": "subset of I"
+            },
+            {
+              "domain": "finite multiset drawn from I",
+              "name": "lambda prime",
+              "role": "image multiset under iota_j",
+              "type": "finite multiset of elements of I"
+            },
+            {
+              "domain": "pairs (S, lambda) satisfying the defining sum condition",
+              "name": "X_j",
+              "role": "domain of the involution",
+              "type": "set of pairs"
+            },
+            {
+              "domain": "maps X_j to X_j",
+              "name": "iota_j",
+              "role": "involution witness",
+              "type": "self-map on X_j"
+            }
+          ],
+          "witness_dependencies": [
+            "The existential witness iota_j depends on the fixed parameters a, b, r, and j, as well as on the universal hypothesis that M_d(r + a, r + b) >= M_d(a, b) for every positive integer d.",
+            "No additional existential witnesses are introduced besides iota_j.",
+            "For any input pair (S, lambda) in X_j, the output pair (S prime, lambda prime) is determined by iota_j; the moved-point parity condition compares the cardinalities of S and S prime.",
+            "If a pair is fixed by iota_j, the fixed-point condition requires the same S to have even cardinality."
+          ]
+        },
+        "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329092547_6a64d34a",
+        "role_in_parent": "This is the deep positivity input; together with reciprocity it yields full nonnegativity of all coefficients.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, and r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "q is a formal indeterminate, not a specialized numeric value",
+            "n ranges over nonnegative integers in the product definition",
+            "D is nonnegative because r >= 0 and b - a >= 0",
+            "j is an integer with 0 <= j <= floor(D/2)",
+            "R is assumed to be a polynomial with integer coefficients"
+          ],
+          "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Let q be an indeterminate",
+            "For each nonnegative integer n, define the q-factorial quantity",
+            "Define R from a, b, r, and q by the stated quotient",
+            "Define D as r times (b - a)",
+            "Assume the resulting R is an element of Z[q]",
+            "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+          ],
+          "variables": [
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "a",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "b",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable",
+              "name": "q",
+              "role": "symbol used to form q-factorials and the polynomial R",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "n",
+              "role": "index in the finite product defining the q-factorial",
+              "type": "integer"
+            },
+            {
+              "domain": "integer polynomials in q, assumed to lie in Z[q]",
+              "name": "R",
+              "role": "defined quantity from a, b, r, and q",
+              "type": "polynomial in q"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "D",
+              "role": "derived quantity equal to r times (b - a)",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from 0 through floor(D/2)",
+              "name": "j",
+              "role": "coefficient index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+          ]
+        },
+        "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329074016_d9949d95",
+        "role_in_parent": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "d ranges over positive integers",
+            "q is a formal indeterminate, not a numeric parameter",
+            "The product index i is an integer",
+            "If a = b, the product is empty and equals 1"
+          ],
+          "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+            "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+            "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable for the polynomial ring over the integers",
+              "name": "q",
+              "role": "variable in the generating product",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universally quantified test divisor",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "i",
+              "role": "product index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329132438_1d671bdc",
+    "proof_nl": "Let I = (u_1,...,u_m) and B = A/I, and for each j let w_j be the image of v_j in B. For each integer t with 0 <= t <= n, set J_t = (u_1,...,u_m,v_1,...,v_t) in A, with J_0 = I. Because the concatenated sequence u_1,...,u_m,v_1,...,v_n is regular in A, two facts hold: each J_t is a proper ideal of A, and for each j with 1 <= j <= n, the element v_j is a nonzerodivisor on A/J_{j-1}.\n\nFirst we prove the proper-ideal condition in B. Fix t with 0 <= t <= n. Suppose that the ideal (w_1,...,w_t) is all of B. Then there are elements b_1,...,b_t in B such that 1 = sum b_i w_i in B; when t = 0 this just means 1 = 0 in B. Choose lifts a_i in A of the elements b_i. Then 1 - sum a_i v_i lies in I, so 1 lies in I + (v_1,...,v_t) = J_t. This contradicts the fact that J_t is proper. Hence (w_1,...,w_t) is a proper ideal of B for every t. In particular, taking t = 0 shows that B is not the zero ring.\n\nNext we prove the nonzerodivisor condition. Fix j with 1 <= j <= n. Let x be an element of A whose class in B/(w_1,...,w_{j-1}) is annihilated by w_j. By definition of the quotient, this means that v_j x lies in I + (v_1,...,v_{j-1}) = J_{j-1}. Since v_j is a nonzerodivisor on A/J_{j-1}, it follows that x lies in J_{j-1}. But then the class of x in B/(w_1,...,w_{j-1}) is zero. Therefore multiplication by w_j on B/(w_1,...,w_{j-1}) is injective, so w_j is a nonzerodivisor there.\n\nThus every initial ideal (w_1,...,w_t) is proper in B, and each w_j is a nonzerodivisor modulo the preceding ones. Hence w_1,...,w_n is a regular sequence in B = A/(u_1,...,u_m).\n\nNow assume A is graded and all u_i and v_j are homogeneous. Then I = (u_1,...,u_m) is a homogeneous ideal, so B = A/I inherits the quotient grading, and the quotient map A -> B preserves degrees. Therefore the image w_j of a homogeneous element v_j of degree d lies in the degree-d part of B. Since w_j is nonzero by the regularity already proved, this means that w_j is homogeneous of degree d, so it has the same degree as v_j. This proves the graded statement as well.",
+    "role_in_assembly": "Allows the tail of the straightened regular sequence to descend to the quotient ring S/(y_1,...,y_a).",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "A must be a commutative ring.",
+        "m and n are finite lengths of the sequence; the statement does not specify whether they may be zero, but the standard reading allows empty sequences.",
+        "The phrase regular sequence carries the usual commutative algebra meaning: each element is a nonzerodivisor modulo the ideal generated by the earlier ones, and the generated ideal is proper at each stage.",
+        "The quotient is by the ideal generated by u_1 through u_m.",
+        "In the graded case, A must carry a grading compatible with the notion of homogeneous elements.",
+        "Homogeneous means each u_i and v_j lies entirely in one graded piece."
+      ],
+      "normalized_claim": "A regular sequence in a commutative ring remains regular after passing to the quotient by the ideal generated by an initial block of the sequence. If the ring is graded and the elements are homogeneous, then their images in the quotient stay homogeneous with the same degrees.",
+      "quantifier_order": [
+        "For every commutative ring A.",
+        "For every nonnegative integers m and n.",
+        "For every sequence u_1 through u_m and v_1 through v_n in A such that the concatenated sequence is regular.",
+        "Then in the quotient ring B equal to A modulo the ideal generated by u_1 through u_m, the images bar_v_1 through bar_v_n form a regular sequence.",
+        "If A is graded and every u_i and v_j is homogeneous, then each bar_v_j is homogeneous and has the same degree as v_j."
+      ],
+      "variables": [
+        {
+          "domain": "commutative rings",
+          "name": "A",
+          "role": "ambient ring",
+          "type": "ring"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "m",
+          "role": "length of the first block of the sequence",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "n",
+          "role": "length of the second block of the sequence",
+          "type": "integer"
+        },
+        {
+          "domain": "A for i from 1 to m",
+          "name": "u_i",
+          "role": "first block of a regular sequence",
+          "type": "element of A"
+        },
+        {
+          "domain": "A for j from 1 to n",
+          "name": "v_j",
+          "role": "second block of a regular sequence",
+          "type": "element of A"
+        },
+        {
+          "domain": "A modulo the ideal generated by u_1 through u_m",
+          "name": "B",
+          "role": "target ring for the images of v_j",
+          "type": "quotient ring"
+        },
+        {
+          "domain": "B for j from 1 to n",
+          "name": "bar_v_j",
+          "role": "image of v_j in the quotient ring",
+          "type": "element of B"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced.",
+        "Regularity of bar_v_j in the quotient depends on the earlier images bar_v_1 through bar_v_{j-1} in the quotient ring.",
+        "The degree statement depends only on the quotient map preserving the grading of homogeneous elements."
+      ]
+    },
+    "statement_nl": "Let A be a commutative ring, and let u_1,...,u_m,v_1,...,v_n be a regular sequence in A. Then the images of v_1,...,v_n in the quotient ring A/(u_1,...,u_m) form a regular sequence. If A is graded and all u_i and v_j are homogeneous, then the quotient images are homogeneous and keep the same degrees.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [
+      {
+        "finding": "The proof correctly verifies the proper-ideal condition for all initial segments in the quotient, including the t = 0 case.",
+        "location": "paragraph 1-2",
+        "severity": "low"
+      },
+      {
+        "finding": "The nonzerodivisor argument is complete and uses exactly the needed regularity property of the concatenated sequence modulo J_{j-1}.",
+        "location": "paragraph 3",
+        "severity": "low"
+      },
+      {
+        "finding": "The graded conclusion is properly reduced to the fact that quotient by a homogeneous ideal preserves homogeneity and degree of nonzero homogeneous images.",
+        "location": "final paragraph",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329132438_1d671bdc",
+    "proof_status": "complete",
+    "reason": "The proof is the standard and correct descent argument for regular sequences under quotient by an initial block. It proves that each initial ideal generated by the images of v_1,...,v_t is proper in B by lifting a hypothetical relation 1 = sum b_i w_i back to A and contradicting properness of J_t. It then proves that each w_j is a nonzerodivisor on B/(w_1,...,w_{j-1}) by lifting an annihilated class to x in A, observing v_j x \\in J_{j-1}, and using that v_j is a nonzerodivisor on A/J_{j-1}. This matches the semantic sketch exactly. The graded addendum is also correctly justified since I is homogeneous, the quotient inherits the grading, and the image of a homogeneous v_j remains homogeneous of the same degree; nonzeroness from regularity avoids ambiguity about degree.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T13:30:41.009732Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329132438_1d671bdc",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T13:31:43.180955Z",
+  "worker_job_id": "wrk_lem_20260329132438_1d671bdc_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

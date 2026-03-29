@@ -1,0 +1,157 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329121139_ed717c6f",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T12:07:05.957662Z",
+  "decomposition_round_count": 1,
+  "dependency_status": "legacy_unknown",
+  "depth": 4,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.97,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T13:31:24.465504Z",
+  "last_dependency_check_id": null,
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": 2,
+  "last_submitted_solver_job_id": "wrk_lem_20260329120647_c4ea7dea_g0_solve_2",
+  "last_terminal_worker_result": "agent4:failed_infra",
+  "last_transition_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329120647_c4ea7dea",
+  "materialized_candidate_count": 1,
+  "minor_rejection_count": 0,
+  "next_action": "invalidate_parent_decomposition",
+  "parent_id": "lem_20260329110006_654a633e",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 1,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329120647_c4ea7dea.json",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "proof_status": "failed",
+  "role_in_parent": "This is the key realization theorem that turns the interval quotient into the Hilbert series of a complete intersection.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, and r are integers.",
+      "The inequalities 0 <= a <= b and r >= 0 hold.",
+      "d ranges over positive integers only.",
+      "I is the finite set of integers from a+1 to b, inclusive.",
+      "R is the polynomial ring over the rational numbers in variables x_s indexed by I.",
+      "The grading is weighted: each x_s has degree s.",
+      "Each f_s must be homogeneous with respect to this grading.",
+      "If I is empty, the required family is the empty family.",
+      "The regular sequence is taken in the order of increasing s."
+    ],
+    "normalized_claim": "For any integers a, b, r with 0 <= a <= b and r >= 0, if the interval counting inequality M_d(r+a, r+b) >= M_d(a,b) holds for every positive integer d, then in the graded polynomial ring over the rational numbers with one variable x_s of degree s for each s in I = {a+1, ..., b}, there exists a family of homogeneous polynomials f_s such that each f_s has weighted degree r+s and the polynomials in increasing index order form a regular sequence; when I is empty, this means choosing no polynomials.",
+    "quantifier_order": [
+      "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+      "For every positive integer d, assume the counting inequality M_d(r+a, r+b) >= M_d(a,b).",
+      "There exists a family (f_s) indexed by s in I.",
+      "For each s in I, the polynomial f_s has weighted degree r+s.",
+      "The polynomials listed in increasing order of s form a regular sequence in R."
+    ],
+    "variables": [
+      {
+        "domain": "all integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers satisfying a <= b",
+        "name": "b",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "the integers from a+1 through b, inclusive",
+        "name": "I",
+        "role": "index set for the polynomial family",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "all positive integers",
+        "name": "d",
+        "role": "universally quantified parameter in the counting condition",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integer arguments of the counting function M_d",
+        "name": "u",
+        "role": "local argument in the definition of M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integer arguments of the counting function M_d",
+        "name": "v",
+        "role": "local argument in the definition of M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integers counted by M_d",
+        "name": "m",
+        "role": "bound variable in the counting definition",
+        "type": "integer"
+      },
+      {
+        "domain": "elements of I",
+        "name": "s",
+        "role": "index for the family of polynomials",
+        "type": "integer"
+      },
+      {
+        "domain": "one variable for each s in I",
+        "name": "x_s",
+        "role": "polynomial ring generator with weighted degree s",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "polynomial ring over the rational numbers in the variables x_s for s in I",
+        "name": "R",
+        "role": "ambient ring",
+        "type": "graded polynomial ring"
+      },
+      {
+        "domain": "elements of R indexed by s in I",
+        "name": "f_s",
+        "role": "witness family",
+        "type": "homogeneous polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "The existence of the family (f_s) depends on the chosen integers a, b, and r.",
+      "The witness family depends on the universal hypothesis that M_d(r+a, r+b) >= M_d(a,b) for every positive integer d.",
+      "There is one global family indexed by I, not separate witnesses for each d.",
+      "The order of the witness sequence is fixed by the natural increasing order on I.",
+      "If I is empty, the witness is uniquely the empty family."
+    ]
+  },
+  "statement_status": "false",
+  "truth_status": "false",
+  "updated_at": "2026-03-29T13:31:24.465504Z"
+}

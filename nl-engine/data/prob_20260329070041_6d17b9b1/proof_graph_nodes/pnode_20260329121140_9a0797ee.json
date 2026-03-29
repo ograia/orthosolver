@@ -1,0 +1,68 @@
+{
+  "created_at": "2026-03-29T12:11:40.702826Z",
+  "graph_node_id": "pnode_20260329121140_9a0797ee",
+  "metadata": {
+    "parent_id": "lem_20260329110006_654a633e"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "2f637e07e5b4c0411dba188c132e2995fff30082fc19605156e3f28c66a807dc",
+  "owner_id": "lem_20260329120759_449f1aa9",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "X must be finite",
+      "p must assign each element of X either 0 or 1",
+      "the count of zero-labeled elements of X is at least the count of one-labeled elements of X",
+      "iota is a total function from X to X",
+      "iota is an involution on X",
+      "every fixed point of iota must be labeled 0",
+      "every non-fixed point must be paired with an element of the opposite label"
+    ],
+    "normalized_claim": "For any finite set X equipped with a binary labeling p, if there are at least as many zeros as ones, then X can be partitioned by an involution iota so that every moved point is matched with a point of the opposite label, and every fixed point has label 0.",
+    "quantifier_order": [
+      "For every finite set X",
+      "for every function p from X to {0,1}",
+      "if the number of x in X with p(x)=0 is at least the number of x in X with p(x)=1",
+      "then there exists a function iota from X to X",
+      "such that for every x in X, iota applied twice to x equals x",
+      "and for every x in X, if iota(x) is not x then p(iota(x)) equals 1 minus p(x)",
+      "and for every x in X, if iota(x) equals x then p(x) equals 0"
+    ],
+    "variables": [
+      {
+        "domain": "finite sets",
+        "name": "X",
+        "role": "ambient set being paired by the involution",
+        "type": "set"
+      },
+      {
+        "domain": "functions from X to the set {0,1}",
+        "name": "p",
+        "role": "binary labeling of elements of X",
+        "type": "function"
+      },
+      {
+        "domain": "functions from X to X",
+        "name": "iota",
+        "role": "witnessed involution with label-flipping on moved points",
+        "type": "function"
+      },
+      {
+        "domain": "elements of X",
+        "name": "x",
+        "role": "universally quantified element used in the pointwise conditions",
+        "type": "element"
+      }
+    ],
+    "witness_dependencies": [
+      "The witness iota depends on both X and p",
+      "For each x, the value iota(x) is determined globally by the chosen iota, not by x alone",
+      "The condition on non-fixed points depends on the paired element iota(x) and the label p(x)",
+      "There is no separate existential witness for each x; the statement requires one single global iota"
+    ]
+  },
+  "statement_nl": "Let X be a finite set, and let p : X -> {0,1} be a function. Assume that the number of elements x in X with p(x) = 0 is at least the number of elements x in X with p(x) = 1. Then there exists a map iota : X -> X such that iota(iota(x)) = x for every x in X, and such that: if iota(x) != x, then p(iota(x)) = 1 - p(x); and if iota(x) = x, then p(x) = 0.",
+  "updated_at": "2026-03-29T12:11:40.702826Z"
+}

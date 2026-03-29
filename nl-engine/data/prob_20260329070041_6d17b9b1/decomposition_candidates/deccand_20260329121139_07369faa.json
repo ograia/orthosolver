@@ -1,0 +1,60 @@
+{
+  "candidate_id": "deccand_20260329121139_07369faa",
+  "candidate_index": 0,
+  "created_at": "2026-03-29T12:11:39.306954Z",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "failure_origin": null,
+  "failure_reason": null,
+  "formalization_cost_estimate": 0.87,
+  "llm_vetting_status": "accepted",
+  "logical_decomposition_id": "logdec_lem_20260329110006_654a633e",
+  "materialization_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/deccand_20260329121139_07369faa/materialization_bundle.json",
+  "node_id": "lem_20260329110006_654a633e",
+  "node_kind": "lemma",
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_id": "dec_20260329121139_0a470496",
+  "raw_candidate_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/dec_20260329120647_d465faeb/agent2_candidate.json",
+  "selection_status": "promoted",
+  "shared_context": [
+    {
+      "content": "For integers a <= b, write I := {a+1, a+2, ..., b}.",
+      "kind": "definition",
+      "label": "Interval I"
+    },
+    {
+      "content": "For a positive integer d and real or integer endpoints u < v, M_d(u,v) := |{m in Z : u < m <= v and d divides m}|.",
+      "kind": "notation",
+      "label": "Divisibility count M_d(u,v)"
+    },
+    {
+      "content": "For a finite multiset lambda of integers, wt(lambda) denotes the sum of its elements. In the root theorem this quantity is written |lambda|; for an ordinary set S, |S| still means cardinality.",
+      "kind": "notation",
+      "label": "Multiset weight"
+    },
+    {
+      "content": "Given integers a,b,r,j with I := {a+1,...,b}, define X_j to be the set of pairs (S,lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j.",
+      "kind": "definition",
+      "label": "The set X_j"
+    },
+    {
+      "content": "If F(q) = sum_{n >= 0} c_n q^n is a formal power series, then [q^j]F(q) denotes c_j.",
+      "kind": "notation",
+      "label": "Coefficient extraction"
+    },
+    {
+      "content": "In a commutative ring R, an ordered finite list g_1,...,g_n is a regular sequence if for each i, the image of g_i is not a zero-divisor in R/(g_1,...,g_{i-1}); the empty list is allowed.",
+      "kind": "definition",
+      "label": "Regular sequence"
+    },
+    {
+      "content": "If A = direct_sum_{n >= 0} A_n is a graded Q-vector space with each A_n finite-dimensional, then Hilb_A(q) := sum_{n >= 0} (dim_Q A_n) q^n.",
+      "kind": "notation",
+      "label": "Hilbert series"
+    }
+  ],
+  "strategy_summary": "Realize the interval product as the Hilbert series of a graded complete intersection in a weighted polynomial ring. The divisibility-count hypothesis is used only in one bottleneck algebraic realization lemma. Once that realization is available, the coefficient of q^j becomes a graded dimension and is therefore nonnegative. A separate expansion lemma identifies the same coefficient with the signed count of X_j, and a finite-set pairing lemma converts the resulting excess of even-parity elements into the required involution on X_j.",
+  "updated_at": "2026-03-29T12:11:41.264466Z"
+}

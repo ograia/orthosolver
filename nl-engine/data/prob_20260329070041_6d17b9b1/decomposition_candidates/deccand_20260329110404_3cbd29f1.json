@@ -1,0 +1,45 @@
+{
+  "candidate_id": "deccand_20260329110404_3cbd29f1",
+  "candidate_index": 0,
+  "created_at": "2026-03-29T11:04:04.864002Z",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "failure_origin": null,
+  "failure_reason": null,
+  "formalization_cost_estimate": 0.81,
+  "llm_vetting_status": "accepted",
+  "logical_decomposition_id": "logdec_lem_20260329092547_6a64d34a",
+  "materialization_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/deccand_20260329110404_3cbd29f1/materialization_bundle.json",
+  "node_id": "lem_20260329092547_6a64d34a",
+  "node_kind": "lemma",
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_id": "dec_20260329110404_3316e963",
+  "raw_candidate_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/dec_20260329105843_b61e82ad/agent2_candidate.json",
+  "selection_status": "promoted",
+  "shared_context": [
+    {
+      "content": "For n >= 0, define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t).",
+      "kind": "definition",
+      "label": "q-factorial"
+    },
+    {
+      "content": "For integers a, b, r with 0 <= a <= b and r >= 0, define R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a).",
+      "kind": "definition",
+      "label": "interval-ratio"
+    },
+    {
+      "content": "[q^j]F(q) denotes the coefficient of q^j in a polynomial or formal power series F(q).",
+      "kind": "notation",
+      "label": "coefficient-notation"
+    },
+    {
+      "content": "A partition with parts in {a+1,...,b} means a finite multiset lambda of elements of {a+1,...,b}; |lambda| denotes the sum of its parts.",
+      "kind": "definition",
+      "label": "partition-interval-convention"
+    }
+  ],
+  "strategy_summary": "Reduce the theorem to a signed combinatorial counting problem. First pass from the q-factorial quotient to its formal power-series expansion. Then use cyclotomic factorization to extract an arithmetic divisibility-dominance condition from the assumption that the quotient is a polynomial. Express each target coefficient as a signed count of subset-partition pairs. The genuine hard step is then isolated as a sign-reversing involution on that signed set for degrees j up to floor(r(b-a)/2). A generic involution lemma converts that involution into coefficient nonnegativity.",
+  "updated_at": "2026-03-29T11:04:06.273452Z"
+}

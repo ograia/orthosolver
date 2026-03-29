@@ -1,0 +1,98 @@
+{
+  "created_at": "2026-03-29T09:29:53.318966Z",
+  "graph_node_id": "pnode_20260329092953_be6ecdbc",
+  "metadata": {
+    "parent_id": "lem_20260329074016_d9949d95"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "3191543b049c01991ce6cf478c5d4d8ea3c2499dd68ad4398052013d12e998f8",
+  "owner_id": "lem_20260329092508_dde83cd9",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a, b, and r are integers.",
+      "The ordering restriction 0 <= a <= b is part of the hypotheses.",
+      "r is required to be nonnegative.",
+      "q is a formal indeterminate, not a numeric parameter.",
+      "n in the q-Pochhammer definition is a nonnegative integer.",
+      "j in the q-Pochhammer product is a positive integer.",
+      "d in the hypothesis ranges over all positive integers.",
+      "d in the conclusion ranges over the finite interval from 1 to r+b.",
+      "The q-Pochhammer value at n = 0 is defined to be 1.",
+      "The product over d from 1 to r+b is finite; if r+b = 0, the intended empty-product convention may be relevant."
+    ],
+    "normalized_claim": "For integer parameters a, b, r with 0 <= a <= b and r >= 0, if the floor inequality holds for every positive integer d, then each explicitly defined exponent e_d is nonnegative for every d between 1 and r+b, and the ratio of q-Pochhammer symbols R_{a,b,r}(q) factors as a finite product of cyclotomic polynomials Phi_d(q) with those exponents. Therefore R_{a,b,r}(q) is a polynomial with integer coefficients.",
+    "quantifier_order": [
+      "Choose integers a, b, r satisfying 0 <= a <= b and r >= 0.",
+      "Assume that for every positive integer d, the stated floor inequality holds.",
+      "For every integer d with 1 <= d <= r+b, define e_d by the given floor formula.",
+      "For every such d, conclude that e_d is nonnegative.",
+      "Conclude that R_{a,b,r}(q) equals the finite product over d from 1 to r+b of cyclotomic polynomials Phi_d(q) raised to e_d, and hence lies in the integer polynomial ring in q."
+    ],
+    "variables": [
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable in q",
+        "name": "q",
+        "role": "base variable for the q-Pochhammer symbols and cyclotomic polynomials",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the definition of the q-Pochhammer symbol",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "j",
+        "role": "product index in the definition of the q-Pochhammer symbol",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers; later restricted to 1 <= d <= r+b",
+        "name": "d",
+        "role": "divisor index in the hypothesis and in the cyclotomic factorization",
+        "type": "integer"
+      },
+      {
+        "domain": "integers indexed by d with 1 <= d <= r+b",
+        "name": "e_d",
+        "role": "cyclotomic exponent defined from floor functions",
+        "type": "integer"
+      },
+      {
+        "domain": "defined by the q-Pochhammer ratio",
+        "name": "R_{a,b,r}(q)",
+        "role": "main quantity being factorized",
+        "type": "rational function in q"
+      }
+    ],
+    "witness_dependencies": [
+      "The exponent e_d depends explicitly on the parameters a, b, r and on the chosen index d.",
+      "There is no existential witness in the conclusion; the factorization is given explicitly by the displayed exponents.",
+      "The claim that R_{a,b,r}(q) is in the integer polynomial ring follows from the explicit nonnegative exponent factorization, not from choosing auxiliary objects."
+    ]
+  },
+  "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, and set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then for every integer d with 1 <= d <= r+b, the integer e_d := floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d) is nonnegative, and one has the cyclotomic factorization R_{a,b,r}(q) = product_{d=1}^{r+b} Phi_d(q)^(e_d), where Phi_d(q) is the d-th cyclotomic polynomial. In particular, R_{a,b,r}(q) belongs to Z[q].",
+  "updated_at": "2026-03-29T09:29:53.318967Z"
+}

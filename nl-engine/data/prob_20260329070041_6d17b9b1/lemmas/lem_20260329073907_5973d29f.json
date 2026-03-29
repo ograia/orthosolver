@@ -1,0 +1,105 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329074401_027a9904",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T07:39:14.750702Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T07:45:52.768022Z",
+  "last_dependency_check_id": "depchk_20260329074552_133e72f5",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof is correct and complete: it checks that n-r is an admissible index, expands both Gaussian q-binomial coefficients using the given q-factorial definition, observes that the denominators are identical by commutativity, and concludes the symmetry. This matches the lemma sketch and supports the stated assembly role of replacing an index by its complement. No undeclared or forbidden dependencies are used beyond the definition provided in the lemma statement itself.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix integers n and r with 0 <= r <= n. Then n-r is also an integer, and 0 <= n-r <= n.\n\nBy the stated definition,\n[n choose r]_q = (q;q)_n / ((q;q)_r (q;q)_{n-r}).\n\nSince n-r is an admissible lower index as well, the same definition gives\n[n choose n-r]_q = (q;q)_n / ((q;q)_{n-r} (q;q)_{n-(n-r)}) = (q;q)_n / ((q;q)_{n-r} (q;q)_r).\n\nNow multiplication of polynomials is commutative, so\n(q;q)_{n-r} (q;q)_r = (q;q)_r (q;q)_{n-r}.\nTherefore the two right-hand sides are identical, and hence\n[n choose n-r]_q = (q;q)_n / ((q;q)_r (q;q)_{n-r}) = [n choose r]_q.\n\nThus [n choose r]_q = [n choose n-r]_q. Since both sides are the Gaussian q-binomial coefficients defined by the given q-factorial formula, this is an identity of polynomials in q. This proves the claimed symmetry.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329074552_da3707f5",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329073907_5973d29f",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329070041_7bd7b795",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329073907_5973d29f.json",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Allows replacement of k and l by k' := min(k, n-k) and l' := min(l, n-l) without changing the quotient.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For all integers n and r with 0 <= r <= n, if the Gaussian q-binomial coefficient is defined by [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1, then [n choose r]_q = [n choose n-r]_q as polynomials in q.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n and r are integers.",
+      "r is between 0 and n inclusive.",
+      "Therefore n is a nonnegative integer.",
+      "The index m in the q-factorial definition is a nonnegative integer.",
+      "q is treated as a formal indeterminate, not as a quantified variable.",
+      "The equality is intended as an identity of polynomials in q."
+    ],
+    "normalized_claim": "For every pair of integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient defined by the stated q-factorial formula satisfies the symmetry [n choose r]_q equals [n choose n-r]_q, viewed as a polynomial identity in q.",
+    "quantifier_order": [
+      "For all integers n and r, assuming 0 <= r <= n."
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "n",
+        "role": "main index parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers",
+        "name": "r",
+        "role": "main index parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomials in q",
+        "name": "q",
+        "role": "indeterminate of the polynomial identity",
+        "type": "formal variable"
+      },
+      {
+        "domain": "indices for the q-factorial definition",
+        "name": "m",
+        "role": "auxiliary index in the product definition",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "1 through m",
+        "name": "i",
+        "role": "product index",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are present in the statement.",
+      "The value of the q-binomial coefficient is determined directly from n, r, and q by the given formula."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T07:45:52.768022Z"
+}

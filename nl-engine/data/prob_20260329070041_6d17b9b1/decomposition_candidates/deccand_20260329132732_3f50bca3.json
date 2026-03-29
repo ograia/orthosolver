@@ -1,0 +1,45 @@
+{
+  "candidate_id": "deccand_20260329132732_3f50bca3",
+  "candidate_index": 0,
+  "created_at": "2026-03-29T13:27:32.680804Z",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "failure_origin": null,
+  "failure_reason": null,
+  "formalization_cost_estimate": 0.91,
+  "llm_vetting_status": "accepted",
+  "logical_decomposition_id": "logdec_lem_20260329120647_c4ea7dea",
+  "materialization_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/deccand_20260329132732_3f50bca3/materialization_bundle.json",
+  "node_id": "lem_20260329120647_c4ea7dea",
+  "node_kind": "lemma",
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_id": "dec_20260329132732_0a2aebc0",
+  "raw_candidate_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/dec_20260329132335_9e14f7b7/agent2_candidate.json",
+  "selection_status": "promoted",
+  "shared_context": [
+    {
+      "content": "For a positive integer d and integers u,v, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|.",
+      "kind": "definition",
+      "label": "Interval divisibility count"
+    },
+    {
+      "content": "For an integer b >= 0, write S_b for the polynomial ring Q[y_1,...,y_b] with weighted grading deg(y_i)=i for 1 <= i <= b. When b=0, this means S_0 = Q.",
+      "kind": "notation",
+      "label": "Initial interval weighted polynomial ring"
+    },
+    {
+      "content": "For integers 0 <= a <= b, write I_{a,b} := {a+1,...,b} and R_{a,b} := Q[x_s : s in I_{a,b}] with weighted grading deg(x_s)=s. When a=b, this means R_{a,b} = Q.",
+      "kind": "notation",
+      "label": "Target weighted polynomial ring on an interval"
+    },
+    {
+      "content": "A sequence u_1,...,u_n in a commutative ring A is regular if for each i the image of u_i is a non-zero-divisor in A/(u_1,...,u_{i-1}) and the final quotient A/(u_1,...,u_n) is nonzero. The empty sequence is regular.",
+      "kind": "definition",
+      "label": "Regular sequence"
+    }
+  ],
+  "strategy_summary": "Embed the target ring R = Q[x_s : s in {a+1,...,b}] into the larger weighted polynomial ring S = Q[y_1,...,y_b] by viewing R as the quotient S/(y_1,...,y_a). Package the desired tail degrees together with the killed coordinate degrees into the ordered list (1,2,...,a,r+a+1,...,r+b). The given interval divisibility hypothesis is exactly the divisor-count dominance needed for a stronger existence theorem in the initial-interval ring S. After obtaining a regular sequence in S of those degrees, straighten the first a entries to y_1,...,y_a by a graded triangular automorphism, then descend the remaining entries to the quotient ring R.",
+  "updated_at": "2026-03-29T13:27:34.957630Z"
+}

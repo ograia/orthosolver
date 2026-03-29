@@ -1,0 +1,81 @@
+{
+  "created_at": "2026-03-29T13:27:33.795247Z",
+  "graph_node_id": "pnode_20260329132733_9f331fba",
+  "metadata": {
+    "parent_id": "lem_20260329120647_c4ea7dea"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "2646c35e64c137107141a8718198625ef80b3101d6b6e369f092dbd68f1ac7c1",
+  "owner_id": "lem_20260329132417_2d21af9e",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a and b are integers",
+      "0 <= a <= b",
+      "S is the polynomial ring over the rational numbers in b variables",
+      "The grading on S assigns degree i to y_i",
+      "Each g_i lies in S",
+      "Each g_i is homogeneous",
+      "The sequence g_1 through g_a is a regular sequence in S",
+      "For each i from 1 to a, the degree of g_i is i",
+      "phi is required to be a graded Q-algebra automorphism, not merely an algebra automorphism"
+    ],
+    "normalized_claim": "Every homogeneous regular sequence g_1 through g_a in the weighted polynomial ring Q[y_1 through y_b], with deg(y_i)=i and deg(g_i)=i, can be carried by a graded Q-algebra automorphism of the ring to the standard sequence y_1 through y_a. In the degenerate case a = 0, the identity automorphism is a valid choice.",
+    "quantifier_order": [
+      "For all integers a and b with 0 <= a <= b",
+      "Define S as the polynomial ring over Q in variables y_1 through y_b, graded by deg(y_i)=i",
+      "For all sequences g_1 through g_a of homogeneous elements of S such that they form a regular sequence and deg(g_i)=i for each i from 1 to a",
+      "There exists a graded Q-algebra automorphism phi of S",
+      "For every i from 1 to a, phi sends g_i to y_i",
+      "If a = 0, phi can be chosen to be the identity automorphism"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "parameter controlling the length of the regular sequence and the target variables",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "b",
+        "role": "parameter controlling the number of polynomial generators",
+        "type": "integer"
+      },
+      {
+        "domain": "the polynomial ring over the rational numbers in b indeterminates with weighted grading",
+        "name": "S",
+        "type": "graded Q-algebra"
+      },
+      {
+        "domain": "the polynomial generators of S, indexed by i from 1 to b",
+        "name": "y_i",
+        "role": "generator with assigned degree i",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "elements of S indexed by i from 1 to a",
+        "name": "g_i",
+        "role": "input regular sequence element",
+        "type": "homogeneous element of S"
+      },
+      {
+        "domain": "automorphisms of S as a graded Q-algebra",
+        "name": "phi",
+        "role": "witness automorphism",
+        "type": "graded Q-algebra automorphism of S"
+      }
+    ],
+    "witness_dependencies": [
+      "The automorphism phi may depend on the chosen integers a and b",
+      "The automorphism phi may depend on the specific graded ring S determined by b",
+      "The automorphism phi may depend on the particular regular sequence g_1 through g_a",
+      "The claim requires one single phi that simultaneously satisfies phi(g_i)=y_i for all i from 1 to a",
+      "In the special case a = 0, the witness phi may be chosen independently of any g_i, namely as the identity"
+    ]
+  },
+  "statement_nl": "Let a and b be integers with 0 <= a <= b, and let S := Q[y_1,...,y_b] be graded by deg(y_i)=i. Suppose g_1,...,g_a are homogeneous elements of S that form a regular sequence and satisfy deg(g_i)=i for each i=1,...,a. Then there exists a graded Q-algebra automorphism phi : S -> S such that phi(g_i)=y_i for every i=1,...,a. When a=0, phi may be taken to be the identity automorphism.",
+  "updated_at": "2026-03-29T13:27:33.795248Z"
+}

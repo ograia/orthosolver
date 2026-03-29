@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-03-29T13:27:33.567833Z",
+  "graph_node_id": "pnode_20260329132733_f598b8e8",
+  "metadata": {
+    "parent_id": "lem_20260329120647_c4ea7dea"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "7dec1483f62e0a3d39d6b382673c50676aeef183b941d60596451aecf52c5d1b",
+  "owner_id": "lem_20260329132405_562eefce",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "b is a nonnegative integer",
+      "the list e_1 through e_b has exactly b entries",
+      "each e_i is a positive integer",
+      "d ranges over positive integers only",
+      "S is the graded polynomial ring over the rationals in variables y_1 through y_b",
+      "the grading on S assigns degree i to y_i",
+      "the counting condition compares indices i from 1 through b",
+      "when b is 0, S is the rational numbers and the conclusion is the empty regular sequence"
+    ],
+    "normalized_claim": "For any nonnegative integer b and any ordered list of b positive integers e_1 through e_b satisfying that, for every positive integer d, the number of indices i from 1 to b with d dividing e_i is at least the number of indices i from 1 to b with d dividing i, there exist homogeneous elements u_1 through u_b in the weighted graded polynomial ring over the rationals on generators y_1 through y_b, with degree of y_i equal to i, such that each u_i has degree e_i and the ordered list u_1 through u_b is a regular sequence. In the case b equals 0, this is the empty regular sequence in the ring of rational numbers.",
+    "quantifier_order": [
+      "for each nonnegative integer b",
+      "for each ordered list e_1 through e_b of positive integers",
+      "for every positive integer d, the divisibility count inequality must hold",
+      "if the hypothesis holds, then there exists an ordered list u_1 through u_b in S",
+      "each u_i is homogeneous of degree e_i",
+      "the list u_1 through u_b is a regular sequence"
+    ],
+    "variables": [
+      {
+        "domain": "nonnegative integers",
+        "name": "b",
+        "role": "length parameter and number of generators in the polynomial ring",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers indexed by i from 1 to b",
+        "name": "e",
+        "role": "target degrees for the homogeneous elements",
+        "type": "ordered list of integers"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "test divisor used in the counting hypothesis",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomial ring over the rationals in b variables",
+        "name": "S",
+        "role": "ambient graded ring",
+        "type": "graded polynomial ring"
+      },
+      {
+        "domain": "homogeneous polynomials in S",
+        "name": "u",
+        "role": "regular sequence with prescribed degrees",
+        "type": "ordered list of elements of S"
+      }
+    ],
+    "witness_dependencies": [
+      "The existence witnesses u_1 through u_b may depend on the entire parameter set b and e_1 through e_b",
+      "The witnesses are chosen after the divisibility hypothesis is verified for all positive integers d",
+      "The elements u_i are not allowed to depend on the particular choice of d, since d is universally quantified in the hypothesis",
+      "The witness is an ordered sequence, so the regular sequence property depends on the order of the u_i"
+    ]
+  },
+  "statement_nl": "Let b be a nonnegative integer, and let e_1,...,e_b be an ordered list of b positive integers. Let S := Q[y_1,...,y_b] be the polynomial ring graded by deg(y_i)=i for 1 <= i <= b. Assume that for every positive integer d, one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. Then there exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for every i and the ordered list u_1,...,u_b is a regular sequence. When b=0, this means the empty regular sequence in S=Q.",
+  "updated_at": "2026-03-29T13:27:33.567834Z"
+}

@@ -1,0 +1,100 @@
+{
+  "created_at": "2026-03-29T13:27:33.341471Z",
+  "graph_node_id": "pnode_20260329132733_d4902824",
+  "metadata": {
+    "parent_id": "lem_20260329120647_c4ea7dea"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "20d09978ff60d73c0907120d3c6f19b69e1ad9a89a2f49e0f38518252cca17be",
+  "owner_id": "lem_20260329132335_f096b04e",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a, b, r are integers with 0 <= a <= b and r >= 0.",
+      "The family e_i is only defined for indices i from 1 through b.",
+      "For i from 1 through b, e_i equals i when i <= a and equals r + i when a < i <= b.",
+      "d must be a positive integer whenever M_d is used or divisibility by d is discussed.",
+      "M_d(u, v) counts integers m with u < m <= v and d dividing m, where u and v are integers.",
+      "The counts in the conclusion are taken over the finite index set from 1 through b.",
+      "If b = 0, the index set from 1 through b is empty, so the counted sets are empty."
+    ],
+    "normalized_claim": "For every choice of integers a, b, r with 0 <= a <= b and r >= 0, if every positive integer d has at least as many multiples in the interval from r + a to r + b as in the interval from a to b, then for every positive integer d the number of indices i from 1 through b for which d divides e_i is at least the number of indices i from 1 through b for which d divides i.",
+    "quantifier_order": [
+      "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+      "For each integer i with 1 <= i <= b, define e_i by a piecewise rule: e_i = i if i <= a, and e_i = r + i if a < i <= b.",
+      "For each positive integer d and integers u, v, define M_d(u, v) as the number of integers m satisfying u < m <= v and d divides m.",
+      "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+      "Conclude that for every positive integer d, the number of indices i from 1 through b with d dividing e_i is at least the number of indices i from 1 through b with d dividing i."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b and r >= 0",
+        "name": "a",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b and r >= 0",
+        "name": "b",
+        "role": "fixed parameter and upper index bound",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b and r >= 0",
+        "name": "r",
+        "role": "fixed shift parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "indices from 1 through b",
+        "name": "i",
+        "role": "index variable for the sequence e_i and for counting sets",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "divisor parameter in the divisibility counts",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers in the interval u < m <= v",
+        "name": "m",
+        "role": "dummy variable counted by M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integer interval endpoint",
+        "name": "u",
+        "role": "lower interval endpoint for M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integer interval endpoint",
+        "name": "v",
+        "role": "upper interval endpoint for M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "indices from 1 through b",
+        "name": "e_i",
+        "role": "piecewise-defined sequence depending on a, b, r, and i",
+        "type": "integer-valued sequence"
+      },
+      {
+        "domain": "positive integer d and integer endpoints u, v",
+        "name": "M_d",
+        "role": "counts multiples of d in the half-open interval (u, v]",
+        "type": "counting function"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement; all quantified variables are universal or fixed by definition.",
+      "The conclusion is required for each positive integer d separately, with the same fixed parameters a, b, and r."
+    ]
+  },
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. For 1 <= i <= b define an integer e_i by e_i = i when i <= a, and e_i = r+i when a < i <= b. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. If M_d(r+a, r+b) >= M_d(a,b) for every positive integer d, then for every positive integer d one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.",
+  "updated_at": "2026-03-29T13:27:33.341472Z"
+}

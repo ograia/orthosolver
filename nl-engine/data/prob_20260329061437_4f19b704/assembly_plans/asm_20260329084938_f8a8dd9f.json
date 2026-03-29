@@ -1,0 +1,100 @@
+{
+  "assembly_plan_id": "asm_20260329084938_f8a8dd9f",
+  "created_at": "2026-03-29T08:55:05.369750Z",
+  "decomposition_id": "dec_20260329084938_5f9a4b46",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_skeleton_nl": "Define the theorem difference as a sum of modified local contributions H_{d,r,n,k}(q), where the claimed right-hand side is absorbed into the k=0 contribution. The only substantive input is a bounded-support q-Gosper/WZ certificate: a Laurent-polynomial multiplier in q^k turns the k-th summand into a forward difference G_k-G_{k+1}, and both boundary terms G_0 and G_n are already divisible by the target modulus M_n(q)=[n]_q \u03a6_n(q)^2 in the localized rational-function sense. An abstract telescoping lemma then shows that the whole theorem difference is itself divisible by M_n(q) in that same localized sense. Finally, a purely formal localization lemma converts that divisibility representation of the difference into the desired congruence between the finite sum and [rn]_q q^{r(1-n)/2}. This assembly is materially different from all rejected patterns because it never introduces an auxiliary parameter a, never uses a falsified special-value evaluation, never asserts a false separate [n]_q-divisibility of a cleared sum, never cancels against a false common denominator, and never uses a transformed statement equivalent to the theorem.",
+  "root_node_id": "thm_root_20260329061437_747e99b3",
+  "steps": [
+    {
+      "derives": "From the theorem hypotheses, conclude that n is odd, gcd(d,n)=1, the exponent r(1-n)/2 is an integer, and every exponent k(d-dk-2r)/2 with 0 <= k <= n is an integer. Therefore the rational functions F_{d,r,n}(q), R_{d,r,n}(q), H_{d,r,n,0}(q), ..., H_{d,r,n,n-1}(q), and the modulus M_n(q) = [n]_q \u03a6_n(q)^2 are all well-defined.",
+      "is_trivial": false,
+      "step_id": "A0",
+      "trivial_justification": "Lemma L1 gives exactly the arithmetic facts needed to make every exponent in the theorem and in the certificate statement integral. Once those exponents are known to be integers, the displayed rational functions and the modulus M_n(q) are well-defined by their explicit formulas.",
+      "uses_lemmas": [
+        "lem_20260329084938_0b83349f"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If \u0394(q) denotes the theorem difference \u0394(q) = F_{d,r,n}(q) - R_{d,r,n}(q), then \u0394(q) = \u2211_{k=0}^{n-1} H_{d,r,n,k}(q).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the statement of Lemma L2 after substituting the definitions fixed in A0.",
+      "uses_lemmas": [
+        "lem_20260329084950_f7e2449c"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "There exist rational functions G_0(q), ..., G_n(q) and polynomials A_0(q), B_0(q), A_n(q), B_n(q) in Z[q] such that H_{d,r,n,k}(q) = G_k(q) - G_{k+1}(q) for every 0 <= k <= n-1, gcd(B_0(q), M_n(q)) = 1, gcd(B_n(q), M_n(q)) = 1, G_0(q) = M_n(q) A_0(q)/B_0(q), and G_n(q) = M_n(q) A_n(q)/B_n(q).",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is the direct output of the bottleneck certificate lemma L5 for the present admissible d, r, n.",
+      "uses_lemmas": [
+        "lem_20260329085104_eb8ac29f"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "There exist polynomials A(q), B(q) in Z[q] with gcd(B(q), M_n(q)) = 1 such that \u2211_{k=0}^{n-1} H_{d,r,n,k}(q) = M_n(q) A(q) / B(q).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Apply Lemma L3 with M(q)=M_n(q), N=n, H_k(q)=H_{d,r,n,k}(q), and the family G_0(q), ..., G_n(q) obtained in A2. Step A2 supplies both hypotheses required by L3: the telescoping identities H_k=G_k-G_{k+1} for all k, and the localized M_n(q)-divisibility representations of the two boundary terms G_0 and G_n. Lemma L3 then yields the stated representation of the whole finite sum of the H_k.",
+      "uses_lemmas": [
+        "lem_20260329085023_f90d9d20"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "There exist polynomials A(q), B(q) in Z[q] with gcd(B(q), M_n(q)) = 1 such that \u0394(q) = M_n(q) A(q) / B(q).",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Step A1 identifies \u0394(q) with the sum \u2211_{k=0}^{n-1} H_{d,r,n,k}(q), and Step A3 gives a localized M_n(q)-divisibility representation of exactly that sum. Replacing the sum by the equal expression \u0394(q) gives the claim.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A3"
+      ]
+    },
+    {
+      "derives": "The finite sum F_{d,r,n}(q) is congruent to R_{d,r,n}(q) modulo M_n(q); that is, F_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q).",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "Apply Lemma L4 with E(q)=\u0394(q), F(q)=F_{d,r,n}(q), G(q)=R_{d,r,n}(q), and M(q)=M_n(q). By definition \u0394(q)=F_{d,r,n}(q)-R_{d,r,n}(q), and Step A4 gives the required representation \u0394(q)=M_n(q)A(q)/B(q) with gcd(B(q),M_n(q))=1. Lemma L4 therefore yields F_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q).",
+      "uses_lemmas": [
+        "lem_20260329085050_fe7811b6"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "The finite sum F_{d,r,n}(q) is congruent to R_{d,r,n}(q) modulo [n]_q \u03a6_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "By definition M_n(q) = [n]_q \u03a6_n(q)^2, so the congruence from A5 is exactly the same congruence with the modulus written out explicitly.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u2211_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "Step A6 states that F_{d,r,n}(q) \u2261 R_{d,r,n}(q) modulo [n]_q \u03a6_n(q)^2. Unfold the definitions of F_{d,r,n}(q) and R_{d,r,n}(q): F_{d,r,n}(q) is exactly the finite sum in the theorem statement, and R_{d,r,n}(q) is exactly [rn]_q q^{r(1\u2212n)/2}. Replacing these abbreviations by their definitions yields precisely the root theorem statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    }
+  ]
+}

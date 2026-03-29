@@ -1,0 +1,116 @@
+{
+  "created_at": "2026-03-29T08:55:05.685306Z",
+  "graph_node_id": "pnode_20260329085505_1298ee7a",
+  "metadata": {
+    "parent_id": "thm_root_20260329061437_747e99b3"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "4ad264c1e7bcaf35357ee2104b4f9eebe23652ee4c38ba033e3bf3ba125b69fe",
+  "owner_id": "lem_20260329085023_f90d9d20",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329085505_7fc53cae",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "M is a nonzero polynomial with integer coefficients.",
+      "N is a positive integer, so the index range from 0 to N minus 1 is finite.",
+      "Each H_k and each G_k is a rational function in q with rational coefficients.",
+      "The relation H_k equals G_k minus G_{k+1} is required for every integer k between 0 and N minus 1 inclusive.",
+      "A_0, B_0, A_N, and B_N are polynomials in Z[q].",
+      "The coprimality conditions gcd(B_0, M) equals 1 and gcd(B_N, M) equals 1 are taken in the polynomial ring Z[q].",
+      "The endpoint identities G_0 equals M times A_0 over B_0 and G_N equals M times A_N over B_N are assumed exactly as rational-function identities.",
+      "In the conclusion, A and B are also polynomials in Z[q], and B must be coprime to M."
+    ],
+    "normalized_claim": "A finite telescoping family H_k equals G_k minus G_{k+1} has the property that if the two endpoint terms G_0 and G_N can each be written as M times a polynomial divided by a polynomial coprime to M, then the total sum from k equals 0 to N minus 1 of H_k can also be written as M times a polynomial divided by a polynomial coprime to M.",
+    "quantifier_order": [
+      "Fix q as the common indeterminate.",
+      "For all nonzero polynomials M in Z[q] and all positive integers N.",
+      "For all rational functions H_0 through H_{N-1} and G_0 through G_N in Q(q).",
+      "For every integer k from 0 to N minus 1, H_k equals G_k minus G_{k+1}.",
+      "Assume there exist polynomials A_0, B_0, A_N, and B_N in Z[q] satisfying gcd(B_0, M) equals 1, gcd(B_N, M) equals 1, G_0 equals M times A_0 over B_0, and G_N equals M times A_N over B_N.",
+      "Then there exist polynomials A and B in Z[q] with gcd(B, M) equals 1 such that the sum from k equals 0 to N minus 1 of H_k equals M times A over B."
+    ],
+    "variables": [
+      {
+        "domain": "common symbol for the polynomial and rational function expressions",
+        "name": "q",
+        "role": "underlying variable",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "integer polynomials in q",
+        "name": "M",
+        "role": "fixed nonzero polynomial used in the coprimality conditions",
+        "type": "polynomial"
+      },
+      {
+        "domain": "positive integers",
+        "name": "N",
+        "role": "length parameter for the finite sequence",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 0 through N minus 1 when used in the telescoping relation",
+        "name": "k",
+        "role": "index for the telescoping identity and the finite sum",
+        "type": "integer index"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "H_k",
+        "role": "terms of the finite sum",
+        "type": "rational function"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "G_k",
+        "role": "telescoping auxiliary sequence",
+        "type": "rational function"
+      },
+      {
+        "domain": "integer polynomials in q",
+        "name": "A_0",
+        "role": "witness for the representation of G_0",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer polynomials in q",
+        "name": "B_0",
+        "role": "denominator witness for the representation of G_0",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer polynomials in q",
+        "name": "A_N",
+        "role": "witness for the representation of G_N",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer polynomials in q",
+        "name": "B_N",
+        "role": "denominator witness for the representation of G_N",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer polynomials in q",
+        "name": "A",
+        "role": "conclusion witness for the numerator of the total sum",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer polynomials in q",
+        "name": "B",
+        "role": "conclusion witness for the denominator of the total sum",
+        "type": "polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "A_0, B_0, A_N, and B_N are existential witnesses for the two endpoint representations of G_0 and G_N.",
+      "The conclusion witnesses A and B may depend on all prior data: M, N, the family H_k, the family G_k, and the endpoint witnesses A_0, B_0, A_N, and B_N.",
+      "A and B are global witnesses for the whole finite sum, not separate witnesses for each index k.",
+      "The existence of A and B is asserted only after the telescoping relation and endpoint hypotheses are fixed."
+    ]
+  },
+  "statement_nl": "Let M(q) be a nonzero polynomial in Z[q], let N be a positive integer, and let H_0(q), ..., H_{N-1}(q), G_0(q), ..., G_N(q) be rational functions in Q(q). Assume that H_k(q) = G_k(q) - G_{k+1}(q) for every integer k with 0 <= k <= N-1. Assume further that there exist polynomials A_0(q), B_0(q), A_N(q), and B_N(q) in Z[q] such that gcd(B_0(q), M(q)) = 1, gcd(B_N(q), M(q)) = 1, G_0(q) = M(q) A_0(q) / B_0(q), and G_N(q) = M(q) A_N(q) / B_N(q). Then there exist polynomials A(q) and B(q) in Z[q] with gcd(B(q), M(q)) = 1 such that \u2211_{k=0}^{N-1} H_k(q) = M(q) A(q) / B(q).",
+  "updated_at": "2026-03-29T08:55:05.685307Z"
+}

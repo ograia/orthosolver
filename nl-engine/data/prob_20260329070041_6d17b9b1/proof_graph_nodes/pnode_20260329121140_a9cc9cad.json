@@ -1,0 +1,105 @@
+{
+  "created_at": "2026-03-29T12:11:40.530609Z",
+  "graph_node_id": "pnode_20260329121140_a9cc9cad",
+  "metadata": {
+    "parent_id": "lem_20260329110006_654a633e"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "9af733af75f4185c29895dbdc9273986bae0ae2ff2f394ca8fe93ed7606b4814",
+  "owner_id": "lem_20260329120747_f3501562",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a, b, r, and j are integers.",
+      "a and b satisfy 0 <= a <= b.",
+      "r and j are nonnegative.",
+      "I is finite because it is the integer interval from a+1 through b.",
+      "S must be a subset of I.",
+      "lambda must be a finite multiset whose elements all lie in I.",
+      "wt(lambda) means the sum of the multiset elements, with multiplicities counted.",
+      "The quantity sum over s in S of r+s is defined because S is finite.",
+      "The parity of |S| is well-defined because S is a finite set."
+    ],
+    "normalized_claim": "For fixed integers a, b, r, j with 0 <= a <= b and r, j nonnegative, the set of pairs (S, lambda) satisfying the stated weight equation is finite, and the sum of (-1) raised to the size of S over all pairs in that set is exactly the number of pairs with S even minus the number of pairs with S odd.",
+    "quantifier_order": [
+      "Fix integers a, b, r, j subject to 0 <= a <= b, r >= 0, and j >= 0.",
+      "Define I as the integer interval from a+1 through b.",
+      "For each pair (S, lambda), membership in X_j requires S to be a subset of I, lambda to be a finite multiset of elements of I, and wt(lambda) plus the sum over s in S of r+s to equal j.",
+      "Then X_j is finite.",
+      "Define E_j and O_j as the counts of pairs in X_j with even or odd size of S.",
+      "The alternating sum over all pairs in X_j equals E_j minus O_j."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "b",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "j",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "the integers from a+1 through b, inclusive",
+        "name": "I",
+        "role": "derived index set",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "all subsets of I",
+        "name": "S",
+        "role": "component of pairs in X_j",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multisets supported on I",
+        "name": "lambda",
+        "role": "component of pairs in X_j",
+        "type": "finite multiset of elements of I"
+      },
+      {
+        "domain": "pairs (S, lambda) satisfying the defining equation for the fixed j",
+        "name": "X_j",
+        "role": "solution set",
+        "type": "set of pairs"
+      },
+      {
+        "domain": "count of elements of X_j with even cardinality of S",
+        "name": "E_j",
+        "role": "even-parity count",
+        "type": "integer"
+      },
+      {
+        "domain": "count of elements of X_j with odd cardinality of S",
+        "name": "O_j",
+        "role": "odd-parity count",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the final conclusion.",
+      "Every pair (S, lambda) in X_j is determined by the fixed parameters a, b, r, and j through the equation wt(lambda) plus sum over s in S of r+s equals j.",
+      "E_j and O_j depend on X_j, hence ultimately on a, b, r, and j.",
+      "The alternating sum is taken over the finite set X_j, so its value depends only on the elements of X_j and the parity of S in each pair."
+    ]
+  },
+  "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) is the sum of the elements of lambda. Then X_j is finite. If E_j is the number of elements (S,lambda) in X_j with |S| even and O_j is the number of elements (S,lambda) in X_j with |S| odd, then\nsum_{(S,lambda) in X_j} (-1)^{|S|} = E_j - O_j.",
+  "updated_at": "2026-03-29T12:11:40.530610Z"
+}

@@ -1,0 +1,113 @@
+{
+  "assembly_plan_id": "asm_20260329081913_40cd9c0c",
+  "created_at": "2026-03-29T08:22:13.621913Z",
+  "decomposition_id": "dec_20260329081913_f1337d12",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_skeleton_nl": "Define the original theorem difference \u0394(q) and its transformed version \u03a8(q)=(1-q^n)\u0394(q). The explicit bottleneck lemma gives a representation \u03a8(q)=[n]_q^2 \u03a6_n(q)^2 A(q)/B(q) with B(q) coprime to the target modulus [n]_q \u03a6_n(q)^2. Independently, the elementary identity 1-q^n=(1-q)[n]_q rewrites the same transformed difference as \u03a8(q)=(1-q)[n]_q\u0394(q). Equating the two expressions and cancelling one nonzero factor [n]_q inside Q(q) gives (1-q)\u0394(q)=[n]_q \u03a6_n(q)^2 A(q)/B(q). Since 1-q is coprime to [n]_q \u03a6_n(q)^2, the abstract localization lemma cancels the factor 1-q and yields \u0394(q) \u2261 0 mod [n]_q \u03a6_n(q)^2. Finally, expand the definition of \u0394(q) and rewrite a zero-difference congruence as the stated congruence of the finite sum to the right-hand side.",
+  "root_node_id": "thm_root_20260329061437_747e99b3",
+  "steps": [
+    {
+      "derives": "From the hypotheses on d, r, and n, conclude that n is odd, gcd(d,n)=1, r(1-n)/2 is an integer, and each exponent k(d-dk-2r)/2 occurring in the finite sum is an integer. Therefore the rational function \u0394(q) = \u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d; q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k - [rn]_q q^{r(1-n)/2} is well-defined in Q(q). Define \u03a8(q) = (1-q^n)\u0394(q) and define M(q) = [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A0",
+      "trivial_justification": "Lemma L1 supplies exactly the needed arithmetic consequences. The statement that \u0394(q), \u03a8(q), and M(q) are now defined is just notation, but the integrality of the exponents is real arithmetic work and is therefore recorded in this nontrivial setup step.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "There exist polynomials A(q), B(q) in Z[q] such that gcd(B(q), M(q)) = 1 and \u03a8(q) = [n]_q M(q) A(q)/B(q).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is Lemma L5 applied to the locally defined \u0394(q), \u03a8(q), and M(q), together with the identity [n]_q^2 \u03a6_n(q)^2 = [n]_q M(q).",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "The transformed difference satisfies \u03a8(q) = (1-q)[n]_q \u0394(q).",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "By definition \u03a8(q) = (1-q^n)\u0394(q). Lemma L2 rewrites 1-q^n as (1-q)[n]_q, so substitution gives the displayed identity.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "One has (1-q)[n]_q \u0394(q) = [n]_q M(q) A(q)/B(q).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "Step A2 gives an explicit formula for \u03a8(q), and Step A1 gives another explicit formula for the same rational function \u03a8(q). Since both right-hand sides are equal to \u03a8(q), they are equal to each other.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "One has (1-q)\u0394(q) = M(q) A(q)/B(q).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Step A3 has the common nonzero rational factor [n]_q on both sides. Since [n]_q is a nonzero polynomial and hence a nonzero element of the field Q(q), dividing both sides of the identity from Step A3 by [n]_q is legitimate and yields the displayed equation.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "The polynomials 1-q and M(q) are coprime in Z[q].",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "Lemma L3 gives gcd(1-q, [n]_q \u03a6_n(q)^2) = 1, and M(q) was defined in Step A0 to be exactly [n]_q \u03a6_n(q)^2.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "The original theorem difference satisfies \u0394(q) \u2261 0 mod M(q).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Apply Lemma L4 with P(q)=1-q, F(q)=\u0394(q), M(q)=M(q), A(q)=A(q), and B(q)=B(q). Step A4 provides the identity P(q)F(q)=M(q)A(q)/B(q). Step A1 gives gcd(B(q),M(q))=1. Step A5 gives gcd(P(q),M(q))=1. Therefore all hypotheses of Lemma L4 are satisfied, so \u0394(q) \u2261 0 mod M(q).",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d; q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k - [rn]_q q^{r(1-n)/2} \u2261 0 mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "Step A6 states that \u0394(q) \u2261 0 mod M(q). Step A0 defines \u0394(q) as exactly the displayed difference and defines M(q) to be [n]_q \u03a6_n(q)^2. Substituting these definitions into Step A6 yields the displayed zero-difference congruence.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A0",
+        "A6"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "Step A7 says that the difference between the finite sum and the stated right-hand side is congruent to 0 modulo [n]_q \u03a6_n(q)^2. By the definition of congruence, this is exactly equivalent to the displayed congruence between the sum and the right-hand side.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A7"
+      ]
+    }
+  ]
+}

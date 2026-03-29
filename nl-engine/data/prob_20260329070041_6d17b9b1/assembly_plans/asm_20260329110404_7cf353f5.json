@@ -1,0 +1,87 @@
+{
+  "assembly_plan_id": "asm_20260329110404_7cf353f5",
+  "created_at": "2026-03-29T11:04:04.910480Z",
+  "decomposition_id": "dec_20260329110404_3316e963",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_skeleton_nl": "Fix arbitrary integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define R_{a,b,r}(q) as in the theorem, and assume R_{a,b,r}(q) belongs to Z[q]. Fix an arbitrary integer j with 0 <= j <= floor(D/2), where D = r(b-a). By Lemma L1, the coefficient [q^j]R_{a,b,r}(q) equals the coefficient [q^j]F_{a,b,r}(q) of the formal interval-product expansion. By Lemma L2, polynomiality of R_{a,b,r}(q) implies the divisibility-dominance inequalities M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. By Lemma L3, [q^j]F_{a,b,r}(q) is the signed count of the subset-partition set X_j. Lemma L5, applied using the dominance inequalities and the degree bound j <= floor(r(b-a)/2), provides a sign-reversing involution on X_j whose fixed points all have positive sign. Lemma L4 then identifies the signed count with the number of fixed points, so the signed count is a nonnegative integer. Therefore [q^j]F_{a,b,r}(q) is a nonnegative integer, and hence [q^j]R_{a,b,r}(q) is a nonnegative integer as well. Since j was arbitrary in the allowed range, the theorem follows.",
+  "root_node_id": "lem_20260329092547_6a64d34a",
+  "steps": [
+    {
+      "derives": "For the fixed admissible parameters a, b, r and the fixed integer j with 0 <= j <= floor(D/2), if R_{a,b,r}(q) belongs to Z[q], then [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q), where F_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is the final clause of Lemma L1 applied to the standing assumption R_{a,b,r}(q) in Z[q].",
+      "uses_lemmas": [
+        "lem_20260329105843_95b318e7"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every positive integer d, the interval-multiple dominance inequality M_d(r+a,r+b) >= M_d(a,b) holds.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "Lemma L2 states exactly that polynomiality of R_{a,b,r}(q) implies these inequalities for all positive integers d.",
+      "uses_lemmas": [
+        "lem_20260329105900_ed0a9993"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If X_j is the set of pairs (S, lambda) defined in Lemma L3, then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the coefficient formula asserted by Lemma L3 for the chosen a, b, r, j.",
+      "uses_lemmas": [
+        "lem_20260329105924_711791c7"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "There exists an involution iota_j : X_j -> X_j such that non-fixed points change the parity of |S| and fixed points have even |S|.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Lemma L5 applies because A2 provides the required inequalities M_d(r+a,r+b) >= M_d(a,b) for every positive integer d, and the standing hypothesis gives 0 <= j <= floor(r(b-a)/2).",
+      "uses_lemmas": [
+        "lem_20260329110006_654a633e"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "The signed sum sum_{(S,lambda) in X_j} (-1)^(|S|) is a nonnegative integer; equivalently, [q^j] F_{a,b,r}(q) is a nonnegative integer.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Apply Lemma L4 to the finite set X := X_j with sign function w(S,lambda) := (-1)^(|S|). By A4, the involution iota_j reverses the sign on every non-fixed point because it changes the parity of |S|, and every fixed point has sign +1 because A4 says fixed points have even |S|. Lemma L4 therefore gives sum_{(S,lambda) in X_j} (-1)^(|S|) = |Fix(iota_j)| >= 0. Then A3 identifies this same signed sum with [q^j] F_{a,b,r}(q).",
+      "uses_lemmas": [
+        "lem_20260329105947_d7a87760"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "[q^j] R_{a,b,r}(q) is a nonnegative integer.",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "Substitute the equality [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q) from A1 into the nonnegativity result from A5.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A5"
+      ]
+    },
+    {
+      "derives": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "The proof above was carried out for an arbitrary integer j satisfying 0 <= j <= floor(D/2), under the standing assumptions on a, b, r, q, and polynomiality of R_{a,b,r}(q). Universal generalization over that arbitrary j yields the desired statement for every j in the specified range, which is exactly the root theorem.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": true,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329092953_e42ab733",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T09:26:03.224481Z",
+  "decomposition_round_count": 1,
+  "dependency_status": "passed",
+  "depth": 2,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.9,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T13:31:43.787333Z",
+  "last_dependency_check_id": "depchk_20260329103222_d91d1260",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent4:failed_infra",
+  "last_transition_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let N := r+a+b. Since 0 <= a <= b and r >= 0, we have N >= b >= a >= 0; in particular 0 <= a <= N and 0 <= b <= N, and also N-a = r+b >= 0 and N-b = r+a >= 0. By the standard polynomial form of Gaussian q-binomial coefficients, for 0 <= t <= N one has [N choose t]_q = (q;q)_N / ((q;q)_t (q;q)_{N-t}). Therefore\n[N choose b]_q / [N choose a]_q = ((q;q)_N / ((q;q)_b (q;q)_{N-b})) / ((q;q)_N / ((q;q)_a (q;q)_{N-a})) = ((q;q)_a (q;q)_{N-a}) / ((q;q)_b (q;q)_{N-b}).\nUsing N-a = r+b and N-b = r+a, this becomes\n[N choose b]_q / [N choose a]_q = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b) = R_{a,b,r}(q).\nThus R_{a,b,r}(q) is exactly a quotient of two Gaussian q-binomial coefficients. By hypothesis R_{a,b,r}(q) belongs to Z[q], so this quotient is a polynomial in q. Applying the allowed semantic anchor with n = N, k = b, and l = a, we conclude that every coefficient of R_{a,b,r}(q) is nonnegative. Since R_{a,b,r}(q) is in Z[q], all of its coefficients are integers. Therefore, for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer. This proves the lemma.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329092547_6a64d34a",
+  "materialized_candidate_count": 1,
+  "minor_rejection_count": 0,
+  "next_action": "invalidate_parent_decomposition",
+  "parent_id": "lem_20260329074016_d9949d95",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 1,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329092547_6a64d34a.json",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "proof_status": "failed",
+  "role_in_parent": "This is the deep positivity input; together with reciprocity it yields full nonnegativity of all coefficients.",
+  "routing_status": "blocked",
+  "shared_context_refs": [],
+  "solver_attempt_count": 3,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, and r are integers",
+      "0 <= a <= b",
+      "r >= 0",
+      "q is a formal indeterminate, not a specialized numeric value",
+      "n ranges over nonnegative integers in the product definition",
+      "D is nonnegative because r >= 0 and b - a >= 0",
+      "j is an integer with 0 <= j <= floor(D/2)",
+      "R is assumed to be a polynomial with integer coefficients"
+    ],
+    "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+    "quantifier_order": [
+      "For all integers a, b, r with 0 <= a <= b and r >= 0",
+      "Let q be an indeterminate",
+      "For each nonnegative integer n, define the q-factorial quantity",
+      "Define R from a, b, r, and q by the stated quotient",
+      "Define D as r times (b - a)",
+      "Assume the resulting R is an element of Z[q]",
+      "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+    ],
+    "variables": [
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "b",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable",
+        "name": "q",
+        "role": "symbol used to form q-factorials and the polynomial R",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the finite product defining the q-factorial",
+        "type": "integer"
+      },
+      {
+        "domain": "integer polynomials in q, assumed to lie in Z[q]",
+        "name": "R",
+        "role": "defined quantity from a, b, r, and q",
+        "type": "polynomial in q"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "D",
+        "role": "derived quantity equal to r times (b - a)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 0 through floor(D/2)",
+        "name": "j",
+        "role": "coefficient index",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+    ]
+  },
+  "statement_status": "false",
+  "truth_status": "false",
+  "updated_at": "2026-03-29T13:31:43.787333Z"
+}

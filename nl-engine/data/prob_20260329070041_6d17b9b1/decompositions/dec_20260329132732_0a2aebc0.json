@@ -1,0 +1,73 @@
+{
+  "assembly_plan_id": "asm_20260329132732_4eb55056",
+  "controller_status": "failed",
+  "created_at": "2026-03-29T13:27:32.838958Z",
+  "decomposition_id": "dec_20260329132732_0a2aebc0",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "passed",
+  "equivalence_risk": "none",
+  "failure_origin": "child_lemma_false",
+  "failure_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.91,
+  "invalidated_by_counterexample_id": "cex_20260329133035_2b45744a",
+  "invalidated_by_lemma_id": "lem_20260329132405_562eefce",
+  "latest_prepare_track_job_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "skipped",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [
+    "lem_20260329132335_f096b04e",
+    "lem_20260329132405_562eefce",
+    "lem_20260329132417_2d21af9e",
+    "lem_20260329132425_b7fb9eda",
+    "lem_20260329132438_1d671bdc",
+    "lem_20260329132447_75e7cd4d"
+  ],
+  "llm_vetting_status": "accepted",
+  "logical_decomposition_id": "logdec_lem_20260329120647_c4ea7dea",
+  "node_id": "lem_20260329120647_c4ea7dea",
+  "node_kind": "lemma",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/decompositions/dec_20260329132732_0a2aebc0.json",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "raw_candidate_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/dec_20260329132335_9e14f7b7/agent2_candidate.json",
+  "revision_number": 1,
+  "shared_context": [
+    {
+      "content": "For a positive integer d and integers u,v, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|.",
+      "kind": "definition",
+      "label": "Interval divisibility count"
+    },
+    {
+      "content": "For an integer b >= 0, write S_b for the polynomial ring Q[y_1,...,y_b] with weighted grading deg(y_i)=i for 1 <= i <= b. When b=0, this means S_0 = Q.",
+      "kind": "notation",
+      "label": "Initial interval weighted polynomial ring"
+    },
+    {
+      "content": "For integers 0 <= a <= b, write I_{a,b} := {a+1,...,b} and R_{a,b} := Q[x_s : s in I_{a,b}] with weighted grading deg(x_s)=s. When a=b, this means R_{a,b} = Q.",
+      "kind": "notation",
+      "label": "Target weighted polynomial ring on an interval"
+    },
+    {
+      "content": "A sequence u_1,...,u_n in a commutative ring A is regular if for each i the image of u_i is a non-zero-divisor in A/(u_1,...,u_{i-1}) and the final quotient A/(u_1,...,u_n) is nonzero. The empty sequence is regular.",
+      "kind": "definition",
+      "label": "Regular sequence"
+    }
+  ],
+  "strategy_summary": "Embed the target ring R = Q[x_s : s in {a+1,...,b}] into the larger weighted polynomial ring S = Q[y_1,...,y_b] by viewing R as the quotient S/(y_1,...,y_a). Package the desired tail degrees together with the killed coordinate degrees into the ordered list (1,2,...,a,r+a+1,...,r+b). The given interval divisibility hypothesis is exactly the divisor-count dominance needed for a stronger existence theorem in the initial-interval ring S. After obtaining a regular sequence in S of those degrees, straighten the first a entries to y_1,...,y_a by a graded triangular automorphism, then descend the remaining entries to the quotient ring R.",
+  "updated_at": "2026-03-29T13:31:12.927463Z"
+}

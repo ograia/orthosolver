@@ -1,0 +1,125 @@
+{
+  "assembly_plan_id": "asm_20260329071820_5845acc6",
+  "created_at": "2026-03-29T07:24:42.626805Z",
+  "decomposition_id": "dec_20260329071820_adcf4ced",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_skeleton_nl": "Rewrite the original summand exactly by the elementary identity ((q^d;q^d)_k)^2/(q^{2d};q^{2d})_k=(q^d;q^d)_k/(-q^d;q^d)_k, and clear the remaining normalized denominators by the common factor D_{d,n}(q). This produces a cleared Laurent polynomial H_{d,r,n}(q). The first substantive input is a strictly weaker lemma asserting that H_{d,r,n}(q) is divisible by [n]_q; write H_{d,r,n}(q)=[n]_q J(q). The second, more delicate input compares the quotient J(q) directly with the quotient of the claimed right-hand side, namely D_{d,n}(q) q^{r(1-n)/2} \u03a3_{j=0}^{r-1} q^{jn}, at primitive nth roots of unity up to first derivative. The abstract double-root lemma then upgrades this primitive-root comparison to divisibility of the quotient difference by \u03a6_n(q)^2. Multiplying back by [n]_q gives divisibility of D_{d,n}(q) times the theorem difference by [n]_q \u03a6_n(q)^2. Finally, coprimality of D_{d,n}(q) with the modulus allows cancellation in the localized congruence ring, yielding the original theorem exactly.",
+  "root_node_id": "thm_root_20260329061437_747e99b3",
+  "steps": [
+    {
+      "derives": "From the hypotheses n > 1 and n \u2261 1 mod 2d, conclude that n is odd and gcd(d,n)=1.",
+      "is_trivial": false,
+      "step_id": "A0",
+      "trivial_justification": "Writing n = 1 + 2dt for some integer t shows immediately that n is odd. Any common divisor of d and n also divides n-2dt = 1, so gcd(d,n)=1.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Define S(q) = \u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k, define R(q) = [rn]_q q^{r(1-n)/2}, define D(q) = \u220f_{k=0}^{n-1} (-q^d;q^d)_k, and define H(q) = D(q) \u00b7 \u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k. Then D(q)\u00b7S(q) = H(q), hence D(q)\u00b7(S(q)-R(q)) = H(q) - D(q)R(q).",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Lemma L1 rewrites the factor ((q^d;q^d)_k)^2/(q^{2d};q^{2d})_k exactly as (q^d;q^d)_k/(-q^d;q^d)_k for each summand. Multiplying the normalized sum by D(q) therefore gives precisely H(q). Subtracting D(q)R(q) from both sides yields the identity for D(q)(S(q)-R(q)).",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The cleared sum H(q) lies in the Laurent polynomial ring Z[q^{\u00b11}].",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is exactly the content of Lemma L3 for the locally defined H(q).",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "There exists a Laurent polynomial J(q) in Z[q^{\u00b11}] such that H(q) = [n]_q J(q).",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "Lemma L4 states that [n]_q divides H(q) in Z[q^{\u00b11}]. By the definition of divisibility in that ring, a quotient J(q) exists with H(q) = [n]_q J(q).",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "If G(q) = \u03a3_{j=0}^{r-1} q^{jn}, then R(q) = [n]_q G(q) q^{r(1-n)/2}, and therefore D(q)R(q) = [n]_q D(q)G(q) q^{r(1-n)/2}.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Lemma L5 gives [rn]_q = [n]_q G(q). Substituting this into the definition R(q) = [rn]_q q^{r(1-n)/2} and multiplying by D(q) gives the displayed identity.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "D(q)\u00b7(S(q)-R(q)) = [n]_q \u00b7 ( J(q) - D(q)G(q) q^{r(1-n)/2} ).",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "From A1, D(q)(S(q)-R(q)) = H(q)-D(q)R(q). Replace H(q) by [n]_q J(q) using A3, and replace D(q)R(q) by [n]_q D(q)G(q) q^{r(1-n)/2} using A4. Factoring out [n]_q gives the result.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "For every primitive nth root of unity \u03b6, the two Laurent polynomials J(q) and B(q) = D(q)G(q) q^{r(1-n)/2} satisfy J(\u03b6) = B(\u03b6) and J'(\u03b6) = B'(\u03b6).",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "Lemma L7 applies exactly because A3 provides the required quotient identity H(q) = [n]_q J(q). Its conclusion is precisely the equality of values and first q-derivatives of J and B at every primitive nth root.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "\u03a6_n(q)^2 divides J(q) - D(q)G(q) q^{r(1-n)/2} in Z[q^{\u00b11}].",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "Apply Lemma L6 with A(q)=J(q) and B(q)=D(q)G(q) q^{r(1-n)/2}. Step A6 supplies exactly the hypotheses required by Lemma L6.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    },
+    {
+      "derives": "The modulus M(q) = [n]_q \u03a6_n(q)^2 divides D(q)\u00b7(S(q)-R(q)) in Z[q^{\u00b11}]. Equivalently, D(q)S(q) \u2261 D(q)R(q) mod M(q).",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "Step A7 gives \u03a6_n(q)^2 | (J(q)-D(q)G(q) q^{r(1-n)/2}). Multiplying by [n]_q shows M(q) divides [n]_q (J(q)-D(q)G(q) q^{r(1-n)/2}). Step A5 identifies this latter Laurent polynomial with D(q)(S(q)-R(q)). Hence M(q) divides D(q)(S(q)-R(q)), i.e. D(q)S(q) \u2261 D(q)R(q) mod M(q).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5",
+        "A7"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "By A0, the hypotheses of Lemma L2 are satisfied, so D(q) is coprime to M(q)=[n]_q \u03a6_n(q)^2. The same lemma also shows that every normalized denominator (-q^d;q^d)_k is coprime to M(q), so the normalized expression for S(q) from A1 has denominator coprime to M(q). The right-hand side R(q)=[rn]_q q^{r(1-n)/2} also has denominator coprime to M(q) because q is invertible modulo any polynomial M with M(0)=1, and here M(0)=1 since n>1 implies [n]_q and \u03a6_n(q) both have constant term 1. Step A8 gives D(q)S(q) \u2261 D(q)R(q) mod M(q). Lemma L8 says that multiplication by a polynomial coprime to M(q) preserves and reflects congruence modulo M(q). Applying Lemma L8 with F(q)=S(q), G(q)=R(q), M(q)=[n]_q \u03a6_n(q)^2, and D(q)=D_{d,n}(q) therefore yields S(q) \u2261 R(q) mod [n]_q \u03a6_n(q)^2. Writing out S(q) and R(q) gives exactly the theorem statement.",
+      "uses_lemmas": [
+        "L2",
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A0",
+        "A1",
+        "A8"
+      ]
+    }
+  ]
+}

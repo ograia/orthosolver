@@ -1,0 +1,70 @@
+{
+  "created_at": "2026-03-29T09:29:53.644251Z",
+  "graph_node_id": "pnode_20260329092953_7dbf6291",
+  "metadata": {
+    "parent_id": "lem_20260329074016_d9949d95"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "e5db82855ace7aca701bbd43ae201eb6a0e511db48cdfb9d7fd8c80211500403",
+  "owner_id": "lem_20260329092603_a2bb7a49",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "D is a nonnegative integer.",
+      "F belongs to the polynomial ring over the integers.",
+      "The coefficients c_j are integers because F has integer coefficients.",
+      "The index j is always an integer.",
+      "In the symmetry assumption, j ranges from 0 to D inclusive.",
+      "In the first nonnegativity assumption, j ranges from 0 to floor of D divided by 2 inclusive.",
+      "The displayed expansion of F uses only coefficients c_0 through c_D."
+    ],
+    "normalized_claim": "If the coefficients of a polynomial over the integers are symmetric around degree D and the coefficients in the first half are nonnegative, then every coefficient is nonnegative.",
+    "quantifier_order": [
+      "Fix a nonnegative integer D.",
+      "Fix a polynomial F in the polynomial ring over the integers, with coefficients c_0 through c_D.",
+      "For every integer j between 0 and D inclusive, c_j equals c_{D minus j}.",
+      "For every integer j between 0 and floor of D divided by 2 inclusive, c_j is nonnegative.",
+      "Therefore, for every integer j between 0 and D inclusive, c_j is nonnegative."
+    ],
+    "variables": [
+      {
+        "domain": "nonnegative integers",
+        "name": "D",
+        "role": "degree bound and symmetry parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomials with integer coefficients",
+        "name": "F",
+        "role": "given polynomial",
+        "type": "polynomial"
+      },
+      {
+        "domain": "polynomial variable",
+        "name": "q",
+        "role": "indeterminate in the polynomial ring",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "integers indexed by j from 0 to D",
+        "name": "c_j",
+        "role": "coefficients of F",
+        "type": "integer sequence"
+      },
+      {
+        "domain": "integers in the stated index ranges",
+        "name": "j",
+        "role": "bound index variable in the assumptions and conclusion",
+        "type": "integer index"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witness is introduced.",
+      "The coefficients c_j are determined by the chosen polynomial F and the displayed expansion up to degree D."
+    ]
+  },
+  "statement_nl": "Let D be a nonnegative integer, and let F(q) = sum_{j=0}^D c_j q^j be a polynomial in Z[q]. Assume that c_j = c_{D-j} for every integer j with 0 <= j <= D, and assume also that c_j >= 0 for every integer j with 0 <= j <= floor(D/2). Then c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.",
+  "updated_at": "2026-03-29T09:29:53.644252Z"
+}

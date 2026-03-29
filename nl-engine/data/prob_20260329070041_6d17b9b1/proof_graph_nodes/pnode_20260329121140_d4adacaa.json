@@ -1,0 +1,103 @@
+{
+  "created_at": "2026-03-29T12:11:40.318072Z",
+  "graph_node_id": "pnode_20260329121140_d4adacaa",
+  "metadata": {
+    "parent_id": "lem_20260329110006_654a633e"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "29610cedd84156eb872bea12735222a0217ee2c308025efd01dca0dc5abdfb6b",
+  "owner_id": "lem_20260329120722_adc74369",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a and b are integers with 0 <= a <= b.",
+      "r and j are nonnegative integers.",
+      "I is the finite set of integers from a+1 through b.",
+      "The index s ranges over I in the product and in the sum over S.",
+      "S is any subset of I.",
+      "lambda is a finite multiset of elements of I, with repetition allowed through multiplicity.",
+      "wt(lambda) is the sum of the multiset elements counted with multiplicity.",
+      "The condition wt(lambda) plus the sum over s in S of (r+s) equals j is exact, not approximate.",
+      "The product is finite, and if a equals b then it is an empty product.",
+      "q is treated as a formal power series variable rather than a numerical parameter."
+    ],
+    "normalized_claim": "For every choice of integers a, b, r, j with 0 <= a <= b and r, j nonnegative, if I is the set of integers from a+1 through b and X_j is the set of all pairs (S, lambda) where S is a subset of I and lambda is a finite multiset of elements of I satisfying wt(lambda) plus the sum over s in S of (r+s) equals j, then the coefficient of q^j in the finite product over s in I of (1 - q^(r+s)) divided by (1 - q^s) is equal to the sum over all pairs in X_j of (-1) to the size of S.",
+    "quantifier_order": [
+      "For all integers a, b, r, j satisfying 0 <= a <= b, r >= 0, and j >= 0.",
+      "Define I from a and b as the set of integers from a+1 through b.",
+      "Define X_j from a, b, r, j as the set of all pairs (S, lambda) with S a subset of I and lambda a finite multiset of elements of I such that wt(lambda) plus the sum over s in S of (r+s) equals j.",
+      "Then the coefficient of q^j in the finite product over s in I of (1 - q^(r+s)) divided by (1 - q^s) equals the signed sum over X_j."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with a <= b",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "j",
+        "role": "target coefficient index",
+        "type": "integer"
+      },
+      {
+        "domain": "formal power series variable",
+        "name": "q",
+        "role": "variable of coefficient extraction",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "the integers from a+1 through b",
+        "name": "I",
+        "role": "index set for the product and for the combinatorial objects",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "all subsets of I",
+        "name": "S",
+        "role": "subset witness in each admissible pair",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multisets whose elements lie in I",
+        "name": "lambda",
+        "role": "multiset witness in each admissible pair",
+        "type": "finite multiset of integers"
+      },
+      {
+        "domain": "elements of I",
+        "name": "s",
+        "role": "index variable in the product and in the subset sum",
+        "type": "integer"
+      },
+      {
+        "domain": "pairs (S, lambda) satisfying the subset and weight condition for the fixed parameters a, b, r, j",
+        "name": "X_j",
+        "role": "admissible pairs counted in the signed sum",
+        "type": "set of pairs"
+      }
+    ],
+    "witness_dependencies": [
+      "Each admissible witness pair (S, lambda) is constrained by the fixed parameters a, b, r, and j through the set I and the equality wt(lambda) plus sum over s in S of (r+s) equals j.",
+      "There is no separate existential witness in the final identity beyond choosing a pair (S, lambda) from X_j.",
+      "The sign of each contribution depends only on the size of S, not on lambda."
+    ]
+  },
+  "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) denotes the sum of the elements of lambda. Then\n[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|},\nwhere |S| is the cardinality of S.",
+  "updated_at": "2026-03-29T12:11:40.318073Z"
+}

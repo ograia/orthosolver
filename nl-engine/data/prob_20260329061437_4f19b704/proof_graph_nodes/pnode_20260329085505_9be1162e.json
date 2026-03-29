@@ -1,0 +1,95 @@
+{
+  "created_at": "2026-03-29T08:55:05.612419Z",
+  "graph_node_id": "pnode_20260329085505_9be1162e",
+  "metadata": {
+    "parent_id": "thm_root_20260329061437_747e99b3"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "baf4a7d939283199240e49415fecb79908ce3083d87df609b32339b686c342f1",
+  "owner_id": "lem_20260329084950_f7e2449c",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329085505_7fc53cae",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d and r are positive integers.",
+      "gcd(d,r)=1.",
+      "r <= d.",
+      "n is an integer greater than 1.",
+      "n is congruent to 1 modulo 2d.",
+      "The finite sum uses k from 0 to n minus 1.",
+      "The modified summand H at k=0 is defined separately from the cases k from 1 to n minus 1.",
+      "If q is interpreted numerically, the expression is only meaningful when the denominators do not vanish.",
+      "The exponent involving division by 2 may require formal fractional powers or a square-root extension of the q-variable."
+    ],
+    "normalized_claim": "For every admissible choice of d, r, n, and q, the finite sum F minus the correction term R is exactly the sum from k = 0 to n minus 1 of the modified summands H, where the k = 0 term is the original k = 0 summand with R subtracted and every positive k term is unchanged.",
+    "quantifier_order": [
+      "q is left free throughout and is not explicitly quantified.",
+      "For the q-bracket definition, m is an arbitrary integer.",
+      "For the q-Pochhammer definition, a is an arbitrary parameter and k is a nonnegative integer, with j running from 0 to k minus 1.",
+      "Fix positive integers d and r with gcd(d,r)=1 and r <= d.",
+      "Let n be an integer greater than 1 with n congruent to 1 modulo 2d.",
+      "For k from 0 to n minus 1, define the summands in F and the modified summands H.",
+      "The final identity is asserted for every admissible choice of d, r, n, and the free parameter q."
+    ],
+    "variables": [
+      {
+        "domain": "unspecified; may be a formal variable or a scalar",
+        "name": "q",
+        "role": "base parameter used in q-brackets and q-Pochhammer symbols",
+        "type": "parameter"
+      },
+      {
+        "domain": "all integers in the q-bracket definition",
+        "name": "m",
+        "role": "input index for the q-bracket",
+        "type": "integer"
+      },
+      {
+        "domain": "unspecified parameter",
+        "name": "a",
+        "role": "input parameter for the q-Pochhammer symbol",
+        "type": "parameter"
+      },
+      {
+        "domain": "integers from 0 to k minus 1",
+        "name": "j",
+        "role": "product index in the q-Pochhammer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers in the q-Pochhammer definition; integers from 0 to n minus 1 in the finite sum; integers from 1 to n minus 1 in the modified summands for k greater than 0",
+        "name": "k",
+        "role": "summation and product index",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "fixed modulus parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed residue parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers greater than 1 satisfying the congruence condition",
+        "name": "n",
+        "role": "truncation parameter",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses; all quantities are defined explicitly.",
+      "H at index 0 depends on the previously defined R and on the q-bracket at r.",
+      "For each k from 1 to n minus 1, H at index k depends on d, r, n, k, and q, and equals the kth summand of F.",
+      "R depends on d, r, n, and q.",
+      "F depends on d, r, n, and q through its finite sum of summands."
+    ]
+  },
+  "statement_nl": "Let [m]_q = (1-q^m)/(1-q), let (a;q)_k = \u220f_{j=0}^{k-1}(1-a q^j), and let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k. Fix positive integers d and r with gcd(d,r)=1 and r <= d, and let n > 1 satisfy n \u2261 1 mod 2d. Define\nF_{d,r,n}(q) = \u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k,\nand define\nR_{d,r,n}(q) = [rn]_q q^{r(1-n)/2}.\nAlso define the modified summands by\nH_{d,r,n,0}(q) = [r]_q - R_{d,r,n}(q),\nand for each integer k with 1 <= k <= n-1,\nH_{d,r,n,k}(q) = [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k.\nThen F_{d,r,n}(q) - R_{d,r,n}(q) = \u2211_{k=0}^{n-1} H_{d,r,n,k}(q).",
+  "updated_at": "2026-03-29T08:55:05.612420Z"
+}

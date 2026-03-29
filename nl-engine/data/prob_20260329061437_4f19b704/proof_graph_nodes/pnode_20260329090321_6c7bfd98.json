@@ -1,0 +1,35 @@
+{
+  "created_at": "2026-03-29T09:03:21.165634Z",
+  "graph_node_id": "pnode_20260329090321_6c7bfd98",
+  "metadata": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every admissible pair d,r and every admissible n, the difference between the finite sum and [r n]_q times q to the power r times (1 minus n) divided by 2 is divisible by [n]_q times Phi_n(q) squared.",
+        "item_id": "pnode_20260329085506_520c94ae",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329085505_5f545fe7",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2."
+      }
+    ]
+  },
+  "node_kind": "proof_attempt",
+  "node_status": "queued",
+  "normalized_claim_hash": null,
+  "owner_id": "lem_20260329085104_eb8ac29f",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329085505_7fc53cae",
+  "semantic_sketch_json": {
+    "attempt": 2
+  },
+  "statement_nl": "Let [m]_q = (1-q^m)/(1-q), let (a;q)_k = \u220f_{j=0}^{k-1}(1-a q^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Fix positive integers d and r with gcd(d,r)=1 and r <= d. Then there exists a nonnegative integer B such that for every integer n > 1 satisfying n \u2261 1 mod 2d there exists a Laurent polynomial in X over Z[q^\u00b11] of the form C_{d,r,n}(X,q) = \u2211_{j=-B}^{B} c_j(q) X^j, with each c_j(q) in Z[q^\u00b11], having the following property. Define the modulus M_n(q) = [n]_q \u03a6_n(q)^2. For each integer k with 0 <= k <= n define\nT_{d,r,n,k}(q) = [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k,\nand define\nG_{d,r,n,k}(q) = T_{d,r,n,k}(q) \u00b7 C_{d,r,n}(q^k,q).\nAlso define\nH_{d,r,n,0}(q) = [r]_q - [rn]_q q^{r(1-n)/2},\nand for each integer k with 1 <= k <= n-1 define\nH_{d,r,n,k}(q) = T_{d,r,n,k}(q).\nThen H_{d,r,n,k}(q) = G_{d,r,n,k}(q) - G_{d,r,n,k+1}(q) for every integer k with 0 <= k <= n-1, and there exist polynomials A_0(q), B_0(q), A_n(q), and B_n(q) in Z[q] such that gcd(B_0(q), M_n(q)) = 1, gcd(B_n(q), M_n(q)) = 1, G_{d,r,n,0}(q) = M_n(q) A_0(q) / B_0(q), and G_{d,r,n,n}(q) = M_n(q) A_n(q) / B_n(q).",
+  "updated_at": "2026-03-29T09:03:21.165635Z"
+}

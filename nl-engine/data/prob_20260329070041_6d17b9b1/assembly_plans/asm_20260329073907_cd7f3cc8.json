@@ -1,0 +1,118 @@
+{
+  "assembly_plan_id": "asm_20260329073907_cd7f3cc8",
+  "created_at": "2026-03-29T07:44:01.676579Z",
+  "decomposition_id": "dec_20260329073907_f9f6a76b",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_skeleton_nl": "Fix integers n, k, l with 0 <= k, l <= n and assume that [n choose k]_q / [n choose l]_q is a polynomial. First use the symmetry [n choose r]_q = [n choose n-r]_q to replace k and l by k' = min(k, n-k) and l' = min(l, n-l); this leaves the quotient unchanged and puts both indices in the first half of [0,n]. Since the reduced quotient is still a polynomial, a general degree argument shows that the degree of its numerator is at least the degree of its denominator. Using deg([n choose r]_q) = r(n-r), this becomes k'(n-k') >= l'(n-l'). On the first half of the interval, the quadratic r(n-r) is increasing, so k' >= l'. Writing a = l', b = k', and r = n-a-b, the reduced quotient becomes the shifted interval q-factorial ratio product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)). Cyclotomic counting then turns the assumption that this product is a polynomial into the floor inequalities floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d. The bottleneck lemma asserts that any shifted interval product satisfying those inequalities has nonnegative coefficients. Applying that lemma to the reduced quotient and then substituting back yields the original theorem.",
+  "root_node_id": "thm_root_20260329070041_7bd7b795",
+  "steps": [
+    {
+      "derives": "Let k' := min(k, n-k) and l' := min(l, n-l). Then [n choose k]_q / [n choose l]_q = [n choose k']_q / [n choose l']_q. Also 0 <= k', 0 <= l', 2*k' <= n, and 2*l' <= n.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Apply the symmetry [n choose r]_q = [n choose n-r]_q from L1 separately to r = k and r = l. By definition of minimum, k' and l' lie in the first half of the interval [0,n], so 2*k' <= n and 2*l' <= n.",
+      "uses_lemmas": [
+        "lem_20260329073907_5973d29f"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The two polynomials [n choose k']_q and [n choose l']_q are nonzero and have degrees k'(n-k') and l'(n-l') respectively.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Instantiate L2 first with r = k' and then with r = l'. This yields both nonzeroness and the exact degree formulas needed later.",
+      "uses_lemmas": [
+        "lem_20260329073914_bfaa8c0e"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "deg([n choose k']_q) >= deg([n choose l']_q).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "By the theorem hypothesis, the original quotient [n choose k]_q / [n choose l]_q is a polynomial in Z[q]. By A1, the reduced quotient [n choose k']_q / [n choose l']_q is the same polynomial. Since A2 shows that both numerator and denominator are nonzero polynomials, L3 applies and gives the degree inequality.",
+      "uses_lemmas": [
+        "lem_20260329073927_1b122a3f"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "k'(n-k') >= l'(n-l').",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Substitute the explicit degree formulas from A2 into the inequality of A3.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "k' >= l'. If we set a := l' and b := k', then 0 <= a <= b and a + b <= n.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "A1 gives 2*k' <= n and 2*l' <= n, so k' and l' satisfy the first-half hypotheses of L4. Applying L4 to the inequality from A4 shows k' >= l'. Defining a := l' and b := k' then gives 0 <= a <= b, and a + b <= 2*b <= n.",
+      "uses_lemmas": [
+        "lem_20260329073933_51291146"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A4"
+      ]
+    },
+    {
+      "derives": "With a := l', b := k', and r := n-a-b, the original quotient satisfies [n choose k]_q / [n choose l]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "By A5, the integers a and b satisfy 0 <= a <= b and a + b <= n, so L5 applies. It rewrites the reduced quotient [n choose b]_q / [n choose a]_q as the shifted interval product with r = n-a-b. Using A1, this reduced quotient is exactly the original quotient.",
+      "uses_lemmas": [
+        "lem_20260329073944_4658f3a6"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A5"
+      ]
+    },
+    {
+      "derives": "For every positive integer d, floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "The theorem hypothesis says that the original quotient is a polynomial in Z[q]. By A6, that quotient is exactly P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)). Applying L6 to this product yields the required family of floor inequalities.",
+      "uses_lemmas": [
+        "lem_20260329074006_a15c13f0"
+      ],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    },
+    {
+      "derives": "The product product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) is a polynomial in Z[q] whose coefficients are all nonnegative.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "A7 gives exactly the hypothesis required in L7 for the parameters a, b, r. Therefore L7 implies that the shifted interval product has nonnegative coefficients.",
+      "uses_lemmas": [
+        "lem_20260329074016_d9949d95"
+      ],
+      "uses_prior_steps": [
+        "A7"
+      ]
+    },
+    {
+      "derives": "The polynomial [n choose k]_q / [n choose l]_q has all coefficients nonnegative.",
+      "is_trivial": true,
+      "step_id": "A9",
+      "trivial_justification": "By A6, the original quotient equals the shifted interval product. By A8, that product has only nonnegative coefficients. Therefore the original quotient has only nonnegative coefficients.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6",
+        "A8"
+      ]
+    }
+  ]
+}

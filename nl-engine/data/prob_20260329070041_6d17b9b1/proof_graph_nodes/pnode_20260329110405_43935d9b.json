@@ -1,0 +1,104 @@
+{
+  "created_at": "2026-03-29T11:04:05.354453Z",
+  "graph_node_id": "pnode_20260329110405_43935d9b",
+  "metadata": {
+    "parent_id": "lem_20260329092547_6a64d34a"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "4ca796cd2078eaac90b6e8eaa1de6a9d08bf8f574b1bcbb84a6c240dc4f2e3ab",
+  "owner_id": "lem_20260329105900_ed0a9993",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a and b are integers with a less than or equal to b and both are nonnegative.",
+      "r is a nonnegative integer.",
+      "q is treated as a formal variable, not as a specified numeric value.",
+      "n is a nonnegative integer in the q-Pochhammer definition.",
+      "t ranges over positive integers from 1 to n in the finite product.",
+      "d is a positive integer.",
+      "u and v are integer endpoints when evaluating M_d.",
+      "m is an integer counted in the definition of M_d.",
+      "The cyclotomic product over all positive integers d has only finitely many nontrivial factors because the exponents vanish for large d.",
+      "The implication about Z[q] concerns integer-coefficient polynomials, not merely rational functions."
+    ],
+    "normalized_claim": "For every choice of integers a, b, r with 0 <= a <= b and r >= 0, the rational q-expression R_{a,b,r}(q) factors into cyclotomic polynomials with exponent at index d equal to the difference between the number of multiples of d in the interval from r+a to r+b and the number of multiples of d in the interval from a to b. If this expression is actually a polynomial with integer coefficients, then every such exponent is nonnegative, so the count of multiples of d in the shifted interval is at least the count in the original interval for every positive integer d.",
+    "quantifier_order": [
+      "For all integers a and b with 0 <= a <= b, and all integers r with r >= 0.",
+      "For each nonnegative integer n, define the q-Pochhammer symbol using a product over t from 1 to n.",
+      "For each positive integer d, define M_d(u,v) as the number of integers m satisfying u < m <= v and d divides m.",
+      "For all such a, b, and r, the stated cyclotomic factorization of R_{a,b,r}(q) holds as an identity in the formal variable q.",
+      "For all such a, b, and r, if R_{a,b,r}(q) lies in Z[q], then for every positive integer d one has M_d(r+a,r+b) >= M_d(a,b)."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "parameter in the q-Pochhammer quotient and in the interval counts",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "b",
+        "role": "parameter in the q-Pochhammer quotient and in the interval counts",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "shift parameter in the q-Pochhammer quotient and in the interval counts",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable in a polynomial or rational function expression",
+        "name": "q",
+        "role": "variable of the q-Pochhammer symbols, R, and the cyclotomic polynomials",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the q-Pochhammer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers from 1 to n",
+        "name": "t",
+        "role": "product index in the q-Pochhammer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "cyclotomic index and divisor parameter in M_d",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "u",
+        "role": "lower endpoint in the counting function M_d(u,v)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "v",
+        "role": "upper endpoint in the counting function M_d(u,v)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "integer being counted by M_d(u,v)",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are present in the statement.",
+      "The exponent of each cyclotomic factor depends explicitly on a, b, r, and d through the difference M_d(r+a,r+b) - M_d(a,b).",
+      "The nonnegativity conclusion uses the same a, b, and r as in the factorization, and it asserts the inequality separately for every positive integer d."
+    ]
+  },
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1, and define R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Then one has the cyclotomic factorization R_{a,b,r}(q) = product_{d>=1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ), where Phi_d(q) is the d-th cyclotomic polynomial. Consequently, if R_{a,b,r}(q) belongs to Z[q], then M_d(r+a,r+b) >= M_d(a,b) for every positive integer d.",
+  "updated_at": "2026-03-29T11:04:05.354454Z"
+}

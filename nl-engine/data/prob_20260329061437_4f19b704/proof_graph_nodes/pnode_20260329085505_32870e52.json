@@ -1,0 +1,94 @@
+{
+  "created_at": "2026-03-29T08:55:05.822804Z",
+  "graph_node_id": "pnode_20260329085505_32870e52",
+  "metadata": {
+    "parent_id": "thm_root_20260329061437_747e99b3"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "f6941af30728b1f499f92e86cf53e9a764abf106daac2d412ecf88634bfccdf5",
+  "owner_id": "lem_20260329085050_fe7811b6",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329085505_7fc53cae",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "M must be nonzero",
+      "M, A, B, A_prime, and B_prime are polynomials with integer coefficients",
+      "E, F, and G are rational functions with rational coefficients",
+      "gcd of B and M is 1",
+      "gcd of B_prime and M is 1",
+      "The congruence relation is defined only through the existence of such a representation of the difference F minus G"
+    ],
+    "normalized_claim": "If a rational function E equals F minus G and E can be expressed as M times a polynomial numerator divided by a polynomial denominator that is coprime to M, then F and G are congruent modulo M in the stated sense, because their difference has such a representation.",
+    "quantifier_order": [
+      "For every nonzero polynomial M in Z[q]",
+      "for every rational functions E, F, and G in Q(q)",
+      "assuming E equals F minus G",
+      "assuming there exist polynomials A and B in Z[q] such that gcd of B and M is 1 and E equals M times A divided by B",
+      "then F is congruent to G modulo M, meaning there exist polynomials A_prime and B_prime in Z[q] such that gcd of B_prime and M is 1 and F minus G equals M times A_prime divided by B_prime"
+    ],
+    "variables": [
+      {
+        "domain": "indeterminate over the polynomial and rational function rings",
+        "name": "q",
+        "role": "shared polynomial variable",
+        "type": "symbol"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "M",
+        "role": "modulus polynomial, assumed nonzero",
+        "type": "polynomial"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "E",
+        "role": "difference expression to be represented with denominator coprime to M",
+        "type": "rational function"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "F",
+        "role": "one side of the target congruence",
+        "type": "rational function"
+      },
+      {
+        "domain": "rational functions in q with rational coefficients",
+        "name": "G",
+        "role": "other side of the target congruence",
+        "type": "rational function"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "A",
+        "role": "witness numerator for the assumed representation of E",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "B",
+        "role": "witness denominator for the assumed representation of E",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "A_prime",
+        "role": "witness numerator in the congruence definition",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer coefficient polynomials in q",
+        "name": "B_prime",
+        "role": "witness denominator in the congruence definition",
+        "type": "polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "The assumed witnesses A and B depend on the pair M and E, not directly on F and G except through the identity E equals F minus G",
+      "The conclusion witnesses A_prime and B_prime can be taken to depend on the same earlier witnesses A and B; in fact the same A and B already witness the conclusion because F minus G equals E",
+      "No additional hidden witness beyond A, B, A_prime, and B_prime is required"
+    ]
+  },
+  "statement_nl": "Let M(q) be a nonzero polynomial in Z[q], and let E(q), F(q), and G(q) be rational functions in Q(q). Assume that E(q) = F(q) - G(q). Assume also that there exist polynomials A(q) and B(q) in Z[q] such that gcd(B(q), M(q)) = 1 and E(q) = M(q) A(q) / B(q). Then F(q) \u2261 G(q) mod M(q), where by definition F(q) \u2261 G(q) mod M(q) means that F(q)-G(q) can be written as M(q) A'(q) / B'(q) for some polynomials A'(q), B'(q) in Z[q] with gcd(B'(q), M(q)) = 1.",
+  "updated_at": "2026-03-29T08:55:05.822804Z"
+}

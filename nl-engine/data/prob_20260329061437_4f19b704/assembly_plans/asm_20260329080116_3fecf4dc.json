@@ -1,0 +1,177 @@
+{
+  "assembly_plan_id": "asm_20260329080116_3fecf4dc",
+  "created_at": "2026-03-29T08:07:26.587033Z",
+  "decomposition_id": "dec_20260329080116_06148eda",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_skeleton_nl": "Clear only the genuine denominator of the theorem sum by multiplying with E_{d,n}(q)=(q^{2d};q^{2d})_{n-1}; this gives a Laurent polynomial P_{d,r,n}(q). Factor the target modulus as [n]_q \u03a6_n(q)^2 = U_n(q) \u03a6_n(q)^3, where U_n(q) is the product of the cyclotomic polynomials \u03a6_m(q) for proper divisors m of n. Prove the U_n(q)-part by a theorem-specific vanishing lemma at primitive roots of proper divisors of n together with an abstract cyclotomic-divisibility criterion. Prove the \u03a6_n(q)^3-part by the explicit bottleneck lemma asserting triple vanishing of P_{d,r,n}(q) at primitive nth roots, then apply the abstract multiplicity-three criterion. Combine the two coprime divisibility statements to obtain divisibility of P_{d,r,n}(q) by the full modulus [n]_q \u03a6_n(q)^2. Finally, use the coprimality of the clearing denominator E_{d,n}(q) with the modulus to convert divisibility of P_{d,r,n}(q)=E_{d,n}(q)\u0394_{d,r,n}(q) into the desired rational-function congruence \u0394_{d,r,n}(q) \u2261 0 mod [n]_q \u03a6_n(q)^2, which is exactly the theorem.",
+  "root_node_id": "thm_root_20260329061437_747e99b3",
+  "steps": [
+    {
+      "derives": "From the theorem hypotheses n > 1 and n \u2261 1 mod 2d, conclude that n is odd and gcd(d,n)=1.",
+      "is_trivial": false,
+      "step_id": "A0",
+      "trivial_justification": "Write n = 1 + 2dt for some integer t. Then n is odd. If a positive integer c divides both d and n, then c also divides n - 2dt = 1, so c = 1. Hence gcd(d,n)=1.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Define E(q) = E_{d,n}(q) = (q^{2d};q^{2d})_{n-1}, define \u0394(q) = \u0394_{d,r,n}(q) = \u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k ((q^d;q^d)_k)^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k - [rn]_q q^{r(1-n)/2}, define P(q) = P_{d,r,n}(q) = E(q)\u0394(q), define U(q) = U_n(q) = \u220f_{m|n, 1<m<n} \u03a6_m(q), and define M(q) = [n]_q \u03a6_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This step only introduces abbreviations for the common denominator, the theorem difference, the cleared difference, the proper-divisor cyclotomic factor, and the target modulus.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The cleared difference P(q) belongs to the Laurent polynomial ring Z[q^{\u00b11}].",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "Step A0 provides that n is odd, and Step A1 defines P(q) exactly as in Lemma L1. Therefore Lemma L1 applies directly and yields P(q) \u2208 Z[q^{\u00b11}].",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": [
+        "A0",
+        "A1"
+      ]
+    },
+    {
+      "derives": "For every divisor m of n with 1 < m < n and every primitive mth root of unity \u03be, one has P(\u03be)=0.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the conclusion of Lemma L5 for the P(q) defined in Step A1 under the theorem hypotheses.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "The Laurent polynomial P(q) is divisible by U(q)=U_n(q) in Z[q^{\u00b11}].",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Step A2 shows that P(q) is a Laurent polynomial, and Step A3 shows that P(q) vanishes at every primitive mth root of unity for every proper divisor m of n. Lemma L4 converts exactly those vanishing conditions into divisibility by the product U_n(q) of the corresponding proper-divisor cyclotomic polynomials. Since Step A1 defined U(q)=U_n(q), the claimed divisibility follows.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3",
+        "A1"
+      ]
+    },
+    {
+      "derives": "For every primitive nth root of unity \u03b6, one has P(\u03b6)=0, P'(\u03b6)=0, and P''(\u03b6)=0.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is exactly the conclusion of Lemma L7 for the cleared difference P(q) defined in Step A1.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "The Laurent polynomial P(q) is divisible by \u03a6_n(q)^3 in Z[q^{\u00b11}].",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Step A2 gives P(q) \u2208 Z[q^{\u00b11}], and Step A5 gives triple vanishing of P(q) at every primitive nth root of unity. Lemma L6 states that these hypotheses imply divisibility by \u03a6_n(q)^3, so \u03a6_n(q)^3 divides P(q).",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A5"
+      ]
+    },
+    {
+      "derives": "One has M(q)=U(q)\u03a6_n(q)^3, and gcd(U(q), \u03a6_n(q)^3)=1 in Z[q].",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "Lemma L3 gives [n]_q \u03a6_n(q)^2 = U_n(q) \u03a6_n(q)^3 and gcd(U_n(q), \u03a6_n(q))=1. Step A1 identifies U(q) with U_n(q) and M(q) with [n]_q \u03a6_n(q)^2, so the factorization M(q)=U(q)\u03a6_n(q)^3 follows immediately. Since gcd(U(q), \u03a6_n(q))=1, the same holds with \u03a6_n(q)^3 in place of \u03a6_n(q).",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "The Laurent polynomial P(q) is divisible by M(q)=[n]_q \u03a6_n(q)^2 in Z[q^{\u00b11}].",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "Step A4 shows U(q) divides P(q). Step A6 shows \u03a6_n(q)^3 divides P(q). Step A7 states that U(q) and \u03a6_n(q)^3 are coprime and that their product is exactly M(q). Applying Lemma L8 with A(q)=U(q), B(q)=\u03a6_n(q)^3, and L(q)=P(q) gives divisibility of P(q) by U(q)\u03a6_n(q)^3, which Step A7 identifies with M(q).",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A6",
+        "A7"
+      ]
+    },
+    {
+      "derives": "The polynomials E(q) and M(q) are coprime in Z[q].",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "Step A0 gives that n is odd and gcd(d,n)=1. Step A1 defines E(q)=E_{d,n}(q) and M(q)=[n]_q \u03a6_n(q)^2. Lemma L2 applies under exactly those hypotheses and yields gcd(E(q), M(q))=1.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A0",
+        "A1"
+      ]
+    },
+    {
+      "derives": "The polynomial M(q) has constant term 1, so M(0)=1.",
+      "is_trivial": false,
+      "step_id": "A10",
+      "trivial_justification": "Step A1 defines M(q)=[n]_q \u03a6_n(q)^2. Because n>1, the q-integer [n]_q = 1+q+...+q^{n-1} has constant term 1, and the cyclotomic polynomial \u03a6_n(q) also has constant term 1. Therefore their product M(q) has constant term 1.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "The rational function \u0394(q)=\u0394_{d,r,n}(q) satisfies \u0394(q) \u2261 0 mod M(q).",
+      "is_trivial": false,
+      "step_id": "A11",
+      "trivial_justification": "Step A1 gives the identity P(q)=E(q)\u0394(q). Step A2 shows P(q) is a Laurent polynomial. Step A8 shows that M(q) divides P(q) in Z[q^{\u00b11}]. Step A9 gives gcd(E(q),M(q))=1, and Step A10 gives M(0)=1. Therefore all hypotheses of Lemma L9 are satisfied with the present P(q), E(q), M(q), and \u0394(q), and Lemma L9 yields \u0394(q) \u2261 0 mod M(q).",
+      "uses_lemmas": [
+        "L9"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A8",
+        "A9",
+        "A10"
+      ]
+    },
+    {
+      "derives": "\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k ((q^d;q^d)_k)^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k - [rn]_q q^{r(1-n)/2} \u2261 0 mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A12",
+      "trivial_justification": "Step A11 states that \u0394(q) \u2261 0 mod M(q). Step A1 defines \u0394(q) as exactly the displayed theorem difference and defines M(q)=[n]_q \u03a6_n(q)^2. Substituting those definitions into the congruence from Step A11 gives the displayed zero-difference congruence.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A11"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A13",
+      "trivial_justification": "Step A12 says exactly that the difference between the finite sum and the right-hand side is congruent to 0 modulo [n]_q \u03a6_n(q)^2. This is precisely equivalent to the displayed congruence between the finite sum and the right-hand side.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A12"
+      ]
+    }
+  ]
+}

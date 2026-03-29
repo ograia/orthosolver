@@ -1,0 +1,45 @@
+{
+  "candidate_id": "deccand_20260329091412_1380ec9d",
+  "candidate_index": 0,
+  "created_at": "2026-03-29T09:14:12.749647Z",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "failure_origin": "agent3:fatal",
+  "failure_reason": "L5 is a near-equivalent reformulation of the parent theorem's hard part on the same family of quotients, so the decomposition hides the main theorem inside a child lemma.",
+  "formalization_cost_estimate": 0.82,
+  "llm_vetting_status": "rejected_fatal",
+  "logical_decomposition_id": "logdec_lem_20260329074016_d9949d95",
+  "materialization_artifact_id": null,
+  "node_id": "lem_20260329074016_d9949d95",
+  "node_kind": "lemma",
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260329070041_6d17b9b1/decomposition_candidates/dec_20260329090726_f09349f2/agent2_candidate.json",
+  "selection_status": "rejected_fatal",
+  "shared_context": [
+    {
+      "content": "For integers a, b, r with 0 <= a <= b and r >= 0, define P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1 when a = b.",
+      "kind": "notation",
+      "label": "P_abr"
+    },
+    {
+      "content": "For integers n, k with 0 <= k <= n, define the Gaussian polynomial [n choose k]_q = product_{i=1}^k ((1 - q^(n-k+i)) / (1 - q^i)).",
+      "kind": "notation",
+      "label": "Gaussian_binomial"
+    },
+    {
+      "content": "For each positive integer d, Phi_d(q) denotes the d-th cyclotomic polynomial, characterized by the identity 1 - q^n = product_{d | n} Phi_d(q) for every positive integer n.",
+      "kind": "definition",
+      "label": "Cyclotomic_polynomial"
+    },
+    {
+      "content": "A polynomial F(q) is reciprocal of degree N if F(q) = q^N F(q^(-1)) in the Laurent polynomial ring.",
+      "kind": "definition",
+      "label": "Reciprocal_polynomial"
+    }
+  ],
+  "strategy_summary": "Rewrite the target product as a quotient of two Gaussian binomial coefficients with the same width r. Use cyclotomic factorization to identify the exponent of each Phi_d(q) with the given floor-expression, so the floor hypothesis gives polynomiality in Z[q]. Then invoke a separate height-one positivity theorem: an integral reciprocal quotient of equal-width Gaussian polynomials has nonnegative coefficients.",
+  "updated_at": "2026-03-29T09:14:12.749653Z"
+}

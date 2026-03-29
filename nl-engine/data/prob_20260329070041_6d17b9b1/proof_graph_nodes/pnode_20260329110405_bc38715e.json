@@ -1,0 +1,137 @@
+{
+  "created_at": "2026-03-29T11:04:05.760365Z",
+  "graph_node_id": "pnode_20260329110405_bc38715e",
+  "metadata": {
+    "node_kind": "lemma"
+  },
+  "node_kind": "claim",
+  "node_status": "active",
+  "normalized_claim_hash": "44af95bea9d3e7ef9e356c6ce6a69a937bf931491bee2c116e5764b20015a0be",
+  "owner_id": "lem_20260329110006_654a633e",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a and b are integers with 0 <= a <= b.",
+      "r is a nonnegative integer.",
+      "j is an integer with 0 <= j <= floor(r (b - a) / 2).",
+      "d ranges over positive integers only.",
+      "M_d counts integers m in the interval with u < m <= v that are divisible by d.",
+      "S must be a subset of I.",
+      "lambda must be a finite multiset of elements of I, with repetition allowed.",
+      "The notation |lambda| means the sum of the elements of the multiset lambda, not its cardinality.",
+      "The set X_j includes exactly those pairs (S, lambda) whose total weighted sum equals j.",
+      "The parity statement uses |S| as the cardinality of S.",
+      "An involution means a self-map whose square is the identity."
+    ],
+    "normalized_claim": "Under the stated numerical and divisibility hypotheses, the set X_j admits an involution. Every non-fixed orbit pairs two elements whose subset parts have opposite parity, and every fixed point has an even-sized subset part.",
+    "quantifier_order": [
+      "Fix integers a, b, r, j with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2).",
+      "Define I as the integers from a + 1 through b.",
+      "For every positive integer d, define M_d(u, v) as the number of integers m such that u < m <= v and d divides m.",
+      "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+      "Define X_j to consist of all pairs (S, lambda) with S a subset of I, lambda a finite multiset of elements of I, and sum of elements of lambda plus sum over s in S of (r + s) equal to j.",
+      "There exists an involution iota_j from X_j to X_j satisfying the two parity conditions."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= j <= floor(r (b - a) / 2)",
+        "name": "j",
+        "role": "parameter and index for X_j and iota_j",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "universal index for the divisibility count",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integer or real interval endpoint for M_d",
+        "name": "u",
+        "role": "left endpoint in the counting function",
+        "type": "integer endpoint"
+      },
+      {
+        "domain": "integer or real interval endpoint for M_d",
+        "name": "v",
+        "role": "right endpoint in the counting function",
+        "type": "integer endpoint"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "counted variable in M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a + 1 through b",
+        "name": "I",
+        "role": "ambient ground set",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "subsets of I",
+        "name": "S",
+        "role": "subset component of an element of X_j",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multisets drawn from I",
+        "name": "lambda",
+        "role": "multiset component of an element of X_j",
+        "type": "finite multiset of elements of I"
+      },
+      {
+        "domain": "subset of I",
+        "name": "S prime",
+        "role": "image subset under iota_j",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multiset drawn from I",
+        "name": "lambda prime",
+        "role": "image multiset under iota_j",
+        "type": "finite multiset of elements of I"
+      },
+      {
+        "domain": "pairs (S, lambda) satisfying the defining sum condition",
+        "name": "X_j",
+        "role": "domain of the involution",
+        "type": "set of pairs"
+      },
+      {
+        "domain": "maps X_j to X_j",
+        "name": "iota_j",
+        "role": "involution witness",
+        "type": "self-map on X_j"
+      }
+    ],
+    "witness_dependencies": [
+      "The existential witness iota_j depends on the fixed parameters a, b, r, and j, as well as on the universal hypothesis that M_d(r + a, r + b) >= M_d(a, b) for every positive integer d.",
+      "No additional existential witnesses are introduced besides iota_j.",
+      "For any input pair (S, lambda) in X_j, the output pair (S prime, lambda prime) is determined by iota_j; the moved-point parity condition compares the cardinalities of S and S prime.",
+      "If a pair is fixed by iota_j, the fixed-point condition requires the same S to have even cardinality."
+    ]
+  },
+  "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.",
+  "updated_at": "2026-03-29T12:11:39.558623Z"
+}

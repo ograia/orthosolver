@@ -1,0 +1,36 @@
+{
+  "confidence": 0.98,
+  "created_at": "2026-03-29T08:57:02.031604Z",
+  "detailed_findings": [
+    {
+      "finding": "Each conjunct in the lemma statement is proved explicitly from the representation n = 1 + 2dt.",
+      "location": "overall proof",
+      "severity": "low"
+    },
+    {
+      "finding": "The gcd argument is valid: any positive common divisor g of d and n also divides n - 2dt = 1, hence g = 1.",
+      "location": "middle of proof",
+      "severity": "low"
+    },
+    {
+      "finding": "The parity calculation for k(d-dk-2r)/2 is correct via k(d-dk-2r) = -d k(k-1) - 2kr and evenness of k(k-1).",
+      "location": "final paragraph",
+      "severity": "low"
+    }
+  ],
+  "drift_assessment": {
+    "drift_description": null,
+    "drift_detected": false,
+    "drift_severity": "none",
+    "drift_type": null
+  },
+  "feedback_for_solver": null,
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_status": "complete",
+  "reason": "The proof is correct and complete for all stated conclusions. From n \u2261 1 mod 2d it validly writes n = 1 + 2dt, which immediately gives oddness of n and integrality of r(1-n)/2 = -rdt. The argument that any common divisor of d and n must divide 1 correctly proves gcd(d,n)=1. For the final integrality claim, the identity k(d-dk-2r) = -d k(k-1) - 2kr is correct, and both terms are even because k(k-1) is even and 2kr is even, so the half is an integer. The proof matches the lemma sketch and uses only elementary arithmetic with no undeclared or forbidden dependencies.",
+  "recommended_action": "send_to_lean",
+  "report_id": "rep_20260329085702_8d1ba309",
+  "statement_status": "plausible",
+  "target_id": "lem_20260329084938_0b83349f",
+  "target_kind": "lemma"
+}

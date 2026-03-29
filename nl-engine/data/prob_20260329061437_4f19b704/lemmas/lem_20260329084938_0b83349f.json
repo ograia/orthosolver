@@ -1,0 +1,104 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329085505_e260d221",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T08:49:50.959240Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.04,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T08:57:02.120685Z",
+  "last_dependency_check_id": "depchk_20260329085702_8830c899",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof is correct and complete for all stated conclusions. From n \u2261 1 mod 2d it validly writes n = 1 + 2dt, which immediately gives oddness of n and integrality of r(1-n)/2 = -rdt. The argument that any common divisor of d and n must divide 1 correctly proves gcd(d,n)=1. For the final integrality claim, the identity k(d-dk-2r) = -d k(k-1) - 2kr is correct, and both terms are even because k(k-1) is even and 2kr is even, so the half is an integer. The proof matches the lemma sketch and uses only elementary arithmetic with no undeclared or forbidden dependencies.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let n \\equiv 1 \\pmod{2d}. By the definition of congruence, there exists an integer t such that\nn = 1 + 2dt.\n\nFrom this representation, n is odd, because it is 1 plus an even integer.\n\nNext, let g be any positive common divisor of d and n. Since g | d, we have g | 2dt, and since g | n as well, it follows that\ng \\mid (n - 2dt) = 1.\nHence g = 1. Therefore gcd(d,n) = 1.\n\nAlso,\nr(1-n)/2 = r(1-(1+2dt))/2 = -rdt,\nwhich is an integer. So r(1-n)/2 \\in \\mathbf{Z}.\n\nNow let k be any integer with 0 \\le k \\le n. We compute\nk(d-dk-2r) = kd - dk^2 - 2kr = -d\\,k(k-1) - 2kr.\nThe product k(k-1) is even, because k and k-1 are consecutive integers. Therefore -d\\,k(k-1) is even, and of course -2kr is even. Hence their sum k(d-dk-2r) is even. Dividing by 2, we obtain\nk(d-dk-2r)/2 \\in \\mathbf{Z}.\n\nThus all the claimed conclusions hold: n is odd, gcd(d,n)=1, r(1-n)/2 is an integer, and for every integer k with 0 \\le k \\le n one has k(d-dk-2r)/2 \\in \\mathbf{Z}.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329085702_8d1ba309",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329084938_0b83349f",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329061437_747e99b3",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329061437_4f19b704",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329061437_4f19b704/proof_bundles/lemmas/lem_20260329084938_0b83349f.json",
+  "proof_graph_id": "pgraph_20260329085505_7fc53cae",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Provides the arithmetic setup needed to define the theorem summand and the modified summands without ambiguity.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Fix positive integers d and r with gcd(d,r)=1 and r <= d, and let n > 1 satisfy n \u2261 1 mod 2d. Then n is odd, gcd(d,n)=1, the integer r(1-n)/2 is an integer, and for every integer k with 0 <= k <= n one has k(d-dk-2r)/2 \u2208 Z.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "d is a positive integer",
+      "r is a positive integer",
+      "gcd(d,r)=1",
+      "r <= d",
+      "n is an integer greater than 1",
+      "n is congruent to 1 modulo 2d",
+      "k is an integer",
+      "0 <= k <= n"
+    ],
+    "normalized_claim": "Given positive integers d and r with gcd(d,r)=1 and r <= d, and given an integer n greater than 1 that is congruent to 1 modulo 2d, it follows that n is odd, gcd(d,n)=1, r times (1 minus n) divided by 2 is an integer, and for every integer k between 0 and n inclusive, k times (d minus d times k minus 2r) divided by 2 is an integer.",
+    "quantifier_order": [
+      "For all positive integers d and r, with gcd(d,r)=1 and r <= d",
+      "For all integers n greater than 1 such that n is congruent to 1 modulo 2d",
+      "For every integer k with 0 <= k <= n"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers greater than 1 and congruent to 1 modulo 2d",
+        "name": "n",
+        "role": "fixed parameter subject to congruence",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= k <= n",
+        "name": "k",
+        "role": "universally quantified index in the final claim",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses appear; the statement is purely universal after fixing d, r, and n.",
+      "The integrality of r times (1 minus n) divided by 2 depends on the derived fact that n is odd.",
+      "The integrality of k times (d minus d times k minus 2r) divided by 2 is asserted separately for each admissible k and does not rely on an auxiliary witness."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T08:57:02.120685Z"
+}

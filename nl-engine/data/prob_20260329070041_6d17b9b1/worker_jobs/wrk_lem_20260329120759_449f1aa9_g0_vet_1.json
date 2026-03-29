@@ -1,0 +1,519 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329120759_449f1aa9/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T12:13:42.933571Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T12:13:52.421584Z",
+  "controller_consumed_by_execution_id": "exec_20260329070041_7940b474",
+  "created_at": "2026-03-29T12:13:11.419134Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+        "item_id": "pnode_20260329074414_4227f7b7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329110006_654a633e",
+        "role_in_parent": "This is the core combinatorial cancellation theorem that forces the low-degree signed count to be nonnegative.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a and b are integers with 0 <= a <= b.",
+            "r is a nonnegative integer.",
+            "j is an integer with 0 <= j <= floor(r (b - a) / 2).",
+            "d ranges over positive integers only.",
+            "M_d counts integers m in the interval with u < m <= v that are divisible by d.",
+            "S must be a subset of I.",
+            "lambda must be a finite multiset of elements of I, with repetition allowed.",
+            "The notation |lambda| means the sum of the elements of the multiset lambda, not its cardinality.",
+            "The set X_j includes exactly those pairs (S, lambda) whose total weighted sum equals j.",
+            "The parity statement uses |S| as the cardinality of S.",
+            "An involution means a self-map whose square is the identity."
+          ],
+          "normalized_claim": "Under the stated numerical and divisibility hypotheses, the set X_j admits an involution. Every non-fixed orbit pairs two elements whose subset parts have opposite parity, and every fixed point has an even-sized subset part.",
+          "quantifier_order": [
+            "Fix integers a, b, r, j with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2).",
+            "Define I as the integers from a + 1 through b.",
+            "For every positive integer d, define M_d(u, v) as the number of integers m such that u < m <= v and d divides m.",
+            "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+            "Define X_j to consist of all pairs (S, lambda) with S a subset of I, lambda a finite multiset of elements of I, and sum of elements of lambda plus sum over s in S of (r + s) equal to j.",
+            "There exists an involution iota_j from X_j to X_j satisfying the two parity conditions."
+          ],
+          "variables": [
+            {
+              "domain": "integers with 0 <= a <= b",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 0 <= a <= b",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 0 <= j <= floor(r (b - a) / 2)",
+              "name": "j",
+              "role": "parameter and index for X_j and iota_j",
+              "type": "integer"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universal index for the divisibility count",
+              "type": "positive integer"
+            },
+            {
+              "domain": "integer or real interval endpoint for M_d",
+              "name": "u",
+              "role": "left endpoint in the counting function",
+              "type": "integer endpoint"
+            },
+            {
+              "domain": "integer or real interval endpoint for M_d",
+              "name": "v",
+              "role": "right endpoint in the counting function",
+              "type": "integer endpoint"
+            },
+            {
+              "domain": "integers",
+              "name": "m",
+              "role": "counted variable in M_d",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "I",
+              "role": "ambient ground set",
+              "type": "finite set of integers"
+            },
+            {
+              "domain": "subsets of I",
+              "name": "S",
+              "role": "subset component of an element of X_j",
+              "type": "subset of I"
+            },
+            {
+              "domain": "finite multisets drawn from I",
+              "name": "lambda",
+              "role": "multiset component of an element of X_j",
+              "type": "finite multiset of elements of I"
+            },
+            {
+              "domain": "subset of I",
+              "name": "S prime",
+              "role": "image subset under iota_j",
+              "type": "subset of I"
+            },
+            {
+              "domain": "finite multiset drawn from I",
+              "name": "lambda prime",
+              "role": "image multiset under iota_j",
+              "type": "finite multiset of elements of I"
+            },
+            {
+              "domain": "pairs (S, lambda) satisfying the defining sum condition",
+              "name": "X_j",
+              "role": "domain of the involution",
+              "type": "set of pairs"
+            },
+            {
+              "domain": "maps X_j to X_j",
+              "name": "iota_j",
+              "role": "involution witness",
+              "type": "self-map on X_j"
+            }
+          ],
+          "witness_dependencies": [
+            "The existential witness iota_j depends on the fixed parameters a, b, r, and j, as well as on the universal hypothesis that M_d(r + a, r + b) >= M_d(a, b) for every positive integer d.",
+            "No additional existential witnesses are introduced besides iota_j.",
+            "For any input pair (S, lambda) in X_j, the output pair (S prime, lambda prime) is determined by iota_j; the moved-point parity condition compares the cardinalities of S and S prime.",
+            "If a pair is fixed by iota_j, the fixed-point condition requires the same S to have even cardinality."
+          ]
+        },
+        "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329092547_6a64d34a",
+        "role_in_parent": "This is the deep positivity input; together with reciprocity it yields full nonnegativity of all coefficients.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, and r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "q is a formal indeterminate, not a specialized numeric value",
+            "n ranges over nonnegative integers in the product definition",
+            "D is nonnegative because r >= 0 and b - a >= 0",
+            "j is an integer with 0 <= j <= floor(D/2)",
+            "R is assumed to be a polynomial with integer coefficients"
+          ],
+          "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Let q be an indeterminate",
+            "For each nonnegative integer n, define the q-factorial quantity",
+            "Define R from a, b, r, and q by the stated quotient",
+            "Define D as r times (b - a)",
+            "Assume the resulting R is an element of Z[q]",
+            "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+          ],
+          "variables": [
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "a",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "b",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable",
+              "name": "q",
+              "role": "symbol used to form q-factorials and the polynomial R",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "n",
+              "role": "index in the finite product defining the q-factorial",
+              "type": "integer"
+            },
+            {
+              "domain": "integer polynomials in q, assumed to lie in Z[q]",
+              "name": "R",
+              "role": "defined quantity from a, b, r, and q",
+              "type": "polynomial in q"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "D",
+              "role": "derived quantity equal to r times (b - a)",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from 0 through floor(D/2)",
+              "name": "j",
+              "role": "coefficient index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+          ]
+        },
+        "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329074016_d9949d95",
+        "role_in_parent": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "d ranges over positive integers",
+            "q is a formal indeterminate, not a numeric parameter",
+            "The product index i is an integer",
+            "If a = b, the product is empty and equals 1"
+          ],
+          "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+            "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+            "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable for the polynomial ring over the integers",
+              "name": "q",
+              "role": "variable in the generating product",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universally quantified test divisor",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "i",
+              "role": "product index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329120759_449f1aa9",
+    "proof_nl": "Let\nZ := {x in X : p(x) = 0}\nand\nO := {x in X : p(x) = 1}.\nBecause p maps X into {0,1}, every element of X lies in exactly one of Z or O. Thus X = Z \u222a O and Z \u2229 O = \u2205.\n\nSince X is finite, the subsets Z and O are finite. Write\nO = {o_1, ..., o_m},\nZ = {z_1, ..., z_n},\nfor some integers m,n >= 0. The hypothesis says that the number of zero-labeled elements is at least the number of one-labeled elements, so n >= m.\n\nNow define a map iota : X -> X as follows:\n- for 1 <= i <= m, set iota(o_i) = z_i;\n- for 1 <= i <= m, set iota(z_i) = o_i;\n- for m < j <= n, set iota(z_j) = z_j.\n\nThis is well-defined because O and Z are disjoint, and every element of X is either some o_i or some z_j.\n\nWe check that iota is an involution.\n- If x = o_i with 1 <= i <= m, then iota(iota(x)) = iota(z_i) = o_i = x.\n- If x = z_i with 1 <= i <= m, then iota(iota(x)) = iota(o_i) = z_i = x.\n- If x = z_j with m < j <= n, then iota(iota(x)) = iota(z_j) = z_j = x.\nHence iota(iota(x)) = x for every x in X.\n\nNext, suppose iota(x) != x. Then x is in one of the first two cases above.\n- If x = o_i, then iota(x) = z_i, so\n  p(iota(x)) = p(z_i) = 0 = 1 - 1 = 1 - p(o_i) = 1 - p(x).\n- If x = z_i with 1 <= i <= m, then iota(x) = o_i, so\n  p(iota(x)) = p(o_i) = 1 = 1 - 0 = 1 - p(z_i) = 1 - p(x).\nThus whenever iota(x) != x, we have p(iota(x)) = 1 - p(x).\n\nFinally, if iota(x) = x, then x cannot be any o_i and cannot be any z_i with 1 <= i <= m; therefore x = z_j for some j with m < j <= n. Hence p(x) = 0.\n\nSo iota is an involution on X, every moved point is matched with a point of opposite label, and every fixed point has label 0. This is exactly the required conclusion.",
+    "role_in_assembly": "Transforms the inequality E_j >= O_j into the exact involution required in the theorem.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "X must be finite",
+        "p must assign each element of X either 0 or 1",
+        "the count of zero-labeled elements of X is at least the count of one-labeled elements of X",
+        "iota is a total function from X to X",
+        "iota is an involution on X",
+        "every fixed point of iota must be labeled 0",
+        "every non-fixed point must be paired with an element of the opposite label"
+      ],
+      "normalized_claim": "For any finite set X equipped with a binary labeling p, if there are at least as many zeros as ones, then X can be partitioned by an involution iota so that every moved point is matched with a point of the opposite label, and every fixed point has label 0.",
+      "quantifier_order": [
+        "For every finite set X",
+        "for every function p from X to {0,1}",
+        "if the number of x in X with p(x)=0 is at least the number of x in X with p(x)=1",
+        "then there exists a function iota from X to X",
+        "such that for every x in X, iota applied twice to x equals x",
+        "and for every x in X, if iota(x) is not x then p(iota(x)) equals 1 minus p(x)",
+        "and for every x in X, if iota(x) equals x then p(x) equals 0"
+      ],
+      "variables": [
+        {
+          "domain": "finite sets",
+          "name": "X",
+          "role": "ambient set being paired by the involution",
+          "type": "set"
+        },
+        {
+          "domain": "functions from X to the set {0,1}",
+          "name": "p",
+          "role": "binary labeling of elements of X",
+          "type": "function"
+        },
+        {
+          "domain": "functions from X to X",
+          "name": "iota",
+          "role": "witnessed involution with label-flipping on moved points",
+          "type": "function"
+        },
+        {
+          "domain": "elements of X",
+          "name": "x",
+          "role": "universally quantified element used in the pointwise conditions",
+          "type": "element"
+        }
+      ],
+      "witness_dependencies": [
+        "The witness iota depends on both X and p",
+        "For each x, the value iota(x) is determined globally by the chosen iota, not by x alone",
+        "The condition on non-fixed points depends on the paired element iota(x) and the label p(x)",
+        "There is no separate existential witness for each x; the statement requires one single global iota"
+      ]
+    },
+    "statement_nl": "Let X be a finite set, and let p : X -> {0,1} be a function. Assume that the number of elements x in X with p(x) = 0 is at least the number of elements x in X with p(x) = 1. Then there exists a map iota : X -> X such that iota(iota(x)) = x for every x in X, and such that: if iota(x) != x, then p(iota(x)) = 1 - p(x); and if iota(x) = x, then p(x) = 0.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "declared_citations_used": [],
+      "forbidden_dependencies_detected": false,
+      "notes": "No citations were invoked; the argument is self-contained.",
+      "undeclared_dependencies_detected": false
+    },
+    "detailed_findings": [
+      {
+        "finding": "The pairing construction is mathematically valid: each one-labeled element is matched with a distinct zero-labeled element, and surplus zero-labeled elements are fixed.",
+        "location": "definition of iota",
+        "severity": "low"
+      },
+      {
+        "finding": "The involution check is complete and covers all cases in X.",
+        "location": "paragraph beginning 'We check that iota is an involution'",
+        "severity": "low"
+      },
+      {
+        "finding": "The moved-point and fixed-point label conditions are verified exactly as required by the lemma.",
+        "location": "final two verification paragraphs",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329120759_449f1aa9",
+    "proof_status": "complete",
+    "reason": "The proof is correct and complete. It partitions X into the zero-labeled set Z and one-labeled set O, enumerates them as Z = {z_1,...,z_n} and O = {o_1,...,o_m} with n >= m by hypothesis, pairs each o_i with z_i, and fixes the remaining zeros. The resulting map is total, well-defined, involutive, flips labels on every moved point, and has only zero-labeled fixed points. This matches the lemma statement exactly and uses no undeclared or forbidden dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T12:13:11.084842Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329120759_449f1aa9",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T12:13:52.421589Z",
+  "worker_job_id": "wrk_lem_20260329120759_449f1aa9_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

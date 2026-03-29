@@ -1,0 +1,80 @@
+{
+  "assembly_plan_id": "asm_20260329092952_b707d3d0",
+  "created_at": "2026-03-29T09:29:52.978448Z",
+  "decomposition_id": "dec_20260329092952_81e5be99",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_skeleton_nl": "First rewrite the original finite product as the balanced q-factorial ratio R(q) = ((q;q)_{r+b}(q;q)_a)/((q;q)_{r+a}(q;q)_b). Next use the floor hypothesis only for polynomiality: cyclotomic factorization gives nonnegative exponents for every Phi_d(q), so R(q) lies in Z[q]. The positivity argument is then split in two. The hard input is a half-range positivity theorem: once this balanced ratio is known to be polynomial, every coefficient up to the midpoint degree floor(r(b-a)/2) is nonnegative. Independently, the ratio is reciprocal of degree r(b-a), so its coefficient sequence is symmetric. A purely abstract symmetry lemma then upgrades midpoint nonnegativity to nonnegativity of every coefficient. Finally, substitute back the identity P_{a,b,r}(q) = R(q) to obtain the theorem exactly as stated.",
+  "root_node_id": "lem_20260329074016_d9949d95",
+  "steps": [
+    {
+      "derives": "Define R(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Then the original product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)) is equal to R(q) in Z(q).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is the direct instantiation of the algebraic identity from L1 with the given integers a, b, r.",
+      "uses_lemmas": [
+        "lem_20260329092458_c3931872"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "From the hypothesis that floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d, conclude that R(q) belongs to Z[q].",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "L2 applies directly to the same parameters a, b, r and exactly the floor hypothesis from the theorem.",
+      "uses_lemmas": [
+        "lem_20260329092508_dde83cd9"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let D := r(b-a). For every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R(q) is a nonnegative integer.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "A2 supplies the assumption R(q) in Z[q] required by L4, so L4 gives nonnegativity of the first half of the coefficient range.",
+      "uses_lemmas": [
+        "lem_20260329092547_6a64d34a"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "With D := r(b-a), the polynomial R(q) can be written as R(q) = sum_{j=0}^D c_j q^j with coefficient symmetry c_j = c_{D-j} for all 0 <= j <= D.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "L3 gives the reciprocity identity q^D R(q^{-1}) = R(q); because A2 shows R is a polynomial, L3 yields a coefficient expansion of degree D with symmetric coefficients.",
+      "uses_lemmas": [
+        "lem_20260329092532_2c3e34d7"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "Every coefficient of R(q) is nonnegative.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "Apply L5 to the polynomial F(q) := R(q) with degree D := r(b-a). Step A4 supplies the symmetry c_j = c_{D-j}, and Step A3 supplies c_j >= 0 for 0 <= j <= floor(D/2). Therefore all coefficients c_j are nonnegative.",
+      "uses_lemmas": [
+        "lem_20260329092603_a2bb7a49"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "The product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1 when a = b, is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Step A1 identifies P_{a,b,r}(q) with R(q). Step A2 says R(q) is a polynomial in Z[q]. Step A5 says every coefficient of R(q) is nonnegative. Substituting the identity from A1 into the conclusions of A2 and A5 yields exactly the root theorem statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A5"
+      ]
+    }
+  ]
+}

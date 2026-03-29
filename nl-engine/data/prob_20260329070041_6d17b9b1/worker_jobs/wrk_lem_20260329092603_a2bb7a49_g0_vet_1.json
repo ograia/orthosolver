@@ -1,0 +1,311 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329092603_a2bb7a49/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T09:32:39.508618Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T09:32:45.340981Z",
+  "controller_consumed_by_execution_id": "exec_20260329070041_7940b474",
+  "created_at": "2026-03-29T09:32:18.176498Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+        "item_id": "pnode_20260329074414_4227f7b7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329074016_d9949d95",
+        "role_in_parent": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "d ranges over positive integers",
+            "q is a formal indeterminate, not a numeric parameter",
+            "The product index i is an integer",
+            "If a = b, the product is empty and equals 1"
+          ],
+          "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+            "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+            "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable for the polynomial ring over the integers",
+              "name": "q",
+              "role": "variable in the generating product",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universally quantified test divisor",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "i",
+              "role": "product index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329092603_a2bb7a49",
+    "proof_nl": "Let j be any integer with 0 <= j <= D. We will prove that c_j >= 0.\n\nIf j <= floor(D/2), then c_j >= 0 by the given hypothesis on the first half of the coefficients.\n\nNow suppose j > floor(D/2). We claim that D - j <= floor(D/2). Indeed, if D - j were also > floor(D/2), then, since j and D-j are integers, we would have j >= floor(D/2) + 1 and D - j >= floor(D/2) + 1. Adding these inequalities gives\nD = j + (D-j) >= 2 floor(D/2) + 2.\nBut 2 floor(D/2) is either D or D-1, so 2 floor(D/2) + 2 > D, a contradiction. Therefore D-j <= floor(D/2). Also D-j >= 0 because j <= D.\n\nHence 0 <= D-j <= floor(D/2), so by the hypothesis on the first half of the coefficients we get c_{D-j} >= 0. Using the symmetry hypothesis, c_j = c_{D-j}, and therefore c_j >= 0.\n\nSince j was arbitrary, we have proved that c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.",
+    "role_in_assembly": "Converts the half-range coefficient positivity from the bottleneck lemma into full coefficientwise nonnegativity using symmetry.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "D is a nonnegative integer.",
+        "F belongs to the polynomial ring over the integers.",
+        "The coefficients c_j are integers because F has integer coefficients.",
+        "The index j is always an integer.",
+        "In the symmetry assumption, j ranges from 0 to D inclusive.",
+        "In the first nonnegativity assumption, j ranges from 0 to floor of D divided by 2 inclusive.",
+        "The displayed expansion of F uses only coefficients c_0 through c_D."
+      ],
+      "normalized_claim": "If the coefficients of a polynomial over the integers are symmetric around degree D and the coefficients in the first half are nonnegative, then every coefficient is nonnegative.",
+      "quantifier_order": [
+        "Fix a nonnegative integer D.",
+        "Fix a polynomial F in the polynomial ring over the integers, with coefficients c_0 through c_D.",
+        "For every integer j between 0 and D inclusive, c_j equals c_{D minus j}.",
+        "For every integer j between 0 and floor of D divided by 2 inclusive, c_j is nonnegative.",
+        "Therefore, for every integer j between 0 and D inclusive, c_j is nonnegative."
+      ],
+      "variables": [
+        {
+          "domain": "nonnegative integers",
+          "name": "D",
+          "role": "degree bound and symmetry parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomials with integer coefficients",
+          "name": "F",
+          "role": "given polynomial",
+          "type": "polynomial"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "indeterminate in the polynomial ring",
+          "type": "formal indeterminate"
+        },
+        {
+          "domain": "integers indexed by j from 0 to D",
+          "name": "c_j",
+          "role": "coefficients of F",
+          "type": "integer sequence"
+        },
+        {
+          "domain": "integers in the stated index ranges",
+          "name": "j",
+          "role": "bound index variable in the assumptions and conclusion",
+          "type": "integer index"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witness is introduced.",
+        "The coefficients c_j are determined by the chosen polynomial F and the displayed expansion up to degree D."
+      ]
+    },
+    "statement_nl": "Let D be a nonnegative integer, and let F(q) = sum_{j=0}^D c_j q^j be a polynomial in Z[q]. Assume that c_j = c_{D-j} for every integer j with 0 <= j <= D, and assume also that c_j >= 0 for every integer j with 0 <= j <= floor(D/2). Then c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "forbidden_dependencies": false,
+      "undeclared_dependencies": false,
+      "uses_declared_citations_only": true
+    },
+    "detailed_findings": [
+      {
+        "finding": "The argument correctly reduces coefficients in the upper half to coefficients in the lower half via the symmetry c_j = c_{D-j}.",
+        "location": "second paragraph onward",
+        "severity": "low"
+      },
+      {
+        "finding": "The inequality D-j <= floor(D/2) for j > floor(D/2) is established with a valid parity-based contradiction argument.",
+        "location": "middle of proof",
+        "severity": "low"
+      },
+      {
+        "finding": "The conclusion quantifies over all j with 0 <= j <= D, exactly matching the lemma statement.",
+        "location": "final paragraph",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329092603_a2bb7a49",
+    "proof_status": "complete",
+    "reason": "The proof is complete and correct. It fixes an arbitrary index j in [0,D], handles the first-half case directly from the hypothesis, and in the second-half case shows D-j lies in [0, floor(D/2)] so that c_{D-j} is nonnegative; symmetry then gives c_j = c_{D-j} >= 0. This matches the lemma sketch exactly and uses no undeclared or forbidden dependencies.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T09:32:18.050977Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329092603_a2bb7a49",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T09:32:45.340987Z",
+  "worker_job_id": "wrk_lem_20260329092603_a2bb7a49_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

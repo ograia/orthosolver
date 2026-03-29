@@ -1,0 +1,427 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329105924_711791c7/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T11:07:34.897085Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T11:07:35.359909Z",
+  "controller_consumed_by_execution_id": "exec_20260329070041_7940b474",
+  "created_at": "2026-03-29T11:07:03.147142Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+        "item_id": "pnode_20260329074414_4227f7b7",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329092547_6a64d34a",
+        "role_in_parent": "This is the deep positivity input; together with reciprocity it yields full nonnegativity of all coefficients.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, and r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "q is a formal indeterminate, not a specialized numeric value",
+            "n ranges over nonnegative integers in the product definition",
+            "D is nonnegative because r >= 0 and b - a >= 0",
+            "j is an integer with 0 <= j <= floor(D/2)",
+            "R is assumed to be a polynomial with integer coefficients"
+          ],
+          "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Let q be an indeterminate",
+            "For each nonnegative integer n, define the q-factorial quantity",
+            "Define R from a, b, r, and q by the stated quotient",
+            "Define D as r times (b - a)",
+            "Assume the resulting R is an element of Z[q]",
+            "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+          ],
+          "variables": [
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "a",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "b",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable",
+              "name": "q",
+              "role": "symbol used to form q-factorials and the polynomial R",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "n",
+              "role": "index in the finite product defining the q-factorial",
+              "type": "integer"
+            },
+            {
+              "domain": "integer polynomials in q, assumed to lie in Z[q]",
+              "name": "R",
+              "role": "defined quantity from a, b, r, and q",
+              "type": "polynomial in q"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "D",
+              "role": "derived quantity equal to r times (b - a)",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from 0 through floor(D/2)",
+              "name": "j",
+              "role": "coefficient index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+          ]
+        },
+        "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329074016_d9949d95",
+        "role_in_parent": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "d ranges over positive integers",
+            "q is a formal indeterminate, not a numeric parameter",
+            "The product index i is an integer",
+            "If a = b, the product is empty and equals 1"
+          ],
+          "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+            "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+            "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable for the polynomial ring over the integers",
+              "name": "q",
+              "role": "variable in the generating product",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universally quantified test divisor",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "i",
+              "role": "product index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329105924_711791c7",
+    "proof_nl": "Let I = {a+1, a+2, ..., b}. Fix j >= 0. Since a >= 0, every i in I is a positive integer. Hence any term q^(m i) with m > floor(j/i) has degree greater than j, so it cannot contribute to the coefficient of q^j in a product whose other factors also have only nonnegative exponents. Therefore\n[q^j] F_{a,b,r}(q) = [q^j] product_{i in I} ((1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i)).\nThe right-hand side is now the coefficient of a finite product of finite sums, so we may expand it by the ordinary distributive law.\n\nFor each i in I, write\n(1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i) = (sum_{m=0}^{floor(j/i)} q^(m i)) + (- q^(r+i) sum_{m=0}^{floor(j/i)} q^(m i)).\nIn the full expansion of the product, choose the second bracket exactly for those i belonging to some subset S of I. For each i, also choose one integer m_i >= 0 from the geometric sum. The resulting monomial is then\n(-1)^(|S|) q^( sum_{i in I} m_i i + sum_{s in S} (r+s) ).\nHence\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all families (m_i)_{i in I} of nonnegative integers satisfying sum_{i in I} m_i i + sum_{s in S}(r+s) = j of (-1)^(|S|).\n(The bounds m_i <= floor(j/i) are automatic from the displayed equation, so they do not need to be written separately.)\n\nNow such a family (m_i)_{i in I} is the same thing as a finite multiset lambda of elements of I: namely, lambda contains exactly m_i copies of i for each i in I. Conversely, every finite multiset of elements of I gives such a family of multiplicities. Under this bijection,\n|lambda| = sum_{i in I} i m_i.\nTherefore, for each fixed S, the inner sum is exactly over those finite multisets lambda of elements of I such that\n|lambda| + sum_{s in S}(r+s) = j.\nSo we get\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all finite multisets lambda of elements of I with |lambda| + sum_{s in S}(r+s) = j of (-1)^(|S|).\nBy the definition of X_j, this is exactly\nsum_{(S,lambda) in X_j} (-1)^(|S|).\nThus [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|), as claimed.\n\nFinally, the sum over X_j is finite: if (S,lambda) belongs to X_j, then |lambda| <= j, and since every element of I is at least 1, lambda has at most j elements. Because I is finite, there are only finitely many such multisets lambda, and there are only finitely many subsets S of I. So the right-hand side is well-defined.",
+    "role_in_assembly": "Provides the signed combinatorial model for the target coefficient.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "a and b are integers with 0 <= a <= b.",
+        "r and j are nonnegative integers.",
+        "I is finite because it consists of the integers from a+1 through b.",
+        "Every i in the product lies in I, hence i is a positive integer since a >= 0.",
+        "m ranges over nonnegative integers.",
+        "S must be a subset of I.",
+        "lambda must be a finite multiset whose elements all lie in I.",
+        "The symbol |lambda| means the sum of the multiset elements, not the number of elements.",
+        "The constraint for membership in X_j is |lambda| plus the sum over s in S of r+s equals j.",
+        "The coefficient extraction [q^j] is understood in the formal power series sense."
+      ],
+      "normalized_claim": "For every integers a, b, r, j with 0 <= a <= b and r, j nonnegative, let I be the set of integers from a+1 through b and let F be the finite product over i in I of (1 minus q to the power r+i) times the geometric series in q to the power i. Then the coefficient of q to the j in F equals the sum over all pairs (S, lambda) where S is a subset of I and lambda is a finite multiset of elements of I whose element-sum plus the sum of r+s over s in S is j, with each pair weighted by minus one to the power of the size of S.",
+      "quantifier_order": [
+        "For all integers a, b, r, j satisfying 0 <= a <= b and r >= 0 and j >= 0.",
+        "Define I as the integers from a+1 through b.",
+        "Define F as the finite product over i in I of (1 minus q to the power r+i) times the geometric series sum over m >= 0 of q to the power m i.",
+        "Define X_j as the set of pairs (S, lambda) with S a subset of I and lambda a finite multiset of elements of I such that the total sum of lambda plus the sum of r+s over s in S equals j.",
+        "Then the coefficient of q to the j in F equals the signed sum over X_j of minus one to the power of the size of S."
+      ],
+      "variables": [
+        {
+          "domain": "integers with 0 <= a <= b",
+          "name": "a",
+          "role": "lower bound for the interval defining I",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with a <= b",
+          "name": "b",
+          "role": "upper bound for the interval defining I",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "r",
+          "role": "shift parameter in the product and in the constraint defining X_j",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "j",
+          "role": "target coefficient index and total weight constraint",
+          "type": "integer"
+        },
+        {
+          "domain": "formal power series variable",
+          "name": "q",
+          "role": "series variable for F",
+          "type": "formal indeterminate"
+        },
+        {
+          "domain": "integers from a+1 through b",
+          "name": "I",
+          "role": "index set for the product and for the combinatorial data",
+          "type": "finite set of integers"
+        },
+        {
+          "domain": "elements of I",
+          "name": "i",
+          "role": "product index",
+          "type": "integer"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "m",
+          "role": "summation index in the geometric series factor",
+          "type": "integer"
+        },
+        {
+          "domain": "subsets of I",
+          "name": "S",
+          "role": "subset chosen in an indexed pair in X_j",
+          "type": "set"
+        },
+        {
+          "domain": "finite multisets of elements of I",
+          "name": "lambda",
+          "role": "multiset chosen in an indexed pair in X_j",
+          "type": "finite multiset"
+        }
+      ],
+      "witness_dependencies": [
+        "There are no existential witnesses outside the indexed pairs in X_j; the statement is an equality of two expressions for each fixed a, b, r, j.",
+        "Membership in X_j depends jointly on S and lambda through the same total weight j.",
+        "The summand depends only on S through its cardinality, but the indexing set also counts all admissible lambda with the required total sum."
+      ]
+    },
+    "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Put I := {a+1, a+2, ..., b}. Define the formal power series F_{a,b,r}(q) := product_{i in I} ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.97,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "assessment": "self-contained proof; no dependency issues detected",
+      "declared_citations_count": 0,
+      "forbidden_citation_count": 0,
+      "undeclared_citations_count": 0
+    },
+    "detailed_findings": [
+      {
+        "finding": "The truncation argument for computing [q^j] is valid because the product has finitely many factors and every factor has only nonnegative exponents.",
+        "location": "opening truncation step",
+        "severity": "low"
+      },
+      {
+        "finding": "The expansion by subsets S and multiplicity choices m_i correctly yields monomials with sign (-1)^{|S|} and exponent sum_i m_i i + sum_{s in S}(r+s).",
+        "location": "middle expansion step",
+        "severity": "low"
+      },
+      {
+        "finding": "The bijection between multiplicity families (m_i) and finite multisets lambda of elements of I is correct, and the finiteness of X_j is adequately justified.",
+        "location": "final identification with X_j",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329105924_711791c7",
+    "proof_status": "complete",
+    "reason": "The proof matches the stated combinatorial coefficient-extraction lemma. It correctly truncates each geometric series when extracting [q^j] because all exponents are nonnegative, expands the resulting finite product by subsets S and choices of multiplicities m_i, and then identifies those multiplicity families with finite multisets lambda of elements of I. The resulting signed enumeration is exactly the definition of X_j, and finiteness of the indexing set is justified. No forbidden or undeclared dependencies are used.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T11:07:02.619499Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329105924_711791c7",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T11:07:35.359916Z",
+  "worker_job_id": "wrk_lem_20260329105924_711791c7_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

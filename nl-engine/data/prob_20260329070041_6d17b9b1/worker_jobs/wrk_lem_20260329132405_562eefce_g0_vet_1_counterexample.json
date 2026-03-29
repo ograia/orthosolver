@@ -1,0 +1,619 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260329132405_562eefce/counterexample_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T13:31:12.598736Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T13:31:12.896988Z",
+  "controller_consumed_by_execution_id": "exec_20260329070041_7940b474",
+  "created_at": "2026-03-29T13:30:35.828309Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329070041_7940b474",
+  "handler_key": "agent5_counterexample_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329120647_c4ea7dea",
+        "role_in_parent": "This is the key realization theorem that turns the interval quotient into the Hilbert series of a complete intersection.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, and r are integers.",
+            "The inequalities 0 <= a <= b and r >= 0 hold.",
+            "d ranges over positive integers only.",
+            "I is the finite set of integers from a+1 to b, inclusive.",
+            "R is the polynomial ring over the rational numbers in variables x_s indexed by I.",
+            "The grading is weighted: each x_s has degree s.",
+            "Each f_s must be homogeneous with respect to this grading.",
+            "If I is empty, the required family is the empty family.",
+            "The regular sequence is taken in the order of increasing s."
+          ],
+          "normalized_claim": "For any integers a, b, r with 0 <= a <= b and r >= 0, if the interval counting inequality M_d(r+a, r+b) >= M_d(a,b) holds for every positive integer d, then in the graded polynomial ring over the rational numbers with one variable x_s of degree s for each s in I = {a+1, ..., b}, there exists a family of homogeneous polynomials f_s such that each f_s has weighted degree r+s and the polynomials in increasing index order form a regular sequence; when I is empty, this means choosing no polynomials.",
+          "quantifier_order": [
+            "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+            "For every positive integer d, assume the counting inequality M_d(r+a, r+b) >= M_d(a,b).",
+            "There exists a family (f_s) indexed by s in I.",
+            "For each s in I, the polynomial f_s has weighted degree r+s.",
+            "The polynomials listed in increasing order of s form a regular sequence in R."
+          ],
+          "variables": [
+            {
+              "domain": "all integers satisfying 0 <= a <= b",
+              "name": "a",
+              "role": "global parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "all integers satisfying a <= b",
+              "name": "b",
+              "role": "global parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "global parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "the integers from a+1 through b, inclusive",
+              "name": "I",
+              "role": "index set for the polynomial family",
+              "type": "finite set of integers"
+            },
+            {
+              "domain": "all positive integers",
+              "name": "d",
+              "role": "universally quantified parameter in the counting condition",
+              "type": "positive integer"
+            },
+            {
+              "domain": "integer arguments of the counting function M_d",
+              "name": "u",
+              "role": "local argument in the definition of M_d",
+              "type": "integer"
+            },
+            {
+              "domain": "integer arguments of the counting function M_d",
+              "name": "v",
+              "role": "local argument in the definition of M_d",
+              "type": "integer"
+            },
+            {
+              "domain": "integers counted by M_d",
+              "name": "m",
+              "role": "bound variable in the counting definition",
+              "type": "integer"
+            },
+            {
+              "domain": "elements of I",
+              "name": "s",
+              "role": "index for the family of polynomials",
+              "type": "integer"
+            },
+            {
+              "domain": "one variable for each s in I",
+              "name": "x_s",
+              "role": "polynomial ring generator with weighted degree s",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "polynomial ring over the rational numbers in the variables x_s for s in I",
+              "name": "R",
+              "role": "ambient ring",
+              "type": "graded polynomial ring"
+            },
+            {
+              "domain": "elements of R indexed by s in I",
+              "name": "f_s",
+              "role": "witness family",
+              "type": "homogeneous polynomial"
+            }
+          ],
+          "witness_dependencies": [
+            "The existence of the family (f_s) depends on the chosen integers a, b, and r.",
+            "The witness family depends on the universal hypothesis that M_d(r+a, r+b) >= M_d(a,b) for every positive integer d.",
+            "There is one global family indexed by I, not separate witnesses for each d.",
+            "The order of the witness sequence is fixed by the natural increasing order on I.",
+            "If I is empty, the witness is uniquely the empty family."
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329110006_654a633e",
+        "role_in_parent": "This is the core combinatorial cancellation theorem that forces the low-degree signed count to be nonnegative.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a and b are integers with 0 <= a <= b.",
+            "r is a nonnegative integer.",
+            "j is an integer with 0 <= j <= floor(r (b - a) / 2).",
+            "d ranges over positive integers only.",
+            "M_d counts integers m in the interval with u < m <= v that are divisible by d.",
+            "S must be a subset of I.",
+            "lambda must be a finite multiset of elements of I, with repetition allowed.",
+            "The notation |lambda| means the sum of the elements of the multiset lambda, not its cardinality.",
+            "The set X_j includes exactly those pairs (S, lambda) whose total weighted sum equals j.",
+            "The parity statement uses |S| as the cardinality of S.",
+            "An involution means a self-map whose square is the identity."
+          ],
+          "normalized_claim": "Under the stated numerical and divisibility hypotheses, the set X_j admits an involution. Every non-fixed orbit pairs two elements whose subset parts have opposite parity, and every fixed point has an even-sized subset part.",
+          "quantifier_order": [
+            "Fix integers a, b, r, j with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2).",
+            "Define I as the integers from a + 1 through b.",
+            "For every positive integer d, define M_d(u, v) as the number of integers m such that u < m <= v and d divides m.",
+            "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+            "Define X_j to consist of all pairs (S, lambda) with S a subset of I, lambda a finite multiset of elements of I, and sum of elements of lambda plus sum over s in S of (r + s) equal to j.",
+            "There exists an involution iota_j from X_j to X_j satisfying the two parity conditions."
+          ],
+          "variables": [
+            {
+              "domain": "integers with 0 <= a <= b",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 0 <= a <= b",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers with 0 <= j <= floor(r (b - a) / 2)",
+              "name": "j",
+              "role": "parameter and index for X_j and iota_j",
+              "type": "integer"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universal index for the divisibility count",
+              "type": "positive integer"
+            },
+            {
+              "domain": "integer or real interval endpoint for M_d",
+              "name": "u",
+              "role": "left endpoint in the counting function",
+              "type": "integer endpoint"
+            },
+            {
+              "domain": "integer or real interval endpoint for M_d",
+              "name": "v",
+              "role": "right endpoint in the counting function",
+              "type": "integer endpoint"
+            },
+            {
+              "domain": "integers",
+              "name": "m",
+              "role": "counted variable in M_d",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "I",
+              "role": "ambient ground set",
+              "type": "finite set of integers"
+            },
+            {
+              "domain": "subsets of I",
+              "name": "S",
+              "role": "subset component of an element of X_j",
+              "type": "subset of I"
+            },
+            {
+              "domain": "finite multisets drawn from I",
+              "name": "lambda",
+              "role": "multiset component of an element of X_j",
+              "type": "finite multiset of elements of I"
+            },
+            {
+              "domain": "subset of I",
+              "name": "S prime",
+              "role": "image subset under iota_j",
+              "type": "subset of I"
+            },
+            {
+              "domain": "finite multiset drawn from I",
+              "name": "lambda prime",
+              "role": "image multiset under iota_j",
+              "type": "finite multiset of elements of I"
+            },
+            {
+              "domain": "pairs (S, lambda) satisfying the defining sum condition",
+              "name": "X_j",
+              "role": "domain of the involution",
+              "type": "set of pairs"
+            },
+            {
+              "domain": "maps X_j to X_j",
+              "name": "iota_j",
+              "role": "involution witness",
+              "type": "self-map on X_j"
+            }
+          ],
+          "witness_dependencies": [
+            "The existential witness iota_j depends on the fixed parameters a, b, r, and j, as well as on the universal hypothesis that M_d(r + a, r + b) >= M_d(a, b) for every positive integer d.",
+            "No additional existential witnesses are introduced besides iota_j.",
+            "For any input pair (S, lambda) in X_j, the output pair (S prime, lambda prime) is determined by iota_j; the moved-point parity condition compares the cardinalities of S and S prime.",
+            "If a pair is fixed by iota_j, the fixed-point condition requires the same S to have even cardinality."
+          ]
+        },
+        "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329092547_6a64d34a",
+        "role_in_parent": "This is the deep positivity input; together with reciprocity it yields full nonnegativity of all coefficients.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, and r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "q is a formal indeterminate, not a specialized numeric value",
+            "n ranges over nonnegative integers in the product definition",
+            "D is nonnegative because r >= 0 and b - a >= 0",
+            "j is an integer with 0 <= j <= floor(D/2)",
+            "R is assumed to be a polynomial with integer coefficients"
+          ],
+          "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Let q be an indeterminate",
+            "For each nonnegative integer n, define the q-factorial quantity",
+            "Define R from a, b, r, and q by the stated quotient",
+            "Define D as r times (b - a)",
+            "Assume the resulting R is an element of Z[q]",
+            "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+          ],
+          "variables": [
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "a",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers satisfying 0 <= a <= b",
+              "name": "b",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "input parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable",
+              "name": "q",
+              "role": "symbol used to form q-factorials and the polynomial R",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "n",
+              "role": "index in the finite product defining the q-factorial",
+              "type": "integer"
+            },
+            {
+              "domain": "integer polynomials in q, assumed to lie in Z[q]",
+              "name": "R",
+              "role": "defined quantity from a, b, r, and q",
+              "type": "polynomial in q"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "D",
+              "role": "derived quantity equal to r times (b - a)",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from 0 through floor(D/2)",
+              "name": "j",
+              "role": "coefficient index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+          ]
+        },
+        "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer."
+      },
+      {
+        "kind": "lemma",
+        "node_id": "lem_20260329074016_d9949d95",
+        "role_in_parent": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "a, b, r are integers",
+            "0 <= a <= b",
+            "r >= 0",
+            "d ranges over positive integers",
+            "q is a formal indeterminate, not a numeric parameter",
+            "The product index i is an integer",
+            "If a = b, the product is empty and equals 1"
+          ],
+          "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+          "quantifier_order": [
+            "For all integers a, b, r with 0 <= a <= b and r >= 0",
+            "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+            "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+            "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "a",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "b",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "nonnegative integers",
+              "name": "r",
+              "role": "parameter",
+              "type": "integer"
+            },
+            {
+              "domain": "formal variable for the polynomial ring over the integers",
+              "name": "q",
+              "role": "variable in the generating product",
+              "type": "indeterminate"
+            },
+            {
+              "domain": "positive integers",
+              "name": "d",
+              "role": "universally quantified test divisor",
+              "type": "integer"
+            },
+            {
+              "domain": "integers from a + 1 through b",
+              "name": "i",
+              "role": "product index",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+          ]
+        },
+        "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": "Take b=3 and e_1=1, e_2=1, e_3=6. Then for the hypothesis: for d=1, the left side is 3 and the right side is 3; for d=2, the left side is 1 (only 6 is divisible by 2) and the right side is 1 (only 2 is divisible by 2); for d=3, the left side is 1 (only 6 is divisible by 3) and the right side is 1 (only 3 is divisible by 3); for every d>=4, the right side is 0 since no element of {1,2,3} is divisible by d, so the inequality is automatic. Hence the stated hypothesis is satisfied. But in S=Q[y_1,y_2,y_3] with deg(y_1)=1, deg(y_2)=2, deg(y_3)=3, every homogeneous polynomial of degree 1 is a scalar multiple of y_1. So any two homogeneous degree-1 elements u_1,u_2 are linearly dependent; in particular, if u_1 is nonzero then u_2 lies in the ideal (u_1), so the image of u_2 in S/(u_1) is 0. Therefore u_2 cannot be a non-zero-divisor modulo (u_1), and the ordered list u_1,u_2,u_3 cannot be a regular sequence. Thus the lemma statement is false as written.",
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329132405_562eefce",
+    "proof_nl": "",
+    "role_in_assembly": "Provides the main existence theorem in the enlarged ring S with weights 1,...,b.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "b is a nonnegative integer",
+        "the list e_1 through e_b has exactly b entries",
+        "each e_i is a positive integer",
+        "d ranges over positive integers only",
+        "S is the graded polynomial ring over the rationals in variables y_1 through y_b",
+        "the grading on S assigns degree i to y_i",
+        "the counting condition compares indices i from 1 through b",
+        "when b is 0, S is the rational numbers and the conclusion is the empty regular sequence"
+      ],
+      "normalized_claim": "For any nonnegative integer b and any ordered list of b positive integers e_1 through e_b satisfying that, for every positive integer d, the number of indices i from 1 to b with d dividing e_i is at least the number of indices i from 1 to b with d dividing i, there exist homogeneous elements u_1 through u_b in the weighted graded polynomial ring over the rationals on generators y_1 through y_b, with degree of y_i equal to i, such that each u_i has degree e_i and the ordered list u_1 through u_b is a regular sequence. In the case b equals 0, this is the empty regular sequence in the ring of rational numbers.",
+      "quantifier_order": [
+        "for each nonnegative integer b",
+        "for each ordered list e_1 through e_b of positive integers",
+        "for every positive integer d, the divisibility count inequality must hold",
+        "if the hypothesis holds, then there exists an ordered list u_1 through u_b in S",
+        "each u_i is homogeneous of degree e_i",
+        "the list u_1 through u_b is a regular sequence"
+      ],
+      "variables": [
+        {
+          "domain": "nonnegative integers",
+          "name": "b",
+          "role": "length parameter and number of generators in the polynomial ring",
+          "type": "integer"
+        },
+        {
+          "domain": "positive integers indexed by i from 1 to b",
+          "name": "e",
+          "role": "target degrees for the homogeneous elements",
+          "type": "ordered list of integers"
+        },
+        {
+          "domain": "positive integers",
+          "name": "d",
+          "role": "test divisor used in the counting hypothesis",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial ring over the rationals in b variables",
+          "name": "S",
+          "role": "ambient graded ring",
+          "type": "graded polynomial ring"
+        },
+        {
+          "domain": "homogeneous polynomials in S",
+          "name": "u",
+          "role": "regular sequence with prescribed degrees",
+          "type": "ordered list of elements of S"
+        }
+      ],
+      "witness_dependencies": [
+        "The existence witnesses u_1 through u_b may depend on the entire parameter set b and e_1 through e_b",
+        "The witnesses are chosen after the divisibility hypothesis is verified for all positive integers d",
+        "The elements u_i are not allowed to depend on the particular choice of d, since d is universally quantified in the hypothesis",
+        "The witness is an ordered sequence, so the regular sequence property depends on the order of the u_i"
+      ]
+    },
+    "statement_nl": "Let b be a nonnegative integer, and let e_1,...,e_b be an ordered list of b positive integers. Let S := Q[y_1,...,y_b] be the polynomial ring graded by deg(y_i)=i for 1 <= i <= b. Assume that for every positive integer d, one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. Then there exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for every i and the ordered list u_1,...,u_b is a regular sequence. When b=0, this means the empty regular sequence in S=Q.",
+    "vetting_mode": "counterexample"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_counterexample_vetter",
+  "result_payload": {
+    "candidate_counterexample": "b=3, (e_1,e_2,e_3)=(1,1,6). Hypothesis check: for d=1, counts are 3 and 3; for d=2, counts are 1 and 1; for d=3, counts are 1 and 1; for d>=4, |{i in {1,2,3}: d divides i}|=0, so the inequality is automatic. In S=Q[y_1,y_2,y_3] with deg(y_1)=1, deg(y_2)=2, deg(y_3)=3, every homogeneous degree-1 polynomial is a scalar multiple of y_1. Thus any u_1,u_2 of degree 1 are linearly dependent. If u_1!=0 then u_2 in (u_1), so u_2 becomes 0 in S/(u_1), hence cannot be a non-zero-divisor there. Therefore no regular sequence of degrees (1,1,6) exists.",
+    "confidence": 0.99,
+    "counterexample_status": "accepted",
+    "dependency_assessment": {},
+    "detailed_findings": [
+      {
+        "finding": "The proof is empty, so the lemma is completely unproved.",
+        "location": "proof_nl",
+        "severity": "high"
+      },
+      {
+        "finding": "The explicit instance b=3, (e_1,e_2,e_3)=(1,1,6) satisfies the stated divisibility hypothesis.",
+        "location": "candidate_counterexample",
+        "severity": "high"
+      },
+      {
+        "finding": "In the weighted ring Q[y_1,y_2,y_3] with deg(y_i)=i, the degree-1 homogeneous component is one-dimensional, so two prescribed degree-1 elements cannot both appear in a regular sequence.",
+        "location": "candidate_counterexample",
+        "severity": "high"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": "The lemma as stated should be revised. The divisibility-count condition alone does not guarantee existence of a regular sequence with prescribed weighted degrees in Q[y_1,...,y_b]. A minimal obstruction is repeated demand for degree 1: the degree-1 piece is one-dimensional, so two degree-1 elements cannot begin a regular sequence. Recheck the intended statement; likely the ambient ring, number of variables, or hypothesis needs strengthening.",
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329132405_562eefce",
+    "proof_status": "major_gap",
+    "reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+    "recommended_action": "flag_suspected_false",
+    "statement_status": "false",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T13:30:40.467243Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329132405_562eefce",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T13:31:12.896995Z",
+  "worker_job_id": "wrk_lem_20260329132405_562eefce_g0_vet_1_counterexample",
+  "worker_kind": "lemma_vetter"
+}

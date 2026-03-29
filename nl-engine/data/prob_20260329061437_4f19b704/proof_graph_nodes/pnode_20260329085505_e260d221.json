@@ -1,0 +1,64 @@
+{
+  "created_at": "2026-03-29T08:55:05.547662Z",
+  "graph_node_id": "pnode_20260329085505_e260d221",
+  "metadata": {
+    "parent_id": "thm_root_20260329061437_747e99b3"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "3f704db8f3422ab765042de9055415d23efeb015ee0aaa9e6869909d59feff45",
+  "owner_id": "lem_20260329084938_0b83349f",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329085505_7fc53cae",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d is a positive integer",
+      "r is a positive integer",
+      "gcd(d,r)=1",
+      "r <= d",
+      "n is an integer greater than 1",
+      "n is congruent to 1 modulo 2d",
+      "k is an integer",
+      "0 <= k <= n"
+    ],
+    "normalized_claim": "Given positive integers d and r with gcd(d,r)=1 and r <= d, and given an integer n greater than 1 that is congruent to 1 modulo 2d, it follows that n is odd, gcd(d,n)=1, r times (1 minus n) divided by 2 is an integer, and for every integer k between 0 and n inclusive, k times (d minus d times k minus 2r) divided by 2 is an integer.",
+    "quantifier_order": [
+      "For all positive integers d and r, with gcd(d,r)=1 and r <= d",
+      "For all integers n greater than 1 such that n is congruent to 1 modulo 2d",
+      "For every integer k with 0 <= k <= n"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers greater than 1 and congruent to 1 modulo 2d",
+        "name": "n",
+        "role": "fixed parameter subject to congruence",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= k <= n",
+        "name": "k",
+        "role": "universally quantified index in the final claim",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses appear; the statement is purely universal after fixing d, r, and n.",
+      "The integrality of r times (1 minus n) divided by 2 depends on the derived fact that n is odd.",
+      "The integrality of k times (d minus d times k minus 2r) divided by 2 is asserted separately for each admissible k and does not rely on an auxiliary witness."
+    ]
+  },
+  "statement_nl": "Fix positive integers d and r with gcd(d,r)=1 and r <= d, and let n > 1 satisfy n \u2261 1 mod 2d. Then n is odd, gcd(d,n)=1, the integer r(1-n)/2 is an integer, and for every integer k with 0 <= k <= n one has k(d-dk-2r)/2 \u2208 Z.",
+  "updated_at": "2026-03-29T08:55:05.547662Z"
+}

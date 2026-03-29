@@ -1,0 +1,108 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329132733_217d33e0",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T13:24:38.436936Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 5,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.14,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T13:30:18.827974Z",
+  "last_dependency_check_id": "depchk_20260329133018_d0c7ada4",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent4:proved",
+  "last_transition_reason": "vetter attempt 1 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let v_i := phi(u_i) for i = 1,...,n. For each i = 0,...,n, set I_i := (u_1,...,u_i) and J_i := (v_1,...,v_i), with I_0 = J_0 = (0). Because phi is an algebra automorphism, phi(I_i) = J_i for every i. Hence phi induces an isomorphism of quotient rings bar_phi_i : A / I_i -> A / J_i, given by a + I_i |-> phi(a) + J_i; its inverse is induced by phi^{-1}. Now let u_i have degree d. Since phi is a graded automorphism, it preserves each graded piece, so phi(u_i) also lies in the degree-d piece. Therefore deg(phi(u_i)) = d = deg(u_i) for every i. It remains to prove preservation of regular sequences. Use the standard ring-theoretic definition: a sequence x_1,...,x_n is regular if for each i >= 1, the class of x_i is a non-zero-divisor in A / (x_1,...,x_{i-1}); if one also adopts the common extra condition that the final quotient A / (x_1,...,x_n) be nonzero, that condition is also preserved here because the final quotients are isomorphic. Assume first that u_1,...,u_n is a regular sequence. Fix i with 1 <= i <= n. Suppose that in A / J_{i-1} one has (v_i + J_{i-1})(a + J_{i-1}) = 0. Then v_i a is in J_{i-1} = phi(I_{i-1}). Applying phi^{-1}, we get u_i phi^{-1}(a) in I_{i-1}. Equivalently, in A / I_{i-1} we have (u_i + I_{i-1})(phi^{-1}(a) + I_{i-1}) = 0. Since u_i + I_{i-1} is a non-zero-divisor in A / I_{i-1}, it follows that phi^{-1}(a) + I_{i-1} = 0, so phi^{-1}(a) is in I_{i-1}. Applying phi, we obtain a in J_{i-1}. Thus v_i + J_{i-1} is a non-zero-divisor in A / J_{i-1}. Since this holds for every i, the sequence v_1,...,v_n is regular. If one includes the additional condition A / I_n != 0 in the definition, it is preserved as well because bar_phi_n is an isomorphism A / I_n ~= A / J_n. Conversely, if v_1,...,v_n is regular, the same argument applied to the automorphism phi^{-1} shows that u_1,...,u_n is regular. Therefore u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Together with the degree argument above, this proves the lemma.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329132425_b7fb9eda",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_vetter",
+  "parent_id": "lem_20260329120647_c4ea7dea",
+  "parent_kind": "lemma",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132425_b7fb9eda.json",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "proof_status": "proof_found",
+  "role_in_parent": "Transfers the regular sequence constructed in S through the straightening automorphism from the previous lemma.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let A be a graded commutative Q-algebra, let phi : A -> A be a graded Q-algebra automorphism, and let u_1,...,u_n be homogeneous elements of A. Then u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Moreover deg(phi(u_i)) = deg(u_i) for every i.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "A must be a graded commutative algebra over the rational numbers",
+      "phi must be an automorphism of A that preserves the grading and the Q-algebra structure",
+      "each u_i must be homogeneous in A",
+      "the sequence length is finite and indexed by integers from 1 to n",
+      "regular sequence is interpreted in the commutative algebra underlying A"
+    ],
+    "normalized_claim": "For every graded commutative Q-algebra A, every grading-preserving Q-algebra automorphism phi of A, every finite sequence of homogeneous elements u_1 through u_n in A, the sequence u_1 through u_n is a regular sequence exactly when the image sequence phi(u_1) through phi(u_n) is a regular sequence; in addition, phi preserves the degree of each sequence element.",
+    "quantifier_order": [
+      "for every graded commutative Q-algebra A",
+      "for every graded Q-algebra automorphism phi of A",
+      "for every natural number n",
+      "for every choice of homogeneous elements u_1 through u_n in A",
+      "for each index i from 1 to n"
+    ],
+    "variables": [
+      {
+        "domain": "algebras over the rational numbers equipped with a grading",
+        "name": "A",
+        "role": "ambient algebra",
+        "type": "graded commutative Q-algebra"
+      },
+      {
+        "domain": "self-maps of A that are algebra automorphisms, Q-linear, and grading-preserving",
+        "name": "phi",
+        "role": "structure-preserving automorphism",
+        "type": "graded Q-algebra automorphism of A"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "length of the sequence",
+        "type": "natural number"
+      },
+      {
+        "domain": "elements of A with a well-defined degree",
+        "name": "u_i",
+        "role": "entries of the sequence",
+        "type": "homogeneous element of A"
+      },
+      {
+        "domain": "integers from 1 to n",
+        "name": "i",
+        "role": "sequence index",
+        "type": "index"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement; it is a universal preservation claim.",
+      "The degree comparison is pointwise for each index i and does not depend on any additional choice."
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T13:30:18.827974Z"
+}

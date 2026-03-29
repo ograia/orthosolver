@@ -1,0 +1,74 @@
+{
+  "created_at": "2026-03-29T07:44:02.392428Z",
+  "graph_node_id": "pnode_20260329074402_2097282d",
+  "metadata": {
+    "node_kind": "lemma"
+  },
+  "node_kind": "claim",
+  "node_status": "active",
+  "normalized_claim_hash": "ef89935df46b7abc066e86c844ccb93efc44ffbab1f0218a619bc1cd832155ef",
+  "owner_id": "lem_20260329074016_d9949d95",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329074401_7ba95fbd",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "a, b, r are integers",
+      "0 <= a <= b",
+      "r >= 0",
+      "d ranges over positive integers",
+      "q is a formal indeterminate, not a numeric parameter",
+      "The product index i is an integer",
+      "If a = b, the product is empty and equals 1"
+    ],
+    "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+    "quantifier_order": [
+      "For all integers a, b, r with 0 <= a <= b and r >= 0",
+      "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+      "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+      "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable for the polynomial ring over the integers",
+        "name": "q",
+        "role": "variable in the generating product",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "universally quantified test divisor",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a + 1 through b",
+        "name": "i",
+        "role": "product index",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+    ]
+  },
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+  "updated_at": "2026-03-29T09:29:53.079768Z"
+}
