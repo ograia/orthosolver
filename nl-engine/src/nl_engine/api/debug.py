@@ -1137,6 +1137,174 @@ def _request_error_context_from_artifact(
     return parsed_response_id, parsed_terminal_status
 
 
+def _normalize_finding_severity(raw: Any) -> str:
+    label = str(raw or "").strip().lower()
+    normalized = {
+        "none": "none",
+        "": "none",
+        "low": "low",
+        "minor": "low",
+        "info": "low",
+        "pass": "low",
+        "medium": "medium",
+        "moderate": "medium",
+        "warning": "medium",
+        "warn": "medium",
+        "high": "high",
+        "fatal": "high",
+        "critical": "high",
+        "severe": "high",
+        "major": "high",
+        "blocker": "high",
+    }
+    return normalized.get(label, "none")
+
+
+def _solver_feedback_from_report(report: Any) -> str | None:
+    if report is None:
+        return None
+    feedback_for_solver = str(getattr(report, "feedback_for_solver", None) or "").strip()
+    if feedback_for_solver:
+        return feedback_for_solver
+
+    findings: list[dict[str, Any]] = []
+    detailed_findings = getattr(report, "detailed_findings", None)
+    if isinstance(detailed_findings, list):
+        findings = [item for item in detailed_findings if isinstance(item, dict)]
+    if findings:
+        lines: list[str] = []
+        for item in findings[:5]:
+            finding = str(item.get("finding") or item.get("description") or "").strip()
+            severity = _normalize_finding_severity(item.get("severity"))
+            code = str(item.get("code", "")).strip()
+            location = str(item.get("location", "")).strip()
+            if not finding:
+                continue
+            prefix_parts: list[str] = []
+            if severity != "none":
+                prefix_parts.append(f"[{severity}]")
+            if code and code.lower() != "none":
+                prefix_parts.append(f"[{code}]")
+            if location and location.lower() != "none":
+                prefix_parts.append(f"@ {location}")
+            prefix = " ".join(prefix_parts)
+            lines.append(f"{prefix} {finding}".strip())
+        if lines:
+            joined = "\n".join(f"- {line}" for line in lines)
+            return f"Previous vetter findings to fix:\n{joined}"
+
+    reason = str(getattr(report, "reason", None) or "").strip()
+    if reason:
+        return f"Previous vetter reason: {reason}"
+    return None
+
+
+def _solver_retry_quality(attempt: Any, report: Any | None) -> int:
+    proof_nl = str(getattr(attempt, "proof_nl", None) or "").strip()
+    if not proof_nl:
+        return 0
+    if str(getattr(attempt, "terminal_disposition", None) or "").strip() == "accepted":
+        return 4
+    if report is not None:
+        if getattr(report, "statement_status", None) == "plausible" and getattr(report, "proof_status", None) == "complete":
+            return 3
+        if getattr(report, "proof_status", None) == "localized_gap":
+            return 2
+        if getattr(report, "proof_status", None) in {"major_gap", "wrong_strategy"}:
+            return 1
+    if str(getattr(attempt, "solver_status", None) or "").strip() == "proved":
+        return 3
+    return 1
+
+
+def _best_solver_retry_context(
+    *,
+    lemma: Any,
+    attempt_rows: list[Any],
+    latest_report: Any | None,
+    report_lookup: dict[str, Any],
+) -> dict[str, Any]:
+    chosen_attempt: Any | None = None
+    chosen_report: Any | None = None
+    chosen_quality = -1
+    for attempt in attempt_rows:
+        report_id = str(getattr(attempt, "vetter_report_id", None) or "").strip()
+        report = report_lookup.get(report_id) if report_id else None
+        quality = _solver_retry_quality(attempt, report)
+        if quality <= 0:
+            continue
+        is_better = quality > chosen_quality
+        if not is_better and quality == chosen_quality and chosen_attempt is not None:
+            is_better = (
+                int(getattr(attempt, "attempt_number", 0) or 0),
+                getattr(attempt, "updated_at", None),
+                str(getattr(attempt, "proof_attempt_id", "") or ""),
+            ) > (
+                int(getattr(chosen_attempt, "attempt_number", 0) or 0),
+                getattr(chosen_attempt, "updated_at", None),
+                str(getattr(chosen_attempt, "proof_attempt_id", "") or ""),
+            )
+        if is_better:
+            chosen_attempt = attempt
+            chosen_report = report
+            chosen_quality = quality
+
+    previous_proof_nl = None
+    if chosen_attempt is not None:
+        proof_nl = str(getattr(chosen_attempt, "proof_nl", None) or "").strip()
+        previous_proof_nl = proof_nl or None
+    elif isinstance(getattr(lemma, "latest_nl_proof", None), str) and getattr(lemma, "latest_nl_proof").strip():
+        previous_proof_nl = getattr(lemma, "latest_nl_proof").strip()
+
+    feedback_source = "none"
+    previous_feedback = _solver_feedback_from_report(chosen_report)
+    if previous_feedback:
+        feedback_source = "selected_attempt_report"
+    else:
+        previous_feedback = _solver_feedback_from_report(latest_report)
+        if previous_feedback:
+            feedback_source = "latest_report"
+
+    return {
+        "previous_proof_nl": previous_proof_nl,
+        "previous_feedback": previous_feedback,
+        "selected_attempt_number": int(getattr(chosen_attempt, "attempt_number", 0) or 0) or None,
+        "selected_proof_attempt_id": str(getattr(chosen_attempt, "proof_attempt_id", "") or "").strip() or None,
+        "selected_vetter_report_id": str(getattr(chosen_report, "report_id", "") or "").strip() or None,
+        "feedback_source": feedback_source,
+    }
+
+
+def _solver_request_record_payload(row: Any, browser: ArtifactBrowser) -> dict[str, Any]:
+    response_id, provider_terminal_status = _request_error_context_from_artifact(
+        browser,
+        getattr(row, "response_artifact_key", None),
+    )
+    if not response_id:
+        raw_response_id = getattr(row, "provider_response_id", None) or getattr(row, "response_id", None)
+        response_id = str(raw_response_id or "").strip() or None
+    return {
+        "request_record_id": row.request_record_id,
+        "status": row.status,
+        "error_class": row.error_class,
+        "summary": row.summary,
+        "response_id": response_id,
+        "provider_response_id": row.provider_response_id,
+        "provider_status": row.provider_status,
+        "provider_terminal_status": provider_terminal_status,
+        "retrieve_attempt_count": row.retrieve_attempt_count,
+        "provider_submission_count": row.provider_submission_count,
+        "recovered_from_connection_error_count": row.recovered_from_connection_error_count,
+        "request_artifact_key": row.request_artifact_key,
+        "response_artifact_key": row.response_artifact_key,
+        "llm_model": row.llm_model,
+        "llm_reasoning_effort": row.llm_reasoning_effort,
+        "llm_text_verbosity": row.llm_text_verbosity,
+        "llm_timeout_seconds": row.llm_timeout_seconds,
+        "updated_at": row.updated_at,
+    }
+
+
 def _attach_llm_usage_to_request_entries(
     entries: list[DebugRequestLogEntry],
     usage_rows: list[LlmUsageRecordORM],
@@ -1638,10 +1806,39 @@ def _promote_legacy_solver_retry_state(problem_id: str, db: FileStore) -> tuple[
         request_payload["allowed_dependency_manifest"] = []
     if not isinstance(request_payload.get("forbidden_claims"), list):
         request_payload["forbidden_claims"] = []
-    request_payload["previous_proof_nl"] = lemma.latest_nl_proof
-    if "previous_feedback" not in request_payload:
-        request_payload["previous_feedback"] = None
+    proof_attempts = LemmaProofAttemptRepository(db)
+    vetter_reports = VetterReportRepository(db)
+    attempt_rows = proof_attempts.list_by_lemma(problem_id, lemma.lemma_id)
+    report_lookup: dict[str, Any] = {}
+    for attempt in attempt_rows:
+        report_id = str(attempt.vetter_report_id or "").strip()
+        if not report_id or report_id in report_lookup:
+            continue
+        report = vetter_reports.get(report_id)
+        if report is not None:
+            report_lookup[report_id] = report
+    latest_report = vetter_reports.get(lemma.latest_vetter_report_id) if lemma.latest_vetter_report_id else None
+    retry_context = _best_solver_retry_context(
+        lemma=lemma,
+        attempt_rows=attempt_rows,
+        latest_report=latest_report,
+        report_lookup=report_lookup,
+    )
+    request_payload["previous_proof_nl"] = retry_context["previous_proof_nl"]
+    request_payload["previous_feedback"] = retry_context["previous_feedback"]
     request_payload["attempt_number"] = next_attempt
+    request_payload["retry_context"] = {
+        "attempt_number": retry_context["selected_attempt_number"],
+        "proof_attempt_id": retry_context["selected_proof_attempt_id"],
+        "vetter_report_id": retry_context["selected_vetter_report_id"],
+        "feedback_source": retry_context["feedback_source"],
+    }
+    if next_attempt >= 4:
+        request_payload["solver_llm_override_key"] = "agent4_infra_retry_3"
+    elif next_attempt >= 3:
+        request_payload["solver_llm_override_key"] = "agent4_infra_retry_2"
+    else:
+        request_payload["solver_llm_override_key"] = None
 
     worker_jobs.enqueue_if_absent(
         WorkerJobORM(
@@ -1658,7 +1855,15 @@ def _promote_legacy_solver_retry_state(problem_id: str, db: FileStore) -> tuple[
             handler_key="agent4_lemma_solver",
             request_source="lemma_solver",
             payload=request_payload,
-            llm_override_key="agent4_first" if next_attempt == 1 else None,
+            llm_override_key=(
+                "agent4_first"
+                if next_attempt == 1
+                else (
+                    "agent4_infra_retry_3"
+                    if next_attempt >= 4
+                    else ("agent4_infra_retry_2" if next_attempt >= 3 else None)
+                )
+            ),
         )
     )
     return lemma_id, new_job_id
@@ -1853,8 +2058,18 @@ def get_debug_problem_snapshot(
     job_rows = lean_jobs.list_by_problem(problem_id)
     event_rows = _tail_events(db, problem_id, events_limit)
     event_items = [_to_event_item(row) for row in event_rows]
+    request_rows = RequestRecordRepository(db).list_by_problem(problem_id, limit=10000)
     session_manager = LeanSessionManager(db)
     lean_session = session_manager.session_snapshot(problem)
+
+    request_rows_by_worker_job_id: dict[str, list[Any]] = {}
+    for row in request_rows:
+        worker_job_id = str(row.worker_job_id or "").strip()
+        if not worker_job_id:
+            continue
+        request_rows_by_worker_job_id.setdefault(worker_job_id, []).append(row)
+    for rows in request_rows_by_worker_job_id.values():
+        rows.sort(key=lambda row: (row.updated_at, row.request_record_id))
 
     artifact_refs: set[str] = set()
     if problem.failure_report_artifact_id:
@@ -2046,6 +2261,20 @@ def get_debug_problem_snapshot(
         latest_formalize_payload = _load_job_result_payload(artifacts, latest_formalize_job) if latest_formalize_job else None
         active_counterexample = counterexamples.get(lemma.active_counterexample_id) if lemma.active_counterexample_id else None
         proof_attempt_rows = proof_attempts.list_by_lemma(problem_id, lemma.lemma_id)
+        report_lookup: dict[str, Any] = {}
+        for attempt in proof_attempt_rows:
+            report_id = str(attempt.vetter_report_id or "").strip()
+            if not report_id or report_id in report_lookup:
+                continue
+            report = vetter_reports.get(report_id)
+            if report is not None:
+                report_lookup[report_id] = report
+        retry_context = _best_solver_retry_context(
+            lemma=lemma,
+            attempt_rows=proof_attempt_rows,
+            latest_report=latest_report,
+            report_lookup=report_lookup,
+        )
         if lemma.proof_bundle_artifact_id:
             artifact_refs.add(lemma.proof_bundle_artifact_id)
         for attempt in proof_attempt_rows:
@@ -2115,6 +2344,14 @@ def get_debug_problem_snapshot(
                     if active_counterexample
                     else None
                 ),
+                "selected_retry_context": {
+                    "previous_proof_nl": retry_context["previous_proof_nl"],
+                    "previous_feedback": retry_context["previous_feedback"],
+                    "selected_attempt_number": retry_context["selected_attempt_number"],
+                    "selected_proof_attempt_id": retry_context["selected_proof_attempt_id"],
+                    "selected_vetter_report_id": retry_context["selected_vetter_report_id"],
+                    "feedback_source": retry_context["feedback_source"],
+                },
                 "proof_attempts": [
                     {
                         "proof_attempt_id": attempt.proof_attempt_id,
@@ -2133,6 +2370,35 @@ def get_debug_problem_snapshot(
                         "vetter_statement_status": attempt.vetter_statement_status,
                         "vetter_proof_status": attempt.vetter_proof_status,
                         "vetter_reason": attempt.vetter_reason,
+                        "retry_context_attempt_number": attempt.retry_context_attempt_number,
+                        "retry_context_proof_attempt_id": attempt.retry_context_proof_attempt_id,
+                        "retry_context_vetter_report_id": attempt.retry_context_vetter_report_id,
+                        "retry_context_feedback_source": attempt.retry_context_feedback_source,
+                        "solver_llm_override_key": attempt.solver_llm_override_key,
+                        "solver_request_records": [
+                            _solver_request_record_payload(row, artifacts)
+                            for row in request_rows_by_worker_job_id.get(attempt.solver_worker_job_id or "", [])
+                        ],
+                        "solver_timeline": [
+                            {
+                                "worker_attempt_index": index,
+                                "status": entry["status"],
+                                "error_class": entry["error_class"],
+                                "response_id": entry["response_id"],
+                                "provider_status": entry["provider_status"],
+                                "provider_terminal_status": entry["provider_terminal_status"],
+                                "llm_model": entry["llm_model"],
+                                "llm_reasoning_effort": entry["llm_reasoning_effort"],
+                                "updated_at": entry["updated_at"],
+                            }
+                            for index, entry in enumerate(
+                                [
+                                    _solver_request_record_payload(row, artifacts)
+                                    for row in request_rows_by_worker_job_id.get(attempt.solver_worker_job_id or "", [])
+                                ],
+                                start=1,
+                            )
+                        ],
                         "terminal_disposition": attempt.terminal_disposition,
                         "artifact_key": attempt.artifact_key,
                         "artifact": _load_optional_json_artifact(artifacts, attempt.artifact_key),

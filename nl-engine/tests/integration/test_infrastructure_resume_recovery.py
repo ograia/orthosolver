@@ -203,6 +203,379 @@ class InfraThenRecoverAgent(BaseAgentService):
         )
 
 
+class RetryContextCarryForwardAgent(BaseAgentService):
+    solve_payloads: list[dict[str, str | int | None]] = []
+
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+    def set_llm_overrides(self, llm_overrides) -> None:
+        return None
+
+    def semantic_sketch(self, statement_nl: str, artifact_prefix: str):
+        return Agent1Output(
+            status="completed",
+            statement_nl_received=statement_nl,
+            semantic_sketch=SemanticSketch(
+                variables=[],
+                quantifier_order=[],
+                domain_restrictions=[],
+                witness_dependencies=[],
+                normalized_claim=statement_nl,
+            ),
+            implicit_assumptions_surfaced=[],
+            ambiguities=[],
+        )
+
+    def decompose(self, payload, artifact_prefix, **kwargs):
+        sketch = SemanticSketch(
+            variables=[],
+            quantifier_order=[],
+            domain_restrictions=[],
+            witness_dependencies=[],
+            normalized_claim=payload.theorem_nl,
+        )
+        candidate = Agent2Candidate(
+            candidate_index=0,
+            strategy_summary="single-lemma",
+            shared_context=[],
+            lemmas=[
+                Agent2Lemma(
+                    local_id="L1",
+                    statement_nl=f"{payload.theorem_nl} lemma",
+                    semantic_sketch=sketch,
+                    role_in_assembly="direct",
+                    formalization_cost_estimate=0.1,
+                    self_check_true=True,
+                    self_check_notes="ok",
+                )
+            ],
+            assembly_plan=Agent2AssemblyPlan(
+                steps=[
+                    {
+                        "step_id": "A1",
+                        "uses_lemmas": ["L1"],
+                        "uses_prior_steps": [],
+                        "derives": payload.theorem_nl,
+                        "is_trivial": True,
+                        "trivial_justification": "direct",
+                    }
+                ],
+                proof_skeleton_nl="Apply L1.",
+                final_step_yields_exact_root=True,
+            ),
+            formalization_cost_estimate_total=0.1,
+            drift_self_check={"all_lemmas_consistent_with_root_sketch": True, "inconsistencies_noted": []},
+        )
+        return Agent2Output(status="completed", candidates=[candidate])
+
+    def vet_decomposition(self, payload, artifact_prefix):
+        return Agent3Output(
+            status="completed",
+            decision="accepted",
+            summary="accepted",
+            lemma_findings=[
+                {
+                    "local_id": "L1",
+                    "statement_status": "plausible",
+                    "evidence": "ok",
+                    "counterexample": None,
+                }
+            ],
+            assembly_check={
+                "verdict": "valid",
+                "details": "ok",
+                "hidden_steps_found": [],
+                "final_step_matches_root": True,
+            },
+            coverage_check={"redundant_lemmas": [], "missing_coverage": [], "disguised_difficulty": []},
+            drift_assessment={
+                "drift_detected": False,
+                "drift_severity": "none",
+                "per_lemma_drift": [],
+                "assembly_conclusion_matches_root": True,
+            },
+            formalization_risk="low",
+            fixes_required=[],
+            fatal_reason=None,
+        )
+
+    def solve_lemma(self, payload, artifact_prefix, **kwargs):
+        attempt = int(payload.attempt_number)
+        self.__class__.solve_payloads.append(
+            {
+                "attempt_number": attempt,
+                "previous_proof_nl": payload.previous_proof_nl,
+                "previous_feedback": payload.previous_feedback,
+            }
+        )
+        if attempt == 1:
+            return Agent4Output(
+                status="proved",
+                lemma_id=payload.lemma_id,
+                attempt_number=attempt,
+                proof_nl="Reusable scaffold proof",
+                proof_summary="first proof",
+                self_report={
+                    "confidence": 0.7,
+                    "suspected_gaps": ["one missing repair"],
+                    "used_external_facts": [],
+                    "every_step_justified": False,
+                    "proves_exactly_the_statement": True,
+                },
+                stuck_point=None,
+                candidate_counterexample=None,
+                addressed_previous_feedback=payload.previous_feedback,
+            )
+        if attempt == 2:
+            return Agent4Output(
+                status="failed",
+                lemma_id=payload.lemma_id,
+                attempt_number=attempt,
+                proof_nl=None,
+                proof_summary="regressed attempt",
+                self_report={
+                    "confidence": 0.2,
+                    "suspected_gaps": ["lost the previous proof"],
+                    "used_external_facts": [],
+                    "every_step_justified": False,
+                    "proves_exactly_the_statement": False,
+                },
+                stuck_point="could not reconstruct",
+                candidate_counterexample=None,
+                addressed_previous_feedback=payload.previous_feedback,
+            )
+        return Agent4Output(
+            status="proved",
+            lemma_id=payload.lemma_id,
+            attempt_number=attempt,
+            proof_nl="Final repaired proof",
+            proof_summary="repaired from prior scaffold",
+            self_report={
+                "confidence": 0.95,
+                "suspected_gaps": [],
+                "used_external_facts": [],
+                "every_step_justified": True,
+                "proves_exactly_the_statement": True,
+            },
+            stuck_point=None,
+            candidate_counterexample=None,
+            addressed_previous_feedback=payload.previous_feedback,
+        )
+
+    def vet_lemma_proof(self, payload, artifact_prefix):
+        if int(payload.attempt_number) == 1:
+            return Agent5Output(
+                status="completed",
+                lemma_id=payload.lemma_id,
+                statement_status="plausible",
+                proof_status="localized_gap",
+                drift_assessment={
+                    "drift_detected": False,
+                    "drift_severity": "none",
+                    "drift_description": None,
+                    "drift_type": None,
+                },
+                recommended_action="retry_solver",
+                confidence=0.8,
+                reason="one local gap remains",
+                feedback_for_solver="Preserve the previous scaffold and repair the missing local step.",
+                candidate_counterexample=None,
+                detailed_findings=[{"finding": "Missing local step", "severity": "medium", "location": "closing argument"}],
+            )
+        return Agent5Output(
+            status="completed",
+            lemma_id=payload.lemma_id,
+            statement_status="plausible",
+            proof_status="complete",
+            drift_assessment={
+                "drift_detected": False,
+                "drift_severity": "none",
+                "drift_description": None,
+                "drift_type": None,
+            },
+            recommended_action="send_to_lean",
+            confidence=0.95,
+            reason="accepted",
+            feedback_for_solver=None,
+            candidate_counterexample=None,
+            detailed_findings=[],
+        )
+
+    def final_check(self, payload, artifact_prefix):
+        return Agent6Output(
+            status="completed",
+            verdict="approved",
+            confidence=0.99,
+            summary="approved",
+            decomposition_findings=[],
+            assembly_findings=[],
+            lemma_findings=[],
+        )
+
+
+class InfraFallbackLadderAgent(BaseAgentService):
+    solve_payloads: list[dict[str, str | int | None]] = []
+
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+    def set_llm_overrides(self, llm_overrides) -> None:
+        return None
+
+    def semantic_sketch(self, statement_nl: str, artifact_prefix: str):
+        return Agent1Output(
+            status="completed",
+            statement_nl_received=statement_nl,
+            semantic_sketch=SemanticSketch(
+                variables=[],
+                quantifier_order=[],
+                domain_restrictions=[],
+                witness_dependencies=[],
+                normalized_claim=statement_nl,
+            ),
+            implicit_assumptions_surfaced=[],
+            ambiguities=[],
+        )
+
+    def decompose(self, payload, artifact_prefix, **kwargs):
+        sketch = SemanticSketch(
+            variables=[],
+            quantifier_order=[],
+            domain_restrictions=[],
+            witness_dependencies=[],
+            normalized_claim=payload.theorem_nl,
+        )
+        candidate = Agent2Candidate(
+            candidate_index=0,
+            strategy_summary="single-lemma",
+            shared_context=[],
+            lemmas=[
+                Agent2Lemma(
+                    local_id="L1",
+                    statement_nl=f"{payload.theorem_nl} lemma",
+                    semantic_sketch=sketch,
+                    role_in_assembly="direct",
+                    formalization_cost_estimate=0.1,
+                    self_check_true=True,
+                    self_check_notes="ok",
+                )
+            ],
+            assembly_plan=Agent2AssemblyPlan(
+                steps=[
+                    {
+                        "step_id": "A1",
+                        "uses_lemmas": ["L1"],
+                        "uses_prior_steps": [],
+                        "derives": payload.theorem_nl,
+                        "is_trivial": True,
+                        "trivial_justification": "direct",
+                    }
+                ],
+                proof_skeleton_nl="Apply L1.",
+                final_step_yields_exact_root=True,
+            ),
+            formalization_cost_estimate_total=0.1,
+            drift_self_check={"all_lemmas_consistent_with_root_sketch": True, "inconsistencies_noted": []},
+        )
+        return Agent2Output(status="completed", candidates=[candidate])
+
+    def vet_decomposition(self, payload, artifact_prefix):
+        return Agent3Output(
+            status="completed",
+            decision="accepted",
+            summary="accepted",
+            lemma_findings=[
+                {
+                    "local_id": "L1",
+                    "statement_status": "plausible",
+                    "evidence": "ok",
+                    "counterexample": None,
+                }
+            ],
+            assembly_check={
+                "verdict": "valid",
+                "details": "ok",
+                "hidden_steps_found": [],
+                "final_step_matches_root": True,
+            },
+            coverage_check={"redundant_lemmas": [], "missing_coverage": [], "disguised_difficulty": []},
+            drift_assessment={
+                "drift_detected": False,
+                "drift_severity": "none",
+                "per_lemma_drift": [],
+                "assembly_conclusion_matches_root": True,
+            },
+            formalization_risk="low",
+            fixes_required=[],
+            fatal_reason=None,
+        )
+
+    def solve_lemma(self, payload, artifact_prefix, **kwargs):
+        attempt = int(payload.attempt_number)
+        self.__class__.solve_payloads.append(
+            {
+                "attempt_number": attempt,
+                "override_key": kwargs.get("override_key"),
+            }
+        )
+        if attempt < 4:
+            raise AgentExecutionError(
+                agent_key="agent4",
+                error_class="infrastructure_transient",
+                message=f"Background response resp_infra_{attempt} for agent4 reached terminal status: failed",
+                artifact_prefix=artifact_prefix,
+            )
+        return Agent4Output(
+            status="proved",
+            lemma_id=payload.lemma_id,
+            attempt_number=attempt,
+            proof_nl="Recovered after ladder fallback",
+            proof_summary="proved after fallback ladder",
+            self_report={
+                "confidence": 0.95,
+                "suspected_gaps": [],
+                "used_external_facts": [],
+                "every_step_justified": True,
+                "proves_exactly_the_statement": True,
+            },
+            stuck_point=None,
+            candidate_counterexample=None,
+            addressed_previous_feedback=payload.previous_feedback,
+        )
+
+    def vet_lemma_proof(self, payload, artifact_prefix):
+        return Agent5Output(
+            status="completed",
+            lemma_id=payload.lemma_id,
+            statement_status="plausible",
+            proof_status="complete",
+            drift_assessment={
+                "drift_detected": False,
+                "drift_severity": "none",
+                "drift_description": None,
+                "drift_type": None,
+            },
+            recommended_action="send_to_lean",
+            confidence=0.95,
+            reason="accepted",
+            feedback_for_solver=None,
+            candidate_counterexample=None,
+            detailed_findings=[],
+        )
+
+    def final_check(self, payload, artifact_prefix):
+        return Agent6Output(
+            status="completed",
+            verdict="approved",
+            confidence=0.99,
+            summary="approved",
+            decomposition_findings=[],
+            assembly_findings=[],
+            lemma_findings=[],
+        )
+
+
 def _run_until_status(client: TestClient, problem_id: str, wanted: set[str], max_ticks: int = 120) -> str:
     status = "created"
     for _ in range(max_ticks):
@@ -285,6 +658,80 @@ def test_resume_after_infrastructure_failure_preserves_run_and_recovers(monkeypa
     problem_row = ProblemRepository(get_file_store()).get(problem_id)
     assert problem_row is not None
     assert problem_row.status == "succeeded"
+
+
+def test_solver_retry_reuses_best_prior_proof_scaffold(monkeypatch) -> None:
+    monkeypatch.setattr(api_main, "AgentService", RetryContextCarryForwardAgent)
+    monkeypatch.setattr(orchestrator_module, "AgentService", RetryContextCarryForwardAgent)
+    monkeypatch.setattr(workers_facade, "AgentService", RetryContextCarryForwardAgent)
+    RetryContextCarryForwardAgent.solve_payloads = []
+
+    client = TestClient(app)
+    create = client.post(
+        "/v1/problems",
+        json={
+            "title": "retry context carry forward",
+            "statement_nl": "For all n, n = n",
+            "config": {"mode": {"nl_only_mode": True}},
+        },
+    )
+    assert create.status_code == 200
+    problem_id = create.json()["problem_id"]
+
+    terminal = _run_until_status(client, problem_id, {"succeeded", "failed"}, max_ticks=120)
+    assert terminal == "succeeded"
+
+    attempt3 = next(item for item in RetryContextCarryForwardAgent.solve_payloads if item["attempt_number"] == 3)
+    assert attempt3["previous_proof_nl"] == "Reusable scaffold proof"
+    assert "Preserve the previous scaffold" in str(attempt3["previous_feedback"])
+
+    snapshot = client.get(f"/v1/debug/problems/{problem_id}/snapshot")
+    assert snapshot.status_code == 200
+    lemma_row = snapshot.json()["lemmas"][0]
+    attempt_rows = {row["attempt_number"]: row for row in lemma_row["proof_attempts"]}
+    assert attempt_rows[3]["retry_context_attempt_number"] == 1
+    assert attempt_rows[3]["retry_context_feedback_source"] == "selected_attempt_report"
+
+
+def test_infrastructure_retry_ladder_sets_solver_override_keys(monkeypatch) -> None:
+    monkeypatch.setattr(api_main, "AgentService", InfraFallbackLadderAgent)
+    monkeypatch.setattr(orchestrator_module, "AgentService", InfraFallbackLadderAgent)
+    monkeypatch.setattr(workers_facade, "AgentService", InfraFallbackLadderAgent)
+    InfraFallbackLadderAgent.solve_payloads = []
+
+    client = TestClient(app)
+    create = client.post(
+        "/v1/problems",
+        json={
+            "title": "infra fallback ladder",
+            "statement_nl": "For all n, n = n",
+            "config": {
+                "mode": {"nl_only_mode": True},
+                "lemma_solving": {
+                    "max_consecutive_infrastructure_failures_per_lemma": 4,
+                    "max_infrastructure_failures": 10,
+                },
+            },
+        },
+    )
+    assert create.status_code == 200
+    problem_id = create.json()["problem_id"]
+
+    terminal = _run_until_status(client, problem_id, {"succeeded", "failed"}, max_ticks=160)
+    assert terminal == "succeeded"
+
+    overrides = {item["attempt_number"]: item["override_key"] for item in InfraFallbackLadderAgent.solve_payloads}
+    assert overrides[1] == "agent4_first"
+    assert overrides[2] is None
+    assert overrides[3] == "agent4_infra_retry_2"
+    assert overrides[4] == "agent4_infra_retry_3"
+
+    jobs = WorkerJobRepository(get_file_store()).list_by_problem(problem_id, worker_kind="lemma_solver")
+    job_overrides = {row.attempt_number: row.llm_override_key for row in jobs}
+    assert job_overrides[1] == "agent4_first"
+    assert job_overrides[2] is None
+    assert job_overrides[3] == "agent4_infra_retry_2"
+    assert job_overrides[4] == "agent4_infra_retry_3"
 
 
 def test_resume_after_infrastructure_failure_refuses_non_failed_problem() -> None:

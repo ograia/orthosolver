@@ -283,6 +283,11 @@ class LemmaProofAttemptORM(BaseModel):
     vetter_statement_status: str | None = None
     vetter_proof_status: str | None = None
     vetter_reason: str | None = None
+    retry_context_attempt_number: int | None = None
+    retry_context_proof_attempt_id: str | None = None
+    retry_context_vetter_report_id: str | None = None
+    retry_context_feedback_source: str | None = None
+    solver_llm_override_key: str | None = None
     terminal_disposition: str | None = None
     artifact_key: str | None = None
     created_at: datetime = Field(default_factory=utcnow)

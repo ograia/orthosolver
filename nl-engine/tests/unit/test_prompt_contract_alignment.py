@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from nl_engine.domain.contracts import Agent2Input
+from nl_engine.services.agents import AgentService
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -35,3 +37,43 @@ def test_agent5_prompt_declares_counterexample_status() -> None:
 
     assert '"counterexample_status": "accepted | rejected | undetermined | null"' in prompt
     assert 'If vetting_mode = "counterexample"' in prompt
+    assert 'If vetting_mode = "proof" and the submitted proof is empty' in prompt
+    assert 'you MUST actively test small admissible examples and edge cases' in prompt
+
+
+def test_agent2_retry_prompt_surfaces_hard_negative_constraints() -> None:
+    service = AgentService.__new__(AgentService)
+    service._prompt = lambda agent_key: "base prompt"
+
+    prompt = service._agent2_retry_prompt_override(
+        Agent2Input(
+            theorem_nl="For all n, n = n",
+            root_semantic_sketch={},
+            shared_context=[],
+            num_candidates=1,
+            previous_attempt_summaries=[
+                {
+                    "strategy_summary": "bad split",
+                    "hard_negative_constraints": [
+                        "Do not reuse the previous decomposition pattern around child lemma L1.",
+                    ],
+                    "false_lemma_findings": [
+                        {
+                            "local_id": "L1",
+                            "candidate_counterexample": "n = 1 violates the child claim",
+                        }
+                    ],
+                    "invalidating_counterexample": {
+                        "counterexample_text": "n = 1 violates the child claim",
+                        "summary": "fails immediately",
+                    },
+                }
+            ],
+            trusted_context_summaries=[],
+        )
+    )
+
+    assert prompt is not None
+    assert "HARD NEGATIVE CONSTRAINTS FROM PREVIOUS FALSE ATTEMPTS" in prompt
+    assert "n = 1 violates the child claim" in prompt
+    assert "Do not reuse the previous decomposition pattern" in prompt

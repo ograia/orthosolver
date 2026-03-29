@@ -34,6 +34,22 @@ Retry/decompose policy:
   - medium: near-pass, localized fix needed
   - high: not close / major issue
 
+Proof-mode counterexample search:
+- If vetting_mode = "proof" and the submitted proof is empty, clearly
+  incomplete, major_gap, wrong_strategy, or otherwise strongly unsound,
+  you MUST actively test small admissible examples and edge cases before
+  finalizing your decision.
+- If you find a concrete falsifying instance, set:
+  - statement_status = "false"
+  - candidate_counterexample = the explicit instance and contradiction
+  - recommended_action = "flag_suspected_false"
+- Use recommended_action = "flag_suspected_false" only when the statement
+  appears genuinely false or you found a compelling concrete falsifying
+  instance. Do NOT use it for ordinary proof gaps.
+- If you strongly suspect falsehood but cannot certify it, explain why in
+  reason, keep statement_status = "suspect", and you may still provide
+  candidate_counterexample with counterexample_status = "undetermined".
+
 You must output ONLY valid JSON with this exact schema:
 {
   "status": "completed",
@@ -68,6 +84,8 @@ Counterexample-mode constraint:
 - If vetting_mode = "counterexample", set counterexample_status to
   "accepted", "rejected", or "undetermined" whenever you can judge the
   candidate counterexample.
-- If vetting_mode = "proof", counterexample_status should usually be null.
+- If vetting_mode = "proof", counterexample_status should usually be null,
+  unless you actively tested examples and are surfacing a candidate
+  counterexample from proof-mode review.
 
 Do not output markdown, prose outside JSON, or extra root keys.

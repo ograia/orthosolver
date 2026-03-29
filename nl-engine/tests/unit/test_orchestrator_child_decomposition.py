@@ -225,3 +225,71 @@ def test_waiting_on_child_frontier_helper_covers_solver_blocking_actions() -> No
     }:
         lemma.next_action = next_action
         assert Orchestrator._lemma_waiting_on_child_decomposition_frontier(lemma) is True
+
+
+def test_previous_attempt_summaries_include_false_lemma_counterexample_constraints() -> None:
+    orch = Orchestrator.__new__(Orchestrator)
+    orch.decompositions = SimpleNamespace(
+        list_by_node=lambda problem_id, node_id: [
+            DecompositionORM(
+                decomposition_id="dec_false",
+                problem_id=problem_id,
+                node_id=node_id,
+                node_kind="lemma",
+                strategy_summary="bad split",
+                llm_vetting_status="fatal",
+                controller_status=ControllerStatus.FAILED.value,
+                invalidated_by_lemma_id="lem_false_child",
+                invalidated_by_counterexample_id="cex_1",
+                failure_origin="child_lemma_false",
+                failure_reason="child lemma contradicted by n=1",
+            )
+        ]
+    )
+    orch.counterexamples = SimpleNamespace(
+        get=lambda counterexample_id: SimpleNamespace(
+            counterexample_id=counterexample_id,
+            lemma_id="lem_false_child",
+            parent_decomposition_id="dec_false",
+            status="accepted",
+            counterexample_text="n = 1 violates the child claim",
+            summary="fails on the smallest nontrivial case",
+            confidence=0.98,
+            source_agent="agent5",
+            source_attempt_number=2,
+            accepted_by_report_id="vet_false",
+            rejected_by_report_id=None,
+        )
+    )
+    orch.artifacts = SimpleNamespace(exists=lambda key: False, load_json=lambda key: None)
+    orch._reconstruct_agent2_candidate = lambda *args, **kwargs: {
+        "lemmas": [
+            {"local_id": "L1", "lemma_id": "lem_false_child", "statement_nl": "bad child"},
+        ]
+    }
+    orch._load_decomposition_vetter_output = lambda *args, **kwargs: {
+        "decision": "fatal",
+        "summary": "contains a false child",
+        "fixes_required": ["remove the false child"],
+        "coverage_check": {"missing_coverage": [], "disguised_difficulty": []},
+        "drift_assessment": {"drift_severity": "none"},
+        "lemma_findings": [
+            {
+                "local_id": "L1",
+                "statement_status": "false",
+                "evidence": "counterexample found at n=1",
+                "counterexample": "n = 1 violates the child claim",
+            }
+        ],
+    }
+
+    summaries = orch._previous_attempt_summaries("prob_test", "lem_parent")
+
+    assert len(summaries) == 1
+    summary = summaries[0]
+    assert summary["invalidated_by_lemma_id"] == "lem_false_child"
+    assert summary["invalidated_by_counterexample_id"] == "cex_1"
+    assert summary["invalidating_counterexample"]["counterexample_text"] == "n = 1 violates the child claim"
+    assert summary["false_lemma_findings"][0]["lemma_id"] == "lem_false_child"
+    assert summary["false_lemma_findings"][0]["candidate_counterexample"] == "n = 1 violates the child claim"
+    assert any("Do not reuse" in item for item in summary["hard_negative_constraints"])

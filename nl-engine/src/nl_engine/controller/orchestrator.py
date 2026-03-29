@@ -836,6 +836,96 @@ class Orchestrator:
                 continue
         return None
 
+    def _counterexample_summary(self, counterexample_id: str | None) -> dict[str, Any] | None:
+        counterexample_key = str(counterexample_id or "").strip()
+        if not counterexample_key:
+            return None
+        row = self.counterexamples.get(counterexample_key)
+        if row is None:
+            return None
+        return {
+            "counterexample_id": row.counterexample_id,
+            "lemma_id": row.lemma_id,
+            "parent_decomposition_id": row.parent_decomposition_id,
+            "status": row.status,
+            "counterexample_text": row.counterexample_text,
+            "summary": row.summary,
+            "confidence": row.confidence,
+            "source_agent": row.source_agent,
+            "source_attempt_number": row.source_attempt_number,
+            "accepted_by_report_id": row.accepted_by_report_id,
+            "rejected_by_report_id": row.rejected_by_report_id,
+        }
+
+    @staticmethod
+    def _false_lemma_constraint_text(
+        *,
+        local_id: str | None,
+        counterexample_text: str | None,
+        evidence: str | None,
+    ) -> str:
+        child_label = f"child lemma {local_id}" if local_id else "a child lemma"
+        if counterexample_text:
+            return (
+                f"Do not reuse the previous decomposition pattern around {child_label}; "
+                f"it was falsified by counterexample {counterexample_text}."
+            )
+        if evidence:
+            return (
+                f"Do not reuse the previous decomposition pattern around {child_label}; "
+                f"it was flagged false because {evidence}."
+            )
+        return f"Do not reuse the previous decomposition pattern around {child_label}; it previously produced a false child."
+
+    def _false_lemma_findings_summary(
+        self,
+        *,
+        full_candidate: dict[str, Any] | None,
+        vet_output: dict[str, Any] | None,
+    ) -> tuple[list[dict[str, Any]], list[str]]:
+        local_to_lemma_id: dict[str, str | None] = {}
+        if isinstance(full_candidate, dict):
+            lemmas = full_candidate.get("lemmas")
+            if isinstance(lemmas, list):
+                for item in lemmas:
+                    if not isinstance(item, dict):
+                        continue
+                    local_id = str(item.get("local_id") or item.get("lemma_local_id") or "").strip()
+                    if not local_id:
+                        continue
+                    lemma_id = str(item.get("lemma_id") or "").strip() or None
+                    local_to_lemma_id[local_id] = lemma_id
+
+        findings: list[dict[str, Any]] = []
+        constraints: list[str] = []
+        lemma_findings = vet_output.get("lemma_findings") if isinstance(vet_output, dict) else None
+        if not isinstance(lemma_findings, list):
+            return findings, constraints
+        for item in lemma_findings:
+            if not isinstance(item, dict):
+                continue
+            statement_status = str(item.get("statement_status") or "").strip().lower()
+            counterexample_text = str(item.get("counterexample") or "").strip() or None
+            if statement_status != "false" and not counterexample_text:
+                continue
+            local_id = str(item.get("local_id") or "").strip() or None
+            evidence = str(item.get("evidence") or "").strip() or None
+            finding_summary = {
+                "local_id": local_id,
+                "lemma_id": local_to_lemma_id.get(local_id or ""),
+                "statement_status": statement_status or None,
+                "evidence": evidence,
+                "candidate_counterexample": counterexample_text,
+                "do_not_repeat_pattern": self._false_lemma_constraint_text(
+                    local_id=local_id,
+                    counterexample_text=counterexample_text,
+                    evidence=evidence,
+                ),
+            }
+            findings.append(finding_summary)
+            constraints.append(str(finding_summary["do_not_repeat_pattern"]))
+        return findings, constraints
+
     def _previous_attempt_summaries(self, problem_id: str, node_id: str) -> list[dict[str, Any]]:
         rows = self.decompositions.list_by_node(problem_id, node_id)
         summaries: list[dict[str, Any]] = []
@@ -875,6 +965,10 @@ class Orchestrator:
                 summary["full_candidate"] = full_candidate
 
             vet_output = self._load_decomposition_vetter_output(problem_id, row.decomposition_id)
+            false_lemma_findings, false_constraints = self._false_lemma_findings_summary(
+                full_candidate=full_candidate,
+                vet_output=vet_output,
+            )
             if isinstance(vet_output, dict):
                 coverage = vet_output.get("coverage_check")
                 drift = vet_output.get("drift_assessment")
@@ -890,6 +984,8 @@ class Orchestrator:
                 summary["disguised_difficulty"] = (
                     coverage.get("disguised_difficulty", []) if isinstance(coverage, dict) else []
                 )
+            if false_lemma_findings:
+                summary["false_lemma_findings"] = false_lemma_findings
             if row.failure_origin:
                 summary["failure_origin"] = row.failure_origin
             # Load programmatic self-containment violations if persisted
@@ -926,6 +1022,22 @@ class Orchestrator:
                     "A child lemma is equivalent to the parent theorem; rewrite decomposition with strictly simpler support lemmas."
                 )
                 summary["fixes_required"] = fixes
+            invalidating_counterexample = self._counterexample_summary(row.invalidated_by_counterexample_id)
+            if row.invalidated_by_lemma_id:
+                summary["invalidated_by_lemma_id"] = row.invalidated_by_lemma_id
+            if row.invalidated_by_counterexample_id:
+                summary["invalidated_by_counterexample_id"] = row.invalidated_by_counterexample_id
+            if invalidating_counterexample is not None:
+                summary["invalidating_counterexample"] = invalidating_counterexample
+                false_constraints.append(
+                    self._false_lemma_constraint_text(
+                        local_id=None,
+                        counterexample_text=str(invalidating_counterexample.get("counterexample_text") or "").strip() or None,
+                        evidence=str(row.failure_reason or "").strip() or None,
+                    )
+                )
+            if false_constraints:
+                summary["hard_negative_constraints"] = list(dict.fromkeys(false_constraints))
             summaries.append(
                 summary
             )
@@ -3113,6 +3225,99 @@ class Orchestrator:
             return f"Previous vetter reason: {report.reason}"
         return None
 
+    @staticmethod
+    def _solver_retry_quality(
+        attempt: LemmaProofAttemptORM,
+        report: VetterReportORM | None,
+    ) -> int:
+        proof_nl = str(attempt.proof_nl or "").strip()
+        if not proof_nl:
+            return 0
+        if str(attempt.terminal_disposition or "").strip() == "accepted":
+            return 4
+        if report is not None:
+            if report.statement_status == "plausible" and report.proof_status == "complete":
+                return 3
+            if report.proof_status == "localized_gap":
+                return 2
+            if report.proof_status in {"major_gap", "wrong_strategy"}:
+                return 1
+        if str(attempt.solver_status or "").strip() == "proved":
+            return 3
+        return 1
+
+    def _best_solver_retry_context(
+        self,
+        *,
+        problem: ProblemORM,
+        lemma: LemmaORM,
+    ) -> dict[str, Any]:
+        attempt_rows = self.proof_attempts.list_by_lemma(problem.problem_id, lemma.lemma_id)
+        chosen_attempt: LemmaProofAttemptORM | None = None
+        chosen_report: VetterReportORM | None = None
+        chosen_quality = -1
+        for attempt in attempt_rows:
+            report = self.vetter_reports.get(attempt.vetter_report_id) if attempt.vetter_report_id else None
+            quality = self._solver_retry_quality(attempt, report)
+            if quality <= 0:
+                continue
+            is_better = quality > chosen_quality
+            if not is_better and quality == chosen_quality and chosen_attempt is not None:
+                is_better = (
+                    int(attempt.attempt_number),
+                    attempt.updated_at,
+                    attempt.proof_attempt_id,
+                ) > (
+                    int(chosen_attempt.attempt_number),
+                    chosen_attempt.updated_at,
+                    chosen_attempt.proof_attempt_id,
+                )
+            if is_better:
+                chosen_attempt = attempt
+                chosen_report = report
+                chosen_quality = quality
+
+        latest_report = self.vetter_reports.latest_for_target(problem.problem_id, lemma.lemma_id)
+        previous_proof_nl = None
+        if chosen_attempt is not None:
+            proof_nl = str(chosen_attempt.proof_nl or "").strip()
+            previous_proof_nl = proof_nl or None
+        elif isinstance(lemma.latest_nl_proof, str) and lemma.latest_nl_proof.strip():
+            previous_proof_nl = lemma.latest_nl_proof.strip()
+
+        feedback_source = "none"
+        previous_feedback = self._solver_feedback_from_report(chosen_report)
+        if previous_feedback:
+            feedback_source = "selected_attempt_report"
+        else:
+            previous_feedback = self._solver_feedback_from_report(latest_report)
+            if previous_feedback:
+                feedback_source = "latest_report"
+
+        return {
+            "previous_proof_nl": previous_proof_nl,
+            "previous_feedback": previous_feedback,
+            "selected_attempt_number": int(chosen_attempt.attempt_number) if chosen_attempt is not None else None,
+            "selected_proof_attempt_id": chosen_attempt.proof_attempt_id if chosen_attempt is not None else None,
+            "selected_vetter_report_id": chosen_report.report_id if chosen_report is not None else None,
+            "feedback_source": feedback_source,
+            "quality_rank": chosen_quality if chosen_quality > 0 else None,
+        }
+
+    @staticmethod
+    def _agent4_infra_override_key(
+        *,
+        attempt_number: int,
+        consecutive_infra_failures: int,
+    ) -> str | None:
+        if attempt_number == 1:
+            return "agent4_first"
+        if consecutive_infra_failures >= 3:
+            return "agent4_infra_retry_3"
+        if consecutive_infra_failures >= 2:
+            return "agent4_infra_retry_2"
+        return None
+
     def _apply_vetter_route_override(
         self,
         *,
@@ -3250,6 +3455,11 @@ class Orchestrator:
             "vetter_statement_status": attempt.vetter_statement_status,
             "vetter_proof_status": attempt.vetter_proof_status,
             "vetter_reason": attempt.vetter_reason,
+            "retry_context_attempt_number": attempt.retry_context_attempt_number,
+            "retry_context_proof_attempt_id": attempt.retry_context_proof_attempt_id,
+            "retry_context_vetter_report_id": attempt.retry_context_vetter_report_id,
+            "retry_context_feedback_source": attempt.retry_context_feedback_source,
+            "solver_llm_override_key": attempt.solver_llm_override_key,
             "terminal_disposition": attempt.terminal_disposition,
             "created_at": attempt.created_at.isoformat(),
             "updated_at": attempt.updated_at.isoformat(),
@@ -3284,6 +3494,26 @@ class Orchestrator:
         attempt.solver_artifact_prefix = worker_row.artifact_prefix
         attempt.proof_nl = proof_nl
         attempt.solver_candidate_counterexample = candidate_counterexample
+        payload = worker_row.payload if isinstance(worker_row.payload, dict) else {}
+        retry_context = payload.get("retry_context")
+        if isinstance(retry_context, dict):
+            raw_attempt_number = retry_context.get("attempt_number")
+            if isinstance(raw_attempt_number, int):
+                attempt.retry_context_attempt_number = raw_attempt_number
+            raw_proof_attempt_id = retry_context.get("proof_attempt_id")
+            if isinstance(raw_proof_attempt_id, str) and raw_proof_attempt_id.strip():
+                attempt.retry_context_proof_attempt_id = raw_proof_attempt_id.strip()
+            raw_report_id = retry_context.get("vetter_report_id")
+            if isinstance(raw_report_id, str) and raw_report_id.strip():
+                attempt.retry_context_vetter_report_id = raw_report_id.strip()
+            raw_feedback_source = retry_context.get("feedback_source")
+            if isinstance(raw_feedback_source, str) and raw_feedback_source.strip():
+                attempt.retry_context_feedback_source = raw_feedback_source.strip()
+        raw_override_key = payload.get("solver_llm_override_key", worker_row.llm_override_key)
+        if isinstance(raw_override_key, str) and raw_override_key.strip():
+            attempt.solver_llm_override_key = raw_override_key.strip()
+        elif not raw_override_key:
+            attempt.solver_llm_override_key = None
         if terminal_disposition is not None:
             attempt.terminal_disposition = terminal_disposition
         self.proof_attempts.save(attempt)
@@ -4216,7 +4446,8 @@ class Orchestrator:
                 continue
 
             lemma.solver_attempt_count = max(lemma.solver_attempt_count, attempt_number)
-            lemma.latest_nl_proof = solved.proof_nl
+            if solved.proof_nl:
+                lemma.latest_nl_proof = solved.proof_nl
             self.lemmas.save(lemma)
             changed = True
 
@@ -4460,10 +4691,7 @@ class Orchestrator:
         if existing is not None:
             return False
 
-        previous_feedback = None
-        latest_report = self.vetter_reports.latest_for_target(problem.problem_id, lemma.lemma_id)
-        if latest_report:
-            previous_feedback = self._solver_feedback_from_report(latest_report)
+        retry_context = self._best_solver_retry_context(problem=problem, lemma=lemma)
 
         allowed_manifest, definition_context, forbidden_claims, proof_attempt_node_id = self._dependency_manifest_bundle(
             problem=problem,
@@ -4487,16 +4715,28 @@ class Orchestrator:
             allowed_dependency_manifest=allowed_manifest,
             forbidden_claims=forbidden_claims,
             proof_attempt_node_id=proof_attempt_node_id,
-            previous_feedback=previous_feedback,
-            previous_proof_nl=lemma.latest_nl_proof,
+            previous_feedback=retry_context["previous_feedback"],
+            previous_proof_nl=retry_context["previous_proof_nl"],
             attempt_number=attempt_number,
         )
-        override_key = None
-        if attempt_number == 1:
+        override_key = self._agent4_infra_override_key(
+            attempt_number=attempt_number,
+            consecutive_infra_failures=int(lemma.consecutive_infrastructure_failures),
+        )
+        if override_key == "agent4_first":
             override_key = self._consume_lemma_override_once(
                 lemma.lemma_id,
                 override_key="agent4_first",
             )
+        payload_dict = payload.model_dump()
+        payload_dict["retry_context"] = {
+            "attempt_number": retry_context["selected_attempt_number"],
+            "proof_attempt_id": retry_context["selected_proof_attempt_id"],
+            "vetter_report_id": retry_context["selected_vetter_report_id"],
+            "feedback_source": retry_context["feedback_source"],
+            "quality_rank": retry_context["quality_rank"],
+        }
+        payload_dict["solver_llm_override_key"] = override_key
         solver_llm_profile = (
             cfg.llm.agent4_first
             if override_key == "agent4_first" and cfg.llm.agent4_first is not None
@@ -4521,7 +4761,7 @@ class Orchestrator:
                 artifact_prefix=f"problems/{problem.problem_id}/lemmas/{lemma.lemma_id}/solver_attempt_{attempt_number}",
                 handler_key="agent4_lemma_solver",
                 request_source="lemma_solver",
-                payload=payload.model_dump(),
+                payload=payload_dict,
                 llm_override_key=override_key,
                 max_attempts=solver_job_max_attempts,
             )
@@ -5013,10 +5253,33 @@ class Orchestrator:
 
         is_infrastructure = error_class in {"infrastructure", "infrastructure_transient", "timeout"}
         if is_infrastructure:
-            problem.infrastructure_failure_count += 1
-            self._infrastructure_incident_added_this_tick = True
             lemma.consecutive_infrastructure_failures = int(lemma.consecutive_infrastructure_failures) + 1
             self._ensure_solver_series_started(lemma)
+            infra_cap = cfg.lemma_solving.max_consecutive_infrastructure_failures_per_lemma
+            if infra_cap is not None and int(lemma.consecutive_infrastructure_failures) >= int(infra_cap):
+                self.event_logger.transition(
+                    problem.problem_id,
+                    "lemma.infrastructure_cap_reached",
+                    None,
+                    RoutingStatus.DECOMPOSE_FURTHER.value,
+                    target_node_id=lemma.lemma_id,
+                    worker_job_id=worker_job_id,
+                    reason=(
+                        f"{error_class}: {message} | "
+                        f"max consecutive infrastructure failures per lemma reached ({int(infra_cap)})"
+                    ),
+                )
+                return self._apply_immediate_lemma_follow_up(
+                    problem=problem,
+                    lemma=lemma,
+                    cfg=cfg,
+                    default_route=RoutingStatus.RETRY_SOLVER.value,
+                    reason=f"{error_class}: {message}",
+                    terminal_worker_result=f"{agent_key}:failed_infra",
+                )
+
+            problem.infrastructure_failure_count += 1
+            self._infrastructure_incident_added_this_tick = True
             reason_payload = {
                 "agent_key": agent_key,
                 "artifact_prefix": artifact_prefix,
@@ -5209,7 +5472,8 @@ class Orchestrator:
             )
 
         lemma.solver_attempt_count = max(lemma.solver_attempt_count, int(solved.attempt_number), consumed_attempt)
-        lemma.latest_nl_proof = solved.proof_nl
+        if solved.proof_nl:
+            lemma.latest_nl_proof = solved.proof_nl
         lemma.consecutive_infrastructure_failures = 0
         attempt_row = self._record_solver_attempt(
             lemma=lemma,

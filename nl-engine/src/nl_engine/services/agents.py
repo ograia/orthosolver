@@ -82,6 +82,7 @@ class BackgroundResponseFailed(RuntimeError):
 
 class AgentService:
     _SUPPORTED_MODELS = {"gpt-5.4", "gpt-5.4-pro", "gpt-5.4-mini", "gpt-5.4-nano"}
+    _MODEL_FALLBACK_ORDER = ("gpt-5.4-pro", "gpt-5.4", "gpt-5.4-mini", "gpt-5.4-nano")
     _BACKGROUND_ELIGIBLE_MODELS = {"gpt-5.4", "gpt-5.4-pro"}
     _BACKGROUND_POLL_INTERVAL = 3  # seconds between polls
     _BACKGROUND_POLL_INTERVALS = (15, 30, 60)
@@ -375,6 +376,57 @@ class AgentService:
             return "high"
         return effort
 
+    @staticmethod
+    def _degrade_reasoning_effort(effort: ReasoningEffort, *, steps: int = 1) -> ReasoningEffort:
+        order: tuple[ReasoningEffort, ...] = ("none", "low", "medium", "high", "xhigh")
+        try:
+            idx = order.index(effort)
+        except ValueError:
+            return "medium"
+        return order[max(0, idx - max(1, steps))]
+
+    @classmethod
+    def _degrade_model(cls, model: str) -> str:
+        try:
+            idx = cls._MODEL_FALLBACK_ORDER.index(model)
+        except ValueError:
+            return model
+        return cls._MODEL_FALLBACK_ORDER[min(len(cls._MODEL_FALLBACK_ORDER) - 1, idx + 1)]
+
+    @classmethod
+    def _apply_internal_override(
+        cls,
+        *,
+        agent_key: str,
+        override_key: str | None,
+        model: str,
+        effort: ReasoningEffort,
+        verbosity: TextVerbosity,
+        timeout_seconds: int,
+        max_attempts: int,
+    ) -> tuple[str, ReasoningEffort, TextVerbosity, int, int]:
+        if agent_key != "agent4" or override_key is None:
+            return model, effort, verbosity, timeout_seconds, max_attempts
+        if override_key == "agent4_infra_retry_2":
+            return (
+                model,
+                cls._normalize_effort_for_model(model, cls._degrade_reasoning_effort(effort, steps=1)),
+                "low",
+                timeout_seconds,
+                max_attempts,
+            )
+        if override_key == "agent4_infra_retry_3":
+            fallback_model = cls._degrade_model(model)
+            fallback_effort = cls._degrade_reasoning_effort(effort, steps=2)
+            return (
+                fallback_model,
+                cls._normalize_effort_for_model(fallback_model, fallback_effort),
+                "low",
+                timeout_seconds,
+                max_attempts,
+            )
+        return model, effort, verbosity, timeout_seconds, max_attempts
+
     def _resolve_agent_model_and_effort(
         self,
         *,
@@ -406,6 +458,15 @@ class AgentService:
                 timeout_seconds = max(0, profile.timeout_seconds)
             if isinstance(profile.max_attempts, int):
                 max_attempts = max(1, profile.max_attempts)
+        model, effort, verbosity, timeout_seconds, max_attempts = self._apply_internal_override(
+            agent_key=agent_key,
+            override_key=override_key,
+            model=model,
+            effort=effort,
+            verbosity=verbosity,
+            timeout_seconds=timeout_seconds,
+            max_attempts=max_attempts,
+        )
         effort = self._normalize_effort_for_model(model, effort)
         return model, effort, verbosity, timeout_seconds, max_attempts
 
@@ -2013,6 +2074,57 @@ class AgentService:
                 + "\n"
             )
 
+        hard_negative_lines: list[str] = []
+        counterexample_lines: list[str] = []
+        for attempt in payload.previous_attempt_summaries:
+            constraints = attempt.get("hard_negative_constraints")
+            if isinstance(constraints, list):
+                for item in constraints:
+                    text = str(item or "").strip()
+                    if text:
+                        hard_negative_lines.append(f"  - {text}")
+            invalidating_counterexample = attempt.get("invalidating_counterexample")
+            if isinstance(invalidating_counterexample, dict):
+                counterexample_text = str(invalidating_counterexample.get("counterexample_text") or "").strip()
+                summary = str(invalidating_counterexample.get("summary") or "").strip()
+                if counterexample_text:
+                    if summary:
+                        counterexample_lines.append(f"  - {counterexample_text} ({summary})")
+                    else:
+                        counterexample_lines.append(f"  - {counterexample_text}")
+            false_findings = attempt.get("false_lemma_findings")
+            if isinstance(false_findings, list):
+                for item in false_findings:
+                    if not isinstance(item, dict):
+                        continue
+                    local_id = str(item.get("local_id") or "?").strip() or "?"
+                    counterexample_text = str(item.get("candidate_counterexample") or "").strip()
+                    evidence = str(item.get("evidence") or "").strip()
+                    if counterexample_text:
+                        counterexample_lines.append(f"  - Lemma {local_id}: {counterexample_text}")
+                    elif evidence:
+                        counterexample_lines.append(f"  - Lemma {local_id}: {evidence}")
+
+        hard_negative_section = ""
+        if hard_negative_lines or counterexample_lines:
+            section_lines = [
+                "\nHARD NEGATIVE CONSTRAINTS FROM PREVIOUS FALSE ATTEMPTS:",
+                "These are not generic suggestions. Treat them as constraints you must explicitly avoid.",
+            ]
+            if counterexample_lines:
+                section_lines.append("Concrete counterexamples / false-child evidence:")
+                section_lines.extend(counterexample_lines)
+            if hard_negative_lines:
+                section_lines.append("Do-not-repeat constraints:")
+                section_lines.extend(hard_negative_lines)
+            section_lines.append(
+                "If a candidate still resembles one of these rejected patterns, you must rewrite it into a materially different decomposition."
+            )
+            section_lines.append(
+                "Do not emit a child lemma that is contradicted by one of the listed counterexamples."
+            )
+            hard_negative_section = "\n".join(section_lines) + "\n"
+
         return (
             f"{base}\n\n"
             "RETRY MODE (MANDATORY):\n"
@@ -2025,6 +2137,7 @@ class AgentService:
             f"{dd_section}"
             f"{prevet_section}"
             f"{equivalence_section}"
+            f"{hard_negative_section}"
             "Previous attempt summaries (JSON):\n"
             f"{retry_context}\n"
         )

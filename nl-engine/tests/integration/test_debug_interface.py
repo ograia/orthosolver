@@ -176,7 +176,17 @@ def test_debug_snapshot_contains_graph_and_lookup_maps() -> None:
     assert "last_transition_reason" in lemma_row
     assert "last_activity_at" in lemma_row
     assert "decomposition_candidates" in lemma_row
+    assert "selected_retry_context" in lemma_row
     assert isinstance(body["decomposition_candidates"], list)
+    if lemma_row["proof_attempts"]:
+        attempt_row = lemma_row["proof_attempts"][0]
+        assert "retry_context_attempt_number" in attempt_row
+        assert "retry_context_proof_attempt_id" in attempt_row
+        assert "retry_context_vetter_report_id" in attempt_row
+        assert "retry_context_feedback_source" in attempt_row
+        assert "solver_llm_override_key" in attempt_row
+        assert "solver_request_records" in attempt_row
+        assert "solver_timeline" in attempt_row
     if body["logical_decompositions"]:
         logical_row = body["logical_decompositions"][0]
         assert "logical_decomposition_id" in logical_row
