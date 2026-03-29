@@ -1,0 +1,100 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329000907_1bd84b9a",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T00:07:27.871342Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.15,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T00:09:56.349015Z",
+  "last_dependency_check_id": "depchk_20260329000956_b201a24f",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof establishes the claimed bound by sorting the elements of S increasingly, proving s_i >= i, and then comparing sum_{k in S} 1/k to H_m and finally to H_r. The empty-set case is handled separately. The argument matches the lemma sketch and uses no disallowed dependence.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let m = |S|. Then 0 <= m <= r. If m = 0, the sum over S is 0, so the inequality is immediate since H_r > 0.\n\nNow assume m >= 1. List the elements of S in increasing order as s_1 < s_2 < ... < s_m. Because these are m distinct positive integers, the i-th smallest one satisfies s_i >= i for each i = 1, ..., m: indeed, there are only i - 1 positive integers smaller than i, so the i-th distinct positive integer cannot be less than i.\n\nTherefore 1/s_i <= 1/i for each i, and hence\n\nsum_{k in S} 1/k = sum_{i=1}^m 1/s_i <= sum_{i=1}^m 1/i = H_m.\n\nFinally, since m <= r and the harmonic numbers are increasing with the index,\n\nH_m <= H_r.\n\nCombining these inequalities gives\n\nsum_{k in S} 1/k <= H_r,\n\nas required.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329000956_c9010932",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329000721_c87cad90",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329000207_576b02a9",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329000207_386106ce",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329000207_386106ce/proof_bundles/lemmas/lem_20260329000721_c87cad90.json",
+  "proof_graph_id": "pgraph_20260329000907_fb680bda",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Turn the cardinality bounds on threshold sets into harmonic-number bounds.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "If r is an integer with 1 <= r <= n and S is a subset of {1,...,n} with |S| <= r, then sum_{k in S} 1/k <= H_r.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is a positive integer",
+      "r is an integer",
+      "1 <= r <= n",
+      "S is a subset of {1,2,...,n}",
+      "the cardinality of S is at most r",
+      "each element k of S is a positive integer (so 1/k is well-defined)"
+    ],
+    "normalized_claim": "For every positive integer n, for every integer r with 1 <= r <= n, for every subset S of {1,2,...,n} with size at most r, the sum of 1/k over all k in S is at most the harmonic number H_r.",
+    "quantifier_order": [
+      "for all n",
+      "for all r",
+      "for all S"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "global parameter defining the ambient set {1,...,n}",
+        "type": "natural number"
+      },
+      {
+        "domain": "integers satisfying 1 <= r <= n",
+        "name": "r",
+        "role": "upper bound on the size of S and index for H_r",
+        "type": "integer"
+      },
+      {
+        "domain": "subsets of {1,2,...,n}",
+        "name": "S",
+        "role": "index set for the partial harmonic sum over reciprocals",
+        "type": "set of integers"
+      },
+      {
+        "domain": "elements of S",
+        "name": "k",
+        "role": "summation index in sum over k in S of 1/k",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential witnesses appear; the claim is purely universal with an inequality conclusion"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T00:09:56.349015Z"
+}

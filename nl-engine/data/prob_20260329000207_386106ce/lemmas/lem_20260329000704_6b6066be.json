@@ -1,0 +1,107 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329000907_a87ad352",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T00:07:11.247017Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.35,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T00:13:16.110031Z",
+  "last_dependency_check_id": null,
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": 7,
+  "last_submitted_solver_job_id": "wrk_lem_20260329000704_6b6066be_g0_solve_7",
+  "last_terminal_worker_result": "agent4:failed",
+  "last_transition_reason": "solver attempt 7 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329000704_6b6066be",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "thm_root_20260329000207_576b02a9",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329000207_386106ce",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329000207_386106ce/proof_bundles/lemmas/lem_20260329000704_6b6066be.json",
+  "proof_graph_id": "pgraph_20260329000907_fb680bda",
+  "proof_status": "proof_flawed",
+  "role_in_parent": "Convert the endpoint values m/n into a combinatorial residue sum that can be estimated term-by-term.",
+  "routing_status": "retry_solver",
+  "shared_context_refs": [],
+  "solver_attempt_count": 6,
+  "solver_series_started_at": "2026-03-29T00:09:25.005675Z",
+  "statement_lean": null,
+  "statement_nl": "For every integer m with 0 <= m <= n-1, let r_k be the least nonnegative residue of k*m modulo n for each k = 1, ..., n. Then F_n(m/n) = sum_{k=1}^n r_k/(n*k).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is a positive integer (so modulo n and the least nonnegative residue are well-defined)",
+      "m is an integer satisfying 0 <= m <= n - 1",
+      "k ranges over all integers from 1 to n inclusive",
+      "each r_k is the least nonnegative residue, hence lies in the set of integers {0, 1, 2, ..., n - 1}"
+    ],
+    "normalized_claim": "For every positive integer n and every integer m with 0 <= m <= n - 1, if for each k in {1, 2, ..., n} the integer r_k is defined as the least nonnegative residue of k*m modulo n, then F_n evaluated at m/n equals the sum from k = 1 to n of r_k divided by n times k.",
+    "quantifier_order": [
+      "for each positive integer n",
+      "for every integer m with 0 <= m <= n - 1",
+      "for each integer k with 1 <= k <= n",
+      "define r_k as the least nonnegative residue of k*m modulo n",
+      "conclude the equality for that m (and the resulting r_k values)"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "modulus parameter and index for the function F_n and the range of k",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= m <= n - 1",
+        "name": "m",
+        "role": "input numerator determining the rational number m/n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "summation/index variable and parameter for the residues",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers with 0 <= r_k <= n - 1",
+        "name": "r_k",
+        "role": "least nonnegative residue of k*m modulo n; depends on k, m, n",
+        "type": "integer"
+      },
+      {
+        "domain": "rationals of the form m/n with 0 <= m <= n - 1",
+        "name": "F_n",
+        "role": "target function evaluated at the rational m/n",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "r_k depends on the chosen n and m and on the index k",
+      "the equality value F_n(m/n) depends on the whole list of residues r_1, ..., r_n, which in turn are determined by n and m"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T00:13:16.110031Z"
+}

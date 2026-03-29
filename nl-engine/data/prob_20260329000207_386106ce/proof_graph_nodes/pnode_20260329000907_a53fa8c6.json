@@ -1,0 +1,64 @@
+{
+  "created_at": "2026-03-29T00:09:07.555229Z",
+  "graph_node_id": "pnode_20260329000907_a53fa8c6",
+  "metadata": {
+    "parent_id": "thm_root_20260329000207_576b02a9"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "83551695c8f88a360303c9f6d5fdd7aad742103842f9dca15cde148923af59ca",
+  "owner_id": "lem_20260329000652_3e7575b2",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329000907_fb680bda",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "m is an integer",
+      "m satisfies 0 <= m <= n-2",
+      "x is in the interval [m/n, (m+1)/n)",
+      "y is in the interval [m/n, (m+1)/n)",
+      "the comparisons F_n(y) <= F_n(x) are meaningful, so outputs of F_n are in an orderable domain"
+    ],
+    "normalized_claim": "Fix an integer n. For every integer m with 0 <= m <= n-2, and for all real numbers x and y in [m/n, (m+1)/n) with x <= y, the inequality F_n(y) <= F_n(x) holds.",
+    "quantifier_order": [
+      "for every integer m such that 0 <= m <= n-2",
+      "for all real numbers x and y such that x and y lie in [m/n, (m+1)/n) and x <= y"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter indexing the function F_n and the partition size",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "interval index selecting the subinterval [m/n, (m+1)/n)",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers",
+        "name": "x",
+        "role": "left argument point in the subinterval",
+        "type": "real number"
+      },
+      {
+        "domain": "real numbers",
+        "name": "y",
+        "role": "right argument point in the subinterval",
+        "type": "real number"
+      },
+      {
+        "domain": "at least defined on every real number in the union of intervals [m/n, (m+1)/n) for allowed m",
+        "name": "F_n",
+        "role": "maps inputs x to outputs F_n(x) that can be compared with <= (belonging to a totally ordered set)",
+        "type": "function"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; the universal conditions quantify x and y directly within the same chosen interval determined by m"
+    ]
+  },
+  "statement_nl": "For every integer m with 0 <= m <= n-2, the function F_n is nonincreasing on the interval [m/n, (m+1)/n): if x and y lie in this interval and x <= y, then F_n(y) <= F_n(x).",
+  "updated_at": "2026-03-29T00:09:07.555230Z"
+}

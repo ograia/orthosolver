@@ -51,6 +51,7 @@ You must output ONLY valid JSON with this exact schema:
   "reason": "string",
   "feedback_for_solver": "string or null",
   "candidate_counterexample": "string or null",
+  "counterexample_status": "accepted | rejected | undetermined | null",
   "dependency_assessment": {},
   "undeclared_citation_findings": [],
   "forbidden_dependency_findings": [],
@@ -62,5 +63,11 @@ You must output ONLY valid JSON with this exact schema:
     }
   ]
 }
+
+Counterexample-mode constraint:
+- If vetting_mode = "counterexample", set counterexample_status to
+  "accepted", "rejected", or "undetermined" whenever you can judge the
+  candidate counterexample.
+- If vetting_mode = "proof", counterexample_status should usually be null.
 
 Do not output markdown, prose outside JSON, or extra root keys.

@@ -1,0 +1,70 @@
+{
+  "assembly_plan_id": "asm_20260329000648_85948849",
+  "controller_status": "active",
+  "created_at": "2026-03-29T00:09:07.451274Z",
+  "decomposition_id": "dec_20260329000648_7ba73989",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "passed",
+  "equivalence_risk": "none",
+  "failure_origin": null,
+  "failure_reason": null,
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 1.8,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": null,
+  "latest_prepare_track_job_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "skipped",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [
+    "lem_20260329000648_7b44fb14",
+    "lem_20260329000652_3e7575b2",
+    "lem_20260329000659_807f9ddf",
+    "lem_20260329000704_6b6066be",
+    "lem_20260329000711_109eff5b",
+    "lem_20260329000721_c87cad90",
+    "lem_20260329000727_e348a852",
+    "lem_20260329000732_a9e86204"
+  ],
+  "llm_vetting_status": "accepted",
+  "logical_decomposition_id": "logdec_thm_root_20260329000207_576b02a9_track_1",
+  "node_id": "thm_root_20260329000207_576b02a9",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329000207_386106ce",
+  "proof_bundle_artifact_id": "problems/prob_20260329000207_386106ce/proof_bundles/decompositions/dec_20260329000648_7ba73989.json",
+  "proof_graph_id": "pgraph_20260329000907_fb680bda",
+  "raw_candidate_artifact_id": "problems/prob_20260329000207_386106ce/decomposition_candidates/dec_20260329000648_7ba73989/agent2_candidate.json",
+  "revision_number": 1,
+  "shared_context": [
+    {
+      "content": "For a fixed integer n>1, define F_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k for real x.",
+      "kind": "definition",
+      "label": "F_n"
+    },
+    {
+      "content": "For a positive integer r, H_r = sum_{i=1}^r 1/i.",
+      "kind": "notation",
+      "label": "H_n"
+    },
+    {
+      "content": "For a real number x, {x} = x - floor(x) denotes its fractional part.",
+      "kind": "notation",
+      "label": "fractional_part"
+    }
+  ],
+  "strategy_summary": "Reduce by integer periodicity to the fractional part x in [0,1). Then split [0,1) into the intervals [m/n,(m+1)/n). The last interval is easy and gives the candidate value H_n-1 directly. On the earlier intervals, monotonicity reduces everything to the grid points m/n, and a residue-counting plus harmonic-sum estimate shows those grid values are strictly smaller than H_n-1. This identifies both the maximizing set and the maximum value.",
+  "updated_at": "2026-03-29T00:09:26.890865Z"
+}

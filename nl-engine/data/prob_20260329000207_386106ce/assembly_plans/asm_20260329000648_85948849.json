@@ -1,0 +1,64 @@
+{
+  "assembly_plan_id": "asm_20260329000648_85948849",
+  "created_at": "2026-03-29T00:09:07.451288Z",
+  "decomposition_id": "dec_20260329000648_7ba73989",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329000207_386106ce",
+  "proof_skeleton_nl": "First use integer periodicity to reduce to x in [0,1). The final interval [(n-1)/n,1) is evaluated directly and gives the value H_n-1. On every earlier interval [m/n,(m+1)/n), monotonicity reduces the problem to the left endpoint m/n, and the bottleneck endpoint estimate shows these values are strictly smaller than H_n-1. Therefore the maximizing points in [0,1) are exactly the last interval, and periodicity lifts this to all real x as the fractional-part condition {x} in [(n-1)/n,1). The maximum value is H_n-1.",
+  "root_node_id": "thm_root_20260329000207_576b02a9",
+  "steps": [
+    {
+      "derives": "For an arbitrary real x, write x = z + t with z an integer and t in [0,1). By integer periodicity, F_n(x) = F_n(t), so it is enough to maximize over t in [0,1).",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This uses the standard decomposition of a real number into integer part and fractional part together with periodicity.",
+      "uses_lemmas": [
+        "lem_20260329000648_7b44fb14"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every t in [(n-1)/n,1), F_n(t) = H_n - 1. Hence every point in the last interval already attains the candidate maximum value.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is a direct application of the explicit evaluation lemma.",
+      "uses_lemmas": [
+        "lem_20260329000659_807f9ddf"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "If t lies in an earlier interval [m/n,(m+1)/n) with m <= n-2, then F_n(t) <= F_n(m/n) < H_n - 1. So no point in any earlier interval can maximize.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "The conclusion comes from monotonicity on the interval and then the strict endpoint bound, i.e. two logical steps.",
+      "uses_lemmas": [
+        "lem_20260329000652_3e7575b2",
+        "lem_20260329000732_a9e86204"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "On [0,1), the maximum value of F_n is H_n - 1, and the maximizing points are exactly those t in [(n-1)/n,1).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Combine the existence of maximizers on the last interval with the exclusion of all earlier intervals.",
+      "uses_lemmas": [
+        "A2",
+        "A3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For all real x, F_n(x) is maximal exactly when its fractional part {x} lies in [(n-1)/n,1). Equivalently, the maximizers are the union over all integers m of [m + (n-1)/n, m + 1), and the maximum value is H_n - 1.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Translate the [0,1) characterization by integer periodicity and rewrite it in terms of the fractional part.",
+      "uses_lemmas": [
+        "A4",
+        "lem_20260329000648_7b44fb14"
+      ],
+      "uses_prior_steps": []
+    }
+  ]
+}

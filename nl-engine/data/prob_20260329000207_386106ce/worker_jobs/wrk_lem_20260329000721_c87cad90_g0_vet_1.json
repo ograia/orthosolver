@@ -1,0 +1,206 @@
+{
+  "artifact_prefix": "problems/prob_20260329000207_386106ce/lemmas/lem_20260329000721_c87cad90/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:09:51.372078Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:09:56.202311Z",
+  "controller_consumed_by_execution_id": "exec_20260329000207_17f0dd74",
+  "created_at": "2026-03-29T00:09:44.511386Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329000207_17f0dd74",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+        "item_id": "pnode_20260329000924_45ff7d7e",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329000207_576b02a9",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329000207_576b02a9",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer greater than 1",
+            "k is an integer with 1 less than or equal to k less than or equal to n",
+            "x ranges over all real numbers",
+            "floor is the usual greatest integer function mapping real inputs to integers"
+          ],
+          "normalized_claim": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+          "quantifier_order": [
+            "Fix an integer n with n greater than 1",
+            "There exists a real x such that the expression at x is at least the expression at every real y",
+            "For all real y, compare the expression value at x versus y"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "fixed parameter used in the definition of the objective function and in the summation range",
+              "type": "integer"
+            },
+            {
+              "domain": "real numbers",
+              "name": "x",
+              "role": "free variable over which the expression is maximized",
+              "type": "real"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "summation index ranging from 1 to n",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "The maximizing real number(s) x can depend on the chosen integer n",
+            "The claimed maximal value depends on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329000721_c87cad90",
+    "proof_nl": "Let m = |S|. Then 0 <= m <= r. If m = 0, the sum over S is 0, so the inequality is immediate since H_r > 0.\n\nNow assume m >= 1. List the elements of S in increasing order as s_1 < s_2 < ... < s_m. Because these are m distinct positive integers, the i-th smallest one satisfies s_i >= i for each i = 1, ..., m: indeed, there are only i - 1 positive integers smaller than i, so the i-th distinct positive integer cannot be less than i.\n\nTherefore 1/s_i <= 1/i for each i, and hence\n\nsum_{k in S} 1/k = sum_{i=1}^m 1/s_i <= sum_{i=1}^m 1/i = H_m.\n\nFinally, since m <= r and the harmonic numbers are increasing with the index,\n\nH_m <= H_r.\n\nCombining these inequalities gives\n\nsum_{k in S} 1/k <= H_r,\n\nas required.",
+    "role_in_assembly": "Turn the cardinality bounds on threshold sets into harmonic-number bounds.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k less than or equal to n",
+        "x ranges over all real numbers",
+        "floor is the usual greatest integer function mapping real inputs to integers"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+      "quantifier_order": [
+        "Fix an integer n with n greater than 1",
+        "There exists a real x such that the expression at x is at least the expression at every real y",
+        "For all real y, compare the expression value at x versus y"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter used in the definition of the objective function and in the summation range",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "free variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number(s) x can depend on the chosen integer n",
+        "The claimed maximal value depends on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is a positive integer",
+        "r is an integer",
+        "1 <= r <= n",
+        "S is a subset of {1,2,...,n}",
+        "the cardinality of S is at most r",
+        "each element k of S is a positive integer (so 1/k is well-defined)"
+      ],
+      "normalized_claim": "For every positive integer n, for every integer r with 1 <= r <= n, for every subset S of {1,2,...,n} with size at most r, the sum of 1/k over all k in S is at most the harmonic number H_r.",
+      "quantifier_order": [
+        "for all n",
+        "for all r",
+        "for all S"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "global parameter defining the ambient set {1,...,n}",
+          "type": "natural number"
+        },
+        {
+          "domain": "integers satisfying 1 <= r <= n",
+          "name": "r",
+          "role": "upper bound on the size of S and index for H_r",
+          "type": "integer"
+        },
+        {
+          "domain": "subsets of {1,2,...,n}",
+          "name": "S",
+          "role": "index set for the partial harmonic sum over reciprocals",
+          "type": "set of integers"
+        },
+        {
+          "domain": "elements of S",
+          "name": "k",
+          "role": "summation index in sum over k in S of 1/k",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential witnesses appear; the claim is purely universal with an inequality conclusion"
+      ]
+    },
+    "statement_nl": "If r is an integer with 1 <= r <= n and S is a subset of {1,...,n} with |S| <= r, then sum_{k in S} 1/k <= H_r.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329000207_386106ce",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329000721_c87cad90",
+    "proof_status": "complete",
+    "reason": "The proof establishes the claimed bound by sorting the elements of S increasingly, proving s_i >= i, and then comparing sum_{k in S} 1/k to H_m and finally to H_r. The empty-set case is handled separately. The argument matches the lemma sketch and uses no disallowed dependence.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T00:09:45.415554Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329000721_c87cad90",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:09:56.202317Z",
+  "worker_job_id": "wrk_lem_20260329000721_c87cad90_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

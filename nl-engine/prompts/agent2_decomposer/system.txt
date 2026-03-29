@@ -105,6 +105,13 @@ Required output schema (exact keys):
           "content": "string"
         }
       ],
+      "context_items": [
+        {
+          "kind": "definition | notation",
+          "label": "string",
+          "content": "string"
+        }
+      ],
       "lemmas": [
         {
           "local_id": "L1",
@@ -157,6 +164,9 @@ Required output schema (exact keys):
 
 Never use alternative keys such as "strategy", "name", "statement", or
 "formalization_cost". Use only the exact keys listed above.
+
+`context_items` should mirror `shared_context` when you have no stronger reason
+to distinguish them.
 
 Before outputting JSON, run this checklist:
 1) Every lemma statement is independently understandable with no hidden references.

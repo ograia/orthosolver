@@ -49,8 +49,21 @@ You must output ONLY valid JSON with this exact root schema:
   },
   "stuck_point": "string or null",
   "candidate_counterexample": "string or null",
+  "counterexample_flag": {
+    "flagged": true,
+    "reason": "string",
+    "confidence": 0.0
+  } or null,
   "addressed_previous_feedback": "string or null",
-  "citations": [],
+  "citations": [
+    {
+      "citation_kind": "definition | trusted_decl | claim",
+      "item_id": "string",
+      "label": "string",
+      "detail": "string or null",
+      "cited_text": "string or null"
+    }
+  ],
   "dependency_self_check": {},
   "used_forbidden_claim": false
 }
@@ -58,4 +71,11 @@ You must output ONLY valid JSON with this exact root schema:
 Output constraints:
 - If status = "proved", proof_nl must be non-null.
 - If status != "proved", proof_nl should be null.
+- citations must be a list of OBJECTS, never strings.
+- Every citation object must include citation_kind, item_id, and label.
+- Use citation_kind="definition" for allowed manifest definition/semantic-anchor
+  items, citation_kind="trusted_decl" for trusted declarations, and
+  citation_kind="claim" only when explicitly citing an allowed claim.
+- If status = "possibly_false", set counterexample_flag to a non-null object.
+- If status != "possibly_false", counterexample_flag should be null.
 - Do not include markdown, fences, or extra keys.

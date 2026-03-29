@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-03-29T00:09:07.628909Z",
+  "graph_node_id": "pnode_20260329000907_87fb0c04",
+  "metadata": {
+    "parent_id": "thm_root_20260329000207_576b02a9"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "579d3f572dd4718d563e392164493e5491cf30252903d2eda21964b566c58d2a",
+  "owner_id": "lem_20260329000711_109eff5b",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329000907_fb680bda",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n must be a positive integer (to make 'modulo n' and least nonnegative residue well-defined over {0,...,n-1})",
+      "m is an integer satisfying 0 <= m <= n-1",
+      "k ranges over integers in {1,...,n}",
+      "r_k is constrained to be the least nonnegative residue of k*m modulo n, hence r_k lies in {0,...,n-1}",
+      "j is an integer satisfying 1 <= j <= n-1"
+    ],
+    "normalized_claim": "For every positive integer n, for every integer m with 0 <= m <= n-1, define for each k in {1,...,n} the least nonnegative residue r_k of k*m modulo n (so r_k is in {0,...,n-1}). Then for every integer j with 1 <= j <= n-1, the set S_{m,j} = {k in {1,...,n} : r_k >= j} has cardinality at most n-j.",
+    "quantifier_order": [
+      "for all positive integers n",
+      "for all integers m with 0 <= m <= n-1",
+      "for all integers j with 1 <= j <= n-1"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "modulus; also sets the ranges {1,...,n} and {1,...,n-1}",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers with 0 <= m <= n-1",
+        "name": "m",
+        "role": "multiplier used in forming residues",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "index of residues and elements of the set S_{m,j}",
+        "type": "integer"
+      },
+      {
+        "domain": "least nonnegative residue in {0,1,...,n-1} of (k*m) mod n",
+        "name": "r_k",
+        "role": "computed value depending on m, k, and n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 1 <= j <= n-1",
+        "name": "j",
+        "role": "threshold defining membership criterion r_k >= j",
+        "type": "integer"
+      },
+      {
+        "domain": "subset of {1,...,n}",
+        "name": "S_{m,j}",
+        "role": "set of indices k for which the corresponding residue r_k is at least j",
+        "type": "set of integers"
+      }
+    ],
+    "witness_dependencies": [
+      "r_k depends on n and on the chosen m, and is defined for each k in {1,...,n}",
+      "S_{m,j} depends on n and on the chosen m and j, through the membership condition r_k >= j using the previously defined r_k"
+    ]
+  },
+  "statement_nl": "For every integer m with 0 <= m <= n-1, let r_k be the least nonnegative residue of k*m modulo n for k = 1, ..., n. For each integer j with 1 <= j <= n-1, the set S_{m,j} = {k in {1,...,n} : r_k >= j} has cardinality at most n-j.",
+  "updated_at": "2026-03-29T00:09:07.628911Z"
+}

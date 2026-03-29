@@ -1,0 +1,580 @@
+{
+  "artifact_prefix": "problems/prob_20260329000207_386106ce/decomposer/attempt_20260329000241_138c1e8e_track_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:06:40.772613Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-29T00:02:41.275770Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329000207_17f0dd74",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 2,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k less than or equal to n",
+        "x ranges over all real numbers",
+        "floor is the usual greatest integer function mapping real inputs to integers"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+      "quantifier_order": [
+        "Fix an integer n with n greater than 1",
+        "There exists a real x such that the expression at x is at least the expression at every real y",
+        "For all real y, compare the expression value at x versus y"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter used in the definition of the objective function and in the summation range",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "free variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number(s) x can depend on the chosen integer n",
+        "The claimed maximal value depends on n"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329000207_386106ce",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "First use integer periodicity to reduce to x in [0,1). The final interval [(n-1)/n,1) is evaluated directly and gives the value H_n-1. On every earlier interval [m/n,(m+1)/n), monotonicity reduces the problem to the left endpoint m/n, and the bottleneck endpoint estimate shows these values are strictly smaller than H_n-1. Therefore the maximizing points in [0,1) are exactly the last interval, and periodicity lifts this to all real x as the fractional-part condition {x} in [(n-1)/n,1). The maximum value is H_n-1.",
+          "steps": [
+            {
+              "derives": "For an arbitrary real x, write x = z + t with z an integer and t in [0,1). By integer periodicity, F_n(x) = F_n(t), so it is enough to maximize over t in [0,1).",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "This uses the standard decomposition of a real number into integer part and fractional part together with periodicity.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For every t in [(n-1)/n,1), F_n(t) = H_n - 1. Hence every point in the last interval already attains the candidate maximum value.",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "This is a direct application of the explicit evaluation lemma.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "If t lies in an earlier interval [m/n,(m+1)/n) with m <= n-2, then F_n(t) <= F_n(m/n) < H_n - 1. So no point in any earlier interval can maximize.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "The conclusion comes from monotonicity on the interval and then the strict endpoint bound, i.e. two logical steps.",
+              "uses_lemmas": [
+                "L2",
+                "L8"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "On [0,1), the maximum value of F_n is H_n - 1, and the maximizing points are exactly those t in [(n-1)/n,1).",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "Combine the existence of maximizers on the last interval with the exclusion of all earlier intervals.",
+              "uses_lemmas": [
+                "A2",
+                "A3"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For all real x, F_n(x) is maximal exactly when its fractional part {x} lies in [(n-1)/n,1). Equivalently, the maximizers are the union over all integers m of [m + (n-1)/n, m + 1), and the maximum value is H_n - 1.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "Translate the [0,1) characterization by integer periodicity and rewrite it in terms of the fractional part.",
+              "uses_lemmas": [
+                "A4",
+                "L1"
+              ],
+              "uses_prior_steps": []
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For a fixed integer n>1, define F_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k for real x.",
+            "kind": "definition",
+            "label": "F_n"
+          },
+          {
+            "content": "For a positive integer r, H_r = sum_{i=1}^r 1/i.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, {x} = x - floor(x) denotes its fractional part.",
+            "kind": "notation",
+            "label": "fractional_part"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 1.8,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduce the global maximization problem to x in [0,1) by writing x as an integer plus its fractional part.",
+            "self_check_notes": "All notation is local or defined in shared_context, and the claim is a standard periodicity fact.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "z is an integer",
+                "x is a real number"
+              ],
+              "normalized_claim": "The objective function is invariant under integer shifts of x.",
+              "quantifier_order": [
+                "Fix an integer n with n>1",
+                "For every integer z",
+                "For every real x"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "z",
+                  "role": "integer translation",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "free real variable",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer z and every real x, F_n(x+z) = F_n(x).",
+            "strictly_easier_reason": "It is a direct floor-function translation identity, much simpler than optimizing the expression."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.15,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Show that on each early interval, the maximum is attained at the left endpoint m/n.",
+            "self_check_notes": "The interval and monotonicity claim are self-contained and do not refer to other lemmas.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "0 <= m <= n-2",
+                "x,y in the same interval [m/n,(m+1)/n)"
+              ],
+              "normalized_claim": "On each interval before the last one, floor(n*x) is constant and each floor(k*x) is nondecreasing, so F_n cannot increase as x increases.",
+              "quantifier_order": [
+                "Fix an integer n with n>1",
+                "For every integer m with 0 <= m <= n-2",
+                "For all real x,y in [m/n,(m+1)/n) with x <= y"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "interval index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "left point in the interval",
+                  "type": "real"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "y",
+                  "role": "right point in the interval",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer m with 0 <= m <= n-2, the function F_n is nonincreasing on the interval [m/n, (m+1)/n): if x and y lie in this interval and x <= y, then F_n(y) <= F_n(x).",
+            "strictly_easier_reason": "It is a piecewise-monotonicity statement on a fixed interval, not the full global optimization problem."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Provide the candidate maximum value and show that the last interval really attains it.",
+            "self_check_notes": "The interval is explicit, and the computation is local.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "x in [(n-1)/n,1)"
+              ],
+              "normalized_claim": "On the last interval before 1, floor(k*x)=k-1 for k<n and floor(n*x)=n-1, so the value is constant and equals H_n-1.",
+              "quantifier_order": [
+                "Fix an integer n with n>1",
+                "For every real x with (n-1)/n <= x < 1"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "real numbers",
+                  "name": "x",
+                  "role": "point in the final interval",
+                  "type": "real"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every real x with (n-1)/n <= x < 1, F_n(x) = H_n - 1.",
+            "strictly_easier_reason": "It is an explicit evaluation on a single interval, not a maximization over all real x."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.35,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Convert the endpoint values m/n into a combinatorial residue sum that can be estimated term-by-term.",
+            "self_check_notes": "The statement defines the residue r_k locally and gives the exact endpoint formula.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "0 <= m <= n-1",
+                "r_k is the unique integer in {0,...,n-1} congruent to k*m modulo n"
+              ],
+              "normalized_claim": "At rational points x=m/n, each floor(k*x) is determined by the residue of k*m mod n, so the objective becomes a weighted sum of these residues.",
+              "quantifier_order": [
+                "Fix an integer n with n>1",
+                "For every integer m with 0 <= m <= n-1",
+                "For every k in {1,...,n}"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "rational endpoint numerator",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r_k",
+                  "role": "least nonnegative residue of k*m modulo n",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer m with 0 <= m <= n-1, let r_k be the least nonnegative residue of k*m modulo n for each k = 1, ..., n. Then F_n(m/n) = sum_{k=1}^n r_k/(n*k).",
+            "strictly_easier_reason": "It is an exact arithmetic reformulation at special rational points, far narrower than the full maximization problem."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.25,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Control how many indices contribute to each threshold level in the residue decomposition.",
+            "self_check_notes": "The threshold set is defined locally, and the bound is independent of the main optimization argument.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "0 <= m <= n-1",
+                "1 <= j <= n-1"
+              ],
+              "normalized_claim": "At any fixed threshold j, at most n-j of the residues can be at least j.",
+              "quantifier_order": [
+                "Fix an integer n with n>1",
+                "For every integer m with 0 <= m <= n-1",
+                "For every integer j with 1 <= j <= n-1"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "residue generator",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "threshold level",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "k",
+                  "role": "index in the residue list",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r_k",
+                  "role": "least nonnegative residue of k*m modulo n",
+                  "type": "integer"
+                },
+                {
+                  "domain": "subsets of {1,...,n}",
+                  "name": "S_{m,j}",
+                  "role": "threshold set of indices",
+                  "type": "set of integers"
+                }
+              ],
+              "witness_dependencies": [
+                "Use the modular structure of multiplication by m modulo n, together with gcd(m,n), to count how many residues can lie above a fixed threshold."
+              ]
+            },
+            "statement_nl": "For every integer m with 0 <= m <= n-1, let r_k be the least nonnegative residue of k*m modulo n for k = 1, ..., n. For each integer j with 1 <= j <= n-1, the set S_{m,j} = {k in {1,...,n} : r_k >= j} has cardinality at most n-j.",
+            "strictly_easier_reason": "It is a modular counting fact about residues, not a statement about the maximizing x itself."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.15,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Turn the cardinality bounds on threshold sets into harmonic-number bounds.",
+            "self_check_notes": "The claim is standard and self-contained.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "1 <= r <= n",
+                "S subset of {1,...,n}"
+              ],
+              "normalized_claim": "Among all subsets of a given size, the largest reciprocal sum comes from choosing the smallest indices.",
+              "quantifier_order": [
+                "Fix integers n and r with 1 <= r <= n",
+                "For every subset S of {1,...,n} with |S| <= r"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "allowed subset size",
+                  "type": "integer"
+                },
+                {
+                  "domain": "subsets of {1,...,n}",
+                  "name": "S",
+                  "role": "subset whose reciprocal sum is estimated",
+                  "type": "set of integers"
+                },
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "ambient upper bound for the index set",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "k",
+                  "role": "generic index in the subset",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "If r is an integer with 1 <= r <= n and S is a subset of {1,...,n} with |S| <= r, then sum_{k in S} 1/k <= H_r.",
+            "strictly_easier_reason": "It is a basic rearrangement/ordering inequality for decreasing weights 1/k."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L7",
+            "proof_nl": null,
+            "role_in_assembly": "Translate the sum of harmonic bounds into the explicit value H_n-1.",
+            "self_check_notes": "The identity is elementary and independent of the optimization structure.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1"
+              ],
+              "normalized_claim": "The partial harmonic sums satisfy a telescoping identity that converts the threshold-by-threshold upper bounds into H_n-1.",
+              "quantifier_order": [
+                "For every integer n > 1"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For every integer n > 1, sum_{j=1}^{n-1} H_{n-j} = n*(H_n - 1).",
+            "strictly_easier_reason": "It is a routine harmonic-number identity, far simpler than the optimization problem."
+          },
+          {
+            "bottleneck_reason": "This is the key discrete estimate that carries the main arithmetic content of the problem, though it is still narrower than the full continuous maximization theorem.",
+            "formalization_cost_estimate": 0.7,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L8",
+            "proof_nl": null,
+            "role_in_assembly": "This is the main bottleneck: it excludes every earlier grid point from being a maximizer.",
+            "self_check_notes": "The claim is self-contained and uses only local residue notation plus standard harmonic estimates.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "0 <= m <= n-2"
+              ],
+              "normalized_claim": "Every endpoint before the last interval lies strictly below the candidate maximum H_n-1.",
+              "quantifier_order": [
+                "Fix an integer n with n>1",
+                "For every integer m with 0 <= m <= n-2"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "fixed parameter with n>1",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "endpoint numerator",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "k",
+                  "role": "summation index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "j",
+                  "role": "threshold index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r_k",
+                  "role": "least nonnegative residue of k*m modulo n",
+                  "type": "integer"
+                },
+                {
+                  "domain": "subsets of {1,...,n}",
+                  "name": "S_{m,j}",
+                  "role": "threshold set of indices",
+                  "type": "set of integers"
+                }
+              ],
+              "witness_dependencies": [
+                "Expand F_n(m/n) using the residue formula, rewrite each residue as a sum of threshold indicators, bound each threshold set by its cardinality, apply the reciprocal-sum bound, and use the harmonic identity; strictness comes from the top threshold j=n-1 because k=1 is not included when m <= n-2."
+              ]
+            },
+            "statement_nl": "For every integer m with 0 <= m <= n-2, F_n(m/n) < H_n - 1.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For a fixed integer n>1, define F_n(x) = floor(n*x) - sum_{k=1}^n floor(k*x)/k for real x.",
+            "kind": "definition",
+            "label": "F_n"
+          },
+          {
+            "content": "For a positive integer r, H_r = sum_{i=1}^r 1/i.",
+            "kind": "notation",
+            "label": "H_n"
+          },
+          {
+            "content": "For a real number x, {x} = x - floor(x) denotes its fractional part.",
+            "kind": "notation",
+            "label": "fractional_part"
+          }
+        ],
+        "strategy_summary": "Reduce by integer periodicity to the fractional part x in [0,1). Then split [0,1) into the intervals [m/n,(m+1)/n). The last interval is easy and gives the candidate value H_n-1 directly. On the earlier intervals, monotonicity reduces everything to the grid points m/n, and a residue-counting plus harmonic-sum estimate shows those grid values are strictly smaller than H_n-1. This identifies both the maximizing set and the maximum value."
+      }
+    ],
+    "status": "completed"
+  },
+  "started_at": "2026-03-29T00:02:44.432255Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260329000207_576b02a9",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-29T00:06:40.772613Z",
+  "worker_job_id": "wrk_thm_root_20260329000207_576b02a9_decompose_0_track_1_req_20260329000241_351f88eb",
+  "worker_kind": "decomposition_generation"
+}

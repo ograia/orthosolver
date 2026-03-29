@@ -1,0 +1,182 @@
+{
+  "artifact_prefix": "problems/prob_20260329000207_386106ce/lemmas/lem_20260329000711_109eff5b/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:10:12.160098Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:10:14.814457Z",
+  "controller_consumed_by_execution_id": "exec_20260329000207_17f0dd74",
+  "created_at": "2026-03-29T00:09:25.244015Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329000207_17f0dd74",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+        "item_id": "pnode_20260329000924_45ff7d7e",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329000907_fce8f594",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260329000711_109eff5b",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260329000925_e071237b",
+    "role_in_assembly": "Control how many indices contribute to each threshold level in the residue decomposition.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k less than or equal to n",
+        "x ranges over all real numbers",
+        "floor is the usual greatest integer function mapping real inputs to integers"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+      "quantifier_order": [
+        "Fix an integer n with n greater than 1",
+        "There exists a real x such that the expression at x is at least the expression at every real y",
+        "For all real y, compare the expression value at x versus y"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter used in the definition of the objective function and in the summation range",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "free variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number(s) x can depend on the chosen integer n",
+        "The claimed maximal value depends on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n must be a positive integer (to make 'modulo n' and least nonnegative residue well-defined over {0,...,n-1})",
+        "m is an integer satisfying 0 <= m <= n-1",
+        "k ranges over integers in {1,...,n}",
+        "r_k is constrained to be the least nonnegative residue of k*m modulo n, hence r_k lies in {0,...,n-1}",
+        "j is an integer satisfying 1 <= j <= n-1"
+      ],
+      "normalized_claim": "For every positive integer n, for every integer m with 0 <= m <= n-1, define for each k in {1,...,n} the least nonnegative residue r_k of k*m modulo n (so r_k is in {0,...,n-1}). Then for every integer j with 1 <= j <= n-1, the set S_{m,j} = {k in {1,...,n} : r_k >= j} has cardinality at most n-j.",
+      "quantifier_order": [
+        "for all positive integers n",
+        "for all integers m with 0 <= m <= n-1",
+        "for all integers j with 1 <= j <= n-1"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "modulus; also sets the ranges {1,...,n} and {1,...,n-1}",
+          "type": "positive integer"
+        },
+        {
+          "domain": "integers with 0 <= m <= n-1",
+          "name": "m",
+          "role": "multiplier used in forming residues",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "index of residues and elements of the set S_{m,j}",
+          "type": "integer"
+        },
+        {
+          "domain": "least nonnegative residue in {0,1,...,n-1} of (k*m) mod n",
+          "name": "r_k",
+          "role": "computed value depending on m, k, and n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 1 <= j <= n-1",
+          "name": "j",
+          "role": "threshold defining membership criterion r_k >= j",
+          "type": "integer"
+        },
+        {
+          "domain": "subset of {1,...,n}",
+          "name": "S_{m,j}",
+          "role": "set of indices k for which the corresponding residue r_k is at least j",
+          "type": "set of integers"
+        }
+      ],
+      "witness_dependencies": [
+        "r_k depends on n and on the chosen m, and is defined for each k in {1,...,n}",
+        "S_{m,j} depends on n and on the chosen m and j, through the membership condition r_k >= j using the previously defined r_k"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer m with 0 <= m <= n-1, let r_k be the least nonnegative residue of k*m modulo n for k = 1, ..., n. For each integer j with 1 <= j <= n-1, the set S_{m,j} = {k in {1,...,n} : r_k >= j} has cardinality at most n-j.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329000207_386106ce",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "lemma_matches_statement": true,
+      "no_forbidden_claims_used": true,
+      "self_contained": true
+    },
+    "lemma_id": "lem_20260329000711_109eff5b",
+    "proof_nl": "Fix n>1, and let m be an integer with 0\u2264m\u2264n\u22121. Set d=gcd(m,n), and write m=da and n=db, so gcd(a,b)=1.\n\nFor each k\u2208{1,\u2026,n}, let t_k be the least nonnegative residue of ka modulo b. Then ka=q b+t_k for some integer q, hence\nkm=dka=q(db)+d t_k=q n+d t_k.\nSo km is congruent to d t_k modulo n, and since 0\u2264t_k\u2264b\u22121, the number d t_k lies in {0,\u2026,n\u22121}; therefore r_k=d t_k.\n\nNow split k as k=qb+s with 0\u2264q\u2264d\u22121 and 1\u2264s\u2264b. For fixed q, the residues t_k are exactly the residues of sa modulo b as s runs through 1,\u2026,b. Because gcd(a,b)=1, multiplication by a modulo b is a permutation of the residue classes modulo b, so the values t_k for one block q are a permutation of {0,1,\u2026,b\u22121}. Hence each residue d t (0\u2264t\u2264b\u22121) occurs exactly d times among r_1,\u2026,r_n.\n\nNow fix j with 1\u2264j\u2264n\u22121, and put q=ceil(j/d). Then r_k\u2265j if and only if t_k\u2265q. There are exactly b\u2212q integers t\u2208{0,\u2026,b\u22121} with t\u2265q, and each occurs d times, so\n|S_{m,j}|=d(b\u2212q).\nSince q=ceil(j/d), we have d q\u2265j, and therefore\n|S_{m,j}|=d b\u2212d q\u2264d b\u2212j=n\u2212j.\nThis proves that for every j\u2208{1,\u2026,n\u22121}, the set S_{m,j} has cardinality at most n\u2212j.",
+    "proof_summary": "Write n=db and m=da with gcd(a,b)=1. Then km modulo n is always d times the residue of ka modulo b, and as k runs from 1 to n each residue modulo b occurs exactly d times. Therefore the residues r_k are the multiples of d, each repeated d times. For j, the condition r_k\u2265j is equivalent to the smaller residue being at least ceil(j/d), giving |S_{m,j}|=d(b-ceil(j/d))\u2264db-j=n-j.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Basic property that multiplication by a unit modulo b permutes residue classes modulo b"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-29T00:09:26.562636Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329000711_109eff5b",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:10:14.814466Z",
+  "worker_job_id": "wrk_lem_20260329000711_109eff5b_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

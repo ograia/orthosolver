@@ -1,0 +1,83 @@
+{
+  "artifact_prefix": "problems/prob_20260329000207_386106ce/root_theorem/thm_root_20260329000207_576b02a9/semantic_sketch",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:02:35.685988Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:02:41.139483Z",
+  "controller_consumed_by_execution_id": "exec_20260329000207_17f0dd74",
+  "created_at": "2026-03-29T00:02:24.658795Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329000207_17f0dd74",
+  "handler_key": "agent1_root_semantic_sketch",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+  },
+  "problem_id": "prob_20260329000207_386106ce",
+  "request_source": "root_semantic_sketch",
+  "result_payload": {
+    "ambiguities": [
+      "Whether the answer should specify all maximizing x values (the entire argmax set) or just one representative maximizing x",
+      "Whether the maximal value means an actual maximum over all real x (attained) versus an upper bound/supremum"
+    ],
+    "implicit_assumptions_surfaced": [
+      "The maximum is intended to be attained by at least one real x (not merely a supremum)",
+      "The summation is finite because n is finite",
+      "No restriction is placed on the sign of x; all real x are allowed"
+    ],
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k less than or equal to n",
+        "x ranges over all real numbers",
+        "floor is the usual greatest integer function mapping real inputs to integers"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+      "quantifier_order": [
+        "Fix an integer n with n greater than 1",
+        "There exists a real x such that the expression at x is at least the expression at every real y",
+        "For all real y, compare the expression value at x versus y"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter used in the definition of the objective function and in the summation range",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "free variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number(s) x can depend on the chosen integer n",
+        "The claimed maximal value depends on n"
+      ]
+    },
+    "statement_nl_received": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+    "status": "completed"
+  },
+  "started_at": "2026-03-29T00:02:28.209204Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260329000207_576b02a9",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-29T00:02:41.139505Z",
+  "worker_job_id": "wrk_thm_root_20260329000207_576b02a9_semantic_sketch_0",
+  "worker_kind": "root_semantic_sketch"
+}

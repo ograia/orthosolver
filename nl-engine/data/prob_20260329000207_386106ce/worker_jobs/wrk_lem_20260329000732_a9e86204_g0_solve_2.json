@@ -1,0 +1,132 @@
+{
+  "artifact_prefix": "problems/prob_20260329000207_386106ce/lemmas/lem_20260329000732_a9e86204/solver_attempt_2",
+  "attempt_count": 2,
+  "attempt_number": 2,
+  "completed_at": "2026-03-29T00:16:22.534555Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-29T00:12:02.950959Z",
+  "error_payload": {
+    "agent_key": "agent4",
+    "class": "AgentExecutionError",
+    "error_class": "interrupted",
+    "message": "request interrupted by local reset"
+  },
+  "execution_id": "exec_20260329000207_17f0dd74",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+        "item_id": "pnode_20260329000924_45ff7d7e",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 2,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329000907_fce8f594",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260329000732_a9e86204",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260329001202_87359af5",
+    "role_in_assembly": "This is the main bottleneck: it excludes every earlier grid point from being a maximizer.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "k is an integer with 1 less than or equal to k less than or equal to n",
+        "x ranges over all real numbers",
+        "floor is the usual greatest integer function mapping real inputs to integers"
+      ],
+      "normalized_claim": "For each fixed integer n greater than 1, define f_n(x) = floor of (n times x) minus the sum for k from 1 to n of (floor of (k times x) divided by k). Determine the set of real x that maximize f_n(x) over all real numbers x, and determine the maximum value of f_n(x).",
+      "quantifier_order": [
+        "Fix an integer n with n greater than 1",
+        "There exists a real x such that the expression at x is at least the expression at every real y",
+        "For all real y, compare the expression value at x versus y"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "fixed parameter used in the definition of the objective function and in the summation range",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "x",
+          "role": "free variable over which the expression is maximized",
+          "type": "real"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "summation index ranging from 1 to n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The maximizing real number(s) x can depend on the chosen integer n",
+        "The claimed maximal value depends on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "0 <= m <= n-2",
+        "n is such that the interval 0 <= m <= n-2 contains integers (implicitly requires n >= 2)",
+        "m/n is defined (implicitly requires n not equal to 0; typically n >= 2 if n is an integer parameter)"
+      ],
+      "normalized_claim": "For the fixed parameter n, for every integer m satisfying 0 <= m <= n-2, the inequality F_n(m divided by n) is strictly less than H_n minus 1.",
+      "quantifier_order": [
+        "for all integers m"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "external parameter indexing the functions/constants F_n and H_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "universal quantified input variable ranging over the specified interval",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "none (the statement is purely universal in m)"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "For every integer m with 0 <= m <= n-2, F_n(m/n) < H_n - 1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329000207_386106ce",
+  "request_source": "lemma_solver",
+  "result_payload": null,
+  "started_at": "2026-03-29T00:12:04.389542Z",
+  "status": "failed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329000732_a9e86204",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:16:22.534555Z",
+  "worker_job_id": "wrk_lem_20260329000732_a9e86204_g0_solve_2",
+  "worker_kind": "lemma_solver"
+}
