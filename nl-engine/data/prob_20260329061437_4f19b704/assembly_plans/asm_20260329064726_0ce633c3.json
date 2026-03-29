@@ -1,0 +1,146 @@
+{
+  "assembly_plan_id": "asm_20260329064726_0ce633c3",
+  "created_at": "2026-03-29T06:54:20.059633Z",
+  "decomposition_id": "dec_20260329064726_974d402b",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_skeleton_nl": "Normalize the original summand so that the only remaining denominators are (-q^d;q^d)_k, and clear all of them by the common factor D_{d,n}(q). Introduce the auxiliary parameter a and prove two independent divisibilities for the cleared difference F(a,q): first, divisibility by (a-q^{rn})(1-a q^{rn}) via the special value a=q^{-rn}, the exact terminating evaluation there, and the symmetry a\u21a6a^{-1}; second, divisibility by [n]_q via the separate root-of-unity/[n]_q analysis. Combine the two divisibilities because the factors are coprime, then specialize a=1 to obtain divisibility by [n]_q(1-q^{rn})^2. Finally, use (1-q^{rn})^2 \u2287 \u03a6_n(q)^2 and the coprimality of D_{d,n}(q) with [n]_q \u03a6_n(q)^2 to cancel D_{d,n}(q) and recover the original theorem.",
+  "root_node_id": "thm_root_20260329061437_747e99b3",
+  "steps": [
+    {
+      "derives": "From the theorem hypotheses n > 1 and n \u2261 1 mod 2d, define m = (n-1)/(2d). Then m is a nonnegative integer, n is odd, gcd(d,n)=1, and rn = r + 2drm.",
+      "is_trivial": false,
+      "step_id": "A0",
+      "trivial_justification": "This is the arithmetic unpacking of the congruence condition n \u2261 1 mod 2d. The identities n=2dm+1 and rn=r+2drm are immediate after defining m, while n odd and gcd(d,n)=1 follow from n=1+2dm.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let R(q) = [rn]_q q^{r(1-n)/2}, let D(q) = \u220f_{k=0}^{n-1} (-q^d;q^d)_k, let S(a,q) = \u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, let F(a,q) = D(q) (S(a,q) - R(q)), and let \u0394(q) denote the theorem difference \u0394(q) = \u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k - [rn]_q q^{r(1-n)/2}. By Lemma L1, S(1,q) is exactly the finite sum appearing in \u0394(q), so F(1,q) = D(q) \u00b7 \u0394(q).",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Lemma L1 rewrites the factor ((q^d;q^d)_k)^2/(q^{2d};q^{2d})_k as (q^d;q^d)_k/(-q^d;q^d)_k term by term. Substituting a=1 into S(a,q) therefore reproduces the original theorem sum exactly, and the definition of F gives F(1,q)=D(q)(S(1,q)-R(q))=D(q)\u0394(q).",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The specialization S(q^{-rn},q) is equal to the terminating sum \u03a3_{k=0}^{rm} [3dk+r]_q (q^{-2drm}, q^{r+rn}, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is exactly the specialization and truncation statement of Lemma L3, using the m fixed in A0.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "S(q^{-rn},q) = [rn]_q q^{r(1-n)/2} = R(q).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "By A2, S(q^{-rn},q) is the terminating rm-sum displayed there. Lemma L5 evaluates precisely that terminating sum and gives the value R(q).",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "F(q^{-rn},q) = 0.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "By definition F(a,q)=D(q)(S(a,q)-R(q)). Step A3 shows S(q^{-rn},q)=R(q), so the bracket vanishes and hence F(q^{-rn},q)=0.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A3"
+      ]
+    },
+    {
+      "derives": "F(a,q) = F(a^{-1},q) in Z[q^{\u00b11},a^{\u00b11}].",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is exactly the symmetry statement of Lemma L4.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The Laurent polynomial F(a,q) is divisible by (a - q^{rn})(1 - a q^{rn}).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Apply Lemma L6 with H(a,q)=F(a,q) and N=rn. Step A5 supplies the symmetry H(a,q)=H(a^{-1},q), and Step A4 supplies the root H(q^{-rn},q)=0. Lemma L6 then yields divisibility by the full quadratic factor (a-q^{rn})(1-a q^{rn}).",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "The Laurent polynomial F(a,q) is divisible by [n]_q.",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "This is exactly the statement of Lemma L7.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The Laurent polynomial F(a,q) is divisible by [n]_q (a - q^{rn})(1 - a q^{rn}).",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "Step A7 gives divisibility by [n]_q, and Step A6 gives divisibility by the quadratic parameter factor. Lemma L8 states that these two factors are coprime in Z[q^{\u00b11},a^{\u00b11}], so simultaneous divisibility implies divisibility by their product.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A6",
+        "A7"
+      ]
+    },
+    {
+      "derives": "After substituting a=1, the polynomial F(1,q) is divisible by [n]_q (1 - q^{rn})^2.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "Evaluation at a=1 is a ring homomorphism from Z[q^{\u00b11},a^{\u00b11}] to Z[q^{\u00b11}]. Applying it to the divisibility statement from A8 sends the factor (a-q^{rn})(1-a q^{rn}) to (1-q^{rn})^2, so the specialized divisibility follows.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    },
+    {
+      "derives": "The specialized value F(1,q) is divisible by [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A10",
+      "trivial_justification": "Lemma L9 shows that [n]_q \u03a6_n(q)^2 divides [n]_q (1-q^{rn})^2. Step A9 shows the latter divides F(1,q). Therefore [n]_q \u03a6_n(q)^2 divides F(1,q).",
+      "uses_lemmas": [
+        "L9"
+      ],
+      "uses_prior_steps": [
+        "A9"
+      ]
+    },
+    {
+      "derives": "\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k \u2261 [rn]_q q^{r(1-n)/2} mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A11",
+      "trivial_justification": "By A0, the hypotheses needed for Lemma L2 hold, so D(q)=\u220f_{k=0}^{n-1}(-q^d;q^d)_k is coprime to [n]_q \u03a6_n(q)^2. Step A1 gives F(1,q)=D(q)\u0394(q), where \u0394(q) is exactly the theorem difference. Step A10 shows [n]_q \u03a6_n(q)^2 divides F(1,q). Coprime cancellation of D(q) therefore implies that [n]_q \u03a6_n(q)^2 divides \u0394(q), which is exactly the stated congruence.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A0",
+        "A1",
+        "A10"
+      ]
+    }
+  ]
+}

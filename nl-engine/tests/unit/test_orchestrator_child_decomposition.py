@@ -142,6 +142,51 @@ def test_pending_accepted_child_candidate_blocks_solver_fallback() -> None:
     assert lemma.next_action == "wait_on_child_decomposition"
 
 
+def test_rejected_child_candidates_retry_decomposition_while_slots_remain() -> None:
+    orch = Orchestrator.__new__(Orchestrator)
+    orch.lemmas = _LemmaRepo()
+    orch.decompositions = SimpleNamespace(list_by_node=lambda problem_id, node_id: [])
+    orch.decomposition_candidates = SimpleNamespace(
+        list_by_node=lambda problem_id, node_id: [
+            DecompositionCandidateORM(
+                candidate_id="cand_rejected",
+                problem_id=problem_id,
+                node_id=node_id,
+                node_kind="lemma",
+                llm_vetting_status="rejected_fatal",
+                selection_status="rejected_fatal",
+                failure_reason="too close to parent theorem",
+            )
+        ]
+    )
+    orch.event_logger = SimpleNamespace(transition=lambda *args, **kwargs: None)
+    orch._select_active_decomposition_for_node = lambda *args, **kwargs: False
+    orch._remaining_decomposition_slots = lambda *args, **kwargs: 9
+    orch._decompose_current_lemma_result = lambda *args, **kwargs: (
+        orch._DECOMPOSE_OUTCOME_NO_ACCEPTED_THIS_ROUND,
+        "no accepted decomposition candidates",
+    )
+    orch._child_decomposition_is_false_frontier = lambda *args, **kwargs: False
+
+    problem = ProblemORM(problem_id="prob_retry")
+    lemma = LemmaORM(
+        lemma_id="lem_retry",
+        problem_id=problem.problem_id,
+        parent_id="thm_root",
+        parent_kind="theorem",
+        statement_nl="retry me",
+        proof_status=ProofStatus.PROOF_FLAWED.value,
+        routing_status=RoutingStatus.DECOMPOSE_FURTHER.value,
+        next_action="retry_decomposition",
+    )
+
+    changed = orch._process_child_decomposition_for_lemma(problem, None, lemma, ProblemConfig())
+
+    assert changed is True
+    assert lemma.routing_status == RoutingStatus.DECOMPOSE_FURTHER.value
+    assert lemma.next_action == "retry_decomposition"
+
+
 def test_build_decomposition_generation_payload_includes_ancestor_shared_context() -> None:
     orch = Orchestrator.__new__(Orchestrator)
     root_lemma = LemmaORM(

@@ -1,0 +1,71 @@
+{
+  "assembly_plan_id": "asm_20260329064726_0ce633c3",
+  "controller_status": "failed",
+  "created_at": "2026-03-29T06:54:20.059616Z",
+  "decomposition_id": "dec_20260329064726_974d402b",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "none",
+  "failure_origin": "agent3:false_lemma",
+  "failure_reason": "Lemma L5 is false, so the exact special-value evaluation used in A3 does not hold.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.81,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": null,
+  "latest_prepare_track_job_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "pending",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "logical_decomposition_id": "logdec_thm_root_20260329061437_747e99b3_track_1",
+  "node_id": "thm_root_20260329061437_747e99b3",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [],
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_bundle_artifact_id": "problems/prob_20260329061437_4f19b704/proof_bundles/decompositions/dec_20260329064726_974d402b.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260329061437_4f19b704/decomposition_candidates/dec_20260329064726_974d402b/agent2_candidate.json",
+  "revision_number": 1,
+  "shared_context": [
+    {
+      "content": "For an integer m, [m]_q = (1-q^m)/(1-q). For k \u2265 0 and parameter x, (x;q)_k = \u220f_{j=0}^{k-1} (1-x q^j). For several parameters, (x,y,z;q)_k = (x;q)_k (y;q)_k (z;q)_k. \u03a6_n(q) denotes the nth cyclotomic polynomial.",
+      "kind": "definition",
+      "label": "q_notation"
+    },
+    {
+      "content": "Whenever n \u2261 1 (mod 2d), write m = (n-1)/(2d). Then m is an integer and rn = r + 2drm.",
+      "kind": "notation",
+      "label": "m_notation"
+    },
+    {
+      "content": "Define S_{d,r,n}(a,q) = \u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k.",
+      "kind": "definition",
+      "label": "normalized_parametric_sum"
+    },
+    {
+      "content": "Define D_{d,n}(q) = \u220f_{k=0}^{n-1} (-q^d;q^d)_k and define F_{d,r,n}(a,q) = D_{d,n}(q) ( S_{d,r,n}(a,q) - [rn]_q q^{r(1-n)/2} ).",
+      "kind": "definition",
+      "label": "common_denominator_and_cleared_difference"
+    },
+    {
+      "content": "All divisibility statements involving both a and q are in the Laurent polynomial ring Z[q^{\u00b11},a^{\u00b11}]. Divisibility and coprimality statements involving only q are in Z[q].",
+      "kind": "notation",
+      "label": "ring_convention"
+    }
+  ],
+  "strategy_summary": "Introduce an auxiliary parameter a by replacing the duplicated factor (q^r,q^r;q^{2d})_k with (a q^r,q^r/a;q^{2d})_k, normalize the original denominator via ((q^d;q^d)_k)^2/(q^{2d};q^{2d})_k=(q^d;q^d)_k/(-q^d;q^d)_k, clear the remaining odd denominators by a common factor D_{d,n}(q), prove the parameter-factor divisibility from the special value a=q^{-rn} plus the symmetry a\u21a6a^{-1}, prove the independent [n]_q-divisibility after clearing denominators, then specialize a=1 and use (1-q^{rn})^2 to recover the \u03a6_n(q)^2 factor.",
+  "updated_at": "2026-03-29T06:54:35.083298Z"
+}

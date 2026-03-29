@@ -2868,14 +2868,56 @@ class Orchestrator:
                         reason="accepted child decomposition candidate exists but promotion is not yet complete",
                         clear_solver_series=True,
                     )
-                return True
-            if lemma.proof_status == ProofStatus.PROOF_EXHAUSTED.value and lemma.routing_status == RoutingStatus.BLOCKED.value:
-                remaining_slots = self._remaining_decomposition_slots(
+                    return True
+            remaining_slots = self._remaining_decomposition_slots(
+                problem.problem_id,
+                lemma.lemma_id,
+                NodeKind.LEMMA.value,
+                cfg,
+            )
+            if (
+                candidate_rows
+                and remaining_slots > 0
+                and lemma.next_action in {"retry_decomposition", "evaluate_child_decompositions"}
+            ):
+                outcome, detail = self._decompose_current_lemma_result(problem, lemma, cfg)
+                if outcome in {
+                    self._DECOMPOSE_OUTCOME_CHILD_SELECTED,
+                    self._DECOMPOSE_OUTCOME_CHILD_PENDING,
+                }:
+                    self.event_logger.transition(
+                        problem.problem_id,
+                        "lemma.decomposition_retry_scheduled",
+                        None,
+                        "queued",
+                        target_node_id=lemma.lemma_id,
+                        reason=f"rejected child candidates only; remaining_slots={remaining_slots}",
+                    )
+                    return True
+                if outcome == self._DECOMPOSE_OUTCOME_NO_ACCEPTED_THIS_ROUND and self._remaining_decomposition_slots(
                     problem.problem_id,
                     lemma.lemma_id,
                     NodeKind.LEMMA.value,
                     cfg,
-                )
+                ) > 0:
+                    self._save_lemma_transition(
+                        lemma,
+                        proof_status=ProofStatus.PROOF_FLAWED.value,
+                        routing_status=RoutingStatus.DECOMPOSE_FURTHER.value,
+                        next_action="retry_decomposition",
+                        reason=detail,
+                        clear_solver_series=True,
+                    )
+                    self.event_logger.transition(
+                        problem.problem_id,
+                        "lemma.decomposition_retry_scheduled",
+                        None,
+                        "retry_decomposition",
+                        target_node_id=lemma.lemma_id,
+                        reason=f"{detail}; remaining_slots={self._remaining_decomposition_slots(problem.problem_id, lemma.lemma_id, NodeKind.LEMMA.value, cfg)}",
+                    )
+                    return True
+            if lemma.proof_status == ProofStatus.PROOF_EXHAUSTED.value and lemma.routing_status == RoutingStatus.BLOCKED.value:
                 if remaining_slots > 0:
                     outcome, detail = self._decompose_current_lemma_result(problem, lemma, cfg)
                     if outcome in {

@@ -1,0 +1,79 @@
+{
+  "assembly_plan_id": "asm_20260329070336_bbc0f5ac",
+  "created_at": "2026-03-29T07:08:39.517865Z",
+  "decomposition_id": "dec_20260329070336_152cdbfa",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329061437_4f19b704",
+  "proof_skeleton_nl": "First rewrite the original summand by the standalone identity ((q^d;q^d)_k)^2/(q^{2d};q^{2d})_k=(q^d;q^d)_k/(-q^d;q^d)_k, so the theorem difference becomes the specialization a=1 of a normalized auxiliary sum S_{d,r,n}(a,q). After multiplying by the common denominator D_{d,n}(q), the cleared difference is F_{d,r,n}(a,q). The only hard input is the bottleneck creative-microscoping lemma asserting that F_{d,r,n}(a,q) is divisible by [n]_q(a-q^{rn})(1-a q^{rn}). This replaces the rejected false special-value branch entirely. Specializing a=1 gives divisibility by [n]_q(1-q^{rn})^2; the elementary factorization 1-q^{rn}=(1-q^n)\u03a3_{j=0}^{r-1}q^{jn} then upgrades this to divisibility by [n]_q \u03a6_n(q)^2. Finally, because the denominator-clearing factor D_{d,n}(q) is coprime to [n]_q \u03a6_n(q)^2, one cancels D_{d,n}(q) from the cleared divisibility and recovers the exact theorem statement.",
+  "root_node_id": "thm_root_20260329061437_747e99b3",
+  "steps": [
+    {
+      "derives": "Let \u0394_{d,r,n}(q) be the original theorem difference, let S_{d,r,n}(a,q) be the normalized auxiliary sum, let D_{d,n}(q)=\u220f_{k=0}^{n-1}(-q^d;q^d)_k, and let F_{d,r,n}(a,q)=D_{d,n}(q)(S_{d,r,n}(a,q)-[rn]_q q^{r(1-n)/2}). Then F_{d,r,n}(1,q)=D_{d,n}(q)\u00b7\u0394_{d,r,n}(q) in Z[q^{\u00b11}].",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "For each summation index k, Lemma L1 rewrites the factor (q^d;q^d)_k^2/(q^{2d};q^{2d})_k in the theorem summand as (q^d;q^d)_k/(-q^d;q^d)_k. Therefore the whole finite sum in \u0394_{d,r,n}(q) becomes exactly S_{d,r,n}(1,q). Subtracting the same term [rn]_q q^{r(1-n)/2} from both expressions gives \u0394_{d,r,n}(q)=S_{d,r,n}(1,q)-[rn]_q q^{r(1-n)/2}. Multiplying by D_{d,n}(q) and using the definition of F_{d,r,n}(a,q) yields F_{d,r,n}(1,q)=D_{d,n}(q)\u00b7\u0394_{d,r,n}(q).",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The Laurent polynomial F_{d,r,n}(a,q) is divisible by [n]_q (a-q^{rn})(1-a q^{rn}) in Z[q^{\u00b11},a^{\u00b11}].",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "This is exactly the statement of Lemma L5 under the theorem hypotheses on d, r, and n.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The specialization F_{d,r,n}(1,q) is divisible by [n]_q (1-q^{rn})^2 in Z[q^{\u00b11}].",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "Apply Lemma L3 to the Laurent polynomial H(a,q)=F_{d,r,n}(a,q) and to N=rn. Step A2 supplies the hypothesis that [n]_q(a-q^{rn})(1-a q^{rn}) divides H(a,q), so Lemma L3 gives the claimed divisibility of H(1,q)=F_{d,r,n}(1,q).",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "The specialization F_{d,r,n}(1,q) is divisible by [n]_q \u03a6_n(q)^2 in Z[q^{\u00b11}].",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Step A3 gives a factorization F_{d,r,n}(1,q) = [n]_q (1-q^{rn})^2 H(q) for some H(q) in Z[q^{\u00b11}]. Lemma L4 states that [n]_q \u03a6_n(q)^2 divides [n]_q (1-q^{rn})^2 in Z[q], so there exists a polynomial B(q) with [n]_q (1-q^{rn})^2 = [n]_q \u03a6_n(q)^2 B(q). Substituting this into the factorization from A3 yields F_{d,r,n}(1,q) = [n]_q \u03a6_n(q)^2 (B(q)H(q)), which is exactly the desired divisibility.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Let M(q) = [n]_q \u03a6_n(q)^2. Then M(q) divides D_{d,n}(q)\u00b7\u0394_{d,r,n}(q) in Z[q^{\u00b11}].",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "Step A4 says that M(q) divides F_{d,r,n}(1,q). Step A1 identifies F_{d,r,n}(1,q) with D_{d,n}(q)\u00b7\u0394_{d,r,n}(q). Replacing F_{d,r,n}(1,q) by this equal expression gives M(q) | D_{d,n}(q)\u00b7\u0394_{d,r,n}(q).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A4"
+      ]
+    },
+    {
+      "derives": "\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k \u2261 [rn]_q q^{r(1-n)/2} mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Set M(q)=[n]_q \u03a6_n(q)^2. By Step A5, M(q) divides D_{d,n}(q)\u00b7\u0394_{d,r,n}(q) in Z[q^{\u00b11}]. Lemma L2 gives gcd(D_{d,n}(q),M(q))=1 in Z[q]. Also M(0)=1 because [n]_q has constant term 1 and \u03a6_n(q) has constant term 1 for n>1. Therefore the hypotheses of Lemma L6 are satisfied with D=D_{d,n}(q), G=\u0394_{d,r,n}(q), and M=M(q). Lemma L6 yields that M(q) divides \u0394_{d,r,n}(q) in Z[q^{\u00b11}]. By the definition of \u0394_{d,r,n}(q), this divisibility is exactly the stated congruence of the original theorem.",
+      "uses_lemmas": [
+        "L2",
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    }
+  ]
+}
