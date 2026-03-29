@@ -1,0 +1,189 @@
+{
+  "artifact_prefix": "problems/prob_20260329002649_4f7773a6/lemmas/lem_20260329003216_0cb7f112/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:33:49.513654Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:34:00.997298Z",
+  "controller_consumed_by_execution_id": "exec_20260329002649_e303d1e6",
+  "created_at": "2026-03-29T00:33:24.488137Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329002649_e303d1e6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329003303_fc89ad8a",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260329003216_0cb7f112",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260329003324_e88f3dfe",
+    "role_in_assembly": "Show that the upper bound from the discrete comparison is actually attained on the last interval, giving the full maximizing set.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "k is an integer index with 1 <= k <= n inside the sum",
+        "x ranges over all real numbers"
+      ],
+      "normalized_claim": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+      "quantifier_order": [
+        "for each integer n with n > 1",
+        "choose real x to maximize the expression over all real x"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "fixed parameter of the problem",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "optimization variable (argument of floors and sum)",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "index variable in the summation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing real number(s) x* (or argmax set) may depend on n",
+        "the maximal value M may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer",
+        "n > 1",
+        "x is a real number so that floor(x) and frac(x) are defined",
+        "the hypothesis constrains frac(x) to be at least (n-1)/n and strictly less than 1"
+      ],
+      "normalized_claim": "For every integer n with n > 1 and every real x with fractional part frac(x) in the interval [ (n-1) / n, 1 ), we have F_n(x) equals H_n minus 1, where F_n(x) is floor(n times x) minus the sum for k from 1 to n of (floor(k times x) divided by k), and H_n is the sum for k from 1 to n of 1 divided by k.",
+      "quantifier_order": [
+        "for all n in integers with n > 1",
+        "for all real x such that frac(x) is in the interval [(n-1)/n, 1)"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "parameter indexing the functions F_n and the harmonic number H_n; also determines the summation limits",
+          "type": "integer"
+        },
+        {
+          "domain": "reals",
+          "name": "x",
+          "role": "input to the floor-based expressions; its fractional part determines the case condition",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "dummy summation index inside the definitions of F_n(x) and H_n",
+          "type": "integer"
+        },
+        {
+          "domain": "reals to reals",
+          "name": "F_n",
+          "role": "defined quantity: floor(n x) minus a weighted sum of floor(k x)",
+          "type": "function of x (indexed by n)"
+        },
+        {
+          "domain": "reals to reals",
+          "name": "frac",
+          "role": "fractional part of x defined as x minus floor(x)",
+          "type": "function of x"
+        },
+        {
+          "domain": "rational numbers for each fixed integer n >= 2",
+          "name": "H_n",
+          "role": "harmonic number defined by sum of 1 over k from 1 to n",
+          "type": "number depending on n"
+        }
+      ],
+      "witness_dependencies": [
+        "none: the conclusion gives a direct equality F_n(x) = H_n - 1 once the condition on frac(x) holds; no existential choices are introduced"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be an integer greater than 1, define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k, and define frac(x) = x - floor(x). If frac(x) lies in the interval [(n-1)/n, 1), then F_n(x) = H_n - 1, where H_n = sum_{k=1}^{n} 1/k.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [
+      {
+        "citation_kind": "definition",
+        "cited_text": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "detail": "Provides the definitions of F_n, frac, and H_n, and the hypothesis frac(x)\u2208[(n\u22121)/n,1).",
+        "item_id": "pnode_20260329003323_0513344c",
+        "label": "root_semantic_sketch"
+      }
+    ],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "used_definition_context_item_ids": [],
+      "used_manifest_item_ids": [
+        "pnode_20260329003323_0513344c"
+      ],
+      "used_trusted_decl_item_ids": []
+    },
+    "lemma_id": "lem_20260329003216_0cb7f112",
+    "proof_nl": "Let x = m + t, where m = floor(x) \u2208 Z and t = frac(x) \u2208 [(n-1)/n, 1).\nFor each k \u2208 {1,2,\\dots,n}, since km is an integer we have\nfloor(kx) = floor(km + kt) = km + floor(kt).\nNow t < 1 implies kt < k, so floor(kt) \u2264 k-1. Also t \u2265 (n-1)/n and k \u2264 n, hence\nkt \u2265 k(n-1)/n = k - k/n \u2265 k-1,\nso floor(kt) \u2265 k-1. Therefore floor(kt) = k-1 for every 1 \u2264 k \u2264 n.\nThus, for every such k,\nfloor(kx) = km + k - 1,\nand in particular floor(nx) = nm + n - 1.\nSubstituting into the definition of F_n(x),\nF_n(x) = floor(nx) - \\sum_{k=1}^n floor(kx)/k\n= (nm+n-1) - \\sum_{k=1}^n (km+k-1)/k\n= (nm+n-1) - \\sum_{k=1}^n \\bigl(m + 1 - 1/k\\bigr)\n= (nm+n-1) - (nm + n - H_n)\n= H_n - 1,\nwhere H_n = \\sum_{k=1}^n 1/k.\nHence whenever frac(x) \u2208 [(n-1)/n, 1), we have F_n(x) = H_n - 1.",
+    "proof_summary": "Write x = floor(x) + frac(x). On the interval frac(x) \u2208 [(n\u22121)/n,1), one gets floor(kt)=k\u22121 for every 1\u2264k\u2264n, so all floor terms simplify and the expression becomes H_n\u22121.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "x = floor(x) + frac(x)",
+        "If m is an integer, then floor(m+y) = m + floor(y)",
+        "If r \u2264 y < r+1 for an integer r, then floor(y) = r"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-29T00:33:29.991736Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329003216_0cb7f112",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:34:00.997307Z",
+  "worker_job_id": "wrk_lem_20260329003216_0cb7f112_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

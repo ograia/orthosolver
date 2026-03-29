@@ -1,0 +1,175 @@
+{
+  "artifact_prefix": "problems/prob_20260329002649_4f7773a6/lemmas/lem_20260329003209_47690510/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:36:25.710121Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:36:39.115814Z",
+  "controller_consumed_by_execution_id": "exec_20260329002649_e303d1e6",
+  "created_at": "2026-03-29T00:33:24.210815Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329002649_e303d1e6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329003303_fc89ad8a",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260329003209_47690510",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260329003324_0f3916f0",
+    "role_in_assembly": "This is the main discrete comparison step that identifies the global maximum among the rational endpoints.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "k is an integer index with 1 <= k <= n inside the sum",
+        "x ranges over all real numbers"
+      ],
+      "normalized_claim": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+      "quantifier_order": [
+        "for each integer n with n > 1",
+        "choose real x to maximize the expression over all real x"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "fixed parameter of the problem",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "optimization variable (argument of floors and sum)",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "index variable in the summation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing real number(s) x* (or argmax set) may depend on n",
+        "the maximal value M may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer greater than 1",
+        "m is an integer satisfying 0 less than or equal to m less than or equal to n minus 1",
+        "k is an integer summation index with 1 less than or equal to k less than or equal to n",
+        "floor argument uses real division of k times m by n (so the input to floor is well-defined as a real number)"
+      ],
+      "normalized_claim": "For every integer n greater than 1 and every integer m with 0 less than or equal to m less than or equal to n minus 1, if H_n equals the sum from k=1 to n of 1 divided by k and S(n,m) equals the sum from k=1 to n of floor(k*m divided by n) divided by k, then the real inequality m minus S(n,m) is less than or equal to H_n minus 1 holds; moreover, m minus S(n,m) equals H_n minus 1 if and only if m equals n minus 1.",
+      "quantifier_order": [
+        "for all integers n greater than 1",
+        "for all integers m with 0 less than or equal to m less than or equal to n minus 1"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "parameter with restriction n greater than 1; index of the sums",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "dummy summation index ranging from 1 to n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "m",
+          "role": "quantified variable constrained by 0 less than or equal to m less than or equal to n-1",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers",
+          "name": "H_n",
+          "role": "derived quantity defined from n by H_n equals sum from k=1 to n of 1 divided by k",
+          "type": "real"
+        },
+        {
+          "domain": "real numbers to integers",
+          "name": "floor",
+          "role": "used as floor of k times m divided by n",
+          "type": "function"
+        }
+      ],
+      "witness_dependencies": [
+        "H_n depends only on n",
+        "the sum term depends on both n and m through floor(k*m/n)",
+        "the equality condition depends on n and m only via whether m equals n minus 1 (no additional existential witnesses are introduced)"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be an integer greater than 1, and define H_n = sum_{k=1}^{n} 1/k. For every integer m with 0 <= m <= n-1, m - sum_{k=1}^{n} floor(k m/n)/k <= H_n - 1, and equality holds if and only if m = n-1.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [
+      {
+        "citation_kind": "definition",
+        "cited_text": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "detail": "Problem setup: n>1 fixed, 0<=m<=n-1, and the expression m - sum_{k=1}^n floor(km/n)/k is to be bounded by H_n - 1.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "label": "root_semantic_sketch"
+      }
+    ],
+    "counterexample_flag": null,
+    "dependency_self_check": {},
+    "lemma_id": "lem_20260329003209_47690510",
+    "proof_nl": "Let F(m) = m - sum_{k=1}^n floor(km/n)/k, where 0 <= m <= n-1.\n\nFor each k, write km = n*q_k + r_k with 0 <= r_k < n. Then q_k = floor(km/n), so\nfloor(km/n)/k = m/n - r_k/(nk).\nSumming over k = 1,...,n gives\nsum_{k=1}^n floor(km/n)/k = m - (1/n) sum_{k=1}^n r_k/k,\nso\nF(m) = (1/n) sum_{k=1}^n r_k/k.\nThus we only need to maximize sum r_k/k.\n\nNow let d = gcd(m,n), and write n = dN, m = dM with gcd(M,N) = 1. Because multiplication by M permutes the residues modulo N, the multiset {r_k : 1 <= k <= n} consists of d copies of each multiple\n0, d, 2d, ..., (N-1)d.\nLet a_1 >= a_2 >= ... >= a_n be these residues in nonincreasing order. Since the weights 1/k are strictly decreasing, swapping any inversion increases the sum; hence the largest possible value of sum r_k/k is attained when the residues are arranged in nonincreasing order. Therefore\nsum_{k=1}^n r_k/k <= sum_{k=1}^n a_k/k.\n\nThe sorted list is explicit: each value n-d, n-2d, ..., 0 appears exactly d times, so\n a_k = n - d*ceil(k/d).\nIn particular, d*ceil(k/d) >= k, so a_k <= n-k for every k. Hence\nsum_{k=1}^n a_k/k <= sum_{k=1}^n (n-k)/k = n*H_n - n,\nwhere H_n = sum_{k=1}^n 1/k. Combining this with F(m) = (1/n) sum r_k/k gives\nF(m) <= H_n - 1.\n\nIt remains to check equality. If d > 1, then a_1 = n-d < n-1, so the inequality a_k <= n-k is already strict at k = 1, and thus F(m) < H_n - 1. Therefore equality can occur only when d = 1.\n\nIf d = 1, then the residues r_k are a permutation of 0,1,...,n-1. The swap argument is then strict unless the sequence is already nonincreasing, so equality forces\nr_1 >= r_2 >= ... >= r_n.\nA nonincreasing permutation of 0,1,...,n-1 must be n-1, n-2, ..., 0. Thus r_1 = m = n-1. Conversely, when m = n-1, we have floor(k(n-1)/n) = k-1 for k < n and floor(n(n-1)/n) = n-1, so\nsum_{k=1}^n floor(k(n-1)/n)/k = sum_{k=1}^{n-1} (k-1)/k + (n-1)/n = n - H_n,\nwhich gives F(n-1) = H_n - 1.\n\nTherefore, for every integer m with 0 <= m <= n-1,\nm - sum_{k=1}^n floor(km/n)/k <= H_n - 1,\nwith equality if and only if m = n-1.",
+    "proof_summary": "Rewrite the expression using remainders r_k = km mod n, so the target becomes (1/n) sum r_k/k. The residues form d copies of 0,d,2d,...,n-d where d=gcd(m,n). Sorting them and comparing to the decreasing benchmark n-1,n-2,...,0 yields the bound H_n-1. Equality forces d=1 and the residues to be exactly n-k, hence m=n-1.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-29T00:33:29.739084Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329003209_47690510",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:36:39.115823Z",
+  "worker_job_id": "wrk_lem_20260329003209_47690510_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

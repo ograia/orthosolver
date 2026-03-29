@@ -1,0 +1,69 @@
+{
+  "created_at": "2026-03-29T00:33:03.628853Z",
+  "graph_node_id": "pnode_20260329003303_a8c5c56e",
+  "metadata": {
+    "parent_id": "thm_root_20260329002649_fb7173fe"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "2e6b4639a78e13a6cd3c5baf606d89629e06a23f49917a85cf904001d6b64e85",
+  "owner_id": "lem_20260329003216_0cb7f112",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329003303_c6c5428d",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer",
+      "n > 1",
+      "x is a real number so that floor(x) and frac(x) are defined",
+      "the hypothesis constrains frac(x) to be at least (n-1)/n and strictly less than 1"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every real x with fractional part frac(x) in the interval [ (n-1) / n, 1 ), we have F_n(x) equals H_n minus 1, where F_n(x) is floor(n times x) minus the sum for k from 1 to n of (floor(k times x) divided by k), and H_n is the sum for k from 1 to n of 1 divided by k.",
+    "quantifier_order": [
+      "for all n in integers with n > 1",
+      "for all real x such that frac(x) is in the interval [(n-1)/n, 1)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter indexing the functions F_n and the harmonic number H_n; also determines the summation limits",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "x",
+        "role": "input to the floor-based expressions; its fractional part determines the case condition",
+        "type": "real number"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "dummy summation index inside the definitions of F_n(x) and H_n",
+        "type": "integer"
+      },
+      {
+        "domain": "reals to reals",
+        "name": "F_n",
+        "role": "defined quantity: floor(n x) minus a weighted sum of floor(k x)",
+        "type": "function of x (indexed by n)"
+      },
+      {
+        "domain": "reals to reals",
+        "name": "frac",
+        "role": "fractional part of x defined as x minus floor(x)",
+        "type": "function of x"
+      },
+      {
+        "domain": "rational numbers for each fixed integer n >= 2",
+        "name": "H_n",
+        "role": "harmonic number defined by sum of 1 over k from 1 to n",
+        "type": "number depending on n"
+      }
+    ],
+    "witness_dependencies": [
+      "none: the conclusion gives a direct equality F_n(x) = H_n - 1 once the condition on frac(x) holds; no existential choices are introduced"
+    ]
+  },
+  "statement_nl": "Let n be an integer greater than 1, define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k, and define frac(x) = x - floor(x). If frac(x) lies in the interval [(n-1)/n, 1), then F_n(x) = H_n - 1, where H_n = sum_{k=1}^{n} 1/k.",
+  "updated_at": "2026-03-29T00:33:03.628854Z"
+}

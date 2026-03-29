@@ -1,0 +1,109 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329003303_a8c5c56e",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T00:32:23.493578Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.12,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T00:34:17.488310Z",
+  "last_dependency_check_id": "depchk_20260329003417_87ea587a",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly proves the stated conditional identity. Writing x = floor(x) + frac(x) and using that floor(km+kt)=km+floor(kt), the argument shows floor(kt)=k-1 for every 1<=k<=n because (n-1)/n <= t < 1. This yields floor(kx)=km+k-1 and hence F_n(x)=H_n-1 exactly. No semantic drift or dependency issue is present.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let x = m + t, where m = floor(x) \u2208 Z and t = frac(x) \u2208 [(n-1)/n, 1).\nFor each k \u2208 {1,2,\\dots,n}, since km is an integer we have\nfloor(kx) = floor(km + kt) = km + floor(kt).\nNow t < 1 implies kt < k, so floor(kt) \u2264 k-1. Also t \u2265 (n-1)/n and k \u2264 n, hence\nkt \u2265 k(n-1)/n = k - k/n \u2265 k-1,\nso floor(kt) \u2265 k-1. Therefore floor(kt) = k-1 for every 1 \u2264 k \u2264 n.\nThus, for every such k,\nfloor(kx) = km + k - 1,\nand in particular floor(nx) = nm + n - 1.\nSubstituting into the definition of F_n(x),\nF_n(x) = floor(nx) - \\sum_{k=1}^n floor(kx)/k\n= (nm+n-1) - \\sum_{k=1}^n (km+k-1)/k\n= (nm+n-1) - \\sum_{k=1}^n \\bigl(m + 1 - 1/k\\bigr)\n= (nm+n-1) - (nm + n - H_n)\n= H_n - 1,\nwhere H_n = \\sum_{k=1}^n 1/k.\nHence whenever frac(x) \u2208 [(n-1)/n, 1), we have F_n(x) = H_n - 1.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329003417_4c22463f",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329003216_0cb7f112",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329002649_fb7173fe",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329002649_4f7773a6/proof_bundles/lemmas/lem_20260329003216_0cb7f112.json",
+  "proof_graph_id": "pgraph_20260329003303_c6c5428d",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Show that the upper bound from the discrete comparison is actually attained on the last interval, giving the full maximizing set.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1, define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k, and define frac(x) = x - floor(x). If frac(x) lies in the interval [(n-1)/n, 1), then F_n(x) = H_n - 1, where H_n = sum_{k=1}^{n} 1/k.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer",
+      "n > 1",
+      "x is a real number so that floor(x) and frac(x) are defined",
+      "the hypothesis constrains frac(x) to be at least (n-1)/n and strictly less than 1"
+    ],
+    "normalized_claim": "For every integer n with n > 1 and every real x with fractional part frac(x) in the interval [ (n-1) / n, 1 ), we have F_n(x) equals H_n minus 1, where F_n(x) is floor(n times x) minus the sum for k from 1 to n of (floor(k times x) divided by k), and H_n is the sum for k from 1 to n of 1 divided by k.",
+    "quantifier_order": [
+      "for all n in integers with n > 1",
+      "for all real x such that frac(x) is in the interval [(n-1)/n, 1)"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "parameter indexing the functions F_n and the harmonic number H_n; also determines the summation limits",
+        "type": "integer"
+      },
+      {
+        "domain": "reals",
+        "name": "x",
+        "role": "input to the floor-based expressions; its fractional part determines the case condition",
+        "type": "real number"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "dummy summation index inside the definitions of F_n(x) and H_n",
+        "type": "integer"
+      },
+      {
+        "domain": "reals to reals",
+        "name": "F_n",
+        "role": "defined quantity: floor(n x) minus a weighted sum of floor(k x)",
+        "type": "function of x (indexed by n)"
+      },
+      {
+        "domain": "reals to reals",
+        "name": "frac",
+        "role": "fractional part of x defined as x minus floor(x)",
+        "type": "function of x"
+      },
+      {
+        "domain": "rational numbers for each fixed integer n >= 2",
+        "name": "H_n",
+        "role": "harmonic number defined by sum of 1 over k from 1 to n",
+        "type": "number depending on n"
+      }
+    ],
+    "witness_dependencies": [
+      "none: the conclusion gives a direct equality F_n(x) = H_n - 1 once the condition on frac(x) holds; no existential choices are introduced"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T00:34:17.488310Z"
+}

@@ -1,0 +1,83 @@
+{
+  "assembly_plan_id": "asm_20260329003149_76ef1551",
+  "created_at": "2026-03-29T00:33:03.264182Z",
+  "decomposition_id": "dec_20260329003149_eb5949c2",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "proof_skeleton_nl": "Use 1-periodicity to reduce an arbitrary real x to y = frac(x) in [0,1). Then choose m = floor(n y), so y lies in the interval [m/n,(m+1)/n). On that interval the function is nonincreasing, hence F_n(y) is at most the left endpoint value F_n(m/n). Evaluate that endpoint explicitly as a discrete floor-sum, and apply the hard discrete inequality to bound it by H_n - 1, with equality only when m = n-1. Finally, on the last interval [(n-1)/n,1) every floor(kx) equals k-1, so the value there is exactly H_n - 1. Therefore the maximum is H_n - 1 and the maximizers are exactly the integers translates of that last interval, equivalently the real x with frac(x) in [(n-1)/n,1).",
+  "root_node_id": "thm_root_20260329002649_fb7173fe",
+  "steps": [
+    {
+      "derives": "For an arbitrary real x, replace x by its fractional part y = frac(x) = x - floor(x); then F_n(x) = F_n(y), and y lies in [0,1).",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "Apply the periodicity lemma with z = floor(x), which is an integer, and note that x - floor(x) = frac(x).",
+      "uses_lemmas": [
+        "lem_20260329003149_d2ff8f59"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let y = frac(x), and let m = floor(n y). Then 0 <= m <= n-1 and y lies in [m/n,(m+1)/n), so F_n(y) <= F_n(m/n).",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "This uses the floor characterization of the interval index m together with the interval monotonicity lemma: once y is placed in the correct half-open interval, the value at y is bounded above by the left endpoint m/n.",
+      "uses_lemmas": [
+        "lem_20260329003154_5ae9f7ea"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "Rewrite the endpoint value as F_n(m/n) = m - sum_{k=1}^{n} floor(k m/n)/k.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is a direct substitution of x = m/n into the definition of F_n.",
+      "uses_lemmas": [
+        "lem_20260329003200_cd20d473"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "Conclude F_n(y) <= H_n - 1, with equality only if m = n-1.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is exactly the discrete comparison lemma applied to the endpoint expression from the previous step.",
+      "uses_lemmas": [
+        "lem_20260329003209_47690510"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "Every real x with frac(x) in [(n-1)/n,1) satisfies F_n(x) = H_n - 1; equivalently, every integer translate of the interval [(n-1)/n,1) is a maximizer set.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "The last interval forces every floor(kx) to equal k-1, so the expression evaluates immediately to H_n - 1.",
+      "uses_lemmas": [
+        "lem_20260329003216_0cb7f112"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "The maximal value of floor(n x) - sum_{k=1}^{n} floor(k x)/k over all real x is H_n - 1 = sum_{k=2}^{n} 1/k, and the maximizers are exactly the real numbers x with frac(x) in [(n-1)/n,1), equivalently x in the union over z in Z of [z + (n-1)/n, z + 1).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Steps A1-A4 give a universal upper bound H_n - 1 for every real x, while A5 shows that this bound is attained precisely on the stated periodic family of intervals. Combining the upper bound with the attainment description yields both the maximal value and the exact maximizer set.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "active_decomposition_id": "dec_20260329003149_eb5949c2",
+  "agent2_first_root_consumed": true,
+  "artifact_ids": [],
+  "created_at": "2026-03-29T00:26:49.821656Z",
+  "final_decl_name": null,
+  "kind": "theorem",
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "statement_lean": null,
+  "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n > 1",
+      "k is an integer index with 1 <= k <= n inside the sum",
+      "x ranges over all real numbers"
+    ],
+    "normalized_claim": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+    "quantifier_order": [
+      "for each integer n with n > 1",
+      "choose real x to maximize the expression over all real x"
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "n",
+        "role": "fixed parameter of the problem",
+        "type": "integer"
+      },
+      {
+        "domain": "all real numbers",
+        "name": "x",
+        "role": "optimization variable (argument of floors and sum)",
+        "type": "real number"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "index variable in the summation",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "the maximizing real number(s) x* (or argmax set) may depend on n",
+      "the maximal value M may depend on n"
+    ]
+  },
+  "status": "succeeded",
+  "theorem_id": "thm_root_20260329002649_fb7173fe",
+  "updated_at": "2026-03-29T00:26:49.821656Z"
+}

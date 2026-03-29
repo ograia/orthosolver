@@ -1,0 +1,175 @@
+{
+  "artifact_prefix": "problems/prob_20260329002649_4f7773a6/lemmas/lem_20260329003149_d2ff8f59/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:33:35.555981Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:33:44.408142Z",
+  "controller_consumed_by_execution_id": "exec_20260329002649_e303d1e6",
+  "created_at": "2026-03-29T00:33:23.812095Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329002649_e303d1e6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329003303_fc89ad8a",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260329003149_d2ff8f59",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260329003323_5c4894d7",
+    "role_in_assembly": "Reduce the maximization problem to x in [0,1) by replacing x with its fractional part.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "k is an integer index with 1 <= k <= n inside the sum",
+        "x ranges over all real numbers"
+      ],
+      "normalized_claim": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+      "quantifier_order": [
+        "for each integer n with n > 1",
+        "choose real x to maximize the expression over all real x"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "fixed parameter of the problem",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "optimization variable (argument of floors and sum)",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "index variable in the summation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing real number(s) x* (or argmax set) may depend on n",
+        "the maximal value M may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and n is greater than 1",
+        "x is any real number",
+        "z is any integer",
+        "k ranges over integers from 1 to n inclusive"
+      ],
+      "normalized_claim": "For every integer n greater than 1, define F_n on all real numbers by F_n(x) equals floor of n times x minus the sum from k equals 1 to n of floor of k times x divided by k. Then for every real x and every integer z, F_n(x plus z) equals F_n(x).",
+      "quantifier_order": [
+        "for all integers n with n greater than 1",
+        "for all real x",
+        "for all integers z"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "fixed parameter of the function F_n; also the upper limit of the finite sum",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "input to the function F_n",
+          "type": "real number"
+        },
+        {
+          "domain": "all integers",
+          "name": "z",
+          "role": "integer shift added to the input of F_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers from 1 to n inclusive (where n is the fixed parameter)",
+          "name": "k",
+          "role": "dummy index in the finite sum",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "no existential quantifiers; the claim is a universal invariance statement with respect to z"
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be an integer greater than 1, and define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k. Then for every real x and every integer z, F_n(x + z) = F_n(x).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [
+      {
+        "citation_kind": "definition",
+        "cited_text": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "detail": "Defines F_n(x) = floor(nx) - sum_{k=1}^n floor(kx)/k and the variables n, x, z, k.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "label": "root_semantic_sketch"
+      }
+    ],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "lemma_statement_match": true,
+      "no_forbidden_claims_used": true,
+      "no_sibling_or_ancestor_lemmas_used": true,
+      "uses_only_allowed_dependency_manifest_items": true
+    },
+    "lemma_id": "lem_20260329003149_d2ff8f59",
+    "proof_nl": "Let n > 1 be fixed, and define F_n(x) = floor(nx) - sum_{k=1}^n floor(kx)/k. We prove that F_n(x+z) = F_n(x) for every real x and every integer z.\n\nSince z is an integer, for any real t we have floor(t+z) = floor(t) + z. Applying this with t = nx and t = kx gives\n\nfloor(n(x+z)) = floor(nx+nz) = floor(nx) + nz,\n\nand for each k = 1, ..., n,\n\nfloor(k(x+z)) = floor(kx+kz) = floor(kx) + kz.\n\nTherefore\n\nsum_{k=1}^n floor(k(x+z))/k = sum_{k=1}^n (floor(kx)+kz)/k\n= sum_{k=1}^n floor(kx)/k + sum_{k=1}^n z\n= sum_{k=1}^n floor(kx)/k + nz.\n\nSubstituting into the definition of F_n gives\n\nF_n(x+z) = floor(n(x+z)) - sum_{k=1}^n floor(k(x+z))/k\n= (floor(nx)+nz) - (sum_{k=1}^n floor(kx)/k + nz)\n= floor(nx) - sum_{k=1}^n floor(kx)/k\n= F_n(x).\n\nHence F_n is periodic with period 1, so the stated identity holds for all real x and all integers z.",
+    "proof_summary": "Use the integer-shift identity floor(t+z)=floor(t)+z for integer z. Apply it to nx and each kx, then observe the added nz terms cancel between the first floor term and the sum.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "Basic floor identity: floor(t+m)=floor(t)+m for integer m"
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-29T00:33:26.048016Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329003149_d2ff8f59",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:33:44.408148Z",
+  "worker_job_id": "wrk_lem_20260329003149_d2ff8f59_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}

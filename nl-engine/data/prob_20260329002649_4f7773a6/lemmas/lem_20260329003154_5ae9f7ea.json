@@ -1,0 +1,112 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329003303_59c94e49",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T00:32:00.973023Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.18,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T00:34:17.224516Z",
+  "last_dependency_check_id": "depchk_20260329003417_c163677c",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The argument correctly shows that for x,y in the same interval [m/n,(m+1)/n), both floor(nx) and floor(ny) equal m, and each floor(kx) is at most floor(ky) since x<=y and k>0. Hence F_n(x)-F_n(y) is a sum of nonnegative terms, proving F_n is nonincreasing on each such interval.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix n>1 and an integer m with 0<=m<=n-1. Let x,y be real numbers such that m/n<=x<=y<(m+1)/n. Then m<=nx<=ny<m+1, so floor(nx)=floor(ny)=m. Also, for each k=1,2,...,n, since x<=y and k>0 we have kx<=ky, hence floor(kx)<=floor(ky). Therefore\nF_n(x)-F_n(y) = (floor(nx)-floor(ny)) - sum_{k=1}^n (floor(kx)-floor(ky))/k\n= sum_{k=1}^n (floor(ky)-floor(kx))/k >= 0,\nbecause each summand is nonnegative and each k is positive. Thus F_n(x)>=F_n(y), so F_n is nonincreasing on [m/n,(m+1)/n).",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329003417_e1ddb4f1",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329003154_5ae9f7ea",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329002649_fb7173fe",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329002649_4f7773a6/proof_bundles/lemmas/lem_20260329003154_5ae9f7ea.json",
+  "proof_graph_id": "pgraph_20260329003303_c6c5428d",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Show that, on each interval [m/n,(m+1)/n), the maximum occurs at the left endpoint m/n.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1, and define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k. For any integer m with 0 <= m <= n-1 and any real numbers x,y satisfying m/n <= x <= y < (m+1)/n, one has F_n(x) >= F_n(y).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and satisfies n > 1",
+      "m is an integer satisfying 0 <= m <= n - 1",
+      "x and y are real numbers satisfying m/n <= x <= y and y < (m+1)/n",
+      "the upper endpoint (m+1)/n is excluded for y, and therefore also excluded for x because x <= y",
+      "k in the sum is an integer with 1 <= k <= n (so division by k is by a nonzero integer)"
+    ],
+    "normalized_claim": "For every integer n > 1, the function Fn defined by Fn(t) = floor(n t) minus sum over integers k from 1 to n of floor(k t) divided by k is nonincreasing on each interval [m/n, (m+1)/n) in the sense that for every integer m with 0 <= m <= n-1 and for all real x and y with m/n <= x <= y < (m+1)/n, one has Fn(x) >= Fn(y).",
+    "quantifier_order": [
+      "for all integers n greater than 1",
+      "for all integers m with 0 <= m <= n-1",
+      "for all real numbers x and y with m/n <= x <= y and y < (m+1)/n"
+    ],
+    "variables": [
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "global parameter defining the function Fn",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= m <= n-1",
+        "name": "m",
+        "role": "chooses one subinterval of the real line",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers with m/n <= x <= y and x < (m+1)/n",
+        "name": "x",
+        "role": "left input to Fn",
+        "type": "real"
+      },
+      {
+        "domain": "real numbers with m/n <= y < (m+1)/n",
+        "name": "y",
+        "role": "right input to Fn",
+        "type": "real"
+      },
+      {
+        "domain": "real numbers",
+        "name": "Fn",
+        "role": "maps a real t to floor(n t) minus sum from k = 1 to n of floor(k t) divided by k",
+        "type": "function"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "summation index inside the definition of Fn",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; all quantified variables (n, m, x, y) are universal.",
+      "Fn depends on n, and the sum in Fn depends on n through its upper limit n."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T00:34:17.224516Z"
+}

@@ -1,0 +1,98 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329003303_d73e9588",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T00:31:54.687460Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.08,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T00:34:00.750521Z",
+  "last_dependency_check_id": "depchk_20260329003400_fd835647",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly establishes the claimed integer-translation invariance using floor(t+z)=floor(t)+z and the fact that kz is an integer. The argument is complete and matches the lemma and assembly role exactly, with no dependency issues.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let n > 1 be fixed, and define F_n(x) = floor(nx) - sum_{k=1}^n floor(kx)/k. We prove that F_n(x+z) = F_n(x) for every real x and every integer z.\n\nSince z is an integer, for any real t we have floor(t+z) = floor(t) + z. Applying this with t = nx and t = kx gives\n\nfloor(n(x+z)) = floor(nx+nz) = floor(nx) + nz,\n\nand for each k = 1, ..., n,\n\nfloor(k(x+z)) = floor(kx+kz) = floor(kx) + kz.\n\nTherefore\n\nsum_{k=1}^n floor(k(x+z))/k = sum_{k=1}^n (floor(kx)+kz)/k\n= sum_{k=1}^n floor(kx)/k + sum_{k=1}^n z\n= sum_{k=1}^n floor(kx)/k + nz.\n\nSubstituting into the definition of F_n gives\n\nF_n(x+z) = floor(n(x+z)) - sum_{k=1}^n floor(k(x+z))/k\n= (floor(nx)+nz) - (sum_{k=1}^n floor(kx)/k + nz)\n= floor(nx) - sum_{k=1}^n floor(kx)/k\n= F_n(x).\n\nHence F_n is periodic with period 1, so the stated identity holds for all real x and all integers z.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329003400_a7228d94",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329003149_d2ff8f59",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329002649_fb7173fe",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329002649_4f7773a6/proof_bundles/lemmas/lem_20260329003149_d2ff8f59.json",
+  "proof_graph_id": "pgraph_20260329003303_c6c5428d",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Reduce the maximization problem to x in [0,1) by replacing x with its fractional part.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1, and define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k. Then for every real x and every integer z, F_n(x + z) = F_n(x).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer and n is greater than 1",
+      "x is any real number",
+      "z is any integer",
+      "k ranges over integers from 1 to n inclusive"
+    ],
+    "normalized_claim": "For every integer n greater than 1, define F_n on all real numbers by F_n(x) equals floor of n times x minus the sum from k equals 1 to n of floor of k times x divided by k. Then for every real x and every integer z, F_n(x plus z) equals F_n(x).",
+    "quantifier_order": [
+      "for all integers n with n greater than 1",
+      "for all real x",
+      "for all integers z"
+    ],
+    "variables": [
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "fixed parameter of the function F_n; also the upper limit of the finite sum",
+        "type": "integer"
+      },
+      {
+        "domain": "all real numbers",
+        "name": "x",
+        "role": "input to the function F_n",
+        "type": "real number"
+      },
+      {
+        "domain": "all integers",
+        "name": "z",
+        "role": "integer shift added to the input of F_n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 1 to n inclusive (where n is the fixed parameter)",
+        "name": "k",
+        "role": "dummy index in the finite sum",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "no existential quantifiers; the claim is a universal invariance statement with respect to z"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T00:34:00.750521Z"
+}

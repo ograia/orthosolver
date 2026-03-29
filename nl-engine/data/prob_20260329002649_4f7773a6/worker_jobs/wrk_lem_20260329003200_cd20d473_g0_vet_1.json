@@ -1,0 +1,207 @@
+{
+  "artifact_prefix": "problems/prob_20260329002649_4f7773a6/lemmas/lem_20260329003200_cd20d473/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:34:01.558133Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:34:17.268322Z",
+  "controller_consumed_by_execution_id": "exec_20260329002649_e303d1e6",
+  "created_at": "2026-03-29T00:33:45.435649Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329002649_e303d1e6",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329002649_fb7173fe",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329002649_fb7173fe",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n is an integer with n > 1",
+            "k is an integer index with 1 <= k <= n inside the sum",
+            "x ranges over all real numbers"
+          ],
+          "normalized_claim": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+          "quantifier_order": [
+            "for each integer n with n > 1",
+            "choose real x to maximize the expression over all real x"
+          ],
+          "variables": [
+            {
+              "domain": "positive integers",
+              "name": "n",
+              "role": "fixed parameter of the problem",
+              "type": "integer"
+            },
+            {
+              "domain": "all real numbers",
+              "name": "x",
+              "role": "optimization variable (argument of floors and sum)",
+              "type": "real number"
+            },
+            {
+              "domain": "integers with 1 <= k <= n",
+              "name": "k",
+              "role": "index variable in the summation",
+              "type": "integer"
+            }
+          ],
+          "witness_dependencies": [
+            "the maximizing real number(s) x* (or argmax set) may depend on n",
+            "the maximal value M may depend on n"
+          ]
+        },
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [
+      {
+        "citation_kind": "definition",
+        "cited_text": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "detail": "Definition of F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "label": "root_semantic_sketch"
+      }
+    ],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260329003200_cd20d473",
+    "proof_nl": "Fix an integer n > 1 and an integer m with 0 <= m <= n-1. By the definition of F_n, for any real x,\n\nF_n(x) = floor(n x) - sum_{k=1}^n floor(k x)/k.\n\nSubstitute x = m/n. Then\n\nF_n(m/n) = floor(n(m/n)) - sum_{k=1}^n floor(k(m/n))/k.\n\nSince n(m/n) = m and m is an integer, floor(n(m/n)) = floor(m) = m. Therefore\n\nF_n(m/n) = m - sum_{k=1}^n floor(k m/n)/k,\n\nwhich is exactly the desired identity.",
+    "role_in_assembly": "Convert the endpoint value into the discrete floor-sum expression to which the hard inequality applies.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "k is an integer index with 1 <= k <= n inside the sum",
+        "x ranges over all real numbers"
+      ],
+      "normalized_claim": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+      "quantifier_order": [
+        "for each integer n with n > 1",
+        "choose real x to maximize the expression over all real x"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "fixed parameter of the problem",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "optimization variable (argument of floors and sum)",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "index variable in the summation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing real number(s) x* (or argmax set) may depend on n",
+        "the maximal value M may depend on n"
+      ]
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "x is a real number (or at least a value for which floor(n x) and floor(k x) are defined)",
+        "k ranges over integers from 1 to n (so division by k is valid since k is nonzero)",
+        "m is an integer satisfying 0 <= m <= n - 1"
+      ],
+      "normalized_claim": "For every integer n with n > 1, define F_n on real x by F_n(x) = floor(n times x) minus the sum over integers k from 1 to n of floor(k times x) divided by k. Then for every integer m with 0 <= m <= n - 1, F_n(m divided by n) equals m minus the sum over integers k from 1 to n of floor(k times m divided by n) divided by k.",
+      "quantifier_order": [
+        "For all integers n such that n > 1",
+        "For all integers m such that 0 <= m <= n - 1"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "global parameter in the definition of F_n",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers (so floor is defined)",
+          "name": "x",
+          "role": "input to the function F_n",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index in the definition of F_n",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 0 <= m <= n - 1",
+          "name": "m",
+          "role": "quantified argument where x is specialized to m/n",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced; the claim is universally quantified over m with fixed n"
+      ]
+    },
+    "statement_nl": "Let n be an integer greater than 1, and define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k. For every integer m with 0 <= m <= n-1, F_n(m/n) = m - sum_{k=1}^{n} floor(k m/n)/k.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.99,
+    "counterexample_status": null,
+    "dependency_assessment": {},
+    "detailed_findings": [],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260329003200_cd20d473",
+    "proof_status": "complete",
+    "reason": "The proof matches the lemma exactly: it specializes the defined function F_n at x = m/n and correctly uses floor(m) = m since m is an integer. No missing steps or semantic drift were detected, and only allowed contextual definition is used.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-29T00:33:56.064982Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329003200_cd20d473",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:34:17.268327Z",
+  "worker_job_id": "wrk_lem_20260329003200_cd20d473_g0_vet_1",
+  "worker_kind": "lemma_vetter"
+}

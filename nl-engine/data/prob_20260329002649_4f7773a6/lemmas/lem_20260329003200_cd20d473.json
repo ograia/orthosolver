@@ -1,0 +1,97 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329003303_c675ba37",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T00:32:09.664945Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T00:34:17.291338Z",
+  "last_dependency_check_id": "depchk_20260329003417_e8366caa",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof matches the lemma exactly: it specializes the defined function F_n at x = m/n and correctly uses floor(m) = m since m is an integer. No missing steps or semantic drift were detected, and only allowed contextual definition is used.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix an integer n > 1 and an integer m with 0 <= m <= n-1. By the definition of F_n, for any real x,\n\nF_n(x) = floor(n x) - sum_{k=1}^n floor(k x)/k.\n\nSubstitute x = m/n. Then\n\nF_n(m/n) = floor(n(m/n)) - sum_{k=1}^n floor(k(m/n))/k.\n\nSince n(m/n) = m and m is an integer, floor(n(m/n)) = floor(m) = m. Therefore\n\nF_n(m/n) = m - sum_{k=1}^n floor(k m/n)/k,\n\nwhich is exactly the desired identity.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329003417_36169058",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329003200_cd20d473",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329002649_fb7173fe",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329002649_4f7773a6/proof_bundles/lemmas/lem_20260329003200_cd20d473.json",
+  "proof_graph_id": "pgraph_20260329003303_c6c5428d",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Convert the endpoint value into the discrete floor-sum expression to which the hard inequality applies.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let n be an integer greater than 1, and define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k. For every integer m with 0 <= m <= n-1, F_n(m/n) = m - sum_{k=1}^{n} floor(k m/n)/k.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer with n > 1",
+      "x is a real number (or at least a value for which floor(n x) and floor(k x) are defined)",
+      "k ranges over integers from 1 to n (so division by k is valid since k is nonzero)",
+      "m is an integer satisfying 0 <= m <= n - 1"
+    ],
+    "normalized_claim": "For every integer n with n > 1, define F_n on real x by F_n(x) = floor(n times x) minus the sum over integers k from 1 to n of floor(k times x) divided by k. Then for every integer m with 0 <= m <= n - 1, F_n(m divided by n) equals m minus the sum over integers k from 1 to n of floor(k times m divided by n) divided by k.",
+    "quantifier_order": [
+      "For all integers n such that n > 1",
+      "For all integers m such that 0 <= m <= n - 1"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "global parameter in the definition of F_n",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers (so floor is defined)",
+        "name": "x",
+        "role": "input to the function F_n",
+        "type": "real number"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "summation index in the definition of F_n",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= m <= n - 1",
+        "name": "m",
+        "role": "quantified argument where x is specialized to m/n",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; the claim is universally quantified over m with fixed n"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T00:34:17.291338Z"
+}

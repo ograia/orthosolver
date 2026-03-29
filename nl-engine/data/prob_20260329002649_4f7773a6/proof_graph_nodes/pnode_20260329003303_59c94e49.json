@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-03-29T00:33:03.524373Z",
+  "graph_node_id": "pnode_20260329003303_59c94e49",
+  "metadata": {
+    "parent_id": "thm_root_20260329002649_fb7173fe"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "02c7ea2ab60aea90352200a4c1e1ab68db18dc0628c04bc216ce192092194f53",
+  "owner_id": "lem_20260329003154_5ae9f7ea",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329003303_c6c5428d",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n is an integer and satisfies n > 1",
+      "m is an integer satisfying 0 <= m <= n - 1",
+      "x and y are real numbers satisfying m/n <= x <= y and y < (m+1)/n",
+      "the upper endpoint (m+1)/n is excluded for y, and therefore also excluded for x because x <= y",
+      "k in the sum is an integer with 1 <= k <= n (so division by k is by a nonzero integer)"
+    ],
+    "normalized_claim": "For every integer n > 1, the function Fn defined by Fn(t) = floor(n t) minus sum over integers k from 1 to n of floor(k t) divided by k is nonincreasing on each interval [m/n, (m+1)/n) in the sense that for every integer m with 0 <= m <= n-1 and for all real x and y with m/n <= x <= y < (m+1)/n, one has Fn(x) >= Fn(y).",
+    "quantifier_order": [
+      "for all integers n greater than 1",
+      "for all integers m with 0 <= m <= n-1",
+      "for all real numbers x and y with m/n <= x <= y and y < (m+1)/n"
+    ],
+    "variables": [
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "global parameter defining the function Fn",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= m <= n-1",
+        "name": "m",
+        "role": "chooses one subinterval of the real line",
+        "type": "integer"
+      },
+      {
+        "domain": "real numbers with m/n <= x <= y and x < (m+1)/n",
+        "name": "x",
+        "role": "left input to Fn",
+        "type": "real"
+      },
+      {
+        "domain": "real numbers with m/n <= y < (m+1)/n",
+        "name": "y",
+        "role": "right input to Fn",
+        "type": "real"
+      },
+      {
+        "domain": "real numbers",
+        "name": "Fn",
+        "role": "maps a real t to floor(n t) minus sum from k = 1 to n of floor(k t) divided by k",
+        "type": "function"
+      },
+      {
+        "domain": "integers with 1 <= k <= n",
+        "name": "k",
+        "role": "summation index inside the definition of Fn",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; all quantified variables (n, m, x, y) are universal.",
+      "Fn depends on n, and the sum in Fn depends on n through its upper limit n."
+    ]
+  },
+  "statement_nl": "Let n be an integer greater than 1, and define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k. For any integer m with 0 <= m <= n-1 and any real numbers x,y satisfying m/n <= x <= y < (m+1)/n, one has F_n(x) >= F_n(y).",
+  "updated_at": "2026-03-29T00:33:03.524374Z"
+}

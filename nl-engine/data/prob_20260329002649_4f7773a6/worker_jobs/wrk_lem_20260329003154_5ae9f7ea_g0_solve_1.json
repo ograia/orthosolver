@@ -1,0 +1,191 @@
+{
+  "artifact_prefix": "problems/prob_20260329002649_4f7773a6/lemmas/lem_20260329003154_5ae9f7ea/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T00:33:44.725761Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": "2026-03-29T00:33:44.773202Z",
+  "controller_consumed_by_execution_id": "exec_20260329002649_e303d1e6",
+  "created_at": "2026-03-29T00:33:23.943758Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329002649_e303d1e6",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [
+      {
+        "content": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "item_kind": "semantic_anchor",
+        "label": "root_semantic_sketch",
+        "metadata": {},
+        "source": "root_semantic_sketch"
+      }
+    ],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260329003303_fc89ad8a",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let $n$ be an integer greater than 1. For which real numbers $x$ is \\\\[\\\\lfloor nx \\\\rfloor - \\\\sum_{k=1}^{n} \\\\frac{\\\\lfloor kx \\\\rfloor}{k}\\\\] maximal, and what is the maximal value that this expression can take?"
+      }
+    ],
+    "lemma_id": "lem_20260329003154_5ae9f7ea",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260329003323_c426f6fc",
+    "role_in_assembly": "Show that, on each interval [m/n,(m+1)/n), the maximum occurs at the left endpoint m/n.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer with n > 1",
+        "k is an integer index with 1 <= k <= n inside the sum",
+        "x ranges over all real numbers"
+      ],
+      "normalized_claim": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+      "quantifier_order": [
+        "for each integer n with n > 1",
+        "choose real x to maximize the expression over all real x"
+      ],
+      "variables": [
+        {
+          "domain": "positive integers",
+          "name": "n",
+          "role": "fixed parameter of the problem",
+          "type": "integer"
+        },
+        {
+          "domain": "all real numbers",
+          "name": "x",
+          "role": "optimization variable (argument of floors and sum)",
+          "type": "real number"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "index variable in the summation",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "the maximizing real number(s) x* (or argmax set) may depend on n",
+        "the maximal value M may depend on n"
+      ]
+    },
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n is an integer and satisfies n > 1",
+        "m is an integer satisfying 0 <= m <= n - 1",
+        "x and y are real numbers satisfying m/n <= x <= y and y < (m+1)/n",
+        "the upper endpoint (m+1)/n is excluded for y, and therefore also excluded for x because x <= y",
+        "k in the sum is an integer with 1 <= k <= n (so division by k is by a nonzero integer)"
+      ],
+      "normalized_claim": "For every integer n > 1, the function Fn defined by Fn(t) = floor(n t) minus sum over integers k from 1 to n of floor(k t) divided by k is nonincreasing on each interval [m/n, (m+1)/n) in the sense that for every integer m with 0 <= m <= n-1 and for all real x and y with m/n <= x <= y < (m+1)/n, one has Fn(x) >= Fn(y).",
+      "quantifier_order": [
+        "for all integers n greater than 1",
+        "for all integers m with 0 <= m <= n-1",
+        "for all real numbers x and y with m/n <= x <= y and y < (m+1)/n"
+      ],
+      "variables": [
+        {
+          "domain": "integers greater than 1",
+          "name": "n",
+          "role": "global parameter defining the function Fn",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 0 <= m <= n-1",
+          "name": "m",
+          "role": "chooses one subinterval of the real line",
+          "type": "integer"
+        },
+        {
+          "domain": "real numbers with m/n <= x <= y and x < (m+1)/n",
+          "name": "x",
+          "role": "left input to Fn",
+          "type": "real"
+        },
+        {
+          "domain": "real numbers with m/n <= y < (m+1)/n",
+          "name": "y",
+          "role": "right input to Fn",
+          "type": "real"
+        },
+        {
+          "domain": "real numbers",
+          "name": "Fn",
+          "role": "maps a real t to floor(n t) minus sum from k = 1 to n of floor(k t) divided by k",
+          "type": "function"
+        },
+        {
+          "domain": "integers with 1 <= k <= n",
+          "name": "k",
+          "role": "summation index inside the definition of Fn",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are introduced; all quantified variables (n, m, x, y) are universal.",
+        "Fn depends on n, and the sum in Fn depends on n through its upper limit n."
+      ]
+    },
+    "shared_context": [],
+    "statement_nl": "Let n be an integer greater than 1, and define F_n(x) = floor(n x) - sum_{k=1}^{n} floor(k x)/k. For any integer m with 0 <= m <= n-1 and any real numbers x,y satisfying m/n <= x <= y < (m+1)/n, one has F_n(x) >= F_n(y).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329002649_4f7773a6",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [
+      {
+        "citation_kind": "definition",
+        "cited_text": "Fix any integer n with n > 1. Define f_n(x) = floor(n x) - sum from k=1 to n of (floor(k x) divided by k). Determine the real number(s) x where f_n(x) attains its maximum over all real x, and give the corresponding maximum value.",
+        "detail": "Semantic anchor specifying the function F_n and the interval statement being proved.",
+        "item_id": "pnode_20260329003323_0513344c",
+        "label": "root_semantic_sketch"
+      }
+    ],
+    "counterexample_flag": null,
+    "dependency_self_check": {
+      "interval_usage": "Used m/n<=x<=y<(m+1)/n to deduce floor(nx)=floor(ny)=m.",
+      "monotonicity_usage": "Used monotonicity of floor and positivity of k to compare each summand.",
+      "no_hidden_dependencies": true,
+      "scope": "Only the stated lemma was used."
+    },
+    "lemma_id": "lem_20260329003154_5ae9f7ea",
+    "proof_nl": "Fix n>1 and an integer m with 0<=m<=n-1. Let x,y be real numbers such that m/n<=x<=y<(m+1)/n. Then m<=nx<=ny<m+1, so floor(nx)=floor(ny)=m. Also, for each k=1,2,...,n, since x<=y and k>0 we have kx<=ky, hence floor(kx)<=floor(ky). Therefore\nF_n(x)-F_n(y) = (floor(nx)-floor(ny)) - sum_{k=1}^n (floor(kx)-floor(ky))/k\n= sum_{k=1}^n (floor(ky)-floor(kx))/k >= 0,\nbecause each summand is nonnegative and each k is positive. Thus F_n(x)>=F_n(y), so F_n is nonincreasing on [m/n,(m+1)/n).",
+    "proof_summary": "On the interval [m/n,(m+1)/n), the term floor(nx) is constant, while each floor(kx) is nondecreasing in x; hence the whole expression cannot increase.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": [
+        "If a<=b and c>0, then ac<=bc.",
+        "The floor function is nondecreasing: u<=v implies floor(u)<=floor(v).",
+        "If an integer q satisfies m<=q<m+1, then q=m."
+      ]
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-29T00:33:27.767209Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260329003154_5ae9f7ea",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-29T00:33:44.773209Z",
+  "worker_job_id": "wrk_lem_20260329003154_5ae9f7ea_g0_solve_1",
+  "worker_kind": "lemma_solver"
+}
