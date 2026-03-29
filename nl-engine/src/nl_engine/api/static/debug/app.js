@@ -1256,7 +1256,6 @@ function renderOverview() {
   }
 
   const usageTotals = state.llmUsage?.totals || null;
-  const pricingByModel = state.llmUsage?.pricing_by_model_usd_per_1m || null;
   if (usageTotals) {
     items.push(["llm_calls", fmtInt(usageTotals.call_count || 0)]);
     items.push(["input_tokens", fmtInt(usageTotals.input_tokens || 0)]);
@@ -1268,14 +1267,6 @@ function renderOverview() {
     items.push(["input_tokens", fmtInt(state.costSummary.total_input_tokens || 0)]);
     items.push(["output_tokens", fmtInt(state.costSummary.total_output_tokens || 0)]);
     items.push(["estimated_cost_usd", fmtUsd(state.costSummary.total_estimated_cost_usd || 0)]);
-  }
-  if (pricingByModel) {
-    Object.entries(pricingByModel).forEach(([model, pricing]) => {
-      items.push([
-        `${model}_pricing_per_1m`,
-        `in ${fmtUsd(pricing.input || 0)}, cached ${fmtUsd(pricing.cached_input || 0)}, out ${fmtUsd(pricing.output || 0)}`,
-      ]);
-    });
   }
   items.forEach(([key, value]) => {
     const div = document.createElement("div");
