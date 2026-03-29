@@ -1907,20 +1907,18 @@ function formatTreeNodeLabel(node) {
   const base = `${node.kind} ${node.id}`;
   if (node.kind === "lemma") {
     const row = state.snapshot?.lemma_by_id?.[node.id];
-    const statusBits = [];
-    if (row?.proof_status) {
-      statusBits.push(row.proof_status);
-    } else if (node.status) {
-      statusBits.push(node.status);
+    const humanize = (value) => String(value || "").replaceAll("_", " ");
+    const proofStatus = humanize(row?.proof_status || node.status);
+    const proofAttempts = row?.solver_attempt_count ?? 0;
+    const decompAttempts = row?.decomposition_round_count ?? 0;
+    if (decompAttempts > 0) {
+      return `${base} [${proofStatus} | ${proofAttempts}, ${decompAttempts}]`;
     }
-    if (row?.routing_status && row.routing_status !== row.proof_status) {
-      statusBits.push(row.routing_status);
+    const routingStatus = humanize(row?.routing_status);
+    if (routingStatus) {
+      return `${base} [${proofStatus} | ${proofAttempts} | ${routingStatus}]`;
     }
-    const parts = [`${base} [${statusBits.join(" | ")}]`, `proof ${row?.solver_attempt_count ?? 0}`];
-    if ((row?.decomposition_round_count ?? 0) > 0) {
-      parts.push(`decomp ${row.decomposition_round_count}`);
-    }
-    return parts.join(" ");
+    return `${base} [${proofStatus} | ${proofAttempts}]`;
   }
 
   let label = `${base} [${node.status}]`;
