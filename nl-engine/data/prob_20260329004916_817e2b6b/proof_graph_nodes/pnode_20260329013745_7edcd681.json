@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-03-29T01:37:45.551861Z",
+  "graph_node_id": "pnode_20260329013745_7edcd681",
+  "metadata": {
+    "parent_id": "thm_root_20260329004916_bb2daf99"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "1bc394684fbd17e60373e5c351f1dcec52518877f941937c2c77e763d8bf0f03",
+  "owner_id": "lem_20260329013328_31445d94",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329013745_facf6520",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "n, k, and l are integers",
+      "The ordering constraint 0 <= l <= k <= n/2 holds",
+      "Because k <= n/2 and l <= k, both m = k - l and d = n - k - l are nonnegative",
+      "The q-binomial coefficient is defined only for integers r with 0 <= r <= n",
+      "The empty product is taken to be 1 when r = 0",
+      "The final product is taken to be 1 when m = 0",
+      "If the displayed product is interpreted numerically, the denominators 1 minus q to a power must be nonzero; otherwise the expression is intended formally or as a polynomial identity",
+      "The statement does not specify a numeric field for q, so q is treated as an implicit parameter or indeterminate"
+    ],
+    "normalized_claim": "For every integer triple n, k, l satisfying 0 <= l <= k <= n/2, if m is k minus l and d is n minus k minus l, then the ratio of the q-binomial coefficient of n choose k to the q-binomial coefficient of n choose l equals the product from i equals 1 to m of (1 minus q raised to l plus d plus i) divided by (1 minus q raised to l plus i), with the convention that the product is 1 when m is 0.",
+    "quantifier_order": [
+      "For all integers n, k, and l with 0 <= l <= k <= n/2",
+      "For the q-binomial definition, for each integer r with 0 <= r <= n",
+      "For each integer j from 1 to r in the defining product",
+      "Set m equal to k minus l and d equal to n minus k minus l",
+      "For each integer i from 1 to m in the final product",
+      "The identity is asserted with q left free as an implicit parameter"
+    ],
+    "variables": [
+      {
+        "domain": "an integer satisfying the stated inequalities with k and l",
+        "name": "n",
+        "role": "main size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer with 0 <= l <= k <= n/2",
+        "name": "k",
+        "role": "upper index in the q-binomial ratio",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer with 0 <= l <= k <= n/2",
+        "name": "l",
+        "role": "lower index in the q-binomial ratio",
+        "type": "integer"
+      },
+      {
+        "domain": "implicit parameter appearing in powers of q",
+        "name": "q",
+        "role": "base parameter for the q-binomial expressions",
+        "type": "scalar or indeterminate"
+      },
+      {
+        "domain": "an integer with 0 <= r <= n in the q-binomial definition",
+        "name": "r",
+        "role": "dummy index for the defining formula",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer ranging from 1 to r in the defining product",
+        "name": "j",
+        "role": "dummy product index in the q-binomial definition",
+        "type": "integer"
+      },
+      {
+        "domain": "m = k - l, hence m is nonnegative",
+        "name": "m",
+        "role": "derived product length in the final identity",
+        "type": "integer"
+      },
+      {
+        "domain": "d = n - k - l, hence d is nonnegative",
+        "name": "d",
+        "role": "derived shift parameter in the final identity",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer ranging from 1 to m in the final product",
+        "name": "i",
+        "role": "dummy product index in the claimed identity",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "m depends only on k and l",
+      "d depends on n, k, and l",
+      "The index i in the final product depends on m",
+      "The index j in the q-binomial definition depends on r",
+      "There are no existential witnesses; all auxiliary quantities are determined uniquely from the stated variables"
+    ]
+  },
+  "statement_nl": "For integers n, k, and l with 0 <= l <= k <= n/2, define [n choose r]_q := product_{j=1}^r (1 - q^(n-r+j)) / (1 - q^j) for 0 <= r <= n, with the empty product equal to 1 when r = 0. Set m := k-l and d := n-k-l. Then [n choose k]_q / [n choose l]_q = product_{i=1}^m (1 - q^(l+d+i)) / (1 - q^(l+i)), where the product is interpreted as 1 when m = 0.",
+  "updated_at": "2026-03-29T01:37:45.551862Z"
+}

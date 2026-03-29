@@ -1,0 +1,102 @@
+{
+  "created_at": "2026-03-29T03:13:30.844629Z",
+  "graph_node_id": "pnode_20260329031330_e0e56a58",
+  "metadata": {
+    "parent_id": "thm_root_20260329014048_9c97a865"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "924106b730d1017d7e18f5edbdf1d4d1492d3a5aec146fd3925ccbdaff8d28d8",
+  "owner_id": "lem_20260329030830_ffab55af",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329031330_b25d6a18",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d and r are positive integers.",
+      "gcd(d, r) = 1.",
+      "r <= d.",
+      "n is an integer greater than 1.",
+      "n is congruent to 1 modulo 2d, so n is odd.",
+      "k is an integer with 0 <= k <= n - 1 whenever A_{d,r,n,k}(q), S_{d,r,n}(q), or the coprimeness claim is invoked.",
+      "u is an arbitrary parameter for the q-Pochhammer definition.",
+      "The q-Pochhammer length k is a nonnegative integer.",
+      "The exponent k(d - dk - 2r)/2 is an integer because k(1 - k) is even.",
+      "The exponent r(1 - n)/2 is an integer because n is odd.",
+      "Loc_M_n is the localization of Q[q, q^{-1}] obtained by inverting precisely those polynomials in Q[q] that are coprime to M_n(q).",
+      "The denominator (-q^d; q^d)_k equals the product of 1 + q^{dj} for j from 1 to k."
+    ],
+    "normalized_claim": "Under the stated arithmetic assumptions on d, r, and n, every denominator factor appearing in A_{d,r,n,k}(q) is invertible in the localization at M_n(q), so each term A_{d,r,n,k}(q) for 0 <= k <= n - 1 lies in Loc_M_n; therefore the finite sum S_{d,r,n}(q) also lies in Loc_M_n; and the auxiliary term R_{d,r,n}(q) lies in Loc_M_n as well.",
+    "quantifier_order": [
+      "For any parameter u and any integer k at least 0, the q-Pochhammer symbols are defined.",
+      "Assume d and r are positive integers with gcd(d, r) = 1 and r <= d.",
+      "Assume n is an integer greater than 1 and n is congruent to 1 modulo 2d.",
+      "For each integer k with 0 <= k <= n - 1, define A_{d,r,n,k}(q).",
+      "For every integer k with 0 <= k <= n - 1, the denominator (-q^d; q^d)_k is coprime to M_n(q).",
+      "Therefore each A_{d,r,n,k}(q), the finite sum S_{d,r,n}(q), and R_{d,r,n}(q) lie in Loc_M_n."
+    ],
+    "variables": [
+      {
+        "domain": "rational Laurent polynomial ring Q[q, q^{-1}]",
+        "name": "q",
+        "role": "base variable used in q-brackets, cyclotomic polynomials, and the localization",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "index parameter in the q-bracket definition",
+        "type": "integer"
+      },
+      {
+        "domain": "ambient parameter set not otherwise specified",
+        "name": "u",
+        "role": "generic input for the q-Pochhammer symbol",
+        "type": "parameter"
+      },
+      {
+        "domain": "nonnegative integers, and later integers in the range 0 through n - 1",
+        "name": "k",
+        "role": "q-Pochhammer length, summation index, and index for A",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "step size parameter in the q-Pochhammer base and in A",
+        "type": "positive integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "coprime parameter and shift index in the main terms",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "modulus parameter, upper limit of the finite sum, and cyclotomic index",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomials with rational coefficients in q",
+        "name": "V(q)",
+        "role": "polynomial inverted in the localization when it is coprime to M_n(q)",
+        "type": "polynomial"
+      },
+      {
+        "domain": "rational polynomials in q",
+        "name": "M_n(q)",
+        "role": "localization modulus built from [n]_q and the cyclotomic polynomial",
+        "type": "polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "To place A_{d,r,n,k}(q) in Loc_M_n, the needed witness is that its denominator (-q^d; q^d)_k is coprime to M_n(q), hence invertible in the localization.",
+      "To place S_{d,r,n}(q) in Loc_M_n, one uses that each summand A_{d,r,n,k}(q) lies in Loc_M_n and that the localization is closed under finite sums.",
+      "To place R_{d,r,n}(q) in Loc_M_n, one uses that n is odd so the exponent r(1 - n)/2 is integral and the resulting monomial is an element of the localized ring.",
+      "The coprimeness claim about (-q^d; q^d)_k is the key algebraic fact supporting the localization membership of A_{d,r,n,k}(q)."
+    ]
+  },
+  "statement_nl": "Let [m]_q=(1-q^m)/(1-q), let \u03a6_n(q) be the nth cyclotomic polynomial, define M_n(q):=[n]_q \u03a6_n(q)^2, and let Loc_{M_n} be the localization of Q[q,q^{-1}] obtained by inverting every polynomial V(q) in Q[q] with gcd(V(q),M_n(q))=1. For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. For 0<=k<=n-1, define A_{d,r,n,k}(q):=[3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2}/(-q^d;q^d)_k, where k(d-dk-2r)/2 is an integer because k(1-k) is even. Define S_{d,r,n}(q):=\u2211_{k=0}^{n-1} A_{d,r,n,k}(q), and define R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, where r(1-n)/2 is an integer because n is odd. Then for every k with 0<=k<=n-1, the denominator (-q^d;q^d)_k=\u220f_{j=1}^{k}(1+q^{dj}) is coprime in Z[q] to M_n(q). Consequently A_{d,r,n,k}(q) belongs to Loc_{M_n} for every k, the finite sum S_{d,r,n}(q) belongs to Loc_{M_n}, and R_{d,r,n}(q) belongs to Loc_{M_n}.",
+  "updated_at": "2026-03-29T03:13:30.844630Z"
+}

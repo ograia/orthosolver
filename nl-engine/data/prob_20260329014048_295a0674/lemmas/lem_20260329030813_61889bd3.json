@@ -1,0 +1,130 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329031330_e56ad357",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T03:08:30.557806Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T03:15:18.696031Z",
+  "last_dependency_check_id": "depchk_20260329031518_b16f4c24",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof establishes exactly the claimed termwise rewriting in Q(q): it expands the q-Pochhammer products, proves (q^(2d);q^(2d))_k = (q^d;q^d)_k (-q^d;q^d)_k for each k, substitutes this into the original summand, and then sums over k=0,...,n-1. No forbidden or undeclared dependencies are used, and the argument matches the lemma and its role in the assembly.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix positive integers d and r with gcd(d,r)=1 and r\\le d, and fix n>1 with n\\equiv 1\\pmod{2d}. These arithmetic hypotheses are not needed for the algebraic rewriting, but they are part of the stated setting.\n\nFor each k with 0\\le k\\le n-1, write\nS_k(q):=[3dk+r]_q\\,(q^r,q^r,q^d;q^{2d})_k\\,(q^d;q^d)_k^2\\,q^{k(d-dk-2r)/2}\\big/(q^{2d};q^{2d})_k.\nThen by definition,\nT_{d,r,n}(q)=\\sum_{k=0}^{n-1} S_k(q).\nAlso, the exponent k(d-dk-2r)/2 is an integer by the statement, so the monomial q^{k(d-dk-2r)/2} is a well-defined element of \\mathbf Q(q).\n\nNow fix such a k. Using the definition (u;q)_k=\\prod_{j=0}^{k-1}(1-uq^j), we have\n(q^{2d};q^{2d})_k=\\prod_{j=0}^{k-1}\\bigl(1-q^{2d}(q^{2d})^j\\bigr)=\\prod_{j=0}^{k-1}\\bigl(1-q^{2d(j+1)}\\bigr),\n(q^d;q^d)_k=\\prod_{j=0}^{k-1}\\bigl(1-q^d(q^d)^j\\bigr)=\\prod_{j=0}^{k-1}\\bigl(1-q^{d(j+1)}\\bigr),\nand\n(-q^d;q^d)_k=\\prod_{j=0}^{k-1}\\bigl(1-(-q^d)(q^d)^j\\bigr)=\\prod_{j=0}^{k-1}\\bigl(1+q^{d(j+1)}\\bigr).\nTherefore\n\\begin{aligned}\n(q^d;q^d)_k(-q^d;q^d)_k\n&=\\prod_{j=0}^{k-1}\\bigl(1-q^{d(j+1)}\\bigr)\\bigl(1+q^{d(j+1)}\\bigr)\\\\\n&=\\prod_{j=0}^{k-1}\\bigl(1-q^{2d(j+1)}\\bigr)\\\\\n&=(q^{2d};q^{2d})_k.\n\\end{aligned}\nThis identity is in the polynomial ring \\mathbf Q[q], hence also in its fraction field \\mathbf Q(q).\n\nSubstituting this factorization into S_k(q), we get in \\mathbf Q(q)\n\\begin{aligned}\nS_k(q)\n&=[3dk+r]_q\\,(q^r,q^r,q^d;q^{2d})_k\\,(q^d;q^d)_k^2\\,q^{k(d-dk-2r)/2}\\Big/\\Big((q^d;q^d)_k(-q^d;q^d)_k\\Big)\\\\\n&=[3dk+r]_q\\,(q^r,q^r,q^d;q^{2d})_k\\,(q^d;q^d)_k\\,q^{k(d-dk-2r)/2}\\big/(-q^d;q^d)_k\\\\\n&=A_{d,r,n,k}(q).\n\\end{aligned}\nSo each summand of T_{d,r,n}(q) is exactly A_{d,r,n,k}(q).\n\nSumming this equality over k=0,1,\\dots,n-1 yields\nT_{d,r,n}(q)=\\sum_{k=0}^{n-1}A_{d,r,n,k}(q)\ninside \\mathbf Q(q).\n\nThis is precisely the claimed rewriting, equivalently using\n(q^{2d};q^{2d})_k=(q^d;q^d)_k(-q^d;q^d)_k\nfor each k.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329031518_1fb75650",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329030813_61889bd3",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329014048_9c97a865",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329014048_295a0674",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329014048_295a0674/proof_bundles/lemmas/lem_20260329030813_61889bd3.json",
+  "proof_graph_id": "pgraph_20260329031330_b25d6a18",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Rewrites the original theorem sum into a form with the correct denominator for localization and clearing.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. For 0<=k<=n-1, define A_{d,r,n,k}(q):=[3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2}/(-q^d;q^d)_k, where k(d-dk-2r)/2 is an integer because k(1-k) is even. Define also T_{d,r,n}(q):=\u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k. Then in the rational-function field Q(q) one has T_{d,r,n}(q)=\u2211_{k=0}^{n-1} A_{d,r,n,k}(q). Equivalently, each summand is rewritten using (q^{2d};q^{2d})_k=(q^d;q^d)_k(-q^d;q^d)_k.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "d and r are positive integers.",
+      "gcd(d, r) = 1.",
+      "r <= d.",
+      "n is an integer greater than 1.",
+      "n is congruent to 1 modulo 2d.",
+      "k ranges over integers from 0 to n - 1.",
+      "The q-Pochhammer symbol (u; q)_k is only defined here for nonnegative integer k.",
+      "The factor k(d - dk - 2r)/2 is asserted to be an integer in the stated range of k.",
+      "q is treated as an indeterminate in the rational-function field Q(q), not as a specialized numeric value."
+    ],
+    "normalized_claim": "For every choice of positive integers d and r with gcd(d, r) = 1 and r <= d, and every integer n > 1 with n congruent to 1 modulo 2d, the finite sum T_{d,r,n}(q) is termwise identical in Q(q) to the finite sum of A_{d,r,n,k}(q) for k from 0 to n - 1, because the denominator (q^{2d}; q^{2d})_k factors as (q^d; q^d)_k times (-q^d; q^d)_k.",
+    "quantifier_order": [
+      "For any parameter u and any nonnegative integer k, define the q-Pochhammer symbols.",
+      "For positive integers d and r with gcd(d, r) = 1 and r <= d, and for an integer n > 1 with n congruent to 1 modulo 2d, define the two finite sums.",
+      "For each integer k with 0 <= k <= n - 1, define the summand A_{d,r,n,k}(q).",
+      "In Q(q), the finite sum T_{d,r,n}(q) equals the sum of the A_{d,r,n,k}(q) terms."
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "m",
+        "role": "index for the q-integer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "the rational-function field Q(q)",
+        "name": "q",
+        "role": "base variable of all q-dependent expressions",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "an arbitrary element of whatever commutative setting makes the product meaningful",
+        "name": "u",
+        "role": "input to the q-Pochhammer symbol",
+        "type": "parameter"
+      },
+      {
+        "domain": "integers from 0 to k - 1",
+        "name": "j",
+        "role": "dummy index in the product defining (u; q)_k",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers, and in the sum specifically 0 <= k <= n - 1",
+        "name": "k",
+        "role": "summation index and Pochhammer length",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "fixed parameter in the main theorem",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter in the main theorem",
+        "type": "integer"
+      },
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "finite cutoff for the sum",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witness is introduced in the statement.",
+      "The equality between the two summands depends on the algebraic factorization of (q^{2d}; q^{2d})_k into (q^d; q^d)_k and (-q^d; q^d)_k.",
+      "The integer-valued exponent k(d - dk - 2r)/2 depends on the parity fact that k(1 - k) is even."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T03:15:18.696031Z"
+}

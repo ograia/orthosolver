@@ -1,0 +1,118 @@
+{
+  "assembly_plan_id": "asm_20260329024518_f9ea5ca4",
+  "created_at": "2026-03-29T02:52:10.312770Z",
+  "decomposition_id": "dec_20260329024518_6336bd6d",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329014048_295a0674",
+  "proof_skeleton_nl": "Work directly with the original rational sum T_{d,r,n}(q) and the difference F_{d,r,n}(q)=T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2}, interpreted in the localization Loc_{M_n} for M_n(q)=[n]_q Phi_n(q)^2. First use the arithmetic denominator lemma to show that every factor (q^{2d};q^{2d})_k is invertible modulo M_n, so the sum and its derivatives are legitimate at nth roots of unity. Next prove the direct value identity F_{d,r,n}(zeta)=0 for every nontrivial nth root of unity zeta; the generic cyclotomic divisibility lemma then yields F_{d,r,n}(q)=[n]_q H_{d,r,n}(q) with H_{d,r,n}(q) still in the same localization. After that, prove the direct first- and second-derivative vanishings F'_{d,r,n}(zeta)=0 and F''_{d,r,n}(zeta)=0 for every primitive nth root zeta. Because [n]_q has a simple zero at each primitive nth root, these derivative vanishings force H_{d,r,n}(zeta)=0 and H'_{d,r,n}(zeta)=0. A second generic cyclotomic multiplicity lemma then implies H_{d,r,n}(q)=Phi_n(q)^2 K_{d,r,n}(q). Substituting back gives F_{d,r,n}(q)=[n]_q Phi_n(q)^2 K_{d,r,n}(q), which is exactly the desired congruence. This assembly fixes the previous formal ambient-ring issue by using localization from the outset and avoids the previously false a-deformation specializations entirely.",
+  "root_node_id": "thm_root_20260329014048_9c97a865",
+  "steps": [
+    {
+      "derives": "For admissible d,r,n with n \u2261 1 mod 2d, the rational functions T_{d,r,n}(q), R_{d,r,n}(q), and F_{d,r,n}(q)=T_{d,r,n}(q)-R_{d,r,n}(q) all lie in Loc_{M_n}, where M_n(q)=[n]_q Phi_n(q)^2, and F_{d,r,n}(q) is regular at every nontrivial nth root of unity.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the conclusion of L1 after naming the final modulus M_n(q)=[n]_q Phi_n(q)^2.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For every complex number zeta with zeta^n=1 and zeta!=1, one has F_{d,r,n}(zeta)=0.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "L4 states precisely that the original difference F_{d,r,n}(q) vanishes at every nontrivial nth root of unity.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "There exists H_{d,r,n}(q) in Loc_{M_n} such that F_{d,r,n}(q)=[n]_q H_{d,r,n}(q) in Q(q).",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "By A1, F_{d,r,n}(q) is an element of Loc_{M_n}; by A2 it vanishes at every nontrivial nth root of unity. Applying L2 to X(q)=F_{d,r,n}(q) gives the factorization F_{d,r,n}(q)=[n]_q H_{d,r,n}(q) with H_{d,r,n}(q) in Loc_{M_n}.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "For every primitive nth root of unity zeta, one has F'_{d,r,n}(zeta)=0.",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is exactly the content of L5.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For every primitive nth root of unity zeta, one has F''_{d,r,n}(zeta)=0.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is exactly the content of L6.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "For every primitive nth root of unity zeta, the quotient H_{d,r,n}(q) from A3 satisfies H_{d,r,n}(zeta)=0 and H'_{d,r,n}(zeta)=0.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Fix a primitive nth root of unity zeta. From A3 we have F_{d,r,n}(q)=[n]_q H_{d,r,n}(q) with H_{d,r,n}(q) in Loc_{M_n}. From A4 and A5 we know F'_{d,r,n}(zeta)=0 and F''_{d,r,n}(zeta)=0. Applying L7 with X(q)=F_{d,r,n}(q), H(q)=H_{d,r,n}(q), and this zeta yields H_{d,r,n}(zeta)=0 and H'_{d,r,n}(zeta)=0. Since zeta was arbitrary, the same conclusion holds for every primitive nth root.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "There exists K_{d,r,n}(q) in Loc_{M_n} such that H_{d,r,n}(q)=Phi_n(q)^2 K_{d,r,n}(q) in Q(q).",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "A3 gives H_{d,r,n}(q) in Loc_{M_n}. A6 gives H_{d,r,n}(zeta)=0 and H'_{d,r,n}(zeta)=0 for every primitive nth root zeta. Applying L3 to Y(q)=H_{d,r,n}(q) produces the factorization H_{d,r,n}(q)=Phi_n(q)^2 K_{d,r,n}(q).",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A3",
+        "A6"
+      ]
+    },
+    {
+      "derives": "The difference F_{d,r,n}(q) belongs to [n]_q Phi_n(q)^2 \u00b7 Loc_{M_n}; equivalently, F_{d,r,n}(q) \u2261 0 mod [n]_q Phi_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "Substitute the identity from A7 into the identity from A3: F_{d,r,n}(q)=[n]_q H_{d,r,n}(q)=[n]_q Phi_n(q)^2 K_{d,r,n}(q). This is exactly the statement that F_{d,r,n}(q) lies in [n]_q Phi_n(q)^2 \u00b7 Loc_{M_n}.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3",
+        "A7"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = product_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let Phi_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have sum_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q Phi_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A9",
+      "trivial_justification": "A8 says exactly that F_{d,r,n}(q)=T_{d,r,n}(q)-R_{d,r,n}(q) is congruent to 0 modulo [n]_q Phi_n(q)^2 in the localized sense. Unfolding the definitions of F_{d,r,n}(q), T_{d,r,n}(q), and R_{d,r,n}(q) yields precisely the displayed theorem statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    }
+  ]
+}

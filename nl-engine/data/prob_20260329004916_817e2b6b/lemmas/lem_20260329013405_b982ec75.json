@@ -1,0 +1,108 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329013745_f8527b94",
+  "consecutive_fatal_rejections": 2,
+  "consecutive_infrastructure_failures": 1,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T01:34:13.452608Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.86,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T03:54:45.135000Z",
+  "last_dependency_check_id": "depchk_20260329030818_74848f59",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": 5,
+  "last_submitted_solver_job_id": "wrk_lem_20260329013405_b982ec75_g0_solve_5",
+  "last_terminal_worker_result": "agent4:failed_infra",
+  "last_transition_reason": "solver attempt 5 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329013405_b982ec75",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "thm_root_20260329004916_bb2daf99",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329004916_817e2b6b",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329004916_817e2b6b/proof_bundles/lemmas/lem_20260329013405_b982ec75.json",
+  "proof_graph_id": "pgraph_20260329013745_facf6520",
+  "proof_status": "proof_flawed",
+  "role_in_parent": "This is the frontier positivity theorem exactly on the shifted-ratio subfamily d >= m produced by the symmetry reduction.",
+  "routing_status": "retry_solver",
+  "shared_context_refs": [],
+  "solver_attempt_count": 4,
+  "solver_series_started_at": "2026-03-29T01:46:48.567720Z",
+  "statement_lean": null,
+  "statement_nl": "For integers b, m, and d with b >= 0, m >= 0, and d >= m, define F_{b,m,d}(q) := product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)), with the empty product equal to 1 when m = 0. Assume that for every positive integer t one has floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t). Then F_{b,m,d}(q) lies in Z[q], and every coefficient in its standard expansion as a polynomial in q is a nonnegative integer.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "b, m, d are integers",
+      "b is nonnegative",
+      "m is nonnegative",
+      "d is at least m",
+      "t ranges over positive integers only",
+      "q is a formal indeterminate, not a numerical input",
+      "The product from i = 1 to m is interpreted as 1 when m = 0"
+    ],
+    "normalized_claim": "Given nonnegative integers b and m and an integer d with d >= m, if for every positive integer t the floor-difference inequality holds, then the product defining F is actually a polynomial with integer coefficients, and every coefficient in that polynomial is a nonnegative integer.",
+    "quantifier_order": [
+      "For all integers b, m, d satisfying b >= 0, m >= 0, and d >= m",
+      "Assume for every positive integer t the stated floor inequality holds",
+      "Then the polynomial F defined from b, m, d and indeterminate q has the stated coefficient property"
+    ],
+    "variables": [
+      {
+        "domain": "all integers, with nonnegative restriction",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, with nonnegative restriction",
+        "name": "m",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, with restriction d >= m",
+        "name": "d",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomial variable over the integers",
+        "name": "q",
+        "role": "variable of the polynomial F",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "positive integers",
+        "name": "t",
+        "role": "universally quantified test integer in the floor inequality",
+        "type": "positive integer"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement",
+      "The conclusion depends only on the universal assumption about all positive integers t and on the parameters b, m, d"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T03:54:45.135000Z"
+}

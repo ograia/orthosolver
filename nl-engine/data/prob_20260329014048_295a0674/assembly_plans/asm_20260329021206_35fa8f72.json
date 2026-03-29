@@ -1,0 +1,115 @@
+{
+  "assembly_plan_id": "asm_20260329021206_35fa8f72",
+  "created_at": "2026-03-29T02:19:40.535466Z",
+  "decomposition_id": "dec_20260329021206_49017eea",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329014048_295a0674",
+  "proof_skeleton_nl": "Define the a-deformed sum S_{d,r,n}(a,q), the target term R_{d,r,n}(q), the harmless denominator-clearing factor U_{d,n}(q), and the cleared polynomial P_{d,r,n}(a,q)=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)). First, use the special-value evaluation lemma to show that P_{d,r,n}(a,q) has the two a-roots q^{rn} and q^{-rn}; the factor theorem then gives divisibility by (1-aq^{rn})(a-q^{rn}). Second, use the root-of-unity vanishing lemma to show that P_{d,r,n}(a,q) vanishes for every nontrivial nth root of unity in the q-variable; the cyclotomic divisibility lemma then yields divisibility by [n]_q. Since the two factors are coprime, their product divides P_{d,r,n}(a,q). Specializing a=1 identifies the deformed sum with the original theorem sum and turns the factor (1-aq^{rn})(a-q^{rn}) into (1-q^{rn})^2, which contains \u03a6_n(q)^2 because n divides rn. This gives divisibility of U_{d,n}(q) times the original difference by [n]_q \u03a6_n(q)^2. Finally, cancel U_{d,n}(q) using its coprimality with the modulus, yielding the exact stated congruence.",
+  "root_node_id": "thm_root_20260329014048_9c97a865",
+  "steps": [
+    {
+      "derives": "For the admissible integers d,r,n, the polynomial U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}) is coprime to [n]_q and to \u03a6_n(q), hence also coprime to [n]_q \u03a6_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the conclusion of L1, together with the immediate observation that coprime to [n]_q and to \u03a6_n(q) implies coprime to their product [n]_q \u03a6_n(q)^2.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Define S_{d,r,n}(a,q), R_{d,r,n}(q), U_{d,n}(q), and P_{d,r,n}(a,q):=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)). Then P_{d,r,n}(a,q) lies in Z[q,q^{-1},a].",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "L2 is precisely the polynomiality statement for the cleared auxiliary expression P_{d,r,n}(a,q).",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) satisfies P_{d,r,n}(q^{rn},q)=0 and P_{d,r,n}(q^{-rn},q)=0.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "L3 states exactly these two special-value vanishing identities for the cleared polynomial P_{d,r,n}(a,q).",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A2"
+      ]
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by (1-aq^{rn})(a-q^{rn}).",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "Apply L4 to the polynomial in a given by P_{d,r,n}(a,q). The two roots from A3 imply divisibility by the quadratic factor.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "For every complex number \u03b6 with \u03b6^n=1 and \u03b6\u22601, the specialization P_{d,r,n}(a,\u03b6) is the zero polynomial in a.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "Every nontrivial nth root of unity has some order m>1 dividing n and is primitive of that order. L5 applies to each such order m and primitive root \u03b6, so it yields P_{d,r,n}(a,\u03b6)=0 for every root of [n]_q.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) is divisible by [n]_q in Q[q,q^{-1},a].",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "L6 converts the vanishing at every nontrivial nth root of unity, established in A5, into divisibility by [n]_q.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) is divisible by [n]_q (1-aq^{rn})(a-q^{rn}) in Q[q,q^{-1},a].",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "A4 gives divisibility by the a-dependent quadratic factor and A6 gives divisibility by [n]_q. L7 says these two factors are coprime, so their product divides P_{d,r,n}(a,q).",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A6"
+      ]
+    },
+    {
+      "derives": "If T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k, then U_{d,n}(q)(T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2}) is divisible by [n]_q \u03a6_n(q)^2 in Q[q,q^{-1}].",
+      "is_trivial": true,
+      "step_id": "A8",
+      "trivial_justification": "L8 is exactly the specialization-at-a=1 statement: it identifies the specialized deformed sum with the theorem\u2019s original sum and upgrades the product modulus to [n]_q \u03a6_n(q)^2.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A7"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "A8 gives divisibility of U_{d,n}(q)(T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2}) by [n]_q \u03a6_n(q)^2. A1 shows U_{d,n}(q) is coprime to [n]_q \u03a6_n(q)^2. Applying the cancellation lemma L9 with M(q)=[n]_q \u03a6_n(q)^2, U(q)=U_{d,n}(q), and H(q)=T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2}, we conclude that T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2} itself is divisible by [n]_q \u03a6_n(q)^2. Since T_{d,r,n}(q) is exactly the left-hand side displayed in A8, this is precisely the desired theorem statement.",
+      "uses_lemmas": [
+        "L9"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A8"
+      ]
+    }
+  ]
+}

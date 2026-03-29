@@ -1,0 +1,132 @@
+{
+  "created_at": "2026-03-29T03:13:31.088545Z",
+  "graph_node_id": "pnode_20260329031331_35cfa47b",
+  "metadata": {
+    "parent_id": "thm_root_20260329014048_9c97a865"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "c7ddde249081952610f01996f815732229361cdd14d426a11b45e8916d05c5d7",
+  "owner_id": "lem_20260329031005_cca79498",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329031330_b25d6a18",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "u is arbitrary in the definition of the q-Pochhammer symbols.",
+      "k is a nonnegative integer in the q-Pochhammer product.",
+      "m is an integer in the q-bracket definition.",
+      "d and r are positive integers.",
+      "gcd(d, r) is equal to 1.",
+      "r is less than or equal to d.",
+      "n is greater than 1.",
+      "n is congruent to 1 modulo 2d.",
+      "q is treated as a formal indeterminate over Q.",
+      "The divisibility claim is inside the Laurent polynomial ring over Q in q, not merely inside the rational function field."
+    ],
+    "normalized_claim": "After defining the q-bracket, q-Pochhammer symbols, cyclotomic polynomial Phi_n, and the derived quantities U_{d,n}(q), T_{d,r,n}(q), R_{d,r,n}(q), G_{d,r,n}(q), and M_n(q), the statement says: for every positive integers d and r with gcd(d, r) equal to 1 and r less than or equal to d, and every integer n greater than 1 with n congruent to 1 modulo 2d, the Laurent polynomial G_{d,r,n}(q) is divisible by M_n(q) in Q[q,q^{-1}]. Equivalently, there exists a Laurent polynomial H_{d,r,n}(q) such that U_{d,n}(q) times (T_{d,r,n}(q) minus R_{d,r,n}(q)) equals M_n(q) times H_{d,r,n}(q).",
+    "quantifier_order": [
+      "For each parameter u and each nonnegative integer k, the q-Pochhammer symbols are defined.",
+      "For all positive integers d and r with gcd(d, r) equal to 1 and r less than or equal to d, and for all integers n greater than 1 with n congruent to 1 modulo 2d,",
+      "there exists H_{d,r,n}(q) in the Laurent polynomial ring over Q such that U_{d,n}(q) times (T_{d,r,n}(q) minus R_{d,r,n}(q)) equals M_n(q) times H_{d,r,n}(q)."
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "argument of the q-bracket definition",
+        "type": "integer parameter"
+      },
+      {
+        "domain": "Laurent polynomial ring over Q in q",
+        "name": "q",
+        "role": "base variable used throughout all definitions",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "arbitrary parameter",
+        "name": "u",
+        "role": "input to the q-Pochhammer definition",
+        "type": "parameter"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "k",
+        "role": "truncation index in the q-Pochhammer definition and summation index in T",
+        "type": "integer index"
+      },
+      {
+        "domain": "integers in the stated ranges",
+        "name": "j",
+        "role": "product and summation index",
+        "type": "integer index"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "main step-size parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "main residue parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "index for cyclotomic polynomial and truncation bounds",
+        "type": "integer"
+      },
+      {
+        "domain": "Q[q]",
+        "name": "Phi_n",
+        "role": "nth cyclotomic polynomial",
+        "type": "polynomial in q"
+      },
+      {
+        "domain": "Q[q]",
+        "name": "M_n(q)",
+        "role": "claimed divisor, defined as q-bracket of n times Phi_n squared",
+        "type": "polynomial in q"
+      },
+      {
+        "domain": "Q[q]",
+        "name": "U_{d,n}(q)",
+        "role": "auxiliary product",
+        "type": "polynomial in q"
+      },
+      {
+        "domain": "Q(q)",
+        "name": "T_{d,r,n}(q)",
+        "role": "truncated sum appearing in the main expression",
+        "type": "rational function in q"
+      },
+      {
+        "domain": "Q(q)",
+        "name": "R_{d,r,n}(q)",
+        "role": "correction term subtracted from T",
+        "type": "rational function in q"
+      },
+      {
+        "domain": "Q(q)",
+        "name": "G_{d,r,n}(q)",
+        "role": "target expression whose divisibility is asserted",
+        "type": "rational function in q"
+      },
+      {
+        "domain": "Q[q,q^{-1}]",
+        "name": "H_{d,r,n}(q)",
+        "role": "existential witness for divisibility",
+        "type": "Laurent polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "The witness H_{d,r,n}(q) depends on the specific parameters d, r, and n.",
+      "No witness uniform in d, r, and n is asserted.",
+      "The witness is for the specific expression U_{d,n}(q) times (T_{d,r,n}(q) minus R_{d,r,n}(q))."
+    ]
+  },
+  "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Let \u03a6_n(q) be the nth cyclotomic polynomial, and define M_n(q):=[n]_q \u03a6_n(q)^2. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), define T_{d,r,n}(q):=\u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k, define R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, and define G_{d,r,n}(q):=U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)). Then G_{d,r,n}(q) is divisible by M_n(q) in the Laurent polynomial ring Q[q,q^{-1}]. Equivalently, there exists H_{d,r,n}(q) in Q[q,q^{-1}] such that U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q))=M_n(q)H_{d,r,n}(q) in Q(q).",
+  "updated_at": "2026-03-29T03:13:31.088546Z"
+}

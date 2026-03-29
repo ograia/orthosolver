@@ -1,0 +1,129 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329031330_47b79d7b",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T03:10:05.225734Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.23,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T03:17:00.311250Z",
+  "last_dependency_check_id": "depchk_20260329031700_c081556f",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly verifies the integrality of the exponents, rewrites the denominator (q^(2d);q^(2d))_k via 1-q^(2dj)=(1-q^(dj))(1+q^(dj)), performs the cancellation against U_{d,n}(q), obtains the stated expanded formula for G_{d,r,n}(q), and then checks each resulting term lies in Z[q,q^(-1)]. This matches the lemma sketch and the assembly role.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Write E_k := k(d-dk-2r)/2 and F := r(1-n)/2. First, E_k is an integer because E_k = d k(1-k)/2 - kr and k(1-k) is always even. Also F is an integer because n \u2261 1 (mod 2d) implies n = 1 + 2dt for some integer t, hence F = -rdt. For any positive integer M, [M]_q = (1-q^M)/(1-q) = 1 + q + ... + q^(M-1), so [3dk+r]_q and [rn]_q lie in Z[q] (here 3dk+r > 0 and rn > 0). Moreover, for each k >= 0, (q^r,q^r,q^d; q^(2d))_k = product_{j=0}^{k-1} (1-q^(r+2dj))^2 (1-q^(d+2dj)) belongs to Z[q], and (q^d; q^d)_k = product_{j=1}^k (1-q^(dj)) belongs to Z[q]. Also U_{d,n}(q) = product_{j=1}^{n-1} (1+q^(dj)) belongs to Z[q]. Now expand G_{d,r,n}(q) = U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) = U_{d,n}(q)T_{d,r,n}(q) - U_{d,n}(q)R_{d,r,n}(q) in Q(q). For the k-th summand of U_{d,n}(q)T_{d,r,n}(q), use (q^(2d); q^(2d))_k = product_{j=1}^k (1-q^(2dj)) = product_{j=1}^k (1-q^(dj))(1+q^(dj)). Then U_{d,n}(q) * (q^d; q^d)_k^2 / (q^(2d); q^(2d))_k = [product_{j=1}^{n-1} (1+q^(dj))] [product_{j=1}^k (1-q^(dj))^2] / [product_{j=1}^k (1-q^(dj))(1+q^(dj))] = [product_{j=1}^k (1-q^(dj))] [product_{j=k+1}^{n-1} (1+q^(dj))] = (q^d; q^d)_k product_{j=k+1}^{n-1} (1+q^(dj)), where the product is 1 if k = n-1. Therefore G_{d,r,n}(q) = sum_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d; q^(2d))_k (q^d; q^d)_k q^(E_k) product_{j=k+1}^{n-1} (1+q^(dj)) - U_{d,n}(q)[rn]_q q^F, which is exactly the expanded expression stated in the lemma. Finally, each summand in that finite sum lies in Z[q,q^(-1)]: all factors other than q^(E_k) lie in Z[q], while q^(E_k) is a Laurent monomial because E_k is an integer. Likewise U_{d,n}(q)[rn]_q q^F lies in Z[q,q^(-1)]. Since Z[q,q^(-1)] is closed under finite sums and differences, G_{d,r,n}(q) belongs to Z[q,q^(-1)]. Hence the lemma is proved.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329031700_117fe980",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329030857_12b3f05d",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329014048_9c97a865",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329014048_295a0674",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329014048_295a0674/proof_bundles/lemmas/lem_20260329030857_12b3f05d.json",
+  "proof_graph_id": "pgraph_20260329031330_b25d6a18",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Builds the cleared Laurent-polynomial difference to which the theorem-specific divisibility bottleneck applies.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), define T_{d,r,n}(q):=\u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k, define R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, and define G_{d,r,n}(q):=U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) in Q(q), where k(d-dk-2r)/2 and r(1-n)/2 are integers. Then G_{d,r,n}(q) belongs to Z[q,q^{-1}]. Equivalently, in Q(q) one has G_{d,r,n}(q)=\u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} \u220f_{j=k+1}^{n-1}(1+q^{dj}) - U_{d,n}(q) R_{d,r,n}(q), and the right-hand side is a Laurent polynomial in q.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "d and r must be positive integers.",
+      "The greatest common divisor of d and r must be 1.",
+      "r must be at most d.",
+      "n must be an integer greater than 1.",
+      "n must satisfy n congruent to 1 modulo 2d.",
+      "The exponent k(d-dk-2r)/2 is intended to be an integer for each summand.",
+      "The exponent r(1-n)/2 is intended to be an integer.",
+      "q is treated as a formal indeterminate, with expressions interpreted in the rational function field in q.",
+      "Finite products over empty index sets are implicitly equal to 1."
+    ],
+    "normalized_claim": "For every positive integers d and r that are coprime, with r at most d, and every integer n greater than 1 that is congruent to 1 modulo 2d, the rational function G built from the stated finite products and sum is actually a Laurent polynomial in q with integer coefficients. The expanded equivalent expression is the same claim written in a different algebraic form.",
+    "quantifier_order": [
+      "For every integer m, the q-bracket of m is defined by the given formula.",
+      "For every parameter u and every nonnegative integer k, the q-Pochhammer symbols are defined by the given finite products.",
+      "For every positive integers d and r with gcd(d,r) equal to 1 and r at most d, and every integer n greater than 1 with n congruent to 1 modulo 2d, the expressions U, T, R, and G are defined.",
+      "For those d, r, and n, the claim is that G is a Laurent polynomial with integer coefficients."
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "m",
+        "role": "index used to define the q-bracket",
+        "type": "integer"
+      },
+      {
+        "domain": "an unspecified coefficient domain where multiplication is defined",
+        "name": "u",
+        "role": "input parameter for the q-Pochhammer symbol",
+        "type": "parameter"
+      },
+      {
+        "domain": "integers at least 0",
+        "name": "k",
+        "role": "length parameter for q-Pochhammer symbols and summation index in T",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "product indices",
+        "name": "j",
+        "role": "inner index in finite products",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "main arithmetic parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "main arithmetic parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "main arithmetic parameter controlling truncation",
+        "type": "integer"
+      },
+      {
+        "domain": "the rational function field in one indeterminate",
+        "name": "q",
+        "role": "base variable for all q-brackets, q-Pochhammer symbols, and polynomials",
+        "type": "formal variable"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the theorem statement; all quantities are explicitly defined from d, r, n, u, m, k, j, and q.",
+      "The equivalent expanded formula uses the same fixed d, r, and n; there is no hidden choice of auxiliary witness."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T03:17:00.311250Z"
+}

@@ -1,0 +1,136 @@
+{
+  "assembly_plan_id": "asm_20260329022726_6ea36e37",
+  "created_at": "2026-03-29T02:35:34.798180Z",
+  "decomposition_id": "dec_20260329022726_d964f156",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329014048_295a0674",
+  "proof_skeleton_nl": "Work with the final modulus M_n(q):=[n]_q \u03a6_n(q)^2, interpreted in the localization-based congruence ring from the shared context so that rational functions with denominators coprime to M_n(q) are legitimate. Define the a-deformed sum S_{d,r,n}(a,q), the target term R_{d,r,n}(q), the harmless clearing factor U_{d,n}(q), and the cleared polynomial P_{d,r,n}(a,q)=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)). By L2, P_{d,r,n}(a,q) is a polynomial in a with Laurent-polynomial coefficients. By L3, the two special values a=q^{rn} and a=q^{-rn} are roots of P_{d,r,n}(a,q); L4 then yields divisibility by the quadratic factor (1-aq^{rn})(a-q^{rn}). Independently, L5 shows that for every nontrivial nth root of unity \u03b6, the q-specialization P_{d,r,n}(a,\u03b6) vanishes identically in a. Since P_{d,r,n}(a,q) is Laurent-polynomial by L2, L6 converts this vanishing into divisibility by [n]_q. Next, L7 proves that [n]_q and (1-aq^{rn})(a-q^{rn}) are coprime in Q[q,q^{-1},a], and L8 combines the two divisibility statements into P_{d,r,n}(a,q) being divisible by [n]_q(1-aq^{rn})(a-q^{rn}). Specializing a=1, L9 identifies P_{d,r,n}(1,q) with U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) and uses n|rn to upgrade the specialized quadratic factor (1-q^{rn})^2 to \u03a6_n(q)^2, giving a cleared equality U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q))=M_n(q)H_{d,r,n}(q) with H_{d,r,n}(q) Laurent. Finally, L1 shows U_{d,n}(q) is coprime to M_n(q), hence invertible in the localization away from M_n(q), and L10 converts the cleared equality into the desired rational-function congruence T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q). Expanding the definitions of T_{d,r,n}(q), R_{d,r,n}(q), and M_n(q) yields exactly the displayed theorem.",
+  "root_node_id": "thm_root_20260329014048_9c97a865",
+  "steps": [
+    {
+      "derives": "For admissible integers d,r,n and M_n(q):=[n]_q \u03a6_n(q)^2, the clearing factor U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}) satisfies gcd(U_{d,n}(q),M_n(q))=1 in Z[q].",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the conclusion of L1 after naming the final modulus M_n(q).",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For admissible d,r,n, the cleared deformed difference P_{d,r,n}(a,q)=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)) lies in Z[q,q^{-1},a].",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "L2 is precisely the polynomiality statement for P_{d,r,n}(a,q).",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) satisfies P_{d,r,n}(q^{rn},q)=0 and P_{d,r,n}(q^{-rn},q)=0.",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the special-value vanishing claimed in L3.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by (1-aq^{rn})(a-q^{rn}).",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "By A2, P_{d,r,n}(a,q) is a polynomial in a over Q[q,q^{-1}], and by A3 it has roots a=q^{rn} and a=q^{-rn}; L4 therefore gives the stated divisibility.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "For every complex number \u03b6 with \u03b6^n=1 and \u03b6 \u2260 1, the specialization P_{d,r,n}(a,\u03b6) is the zero polynomial in a.",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "This is exactly the vanishing statement of L5.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) is divisible by [n]_q in Q[q,q^{-1},a].",
+      "is_trivial": true,
+      "step_id": "A6",
+      "trivial_justification": "A2 places P_{d,r,n}(a,q) in Q[q,q^{-1},a], and A5 gives vanishing at every nontrivial nth root of unity; L6 converts that vanishing into divisibility by [n]_q.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A2",
+        "A5"
+      ]
+    },
+    {
+      "derives": "In Q[q,q^{-1},a], the two factors [n]_q and (1-aq^{rn})(a-q^{rn}) are coprime.",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "This is exactly the coprimality statement of L7.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The polynomial P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by [n]_q(1-aq^{rn})(a-q^{rn}).",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "A6 shows that [n]_q divides P_{d,r,n}(a,q). A4 shows that (1-aq^{rn})(a-q^{rn}) also divides P_{d,r,n}(a,q). A7 shows that these two divisors are coprime in the ambient ring. Applying L8 with A=[n]_q, B=(1-aq^{rn})(a-q^{rn}), and H=P_{d,r,n}(a,q) yields divisibility by their product. This explicitly separates the coprimality input from the product-divisibility inference, fixing the rejected shortcut.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A6",
+        "A7"
+      ]
+    },
+    {
+      "derives": "With M_n(q):=[n]_q \u03a6_n(q)^2, there exists H_{d,r,n}(q) in Q[q,q^{-1}] such that U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) = M_n(q) H_{d,r,n}(q) in Q(q).",
+      "is_trivial": true,
+      "step_id": "A9",
+      "trivial_justification": "L9 applies directly to the product divisibility obtained in A8 and gives the stated cleared equality for the original rational sum.",
+      "uses_lemmas": [
+        "L9"
+      ],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    },
+    {
+      "derives": "In the localization-congruence sense defined in the shared context, T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q).",
+      "is_trivial": false,
+      "step_id": "A10",
+      "trivial_justification": "A9 provides a cleared equality U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) = M_n(q) H_{d,r,n}(q) with H_{d,r,n}(q) Laurent. A1 shows gcd(U_{d,n}(q),M_n(q))=1. Therefore the hypotheses of L10 hold with M=M_n, U=U_{d,n}, X=T_{d,r,n}, Y=R_{d,r,n}, and H=H_{d,r,n}. L10 then concludes that T_{d,r,n}(q)-R_{d,r,n}(q) lies in M_n(q)\u00b7Loc_{M_n}, which is exactly the congruence T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q).",
+      "uses_lemmas": [
+        "L10"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A9"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A11",
+      "trivial_justification": "This is exactly A10 after unfolding the definitions of T_{d,r,n}(q), R_{d,r,n}(q), and M_n(q), together with the standing notation for q-shifted factorials and congruence modulo M_n(q).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A10"
+      ]
+    }
+  ]
+}

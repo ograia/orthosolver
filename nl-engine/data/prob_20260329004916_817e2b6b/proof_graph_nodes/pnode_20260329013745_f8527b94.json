@@ -1,0 +1,68 @@
+{
+  "created_at": "2026-03-29T01:37:45.703609Z",
+  "graph_node_id": "pnode_20260329013745_f8527b94",
+  "metadata": {
+    "parent_id": "thm_root_20260329004916_bb2daf99"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "76f1639dec0fa2c3b1d36c5f04b2d89228df2f6be33902b58838a616c272d8d6",
+  "owner_id": "lem_20260329013405_b982ec75",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329013745_facf6520",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "b, m, d are integers",
+      "b is nonnegative",
+      "m is nonnegative",
+      "d is at least m",
+      "t ranges over positive integers only",
+      "q is a formal indeterminate, not a numerical input",
+      "The product from i = 1 to m is interpreted as 1 when m = 0"
+    ],
+    "normalized_claim": "Given nonnegative integers b and m and an integer d with d >= m, if for every positive integer t the floor-difference inequality holds, then the product defining F is actually a polynomial with integer coefficients, and every coefficient in that polynomial is a nonnegative integer.",
+    "quantifier_order": [
+      "For all integers b, m, d satisfying b >= 0, m >= 0, and d >= m",
+      "Assume for every positive integer t the stated floor inequality holds",
+      "Then the polynomial F defined from b, m, d and indeterminate q has the stated coefficient property"
+    ],
+    "variables": [
+      {
+        "domain": "all integers, with nonnegative restriction",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, with nonnegative restriction",
+        "name": "m",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, with restriction d >= m",
+        "name": "d",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomial variable over the integers",
+        "name": "q",
+        "role": "variable of the polynomial F",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "positive integers",
+        "name": "t",
+        "role": "universally quantified test integer in the floor inequality",
+        "type": "positive integer"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement",
+      "The conclusion depends only on the universal assumption about all positive integers t and on the parameters b, m, d"
+    ]
+  },
+  "statement_nl": "For integers b, m, and d with b >= 0, m >= 0, and d >= m, define F_{b,m,d}(q) := product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)), with the empty product equal to 1 when m = 0. Assume that for every positive integer t one has floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t). Then F_{b,m,d}(q) lies in Z[q], and every coefficient in its standard expansion as a polynomial in q is a nonnegative integer.",
+  "updated_at": "2026-03-29T01:37:45.703610Z"
+}

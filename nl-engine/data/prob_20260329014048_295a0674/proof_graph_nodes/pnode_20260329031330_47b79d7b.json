@@ -1,0 +1,89 @@
+{
+  "created_at": "2026-03-29T03:13:30.928453Z",
+  "graph_node_id": "pnode_20260329031330_47b79d7b",
+  "metadata": {
+    "parent_id": "thm_root_20260329014048_9c97a865"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "969ff86bf87762951833195de789aaa3b696ba35d10fa500219f7a7d9d4255ca",
+  "owner_id": "lem_20260329030857_12b3f05d",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329031330_b25d6a18",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d and r must be positive integers.",
+      "The greatest common divisor of d and r must be 1.",
+      "r must be at most d.",
+      "n must be an integer greater than 1.",
+      "n must satisfy n congruent to 1 modulo 2d.",
+      "The exponent k(d-dk-2r)/2 is intended to be an integer for each summand.",
+      "The exponent r(1-n)/2 is intended to be an integer.",
+      "q is treated as a formal indeterminate, with expressions interpreted in the rational function field in q.",
+      "Finite products over empty index sets are implicitly equal to 1."
+    ],
+    "normalized_claim": "For every positive integers d and r that are coprime, with r at most d, and every integer n greater than 1 that is congruent to 1 modulo 2d, the rational function G built from the stated finite products and sum is actually a Laurent polynomial in q with integer coefficients. The expanded equivalent expression is the same claim written in a different algebraic form.",
+    "quantifier_order": [
+      "For every integer m, the q-bracket of m is defined by the given formula.",
+      "For every parameter u and every nonnegative integer k, the q-Pochhammer symbols are defined by the given finite products.",
+      "For every positive integers d and r with gcd(d,r) equal to 1 and r at most d, and every integer n greater than 1 with n congruent to 1 modulo 2d, the expressions U, T, R, and G are defined.",
+      "For those d, r, and n, the claim is that G is a Laurent polynomial with integer coefficients."
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "m",
+        "role": "index used to define the q-bracket",
+        "type": "integer"
+      },
+      {
+        "domain": "an unspecified coefficient domain where multiplication is defined",
+        "name": "u",
+        "role": "input parameter for the q-Pochhammer symbol",
+        "type": "parameter"
+      },
+      {
+        "domain": "integers at least 0",
+        "name": "k",
+        "role": "length parameter for q-Pochhammer symbols and summation index in T",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "product indices",
+        "name": "j",
+        "role": "inner index in finite products",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "main arithmetic parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "main arithmetic parameter",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "main arithmetic parameter controlling truncation",
+        "type": "integer"
+      },
+      {
+        "domain": "the rational function field in one indeterminate",
+        "name": "q",
+        "role": "base variable for all q-brackets, q-Pochhammer symbols, and polynomials",
+        "type": "formal variable"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the theorem statement; all quantities are explicitly defined from d, r, n, u, m, k, j, and q.",
+      "The equivalent expanded formula uses the same fixed d, r, and n; there is no hidden choice of auxiliary witness."
+    ]
+  },
+  "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), define T_{d,r,n}(q):=\u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k, define R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, and define G_{d,r,n}(q):=U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) in Q(q), where k(d-dk-2r)/2 and r(1-n)/2 are integers. Then G_{d,r,n}(q) belongs to Z[q,q^{-1}]. Equivalently, in Q(q) one has G_{d,r,n}(q)=\u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} \u220f_{j=k+1}^{n-1}(1+q^{dj}) - U_{d,n}(q) R_{d,r,n}(q), and the right-hand side is a Laurent polynomial in q.",
+  "updated_at": "2026-03-29T03:13:30.928454Z"
+}

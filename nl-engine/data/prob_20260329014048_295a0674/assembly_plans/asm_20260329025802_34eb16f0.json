@@ -1,0 +1,88 @@
+{
+  "assembly_plan_id": "asm_20260329025802_34eb16f0",
+  "created_at": "2026-03-29T03:03:11.708387Z",
+  "decomposition_id": "dec_20260329025802_126d5d70",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329014048_295a0674",
+  "proof_skeleton_nl": "Work in the localized congruence ring Loc_{M_n} with M_n(q)=[n]_q \u03a6_n(q)^2. First show that the clearing factor U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}) is coprime to M_n(q), so U_{d,n}(q) is invertible in Loc_{M_n}. Independently, show that every denominator (q^{2d};q^{2d})_k occurring in the theorem sum is also invertible modulo M_n(q); therefore the original sum T_{d,r,n}(q) and the target term R_{d,r,n}(q) are legitimate elements of Loc_{M_n}. Next define the cleared difference G_{d,r,n}(q)=U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) and use the denominator-clearing identity (q^{2d};q^{2d})_k=(q^d;q^d)_k(-q^d;q^d)_k to show that G_{d,r,n}(q) is a Laurent polynomial. The only theorem-specific input is then the bottleneck lemma asserting that G_{d,r,n}(q) is divisible by M_n(q) in Q[q,q^{-1}]. By the meaning of divisibility, write G_{d,r,n}(q)=M_n(q)H_{d,r,n}(q) with H_{d,r,n}(q) Laurent. Since T_{d,r,n}(q) and R_{d,r,n}(q) lie in Loc_{M_n} and U_{d,n}(q) is invertible there, the generic localization-cancellation lemma converts the cleared equality U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q))=M_n(q)H_{d,r,n}(q) into the desired congruence T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q). Unfolding the definitions yields exactly the displayed theorem. This assembly deliberately avoids the previously rejected false special-value and root-of-unity sublemmas and fixes the ambient-ring issue from the start.",
+  "root_node_id": "thm_root_20260329014048_9c97a865",
+  "steps": [
+    {
+      "derives": "For admissible d,r,n, if M_n(q):=[n]_q \u03a6_n(q)^2 and U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), then gcd(U_{d,n}(q),M_n(q))=1 in Z[q].",
+      "is_trivial": true,
+      "step_id": "A1",
+      "trivial_justification": "This is exactly the conclusion of L1 after naming M_n(q).",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "For admissible d,r,n, the rational functions T_{d,r,n}(q)=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k and R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2} belong to the localization Loc_{M_n}.",
+      "is_trivial": true,
+      "step_id": "A2",
+      "trivial_justification": "L2 states precisely that each summand of T_{d,r,n}(q), the whole sum T_{d,r,n}(q), and the target term R_{d,r,n}(q) lie in Loc_{M_n}.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Define G_{d,r,n}(q):=U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)). Then G_{d,r,n}(q) belongs to Z[q,q^{-1}].",
+      "is_trivial": true,
+      "step_id": "A3",
+      "trivial_justification": "This is exactly the cleared-polynomial statement of L3.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The Laurent polynomial G_{d,r,n}(q) is divisible by M_n(q)=[n]_q \u03a6_n(q)^2 in Q[q,q^{-1}].",
+      "is_trivial": true,
+      "step_id": "A4",
+      "trivial_justification": "This is precisely the bottleneck divisibility claim supplied by L4.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "There exists H_{d,r,n}(q) in Q[q,q^{-1}] such that G_{d,r,n}(q)=M_n(q) H_{d,r,n}(q) in Q(q).",
+      "is_trivial": true,
+      "step_id": "A5",
+      "trivial_justification": "By definition, divisibility of G_{d,r,n}(q) by M_n(q) in Q[q,q^{-1}] means exactly that such a Laurent polynomial H_{d,r,n}(q) exists.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "In the localized-congruence sense, T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q), where M_n(q)=[n]_q \u03a6_n(q)^2.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "From A3 and A5 we have U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q))=M_n(q)H_{d,r,n}(q) in Q(q), with H_{d,r,n}(q) Laurent. From A2 both T_{d,r,n}(q) and R_{d,r,n}(q) lie in Loc_{M_n}. From A1 the polynomial U_{d,n}(q) is coprime to M_n(q). Therefore all hypotheses of L5 hold with X=T_{d,r,n}, Y=R_{d,r,n}, U=U_{d,n}, and M=M_n. Applying L5 yields T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q).",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A3",
+        "A5"
+      ]
+    },
+    {
+      "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+      "is_trivial": true,
+      "step_id": "A7",
+      "trivial_justification": "This is exactly A6 after unfolding the definitions of T_{d,r,n}(q), R_{d,r,n}(q), and M_n(q), together with the standing notation for q-integers, q-shifted factorials, and congruence modulo M_n(q).",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    }
+  ]
+}

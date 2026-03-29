@@ -1,0 +1,123 @@
+{
+  "assembly_plan_id": "asm_20260329012150_c8d35570",
+  "created_at": "2026-03-29T01:26:31.555562Z",
+  "decomposition_id": "dec_20260329012150_9c423837",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329004916_817e2b6b",
+  "proof_skeleton_nl": "Fix arbitrary n, k, l in the allowed range and assume the quotient is polynomial. Replace k and l by k0 = min(k, n-k) and l0 = min(l, n-l) using q-binomial symmetry, and use the degree obstruction to force l0 <= k0. Rewrite the reduced quotient as a shifted interval ratio F_{b,m,d}(q) with b = l0, m = k0 - l0, and d = n - k0 - l0. The cyclotomic exponent formula converts polynomiality of F_{b,m,d}(q) into the floor-count condition saying that every modulus t sees at least as many multiples in the shifted numerator interval as in the denominator interval. The bottleneck positivity lemma for shifted interval ratios then shows that F_{b,m,d}(q), hence the original quotient, has nonnegative coefficients. Finally discharge the temporary polynomiality hypothesis and generalize over n, k, l.",
+  "root_node_id": "thm_root_20260329004916_bb2daf99",
+  "steps": [
+    {
+      "derives": "Fix arbitrary integers n, k, and l with 0 <= k <= n and 0 <= l <= n, and assume H: the rational function [n choose k]_q / [n choose l]_q is a polynomial in q.",
+      "is_trivial": true,
+      "step_id": "A0",
+      "trivial_justification": "This is the standard setup for proving the universally quantified implication in the theorem.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Let k0 := min(k, n-k) and l0 := min(l, n-l). Then [n choose k]_q = [n choose k0]_q and [n choose l]_q = [n choose l0]_q, so [n choose k]_q / [n choose l]_q = [n choose k0]_q / [n choose l0]_q. In particular, H implies that the reduced quotient [n choose k0]_q / [n choose l0]_q is also a polynomial in q.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Because k0 is either k or n-k, L1 gives [n choose k]_q = [n choose k0]_q; similarly, because l0 is either l or n-l, L1 gives [n choose l]_q = [n choose l0]_q. Substituting these two equalities into the quotient gives equality of the original and reduced rational functions. Since H says the original quotient is polynomial, the reduced quotient is polynomial as well.",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "The reduced indices satisfy k0 >= l0.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "L2 applies directly to the same integers n, k, and l under the hypothesis H and yields min(k, n-k) >= min(l, n-l), which is exactly k0 >= l0.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "From the definitions of k0 and l0, we have 0 <= k0 <= n/2 and 0 <= l0 <= n/2; together with A2 this gives 0 <= l0 <= k0 <= n/2. Define b := l0, m := k0 - l0, and d := n - k0 - l0. Then b, m, and d are nonnegative integers.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "By definition of minimum, both k0 and l0 are at most n/2 and are nonnegative. A2 gives l0 <= k0, so m = k0 - l0 >= 0. Also d = n - k0 - l0 >= 0 because k0 <= n/2 and l0 <= n/2 imply k0 + l0 <= n. Hence b, m, d are all valid inputs for the shifted interval product.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "The reduced quotient can be rewritten as [n choose k0]_q / [n choose l0]_q = F_{b,m,d}(q) = product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "A3 gives exactly the hypotheses 0 <= l0 <= k0 <= n/2 needed for L3. Applying L3 with l = l0 and k = k0 rewrites the reduced quotient in the stated shifted interval form; because b = l0, m = k0 - l0, and d = n - k0 - l0, this rewritten product is exactly F_{b,m,d}(q).",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A3"
+      ]
+    },
+    {
+      "derives": "For every positive integer t, floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t).",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "By A1 the reduced quotient [n choose k0]_q / [n choose l0]_q is a polynomial. By A4 this reduced quotient is exactly F_{b,m,d}(q). Lemma L4 says that F_{b,m,d}(q) is polynomial if and only if the displayed floor inequalities hold for every positive integer t. Therefore those inequalities are valid for the present b, m, and d.",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A4"
+      ]
+    },
+    {
+      "derives": "The polynomial F_{b,m,d}(q) has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "A5 verifies exactly the hypothesis of L5 for the integers b, m, and d chosen in A3. Therefore L5 yields that F_{b,m,d}(q) lies in Z[q] and every coefficient in its q-expansion is nonnegative.",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    },
+    {
+      "derives": "The reduced quotient [n choose k0]_q / [n choose l0]_q has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "A4 identifies the reduced quotient with F_{b,m,d}(q), and A6 proves coefficientwise nonnegativity for that polynomial. Substituting the equality from A4 transfers the coefficientwise nonnegativity to [n choose k0]_q / [n choose l0]_q.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4",
+        "A6"
+      ]
+    },
+    {
+      "derives": "Under the temporary hypothesis H, the original quotient [n choose k]_q / [n choose l]_q has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "A1 shows that the original quotient equals the reduced quotient, while A7 shows that the reduced quotient has only nonnegative coefficients. Therefore the original quotient has only nonnegative coefficients as well.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A7"
+      ]
+    },
+    {
+      "derives": "For all integers n, k, and l with 0 <= k <= n and 0 <= l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "The argument started with an arbitrary triple n, k, l satisfying the bounds and an arbitrary assumption H that the quotient is polynomial. Step A8 derived the desired coefficientwise nonnegativity from H. Discharging H proves the implication for this arbitrary triple, and universal generalization yields exactly the theorem statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    }
+  ]
+}

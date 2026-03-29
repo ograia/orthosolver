@@ -1,0 +1,90 @@
+{
+  "created_at": "2026-03-29T03:13:30.768398Z",
+  "graph_node_id": "pnode_20260329031330_e56ad357",
+  "metadata": {
+    "parent_id": "thm_root_20260329014048_9c97a865"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "02bb68a4e7d1b4ae2e706869967afd2a6ede8a52c9dbeec2d443e5944a703ad7",
+  "owner_id": "lem_20260329030813_61889bd3",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329031330_b25d6a18",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d and r are positive integers.",
+      "gcd(d, r) = 1.",
+      "r <= d.",
+      "n is an integer greater than 1.",
+      "n is congruent to 1 modulo 2d.",
+      "k ranges over integers from 0 to n - 1.",
+      "The q-Pochhammer symbol (u; q)_k is only defined here for nonnegative integer k.",
+      "The factor k(d - dk - 2r)/2 is asserted to be an integer in the stated range of k.",
+      "q is treated as an indeterminate in the rational-function field Q(q), not as a specialized numeric value."
+    ],
+    "normalized_claim": "For every choice of positive integers d and r with gcd(d, r) = 1 and r <= d, and every integer n > 1 with n congruent to 1 modulo 2d, the finite sum T_{d,r,n}(q) is termwise identical in Q(q) to the finite sum of A_{d,r,n,k}(q) for k from 0 to n - 1, because the denominator (q^{2d}; q^{2d})_k factors as (q^d; q^d)_k times (-q^d; q^d)_k.",
+    "quantifier_order": [
+      "For any parameter u and any nonnegative integer k, define the q-Pochhammer symbols.",
+      "For positive integers d and r with gcd(d, r) = 1 and r <= d, and for an integer n > 1 with n congruent to 1 modulo 2d, define the two finite sums.",
+      "For each integer k with 0 <= k <= n - 1, define the summand A_{d,r,n,k}(q).",
+      "In Q(q), the finite sum T_{d,r,n}(q) equals the sum of the A_{d,r,n,k}(q) terms."
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "m",
+        "role": "index for the q-integer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "the rational-function field Q(q)",
+        "name": "q",
+        "role": "base variable of all q-dependent expressions",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "an arbitrary element of whatever commutative setting makes the product meaningful",
+        "name": "u",
+        "role": "input to the q-Pochhammer symbol",
+        "type": "parameter"
+      },
+      {
+        "domain": "integers from 0 to k - 1",
+        "name": "j",
+        "role": "dummy index in the product defining (u; q)_k",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers, and in the sum specifically 0 <= k <= n - 1",
+        "name": "k",
+        "role": "summation index and Pochhammer length",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "fixed parameter in the main theorem",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "fixed parameter in the main theorem",
+        "type": "integer"
+      },
+      {
+        "domain": "integers greater than 1",
+        "name": "n",
+        "role": "finite cutoff for the sum",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witness is introduced in the statement.",
+      "The equality between the two summands depends on the algebraic factorization of (q^{2d}; q^{2d})_k into (q^d; q^d)_k and (-q^d; q^d)_k.",
+      "The integer-valued exponent k(d - dk - 2r)/2 depends on the parity fact that k(1 - k) is even."
+    ]
+  },
+  "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. For 0<=k<=n-1, define A_{d,r,n,k}(q):=[3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2}/(-q^d;q^d)_k, where k(d-dk-2r)/2 is an integer because k(1-k) is even. Define also T_{d,r,n}(q):=\u2211_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2}/(q^{2d};q^{2d})_k. Then in the rational-function field Q(q) one has T_{d,r,n}(q)=\u2211_{k=0}^{n-1} A_{d,r,n,k}(q). Equivalently, each summand is rewritten using (q^{2d};q^{2d})_k=(q^d;q^d)_k(-q^d;q^d)_k.",
+  "updated_at": "2026-03-29T03:13:30.768399Z"
+}

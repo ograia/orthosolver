@@ -1,0 +1,568 @@
+{
+  "artifact_prefix": "problems/prob_20260329004916_817e2b6b/decomposer/attempt_20260329004955_035f98e7_track_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-29T01:21:39.604153Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-29T00:49:55.337483Z",
+  "error_payload": null,
+  "execution_id": "exec_20260329004916_ab049674",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 2,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, and l are integers",
+        "0 <= k <= n",
+        "0 <= l <= n",
+        "the quotient is only assumed to have meaning as a polynomial when it simplifies to one in q",
+        "the phrase has only nonnegative coefficients refers to the standard expansion as a polynomial in q"
+      ],
+      "normalized_claim": "For every integer triple n, k, l with 0 <= k <= n and 0 <= l <= n, if the ratio of the Gaussian binomial coefficient for n choose k to the one for n choose l is actually a polynomial in q, then every coefficient of that polynomial is nonnegative.",
+      "quantifier_order": [
+        "For every integer n",
+        "for every integer k satisfying 0 <= k <= n",
+        "for every integer l satisfying 0 <= l <= n",
+        "if the quotient of the two Gaussian binomial coefficients is a polynomial in q, then its coefficients are all nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "all integers, effectively nonnegative because k and l are between 0 and n",
+          "name": "n",
+          "role": "upper parameter of the Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 0 <= k <= n",
+          "name": "k",
+          "role": "lower index in the numerator Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers with 0 <= l <= n",
+          "name": "l",
+          "role": "lower index in the denominator Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "base and expansion variable for the Gaussian binomial coefficients",
+          "type": "indeterminate"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses appear in the statement"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329004916_817e2b6b",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix arbitrary n, k, l in the allowed range and assume the quotient is polynomial. Replace k and l by k0 = min(k, n-k) and l0 = min(l, n-l) using q-binomial symmetry, and use the degree obstruction to force l0 <= k0. Rewrite the reduced quotient as a shifted interval ratio F_{b,m,d}(q) with b = l0, m = k0 - l0, and d = n - k0 - l0. The cyclotomic exponent formula converts polynomiality of F_{b,m,d}(q) into the floor-count condition saying that every modulus t sees at least as many multiples in the shifted numerator interval as in the denominator interval. The bottleneck positivity lemma for shifted interval ratios then shows that F_{b,m,d}(q), hence the original quotient, has nonnegative coefficients. Finally discharge the temporary polynomiality hypothesis and generalize over n, k, l.",
+          "steps": [
+            {
+              "derives": "Fix arbitrary integers n, k, and l with 0 <= k <= n and 0 <= l <= n, and assume H: the rational function [n choose k]_q / [n choose l]_q is a polynomial in q.",
+              "is_trivial": true,
+              "step_id": "A0",
+              "trivial_justification": "This is the standard setup for proving the universally quantified implication in the theorem.",
+              "uses_lemmas": [],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Let k0 := min(k, n-k) and l0 := min(l, n-l). Then [n choose k]_q = [n choose k0]_q and [n choose l]_q = [n choose l0]_q, so [n choose k]_q / [n choose l]_q = [n choose k0]_q / [n choose l0]_q. In particular, H implies that the reduced quotient [n choose k0]_q / [n choose l0]_q is also a polynomial in q.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "Because k0 is either k or n-k, L1 gives [n choose k]_q = [n choose k0]_q; similarly, because l0 is either l or n-l, L1 gives [n choose l]_q = [n choose l0]_q. Substituting these two equalities into the quotient gives equality of the original and reduced rational functions. Since H says the original quotient is polynomial, the reduced quotient is polynomial as well.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": [
+                "A0"
+              ]
+            },
+            {
+              "derives": "The reduced indices satisfy k0 >= l0.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "L2 applies directly to the same integers n, k, and l under the hypothesis H and yields min(k, n-k) >= min(l, n-l), which is exactly k0 >= l0.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A0"
+              ]
+            },
+            {
+              "derives": "From the definitions of k0 and l0, we have 0 <= k0 <= n/2 and 0 <= l0 <= n/2; together with A2 this gives 0 <= l0 <= k0 <= n/2. Define b := l0, m := k0 - l0, and d := n - k0 - l0. Then b, m, and d are nonnegative integers.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "By definition of minimum, both k0 and l0 are at most n/2 and are nonnegative. A2 gives l0 <= k0, so m = k0 - l0 >= 0. Also d = n - k0 - l0 >= 0 because k0 <= n/2 and l0 <= n/2 imply k0 + l0 <= n. Hence b, m, d are all valid inputs for the shifted interval product.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A2"
+              ]
+            },
+            {
+              "derives": "The reduced quotient can be rewritten as [n choose k0]_q / [n choose l0]_q = F_{b,m,d}(q) = product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)).",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "A3 gives exactly the hypotheses 0 <= l0 <= k0 <= n/2 needed for L3. Applying L3 with l = l0 and k = k0 rewrites the reduced quotient in the stated shifted interval form; because b = l0, m = k0 - l0, and d = n - k0 - l0, this rewritten product is exactly F_{b,m,d}(q).",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "For every positive integer t, floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t).",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "By A1 the reduced quotient [n choose k0]_q / [n choose l0]_q is a polynomial. By A4 this reduced quotient is exactly F_{b,m,d}(q). Lemma L4 says that F_{b,m,d}(q) is polynomial if and only if the displayed floor inequalities hold for every positive integer t. Therefore those inequalities are valid for the present b, m, and d.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A4"
+              ]
+            },
+            {
+              "derives": "The polynomial F_{b,m,d}(q) has only nonnegative coefficients.",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "A5 verifies exactly the hypothesis of L5 for the integers b, m, and d chosen in A3. Therefore L5 yields that F_{b,m,d}(q) lies in Z[q] and every coefficient in its q-expansion is nonnegative.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            },
+            {
+              "derives": "The reduced quotient [n choose k0]_q / [n choose l0]_q has only nonnegative coefficients.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "A4 identifies the reduced quotient with F_{b,m,d}(q), and A6 proves coefficientwise nonnegativity for that polynomial. Substituting the equality from A4 transfers the coefficientwise nonnegativity to [n choose k0]_q / [n choose l0]_q.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A4",
+                "A6"
+              ]
+            },
+            {
+              "derives": "Under the temporary hypothesis H, the original quotient [n choose k]_q / [n choose l]_q has only nonnegative coefficients.",
+              "is_trivial": false,
+              "step_id": "A8",
+              "trivial_justification": "A1 shows that the original quotient equals the reduced quotient, while A7 shows that the reduced quotient has only nonnegative coefficients. Therefore the original quotient has only nonnegative coefficients as well.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A7"
+              ]
+            },
+            {
+              "derives": "For all integers n, k, and l with 0 <= k <= n and 0 <= l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+              "is_trivial": false,
+              "step_id": "A9",
+              "trivial_justification": "The argument started with an arbitrary triple n, k, l satisfying the bounds and an arbitrary assumption H that the quotient is polynomial. Step A8 derived the desired coefficientwise nonnegativity from H. Discharging H proves the implication for this arbitrary triple, and universal generalization yields exactly the theorem statement.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A8"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For integers n >= 0 and r with 0 <= r <= n, [n choose r]_q := product_{i=1}^r (1 - q^(n-r+i)) / (1 - q^i). For r = 0 the empty product is 1.",
+            "kind": "definition",
+            "label": "Gaussian q-binomial"
+          },
+          {
+            "content": "A rational function in q is said to be a polynomial in q if it lies in Q[q].",
+            "kind": "definition",
+            "label": "Polynomiality convention"
+          },
+          {
+            "content": "A polynomial P(q) = sum_i c_i q^i is coefficientwise nonnegative if every coefficient c_i is a nonnegative integer.",
+            "kind": "definition",
+            "label": "Coefficientwise nonnegative"
+          },
+          {
+            "content": "Phi_t(q) denotes the t-th cyclotomic polynomial.",
+            "kind": "notation",
+            "label": "Cyclotomic notation"
+          },
+          {
+            "content": "For integers b,m,d >= 0, F_{b,m,d}(q) denotes product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)).",
+            "kind": "notation",
+            "label": "Shifted interval ratio"
+          },
+          {
+            "content": "Any product over an empty index set is equal to 1.",
+            "kind": "notation",
+            "label": "Empty product"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.83,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Allows replacement of k and l by their complements so both indices can be moved into the interval [0, n/2] without changing the quotient.",
+            "self_check_notes": "All notation is defined locally; no reference to any other lemma is needed.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "[n choose r]_q is defined by the explicit finite product product_{i=1}^r (1 - q^(n-r+i)) / (1 - q^i)",
+                "The empty product is 1 when r = 0"
+              ],
+              "normalized_claim": "[n choose r]_q = [n choose n-r]_q.",
+              "quantifier_order": [
+                "For every integer n with n >= 0",
+                "for every integer r with 0 <= r <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers >= 0",
+                  "name": "n",
+                  "role": "upper parameter of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 <= r <= n",
+                  "name": "r",
+                  "role": "lower index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For integers n and r with 0 <= r <= n, define the Gaussian q-binomial coefficient by [n choose r]_q := product_{i=1}^r (1 - q^(n-r+i)) / (1 - q^i), with the empty product equal to 1 when r = 0. Then [n choose r]_q = [n choose n-r]_q.",
+            "strictly_easier_reason": "This is a basic symmetry identity for a single Gaussian q-binomial coefficient and does not address quotient positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Shows that after complement reduction the numerator index is at least the denominator index, so the shifted-interval product has nonnegative length.",
+            "self_check_notes": "The statement defines k0 and l0 locally and uses only standard notation introduced inside the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "k0 = min(k, n-k)",
+                "l0 = min(l, n-l)",
+                "[n choose r]_q is defined by the explicit finite product"
+              ],
+              "normalized_claim": "Polynomiality of [n choose k]_q / [n choose l]_q implies min(k, n-k) >= min(l, n-l).",
+              "quantifier_order": [
+                "For every integer n with n >= 0",
+                "for every integers k and l with 0 <= k <= n and 0 <= l <= n",
+                "if [n choose k]_q / [n choose l]_q is a polynomial in q"
+              ],
+              "variables": [
+                {
+                  "domain": "integers >= 0",
+                  "name": "n",
+                  "role": "upper parameter of the Gaussian q-binomial coefficients",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 <= k <= n",
+                  "name": "k",
+                  "role": "numerator index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 <= l <= n",
+                  "name": "l",
+                  "role": "denominator index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "derived integer min(k, n-k)",
+                  "name": "k0",
+                  "role": "numerator index moved into [0, n/2]",
+                  "type": "integer"
+                },
+                {
+                  "domain": "derived integer min(l, n-l)",
+                  "name": "l0",
+                  "role": "denominator index moved into [0, n/2]",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For integers n, k, and l with 0 <= k <= n and 0 <= l <= n, define [n choose r]_q := product_{i=1}^r (1 - q^(n-r+i)) / (1 - q^i) for 0 <= r <= n. Let k0 := min(k, n-k) and l0 := min(l, n-l). If the rational function [n choose k]_q / [n choose l]_q is actually a polynomial in q, then k0 >= l0.",
+            "strictly_easier_reason": "It extracts only a necessary ordering condition from the degree of the quotient; it proves no coefficientwise positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Rewrites the reduced quotient as a shifted interval ratio F_{b,m,d}(q).",
+            "self_check_notes": "All symbols, including m and d, are defined inside the statement; no hidden dependencies remain.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "m = k-l",
+                "d = n-k-l",
+                "[n choose r]_q is defined by the explicit finite product",
+                "The empty product equals 1 when m = 0"
+              ],
+              "normalized_claim": "For 0 <= l <= k <= n/2, with m = k-l and d = n-k-l, [n choose k]_q / [n choose l]_q = product_{i=1}^m (1 - q^(l+d+i)) / (1 - q^(l+i)).",
+              "quantifier_order": [
+                "For every integer n with n >= 0",
+                "for every integers k and l with 0 <= l <= k <= n/2"
+              ],
+              "variables": [
+                {
+                  "domain": "integers >= 0",
+                  "name": "n",
+                  "role": "upper parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 <= k <= n",
+                  "name": "k",
+                  "role": "larger reduced index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 <= l <= k",
+                  "name": "l",
+                  "role": "smaller reduced index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "derived integer k-l",
+                  "name": "m",
+                  "role": "common length of the two intervals in the product rewrite",
+                  "type": "integer"
+                },
+                {
+                  "domain": "derived integer n-k-l",
+                  "name": "d",
+                  "role": "shift between denominator and numerator exponent intervals",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For integers n, k, and l with 0 <= l <= k <= n/2, define [n choose r]_q := product_{j=1}^r (1 - q^(n-r+j)) / (1 - q^j) for 0 <= r <= n. Set m := k-l and d := n-k-l. Then [n choose k]_q / [n choose l]_q = product_{i=1}^m (1 - q^(l+d+i)) / (1 - q^(l+i)), where the product is interpreted as 1 when m = 0.",
+            "strictly_easier_reason": "This is a direct algebraic cancellation identity and contains no positivity argument."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.38,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Translates the polynomiality hypothesis into an explicit arithmetic condition on counts of multiples in two equal-length intervals.",
+            "self_check_notes": "The shifted product F_{b,m,d}(q) is defined locally, and the only extra notation Phi_t(q) is standard and also listed in shared context.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "F_{b,m,d}(q) = product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i))",
+                "Phi_t(q) is the t-th cyclotomic polynomial",
+                "The empty product equals 1 when m = 0"
+              ],
+              "normalized_claim": "The exponent of Phi_t(q) in F_{b,m,d}(q) is the stated floor difference, so F_{b,m,d}(q) is a polynomial exactly when those floor differences are nonnegative for all positive integers t.",
+              "quantifier_order": [
+                "For every integer b with b >= 0",
+                "for every integer m with m >= 0",
+                "for every integer d with d >= 0",
+                "for every positive integer t"
+              ],
+              "variables": [
+                {
+                  "domain": "integers >= 0",
+                  "name": "b",
+                  "role": "starting offset of the denominator interval",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers >= 0",
+                  "name": "m",
+                  "role": "common length of the numerator and denominator intervals",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers >= 0",
+                  "name": "d",
+                  "role": "shift applied to the denominator interval to get the numerator interval",
+                  "type": "integer"
+                },
+                {
+                  "domain": "positive integers",
+                  "name": "t",
+                  "role": "cyclotomic index and modulus for counting multiples",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For integers b, m, and d with b >= 0, m >= 0, and d >= 0, define F_{b,m,d}(q) := product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)), with the empty product equal to 1 when m = 0. For each positive integer t, the exponent of the cyclotomic polynomial Phi_t(q) in the factorization of the rational function F_{b,m,d}(q) is (floor((b+d+m)/t) - floor((b+d)/t)) - (floor((b+m)/t) - floor(b/t)). Consequently, F_{b,m,d}(q) is a polynomial in q if and only if floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t) for every positive integer t; in that case F_{b,m,d}(q) actually lies in Z[q].",
+            "strictly_easier_reason": "This is a cyclotomic factor-counting statement about divisibility, independent of any coefficientwise positivity."
+          },
+          {
+            "bottleneck_reason": "After symmetry reduction and product rewriting, the root theorem becomes exactly a positivity statement for these shifted interval ratios. Proving that the arithmetic multiple-count condition forces coefficientwise nonnegativity is the substantive frontier step, likely requiring anti-telescoping or a new combinatorial interpretation.",
+            "formalization_cost_estimate": 0.88,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "This is the frontier positivity theorem for shifted interval ratios; once the quotient has been reduced to this form and the arithmetic criterion is known, it delivers the desired nonnegativity.",
+            "self_check_notes": "The statement defines F_{b,m,d}(q) and all hypotheses locally; there are no references to the parent theorem or to other lemmas.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "F_{b,m,d}(q) = product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i))",
+                "The empty product equals 1 when m = 0"
+              ],
+              "normalized_claim": "The floor-count inequalities imply that F_{b,m,d}(q) is a polynomial with coefficientwise nonnegative coefficients.",
+              "quantifier_order": [
+                "For every integer b with b >= 0",
+                "for every integer m with m >= 0",
+                "for every integer d with d >= 0",
+                "if for every positive integer t the floor inequality holds"
+              ],
+              "variables": [
+                {
+                  "domain": "integers >= 0",
+                  "name": "b",
+                  "role": "starting offset of the denominator interval",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers >= 0",
+                  "name": "m",
+                  "role": "common length of the numerator and denominator intervals",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers >= 0",
+                  "name": "d",
+                  "role": "shift applied to the denominator interval to get the numerator interval",
+                  "type": "integer"
+                },
+                {
+                  "domain": "positive integers",
+                  "name": "t",
+                  "role": "modulus appearing in the floor-count hypothesis",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For integers b, m, and d with b >= 0, m >= 0, and d >= 0, define F_{b,m,d}(q) := product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)), with the empty product equal to 1 when m = 0. Assume that for every positive integer t one has floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t). Then F_{b,m,d}(q) lies in Z[q], and every coefficient in its standard expansion as a polynomial in q is a nonnegative integer.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For integers n >= 0 and r with 0 <= r <= n, [n choose r]_q := product_{i=1}^r (1 - q^(n-r+i)) / (1 - q^i). For r = 0 the empty product is 1.",
+            "kind": "definition",
+            "label": "Gaussian q-binomial"
+          },
+          {
+            "content": "A rational function in q is said to be a polynomial in q if it lies in Q[q].",
+            "kind": "definition",
+            "label": "Polynomiality convention"
+          },
+          {
+            "content": "A polynomial P(q) = sum_i c_i q^i is coefficientwise nonnegative if every coefficient c_i is a nonnegative integer.",
+            "kind": "definition",
+            "label": "Coefficientwise nonnegative"
+          },
+          {
+            "content": "Phi_t(q) denotes the t-th cyclotomic polynomial.",
+            "kind": "notation",
+            "label": "Cyclotomic notation"
+          },
+          {
+            "content": "For integers b,m,d >= 0, F_{b,m,d}(q) denotes product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)).",
+            "kind": "notation",
+            "label": "Shifted interval ratio"
+          },
+          {
+            "content": "Any product over an empty index set is equal to 1.",
+            "kind": "notation",
+            "label": "Empty product"
+          }
+        ],
+        "strategy_summary": "Reduce by q-binomial symmetry to a canonical ordered case 0 <= l0 <= k0 <= n/2, rewrite the quotient as a shifted interval q-factorial ratio F_{b,m,d}(q), translate polynomiality into a cyclotomic multiple-count condition via floor formulas, and isolate the true difficulty as a positivity theorem for such shifted interval ratios under that arithmetic condition."
+      }
+    ],
+    "status": "completed"
+  },
+  "started_at": "2026-03-29T00:49:55.984752Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260329004916_bb2daf99",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-29T01:21:39.604153Z",
+  "worker_job_id": "wrk_thm_root_20260329004916_bb2daf99_decompose_0_track_1_req_20260329004955_82463302",
+  "worker_kind": "decomposition_generation"
+}

@@ -1,0 +1,199 @@
+{
+  "assembly_plan_id": "asm_20260329013314_89d69fb7",
+  "created_at": "2026-03-29T01:37:45.338609Z",
+  "decomposition_id": "dec_20260329013314_fb078aa2",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329004916_817e2b6b",
+  "proof_skeleton_nl": "Unlike the rejected draft, the outer universal quantifiers and the temporary implication hypothesis are opened and closed in separate assembly steps. After fixing arbitrary n, then k with 0 <= k <= n, then l with 0 <= l <= n, and finally a temporary polynomiality hypothesis H, we replace k and l by k0 = min(k, n-k) and l0 = min(l, n-l) using q-binomial symmetry. Polynomiality forces k0 >= l0, so the reduced quotient can be rewritten as a shifted interval ratio F_{b,m,d}(q) with b = l0, m = k0 - l0, and d = n - k0 - l0; moreover 2k0 <= n gives d >= m, so only that subfamily of shifted ratios is needed. Cyclotomic exponent counting converts polynomiality of F_{b,m,d}(q) into the floor-count condition on multiples in two intervals. The explicit bottleneck lemma then proves coefficientwise nonnegativity of F_{b,m,d}(q) on this d >= m subfamily. Equality transfers the nonnegativity first to the reduced quotient and then to the original quotient. Finally the temporary hypothesis H is discharged, and the variables l, k, and n are generalized one at a time to recover exactly the theorem.",
+  "root_node_id": "thm_root_20260329004916_bb2daf99",
+  "steps": [
+    {
+      "derives": "Fix an arbitrary integer n.",
+      "is_trivial": false,
+      "step_id": "A0",
+      "trivial_justification": "This opens the outermost universal quantifier of the target theorem. No special property of n is assumed, so a final universal-generalization step can later close this quantifier.",
+      "uses_lemmas": [],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "Fix an arbitrary integer k satisfying 0 <= k <= n.",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "This opens the next universal quantifier together with its bound hypothesis. The later argument will use only the displayed inequalities on k, so k can eventually be generalized again.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A0"
+      ]
+    },
+    {
+      "derives": "Fix an arbitrary integer l satisfying 0 <= l <= n.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "This opens the third universal quantifier together with its bound hypothesis. The subsequent proof uses only these displayed bounds on l.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A0",
+        "A1"
+      ]
+    },
+    {
+      "derives": "Assume H: the rational function [n choose k]_q / [n choose l]_q is a polynomial in q.",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "To prove the implication for the fixed triple n, k, l, we introduce its antecedent as a temporary hypothesis. The goal from now on is to deduce coefficientwise nonnegativity and then discharge H.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A0",
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "Define k0 := min(k, n-k) and l0 := min(l, n-l). Then [n choose k]_q = [n choose k0]_q and [n choose l]_q = [n choose l0]_q, hence [n choose k]_q / [n choose l]_q = [n choose k0]_q / [n choose l0]_q. In particular, H implies that the reduced quotient [n choose k0]_q / [n choose l0]_q is also a polynomial in q.",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "Because k0 is either k or n-k, either [n choose k]_q = [n choose k0]_q is immediate or it follows from L1 applied to r = k. The same reasoning with l0 gives [n choose l]_q = [n choose l0]_q. Substituting these two equalities into the quotient yields equality of the original and reduced rational functions. Using H then shows that the reduced quotient is polynomial.",
+      "uses_lemmas": [
+        "lem_20260329013314_914bac7b"
+      ],
+      "uses_prior_steps": [
+        "A0",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "The reduced indices satisfy k0 >= l0.",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "The bounds from A1 and A2 allow L2 to be applied to the present n, k, and l under the hypothesis H from A3. Lemma L2 yields min(k, n-k) >= min(l, n-l), which is exactly k0 >= l0 by the definitions introduced in A4.",
+      "uses_lemmas": [
+        "lem_20260329013321_ff5bdde4"
+      ],
+      "uses_prior_steps": [
+        "A0",
+        "A1",
+        "A2",
+        "A3",
+        "A4"
+      ]
+    },
+    {
+      "derives": "From the definitions of k0 and l0, we have 0 <= k0 <= n/2 and 0 <= l0 <= n/2. Together with A5 this gives 0 <= l0 <= k0 <= n/2. Define b := l0, m := k0 - l0, and d := n - k0 - l0. Then b >= 0, m >= 0, d >= 0, and in fact d >= m.",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Since k0 = min(k, n-k), we have k0 >= 0, k0 <= k, and k0 <= n-k. Adding the last two inequalities gives 2k0 <= n, hence k0 <= n/2. The same argument with l0 gives 0 <= l0 <= n/2. Combining this with A5 yields 0 <= l0 <= k0 <= n/2. Now b = l0 is nonnegative and m = k0 - l0 is nonnegative. Also d - m = (n - k0 - l0) - (k0 - l0) = n - 2k0, and 2k0 <= n was already proved, so d - m >= 0. Hence d >= m, and therefore d >= 0 as well.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4",
+        "A5"
+      ]
+    },
+    {
+      "derives": "The reduced quotient rewrites as [n choose k0]_q / [n choose l0]_q = product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)). Equivalently, if F_{b,m,d}(q) := product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)), then [n choose k0]_q / [n choose l0]_q = F_{b,m,d}(q).",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "Step A6 gives exactly the inequalities 0 <= l0 <= k0 <= n/2 needed for L3. Applying L3 with l = l0 and k = k0 yields [n choose k0]_q / [n choose l0]_q = product_{i=1}^{k0-l0} (1 - q^(l0 + (n-k0-l0) + i)) / (1 - q^(l0 + i)). Because b = l0, m = k0 - l0, and d = n - k0 - l0, this is precisely the displayed formula and therefore equals F_{b,m,d}(q).",
+      "uses_lemmas": [
+        "lem_20260329013328_31445d94"
+      ],
+      "uses_prior_steps": [
+        "A6"
+      ]
+    },
+    {
+      "derives": "For every positive integer t, floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t).",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "By A4, the reduced quotient [n choose k0]_q / [n choose l0]_q is a polynomial in q. By A7, this reduced quotient is exactly F_{b,m,d}(q). Step A6 supplies the nonnegativity assumptions on b, m, and d needed in L4. Applying L4 to F_{b,m,d}(q) therefore yields the stated floor inequalities for every positive integer t.",
+      "uses_lemmas": [
+        "lem_20260329013346_eaeafaaf"
+      ],
+      "uses_prior_steps": [
+        "A4",
+        "A6",
+        "A7"
+      ]
+    },
+    {
+      "derives": "The polynomial F_{b,m,d}(q) has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A9",
+      "trivial_justification": "Step A6 proves that b >= 0, m >= 0, and d >= m, which are the parameter restrictions in L5. Step A8 proves the floor-count hypothesis required by L5. Therefore L5 applies and shows that F_{b,m,d}(q) lies in Z[q] and has coefficientwise nonnegative q-expansion.",
+      "uses_lemmas": [
+        "lem_20260329013405_b982ec75"
+      ],
+      "uses_prior_steps": [
+        "A6",
+        "A8"
+      ]
+    },
+    {
+      "derives": "The reduced quotient [n choose k0]_q / [n choose l0]_q has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A10",
+      "trivial_justification": "Step A7 identifies the reduced quotient with F_{b,m,d}(q). Replacing F_{b,m,d}(q) by the equal expression [n choose k0]_q / [n choose l0]_q transfers the coefficientwise nonnegativity proved in A9 to the reduced quotient.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A7",
+        "A9"
+      ]
+    },
+    {
+      "derives": "Under the temporary hypothesis H, the original quotient [n choose k]_q / [n choose l]_q has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A11",
+      "trivial_justification": "Step A4 shows that the original quotient equals the reduced quotient. Step A10 shows that the reduced quotient has only nonnegative coefficients. Substituting the equality from A4 therefore yields the same coefficientwise nonnegativity for the original quotient.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A4",
+        "A10"
+      ]
+    },
+    {
+      "derives": "For these fixed integers n, k, and l with 0 <= k <= n and 0 <= l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A12",
+      "trivial_justification": "Step A11 was obtained from the temporary assumption H introduced in A3. Discharging that assumption by implication introduction yields exactly the desired implication for the present fixed triple n, k, l.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A3",
+        "A11"
+      ]
+    },
+    {
+      "derives": "For these fixed integers n and k with 0 <= k <= n, the following holds: for every integer l with 0 <= l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A13",
+      "trivial_justification": "The argument leading to A12 used no special property of the chosen l beyond the bound 0 <= l <= n recorded in A2. Therefore universal generalization over l yields the stated bounded-forall conclusion for the fixed n and k.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A2",
+        "A12"
+      ]
+    },
+    {
+      "derives": "For the fixed integer n, the following holds: for every integer k with 0 <= k <= n and every integer l with 0 <= l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A14",
+      "trivial_justification": "The proof of A13 used no special property of the chosen k beyond the bound 0 <= k <= n recorded in A1. Hence universal generalization over k yields the displayed statement for the fixed n.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A1",
+        "A13"
+      ]
+    },
+    {
+      "derives": "For all integers n, k, and l with 0 <= k <= n and 0 <= l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+      "is_trivial": false,
+      "step_id": "A15",
+      "trivial_justification": "The proof of A14 used no special property of the chosen n beyond its arbitrariness from A0. A final universal generalization over n therefore yields exactly the root theorem statement.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A0",
+        "A14"
+      ]
+    }
+  ]
+}

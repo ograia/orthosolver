@@ -1,0 +1,122 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329013745_c27576e9",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T01:34:05.590252Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.38,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T01:43:31.627361Z",
+  "last_dependency_check_id": "depchk_20260329014331_2e65d179",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof establishes the cyclotomic exponent formula by counting, via the standard factorization q^N - 1 = product_{r|N} Phi_r(q), and converts those counts to the stated floor expressions. It then proves the polynomiality criterion in both directions: nonnegative exponents give a finite product in Z[q], while any negative exponent yields a nontrivial denominator factor that cannot cancel because distinct cyclotomic polynomials are pairwise coprime. The argument matches the lemma sketch and supports the stated role in the assembly.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let e_t denote the exponent of Phi_t(q) in the cyclotomic factorization of F_{b,m,d}(q). Since\nF_{b,m,d}(q) = product_{i=1}^m (q^(b+d+i) - 1)/(q^(b+i) - 1)\n(the minus signs from 1 - q^N cancel), and since for every integer N >= 1 one has q^N - 1 = product_{r|N} Phi_r(q), the exponent of Phi_t(q) in q^N - 1 is 1 exactly when t divides N, and 0 otherwise. By additivity of exponents in products and quotients,\ne_t = #{1 <= i <= m : t divides (b+d+i)} - #{1 <= i <= m : t divides (b+i)}.\nEquivalently, e_t is the number of multiples of t in {b+d+1, ..., b+d+m} minus the number of multiples of t in {b+1, ..., b+m}.\n\nNow fix any nonnegative integer A and any positive integer t. The number of multiples of t in {A+1, ..., A+m} is floor((A+m)/t) - floor(A/t), because floor(X/t) counts the multiples of t in {1, ..., X}. Applying this with A = b+d and A = b gives\n\ne_t = (floor((b+d+m)/t) - floor((b+d)/t)) - (floor((b+m)/t) - floor(b/t)).\n\nThis is exactly the claimed formula for the exponent of Phi_t(q). It also covers m = 0, because then both sets are empty and both floor differences are 0.\n\nOnly finitely many e_t are nonzero: if t > b+d+m, then t divides none of the integers appearing in the numerator or denominator factors. Hence\nF_{b,m,d}(q) = product_{t >= 1} Phi_t(q)^{e_t}\nis really a finite factorization.\n\nWe now prove the polynomiality criterion. If e_t >= 0 for every positive integer t, then F_{b,m,d}(q) is a finite product of cyclotomic polynomials, so F_{b,m,d}(q) lies in Z[q] because each Phi_t(q) does. In particular, F_{b,m,d}(q) is a polynomial.\n\nConversely, suppose some e_r < 0. Write\nP(q) = product_{e_t > 0} Phi_t(q)^{e_t},\nQ(q) = product_{e_t < 0} Phi_t(q)^{-e_t},\nso that F_{b,m,d}(q) = P(q)/Q(q). Then Q(q) is nonconstant, because e_r < 0 and Phi_r(q) is nonconstant. Distinct cyclotomic polynomials have disjoint sets of roots, hence are pairwise coprime in Q[q]. Since e_r < 0, the factor Phi_r(q) occurs in Q(q) but not in P(q); all factors of P(q) are Phi_t(q) with t != r, so Phi_r(q) is coprime to each of them and therefore cannot divide P(q). But if F_{b,m,d}(q) were a polynomial R(q), then P(q) = R(q)Q(q), so every factor of Q(q), in particular Phi_r(q), would divide P(q), a contradiction. Therefore F_{b,m,d}(q) is not a polynomial whenever some e_t < 0.\n\nSo F_{b,m,d}(q) is a polynomial if and only if e_t >= 0 for every positive integer t. Using the formula already proved for e_t, this is equivalent to\nfloor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t)\nfor every positive integer t. In that case, as shown above, F_{b,m,d}(q) actually belongs to Z[q].",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329014331_1be32478",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329013346_eaeafaaf",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329004916_bb2daf99",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329004916_817e2b6b",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329004916_817e2b6b/proof_bundles/lemmas/lem_20260329013346_eaeafaaf.json",
+  "proof_graph_id": "pgraph_20260329013745_facf6520",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Translates the polynomiality hypothesis into an explicit arithmetic condition on counts of multiples in two equal-length intervals.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For integers b, m, and d with b >= 0, m >= 0, and d >= 0, define F_{b,m,d}(q) := product_{i=1}^m (1 - q^(b+d+i)) / (1 - q^(b+i)), with the empty product equal to 1 when m = 0. For each positive integer t, let Phi_t(q) denote the t-th cyclotomic polynomial. Then the exponent of Phi_t(q) in the cyclotomic factorization of the rational function F_{b,m,d}(q) is (floor((b+d+m)/t) - floor((b+d)/t)) - (floor((b+m)/t) - floor(b/t)). Consequently, F_{b,m,d}(q) is a polynomial in q if and only if floor((b+m)/t) - floor(b/t) <= floor((b+d+m)/t) - floor((b+d)/t) for every positive integer t; in that case F_{b,m,d}(q) actually lies in Z[q].",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "b, m, and d are integers and each is at least 0",
+      "t ranges over positive integers only",
+      "q is a formal indeterminate, not a numerical parameter",
+      "the product defining F_{b,m,d}(q) is finite and uses the convention that the empty product equals 1 when m equals 0",
+      "Phi_t(q) is the standard t-th cyclotomic polynomial",
+      "the cyclotomic factorization is understood for the rational function in q, so exponents may be interpreted as multiplicities in a factorization of a rational function"
+    ],
+    "normalized_claim": "For every nonnegative integer triple b, m, d, the t-th cyclotomic polynomial appears in the factorization of F_{b,m,d}(q) with exponent equal to floor((b+d+m)/t) minus floor((b+d)/t) minus floor((b+m)/t) plus floor(b/t), for every positive integer t. Moreover, F_{b,m,d}(q) is a polynomial in q exactly when, for every positive integer t, floor((b+m)/t) minus floor(b/t) is less than or equal to floor((b+d+m)/t) minus floor((b+d)/t); in that case the polynomial has integer coefficients.",
+    "quantifier_order": [
+      "for all integers b, m, d with b, m, d nonnegative",
+      "define F_{b,m,d}(q) using the finite product, with the empty product equal to 1 when m equals 0",
+      "for each positive integer t, define Phi_t(q) as the t-th cyclotomic polynomial",
+      "for each positive integer t, the exponent of Phi_t(q) in the cyclotomic factorization of F_{b,m,d}(q) is the stated floor-expression",
+      "for each fixed b, m, d, F_{b,m,d}(q) is a polynomial in q if and only if the stated inequality holds for every positive integer t",
+      "in the polynomial case, F_{b,m,d}(q) lies in Z[q]"
+    ],
+    "variables": [
+      {
+        "domain": "nonnegative integers",
+        "name": "b",
+        "role": "parameter indexing the family F",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m",
+        "role": "parameter giving the length of the product",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "d",
+        "role": "parameter indexing the shift in the numerator",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "t",
+        "role": "index of the cyclotomic polynomial",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable in the polynomial or rational function ring",
+        "name": "q",
+        "role": "variable of the rational function",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "functions in q indexed by b, m, d",
+        "name": "F",
+        "role": "defined product whose cyclotomic factorization is studied",
+        "type": "family of rational functions"
+      },
+      {
+        "domain": "cyclotomic polynomials in q indexed by positive integers t",
+        "name": "Phi_t",
+        "role": "the t-th cyclotomic polynomial",
+        "type": "family of polynomials"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement",
+      "The polynomiality criterion has no hidden witness dependence; it is a universal condition over all positive integers t"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T01:43:31.627361Z"
+}

@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-03-29T03:13:30.707627Z",
+  "graph_node_id": "pnode_20260329031330_bcd06662",
+  "metadata": {
+    "parent_id": "thm_root_20260329014048_9c97a865"
+  },
+  "node_kind": "claim",
+  "node_status": "open",
+  "normalized_claim_hash": "78df344fed537127641372073782e316d3a09bc3b5e5905dee2cb3a7375ac4e0",
+  "owner_id": "lem_20260329030751_efeef8c0",
+  "owner_kind": "lemma",
+  "proof_graph_id": "pgraph_20260329031330_b25d6a18",
+  "semantic_sketch_json": {
+    "domain_restrictions": [
+      "d and r are positive integers.",
+      "n is an integer greater than 1.",
+      "The congruence condition is with respect to 2d.",
+      "The q-integer [m]_q is treated as a polynomial expression in the formal variable q.",
+      "zeta is a complex number.",
+      "zeta must satisfy zeta^n = 1 and zeta != 1.",
+      "The gcd statement is in the polynomial ring Z[q]."
+    ],
+    "normalized_claim": "For all positive integers d and r with gcd(d,r) = 1 and r <= d, and for all integers n greater than 1 satisfying n congruent to 1 modulo 2d, the integer n is odd and coprime to 2d. For every complex nth root of unity zeta different from 1, the value of U_{d,n} at zeta is nonzero. Therefore U_{d,n}(q) and M_n(q) have no nonconstant common divisor in Z[q].",
+    "quantifier_order": [
+      "For each positive integers d and r, assume gcd(d,r) = 1 and r <= d.",
+      "For each positive integer n greater than 1, assume n is congruent to 1 modulo 2d.",
+      "Under those assumptions, conclude that n is odd and gcd(n, 2d) = 1.",
+      "For every complex number zeta satisfying zeta^n = 1 and zeta != 1, conclude that U_{d,n}(zeta) is nonzero.",
+      "Equivalently, the polynomials U_{d,n}(q) and M_n(q) are coprime in Z[q]."
+    ],
+    "variables": [
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "index used in the q-integer definition",
+        "type": "integer parameter"
+      },
+      {
+        "domain": "indeterminate in the polynomial ring over the integers, later specialized to complex values",
+        "name": "q",
+        "role": "polynomial variable",
+        "type": "formal variable"
+      },
+      {
+        "domain": "positive integers greater than 1",
+        "name": "n",
+        "role": "main parameter for the cyclotomic and product expressions",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "parameter appearing in U_{d,n} and in the modulus 2d",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "r",
+        "role": "auxiliary parameter constrained together with d",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 1 to n minus 1",
+        "name": "j",
+        "role": "product index in U_{d,n}",
+        "type": "integer index"
+      },
+      {
+        "domain": "complex numbers",
+        "name": "zeta",
+        "role": "evaluation point assumed to be an nth root of unity different from 1",
+        "type": "complex number"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witness is chosen; zeta is universally arbitrary among the admissible complex nth roots of unity different from 1.",
+      "The nonvanishing claim for U_{d,n}(zeta) depends on the fixed parameters d and n, not on a separately chosen witness.",
+      "The coprimality conclusion for U_{d,n}(q) and M_n(q) depends on the universal nonvanishing statement at all nontrivial nth roots of unity."
+    ]
+  },
+  "statement_nl": "Let [m]_q=(1-q^m)/(1-q), let \u03a6_n(q) be the nth cyclotomic polynomial, define M_n(q):=[n]_q \u03a6_n(q)^2, and define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}). Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Then n is odd and gcd(n,2d)=1. Consequently, if \u03b6 is any complex number with \u03b6^n=1 and \u03b6 \u2260 1, then U_{d,n}(\u03b6) \u2260 0. In particular gcd(U_{d,n}(q),M_n(q))=1 in Z[q].",
+  "updated_at": "2026-03-29T03:13:30.707628Z"
+}

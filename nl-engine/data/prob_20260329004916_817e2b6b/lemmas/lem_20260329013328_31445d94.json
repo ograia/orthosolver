@@ -1,0 +1,139 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260329013745_7edcd681",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-29T01:33:46.868130Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.12,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-29T01:44:12.060574Z",
+  "last_dependency_check_id": "depchk_20260329014412_a3f48da1",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof correctly expands both q-binomial coefficients from the stated definition, splits the numerator product for r=k at k=l+m, simplifies the ratio, and reindexes/cancels factors to obtain exactly \u220f_{i=1}^m (1-q^(l+d+i))/(1-q^(l+i)). The m=0 case is handled separately and correctly. No semantic drift or illegal dependency use is present.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Interpret all expressions as formal rational functions in q. Since 0 <= l <= k <= n/2, we have n >= 0, so n/2 <= n and hence 0 <= l <= k <= n; therefore the stated definition applies to r = l and r = k. Set m = k-l and d = n-k-l. If m = 0, then k = l, so [n choose k]_q / [n choose l]_q = 1, and the right-hand side is the empty product, which is 1 by convention. Now assume m > 0. Then k = l+m. Using the definition for r = k and splitting the product after the first m terms, we get [n choose k]_q = prod_{j=1}^{l+m} ((1-q^(n-(l+m)+j))/(1-q^j)) = (prod_{j=1}^m ((1-q^(n-k+j))/(1-q^j))) (prod_{s=1}^l ((1-q^(n-k+m+s))/(1-q^(m+s)))). Since n-k+m = n-l, this becomes [n choose k]_q = (prod_{j=1}^m ((1-q^(n-k+j))/(1-q^j))) (prod_{s=1}^l ((1-q^(n-l+s))/(1-q^(m+s)))). Also, by the definition with r = l, [n choose l]_q = prod_{s=1}^l ((1-q^(n-l+s))/(1-q^s)). Therefore [n choose k]_q / [n choose l]_q = (prod_{j=1}^m ((1-q^(n-k+j))/(1-q^j))) (prod_{s=1}^l ((1-q^s)/(1-q^(m+s)))). Multiplying the two products together gives [n choose k]_q / [n choose l]_q = (prod_{j=1}^m (1-q^(n-k+j)))(prod_{s=1}^l (1-q^s)) / ((prod_{j=1}^m (1-q^j))(prod_{s=1}^l (1-q^(m+s)))). But (prod_{j=1}^m (1-q^j))(prod_{s=1}^l (1-q^(m+s))) = prod_{u=1}^{m+l} (1-q^u), and this equals (prod_{u=1}^l (1-q^u))(prod_{i=1}^m (1-q^(l+i))). Hence the factor prod_{u=1}^l (1-q^u) cancels, leaving [n choose k]_q / [n choose l]_q = prod_{i=1}^m ((1-q^(n-k+i))/(1-q^(l+i))). Finally, n-k = l+d because d = n-k-l, so [n choose k]_q / [n choose l]_q = prod_{i=1}^m ((1-q^(l+d+i))/(1-q^(l+i))), which is exactly the claimed identity. When m = 0 this is the empty product 1, as already noted.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260329014412_6284faef",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260329013328_31445d94",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329004916_bb2daf99",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329004916_817e2b6b",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329004916_817e2b6b/proof_bundles/lemmas/lem_20260329013328_31445d94.json",
+  "proof_graph_id": "pgraph_20260329013745_facf6520",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Rewrites the reduced quotient as a shifted interval ratio F_{b,m,d}(q).",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For integers n, k, and l with 0 <= l <= k <= n/2, define [n choose r]_q := product_{j=1}^r (1 - q^(n-r+j)) / (1 - q^j) for 0 <= r <= n, with the empty product equal to 1 when r = 0. Set m := k-l and d := n-k-l. Then [n choose k]_q / [n choose l]_q = product_{i=1}^m (1 - q^(l+d+i)) / (1 - q^(l+i)), where the product is interpreted as 1 when m = 0.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n, k, and l are integers",
+      "The ordering constraint 0 <= l <= k <= n/2 holds",
+      "Because k <= n/2 and l <= k, both m = k - l and d = n - k - l are nonnegative",
+      "The q-binomial coefficient is defined only for integers r with 0 <= r <= n",
+      "The empty product is taken to be 1 when r = 0",
+      "The final product is taken to be 1 when m = 0",
+      "If the displayed product is interpreted numerically, the denominators 1 minus q to a power must be nonzero; otherwise the expression is intended formally or as a polynomial identity",
+      "The statement does not specify a numeric field for q, so q is treated as an implicit parameter or indeterminate"
+    ],
+    "normalized_claim": "For every integer triple n, k, l satisfying 0 <= l <= k <= n/2, if m is k minus l and d is n minus k minus l, then the ratio of the q-binomial coefficient of n choose k to the q-binomial coefficient of n choose l equals the product from i equals 1 to m of (1 minus q raised to l plus d plus i) divided by (1 minus q raised to l plus i), with the convention that the product is 1 when m is 0.",
+    "quantifier_order": [
+      "For all integers n, k, and l with 0 <= l <= k <= n/2",
+      "For the q-binomial definition, for each integer r with 0 <= r <= n",
+      "For each integer j from 1 to r in the defining product",
+      "Set m equal to k minus l and d equal to n minus k minus l",
+      "For each integer i from 1 to m in the final product",
+      "The identity is asserted with q left free as an implicit parameter"
+    ],
+    "variables": [
+      {
+        "domain": "an integer satisfying the stated inequalities with k and l",
+        "name": "n",
+        "role": "main size parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer with 0 <= l <= k <= n/2",
+        "name": "k",
+        "role": "upper index in the q-binomial ratio",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer with 0 <= l <= k <= n/2",
+        "name": "l",
+        "role": "lower index in the q-binomial ratio",
+        "type": "integer"
+      },
+      {
+        "domain": "implicit parameter appearing in powers of q",
+        "name": "q",
+        "role": "base parameter for the q-binomial expressions",
+        "type": "scalar or indeterminate"
+      },
+      {
+        "domain": "an integer with 0 <= r <= n in the q-binomial definition",
+        "name": "r",
+        "role": "dummy index for the defining formula",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer ranging from 1 to r in the defining product",
+        "name": "j",
+        "role": "dummy product index in the q-binomial definition",
+        "type": "integer"
+      },
+      {
+        "domain": "m = k - l, hence m is nonnegative",
+        "name": "m",
+        "role": "derived product length in the final identity",
+        "type": "integer"
+      },
+      {
+        "domain": "d = n - k - l, hence d is nonnegative",
+        "name": "d",
+        "role": "derived shift parameter in the final identity",
+        "type": "integer"
+      },
+      {
+        "domain": "an integer ranging from 1 to m in the final product",
+        "name": "i",
+        "role": "dummy product index in the claimed identity",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "m depends only on k and l",
+      "d depends on n, k, and l",
+      "The index i in the final product depends on m",
+      "The index j in the q-binomial definition depends on r",
+      "There are no existential witnesses; all auxiliary quantities are determined uniquely from the stated variables"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-29T01:44:12.060574Z"
+}

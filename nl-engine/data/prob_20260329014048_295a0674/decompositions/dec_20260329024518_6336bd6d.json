@@ -1,0 +1,1648 @@
+{
+  "assembly_plan_id": "asm_20260329024518_f9ea5ca4",
+  "controller_status": "failed",
+  "created_at": "2026-03-29T02:52:10.312754Z",
+  "decomposition_id": "dec_20260329024518_6336bd6d",
+  "decomposition_origin": null,
+  "decomposition_origin_job_id": null,
+  "decomposition_origin_reason": null,
+  "dependency_status": "legacy_unknown",
+  "equivalence_risk": "none",
+  "failure_origin": "agent3:false_lemma",
+  "failure_reason": "L4 is false on an admissible test case, which already shows the root theorem fails as stated; L5 and L6 are also false on the same case, and L7 is false as stated because it omits n>1.",
+  "final_check_job_id": null,
+  "final_check_passed": false,
+  "formalization_cost_estimate": 0.86,
+  "invalidated_by_counterexample_id": null,
+  "invalidated_by_lemma_id": null,
+  "latest_prepare_track_job_id": null,
+  "lean_artifact_index": {},
+  "lean_assembly_status": "pending",
+  "lean_bottlenecks": [],
+  "lean_prepare_confidence": null,
+  "lean_prepare_error_class": null,
+  "lean_prepare_fatality": null,
+  "lean_prepare_issue_kind": null,
+  "lean_run_dir": null,
+  "lean_v2_lemma_handles": {},
+  "lean_v2_prepare_status": null,
+  "lean_v2_track_id": null,
+  "lemma_ids": [],
+  "llm_vetting_status": "rejected_fatal",
+  "logical_decomposition_id": "logdec_thm_root_20260329014048_9c97a865_track_1",
+  "node_id": "thm_root_20260329014048_9c97a865",
+  "node_kind": "theorem",
+  "pinned_statement_signatures": null,
+  "previous_attempt_summaries": [
+    {
+      "controller_status": "failed",
+      "decision": "minor_fix",
+      "decomposition_id": "dec_20260329021206_49017eea",
+      "disguised_difficulty": [
+        "L5 packages essentially the entire mod [n]_q part of the parent theorem on the stronger a-deformed cleared sum. It is not equivalent to the full theorem, but it is the main dependency-risk bottleneck."
+      ],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "rejected_minor:failed",
+      "failure_origin": "agent3:minor_fix",
+      "fixes_required": [
+        "Step A7 claims triviality but requires combining two prior divisibility statements with the coprimality lemma. Break it into smaller steps or surface the intermediate reasoning explicitly.",
+        "Replace L9/A9 by a cancellation lemma in the localization where factors of U_{d,n}(q) are inverted, or explicitly define theorem-level congruence for rational functions whose denominators are coprime to [n]_q Phi_n(q)^2.",
+        "Revise the shared-context ambient-ring note: the displayed theorem sum is generally not a Laurent polynomial, so 'all divisibility statements are in Laurent polynomial rings' is too restrictive for the final step."
+      ],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Define the a-deformed sum S_{d,r,n}(a,q), the target term R_{d,r,n}(q), the harmless denominator-clearing factor U_{d,n}(q), and the cleared polynomial P_{d,r,n}(a,q)=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)). First, use the special-value evaluation lemma to show that P_{d,r,n}(a,q) has the two a-roots q^{rn} and q^{-rn}; the factor theorem then gives divisibility by (1-aq^{rn})(a-q^{rn}). Second, use the root-of-unity vanishing lemma to show that P_{d,r,n}(a,q) vanishes for every nontrivial nth root of unity in the q-variable; the cyclotomic divisibility lemma then yields divisibility by [n]_q. Since the two factors are coprime, their product divides P_{d,r,n}(a,q). Specializing a=1 identifies the deformed sum with the original theorem sum and turns the factor (1-aq^{rn})(a-q^{rn}) into (1-q^{rn})^2, which contains \u03a6_n(q)^2 because n divides rn. This gives divisibility of U_{d,n}(q) times the original difference by [n]_q \u03a6_n(q)^2. Finally, cancel U_{d,n}(q) using its coprimality with the modulus, yielding the exact stated congruence.",
+          "steps": [
+            {
+              "derives": "For the admissible integers d,r,n, the polynomial U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}) is coprime to [n]_q and to \u03a6_n(q), hence also coprime to [n]_q \u03a6_n(q)^2.",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "This is exactly the conclusion of L1, together with the immediate observation that coprime to [n]_q and to \u03a6_n(q) implies coprime to their product [n]_q \u03a6_n(q)^2.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Define S_{d,r,n}(a,q), R_{d,r,n}(q), U_{d,n}(q), and P_{d,r,n}(a,q):=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)). Then P_{d,r,n}(a,q) lies in Z[q,q^{-1},a].",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "L2 is precisely the polynomiality statement for the cleared auxiliary expression P_{d,r,n}(a,q).",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) satisfies P_{d,r,n}(q^{rn},q)=0 and P_{d,r,n}(q^{-rn},q)=0.",
+              "is_trivial": true,
+              "step_id": "A3",
+              "trivial_justification": "L3 states exactly these two special-value vanishing identities for the cleared polynomial P_{d,r,n}(a,q).",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A2"
+              ]
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by (1-aq^{rn})(a-q^{rn}).",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "Apply L4 to the polynomial in a given by P_{d,r,n}(a,q). The two roots from A3 imply divisibility by the quadratic factor.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "For every complex number \u03b6 with \u03b6^n=1 and \u03b6\u22601, the specialization P_{d,r,n}(a,\u03b6) is the zero polynomial in a.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "Every nontrivial nth root of unity has some order m>1 dividing n and is primitive of that order. L5 applies to each such order m and primitive root \u03b6, so it yields P_{d,r,n}(a,\u03b6)=0 for every root of [n]_q.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) is divisible by [n]_q in Q[q,q^{-1},a].",
+              "is_trivial": true,
+              "step_id": "A6",
+              "trivial_justification": "L6 converts the vanishing at every nontrivial nth root of unity, established in A5, into divisibility by [n]_q.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) is divisible by [n]_q (1-aq^{rn})(a-q^{rn}) in Q[q,q^{-1},a].",
+              "is_trivial": true,
+              "step_id": "A7",
+              "trivial_justification": "A4 gives divisibility by the a-dependent quadratic factor and A6 gives divisibility by [n]_q. L7 says these two factors are coprime, so their product divides P_{d,r,n}(a,q).",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": [
+                "A4",
+                "A6"
+              ]
+            },
+            {
+              "derives": "If T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k, then U_{d,n}(q)(T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2}) is divisible by [n]_q \u03a6_n(q)^2 in Q[q,q^{-1}].",
+              "is_trivial": true,
+              "step_id": "A8",
+              "trivial_justification": "L8 is exactly the specialization-at-a=1 statement: it identifies the specialized deformed sum with the theorem\u2019s original sum and upgrades the product modulus to [n]_q \u03a6_n(q)^2.",
+              "uses_lemmas": [
+                "L8"
+              ],
+              "uses_prior_steps": [
+                "A7"
+              ]
+            },
+            {
+              "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+              "is_trivial": false,
+              "step_id": "A9",
+              "trivial_justification": "A8 gives divisibility of U_{d,n}(q)(T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2}) by [n]_q \u03a6_n(q)^2. A1 shows U_{d,n}(q) is coprime to [n]_q \u03a6_n(q)^2. Applying the cancellation lemma L9 with M(q)=[n]_q \u03a6_n(q)^2, U(q)=U_{d,n}(q), and H(q)=T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2}, we conclude that T_{d,r,n}(q)-[rn]_q q^{r(1-n)/2} itself is divisible by [n]_q \u03a6_n(q)^2. Since T_{d,r,n}(q) is exactly the left-hand side displayed in A8, this is precisely the desired theorem statement.",
+              "uses_lemmas": [
+                "L9"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A8"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For any integer m, define [m]_q := (1-q^m)/(1-q).",
+            "kind": "definition",
+            "label": "q_integer"
+          },
+          {
+            "content": "For any parameter u and integer k >= 0, define (u;q)_k := \u220f_{j=0}^{k-1} (1-u q^j). For several parameters, (u,v,w;q)_k := (u;q)_k (v;q)_k (w;q)_k.",
+            "kind": "definition",
+            "label": "q_shifted_factorial"
+          },
+          {
+            "content": "\u03a6_n(q) denotes the nth cyclotomic polynomial.",
+            "kind": "definition",
+            "label": "cyclotomic"
+          },
+          {
+            "content": "For integers d,r,k, the exponent k(d-dk-2r)/2 is an integer because k(1-k) is even.",
+            "kind": "notation",
+            "label": "integral_exponent"
+          },
+          {
+            "content": "For admissible d,r,n, define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, and S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k.",
+            "kind": "definition",
+            "label": "deformed_sum"
+          },
+          {
+            "content": "For admissible d,r,n, define P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ).",
+            "kind": "definition",
+            "label": "cleared_difference"
+          },
+          {
+            "content": "For admissible d,r,n, define T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k.",
+            "kind": "definition",
+            "label": "original_sum"
+          },
+          {
+            "content": "All divisibility statements below are taken in Laurent polynomial rings in q (and in a when present); powers of q are units and do not affect divisibility by [n]_q or by \u03a6_n(q).",
+            "kind": "notation",
+            "label": "laurent_divisibility"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.84,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Provides the harmless denominator-clearing factor U_{d,n}(q) and proves it is invertible modulo the final modulus.",
+            "self_check_notes": "All notation used in the statement is defined locally, and the statement does not reference any other lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0, r>0, gcd(d,r)=1, r<=d",
+                "n>1 and n \u2261 1 mod 2d",
+                "m divides n and m>1",
+                "\u03b6 has exact order m"
+              ],
+              "normalized_claim": "n is odd and gcd(n,2d)=1; therefore no factor 1+q^{dj} in U_{d,n}(q) vanishes at any nontrivial nth root of unity, so U_{d,n}(q) is coprime to [n]_q and to \u03a6_n(q).",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "For every divisor m>1 of n, every primitive mth root of unity \u03b6, and every integer j with 1<=j<=n-1."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size in q-shifted factorials",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "divisor of n with m>1",
+                  "name": "m",
+                  "role": "order of a root of unity",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "primitive mth root of unity",
+                  "name": "\u03b6",
+                  "role": "test root of cyclotomic factors",
+                  "type": "complex number"
+                },
+                {
+                  "domain": "1 <= j <= n-1",
+                  "name": "j",
+                  "role": "index of a factor of U_{d,n}(q)",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is needed."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q), let \u03a6_n(q) be the nth cyclotomic polynomial, and let U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}). Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Then n is odd and gcd(n,d)=gcd(n,2d)=1. Consequently, if m>1 divides n, if \u03b6 is a primitive mth root of unity, and if 1 <= j <= n-1, then 1+\u03b6^{dj} != 0. In particular gcd(U_{d,n}(q),[n]_q)=1 and gcd(U_{d,n}(q),\u03a6_n(q))=1 in Z[q].",
+            "strictly_easier_reason": "This is elementary arithmetic and root-of-unity analysis, independent of the hypergeometric structure of the theorem."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.25,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Builds the auxiliary polynomial P_{d,r,n}(a,q) to which factor-theorem and cyclotomic divisibility arguments can be applied.",
+            "self_check_notes": "The statement defines every symbol it uses, including the deformed sum and the cleared polynomial.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0, r>0, gcd(d,r)=1, r<=d",
+                "n>1 and n \u2261 1 mod 2d",
+                "a is formal",
+                "q is formal"
+              ],
+              "normalized_claim": "After multiplying the deformed sum difference by a^{n-1} and U_{d,n}(q), all denominators disappear; the result is a Laurent polynomial in q and a polynomial in a.",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "For the formal parameter a and the formal indeterminate q, define U_{d,n}, R_{d,r,n}, S_{d,r,n}, and P_{d,r,n}."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "upper summation limit and modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "auxiliary deformation parameter",
+                  "name": "a",
+                  "role": "creative-microscoping variable",
+                  "type": "formal parameter"
+                },
+                {
+                  "domain": "base variable of all q-objects",
+                  "name": "q",
+                  "role": "main formal variable",
+                  "type": "formal indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "P_{d,r,n}(a,q) is determined by d,r,n,a,q through the displayed formulas."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, and define S_{d,r,n}(a,q) by S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k. Here k(d-dk-2r)/2 is an integer because k(1-k) is even. Finally define P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ). Then P_{d,r,n}(a,q) belongs to Z[q,q^{-1},a]; equivalently, it is a polynomial in a whose coefficients are Laurent polynomials in q.",
+            "strictly_easier_reason": "This is a denominator-clearing and bookkeeping lemma, with no root-of-unity cancellation or hypergeometric evaluation."
+          },
+          {
+            "bottleneck_reason": "This is the frontier terminating basic-hypergeometric evaluation where the explicit closed form [rn]_q q^{r(1-n)/2} must emerge.",
+            "formalization_cost_estimate": 0.82,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Supplies the two parameter roots a=q^{\u00b1rn} that will produce the factor (1-aq^{rn})(a-q^{rn}).",
+            "self_check_notes": "The statement includes complete definitions of U_{d,n}, R_{d,r,n}, S_{d,r,n}, and P_{d,r,n}; no external references are used.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0, r>0, gcd(d,r)=1, r<=d",
+                "n>1 and n \u2261 1 mod 2d"
+              ],
+              "normalized_claim": "The cleared deformed difference P_{d,r,n}(a,q) has the two special a-values q^{rn} and q^{-rn} as roots; equivalently the specialized deformed sums evaluate exactly to [rn]_q q^{r(1-n)/2}.",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "Define the deformed sum S_{d,r,n}, the target term R_{d,r,n}, the clearing factor U_{d,n}, and the cleared polynomial P_{d,r,n}."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "base variable",
+                  "name": "q",
+                  "role": "main formal variable",
+                  "type": "formal indeterminate"
+                },
+                {
+                  "domain": "M = r(n-1)/(2d)",
+                  "name": "M",
+                  "role": "natural truncation index after specialization",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "M depends on d,r,n via M=r(n-1)/(2d)."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, and P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ). Then P_{d,r,n}(q^{rn},q)=0 and P_{d,r,n}(q^{-rn},q)=0 in Z[q,q^{-1}]. Equivalently, S_{d,r,n}(q^{rn},q)=R_{d,r,n}(q)=S_{d,r,n}(q^{-rn},q). If M:=r(n-1)/(2d), then M is an integer and the factor (q^{r-rn};q^{2d})_k=(q^{-2dM};q^{2d})_k forces both specialized sums to terminate at k=M.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Converts the special-value identities from the bottleneck evaluation into the creative-microscoping factor in the parameter a.",
+            "self_check_notes": "The statement is abstract and self-contained; it uses no theorem-specific notation beyond what it defines locally.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "q is formal",
+                "P(q^{rn},q)=0",
+                "P(q^{-rn},q)=0"
+              ],
+              "normalized_claim": "Two roots in the a-variable, namely a=q^{rn} and a=q^{-rn}, force divisibility by (a-q^{rn})(1-aq^{rn}) in the Laurent polynomial ring.",
+              "quantifier_order": [
+                "For all positive integers n and r.",
+                "For every polynomial P(a,q) in Q[q,q^{-1}][a]."
+              ],
+              "variables": [
+                {
+                  "domain": "integer parameter",
+                  "name": "n",
+                  "role": "exponent source",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer parameter",
+                  "name": "r",
+                  "role": "exponent multiplier",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "Laurent coefficient variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "formal indeterminate"
+                },
+                {
+                  "domain": "Q[q,q^{-1}][a]",
+                  "name": "P",
+                  "role": "object to be factored",
+                  "type": "polynomial in a"
+                }
+              ],
+              "witness_dependencies": [
+                "The quotient Q(a,q) depends on P, n, r, and q."
+              ]
+            },
+            "statement_nl": "Let n and r be positive integers, let q be a formal indeterminate, and let P(a,q) belong to the polynomial ring Q[q,q^{-1}][a]. If P(q^{rn},q)=0 and P(q^{-rn},q)=0 in Q[q,q^{-1}], then P(a,q) is divisible in Q[q,q^{-1},a] by (a-q^{rn})(1-a q^{rn}). Equivalently, there exists Q(a,q) in Q[q,q^{-1},a] such that P(a,q)=(a-q^{rn})(1-a q^{rn}) Q(a,q).",
+            "strictly_easier_reason": "This is a pure factor-theorem argument in the polynomial variable a over a Laurent coefficient ring."
+          },
+          {
+            "bottleneck_reason": "This is essentially the entire mod [n]_q part of the theorem, now lifted to the stronger a-deformed sum; it is the second genuine frontier step.",
+            "formalization_cost_estimate": 0.78,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Provides the full q-root-of-unity vanishing needed for the [n]_q divisibility of the deformed difference.",
+            "self_check_notes": "All notation and all auxiliary objects are defined inside the statement; the lemma does not reference any other lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0, r>0, gcd(d,r)=1, r<=d",
+                "n>1 and n \u2261 1 mod 2d",
+                "m divides n and m>1",
+                "\u03b6 has exact order m"
+              ],
+              "normalized_claim": "After clearing denominators by a^{n-1}U_{d,n}(q), the deformed difference vanishes when q is any nontrivial nth root of unity; equivalently every root of [n]_q is a q-root of P_{d,r,n}(a,q).",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "For every divisor m>1 of n and every primitive mth root of unity \u03b6."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "global modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "divisor of n with m>1",
+                  "name": "m",
+                  "role": "order of the specialized root of unity",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "primitive mth root of unity",
+                  "name": "\u03b6",
+                  "role": "specialized q-value",
+                  "type": "complex number"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "a",
+                  "role": "auxiliary deformation parameter",
+                  "type": "formal parameter"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is needed."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, and P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ). If m>1 divides n and \u03b6 is a primitive mth root of unity, then P_{d,r,n}(a,\u03b6)=0 as a polynomial in a.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Turns the root-of-unity vanishing from L5 into actual divisibility by [n]_q.",
+            "self_check_notes": "The statement is generic and defines all required notation locally.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "F(a,\u03b6)=0 for all complex \u03b6 with \u03b6^n=1 and \u03b6 != 1"
+              ],
+              "normalized_claim": "Vanishing at every nontrivial nth root of unity implies divisibility by [n]_q in the Laurent polynomial ring.",
+              "quantifier_order": [
+                "For every integer n>1.",
+                "For every Laurent polynomial F(a,q) in Q[q,q^{-1},a]."
+              ],
+              "variables": [
+                {
+                  "domain": "cyclotomic index",
+                  "name": "n",
+                  "role": "defines the q-integer [n]_q",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "Q[q,q^{-1},a]",
+                  "name": "F",
+                  "role": "polynomial to test for [n]_q divisibility",
+                  "type": "Laurent polynomial in q and polynomial in a"
+                },
+                {
+                  "domain": "nontrivial nth root of unity",
+                  "name": "\u03b6",
+                  "role": "test root",
+                  "type": "complex number"
+                }
+              ],
+              "witness_dependencies": [
+                "The quotient F(a,q)/[n]_q depends on F and n."
+              ]
+            },
+            "statement_nl": "Let n>1 and let F(a,q) belong to Q[q,q^{-1},a]. Assume that for every complex number \u03b6 with \u03b6^n=1 and \u03b6 != 1, the specialization F(a,\u03b6) is the zero polynomial in the variable a. Then [n]_q=(1-q^n)/(1-q) divides F(a,q) in the Laurent polynomial ring Q[q,q^{-1},a].",
+            "strictly_easier_reason": "This is a standard cyclotomic-root argument and does not use the specific hypergeometric form of the sum."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L7",
+            "proof_nl": null,
+            "role_in_assembly": "Combines the [n]_q divisibility and the parameter-factor divisibility into the full parametric modulus.",
+            "self_check_notes": "The statement is abstract, self-contained, and independent of the detailed form of the summand.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "H is divisible by [n]_q",
+                "H is divisible by (1-aq^{rn})(a-q^{rn})"
+              ],
+              "normalized_claim": "The q-only factor [n]_q and the a-dependent quadratic factor are coprime, so separate divisibility implies divisibility by their product.",
+              "quantifier_order": [
+                "For all positive integers n and r.",
+                "For every H(a,q) in Q[q,q^{-1},a]."
+              ],
+              "variables": [
+                {
+                  "domain": "index of [n]_q",
+                  "name": "n",
+                  "role": "defines the q-only factor",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer parameter",
+                  "name": "r",
+                  "role": "exponent multiplier in the a-factor",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "Q[q,q^{-1},a]",
+                  "name": "H",
+                  "role": "candidate multiple of both factors",
+                  "type": "Laurent polynomial in q and polynomial in a"
+                }
+              ],
+              "witness_dependencies": [
+                "The product quotient depends on H, n, and r."
+              ]
+            },
+            "statement_nl": "Let n and r be positive integers. In the Laurent polynomial ring Q[q,q^{-1},a], the two elements [n]_q=(1-q^n)/(1-q) and (1-a q^{rn})(a-q^{rn}) are coprime. Therefore, if H(a,q) in Q[q,q^{-1},a] is divisible by [n]_q and also divisible by (1-a q^{rn})(a-q^{rn}), then H(a,q) is divisible by [n]_q (1-a q^{rn})(a-q^{rn}).",
+            "strictly_easier_reason": "This is a purely algebraic coprimality argument in a Laurent polynomial ring."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L8",
+            "proof_nl": null,
+            "role_in_assembly": "Converts the parametric modulus into the target modulus and simultaneously identifies the specialized deformed sum with the original summand.",
+            "self_check_notes": "All theorem-specific objects are defined inside the statement, including the original sum T_{d,r,n}(q).",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0, r>0, gcd(d,r)=1, r<=d",
+                "n>1 and n \u2261 1 mod 2d",
+                "P_{d,r,n}(a,q) is divisible by [n]_q(1-aq^{rn})(a-q^{rn})"
+              ],
+              "normalized_claim": "Specializing the parametric divisibility at a=1 produces divisibility of the cleared original difference by [n]_q \u03a6_n(q)^2, and the specialized deformed sum equals the theorem's original sum.",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "Define U_{d,n}, R_{d,r,n}, S_{d,r,n}, P_{d,r,n}, and T_{d,r,n}."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "base variable",
+                  "name": "q",
+                  "role": "main formal variable",
+                  "type": "formal indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "No extra witness is needed."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q), let \u03a6_n(q) be the nth cyclotomic polynomial, and for any parameter u and integer k>=0 let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), with (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ), and T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k. If P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by [n]_q (1-a q^{rn})(a-q^{rn}), then P_{d,r,n}(1,q)=U_{d,n}(q) ( T_{d,r,n}(q) - R_{d,r,n}(q) ) is divisible in Q[q,q^{-1}] by [n]_q \u03a6_n(q)^2. The identity P_{d,r,n}(1,q)=U_{d,n}(q) ( T_{d,r,n}(q) - R_{d,r,n}(q) ) follows from (q^{2d};q^{2d})_k=(q^d;q^d)_k (-q^d;q^d)_k, and the factor \u03a6_n(q)^2 comes from the specialization (1-q^{rn})^2 with n dividing rn.",
+            "strictly_easier_reason": "This is an algebraic specialization and factorization step once the stronger parametric divisibility has been obtained."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L9",
+            "proof_nl": null,
+            "role_in_assembly": "Cancels the harmless clearing factor U_{d,n}(q) to turn the cleared divisibility statement into the exact congruence claimed in the theorem.",
+            "self_check_notes": "The statement is completely generic and self-contained.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "gcd(M,U)=1",
+                "M divides U\u00b7H in Q[q,q^{-1}]"
+              ],
+              "normalized_claim": "A factor U(q) coprime to the modulus M(q) may be cancelled from divisibility in the Laurent polynomial ring.",
+              "quantifier_order": [
+                "For every pair of coprime polynomials M(q), U(q) in Q[q].",
+                "For every Laurent polynomial H(q) in Q[q,q^{-1}]."
+              ],
+              "variables": [
+                {
+                  "domain": "Q[q]",
+                  "name": "M",
+                  "role": "modulus",
+                  "type": "polynomial in q"
+                },
+                {
+                  "domain": "Q[q]",
+                  "name": "U",
+                  "role": "coprime clearing factor",
+                  "type": "polynomial in q"
+                },
+                {
+                  "domain": "Q[q,q^{-1}]",
+                  "name": "H",
+                  "role": "difference to be recovered after cancellation",
+                  "type": "Laurent polynomial in q"
+                }
+              ],
+              "witness_dependencies": [
+                "The quotient H/M depends on H, M, and U."
+              ]
+            },
+            "statement_nl": "Let M(q) and U(q) be elements of Q[q] with gcd(M(q),U(q))=1, and let H(q) belong to Q[q,q^{-1}]. If U(q) H(q) is divisible by M(q) in Q[q,q^{-1}], then H(q) is divisible by M(q) in Q[q,q^{-1}]. Equivalently, a factor coprime to the modulus can be cancelled from a Laurent-polynomial divisibility statement.",
+            "strictly_easier_reason": "This is a generic algebraic cancellation lemma, independent of the hypergeometric sum."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For any integer m, define [m]_q := (1-q^m)/(1-q).",
+            "kind": "definition",
+            "label": "q_integer"
+          },
+          {
+            "content": "For any parameter u and integer k >= 0, define (u;q)_k := \u220f_{j=0}^{k-1} (1-u q^j). For several parameters, (u,v,w;q)_k := (u;q)_k (v;q)_k (w;q)_k.",
+            "kind": "definition",
+            "label": "q_shifted_factorial"
+          },
+          {
+            "content": "\u03a6_n(q) denotes the nth cyclotomic polynomial.",
+            "kind": "definition",
+            "label": "cyclotomic"
+          },
+          {
+            "content": "For integers d,r,k, the exponent k(d-dk-2r)/2 is an integer because k(1-k) is even.",
+            "kind": "notation",
+            "label": "integral_exponent"
+          },
+          {
+            "content": "For admissible d,r,n, define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, and S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k.",
+            "kind": "definition",
+            "label": "deformed_sum"
+          },
+          {
+            "content": "For admissible d,r,n, define P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ).",
+            "kind": "definition",
+            "label": "cleared_difference"
+          },
+          {
+            "content": "For admissible d,r,n, define T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k.",
+            "kind": "definition",
+            "label": "original_sum"
+          },
+          {
+            "content": "All divisibility statements below are taken in Laurent polynomial rings in q (and in a when present); powers of q are units and do not affect divisibility by [n]_q or by \u03a6_n(q).",
+            "kind": "notation",
+            "label": "laurent_divisibility"
+          }
+        ],
+        "strategy_summary": "Introduce an auxiliary parameter a by replacing the repeated factor (q^r,q^r;q^{2d})_k with (a q^r, q^r/a;q^{2d})_k. Rewrite the original summand so that its only denominator is (-q^d;q^d)_k, then clear that harmless denominator by U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}). This yields a polynomial P_{d,r,n}(a,q) in a with Laurent-polynomial coefficients in q. Prove that P_{d,r,n}(a,q) vanishes at a=q^{rn} and a=q^{-rn} (special-value exact evaluations) and also at every nontrivial nth root of unity in the q-variable (root-of-unity vanishing). These give divisibility by (1-aq^{rn})(a-q^{rn}) and by [n]_q, respectively. Because the two factors are coprime, P_{d,r,n}(a,q) is divisible by their product. Specialize a=1; then (1-q^{rn})^2 contributes \u03a6_n(q)^2, and cancelling U_{d,n}(q) recovers the stated congruence modulo [n]_q \u03a6_n(q)^2."
+      },
+      "lean_assembly_status": "pending",
+      "lean_v2_prepare_status": null,
+      "llm_vetting_status": "rejected_minor",
+      "missing_coverage": [
+        "The final congruence is for the rational sum T_{d,r,n}(q), but no lemma defines the ambient localized ring or proves T_{d,r,n}(q)-R_{d,r,n}(q) is Laurent. A localization-compatible cancellation/result is missing.",
+        "The shared ambient-ring convention should specify congruence for rational functions whose denominators divide U_{d,n}(q) and are coprime to [n]_q Phi_n(q)^2."
+      ],
+      "rejection_reason": "The decomposition captures the intended creative-microscoping proof and all nine lemmas are individually plausible; L3 and especially L5 are the explicit bottlenecks. The main issues are formal rather than mathematical: step A7 is mislabeled as trivial, and step A9 applies the Laurent-polynomial cancellation lemma L9 to H=T_{d,r,n}(q)-R_{d,r,n}(q) without showing H is Laurent (the displayed theorem sum is generally a rational function with denominator built from U_{d,n}). The final cancellation therefore needs a localization/rational-function version of L9 or an explicit ambient-ring definition for the congruence.",
+      "strategy_summary": "Introduce an auxiliary parameter a by replacing the repeated factor (q^r,q^r;q^{2d})_k with (a q^r, q^r/a;q^{2d})_k. Rewrite the original summand so that its only denominator is (-q^d;q^d)_k, then clear that harmless denominator by U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}). This yields a polynomial P_{d,r,n}(a,q) in a with Laurent-polynomial coefficients in q. Prove that P_{d,r,n}(a,q) vanishes at a=q^{rn} and a=q^{-rn} (special-value exact evaluations) and also at every nontrivial nth root of unity in the q-variable (root-of-unity vanishing). These give divisibility by (1-aq^{rn})(a-q^{rn}) and by [n]_q, respectively. Because the two factors are coprime, P_{d,r,n}(a,q) is divisible by their product. Specialize a=1; then (1-q^{rn})^2 contributes \u03a6_n(q)^2, and cancelling U_{d,n}(q) recovers the stated congruence modulo [n]_q \u03a6_n(q)^2.",
+      "vet_summary": "The decomposition captures the intended creative-microscoping proof and all nine lemmas are individually plausible; L3 and especially L5 are the explicit bottlenecks. The main issues are formal rather than mathematical: step A7 is mislabeled as trivial, and step A9 applies the Laurent-polynomial cancellation lemma L9 to H=T_{d,r,n}(q)-R_{d,r,n}(q) without showing H is Laurent (the displayed theorem sum is generally a rational function with denominator built from U_{d,n}). The final cancellation therefore needs a localization/rational-function version of L9 or an explicit ambient-ring definition for the congruence."
+    },
+    {
+      "controller_status": "failed",
+      "decision": "fatal",
+      "decomposition_id": "dec_20260329022726_d964f156",
+      "disguised_difficulty": [
+        "L3 is a hard specialized hypergeometric evaluation that produces the exact closed form at a = q^{\u00b1rn}.",
+        "L5 carries essentially the whole mod [n]_q root-of-unity argument on the stronger a-deformed object; it is the main dependency-risk bottleneck."
+      ],
+      "drift_severity": "none",
+      "equivalence_risk": "none",
+      "failure_mode": "rejected_fatal:failed",
+      "failure_origin": "agent3:false_lemma",
+      "fixes_required": [
+        "Replace or substantially revise L3; the claimed special-value vanishing fails for d = r = 1 and n = 3.",
+        "Replace or substantially revise L5; the claimed root-of-unity vanishing fails for d = r = 1 and n = 3.",
+        "After correcting L3 and L5, rebuild the downstream divisibility chain A3-A9 from the corrected statements."
+      ],
+      "full_candidate": {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Work with the final modulus M_n(q):=[n]_q \u03a6_n(q)^2, interpreted in the localization-based congruence ring from the shared context so that rational functions with denominators coprime to M_n(q) are legitimate. Define the a-deformed sum S_{d,r,n}(a,q), the target term R_{d,r,n}(q), the harmless clearing factor U_{d,n}(q), and the cleared polynomial P_{d,r,n}(a,q)=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)). By L2, P_{d,r,n}(a,q) is a polynomial in a with Laurent-polynomial coefficients. By L3, the two special values a=q^{rn} and a=q^{-rn} are roots of P_{d,r,n}(a,q); L4 then yields divisibility by the quadratic factor (1-aq^{rn})(a-q^{rn}). Independently, L5 shows that for every nontrivial nth root of unity \u03b6, the q-specialization P_{d,r,n}(a,\u03b6) vanishes identically in a. Since P_{d,r,n}(a,q) is Laurent-polynomial by L2, L6 converts this vanishing into divisibility by [n]_q. Next, L7 proves that [n]_q and (1-aq^{rn})(a-q^{rn}) are coprime in Q[q,q^{-1},a], and L8 combines the two divisibility statements into P_{d,r,n}(a,q) being divisible by [n]_q(1-aq^{rn})(a-q^{rn}). Specializing a=1, L9 identifies P_{d,r,n}(1,q) with U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) and uses n|rn to upgrade the specialized quadratic factor (1-q^{rn})^2 to \u03a6_n(q)^2, giving a cleared equality U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q))=M_n(q)H_{d,r,n}(q) with H_{d,r,n}(q) Laurent. Finally, L1 shows U_{d,n}(q) is coprime to M_n(q), hence invertible in the localization away from M_n(q), and L10 converts the cleared equality into the desired rational-function congruence T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q). Expanding the definitions of T_{d,r,n}(q), R_{d,r,n}(q), and M_n(q) yields exactly the displayed theorem.",
+          "steps": [
+            {
+              "derives": "For admissible integers d,r,n and M_n(q):=[n]_q \u03a6_n(q)^2, the clearing factor U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}) satisfies gcd(U_{d,n}(q),M_n(q))=1 in Z[q].",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "This is exactly the conclusion of L1 after naming the final modulus M_n(q).",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "For admissible d,r,n, the cleared deformed difference P_{d,r,n}(a,q)=a^{n-1}U_{d,n}(q)(S_{d,r,n}(a,q)-R_{d,r,n}(q)) lies in Z[q,q^{-1},a].",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "L2 is precisely the polynomiality statement for P_{d,r,n}(a,q).",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) satisfies P_{d,r,n}(q^{rn},q)=0 and P_{d,r,n}(q^{-rn},q)=0.",
+              "is_trivial": true,
+              "step_id": "A3",
+              "trivial_justification": "This is exactly the special-value vanishing claimed in L3.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by (1-aq^{rn})(a-q^{rn}).",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "By A2, P_{d,r,n}(a,q) is a polynomial in a over Q[q,q^{-1}], and by A3 it has roots a=q^{rn} and a=q^{-rn}; L4 therefore gives the stated divisibility.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A3"
+              ]
+            },
+            {
+              "derives": "For every complex number \u03b6 with \u03b6^n=1 and \u03b6 \u2260 1, the specialization P_{d,r,n}(a,\u03b6) is the zero polynomial in a.",
+              "is_trivial": true,
+              "step_id": "A5",
+              "trivial_justification": "This is exactly the vanishing statement of L5.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) is divisible by [n]_q in Q[q,q^{-1},a].",
+              "is_trivial": true,
+              "step_id": "A6",
+              "trivial_justification": "A2 places P_{d,r,n}(a,q) in Q[q,q^{-1},a], and A5 gives vanishing at every nontrivial nth root of unity; L6 converts that vanishing into divisibility by [n]_q.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A5"
+              ]
+            },
+            {
+              "derives": "In Q[q,q^{-1},a], the two factors [n]_q and (1-aq^{rn})(a-q^{rn}) are coprime.",
+              "is_trivial": true,
+              "step_id": "A7",
+              "trivial_justification": "This is exactly the coprimality statement of L7.",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomial P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by [n]_q(1-aq^{rn})(a-q^{rn}).",
+              "is_trivial": false,
+              "step_id": "A8",
+              "trivial_justification": "A6 shows that [n]_q divides P_{d,r,n}(a,q). A4 shows that (1-aq^{rn})(a-q^{rn}) also divides P_{d,r,n}(a,q). A7 shows that these two divisors are coprime in the ambient ring. Applying L8 with A=[n]_q, B=(1-aq^{rn})(a-q^{rn}), and H=P_{d,r,n}(a,q) yields divisibility by their product. This explicitly separates the coprimality input from the product-divisibility inference, fixing the rejected shortcut.",
+              "uses_lemmas": [
+                "L8"
+              ],
+              "uses_prior_steps": [
+                "A4",
+                "A6",
+                "A7"
+              ]
+            },
+            {
+              "derives": "With M_n(q):=[n]_q \u03a6_n(q)^2, there exists H_{d,r,n}(q) in Q[q,q^{-1}] such that U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) = M_n(q) H_{d,r,n}(q) in Q(q).",
+              "is_trivial": true,
+              "step_id": "A9",
+              "trivial_justification": "L9 applies directly to the product divisibility obtained in A8 and gives the stated cleared equality for the original rational sum.",
+              "uses_lemmas": [
+                "L9"
+              ],
+              "uses_prior_steps": [
+                "A8"
+              ]
+            },
+            {
+              "derives": "In the localization-congruence sense defined in the shared context, T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q).",
+              "is_trivial": false,
+              "step_id": "A10",
+              "trivial_justification": "A9 provides a cleared equality U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) = M_n(q) H_{d,r,n}(q) with H_{d,r,n}(q) Laurent. A1 shows gcd(U_{d,n}(q),M_n(q))=1. Therefore the hypotheses of L10 hold with M=M_n, U=U_{d,n}, X=T_{d,r,n}, Y=R_{d,r,n}, and H=H_{d,r,n}. L10 then concludes that T_{d,r,n}(q)-R_{d,r,n}(q) lies in M_n(q)\u00b7Loc_{M_n}, which is exactly the congruence T_{d,r,n}(q) \u2261 R_{d,r,n}(q) mod M_n(q).",
+              "uses_lemmas": [
+                "L10"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A9"
+              ]
+            },
+            {
+              "derives": "Let [m]_q = (1\u2212q^m)/(1\u2212q), let (a;q)_k = \u220f_{j=0}^{k\u22121} (1\u2212aq^j), let (a,b,c;q)_k = (a;q)_k (b;q)_k (c;q)_k, and let \u03a6_n(q) be the nth cyclotomic polynomial. Prove that for positive integers d and r with gcd(d,r)=1 and r \u2264 d, and for every integer n > 1 with n \u2261 1 mod 2d, we have \u03a3_{k=0}^{n\u22121} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^(k(d\u2212dk\u22122r)/2) / (q^{2d};q^{2d})_k \u2261 [rn]_q q^(r(1\u2212n)/2) mod [n]_q \u03a6_n(q)^2.",
+              "is_trivial": true,
+              "step_id": "A11",
+              "trivial_justification": "This is exactly A10 after unfolding the definitions of T_{d,r,n}(q), R_{d,r,n}(q), and M_n(q), together with the standing notation for q-shifted factorials and congruence modulo M_n(q).",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A10"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For any integer m, define [m]_q := (1-q^m)/(1-q).",
+            "kind": "definition",
+            "label": "q_integer"
+          },
+          {
+            "content": "For any parameter u and integer k >= 0, define (u;q)_k := \u220f_{j=0}^{k-1} (1-u q^j). For several parameters, define (u,v,w;q)_k := (u;q)_k (v;q)_k (w;q)_k.",
+            "kind": "definition",
+            "label": "q_shifted_factorial"
+          },
+          {
+            "content": "\u03a6_n(q) denotes the nth cyclotomic polynomial.",
+            "kind": "definition",
+            "label": "cyclotomic"
+          },
+          {
+            "content": "For integers d,r,k, the exponent k(d-dk-2r)/2 is an integer because k(1-k) is even.",
+            "kind": "notation",
+            "label": "integral_exponent"
+          },
+          {
+            "content": "For each integer n>1, define M_n(q) := [n]_q \u03a6_n(q)^2.",
+            "kind": "definition",
+            "label": "final_modulus"
+          },
+          {
+            "content": "For admissible d,r,n, define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, and P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ).",
+            "kind": "definition",
+            "label": "deformed_auxiliary_objects"
+          },
+          {
+            "content": "For admissible d,r,n, define T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k.",
+            "kind": "definition",
+            "label": "original_sum"
+          },
+          {
+            "content": "For a nonzero polynomial M(q) in Q[q], let Loc_M be the localization of the Laurent polynomial ring Q[q,q^{-1}] obtained by inverting every polynomial V(q) in Q[q] with gcd(V(q),M(q))=1. For rational functions X(q),Y(q) in Q(q), write X(q) \u2261 Y(q) mod M(q) if X(q)-Y(q) belongs to the ideal M(q)\u00b7Loc_M.",
+            "kind": "definition",
+            "label": "localized_congruence"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.88,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Shows that the clearing factor U_{d,n}(q) becomes a unit modulo the final modulus in the localized ambient ring.",
+            "self_check_notes": "All nonstandard symbols are defined in the statement; there is no reference to any other lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0",
+                "r>0",
+                "gcd(d,r)=1",
+                "r<=d",
+                "n>1",
+                "n \u2261 1 mod 2d"
+              ],
+              "normalized_claim": "The congruence n \u2261 1 mod 2d forces gcd(n,2d)=1, so no factor 1+q^{dj} of U_{d,n}(q) vanishes at any nontrivial nth root of unity; hence U_{d,n}(q) and M_n(q)=[n]_q \u03a6_n(q)^2 are coprime in Z[q].",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "Define U_{d,n}(q) and M_n(q), and test them at arbitrary complex numbers \u03b6 with \u03b6^n=1 and \u03b6\u22601."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size in the shifted factorials",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "base variable of the q-objects",
+                  "type": "formal indeterminate"
+                },
+                {
+                  "domain": "nontrivial nth root of unity",
+                  "name": "\u03b6",
+                  "role": "test point for common roots of U_{d,n} and M_n",
+                  "type": "complex number"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q), let \u03a6_n(q) be the nth cyclotomic polynomial, define M_n(q):=[n]_q \u03a6_n(q)^2, and define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}). Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Then n is odd, gcd(n,2d)=1, and gcd(U_{d,n}(q),M_n(q))=1 in Z[q]. Equivalently, if \u03b6 is any complex number with \u03b6^n=1 and \u03b6 \u2260 1, then U_{d,n}(\u03b6) \u2260 0.",
+            "strictly_easier_reason": "This is elementary number theory and root-of-unity analysis, independent of the hypergeometric identities."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.25,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Provides the algebraic object P_{d,r,n}(a,q) to which the factor theorem and cyclotomic divisibility can be applied.",
+            "self_check_notes": "All notation used by the statement is introduced locally, including the deformed sum and the cleared polynomial.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0",
+                "r>0",
+                "gcd(d,r)=1",
+                "r<=d",
+                "n>1",
+                "n \u2261 1 mod 2d"
+              ],
+              "normalized_claim": "Multiplying the deformed difference S_{d,r,n}(a,q)-R_{d,r,n}(q) by a^{n-1} and the product U_{d,n}(q)=\u220f_{j=1}^{n-1}(1+q^{dj}) clears all negative powers of a and all denominator factors, yielding a Laurent polynomial in q and a polynomial in a.",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "For the formal parameters a and q, define U_{d,n}, R_{d,r,n}, S_{d,r,n}, and P_{d,r,n} by the displayed formulas."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "upper summation limit and modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "auxiliary deformation parameter",
+                  "name": "a",
+                  "role": "creative-microscoping variable",
+                  "type": "formal parameter"
+                },
+                {
+                  "domain": "base variable",
+                  "name": "q",
+                  "role": "main formal variable",
+                  "type": "formal indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "P_{d,r,n}(a,q) is determined by d,r,n,a,q through the displayed definitions."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, and S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k. Here k(d-dk-2r)/2 is an integer because k(1-k) is even. Finally define P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ). Then P_{d,r,n}(a,q) belongs to Z[q,q^{-1},a]; equivalently, it is a polynomial in a whose coefficients are Laurent polynomials in q.",
+            "strictly_easier_reason": "This is a bookkeeping and denominator-clearing lemma, with no root-of-unity cancellation and no exact hypergeometric evaluation."
+          },
+          {
+            "bottleneck_reason": "This is the frontier terminating basic-hypergeometric evaluation where the explicit closed form [rn]_q q^{r(1-n)/2} must appear.",
+            "formalization_cost_estimate": 0.82,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Supplies the two parameter roots needed to create the factor (1-aq^{rn})(a-q^{rn}).",
+            "self_check_notes": "The statement defines every theorem-specific object it uses and does not refer to any other lemma.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0",
+                "r>0",
+                "gcd(d,r)=1",
+                "r<=d",
+                "n>1",
+                "n \u2261 1 mod 2d"
+              ],
+              "normalized_claim": "The a-deformed cleared difference P_{d,r,n}(a,q) has the two special a-values q^{rn} and q^{-rn} as roots; equivalently, both specialized deformed sums evaluate exactly to [rn]_q q^{r(1-n)/2}.",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "Define U_{d,n}, R_{d,r,n}, S_{d,r,n}, and P_{d,r,n}, then specialize a to q^{rn} and q^{-rn}."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "base variable",
+                  "name": "q",
+                  "role": "main formal variable",
+                  "type": "formal indeterminate"
+                },
+                {
+                  "domain": "J = r(n-1)/(2d)",
+                  "name": "J",
+                  "role": "termination index after specialization",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "The integer J depends on d,r,n via J=r(n-1)/(2d)."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, and P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ). Then P_{d,r,n}(q^{rn},q)=0 and P_{d,r,n}(q^{-rn},q)=0 in Z[q,q^{-1}]. Equivalently, S_{d,r,n}(q^{rn},q)=R_{d,r,n}(q)=S_{d,r,n}(q^{-rn},q). If J:=r(n-1)/(2d), then J is an integer, and the factor (q^{r-rn};q^{2d})_k=(q^{-2dJ};q^{2d})_k forces both specialized sums to terminate at k=J.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Converts the exact special-value identities into the key quadratic factor in the deformation parameter a.",
+            "self_check_notes": "The lemma is abstract and self-contained; no theorem-specific notation is assumed beyond what is defined in the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "P belongs to Q[q,q^{-1}][a]",
+                "P(q^{rn},q)=0",
+                "P(q^{-rn},q)=0"
+              ],
+              "normalized_claim": "Two distinct prescribed roots in the variable a force divisibility by the quadratic factor (1-aq^{rn})(a-q^{rn}) in the polynomial ring over Laurent coefficients.",
+              "quantifier_order": [
+                "For all positive integers n and r.",
+                "For every polynomial P(a,q) in Q[q,q^{-1}][a].",
+                "Assume the two specializations a=q^{rn} and a=q^{-rn} are roots."
+              ],
+              "variables": [
+                {
+                  "domain": "integer parameter",
+                  "name": "n",
+                  "role": "source of the exponent n",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer parameter",
+                  "name": "r",
+                  "role": "multiplier in the exponent rn",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "coefficient variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "formal indeterminate"
+                },
+                {
+                  "domain": "Q[q,q^{-1}][a]",
+                  "name": "P",
+                  "role": "object to be factored",
+                  "type": "polynomial in a"
+                }
+              ],
+              "witness_dependencies": [
+                "The quotient polynomial Q(a,q) depends on P,n,r."
+              ]
+            },
+            "statement_nl": "Let n and r be positive integers, let q be a formal indeterminate, and let P(a,q) belong to the polynomial ring Q[q,q^{-1}][a]. If P(q^{rn},q)=0 and P(q^{-rn},q)=0 in Q[q,q^{-1}], then P(a,q) is divisible in Q[q,q^{-1},a] by (1-a q^{rn})(a-q^{rn}). Equivalently, there exists Q(a,q) in Q[q,q^{-1},a] such that P(a,q)=(1-a q^{rn})(a-q^{rn}) Q(a,q).",
+            "strictly_easier_reason": "This is a pure factor-theorem argument in the variable a over a Laurent-polynomial coefficient ring."
+          },
+          {
+            "bottleneck_reason": "This isolates the entire mod [n]_q part on the stronger a-deformed object; it is the main dependency-risk bottleneck already flagged in the rejected attempt.",
+            "formalization_cost_estimate": 0.78,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Provides the complete q-root-of-unity vanishing needed for the [n]_q divisibility of the deformed difference.",
+            "self_check_notes": "The statement defines all theorem-specific symbols locally and does not depend on any other lemma text.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0",
+                "r>0",
+                "gcd(d,r)=1",
+                "r<=d",
+                "n>1",
+                "n \u2261 1 mod 2d",
+                "\u03b6^n=1",
+                "\u03b6 \u2260 1"
+              ],
+              "normalized_claim": "After clearing denominators by a^{n-1}U_{d,n}(q), the a-deformed difference vanishes when q is any nontrivial nth root of unity; equivalently, every root of [n]_q is a q-root of P_{d,r,n}(a,q).",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "Define U_{d,n}, R_{d,r,n}, S_{d,r,n}, and P_{d,r,n}.",
+                "For every complex number \u03b6 with \u03b6^n=1 and \u03b6\u22601, specialize q to \u03b6."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "global modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "nontrivial nth root of unity",
+                  "name": "\u03b6",
+                  "role": "specialized q-value",
+                  "type": "complex number"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "a",
+                  "role": "auxiliary deformation parameter",
+                  "type": "formal parameter"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q). For any parameter u and integer k>=0, let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), and let (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, and P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ). If \u03b6 is any complex number with \u03b6^n=1 and \u03b6 \u2260 1, then P_{d,r,n}(a,\u03b6)=0 as a polynomial in a.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Converts the root-of-unity vanishing into algebraic divisibility by [n]_q.",
+            "self_check_notes": "The statement is generic, all notation is local, and no other lemma is referenced.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>1",
+                "F(a,\u03b6)=0 for all complex \u03b6 with \u03b6^n=1 and \u03b6\u22601"
+              ],
+              "normalized_claim": "Vanishing at every nontrivial nth root of unity implies divisibility by the full q-integer [n]_q in the Laurent polynomial ring.",
+              "quantifier_order": [
+                "For every integer n>1.",
+                "For every Laurent polynomial F(a,q) in Q[q,q^{-1},a].",
+                "Assume F(a,\u03b6)=0 for each nontrivial nth root of unity \u03b6."
+              ],
+              "variables": [
+                {
+                  "domain": "cyclotomic index",
+                  "name": "n",
+                  "role": "defines the q-integer [n]_q",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "Q[q,q^{-1},a]",
+                  "name": "F",
+                  "role": "polynomial to test for [n]_q-divisibility",
+                  "type": "Laurent polynomial in q and polynomial in a"
+                },
+                {
+                  "domain": "nontrivial nth root of unity",
+                  "name": "\u03b6",
+                  "role": "test root",
+                  "type": "complex number"
+                }
+              ],
+              "witness_dependencies": [
+                "The quotient F(a,q)/[n]_q depends on F and n."
+              ]
+            },
+            "statement_nl": "Let n>1 and let F(a,q) belong to Q[q,q^{-1},a]. Assume that for every complex number \u03b6 with \u03b6^n=1 and \u03b6 \u2260 1, the specialization F(a,\u03b6) is the zero polynomial in the variable a. Then [n]_q=(1-q^n)/(1-q) divides F(a,q) in the Laurent polynomial ring Q[q,q^{-1},a].",
+            "strictly_easier_reason": "This is a standard cyclotomic-root argument and does not use the specific form of the hypergeometric summand."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.11,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L7",
+            "proof_nl": null,
+            "role_in_assembly": "Separates the coprimality issue from the later product-divisibility step, explicitly fixing the former rejected A7 shortcut.",
+            "self_check_notes": "The statement is self-contained and uses only standard algebraic notation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n>0",
+                "r>0"
+              ],
+              "normalized_claim": "The q-only factor [n]_q and the a-dependent quadratic factor (1-aq^{rn})(a-q^{rn}) have no nonunit common divisor in Q[q,q^{-1},a].",
+              "quantifier_order": [
+                "For all positive integers n and r.",
+                "Work in the Laurent polynomial ring Q[q,q^{-1},a]."
+              ],
+              "variables": [
+                {
+                  "domain": "index of [n]_q",
+                  "name": "n",
+                  "role": "defines the q-only factor",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer parameter",
+                  "name": "r",
+                  "role": "determines the exponents in the quadratic factor",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "Laurent variable",
+                  "name": "q",
+                  "role": "base variable",
+                  "type": "formal indeterminate"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "a",
+                  "role": "deformation variable",
+                  "type": "formal parameter"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required."
+              ]
+            },
+            "statement_nl": "Let n and r be positive integers. In the Laurent polynomial ring Q[q,q^{-1},a], the two elements [n]_q=(1-q^n)/(1-q) and (1-a q^{rn})(a-q^{rn}) are coprime. Equivalently, every common divisor of [n]_q and (1-a q^{rn})(a-q^{rn}) is a unit of Q[q,q^{-1},a].",
+            "strictly_easier_reason": "This is a purely algebraic coprimality statement in the ambient polynomial ring, independent of the hard hypergeometric content."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.09,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L8",
+            "proof_nl": null,
+            "role_in_assembly": "Combines the separate divisibility facts once coprimality has been isolated.",
+            "self_check_notes": "The statement is abstract and fully local; it does not reference theorem-specific objects or other lemmas.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "gcd(A,B)=1",
+                "A divides H",
+                "B divides H"
+              ],
+              "normalized_claim": "In the UFD Q[q,q^{-1},a], coprime divisors of the same element multiply: if A|H and B|H with gcd(A,B)=1, then AB|H.",
+              "quantifier_order": [
+                "For every triple A(a,q), B(a,q), H(a,q) in Q[q,q^{-1},a]."
+              ],
+              "variables": [
+                {
+                  "domain": "Q[q,q^{-1},a]",
+                  "name": "A",
+                  "role": "first divisor",
+                  "type": "Laurent polynomial in q and polynomial in a"
+                },
+                {
+                  "domain": "Q[q,q^{-1},a]",
+                  "name": "B",
+                  "role": "second divisor",
+                  "type": "Laurent polynomial in q and polynomial in a"
+                },
+                {
+                  "domain": "Q[q,q^{-1},a]",
+                  "name": "H",
+                  "role": "common multiple",
+                  "type": "Laurent polynomial in q and polynomial in a"
+                }
+              ],
+              "witness_dependencies": [
+                "The quotient H/(AB) depends on A,B,H."
+              ]
+            },
+            "statement_nl": "Let A(a,q), B(a,q), and H(a,q) belong to Q[q,q^{-1},a]. If gcd(A(a,q),B(a,q))=1 in Q[q,q^{-1},a], if A(a,q) divides H(a,q), and if B(a,q) divides H(a,q), then A(a,q)B(a,q) divides H(a,q) in Q[q,q^{-1},a].",
+            "strictly_easier_reason": "This is a generic divisibility principle in a UFD and is completely independent of the theorem\u2019s special q-series structure."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.22,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L9",
+            "proof_nl": null,
+            "role_in_assembly": "Moves from the parametric polynomial divisibility to a cleared congruence for the original rational sum.",
+            "self_check_notes": "All theorem-specific symbols are defined locally; the statement is self-contained and does not rely on any external ambient-ring convention.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "d>0",
+                "r>0",
+                "gcd(d,r)=1",
+                "r<=d",
+                "n>1",
+                "n \u2261 1 mod 2d",
+                "P_{d,r,n}(a,q) is divisible by [n]_q(1-aq^{rn})(a-q^{rn})"
+              ],
+              "normalized_claim": "Specializing the stronger parametric divisibility at a=1 identifies the deformed sum with the original rational sum T_{d,r,n}(q), and the specialized factor (1-q^{rn})^2 contributes \u03a6_n(q)^2, yielding a cleared equality U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) = M_n(q) H_{d,r,n}(q) with H_{d,r,n}(q) Laurent.",
+              "quantifier_order": [
+                "For all positive integers d and r with gcd(d,r)=1 and r<=d.",
+                "For every integer n>1 with n \u2261 1 mod 2d.",
+                "Define M_n, U_{d,n}, R_{d,r,n}, S_{d,r,n}, P_{d,r,n}, and T_{d,r,n}.",
+                "Assume the divisibility P_{d,r,n}(a,q) by [n]_q(1-aq^{rn})(a-q^{rn})."
+              ],
+              "variables": [
+                {
+                  "domain": "theorem parameter",
+                  "name": "d",
+                  "role": "step size",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "theorem parameter with gcd(d,r)=1 and r<=d",
+                  "name": "r",
+                  "role": "offset parameter",
+                  "type": "positive integer"
+                },
+                {
+                  "domain": "integer congruent to 1 modulo 2d",
+                  "name": "n",
+                  "role": "modulus index",
+                  "type": "integer greater than 1"
+                },
+                {
+                  "domain": "base variable",
+                  "name": "q",
+                  "role": "main q-variable",
+                  "type": "formal indeterminate"
+                },
+                {
+                  "domain": "Q[q,q^{-1}]",
+                  "name": "H_{d,r,n}",
+                  "role": "witness for the cleared divisibility after specializing a=1",
+                  "type": "Laurent polynomial in q"
+                }
+              ],
+              "witness_dependencies": [
+                "The witness H_{d,r,n}(q) depends on d,r,n and on the quotient in the assumed divisibility of P_{d,r,n}(a,q)."
+              ]
+            },
+            "statement_nl": "Let [m]_q=(1-q^m)/(1-q), let \u03a6_n(q) be the nth cyclotomic polynomial, and for any parameter u and integer k>=0 let (u;q)_k:=\u220f_{j=0}^{k-1}(1-u q^j), with (u,v,w;q)_k:=(u;q)_k(v;q)_k(w;q)_k. Suppose d and r are positive integers with gcd(d,r)=1 and r <= d, and suppose n>1 satisfies n \u2261 1 mod 2d. Define M_n(q):=[n]_q \u03a6_n(q)^2, U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ), and T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k. If P_{d,r,n}(a,q) is divisible in Q[q,q^{-1},a] by [n]_q (1-a q^{rn})(a-q^{rn}), then P_{d,r,n}(1,q)=U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) in Q(q), and there exists H_{d,r,n}(q) in Q[q,q^{-1}] such that U_{d,n}(q)(T_{d,r,n}(q)-R_{d,r,n}(q)) = M_n(q) H_{d,r,n}(q) in Q(q).",
+            "strictly_easier_reason": "Once the stronger parametric divisibility is known, this is an algebraic specialization and factor extraction step."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.2,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L10",
+            "proof_nl": null,
+            "role_in_assembly": "Replaces the invalid Laurent-polynomial cancellation from the rejected attempt by a correct localization-compatible final step for rational functions.",
+            "self_check_notes": "The lemma defines the localized ambient ring and the congruence notation locally, so it can be solved in isolation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "M \u2260 0",
+                "U \u2260 0",
+                "gcd(U,M)=1",
+                "U(X-Y)=M H in Q(q)"
+              ],
+              "normalized_claim": "In the localization away from the modulus M, any polynomial U coprime to M is invertible; therefore a cleared equality U(X-Y)=M H immediately implies the congruence X \u2261 Y mod M.",
+              "quantifier_order": [
+                "For every pair of nonzero polynomials M(q), U(q) in Q[q].",
+                "Define Loc_M and the congruence notation modulo M(q).",
+                "For every rational functions X(q), Y(q) in Q(q) and every Laurent polynomial H(q) in Q[q,q^{-1}], assume gcd(U,M)=1 and U(X-Y)=M H."
+              ],
+              "variables": [
+                {
+                  "domain": "Q[q]",
+                  "name": "M",
+                  "role": "modulus",
+                  "type": "nonzero polynomial in q"
+                },
+                {
+                  "domain": "Q[q]",
+                  "name": "U",
+                  "role": "clearing factor to be inverted",
+                  "type": "nonzero polynomial in q"
+                },
+                {
+                  "domain": "Q(q)",
+                  "name": "X",
+                  "role": "left-hand side of the target congruence",
+                  "type": "rational function in q"
+                },
+                {
+                  "domain": "Q(q)",
+                  "name": "Y",
+                  "role": "right-hand side of the target congruence",
+                  "type": "rational function in q"
+                },
+                {
+                  "domain": "Q[q,q^{-1}]",
+                  "name": "H",
+                  "role": "witness for the cleared equality",
+                  "type": "Laurent polynomial in q"
+                }
+              ],
+              "witness_dependencies": [
+                "The congruence witness in M(q)\u00b7Loc_M is Z(q)=H(q)/U(q), which belongs to Loc_M because gcd(U,M)=1."
+              ]
+            },
+            "statement_nl": "Let M(q) and U(q) be nonzero elements of Q[q]. Let Loc_M be the localization of Q[q,q^{-1}] obtained by inverting every polynomial V(q) in Q[q] with gcd(V(q),M(q))=1. For rational functions X(q) and Y(q) in Q(q), write X(q) \u2261 Y(q) mod M(q) if X(q)-Y(q) belongs to the ideal M(q)\u00b7Loc_M. If gcd(U(q),M(q))=1 and there exists H(q) in Q[q,q^{-1}] such that U(q)(X(q)-Y(q)) = M(q) H(q) in Q(q), then X(q) \u2261 Y(q) mod M(q).",
+            "strictly_easier_reason": "This is a generic localization argument in commutative algebra and is independent of the hypergeometric content of the theorem."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For any integer m, define [m]_q := (1-q^m)/(1-q).",
+            "kind": "definition",
+            "label": "q_integer"
+          },
+          {
+            "content": "For any parameter u and integer k >= 0, define (u;q)_k := \u220f_{j=0}^{k-1} (1-u q^j). For several parameters, define (u,v,w;q)_k := (u;q)_k (v;q)_k (w;q)_k.",
+            "kind": "definition",
+            "label": "q_shifted_factorial"
+          },
+          {
+            "content": "\u03a6_n(q) denotes the nth cyclotomic polynomial.",
+            "kind": "definition",
+            "label": "cyclotomic"
+          },
+          {
+            "content": "For integers d,r,k, the exponent k(d-dk-2r)/2 is an integer because k(1-k) is even.",
+            "kind": "notation",
+            "label": "integral_exponent"
+          },
+          {
+            "content": "For each integer n>1, define M_n(q) := [n]_q \u03a6_n(q)^2.",
+            "kind": "definition",
+            "label": "final_modulus"
+          },
+          {
+            "content": "For admissible d,r,n, define U_{d,n}(q):=\u220f_{j=1}^{n-1}(1+q^{dj}), R_{d,r,n}(q):=[rn]_q q^{r(1-n)/2}, S_{d,r,n}(a,q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (a q^r, q^r/a, q^d; q^{2d})_k (q^d;q^d)_k q^{k(d-dk-2r)/2} / (-q^d;q^d)_k, and P_{d,r,n}(a,q):=a^{n-1} U_{d,n}(q) ( S_{d,r,n}(a,q) - R_{d,r,n}(q) ).",
+            "kind": "definition",
+            "label": "deformed_auxiliary_objects"
+          },
+          {
+            "content": "For admissible d,r,n, define T_{d,r,n}(q):=\u03a3_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k.",
+            "kind": "definition",
+            "label": "original_sum"
+          },
+          {
+            "content": "For a nonzero polynomial M(q) in Q[q], let Loc_M be the localization of the Laurent polynomial ring Q[q,q^{-1}] obtained by inverting every polynomial V(q) in Q[q] with gcd(V(q),M(q))=1. For rational functions X(q),Y(q) in Q(q), write X(q) \u2261 Y(q) mod M(q) if X(q)-Y(q) belongs to the ideal M(q)\u00b7Loc_M.",
+            "kind": "definition",
+            "label": "localized_congruence"
+          }
+        ],
+        "strategy_summary": "Retain the creative-microscoping a-deformation, but unlike the rejected attempt this version fixes both formal gaps explicitly: it splits the former product-modulus step into separate coprimality and combination stages, and it replaces the invalid Laurent-polynomial cancellation at the end by a localization-compatible definition of congruence for rational functions, so the displayed theorem sum is handled in the correct ambient ring from the start."
+      },
+      "lean_assembly_status": "pending",
+      "lean_v2_prepare_status": null,
+      "llm_vetting_status": "rejected_fatal",
+      "missing_coverage": [],
+      "rejection_reason": "Key lemmas L3 and L5 are false; explicit counterexamples occur at d = 1, r = 1, n = 3.",
+      "strategy_summary": "Retain the creative-microscoping a-deformation, but unlike the rejected attempt this version fixes both formal gaps explicitly: it splits the former product-modulus step into separate coprimality and combination stages, and it replaces the invalid Laurent-polynomial cancellation at the end by a localization-compatible definition of congruence for rational functions, so the displayed theorem sum is handled in the correct ambient ring from the start.",
+      "vet_summary": "Fatal: the assembly is conditionally coherent, but two key bottleneck lemmas are false. In particular, L3 and L5 both fail already for d = r = 1 and n = 3, so the proposed decomposition does not establish the theorem."
+    }
+  ],
+  "problem_id": "prob_20260329014048_295a0674",
+  "proof_bundle_artifact_id": "problems/prob_20260329014048_295a0674/proof_bundles/decompositions/dec_20260329024518_6336bd6d.json",
+  "proof_graph_id": null,
+  "raw_candidate_artifact_id": "problems/prob_20260329014048_295a0674/decomposition_candidates/dec_20260329024518_6336bd6d/agent2_candidate.json",
+  "revision_number": 3,
+  "shared_context": [
+    {
+      "content": "For any integer m, define [m]_q := (1-q^m)/(1-q).",
+      "kind": "definition",
+      "label": "q_integer"
+    },
+    {
+      "content": "For any parameter u and integer k >= 0, define (u;q)_k := product_{j=0}^{k-1} (1-u q^j). For several parameters, define (u,v,w;q)_k := (u;q)_k (v;q)_k (w;q)_k.",
+      "kind": "definition",
+      "label": "q_shifted_factorial"
+    },
+    {
+      "content": "Phi_n(q) denotes the nth cyclotomic polynomial.",
+      "kind": "definition",
+      "label": "cyclotomic"
+    },
+    {
+      "content": "If n \u2261 1 mod 2d, then n is odd, so r(1-n)/2 is an integer. Also k(d-dk-2r)/2 is an integer for every integer k because k(1-k) is even.",
+      "kind": "notation",
+      "label": "integral_exponents"
+    },
+    {
+      "content": "For each integer n>1, define M_n(q) := [n]_q Phi_n(q)^2.",
+      "kind": "definition",
+      "label": "final_modulus"
+    },
+    {
+      "content": "For a nonzero polynomial M(q) in Q[q], let Loc_M be the localization of Q[q,q^{-1}] obtained by inverting every polynomial V(q) in Q[q] with gcd(V(q),M(q))=1. For rational functions X(q), Y(q) in Q(q), write X(q) \u2261 Y(q) mod M(q) if X(q)-Y(q) belongs to the ideal M(q)\u00b7Loc_M.",
+      "kind": "definition",
+      "label": "localized_congruence"
+    },
+    {
+      "content": "For admissible d,r,n, define T_{d,r,n}(q) := sum_{k=0}^{n-1} [3dk+r]_q (q^r,q^r,q^d;q^{2d})_k (q^d;q^d)_k^2 q^{k(d-dk-2r)/2} / (q^{2d};q^{2d})_k, define R_{d,r,n}(q) := [rn]_q q^{r(1-n)/2}, and define F_{d,r,n}(q) := T_{d,r,n}(q) - R_{d,r,n}(q).",
+      "kind": "definition",
+      "label": "theorem_objects"
+    },
+    {
+      "content": "If a rational function H(q) is regular at a complex number zeta, then H'(zeta) and H''(zeta) denote the usual first and second complex derivatives with respect to q.",
+      "kind": "notation",
+      "label": "derivative_notation"
+    }
+  ],
+  "strategy_summary": "Unlike the rejected a-deformation attempts, this candidate does not use the false specializations at a=q^{\u00b1rn} or false deformed root-of-unity vanishing. It works directly with the original rational sum in a localization from the start, so the ambient-ring gap is fixed. The theorem is split into: (i) a direct root-of-unity vanishing of the original difference giving the [n]_q factor, and (ii) direct first- and second-derivative vanishing of that same difference at primitive nth roots, which upgrades the normalized quotient to a \u03a6_n(q)^2-multiple.",
+  "updated_at": "2026-03-29T02:52:10.643639Z"
+}
