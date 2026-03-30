@@ -30,6 +30,8 @@ def test_agent4_prompt_declares_structured_citations_and_counterexample_flag() -
     assert '"detail": "string or null"' in prompt
     assert '"cited_text": "string or null"' in prompt
     assert "citations must be a list of OBJECTS, never strings." in prompt
+    assert "The root theorem and any root semantic sketch are orientation-only background" in prompt
+    assert "The allowed_dependency_manifest is the ONLY citable external context." in prompt
 
 
 def test_agent5_prompt_declares_counterexample_status() -> None:
@@ -39,6 +41,8 @@ def test_agent5_prompt_declares_counterexample_status() -> None:
     assert 'If vetting_mode = "counterexample"' in prompt
     assert 'If vetting_mode = "proof" and the submitted proof is empty' in prompt
     assert 'you MUST actively test small admissible examples and edge cases' in prompt
+    assert "`root_semantic_sketch`" in prompt
+    assert "as circular theorem use in descendant" in prompt
 
 
 def test_agent2_retry_prompt_surfaces_hard_negative_constraints() -> None:

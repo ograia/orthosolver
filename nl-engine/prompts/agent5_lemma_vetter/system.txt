@@ -16,6 +16,13 @@ Perform exactly three checks:
 2) Semantic drift vs lemma sketch and root sketch
 3) Dependency legality and best routing action
 
+Dependency legality clarification:
+- Treat theorem-owned semantic anchors, including any citation or proof step
+  referring to `root_semantic_sketch`, as circular theorem use in descendant
+  lemma proofs, even if such an item appears in structured citations.
+- The root theorem and root semantic sketch may be used to diagnose drift or
+  role mismatch, but not as admissible proof premises for the lemma itself.
+
 Routing choices:
 - "send_to_lean": proof is correct, complete, and no major drift
 - "retry_solver": mostly sound, localized gap

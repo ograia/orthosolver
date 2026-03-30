@@ -1,3 +1,4 @@
+from nl_engine.domain.contracts import DependencyManifestItem
 from nl_engine.domain.models import DecompositionORM, LemmaORM, ProblemORM, ProofGraphEdgeORM, ProofGraphNodeORM, ProofGraphORM, TheoremORM
 from nl_engine.persistence.db import FileStore
 from nl_engine.persistence.repositories import DecompositionRepository, LemmaRepository, ProblemRepository, ProofGraphEdgeRepository, ProofGraphNodeRepository, ProofGraphRepository, TheoremRepository, TrustedContextRepository
@@ -182,6 +183,7 @@ def test_build_dependency_manifest_uses_graph_node_ids(tmp_path) -> None:
     assert all(item.item_id in graph_nodes for item in allowed)
     assert all(not item.item_id.startswith("def_") for item in allowed)
     assert all(not item.item_id.startswith("trusted_") for item in allowed)
+    assert all(item.label != "root_semantic_sketch" for item in allowed)
 
 
 def test_build_dependency_manifest_includes_transitive_definition_context(tmp_path) -> None:
@@ -369,3 +371,132 @@ def test_final_graph_integrity_projects_proof_attempt_dependencies_to_claim_cycl
     assert status == "fatal_violation"
     assert summary["cycle_found"] is True
     assert any(item.get("type") == "claim_dependency_cycle" for item in violations)
+
+
+def test_validate_solver_output_rejects_theorem_semantic_anchor_citation_even_if_present(tmp_path) -> None:
+    store = FileStore(str(tmp_path / "data"))
+    graphs = ProofGraphRepository(store)
+    nodes = ProofGraphNodeRepository(store)
+    service = ProofGraphService(store)
+
+    graph = graphs.create(
+        ProofGraphORM(
+            proof_graph_id="pgraph_theorem_anchor",
+            problem_id="prob_test",
+            root_theorem_id="thm_root",
+            root_decomposition_id="dec_root",
+            graph_status="active",
+            verification_status="retry_enforced",
+        )
+    )
+    anchor = nodes.create(
+        ProofGraphNodeORM(
+            graph_node_id="anchor_root",
+            proof_graph_id=graph.proof_graph_id,
+            node_kind="semantic_anchor",
+            owner_kind="theorem",
+            owner_id="thm_root",
+            statement_nl="root semantic sketch",
+            semantic_sketch_json={"normalized_claim": "root semantic sketch"},
+            normalized_claim_hash="anchor",
+            node_status="available",
+            metadata={"label": "root_semantic_sketch"},
+        )
+    )
+    problem = ProblemORM(problem_id="prob_test", root_theorem_id="thm_root", active_proof_graph_id=graph.proof_graph_id)
+    lemma = type(
+        "LemmaStub",
+        (),
+        {"lemma_id": "lem_test", "proof_graph_id": graph.proof_graph_id, "claim_node_id": "claim_lemma"},
+    )()
+
+    status, violations = service.validate_solver_output(
+        problem=problem,
+        lemma=lemma,
+        proof_attempt_node_id=None,
+        allowed_manifest=[
+            DependencyManifestItem(
+                item_id=anchor.graph_node_id,
+                item_kind="semantic_anchor",
+                label="root_semantic_sketch",
+                source="root_semantic_sketch",
+                content="root semantic sketch",
+            )
+        ],
+        forbidden_claims=[],
+        output_proof_nl="Apply root_semantic_sketch.",
+        citations=[
+            {
+                "citation_kind": "definition",
+                "item_id": anchor.graph_node_id,
+                "label": "root_semantic_sketch",
+                "detail": "used directly",
+            }
+        ],  # type: ignore[list-item]
+        used_forbidden_claim=False,
+        artifact_id="solver_test",
+    )
+
+    assert status == "retryable_violation"
+    assert any(item.get("type") == "forbidden_theorem_context_citation" for item in violations)
+
+
+def test_final_graph_integrity_flags_theorem_semantic_anchor_dependency(tmp_path) -> None:
+    store = FileStore(str(tmp_path / "data"))
+    graphs = ProofGraphRepository(store)
+    nodes = ProofGraphNodeRepository(store)
+    edges = ProofGraphEdgeRepository(store)
+    service = ProofGraphService(store)
+
+    graph = graphs.create(
+        ProofGraphORM(
+            proof_graph_id="pgraph_theorem_context",
+            problem_id="prob_test",
+            root_theorem_id="thm_root",
+            root_decomposition_id="dec_root",
+            graph_status="active",
+            verification_status="retry_enforced",
+        )
+    )
+    attempt = nodes.create(
+        ProofGraphNodeORM(
+            graph_node_id="attempt_child",
+            proof_graph_id=graph.proof_graph_id,
+            node_kind="proof_attempt",
+            owner_kind="lemma",
+            owner_id="lem_child",
+            statement_nl="attempt",
+            semantic_sketch_json={},
+            normalized_claim_hash=None,
+            node_status="completed",
+        )
+    )
+    anchor = nodes.create(
+        ProofGraphNodeORM(
+            graph_node_id="anchor_root",
+            proof_graph_id=graph.proof_graph_id,
+            node_kind="semantic_anchor",
+            owner_kind="theorem",
+            owner_id="thm_root",
+            statement_nl="root semantic sketch",
+            semantic_sketch_json={"normalized_claim": "root semantic sketch"},
+            normalized_claim_hash="anchor",
+            node_status="available",
+            metadata={"label": "root_semantic_sketch"},
+        )
+    )
+    edges.create(
+        ProofGraphEdgeORM(
+            edge_id=new_id("edge"),
+            proof_graph_id=graph.proof_graph_id,
+            from_node_id=attempt.graph_node_id,
+            to_node_id=anchor.graph_node_id,
+            edge_kind="proof_depends_on_definition",
+            dependency_scope="allowed",
+        )
+    )
+
+    status, violations, summary = service.final_graph_integrity(graph.proof_graph_id, artifact_id="theorem_context")
+    assert status == "fatal_violation"
+    assert summary["cycle_found"] is False
+    assert any(item.get("type") == "forbidden_theorem_context_dependency" for item in violations)

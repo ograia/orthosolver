@@ -520,16 +520,6 @@ class ProofGraphService:
                     metadata={"proof_graph_id": row.proof_graph_id},
                 )
             )
-        anchor_node = self._ensure_root_semantic_anchor_node(proof_graph_id, root)
-        allowed.append(
-            DependencyManifestItem(
-                item_id=anchor_node.graph_node_id,
-                item_kind="semantic_anchor",
-                label="root_semantic_sketch",
-                source="root_semantic_sketch",
-                content=str(root.statement_semantic_sketch.get("normalized_claim") or ""),
-            )
-        )
         forbidden_claims = self._forbidden_claims(problem, lemma, root)
         proof_attempt_node = self.nodes.create(
             ProofGraphNodeORM(
@@ -715,6 +705,23 @@ class ProofGraphService:
             elif isinstance(citation, dict):
                 normalized_citations.append(DependencyCitation.model_validate(citation))
         for citation in normalized_citations:
+            target_node = self.nodes.get(citation.item_id)
+            theorem_context_label = str(citation.label or "").strip().lower()
+            if theorem_context_label == "root_semantic_sketch" or (
+                target_node is not None
+                and target_node.proof_graph_id == proof_graph_id
+                and target_node.owner_kind == "theorem"
+                and target_node.node_kind == "semantic_anchor"
+            ):
+                violations.append(
+                    {
+                        "type": "forbidden_theorem_context_citation",
+                        "item_id": citation.item_id,
+                        "label": citation.label,
+                        "reason": "descendant proofs may not cite theorem-owned semantic anchors",
+                    }
+                )
+                continue
             if citation.item_id in forbidden_ids:
                 violations.append(
                     {
@@ -734,7 +741,6 @@ class ProofGraphService:
                     }
                 )
                 continue
-            target_node = self.nodes.get(citation.item_id)
             if target_node is None or target_node.proof_graph_id != proof_graph_id:
                 violations.append(
                     {
@@ -756,6 +762,20 @@ class ProofGraphService:
                         "reason": "proof text mentions a forbidden claim label",
                     }
                 )
+        if re.search(r"\broot_semantic_sketch\b", proof_text, flags=re.I):
+            violations.append(
+                {
+                    "type": "forbidden_theorem_context_text",
+                    "reason": "proof text explicitly cites root_semantic_sketch",
+                }
+            )
+        if re.search(r"\broot theorem\b", proof_text, flags=re.I):
+            violations.append(
+                {
+                    "type": "forbidden_theorem_context_text",
+                    "reason": "proof text explicitly cites the root theorem as a dependency source",
+                }
+            )
         if used_forbidden_claim:
             violations.append(
                 {
@@ -780,6 +800,14 @@ class ProofGraphService:
                     continue
                 scope = "allowed"
                 edge_kind = "proof_depends_on_definition"
+                if (
+                    str(citation.label or "").strip().lower() == "root_semantic_sketch"
+                    or (
+                        target_node.owner_kind == "theorem"
+                        and target_node.node_kind == "semantic_anchor"
+                    )
+                ):
+                    scope = "forbidden"
                 if citation.citation_kind == "trusted_decl":
                     edge_kind = "proof_depends_on_trusted_decl"
                 elif citation.citation_kind == "claim":
@@ -864,6 +892,24 @@ class ProofGraphService:
         adjacency: dict[str, set[str]] = defaultdict(set)
         violations: list[dict[str, Any]] = []
         for edge in edges:
+            from_node = nodes_by_id.get(edge.from_node_id)
+            to_node = nodes_by_id.get(edge.to_node_id)
+            if (
+                from_node is not None
+                and from_node.node_kind in {"proof_attempt", "claim"}
+                and to_node is not None
+                and to_node.owner_kind == "theorem"
+                and to_node.node_kind != "definition"
+            ):
+                violations.append(
+                    {
+                        "type": "forbidden_theorem_context_dependency",
+                        "edge_id": edge.edge_id,
+                        "from_node_id": edge.from_node_id,
+                        "to_node_id": edge.to_node_id,
+                        "edge_kind": edge.edge_kind,
+                    }
+                )
             if edge.edge_kind == "proof_depends_on_claim":
                 if edge.from_node_id not in nodes_by_id or edge.to_node_id not in nodes_by_id:
                     violations.append(
