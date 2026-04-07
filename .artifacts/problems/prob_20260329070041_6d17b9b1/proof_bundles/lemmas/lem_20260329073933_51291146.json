@@ -1,0 +1,78 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329073933_51291146",
+  "proof_nl": "Assume the hypotheses: n, a, b are integers with 0 <= a, 0 <= b, 2*a <= n, 2*b <= n, and a(n-a) >= b(n-b). We must show a >= b.\n\nSuppose, for contradiction, that a < b. Then a-b < 0. Also, since a < b, we have a+b < 2b, and because 2b <= n, it follows that a+b < n. Hence n-a-b > 0.\n\nNow compute\n\na(n-a)-b(n-b)\n= an-a^2-bn+b^2\n= (a-b)n-(a^2-b^2)\n= (a-b)n-(a-b)(a+b)\n= (a-b)(n-a-b).\n\nBut we have shown that a-b < 0 and n-a-b > 0, so their product is negative. Therefore\n\na(n-a)-b(n-b) = (a-b)(n-a-b) < 0,\n\nwhich means\n\na(n-a) < b(n-b).\n\nThis contradicts the assumption that a(n-a) >= b(n-b).\n\nTherefore our assumption a < b was impossible, and so a >= b. This proves the statement.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.764034+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "n, a, and b are integers.",
+      "a and b are nonnegative.",
+      "a is at most n divided by 2, and b is at most n divided by 2.",
+      "The stated bounds force n to be nonnegative as well."
+    ],
+    "normalized_claim": "For integers n, a, and b with a and b between 0 and n divided by 2 inclusive, if a times n minus a is at least b times n minus b, then a is at least b.",
+    "quantifier_order": [
+      "For every integer n, for every integer a, and for every integer b, if 0 less than or equal to a, 0 less than or equal to b, 2a less than or equal to n, and 2b less than or equal to n, then from a times (n minus a) being at least b times (n minus b), conclude that a is at least b."
+    ],
+    "variables": [
+      {
+        "domain": "all integers, further restricted by the stated inequalities",
+        "name": "n",
+        "role": "ambient parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, further restricted by the stated inequalities",
+        "name": "a",
+        "role": "first compared value",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, further restricted by the stated inequalities",
+        "name": "b",
+        "role": "second compared value",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are involved.",
+      "The conclusion depends only on the universally quantified inputs n, a, and b under the stated hypotheses."
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329074505_70b726c3"
+  ],
+  "statement_nl": "For all integers n, a, b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T07:45:05.074977+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof is correct and complete. Assuming a < b, it derives a+b < 2b <= n, hence n-a-b > 0, and factors the difference as a(n-a)-b(n-b) = (a-b)(n-a-b). Since a-b < 0 and n-a-b > 0, the product is negative, contradicting the hypothesis a(n-a) >= b(n-b). This matches the lemma\u2019s intended monotonicity-on-the-first-half argument and introduces no illicit dependencies.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329074505_70b726c3",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329073933_51291146.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T07:45:05.074977+00:00"
+  }
+}

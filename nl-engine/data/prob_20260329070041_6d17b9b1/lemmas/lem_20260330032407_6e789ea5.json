@@ -1,0 +1,108 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260330033218_4a8c393c",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-30T03:24:15.188142Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-30T03:33:16.680164Z",
+  "last_dependency_check_id": "depchk_20260330033316_6b60c575",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof is a complete direct verification from the stated definition of the Gaussian q-binomial coefficient. Under 0 <= r <= n, both r and n-r are nonnegative, so both defining expressions are legitimate. Substituting s = n-r into the formula gives [n choose n-r]_q = (q;q)_n / ((q;q)_{n-r}(q;q)_r), and commutativity of multiplication identifies this denominator with ((q;q)_r (q;q)_{n-r}), which is exactly the denominator for [n choose r]_q. Hence the two expressions are identical as polynomials in q. There is no reliance on the root theorem or other forbidden dependencies.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Fix integers n and r with 0 <= r <= n. Then r >= 0 and n-r >= 0, so both quantities [n choose r]_q and [n choose n-r]_q are defined by the given formula\n\n[n choose s]_q := (q;q)_n / ((q;q)_s (q;q)_{n-s})\n\nfor the relevant values s=r and s=n-r.\n\nNow compute directly from the definition:\n\n[n choose n-r]_q\n= (q;q)_n / ((q;q)_{n-r} (q;q)_{n-(n-r)})\n= (q;q)_n / ((q;q)_{n-r} (q;q)_r).\n\nSince multiplication is commutative,\n\n(q;q)_{n-r} (q;q)_r = (q;q)_r (q;q)_{n-r}.\n\nTherefore\n\n[n choose n-r]_q\n= (q;q)_n / ((q;q)_r (q;q)_{n-r})\n= [n choose r]_q.\n\nSo the two defining expressions are identical. Hence the Gaussian q-binomial coefficient is symmetric under replacing r by n-r; in particular, [n choose r]_q = [n choose n-r]_q as polynomials in q.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260330033316_8245e371",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260330032407_6e789ea5",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329070041_7bd7b795",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260330032407_6e789ea5.json",
+  "proof_graph_id": "pgraph_20260330033217_4ecb4e26",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Moves each lower index to the first half of [0,n] without changing the quotient.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "For all integers n and r with 0 <= r <= n, define the Gaussian q-binomial coefficient by [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1. Then [n choose r]_q = [n choose n-r]_q as polynomials in q.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n and r are integers.",
+      "The inequalities 0 <= r <= n hold.",
+      "Therefore n is automatically a nonnegative integer.",
+      "The quantities (q;q)_r, (q;q)_{n-r}, and (q;q)_n are only formed for nonnegative integer indices.",
+      "q is treated as a formal indeterminate, not as a quantified numeric variable."
+    ],
+    "normalized_claim": "For every pair of integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient is symmetric under replacing r by n-r; that is, the coefficient defined by the q-factorial ratio for r equals the one defined for n-r, as a polynomial in q.",
+    "quantifier_order": [
+      "For all integers n and r, assume 0 <= r <= n.",
+      "For each nonnegative integer m, define (q;q)_m by the stated finite product, with (q;q)_0 equal to 1.",
+      "Then the q-binomial coefficient defined from these q-factorials satisfies the symmetry identity.",
+      "The equality is asserted as an identity of polynomials in q."
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "n",
+        "role": "universally quantified index",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "r",
+        "role": "universally quantified index",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomial variable",
+        "name": "q",
+        "role": "indeterminate in the q-binomial coefficient",
+        "type": "formal variable"
+      },
+      {
+        "domain": "positive integers up to m",
+        "name": "i",
+        "role": "dummy index in the product defining q-factorials",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m",
+        "role": "parameter of the q-factorial definition",
+        "type": "nonnegative integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses appear in the statement.",
+      "The dummy index i in the product depends on the chosen parameter m.",
+      "The value of (q;q)_m depends on m, and the q-binomial coefficient for n,r depends on n, r, and q."
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-30T03:33:16.680164Z"
+}

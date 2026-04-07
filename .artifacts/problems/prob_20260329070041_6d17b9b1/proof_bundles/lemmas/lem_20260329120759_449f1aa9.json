@@ -1,0 +1,95 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329120759_449f1aa9",
+  "proof_nl": "Let\nZ := {x in X : p(x) = 0}\nand\nO := {x in X : p(x) = 1}.\nBecause p maps X into {0,1}, every element of X lies in exactly one of Z or O. Thus X = Z \u222a O and Z \u2229 O = \u2205.\n\nSince X is finite, the subsets Z and O are finite. Write\nO = {o_1, ..., o_m},\nZ = {z_1, ..., z_n},\nfor some integers m,n >= 0. The hypothesis says that the number of zero-labeled elements is at least the number of one-labeled elements, so n >= m.\n\nNow define a map iota : X -> X as follows:\n- for 1 <= i <= m, set iota(o_i) = z_i;\n- for 1 <= i <= m, set iota(z_i) = o_i;\n- for m < j <= n, set iota(z_j) = z_j.\n\nThis is well-defined because O and Z are disjoint, and every element of X is either some o_i or some z_j.\n\nWe check that iota is an involution.\n- If x = o_i with 1 <= i <= m, then iota(iota(x)) = iota(z_i) = o_i = x.\n- If x = z_i with 1 <= i <= m, then iota(iota(x)) = iota(o_i) = z_i = x.\n- If x = z_j with m < j <= n, then iota(iota(x)) = iota(z_j) = z_j = x.\nHence iota(iota(x)) = x for every x in X.\n\nNext, suppose iota(x) != x. Then x is in one of the first two cases above.\n- If x = o_i, then iota(x) = z_i, so\n  p(iota(x)) = p(z_i) = 0 = 1 - 1 = 1 - p(o_i) = 1 - p(x).\n- If x = z_i with 1 <= i <= m, then iota(x) = o_i, so\n  p(iota(x)) = p(o_i) = 1 = 1 - 0 = 1 - p(z_i) = 1 - p(x).\nThus whenever iota(x) != x, we have p(iota(x)) = 1 - p(x).\n\nFinally, if iota(x) = x, then x cannot be any o_i and cannot be any z_i with 1 <= i <= m; therefore x = z_j for some j with m < j <= n. Hence p(x) = 0.\n\nSo iota is an involution on X, every moved point is matched with a point of opposite label, and every fixed point has label 0. This is exactly the required conclusion.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.742789+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "X must be finite",
+      "p must assign each element of X either 0 or 1",
+      "the count of zero-labeled elements of X is at least the count of one-labeled elements of X",
+      "iota is a total function from X to X",
+      "iota is an involution on X",
+      "every fixed point of iota must be labeled 0",
+      "every non-fixed point must be paired with an element of the opposite label"
+    ],
+    "normalized_claim": "For any finite set X equipped with a binary labeling p, if there are at least as many zeros as ones, then X can be partitioned by an involution iota so that every moved point is matched with a point of the opposite label, and every fixed point has label 0.",
+    "quantifier_order": [
+      "For every finite set X",
+      "for every function p from X to {0,1}",
+      "if the number of x in X with p(x)=0 is at least the number of x in X with p(x)=1",
+      "then there exists a function iota from X to X",
+      "such that for every x in X, iota applied twice to x equals x",
+      "and for every x in X, if iota(x) is not x then p(iota(x)) equals 1 minus p(x)",
+      "and for every x in X, if iota(x) equals x then p(x) equals 0"
+    ],
+    "variables": [
+      {
+        "domain": "finite sets",
+        "name": "X",
+        "role": "ambient set being paired by the involution",
+        "type": "set"
+      },
+      {
+        "domain": "functions from X to the set {0,1}",
+        "name": "p",
+        "role": "binary labeling of elements of X",
+        "type": "function"
+      },
+      {
+        "domain": "functions from X to X",
+        "name": "iota",
+        "role": "witnessed involution with label-flipping on moved points",
+        "type": "function"
+      },
+      {
+        "domain": "elements of X",
+        "name": "x",
+        "role": "universally quantified element used in the pointwise conditions",
+        "type": "element"
+      }
+    ],
+    "witness_dependencies": [
+      "The witness iota depends on both X and p",
+      "For each x, the value iota(x) is determined globally by the chosen iota, not by x alone",
+      "The condition on non-fixed points depends on the paired element iota(x) and the label p(x)",
+      "There is no separate existential witness for each x; the statement requires one single global iota"
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329121352_bde187ad"
+  ],
+  "statement_nl": "Let X be a finite set, and let p : X -> {0,1} be a function. Assume that the number of elements x in X with p(x) = 0 is at least the number of elements x in X with p(x) = 1. Then there exists a map iota : X -> X such that iota(iota(x)) = x for every x in X, and such that: if iota(x) != x, then p(iota(x)) = 1 - p(x); and if iota(x) = x, then p(x) = 0.",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T12:13:52.534421+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof is correct and complete. It partitions X into the zero-labeled set Z and one-labeled set O, enumerates them as Z = {z_1,...,z_n} and O = {o_1,...,o_m} with n >= m by hypothesis, pairs each o_i with z_i, and fixes the remaining zeros. The resulting map is total, well-defined, involutive, flips labels on every moved point, and has only zero-labeled fixed points. This matches the lemma statement exactly and uses no undeclared or forbidden dependencies.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329121352_bde187ad",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329120759_449f1aa9.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T12:13:52.534421+00:00"
+  }
+}

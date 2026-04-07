@@ -1,0 +1,110 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329092458_c3931872",
+  "proof_nl": "Because 0 <= a <= b and r >= 0, the integers a, b, r+a, and r+b are all nonnegative, so every q-Pochhammer symbol appearing in the claimed identity is defined.\n\nFirst consider the case a = b. By the definition of P_{a,b,r}(q), the product from i = a+1 to b is empty, so P_{a,b,r}(q) = 1. On the other hand,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= ((q;q)_{r+a} (q;q)_a) / ((q;q)_{r+a} (q;q)_a)\n= 1.\nSo the identity holds when a = b.\n\nNow assume a < b. We use the following elementary consequence of the definition of (q;q)_n: for any nonnegative integers m < n,\n(q;q)_n = (q;q)_m \\prod_{j=m+1}^n (1 - q^j).\nIndeed, if m = 0 then this is just (q;q)_n = 1 \\cdot \\prod_{j=1}^n (1 - q^j), using (q;q)_0 = 1; if m > 0, it follows by splitting the defining product for (q;q)_n after the factor j = m.\n\nApply this with m = r+a and n = r+b. Since a < b, we have r+a < r+b, so\n(q;q)_{r+b} = (q;q)_{r+a} \\prod_{j=r+a+1}^{r+b} (1 - q^j).\nApply it again with m = a and n = b:\n(q;q)_b = (q;q)_a \\prod_{j=a+1}^{b} (1 - q^j).\n\nSince each factor 1 - q^j is a nonzero polynomial, these products are invertible in the rational function field Z(q). Therefore,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{j=r+a+1}^{r+b} (1 - q^j)}{\\prod_{j=a+1}^{b} (1 - q^j)}.\n\nNow reindex the numerator by writing j = r+i. As j runs from r+a+1 to r+b, the index i runs from a+1 to b. Hence\n\\prod_{j=r+a+1}^{r+b} (1 - q^j) = \\prod_{i=a+1}^{b} (1 - q^{r+i}).\nSubstituting this gives\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{i=a+1}^{b} (1 - q^{r+i})}{\\prod_{i=a+1}^{b} (1 - q^i)}\n= \\prod_{i=a+1}^{b} \\frac{1 - q^{r+i}}{1 - q^i}\n= P_{a,b,r}(q),\nwhere the last equality is exactly the definition of P_{a,b,r}(q).\n\nThus, in all cases,\nP_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\nin the rational function field Z(q).",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.716458+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, and r are integers",
+      "a and b satisfy 0 <= a <= b",
+      "r is nonnegative",
+      "q is not a numeric value but an indeterminate",
+      "n is restricted to nonnegative integers in the definition of q-Pochhammer",
+      "The product defining P runs over integers i from a + 1 to b inclusive",
+      "When a = b, the product defining P is the empty product and equals 1",
+      "When n = 0, the q-Pochhammer symbol equals 1"
+    ],
+    "normalized_claim": "For every integer triple a, b, r with 0 <= a <= b and r >= 0, if P of a, b, r at q is defined as the product over i from a + 1 to b of (1 minus q to the power r plus i) divided by (1 minus q to the power i), with empty product equal to 1 when a = b, and if q-Pochhammer n is defined for nonnegative n as the product over j from 1 to n of (1 minus q to the power j), with value 1 at n = 0, then P of a, b, r at q equals the ratio of q-Pochhammer terms: q-Pochhammer at r + b times q-Pochhammer at a divided by q-Pochhammer at r + a times q-Pochhammer at b, as an identity of rational functions.",
+    "quantifier_order": [
+      "For all integers a, b, r with 0 <= a <= b and r >= 0",
+      "Let q be an indeterminate",
+      "For each nonnegative integer n, define the q-Pochhammer symbol",
+      "Then the stated identity holds in the rational function field over the integers"
+    ],
+    "variables": [
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers satisfying a <= b",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable in the rational function field over the integers",
+        "name": "q",
+        "role": "symbolic parameter of the identity",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index used only in the definition of the q-Pochhammer symbol",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a + 1 through b",
+        "name": "i",
+        "role": "dummy index in the product defining P",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 1 through n",
+        "name": "j",
+        "role": "dummy index in the product defining q-Pochhammer",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are present",
+      "The identity is explicit and does not depend on choosing auxiliary objects",
+      "The only dependencies are definitional: P depends on a, b, r, and q; q-Pochhammer depends on n and q"
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329093318_e886e3c3"
+  ],
+  "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate and define P_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with the empty product equal to 1 when a = b. For each nonnegative integer n, define (q;q)_n := product_{j=1}^n (1 - q^j), with (q;q)_0 := 1. Then one has the identity in the rational function field Z(q): P_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b).",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T09:33:19.062401+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof establishes exactly the claimed q-Pochhammer identity. It correctly separates the empty-product case a = b, then for a < b expands (q;q)_{r+b} and (q;q)_b relative to (q;q)_{r+a} and (q;q)_a, cancels in the rational function field, reindexes the numerator product, and matches the definition of P_{a,b,r}(q). This aligns with the lemma sketch and its role as a product-to-factorial-ratio rewrite. No undeclared or forbidden dependencies are used.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329093318_e886e3c3",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329092458_c3931872.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T09:33:19.062401+00:00"
+  }
+}

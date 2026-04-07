@@ -1,0 +1,1086 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/decomposer/attempt_20260330022045_8fc25ef0_track_1",
+  "attempt_count": 1,
+  "attempt_number": 2,
+  "completed_at": "2026-03-30T02:39:23.324548Z",
+  "continuation_generation": 1,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-30T02:20:45.453957Z",
+  "error_payload": null,
+  "execution_id": "exec_20260330022026_2c10e88b",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [
+      {
+        "controller_status": "failed",
+        "decision": "accepted",
+        "decomposition_id": "dec_20260329073907_f9f6a76b",
+        "disguised_difficulty": [],
+        "drift_severity": "none",
+        "equivalence_risk": "none",
+        "failure_mode": "accepted",
+        "failure_origin": "child_lemma_false",
+        "fixes_required": [],
+        "full_candidate": {
+          "assembly_plan": {
+            "final_step_yields_exact_root": true,
+            "proof_skeleton_nl": "Fix integers n, k, l with 0 <= k, l <= n and assume that [n choose k]_q / [n choose l]_q is a polynomial. First use the symmetry [n choose r]_q = [n choose n-r]_q to replace k and l by k' = min(k, n-k) and l' = min(l, n-l); this leaves the quotient unchanged and puts both indices in the first half of [0,n]. Since the reduced quotient is still a polynomial, a general degree argument shows that the degree of its numerator is at least the degree of its denominator. Using deg([n choose r]_q) = r(n-r), this becomes k'(n-k') >= l'(n-l'). On the first half of the interval, the quadratic r(n-r) is increasing, so k' >= l'. Writing a = l', b = k', and r = n-a-b, the reduced quotient becomes the shifted interval q-factorial ratio product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)). Cyclotomic counting then turns the assumption that this product is a polynomial into the floor inequalities floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d. The bottleneck lemma asserts that any shifted interval product satisfying those inequalities has nonnegative coefficients. Applying that lemma to the reduced quotient and then substituting back yields the original theorem.",
+            "steps": [
+              {
+                "derives": "Let k' := min(k, n-k) and l' := min(l, n-l). Then [n choose k]_q / [n choose l]_q = [n choose k']_q / [n choose l']_q. Also 0 <= k', 0 <= l', 2*k' <= n, and 2*l' <= n.",
+                "is_trivial": false,
+                "step_id": "A1",
+                "trivial_justification": "Apply the symmetry [n choose r]_q = [n choose n-r]_q from L1 separately to r = k and r = l. By definition of minimum, k' and l' lie in the first half of the interval [0,n], so 2*k' <= n and 2*l' <= n.",
+                "uses_lemmas": [
+                  "L1"
+                ],
+                "uses_prior_steps": []
+              },
+              {
+                "derives": "The two polynomials [n choose k']_q and [n choose l']_q are nonzero and have degrees k'(n-k') and l'(n-l') respectively.",
+                "is_trivial": false,
+                "step_id": "A2",
+                "trivial_justification": "Instantiate L2 first with r = k' and then with r = l'. This yields both nonzeroness and the exact degree formulas needed later.",
+                "uses_lemmas": [
+                  "L2"
+                ],
+                "uses_prior_steps": [
+                  "A1"
+                ]
+              },
+              {
+                "derives": "deg([n choose k']_q) >= deg([n choose l']_q).",
+                "is_trivial": false,
+                "step_id": "A3",
+                "trivial_justification": "By the theorem hypothesis, the original quotient [n choose k]_q / [n choose l]_q is a polynomial in Z[q]. By A1, the reduced quotient [n choose k']_q / [n choose l']_q is the same polynomial. Since A2 shows that both numerator and denominator are nonzero polynomials, L3 applies and gives the degree inequality.",
+                "uses_lemmas": [
+                  "L3"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A2"
+                ]
+              },
+              {
+                "derives": "k'(n-k') >= l'(n-l').",
+                "is_trivial": true,
+                "step_id": "A4",
+                "trivial_justification": "Substitute the explicit degree formulas from A2 into the inequality of A3.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A2",
+                  "A3"
+                ]
+              },
+              {
+                "derives": "k' >= l'. If we set a := l' and b := k', then 0 <= a <= b and a + b <= n.",
+                "is_trivial": false,
+                "step_id": "A5",
+                "trivial_justification": "A1 gives 2*k' <= n and 2*l' <= n, so k' and l' satisfy the first-half hypotheses of L4. Applying L4 to the inequality from A4 shows k' >= l'. Defining a := l' and b := k' then gives 0 <= a <= b, and a + b <= 2*b <= n.",
+                "uses_lemmas": [
+                  "L4"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A4"
+                ]
+              },
+              {
+                "derives": "With a := l', b := k', and r := n-a-b, the original quotient satisfies [n choose k]_q / [n choose l]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).",
+                "is_trivial": false,
+                "step_id": "A6",
+                "trivial_justification": "By A5, the integers a and b satisfy 0 <= a <= b and a + b <= n, so L5 applies. It rewrites the reduced quotient [n choose b]_q / [n choose a]_q as the shifted interval product with r = n-a-b. Using A1, this reduced quotient is exactly the original quotient.",
+                "uses_lemmas": [
+                  "L5"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A5"
+                ]
+              },
+              {
+                "derives": "For every positive integer d, floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).",
+                "is_trivial": false,
+                "step_id": "A7",
+                "trivial_justification": "The theorem hypothesis says that the original quotient is a polynomial in Z[q]. By A6, that quotient is exactly P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)). Applying L6 to this product yields the required family of floor inequalities.",
+                "uses_lemmas": [
+                  "L6"
+                ],
+                "uses_prior_steps": [
+                  "A6"
+                ]
+              },
+              {
+                "derives": "The product product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) is a polynomial in Z[q] whose coefficients are all nonnegative.",
+                "is_trivial": false,
+                "step_id": "A8",
+                "trivial_justification": "A7 gives exactly the hypothesis required in L7 for the parameters a, b, r. Therefore L7 implies that the shifted interval product has nonnegative coefficients.",
+                "uses_lemmas": [
+                  "L7"
+                ],
+                "uses_prior_steps": [
+                  "A7"
+                ]
+              },
+              {
+                "derives": "The polynomial [n choose k]_q / [n choose l]_q has all coefficients nonnegative.",
+                "is_trivial": true,
+                "step_id": "A9",
+                "trivial_justification": "By A6, the original quotient equals the shifted interval product. By A8, that product has only nonnegative coefficients. Therefore the original quotient has only nonnegative coefficients.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A6",
+                  "A8"
+                ]
+              }
+            ]
+          },
+          "candidate_index": 0,
+          "context_items": [
+            {
+              "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+              "kind": "definition",
+              "label": "qPochhammer"
+            },
+            {
+              "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+              "kind": "definition",
+              "label": "gaussianQBinomial"
+            },
+            {
+              "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+              "kind": "notation",
+              "label": "integerPolynomialRing"
+            },
+            {
+              "content": "A product over an empty index set is interpreted as 1.",
+              "kind": "notation",
+              "label": "emptyProduct"
+            }
+          ],
+          "drift_self_check": {
+            "all_lemmas_consistent_with_root_sketch": true,
+            "inconsistencies_noted": []
+          },
+          "formalization_cost_estimate_total": 0.81,
+          "lemmas": [
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.05,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L1",
+              "proof_nl": null,
+              "role_in_assembly": "Allows replacement of k and l by k' := min(k, n-k) and l' := min(l, n-l) without changing the quotient.",
+              "self_check_notes": "All nonstandard notation is defined inside the statement; no hidden references are used.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                  "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+                ],
+                "normalized_claim": "[n choose r]_q = [n choose n-r]_q in Z[q].",
+                "quantifier_order": [
+                  "For all integers n and r",
+                  "assume 0 <= r <= n"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "upper index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "lower index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n and r with 0 <= r <= n, if the Gaussian q-binomial coefficient is defined by [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1, then [n choose r]_q = [n choose n-r]_q as polynomials in q.",
+              "strictly_easier_reason": "This is the basic complement symmetry of Gaussian binomial coefficients; it has no divisibility or positivity content."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.08,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L2",
+              "proof_nl": null,
+              "role_in_assembly": "Provides explicit degrees and nonzeroness for the reduced numerator and denominator.",
+              "self_check_notes": "The statement defines every nonstandard symbol locally and is independent of the parent theorem.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                  "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+                ],
+                "normalized_claim": "[n choose r]_q belongs to Z[q], is nonzero, and has degree r(n-r).",
+                "quantifier_order": [
+                  "For all integers n and r",
+                  "assume 0 <= r <= n"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "upper index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "lower index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1, is a nonzero polynomial in Z[q] of degree r(n-r).",
+              "strictly_easier_reason": "This is a standard structural fact about a single Gaussian q-binomial coefficient; it does not involve any quotient positivity."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.05,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L3",
+              "proof_nl": null,
+              "role_in_assembly": "Converts the assumption that the reduced quotient is a polynomial into an inequality between the degrees of its numerator and denominator.",
+              "self_check_notes": "Only standard polynomial notation is used; no hidden theorem references appear.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "A(q) and B(q) are nonzero integer-coefficient polynomials"
+                ],
+                "normalized_claim": "deg(A) >= deg(B).",
+                "quantifier_order": [
+                  "For all polynomials A(q) and B(q) in Z[q]",
+                  "assume A(q) != 0 and B(q) != 0",
+                  "assume A(q)/B(q) lies in Z[q]"
+                ],
+                "variables": [
+                  {
+                    "domain": "Z[q]",
+                    "name": "A",
+                    "role": "numerator polynomial",
+                    "type": "polynomial"
+                  },
+                  {
+                    "domain": "Z[q]",
+                    "name": "B",
+                    "role": "denominator polynomial",
+                    "type": "polynomial"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let A(q) and B(q) be nonzero polynomials in Z[q]. If the rational function A(q) / B(q) is itself a polynomial in Z[q], then deg(A) >= deg(B).",
+              "strictly_easier_reason": "This is a general algebraic fact about polynomial division and degrees, unrelated to Gaussian-specific positivity."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.06,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L4",
+              "proof_nl": null,
+              "role_in_assembly": "After symmetrization into the first half, turns the degree inequality into an ordering k' >= l'.",
+              "self_check_notes": "The lemma is a self-contained arithmetic fact; no notation from other lemmas is needed.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "a and b lie in the integer interval [0, n/2]"
+                ],
+                "normalized_claim": "a >= b.",
+                "quantifier_order": [
+                  "For all integers n, a, b",
+                  "assume 0 <= a and 0 <= b",
+                  "assume 2*a <= n and 2*b <= n",
+                  "assume a(n-a) >= b(n-b)"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "ambient size parameter",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "first index in the first half of [0,n]",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "second index in the first half of [0,n]",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n, a, b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+              "strictly_easier_reason": "This is a one-variable quadratic monotonicity statement on integers, with no q-series content."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.12,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L5",
+              "proof_nl": null,
+              "role_in_assembly": "Rewrites the reduced Gaussian quotient as the canonical shifted interval q-factorial ratio P_{a,b,r}(q).",
+              "self_check_notes": "All objects are defined in the statement, including the shift r and the empty-product convention.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t})",
+                  "(q;q)_m := product_{j=1}^m (1 - q^j), with (q;q)_0 := 1",
+                  "empty products are interpreted as 1"
+                ],
+                "normalized_claim": "[n choose b]_q / [n choose a]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).",
+                "quantifier_order": [
+                  "For all integers n, a, b, r",
+                  "assume 0 <= a <= b",
+                  "assume a + b <= n",
+                  "assume r = n - a - b"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "ambient size parameter",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "smaller lower index",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "larger lower index",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift parameter defined by r = n-a-b",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For integers n, a, b with 0 <= a <= b and a + b <= n, define r := n - a - b. Then the quotient of Gaussian q-binomial coefficients satisfies [n choose b]_q / [n choose a]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), where [n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t}), (q;q)_m := product_{j=1}^m (1 - q^j), (q;q)_0 := 1, and an empty product is interpreted as 1.",
+              "strictly_easier_reason": "This is an exact algebraic cancellation identity; it does not address when the quotient is polynomial or whether coefficients are positive."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.25,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L6",
+              "proof_nl": null,
+              "role_in_assembly": "Converts polynomiality of the shifted interval product into explicit floor inequalities counting multiples in the shifted and unshifted intervals.",
+              "self_check_notes": "The product P_{a,b,r}(q) and the floor inequalities are fully stated locally; no external definitions are needed.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i))",
+                  "empty products are interpreted as 1"
+                ],
+                "normalized_claim": "P_{a,b,r}(q) lies in Z[q] iff floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d.",
+                "quantifier_order": [
+                  "For all integers a, b, r",
+                  "assume 0 <= a <= b and r >= 0",
+                  "for every positive integer d"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "left endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "right endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift from denominator interval to numerator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "positive integers",
+                    "name": "d",
+                    "role": "test modulus in the floor-count condition",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Then P_{a,b,r}(q) belongs to Z[q] if and only if for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).",
+              "strictly_easier_reason": "This is a cyclotomic-divisibility criterion; it is about when the quotient is a polynomial, not about coefficient positivity."
+            },
+            {
+              "bottleneck_reason": "After symmetry reduction, degree ordering, and algebraic rewriting, the original theorem is exactly reduced to this positivity statement for shifted interval q-factorial ratios under the floor-count condition.",
+              "formalization_cost_estimate": 0.83,
+              "lemma_relation_to_parent": "bottleneck",
+              "local_id": "L7",
+              "proof_nl": null,
+              "role_in_assembly": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+              "self_check_notes": "The hard floor condition is stated explicitly; the lemma is fully local and does not refer to any other lemma.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i))",
+                  "empty products are interpreted as 1"
+                ],
+                "normalized_claim": "P_{a,b,r}(q) belongs to Z[q], and all coefficients of P_{a,b,r}(q) are nonnegative.",
+                "quantifier_order": [
+                  "For all integers a, b, r",
+                  "assume 0 <= a <= b and r >= 0",
+                  "assume for every positive integer d that floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d)"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "left endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "right endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift from denominator interval to numerator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "positive integers",
+                    "name": "d",
+                    "role": "test modulus in the floor-count condition",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+              "strictly_easier_reason": null
+            }
+          ],
+          "shared_context": [
+            {
+              "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+              "kind": "definition",
+              "label": "qPochhammer"
+            },
+            {
+              "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+              "kind": "definition",
+              "label": "gaussianQBinomial"
+            },
+            {
+              "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+              "kind": "notation",
+              "label": "integerPolynomialRing"
+            },
+            {
+              "content": "A product over an empty index set is interpreted as 1.",
+              "kind": "notation",
+              "label": "emptyProduct"
+            }
+          ],
+          "strategy_summary": "Reduce the Gaussian quotient to the height-zero q-factorial ratio P_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) by complement symmetry and degree monotonicity on the first half of the index range. Then use cyclotomic-factor counting to convert polynomiality into explicit floor inequalities counting multiples in two equal-length intervals. The remaining frontier step is an isolated positivity theorem for these shifted interval products."
+        },
+        "invalidated_by_lemma_id": "lem_20260329074016_d9949d95",
+        "invalidated_by_statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+        "lean_assembly_status": "skipped",
+        "lean_v2_prepare_status": null,
+        "llm_vetting_status": "accepted",
+        "missing_coverage": [],
+        "rejection_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+        "source_lineage_depth": 0,
+        "source_node_id": "thm_root_20260329070041_7bd7b795",
+        "source_node_kind": "theorem",
+        "source_relation": "current_node",
+        "source_statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+        "strategy_summary": "Reduce the Gaussian quotient to the height-zero q-factorial ratio P_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) by complement symmetry and degree monotonicity on the first half of the index range. Then use cyclotomic-factor counting to convert polynomiality into explicit floor inequalities counting multiples in two equal-length intervals. The remaining frontier step is an isolated positivity theorem for these shifted interval products.",
+        "vet_summary": "All seven lemmas are plausible and the assembly reaches the exact root claim. The reduction steps L1-L6 are standard and sufficient to put the quotient into the shifted-interval form required by L7. The only real proof burden is concentrated in L7, which is an explicitly identified bottleneck and is close to the normalized core of the parent theorem, but the surrounding lemmas are genuine simplifications rather than semantic noise."
+      }
+    ],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "shared_context": [],
+    "theorem_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix integers n, k, l with 0 <= k, l <= n and assume that [n choose k]_q / [n choose l]_q is a polynomial. First use complement symmetry to replace k and l by k' = min(k, n-k) and l' = min(l, n-l); this does not change the quotient and puts both indices in the first half of [0,n]. Because the reduced quotient is still a polynomial, a degree argument shows that k'(n-k') >= l'(n-l'). Since the quadratic r(n-r) is increasing on the first half, this forces k' >= l'. Next interpret [n choose r]_q as the rank generating polynomial of the finite ranked set R_{n,r} of partitions inside an r x (n-r) rectangle. The bottleneck lemma then says that, under the polynomiality hypothesis, R_{n,k'} can be partitioned into disjoint rank-shifted copies of R_{n,l'}. Summing q^{rank} over that partition factors the rank generating polynomial of R_{n,k'} by that of R_{n,l'}, and the quotient is explicitly a sum of monomials q^{c_x} with nonnegative coefficients. Translating back through the rectangle-partition interpretation and the initial symmetry step gives the desired nonnegativity for the original quotient.",
+          "steps": [
+            {
+              "derives": "Let k' := min(k, n-k) and l' := min(l, n-l). Then [n choose k]_q / [n choose l]_q = [n choose k']_q / [n choose l']_q. Also 0 <= k', 0 <= l', 2*k' <= n, and 2*l' <= n.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "Apply the symmetry [n choose r]_q = [n choose n-r]_q from L1 separately to r = k and r = l. Replacing k or l by its complement n-k or n-l does not change the quotient. By definition of minimum, both k' and l' lie in the first half of [0,n], so 2*k' <= n and 2*l' <= n.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomials [n choose k']_q and [n choose l']_q are nonzero and have degrees k'(n-k') and l'(n-l') respectively.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Instantiate L2 first with r = k' and then with r = l'. This gives nonzeroness of both reduced Gaussian coefficients and the explicit degree formulas needed in the next steps.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "deg([n choose k']_q) >= deg([n choose l']_q).",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "By the theorem hypothesis, the original quotient [n choose k]_q / [n choose l]_q is a polynomial in Z[q]. Step A1 shows that the reduced quotient [n choose k']_q / [n choose l']_q is exactly the same polynomial. Since A2 shows that both reduced factors are nonzero, write [n choose k']_q = [n choose l']_q * C(q) for that polynomial C(q). Lemma L3 then yields the degree inequality.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2"
+              ]
+            },
+            {
+              "derives": "k' >= l'. Consequently 0 <= l' <= k' and 2*k' <= n, so 0 <= l' <= k' <= n/2.",
+              "is_trivial": false,
+              "step_id": "A4",
+              "trivial_justification": "From A2 and A3, substitute the explicit degrees to obtain k'(n-k') >= l'(n-l'). Step A1 gives 2*k' <= n and 2*l' <= n. Applying L4 with a = k' and b = l' shows k' >= l'. The remaining inequalities are immediate from A1.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2",
+                "A3"
+              ]
+            },
+            {
+              "derives": "There exist a finite index set X, pairwise disjoint subsets S_x of R_{n,k'}, integers c_x >= 0, and bijections phi_x : R_{n,l'} -> S_x such that R_{n,k'} is the disjoint union of the subsets S_x and |phi_x(mu)| = c_x + |mu| for every x in X and every mu in R_{n,l'}.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "By A4, the reduced indices satisfy 0 <= l' <= k' and 2*k' <= n. By A1, the reduced quotient [n choose k']_q / [n choose l']_q is a polynomial in Z[q]. Therefore the hypotheses of L6 are satisfied with n, k', and l', and L6 produces exactly the stated rank-shifted partition of R_{n,k'} by copies of R_{n,l'}.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A4"
+              ]
+            },
+            {
+              "derives": "sum_{lambda in R_{n,k'}} q^{|lambda|} = (sum_{mu in R_{n,l'}} q^{|mu|}) (sum_{x in X} q^{c_x}).",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "Apply L7 to the finite ranked set A := R_{n,k'} with rank function rho_A(lambda) := |lambda|, to the finite ranked set B := R_{n,l'} with rank function rho_B(mu) := |mu|, and to the partition data supplied by A5. Lemma L7 then gives the stated factorization of rank generating polynomials.",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            },
+            {
+              "derives": "[n choose k']_q = [n choose l']_q (sum_{x in X} q^{c_x}). Hence [n choose k']_q / [n choose l']_q = sum_{x in X} q^{c_x}, which is a polynomial with nonnegative coefficients.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "Apply L5 with r = k' to identify sum_{lambda in R_{n,k'}} q^{|lambda|} with [n choose k']_q, and apply L5 with r = l' to identify sum_{mu in R_{n,l'}} q^{|mu|} with [n choose l']_q. Substituting these identifications into A6 gives [n choose k']_q = [n choose l']_q (sum_{x in X} q^{c_x}). By A2 the polynomial [n choose l']_q is nonzero, so in the integral domain Z[q] we may divide and obtain the exact formula for the reduced quotient. Because each c_x is a nonnegative integer, the right-hand side has nonnegative integer coefficients.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A6"
+              ]
+            },
+            {
+              "derives": "The polynomial [n choose k]_q / [n choose l]_q has only nonnegative coefficients.",
+              "is_trivial": true,
+              "step_id": "A8",
+              "trivial_justification": "Step A1 identifies the original quotient with the reduced quotient, and A7 shows that the reduced quotient equals sum_{x in X} q^{c_x} with all coefficients nonnegative.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A1",
+                "A7"
+              ]
+            },
+            {
+              "derives": "For all integers n, k, l with 0 <= k, l <= n, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+              "is_trivial": true,
+              "step_id": "A9",
+              "trivial_justification": "The argument in A1-A8 was carried out for arbitrary integers n, k, l satisfying the theorem hypotheses, so universal generalization yields the stated theorem exactly.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A8"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+            "kind": "definition",
+            "label": "qPochhammer"
+          },
+          {
+            "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+            "kind": "definition",
+            "label": "gaussianQBinomial"
+          },
+          {
+            "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+            "kind": "notation",
+            "label": "integerPolynomialRing"
+          },
+          {
+            "content": "For integers n,r with 0 <= r <= n, R_{n,r} denotes the set of weakly decreasing r-tuples lambda = (lambda_1,...,lambda_r) of integers satisfying n-r >= lambda_1 >= ... >= lambda_r >= 0; if r = 0, then R_{n,0} consists of the unique empty tuple. The rank of lambda is |lambda| := lambda_1 + ... + lambda_r, and the empty tuple has rank 0.",
+            "kind": "definition",
+            "label": "rectanglePartitions"
+          },
+          {
+            "content": "For a finite ranked set (A,rho), its rank generating polynomial means sum_{a in A} q^(rho(a)).",
+            "kind": "notation",
+            "label": "rankGeneratingPolynomial"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.8,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.04,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Allows replacement of k and l by k' := min(k,n-k) and l' := min(l,n-l) without changing the quotient.",
+            "self_check_notes": "All nonstandard notation is defined locally; the statement is independent of the parent theorem.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+              ],
+              "normalized_claim": "[n choose r]_q = [n choose n-r]_q in Z[q].",
+              "quantifier_order": [
+                "For all integers n and r",
+                "assume 0 <= r <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "upper index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "lower index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For all integers n and r with 0 <= r <= n, define the Gaussian q-binomial coefficient by [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1. Then [n choose r]_q = [n choose n-r]_q as polynomials in q.",
+            "strictly_easier_reason": "This is the basic complement symmetry of Gaussian binomial coefficients; it has no divisibility or positivity content."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.07,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Provides nonzeroness and the exact degree formula needed for the degree comparison after symmetrization.",
+            "self_check_notes": "Every symbol is introduced in the statement; no hidden references appear.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+              ],
+              "normalized_claim": "[n choose r]_q belongs to Z[q], is nonzero, and has degree r(n-r).",
+              "quantifier_order": [
+                "For all integers n and r",
+                "assume 0 <= r <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "upper index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "lower index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For all integers n and r with 0 <= r <= n, define [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1. Then [n choose r]_q is a nonzero polynomial in Z[q] of degree r(n-r).",
+            "strictly_easier_reason": "This is a standard structural fact about a single Gaussian q-binomial coefficient and does not concern quotients."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.04,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Transforms the hypothesis that the reduced quotient is a polynomial into an inequality between the degrees of the reduced numerator and denominator.",
+            "self_check_notes": "Only standard polynomial notions are used; the statement is fully self-contained.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A(q), B(q), C(q) are polynomials with integer coefficients"
+              ],
+              "normalized_claim": "deg(A) >= deg(B).",
+              "quantifier_order": [
+                "For all polynomials A(q), B(q), and C(q) in Z[q]",
+                "assume A(q) != 0 and B(q) != 0",
+                "assume A(q) = B(q) C(q)"
+              ],
+              "variables": [
+                {
+                  "domain": "Z[q]",
+                  "name": "A",
+                  "role": "numerator polynomial",
+                  "type": "polynomial"
+                },
+                {
+                  "domain": "Z[q]",
+                  "name": "B",
+                  "role": "denominator polynomial",
+                  "type": "polynomial"
+                },
+                {
+                  "domain": "Z[q]",
+                  "name": "C",
+                  "role": "polynomial quotient",
+                  "type": "polynomial"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A(q) and B(q) be nonzero polynomials in Z[q]. If there exists a polynomial C(q) in Z[q] such that A(q) = B(q) C(q), then deg(A) >= deg(B).",
+            "strictly_easier_reason": "This is a general algebraic fact about polynomial divisibility and degrees; it is unrelated to Gaussian-specific positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "After symmetrization into the first half of the interval, converts the degree inequality into the ordering k' >= l'.",
+            "self_check_notes": "The lemma is purely arithmetic and uses only standard notation.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "a and b lie in the integer interval [0, n/2]"
+              ],
+              "normalized_claim": "a >= b.",
+              "quantifier_order": [
+                "For all integers n, a, b",
+                "assume 0 <= a and 0 <= b",
+                "assume 2*a <= n and 2*b <= n",
+                "assume a(n-a) >= b(n-b)"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "ambient size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "a",
+                  "role": "first index in the first half of [0,n]",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "b",
+                  "role": "second index in the first half of [0,n]",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For all integers n, a, b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+            "strictly_easier_reason": "This is a one-variable arithmetic monotonicity fact with no q-series content."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.14,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Interprets each Gaussian q-binomial coefficient as the rank generating polynomial of partitions inside a rectangle.",
+            "self_check_notes": "The ranked set R_{n,r}, the rank function, and the Gaussian coefficient are all defined inside the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "R_{n,r} is the set of weakly decreasing r-tuples lambda with n-r >= lambda_1 >= ... >= lambda_r >= 0; for r = 0 there is one empty tuple",
+                "|lambda| is the sum of the entries of lambda",
+                "[n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+              ],
+              "normalized_claim": "The rank generating polynomial of R_{n,r} is [n choose r]_q.",
+              "quantifier_order": [
+                "For all integers n and r",
+                "assume 0 <= r <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "ambient size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "rectangle height parameter",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For integers n and r with 0 <= r <= n, define R_{n,r} to be the set of weakly decreasing r-tuples lambda = (lambda_1,...,lambda_r) of integers satisfying n-r >= lambda_1 >= ... >= lambda_r >= 0; if r = 0, let R_{n,0} consist of the unique empty tuple. Define |lambda| := lambda_1 + ... + lambda_r, and for the empty tuple set |lambda| := 0. Then sum_{lambda in R_{n,r}} q^{|lambda|} = [n choose r]_q, where [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), (q;q)_m := product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+            "strictly_easier_reason": "This is the standard partition interpretation of a single Gaussian q-binomial coefficient; it does not involve any quotient."
+          },
+          {
+            "bottleneck_reason": "This is the structural heart of the new strategy. It replaces the previously rejected generic shifted-interval positivity claim by a different and stronger combinatorial decomposition statement inside the rectangle-partition model.",
+            "formalization_cost_estimate": 0.92,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Supplies the new frontier theorem: polynomial divisibility of same-top Gaussian coefficients forces a rank-shifted tiling of the larger rectangle-partition set by copies of the smaller one.",
+            "self_check_notes": "The Gaussian coefficients, the ranked sets R_{n,r}, the rank function, and all existential witnesses are defined locally with no cross-reference.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "[n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1",
+                "R_{n,r} is the set of weakly decreasing r-tuples lambda with n-r >= lambda_1 >= ... >= lambda_r >= 0; for r = 0 there is one empty tuple",
+                "|lambda| is the sum of the entries of lambda"
+              ],
+              "normalized_claim": "R_{n,k} can be partitioned into disjoint subsets, each rank-shiftedly bijective to R_{n,l}.",
+              "quantifier_order": [
+                "For all integers n, k, l",
+                "assume 0 <= l <= k",
+                "assume 2*k <= n",
+                "assume [n choose k]_q / [n choose l]_q lies in Z[q]"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "ambient size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "k",
+                  "role": "larger lower index after symmetry reduction",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "l",
+                  "role": "smaller lower index after symmetry reduction",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": [
+                "The finite set X, the subsets S_x, the shifts c_x, and the bijections phi_x depend on n, k, and l."
+              ]
+            },
+            "statement_nl": "For integers n, k, l with 0 <= l <= k and 2*k <= n, define [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}) for 0 <= r <= n, where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1. For each integer r with 0 <= r <= n, define R_{n,r} to be the set of weakly decreasing r-tuples lambda = (lambda_1,...,lambda_r) of integers satisfying n-r >= lambda_1 >= ... >= lambda_r >= 0; if r = 0, let R_{n,0} consist of the unique empty tuple. For lambda in R_{n,r}, define |lambda| := lambda_1 + ... + lambda_r, and for the empty tuple set |lambda| := 0. Assume that the quotient [n choose k]_q / [n choose l]_q is a polynomial in Z[q]. Then there exist a finite index set X, pairwise disjoint subsets S_x of R_{n,k}, integers c_x >= 0, and bijections phi_x : R_{n,l} -> S_x such that R_{n,k} is the disjoint union of the subsets S_x and, for every x in X and every mu in R_{n,l}, one has |phi_x(mu)| = c_x + |mu|.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L7",
+            "proof_nl": null,
+            "role_in_assembly": "Converts the rank-shifted tiling from the bottleneck lemma into an explicit factorization whose quotient has manifestly nonnegative coefficients.",
+            "self_check_notes": "All sets, maps, and rank functions are introduced in the statement; the claim is entirely self-contained.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A, B, and X are finite",
+                "rho_A and rho_B take values in the nonnegative integers"
+              ],
+              "normalized_claim": "The rank generating polynomial of A factors as the rank generating polynomial of B times a polynomial with nonnegative integer coefficients.",
+              "quantifier_order": [
+                "For all finite sets A, B, X",
+                "for all rank functions rho_A : A -> Z_{>=0} and rho_B : B -> Z_{>=0}",
+                "assume A is the disjoint union of subsets S_x indexed by X",
+                "assume for each x in X there exists c_x >= 0 and a bijection phi_x : B -> S_x with rho_A(phi_x(b)) = c_x + rho_B(b) for all b in B"
+              ],
+              "variables": [
+                {
+                  "domain": "finite sets",
+                  "name": "A",
+                  "role": "larger ranked set",
+                  "type": "finite set"
+                },
+                {
+                  "domain": "finite sets",
+                  "name": "B",
+                  "role": "template ranked set",
+                  "type": "finite set"
+                },
+                {
+                  "domain": "finite sets",
+                  "name": "X",
+                  "role": "indexing set for the partition of A",
+                  "type": "finite set"
+                },
+                {
+                  "domain": "functions A -> Z_{>=0}",
+                  "name": "rho_A",
+                  "role": "rank function on A",
+                  "type": "function"
+                },
+                {
+                  "domain": "functions B -> Z_{>=0}",
+                  "name": "rho_B",
+                  "role": "rank function on B",
+                  "type": "function"
+                }
+              ],
+              "witness_dependencies": [
+                "The polynomial sum_{x in X} q^{c_x} depends on the chosen partition data."
+              ]
+            },
+            "statement_nl": "Let A and B be finite sets equipped with rank functions rho_A : A -> Z_{>=0} and rho_B : B -> Z_{>=0}. Suppose there exist a finite index set X, pairwise disjoint subsets S_x of A, integers c_x >= 0, and bijections phi_x : B -> S_x such that A is the disjoint union of the subsets S_x and rho_A(phi_x(b)) = c_x + rho_B(b) for every x in X and every b in B. Then sum_{a in A} q^{rho_A(a)} = (sum_{b in B} q^{rho_B(b)}) (sum_{x in X} q^{c_x}). In particular, the quotient of the two rank generating polynomials is a polynomial in Z[q] with nonnegative coefficients.",
+            "strictly_easier_reason": "This is a general bookkeeping statement about finite ranked sets and disjoint unions of shifted copies; it is independent of Gaussian binomials."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+            "kind": "definition",
+            "label": "qPochhammer"
+          },
+          {
+            "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+            "kind": "definition",
+            "label": "gaussianQBinomial"
+          },
+          {
+            "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+            "kind": "notation",
+            "label": "integerPolynomialRing"
+          },
+          {
+            "content": "For integers n,r with 0 <= r <= n, R_{n,r} denotes the set of weakly decreasing r-tuples lambda = (lambda_1,...,lambda_r) of integers satisfying n-r >= lambda_1 >= ... >= lambda_r >= 0; if r = 0, then R_{n,0} consists of the unique empty tuple. The rank of lambda is |lambda| := lambda_1 + ... + lambda_r, and the empty tuple has rank 0.",
+            "kind": "definition",
+            "label": "rectanglePartitions"
+          },
+          {
+            "content": "For a finite ranked set (A,rho), its rank generating polynomial means sum_{a in A} q^(rho(a)).",
+            "kind": "notation",
+            "label": "rankGeneratingPolynomial"
+          }
+        ],
+        "strategy_summary": "Unlike the rejected floor-inequality/shifted-product frontier, this candidate does not normalize the problem to a generic shifted interval product at all. It works in the rectangle-partition model for Gaussian coefficients and isolates a different bottleneck: a rank-shifted tiling of the partition set for the k x (n-k) rectangle by copies of the partition set for the l x (n-l) rectangle; once that tiling exists, nonnegativity of the quotient is immediate from rank generating functions."
+      }
+    ],
+    "status": "completed"
+  },
+  "started_at": "2026-03-30T02:20:45.807065Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260329070041_7bd7b795",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-30T02:39:23.324548Z",
+  "worker_job_id": "wrk_thm_root_20260329070041_7bd7b795_decompose_1_track_1_req_20260330022045_a1ffe779",
+  "worker_kind": "decomposition_generation"
+}

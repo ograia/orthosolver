@@ -1,0 +1,131 @@
+{
+  "assembly_plan_id": "asm_20260330030818_75c42584",
+  "created_at": "2026-03-30T03:15:18.802305Z",
+  "decomposition_id": "dec_20260330030818_c19409c7",
+  "is_trivially_composable": false,
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_skeleton_nl": "Start with the original quotient and use complement symmetry to move both lower indices into the first half of the interval [0,n]. A degree comparison then forces the numerator index to be at least the denominator index in that first-half range. After renaming the indices as a <= b and writing r = n-a-b, the quotient becomes the balanced q-factorial ratio \\(([r+b]_q! [a]_q!)/([r+a]_q! [b]_q!)\\), equivalently the shifted product \\(\\prod_{i=a+1}^{b} (1-q^{r+i})/(1-q^i)\\).\n\nThe key change from the rejected strategy is that we do not try to prove positivity directly from divisibility or floor inequalities. Instead, define the explicit graded ring \\(R_{a,b} = \\mathbb{Q}[e_1,\\dots,e_b]/(e_1,\\dots,e_a)\\) and the canonical complete homogeneous elements \\(\\bar h_t\\) coming from the generating relation \\((\\sum (-1)^i e_i z^i)(\\sum h_t z^t)=1\\). The bottleneck lemma states that polynomiality of the shifted product implies that \\(\\bar h_{r+a+1},\\dots,\\bar h_{r+b}\\) is a regular sequence in \\(R_{a,b}\\). Once this is known, the standard Hilbert-series formula for quotienting by a homogeneous regular sequence shows that the Hilbert series of the resulting quotient ring is exactly the reduced quotient. Because a Hilbert series is by definition a sum of graded dimensions, all coefficients are nonnegative. Finally, substitute back the identity between the original Gaussian quotient and the reduced product to obtain the theorem exactly as stated.",
+  "root_node_id": "thm_root_20260329070041_7bd7b795",
+  "steps": [
+    {
+      "derives": "Define k' := min(k, n-k) and l' := min(l, n-l). Then \\([n \\choose k]_q / [n \\choose l]_q = [n \\choose k']_q / [n \\choose l']_q\\). Also \\(0 \\le k'\\), \\(0 \\le l'\\), \\(2k' \\le n\\), and \\(2l' \\le n\\).",
+      "is_trivial": false,
+      "step_id": "A1",
+      "trivial_justification": "Apply the symmetry \\([n \\choose r]_q = [n \\choose n-r]_q\\) from L1 separately to r = k and r = l. By the definition of minimum, k' and l' lie in the first half of [0,n].",
+      "uses_lemmas": [
+        "L1"
+      ],
+      "uses_prior_steps": []
+    },
+    {
+      "derives": "The polynomials \\([n \\choose k']_q\\) and \\([n \\choose l']_q\\) are nonzero, with degrees \\(k'(n-k')\\) and \\(l'(n-l')\\) respectively.",
+      "is_trivial": false,
+      "step_id": "A2",
+      "trivial_justification": "Instantiate L2 for r = k' and again for r = l'.",
+      "uses_lemmas": [
+        "L2"
+      ],
+      "uses_prior_steps": [
+        "A1"
+      ]
+    },
+    {
+      "derives": "\\(\\deg [n \\choose k']_q \\ge \\deg [n \\choose l']_q\\).",
+      "is_trivial": false,
+      "step_id": "A3",
+      "trivial_justification": "The theorem hypothesis says the original quotient is a polynomial in q. By A1 the reduced quotient is the same polynomial. Since A2 gives nonzeroness of numerator and denominator, L3 applies to the reduced quotient.",
+      "uses_lemmas": [
+        "L3"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2"
+      ]
+    },
+    {
+      "derives": "\\(k' \\ge l'\\). If we set \\(a := l'\\), \\(b := k'\\), and \\(r := n-a-b\\), then \\(0 \\le a \\le b\\) and \\(r \\ge 0\\).",
+      "is_trivial": false,
+      "step_id": "A4",
+      "trivial_justification": "From A2 and A3, one has \\(k'(n-k') \\ge l'(n-l')\\). The hypotheses \\(2k' \\le n\\) and \\(2l' \\le n\\) from A1 allow application of L4, yielding \\(k' \\ge l'\\). Therefore \\(a \\le b\\), and since \\(b \\le n/2\\), one gets \\(a+b \\le 2b \\le n\\), hence \\(r = n-a-b \\ge 0\\).",
+      "uses_lemmas": [
+        "L4"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "derives": "The original quotient equals the balanced q-factorial ratio\n\\[\n\\frac{[n \\choose k]_q}{[n \\choose l]_q}\n= \\frac{[n \\choose b]_q}{[n \\choose a]_q}\n= \\frac{[r+b]_q!\\,[a]_q!}{[r+a]_q!\\,[b]_q!}\n= \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\n\\]",
+      "is_trivial": false,
+      "step_id": "A5",
+      "trivial_justification": "By A4, the integers a and b satisfy 0 <= a <= b and a+b <= n, so L5 applies. A1 identifies the original quotient with the reduced quotient \\([n \\choose b]_q/[n \\choose a]_q\\).",
+      "uses_lemmas": [
+        "L5"
+      ],
+      "uses_prior_steps": [
+        "A1",
+        "A4"
+      ]
+    },
+    {
+      "derives": "Define \\(\\Lambda_b := \\mathbb{Q}[e_1,\\dots,e_b]\\) with \\(\\deg e_i = i\\), define \\(R_{a,b} := \\Lambda_b/(e_1,\\dots,e_a)\\), and define \\(h_t\\) by \\((\\sum_{i=0}^{b} (-1)^i e_i z^i)(\\sum_{t\\ge 0} h_t z^t)=1\\), where \\(e_0 := 1\\). Let \\(\\bar h_t\\) be the image of \\(h_t\\) in \\(R_{a,b}\\). Then\n\\[\n\\operatorname{Hilb}(R_{a,b};q)=\\frac{1}{\\prod_{i=a+1}^{b}(1-q^i)},\n\\]\nand for each i with \\(a+1 \\le i \\le b\\), the element \\(\\bar h_{r+i}\\) is homogeneous of degree \\(r+i\\).",
+      "is_trivial": false,
+      "step_id": "A6",
+      "trivial_justification": "Apply L6 with the values a, b, and m = r+i for each relevant i. This provides both the ambient Hilbert series and the degrees of the canonical elements that will be quotiented out.",
+      "uses_lemmas": [
+        "L6"
+      ],
+      "uses_prior_steps": [
+        "A4"
+      ]
+    },
+    {
+      "derives": "The sequence \\(\\bar h_{r+a+1},\\bar h_{r+a+2},\\dots,\\bar h_{r+b}\\) is a regular sequence in the graded ring \\(R_{a,b}\\).",
+      "is_trivial": false,
+      "step_id": "A7",
+      "trivial_justification": "By the theorem hypothesis and A5, the product \\(\\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}\\) belongs to Z[q]. The ring \\(R_{a,b}\\) and the elements \\(\\bar h_t\\) are exactly those defined in L7, so L7 applies and yields regularity.",
+      "uses_lemmas": [
+        "L7"
+      ],
+      "uses_prior_steps": [
+        "A5"
+      ]
+    },
+    {
+      "derives": "The quotient ring \\(R_{a,b}/(\\bar h_{r+a+1},\\dots,\\bar h_{r+b})\\) has Hilbert series\n\\[\n\\operatorname{Hilb}(R_{a,b}/(\\bar h_{r+a+1},\\dots,\\bar h_{r+b});q)\n= \\frac{1}{\\prod_{i=a+1}^{b}(1-q^i)}\\prod_{i=a+1}^{b}(1-q^{r+i})\n= \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\n\\]",
+      "is_trivial": false,
+      "step_id": "A8",
+      "trivial_justification": "Use L8 with R = R_{a,b} and the homogeneous sequence \\(f_i := \\bar h_{r+i}\\) for i = a+1,...,b. A6 gives the Hilbert series of R and the degrees of the f_i, while A7 gives the regular-sequence hypotheses. Substituting these data into the formula of L8 yields the displayed product.",
+      "uses_lemmas": [
+        "L8"
+      ],
+      "uses_prior_steps": [
+        "A6",
+        "A7"
+      ]
+    },
+    {
+      "derives": "Every coefficient of \\(\\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}\\) is a nonnegative integer.",
+      "is_trivial": true,
+      "step_id": "A9",
+      "trivial_justification": "By definition of Hilbert series, the coefficient of q^d in the polynomial from A8 is \\(\\dim_{\\mathbb Q}(R_{a,b}/(\\bar h_{r+a+1},\\dots,\\bar h_{r+b}))_d\\), which is nonnegative.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A8"
+      ]
+    },
+    {
+      "derives": "The polynomial \\([n \\choose k]_q / [n \\choose l]_q\\) has all coefficients nonnegative.",
+      "is_trivial": true,
+      "step_id": "A10",
+      "trivial_justification": "A5 identifies the original quotient with the product treated in A9, so the coefficientwise nonnegativity established there is exactly the desired conclusion.",
+      "uses_lemmas": [],
+      "uses_prior_steps": [
+        "A5",
+        "A9"
+      ]
+    }
+  ]
+}

@@ -393,6 +393,7 @@ class Orchestrator:
         root = self.theorems.get(problem.root_theorem_id) if problem.root_theorem_id else None
         if not root:
             raise ValueError("root theorem not found")
+        anchor = self._resume_anchor_lemma(problem)
 
         def _flush_worker_usage() -> None:
             self._flush_worker_usage_buffer()
@@ -446,20 +447,20 @@ class Orchestrator:
                 problem = self.problems.get(problem.problem_id)
                 return problem
 
-            if self._current_root_track_count(problem.problem_id, root.theorem_id) < self._root_parallel_take_k(cfg):
+            if anchor is None and self._current_root_track_count(problem.problem_id, root.theorem_id) < self._root_parallel_take_k(cfg):
                 changed |= self._generate_root_decompositions(problem, root, cfg)
 
             if not cfg.mode.nl_only_mode:
                 changed |= self._ensure_assembly_jobs(problem, root, cfg)
 
             if not problem.active_decomposition_id:
-                changed |= self._select_active_or_fail(problem, root, cfg)
+                if anchor is None:
+                    changed |= self._select_active_or_fail(problem, root, cfg)
             else:
                 # If the active decomposition was rejected by the final check,
                 # clear it so a new one can be selected on the next tick.
                 active_check = self.decompositions.get(problem.active_decomposition_id)
                 if active_check and active_check.controller_status == ControllerStatus.FAILED.value:
-                    anchor = self._resume_anchor_lemma(problem)
                     if anchor is not None:
                         self.event_logger.transition(
                             problem.problem_id,
@@ -473,6 +474,15 @@ class Orchestrator:
                             problem,
                             reason="branch_exhausted_starting_root_replan",
                         )
+                    problem.active_decomposition_id = None
+                    self.problems.touch(problem)
+                    changed = True
+                elif (
+                    active_check
+                    and anchor is None
+                    and active_check.node_kind == NodeKind.LEMMA.value
+                    and active_check.controller_status == ControllerStatus.SUCCEEDED.value
+                ):
                     problem.active_decomposition_id = None
                     self.problems.touch(problem)
                     changed = True
@@ -508,6 +518,7 @@ class Orchestrator:
                 changed |= self._finalize_if_complete(problem, root, cfg)
 
             changed |= self._clear_resume_anchor_if_resolved(problem)
+            anchor = self._resume_anchor_lemma(problem)
             if problem.status == ProblemStatus.RUNNING.value:
                 changed |= self._maybe_fail_dead_frontier(problem, root, cfg)
 
@@ -1561,12 +1572,12 @@ class Orchestrator:
             hops += sum(
                 1
                 for row in self.decompositions.list_by_node(problem_id, lineage_node_id)
-                if self._child_decomposition_is_false_frontier(row)
+                if self._child_decomposition_is_descendant_false_frontier(row)
             )
             hops += sum(
                 1
                 for row in self.decomposition_candidates.list_by_node(problem_id, lineage_node_id)
-                if self._child_decomposition_is_false_frontier(row)
+                if self._child_decomposition_is_descendant_false_frontier(row)
             )
         return hops
 
@@ -1848,11 +1859,12 @@ class Orchestrator:
         return collected
 
     @staticmethod
-    def _child_decomposition_is_false_frontier(row: Any) -> bool:
-        return str(getattr(row, "failure_origin", "") or "").strip() in {
-            "agent3:false_lemma",
-            "child_lemma_false",
-        }
+    def _child_decomposition_proves_current_lemma_false(row: Any) -> bool:
+        return str(getattr(row, "failure_origin", "") or "").strip() == "agent3:false_lemma"
+
+    @staticmethod
+    def _child_decomposition_is_descendant_false_frontier(row: Any) -> bool:
+        return str(getattr(row, "failure_origin", "") or "").strip() == "child_lemma_false"
 
     @staticmethod
     def _child_decomposition_is_live_accepted(row: Any) -> bool:
@@ -3048,7 +3060,7 @@ class Orchestrator:
         node_decs = self.decompositions.list_by_node(problem.problem_id, lemma.lemma_id)
         candidate_rows = self.decomposition_candidates.list_by_node(problem.problem_id, lemma.lemma_id)
         if not node_decs:
-            false_candidate = next((row for row in candidate_rows if self._child_decomposition_is_false_frontier(row)), None)
+            false_candidate = next((row for row in candidate_rows if self._child_decomposition_proves_current_lemma_false(row)), None)
             if false_candidate is not None:
                 self._invalidate_parent_decomposition(
                     problem,
@@ -3154,9 +3166,9 @@ class Orchestrator:
                         return True
             return False
 
-        false_child = next((d for d in node_decs if self._child_decomposition_is_false_frontier(d)), None)
+        false_child = next((d for d in node_decs if self._child_decomposition_proves_current_lemma_false(d)), None)
         if false_child is None:
-            false_candidate = next((row for row in candidate_rows if self._child_decomposition_is_false_frontier(row)), None)
+            false_candidate = next((row for row in candidate_rows if self._child_decomposition_proves_current_lemma_false(row)), None)
             if false_candidate is not None:
                 self._invalidate_parent_decomposition(
                     problem,

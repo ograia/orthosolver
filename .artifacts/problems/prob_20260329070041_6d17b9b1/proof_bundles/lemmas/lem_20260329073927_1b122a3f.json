@@ -1,0 +1,77 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329073927_1b122a3f",
+  "proof_nl": "Assume that the rational function A(q)/B(q) is a polynomial in Z[q]. Then there exists a polynomial C(q) in Z[q] such that\n\nA(q)=B(q)C(q).\n\nBecause A(q) and B(q) are both nonzero, C(q) must also be nonzero: if C(q)=0, then A(q)=B(q)C(q)=0, contradicting that A(q) is nonzero.\n\nNow let r=deg(B) and s=deg(C). Since B and C are nonzero, we may write\n\nB(q)=b_r q^r + b_{r-1} q^{r-1}+\\cdots+b_0, with b_r\\neq 0,\nC(q)=c_s q^s + c_{s-1} q^{s-1}+\\cdots+c_0, with c_s\\neq 0.\n\nIn the product B(q)C(q), every term has degree at most r+s, because it comes from multiplying q^i by q^j with i\\le r and j\\le s. The coefficient of q^{r+s} is b_r c_s, which is nonzero because b_r and c_s are nonzero integers. Therefore the product B(q)C(q) has degree exactly r+s. Hence\n\ndeg(A)=deg(B(q)C(q))=r+s=deg(B)+deg(C).\n\nSince C is a nonzero polynomial, deg(C)=s\\ge 0. Therefore\n\ndeg(A)=deg(B)+deg(C)\\ge deg(B).\n\nThis proves that deg(A)\\ge deg(B).",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.762913+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "A and B must be nonzero polynomials so that their degrees are defined and the quotient is meaningful as a rational function.",
+      "A and B lie in the polynomial ring with integer coefficients in q.",
+      "The hypothesis that A divided by B is itself a polynomial means the rational function has no remaining denominator after simplification and is an element of the same polynomial ring."
+    ],
+    "normalized_claim": "For every pair of nonzero integer coefficient polynomials A and B in q, if A divided by B is a polynomial in q, then degree of A is at least degree of B.",
+    "quantifier_order": [
+      "For all polynomials A and B with integer coefficients in q, assuming both are nonzero, if the quotient A divided by B is itself a polynomial with integer coefficients in q, then the degree of A is at least the degree of B."
+    ],
+    "variables": [
+      {
+        "domain": "polynomial variable",
+        "name": "q",
+        "role": "symbol used to form polynomials",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "polynomials with integer coefficients in q",
+        "name": "A",
+        "role": "numerator polynomial",
+        "type": "polynomial"
+      },
+      {
+        "domain": "polynomials with integer coefficients in q",
+        "name": "B",
+        "role": "denominator polynomial",
+        "type": "polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement.",
+      "The conclusion depends only on the pair A, B and the assumption that the quotient belongs to the polynomial ring."
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329074559_1297e592"
+  ],
+  "statement_nl": "Let A(q) and B(q) be nonzero polynomials in Z[q]. If the rational function A(q) / B(q) is itself a polynomial in Z[q], then deg(A) >= deg(B).",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T07:45:59.177134+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof is mathematically correct and complete for the stated lemma. From the hypothesis that A(q)/B(q) is a polynomial in Z[q], it introduces C(q) with A = BC, uses nonzeroness of A and B to conclude C is nonzero, and then proves deg(BC) = deg(B) + deg(C) by inspecting leading terms. Since deg(C) >= 0, it follows that deg(A) >= deg(B). This matches the lemma sketch and the stated assembly role.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329074559_1297e592",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329073927_1b122a3f.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T07:45:59.177134+00:00"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329105924_711791c7",
+  "proof_nl": "Let I = {a+1, a+2, ..., b}. Fix j >= 0. Since a >= 0, every i in I is a positive integer. Hence any term q^(m i) with m > floor(j/i) has degree greater than j, so it cannot contribute to the coefficient of q^j in a product whose other factors also have only nonnegative exponents. Therefore\n[q^j] F_{a,b,r}(q) = [q^j] product_{i in I} ((1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i)).\nThe right-hand side is now the coefficient of a finite product of finite sums, so we may expand it by the ordinary distributive law.\n\nFor each i in I, write\n(1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i) = (sum_{m=0}^{floor(j/i)} q^(m i)) + (- q^(r+i) sum_{m=0}^{floor(j/i)} q^(m i)).\nIn the full expansion of the product, choose the second bracket exactly for those i belonging to some subset S of I. For each i, also choose one integer m_i >= 0 from the geometric sum. The resulting monomial is then\n(-1)^(|S|) q^( sum_{i in I} m_i i + sum_{s in S} (r+s) ).\nHence\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all families (m_i)_{i in I} of nonnegative integers satisfying sum_{i in I} m_i i + sum_{s in S}(r+s) = j of (-1)^(|S|).\n(The bounds m_i <= floor(j/i) are automatic from the displayed equation, so they do not need to be written separately.)\n\nNow such a family (m_i)_{i in I} is the same thing as a finite multiset lambda of elements of I: namely, lambda contains exactly m_i copies of i for each i in I. Conversely, every finite multiset of elements of I gives such a family of multiplicities. Under this bijection,\n|lambda| = sum_{i in I} i m_i.\nTherefore, for each fixed S, the inner sum is exactly over those finite multisets lambda of elements of I such that\n|lambda| + sum_{s in S}(r+s) = j.\nSo we get\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all finite multisets lambda of elements of I with |lambda| + sum_{s in S}(r+s) = j of (-1)^(|S|).\nBy the definition of X_j, this is exactly\nsum_{(S,lambda) in X_j} (-1)^(|S|).\nThus [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|), as claimed.\n\nFinally, the sum over X_j is finite: if (S,lambda) belongs to X_j, then |lambda| <= j, and since every element of I is at least 1, lambda has at most j elements. Because I is finite, there are only finitely many such multisets lambda, and there are only finitely many subsets S of I. So the right-hand side is well-defined.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.729513+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a and b are integers with 0 <= a <= b.",
+      "r and j are nonnegative integers.",
+      "I is finite because it consists of the integers from a+1 through b.",
+      "Every i in the product lies in I, hence i is a positive integer since a >= 0.",
+      "m ranges over nonnegative integers.",
+      "S must be a subset of I.",
+      "lambda must be a finite multiset whose elements all lie in I.",
+      "The symbol |lambda| means the sum of the multiset elements, not the number of elements.",
+      "The constraint for membership in X_j is |lambda| plus the sum over s in S of r+s equals j.",
+      "The coefficient extraction [q^j] is understood in the formal power series sense."
+    ],
+    "normalized_claim": "For every integers a, b, r, j with 0 <= a <= b and r, j nonnegative, let I be the set of integers from a+1 through b and let F be the finite product over i in I of (1 minus q to the power r+i) times the geometric series in q to the power i. Then the coefficient of q to the j in F equals the sum over all pairs (S, lambda) where S is a subset of I and lambda is a finite multiset of elements of I whose element-sum plus the sum of r+s over s in S is j, with each pair weighted by minus one to the power of the size of S.",
+    "quantifier_order": [
+      "For all integers a, b, r, j satisfying 0 <= a <= b and r >= 0 and j >= 0.",
+      "Define I as the integers from a+1 through b.",
+      "Define F as the finite product over i in I of (1 minus q to the power r+i) times the geometric series sum over m >= 0 of q to the power m i.",
+      "Define X_j as the set of pairs (S, lambda) with S a subset of I and lambda a finite multiset of elements of I such that the total sum of lambda plus the sum of r+s over s in S equals j.",
+      "Then the coefficient of q to the j in F equals the signed sum over X_j of minus one to the power of the size of S."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "lower bound for the interval defining I",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with a <= b",
+        "name": "b",
+        "role": "upper bound for the interval defining I",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "shift parameter in the product and in the constraint defining X_j",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "j",
+        "role": "target coefficient index and total weight constraint",
+        "type": "integer"
+      },
+      {
+        "domain": "formal power series variable",
+        "name": "q",
+        "role": "series variable for F",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "integers from a+1 through b",
+        "name": "I",
+        "role": "index set for the product and for the combinatorial data",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "elements of I",
+        "name": "i",
+        "role": "product index",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m",
+        "role": "summation index in the geometric series factor",
+        "type": "integer"
+      },
+      {
+        "domain": "subsets of I",
+        "name": "S",
+        "role": "subset chosen in an indexed pair in X_j",
+        "type": "set"
+      },
+      {
+        "domain": "finite multisets of elements of I",
+        "name": "lambda",
+        "role": "multiset chosen in an indexed pair in X_j",
+        "type": "finite multiset"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses outside the indexed pairs in X_j; the statement is an equality of two expressions for each fixed a, b, r, j.",
+      "Membership in X_j depends jointly on S and lambda through the same total weight j.",
+      "The summand depends only on S through its cardinality, but the indexing set also counts all admissible lambda with the required total sum."
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329110735_6a0df599"
+  ],
+  "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Put I := {a+1, a+2, ..., b}. Define the formal power series F_{a,b,r}(q) := product_{i in I} ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T11:07:35.535422+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof matches the stated combinatorial coefficient-extraction lemma. It correctly truncates each geometric series when extracting [q^j] because all exponents are nonnegative, expands the resulting finite product by subsets S and choices of multiplicities m_i, and then identifies those multiplicity families with finite multisets lambda of elements of I. The resulting signed enumeration is exactly the definition of X_j, and finiteness of the indexing set is justified. No forbidden or undeclared dependencies are used.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329110735_6a0df599",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105924_711791c7.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T11:07:35.535422+00:00"
+  }
+}

@@ -1,0 +1,541 @@
+{
+  "artifact_prefix": "problems/prob_20260330014701_128d3cb6/decomposer/attempt_20260330014735_16e9e73d_track_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-30T02:29:30.428057Z",
+  "continuation_generation": 0,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-30T01:47:35.850181Z",
+  "error_payload": null,
+  "execution_id": "exec_20260330014701_4e7d0ed2",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent2_first_root",
+  "max_attempts": 2,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the q-binomial coefficients are taken in the standard Gaussian sense",
+        "the ratio is only considered under the condition that it simplifies to a polynomial in q"
+      ],
+      "normalized_claim": "For every integer triple n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient indexed by k and the one indexed by l is actually a polynomial in q, then every coefficient of that polynomial is nonnegative.",
+      "quantifier_order": [
+        "for all integers n, k, l",
+        "assume 0 <= k <= n and 0 <= l <= n",
+        "if the ratio of the two q-binomial coefficients is a polynomial in q",
+        "then that polynomial has only nonnegative coefficients"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first q-binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second q-binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "parameter of the q-binomial coefficient and the ratio",
+          "type": "indeterminate"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witness is stated",
+        "The conclusion depends on the given integers n, k, l and on the assumption that the ratio is polynomial in q"
+      ]
+    },
+    "shared_context": [],
+    "theorem_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260330014701_128d3cb6",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix an arbitrary triple (n,k,\u2113) under the theorem\u2019s hypotheses. First replace k and \u2113 by k' = min(k,n-k) and \u2113' = min(\u2113,n-\u2113); by Gaussian symmetry this does not change the quotient, and the assumption that the quotient is a polynomial forces \u2113' \u2264 k' \u2264 n/2. Next rewrite the reduced quotient as the balanced four-term q-factorial ratio ((q;q)_{\u2113'} (q;q)_{n-\u2113'}) / ((q;q)_{k'} (q;q)_{n-k'}). Cyclotomic factorization converts the polynomiality assumption into the family of floor inequalities required by the balanced q-factorial-ratio positivity theorem. Applying that bottleneck theorem yields coefficientwise nonnegativity for the reduced quotient, and therefore also for the original quotient.",
+          "steps": [
+            {
+              "derives": "Fix arbitrary integers n,k,\u2113 with 0 \u2264 k,\u2113 \u2264 n, and assume that Q(q) := [n choose k]_q / [n choose \u2113]_q is a polynomial in q.",
+              "is_trivial": true,
+              "step_id": "A0",
+              "trivial_justification": "This is the standard setup for proving a universally quantified implication: fix an arbitrary triple satisfying the hypotheses and name the quotient Q(q).",
+              "uses_lemmas": [],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "Define k' := min(k,n-k) and \u2113' := min(\u2113,n-\u2113).",
+              "is_trivial": true,
+              "step_id": "A1",
+              "trivial_justification": "This is a direct definition of the reduced indices.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A0"
+              ]
+            },
+            {
+              "derives": "Q(q) = [n choose k']_q / [n choose \u2113']_q as a rational function in q.",
+              "is_trivial": true,
+              "step_id": "A2",
+              "trivial_justification": "Lemma L1 states exactly that replacing each index by its minimum with its complement leaves the quotient unchanged.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "The reduced indices satisfy 0 \u2264 \u2113' \u2264 k' \u2264 \u230an/2\u230b.",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "Lemma L2 gives deg([n choose r]_q)=r(n-r), and the degree function r(n-r) is weakly increasing on 0 \u2264 r \u2264 n/2. Since the quotient Q(q) is assumed polynomial in A0, its degree is nonnegative, so the degree of [n choose k']_q is at least the degree of [n choose \u2113']_q. Therefore \u2113' \u2264 k'; by definition of k' and \u2113', both also lie in [0,\u230an/2\u230b].",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A0",
+                "A1"
+              ]
+            },
+            {
+              "derives": "Set a := \u2113', b := n-\u2113', c := k', and d := n-k'. Then a+b=c+d=n and a \u2264 c \u2264 d \u2264 b.",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "From A3, \u2113' \u2264 k' \u2264 n/2. Hence a=\u2113' \u2264 c=k', and c=k' \u2264 n-k'=d. Also d=n-k' \u2264 n-\u2113'=b. Finally a+b=\u2113'+(n-\u2113')=n=k'+(n-k')=c+d.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A3"
+              ]
+            },
+            {
+              "derives": "Q(q) = ((q;q)_a (q;q)_b) / ((q;q)_c (q;q)_d).",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "By A2, Q(q) equals [n choose k']_q / [n choose \u2113']_q. The inequalities in A3 allow Lemma L3 to be applied to the triple (n,k',\u2113'). Lemma L3 rewrites this quotient as ((q;q)_{\u2113'} (q;q)_{n-\u2113'}) / ((q;q)_{k'} (q;q)_{n-k'}), which is exactly the displayed expression after substituting the definitions from A4.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A2",
+                "A3",
+                "A4"
+              ]
+            },
+            {
+              "derives": "For every positive integer m, one has \u230aa/m\u230b + \u230ab/m\u230b - \u230ac/m\u230b - \u230ad/m\u230b \u2265 0.",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "From A0 and A2, the reduced quotient [n choose k']_q / [n choose \u2113']_q is itself a polynomial in q. Lemma L4 applies to the ordered triple (n,k',\u2113') from A3, and therefore says that for every positive integer m the cyclotomic exponent \u230a\u2113'/m\u230b + \u230a(n-\u2113')/m\u230b - \u230ak'/m\u230b - \u230a(n-k')/m\u230b is nonnegative. Using the substitutions a=\u2113', b=n-\u2113', c=k', d=n-k' from A4 gives exactly the displayed inequalities.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A0",
+                "A2",
+                "A4"
+              ]
+            },
+            {
+              "derives": "Q(q) is a polynomial whose coefficients are all nonnegative integers.",
+              "is_trivial": false,
+              "step_id": "A7",
+              "trivial_justification": "Step A4 gives the balancing and ordering hypotheses a+b=c+d and a \u2264 c \u2264 d \u2264 b. Step A6 gives the required floor inequalities for every positive integer m. Therefore Lemma L5 applies to the four-term q-factorial ratio F(q)=((q;q)_a (q;q)_b)/((q;q)_c (q;q)_d). Lemma L5 concludes that F(q) lies in Z[q] and has only nonnegative coefficients. By A5, Q(q)=F(q), so Q(q) has only nonnegative coefficients.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A4",
+                "A5",
+                "A6"
+              ]
+            },
+            {
+              "derives": "For all integers n,k,\u2113 with 0 \u2264 k,\u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then every coefficient of that polynomial is nonnegative.",
+              "is_trivial": false,
+              "step_id": "A8",
+              "trivial_justification": "The triple (n,k,\u2113) in A0 was arbitrary subject to the theorem\u2019s hypotheses, and A7 proves the desired coefficientwise nonnegativity for the corresponding quotient Q(q). Universal generalization therefore yields exactly the root theorem statement.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A0",
+                "A7"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer m \u2265 0, define (q;q)_m := \u220f_{i=1}^m (1-q^i), with the convention (q;q)_0 := 1.",
+            "kind": "definition",
+            "label": "finite q-Pochhammer symbol"
+          },
+          {
+            "content": "For integers n,r with 0 \u2264 r \u2264 n, define [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+            "kind": "definition",
+            "label": "Gaussian q-binomial coefficient"
+          },
+          {
+            "content": "For each positive integer d, \u03a6_d(q) denotes the d-th cyclotomic polynomial, characterized by 1-q^m = \u220f_{d|m} \u03a6_d(q) for every positive integer m.",
+            "kind": "definition",
+            "label": "cyclotomic polynomials"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.81,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.08,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Reduces the theorem to indices in the half-interval [0,n/2] without changing the quotient.",
+            "self_check_notes": "All nonstandard notation is defined locally; the statement is a standalone symmetry identity.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n is a nonnegative integer",
+                "0 \u2264 r \u2264 n",
+                "0 \u2264 k,\u2113 \u2264 n"
+              ],
+              "normalized_claim": "Gaussian symmetry holds: [n choose r]_q = [n choose n-r]_q. Therefore replacing k and \u2113 by k' = min(k,n-k) and \u2113' = min(\u2113,n-\u2113) leaves the quotient [n choose k]_q / [n choose \u2113]_q unchanged.",
+              "quantifier_order": [
+                "for all integers n \u2265 0",
+                "for all integers r with 0 \u2264 r \u2264 n",
+                "for all integers k,\u2113 with 0 \u2264 k,\u2113 \u2264 n"
+              ],
+              "variables": [
+                {
+                  "domain": "nonnegative integers",
+                  "name": "n",
+                  "role": "upper index of the Gaussian coefficients",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 r \u2264 n",
+                  "name": "r",
+                  "role": "single lower index in the symmetry identity",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 k \u2264 n",
+                  "name": "k",
+                  "role": "original numerator index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 \u2113 \u2264 n",
+                  "name": "\u2113",
+                  "role": "original denominator index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "Gaussian parameter",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required"
+              ]
+            },
+            "statement_nl": "For every integer n \u2265 0 and every integer r with 0 \u2264 r \u2264 n, define (q;q)_m := \u220f_{i=1}^m (1-q^i) for m \u2265 1 and (q;q)_0 := 1, and define the Gaussian q-binomial coefficient by [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}). Then [n choose r]_q = [n choose n-r]_q. Consequently, for any integers n,k,\u2113 with 0 \u2264 k,\u2113 \u2264 n, if k' := min(k,n-k) and \u2113' := min(\u2113,n-\u2113), then [n choose k]_q / [n choose \u2113]_q = [n choose k']_q / [n choose \u2113']_q as rational functions in q.",
+            "strictly_easier_reason": "This is the standard k \u2194 n-k symmetry of Gaussian coefficients and does not address polynomiality or coefficient positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.14,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Uses degree comparison to order the reduced indices so that the quotient becomes a balanced four-factor q-factorial ratio with ordered parameters.",
+            "self_check_notes": "The statement defines the Gaussian coefficient locally and only uses elementary degree arguments.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n is a nonnegative integer",
+                "0 \u2264 r \u2264 n",
+                "0 \u2264 k,\u2113 \u2264 n"
+              ],
+              "normalized_claim": "deg([n choose r]_q) = r(n-r). Therefore polynomiality of [n choose k]_q / [n choose \u2113]_q forces min(\u2113,n-\u2113) \u2264 min(k,n-k), and these reduced indices lie in [0, \u230an/2\u230b].",
+              "quantifier_order": [
+                "for all integers n \u2265 0",
+                "for all integers r with 0 \u2264 r \u2264 n",
+                "for all integers k,\u2113 with 0 \u2264 k,\u2113 \u2264 n",
+                "assume [n choose k]_q / [n choose \u2113]_q is a polynomial"
+              ],
+              "variables": [
+                {
+                  "domain": "nonnegative integers",
+                  "name": "n",
+                  "role": "upper index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 r \u2264 n",
+                  "name": "r",
+                  "role": "lower index for the degree formula",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 k \u2264 n",
+                  "name": "k",
+                  "role": "original numerator index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 \u2113 \u2264 n",
+                  "name": "\u2113",
+                  "role": "original denominator index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "Gaussian parameter",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required"
+              ]
+            },
+            "statement_nl": "For every integer n \u2265 0 and every integer r with 0 \u2264 r \u2264 n, define [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := \u220f_{i=1}^m (1-q^i) for m \u2265 1 and (q;q)_0 := 1. Then [n choose r]_q is a polynomial of degree r(n-r). Hence, if integers n,k,\u2113 satisfy 0 \u2264 k,\u2113 \u2264 n and the quotient [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then with k' := min(k,n-k) and \u2113' := min(\u2113,n-\u2113) one has 0 \u2264 \u2113' \u2264 k' \u2264 \u230an/2\u230b.",
+            "strictly_easier_reason": "It only computes degrees and deduces an ordering constraint; it does not address coefficientwise positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.12,
+            "lemma_relation_to_parent": "strictly_weaker",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Rewrites the reduced quotient in the balanced four-factor q-factorial form needed for the bottleneck theorem.",
+            "self_check_notes": "All auxiliary notation is defined inside the statement; no hidden references are used.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n is a nonnegative integer",
+                "0 \u2264 \u2113 \u2264 k \u2264 n"
+              ],
+              "normalized_claim": "For 0 \u2264 \u2113 \u2264 k \u2264 n, the Gaussian quotient equals the balanced q-factorial ratio ((q;q)_\u2113 (q;q)_{n-\u2113}) / ((q;q)_k (q;q)_{n-k}), equivalently the interval product \u220f_{i=1}^{k-\u2113}(1-q^{n-k+i})/(1-q^{\u2113+i}).",
+              "quantifier_order": [
+                "for all integers n,\u2113,k with 0 \u2264 \u2113 \u2264 k \u2264 n"
+              ],
+              "variables": [
+                {
+                  "domain": "nonnegative integers",
+                  "name": "n",
+                  "role": "upper index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 k \u2264 n",
+                  "name": "k",
+                  "role": "larger reduced lower index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 \u2113 \u2264 k",
+                  "name": "\u2113",
+                  "role": "smaller reduced lower index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "variable of the quotient",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required"
+              ]
+            },
+            "statement_nl": "For integers n,\u2113,k with 0 \u2264 \u2113 \u2264 k \u2264 n, define (q;q)_m := \u220f_{j=1}^m (1-q^j) for m \u2265 1 and (q;q)_0 := 1, and define [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}). Then one has the exact identity\n[n choose k]_q / [n choose \u2113]_q = ((q;q)_\u2113 (q;q)_{n-\u2113}) / ((q;q)_k (q;q)_{n-k}) = \u220f_{i=1}^{k-\u2113} (1-q^{n-k+i}) / (1-q^{\u2113+i}),\nwith the convention that an empty product equals 1.",
+            "strictly_easier_reason": "This is a direct algebraic identity obtained from the q-factorial formula for Gaussian coefficients."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.32,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "Translates the hypothesis that the reduced quotient is a polynomial into a family of explicit floor inequalities.",
+            "self_check_notes": "The statement defines R_{n,k,\u2113} and \u03a6_d(q) locally and is independently understandable.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "n is a nonnegative integer",
+                "0 \u2264 \u2113 \u2264 k \u2264 n",
+                "d \u2265 1"
+              ],
+              "normalized_claim": "The cyclotomic exponent of \u03a6_d(q) in R_{n,k,\u2113}(q)=((q;q)_\u2113 (q;q)_{n-\u2113})/((q;q)_k (q;q)_{n-k}) is \u230a\u2113/d\u230b+\u230a(n-\u2113)/d\u230b-\u230ak/d\u230b-\u230a(n-k)/d\u230b. Hence polynomiality of R_{n,k,\u2113}(q) is equivalent to nonnegativity of these floor differences for every d.",
+              "quantifier_order": [
+                "for all integers n,\u2113,k with 0 \u2264 \u2113 \u2264 k \u2264 n",
+                "for all positive integers d"
+              ],
+              "variables": [
+                {
+                  "domain": "nonnegative integers",
+                  "name": "n",
+                  "role": "sum parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 k \u2264 n",
+                  "name": "k",
+                  "role": "larger lower index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers with 0 \u2264 \u2113 \u2264 k",
+                  "name": "\u2113",
+                  "role": "smaller lower index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "positive integers",
+                  "name": "d",
+                  "role": "cyclotomic index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "variable of the quotient",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required"
+              ]
+            },
+            "statement_nl": "For integers n,\u2113,k with 0 \u2264 \u2113 \u2264 k \u2264 n, define (q;q)_m := \u220f_{j=1}^m (1-q^j) for m \u2265 1 and (q;q)_0 := 1, define R_{n,k,\u2113}(q) := ((q;q)_\u2113 (q;q)_{n-\u2113}) / ((q;q)_k (q;q)_{n-k}), and for each positive integer d let \u03a6_d(q) denote the d-th cyclotomic polynomial, characterized by 1-q^m = \u220f_{d|m} \u03a6_d(q). Then the exponent of \u03a6_d(q) in the factorization of R_{n,k,\u2113}(q) over Q[q] is\n\u230a\u2113/d\u230b + \u230a(n-\u2113)/d\u230b - \u230ak/d\u230b - \u230a(n-k)/d\u230b.\nIn particular, R_{n,k,\u2113}(q) is a polynomial in q if and only if this integer is nonnegative for every positive integer d.",
+            "strictly_easier_reason": "It concerns only cyclotomic factor bookkeeping and does not yet address coefficient signs."
+          },
+          {
+            "bottleneck_reason": "After setting n=a+b, \u2113=a, and k=c, this is essentially the ordered balanced reformulation of the target theorem. It contains the genuine frontier step: turning the floor-inequality / polynomiality condition into coefficientwise nonnegativity.",
+            "formalization_cost_estimate": 0.9,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "This is the main positivity engine for balanced four-term q-factorial ratios once the floor inequalities are known.",
+            "self_check_notes": "The statement is fully self-contained and explicitly marked as the bottleneck general theorem.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "a,b,c,d are nonnegative integers",
+                "a+b=c+d",
+                "a \u2264 c \u2264 d \u2264 b"
+              ],
+              "normalized_claim": "Under the balanced-order and floor-inequality assumptions, the four-term q-factorial ratio F(q)=((q;q)_a (q;q)_b)/((q;q)_c (q;q)_d) is a polynomial with all coefficients nonnegative.",
+              "quantifier_order": [
+                "for all nonnegative integers a,b,c,d",
+                "assume a+b=c+d and a \u2264 c \u2264 d \u2264 b",
+                "assume for every positive integer m the displayed floor inequality",
+                "then conclude positivity of F(q)"
+              ],
+              "variables": [
+                {
+                  "domain": "nonnegative integers",
+                  "name": "a",
+                  "role": "first numerator q-factorial index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "nonnegative integers",
+                  "name": "b",
+                  "role": "second numerator q-factorial index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "nonnegative integers",
+                  "name": "c",
+                  "role": "first denominator q-factorial index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "nonnegative integers",
+                  "name": "d",
+                  "role": "second denominator q-factorial index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "positive integers",
+                  "name": "m",
+                  "role": "index in the floor inequalities",
+                  "type": "integer"
+                },
+                {
+                  "domain": "polynomial variable",
+                  "name": "q",
+                  "role": "variable of the q-factorial ratio",
+                  "type": "indeterminate"
+                }
+              ],
+              "witness_dependencies": [
+                "No existential witness is required"
+              ]
+            },
+            "statement_nl": "Let a,b,c,d be nonnegative integers with a+b=c+d and a \u2264 c \u2264 d \u2264 b. Define (q;q)_m := \u220f_{j=1}^m (1-q^j) for m \u2265 1 and (q;q)_0 := 1, and define\nF(q) := ((q;q)_a (q;q)_b) / ((q;q)_c (q;q)_d).\nAssume that for every positive integer m one has\n\u230aa/m\u230b + \u230ab/m\u230b - \u230ac/m\u230b - \u230ad/m\u230b \u2265 0.\nThen F(q) belongs to Z[q], and every coefficient of F(q) is a nonnegative integer.",
+            "strictly_easier_reason": null
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer m \u2265 0, define (q;q)_m := \u220f_{i=1}^m (1-q^i), with the convention (q;q)_0 := 1.",
+            "kind": "definition",
+            "label": "finite q-Pochhammer symbol"
+          },
+          {
+            "content": "For integers n,r with 0 \u2264 r \u2264 n, define [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+            "kind": "definition",
+            "label": "Gaussian q-binomial coefficient"
+          },
+          {
+            "content": "For each positive integer d, \u03a6_d(q) denotes the d-th cyclotomic polynomial, characterized by 1-q^m = \u220f_{d|m} \u03a6_d(q) for every positive integer m.",
+            "kind": "definition",
+            "label": "cyclotomic polynomials"
+          }
+        ],
+        "strategy_summary": "Reduce by the symmetry r \u21a6 n-r to an ordered quotient, rewrite that quotient as a balanced four-term q-factorial ratio, convert the polynomiality assumption into Landau-style floor inequalities via cyclotomic exponents, and then invoke the balanced q-factorial-ratio positivity theorem as the single explicit bottleneck."
+      }
+    ],
+    "status": "completed"
+  },
+  "started_at": "2026-03-30T01:47:40.496965Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260330014701_00a97efb",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-30T02:29:30.428057Z",
+  "worker_job_id": "wrk_thm_root_20260330014701_00a97efb_decompose_0_track_1_req_20260330014735_a2939538",
+  "worker_kind": "decomposition_generation"
+}

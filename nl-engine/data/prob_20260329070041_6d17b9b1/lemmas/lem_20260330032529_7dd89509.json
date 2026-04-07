@@ -1,0 +1,128 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260330033220_990b1aeb",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-30T03:25:44.755101Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.18,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-30T03:32:26.670485Z",
+  "last_dependency_check_id": null,
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": 1,
+  "last_submitted_solver_job_id": "wrk_lem_20260330032529_7dd89509_g2_solve_1",
+  "last_terminal_worker_result": null,
+  "last_transition_reason": "solver attempt 1 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260330032529_7dd89509",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "thm_root_20260329070041_7bd7b795",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260330032529_7dd89509.json",
+  "proof_graph_id": "pgraph_20260330033217_4ecb4e26",
+  "proof_status": "open",
+  "role_in_parent": "Converts regularity of the canonical sequence into the exact Hilbert-series product formula for the quotient ring.",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 0,
+  "solver_series_started_at": "2026-03-30T03:32:26.560607Z",
+  "statement_lean": null,
+  "statement_nl": "Let R = direct_sum_{d>=0} R_d be a positively graded commutative Q-algebra such that each graded piece R_d is finite-dimensional over Q. Define its Hilbert series by Hilb(R;q) := sum_{d>=0} (dim_Q R_d) q^d. Let m be a positive integer and let f_1,...,f_m in R be homogeneous elements of positive degrees d_1,...,d_m. Assume that f_1 is not a zero-divisor in R, that for each j with 2 <= j <= m the image of f_j in R/(f_1,...,f_{j-1}) is not a zero-divisor, and that the final quotient R/(f_1,...,f_m) is not the zero ring. Then Hilb(R/(f_1,...,f_m);q) = Hilb(R;q) product_{j=1}^{m} (1 - q^{d_j}).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "R is a commutative algebra over the rational numbers.",
+      "R is graded by nonnegative integers.",
+      "Each graded piece R_d is finite-dimensional as a Q-vector space.",
+      "m is a positive integer.",
+      "Each f_j is homogeneous.",
+      "Each degree d_j is a positive integer.",
+      "The degree d_j is the degree of f_j.",
+      "f_1 is a nonzerodivisor in R.",
+      "For each j from 2 to m, the class of f_j in the quotient by the earlier f_i is a nonzerodivisor.",
+      "The quotient R modulo f_1 through f_m is not the zero ring.",
+      "The Hilbert series is interpreted as a formal power series with coefficients dim_Q of graded pieces."
+    ],
+    "normalized_claim": "A homogeneous sequence that is regular in the successive quotient sense has the expected Hilbert series formula: the Hilbert series of the quotient by the sequence equals the Hilbert series of the original graded algebra multiplied by one minus q raised to each generator degree.",
+    "quantifier_order": [
+      "For every positively graded commutative Q-algebra R whose graded pieces are finite-dimensional over Q,",
+      "for every positive integer m,",
+      "for every sequence f_1 through f_m of homogeneous elements of R with positive degrees d_1 through d_m,",
+      "if f_1 is a nonzerodivisor in R and for each j from 2 to m the image of f_j in the quotient by f_1 through f_{j-1} is a nonzerodivisor, and if the final quotient by f_1 through f_m is not the zero ring,",
+      "then the Hilbert series identity holds."
+    ],
+    "variables": [
+      {
+        "domain": "positively graded by nonnegative integers",
+        "name": "R",
+        "role": "ambient graded algebra",
+        "type": "commutative algebra over the rational numbers"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "d",
+        "role": "grading index for the direct sum decomposition and Hilbert series",
+        "type": "integer"
+      },
+      {
+        "domain": "formal power series variable",
+        "name": "q",
+        "role": "Hilbert series parameter",
+        "type": "formal variable"
+      },
+      {
+        "domain": "positive integers",
+        "name": "m",
+        "role": "length of the sequence of homogeneous elements",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 1 to m",
+        "name": "j",
+        "role": "index for the sequence of elements",
+        "type": "integer"
+      },
+      {
+        "domain": "elements of R indexed by j from 1 to m",
+        "name": "f_j",
+        "role": "sequence of elements forming successive quotients",
+        "type": "homogeneous element of R"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d_j",
+        "role": "degree of f_j",
+        "type": "positive integer"
+      }
+    ],
+    "witness_dependencies": [
+      "The object used to test whether f_j is a nonzerodivisor depends on the previously chosen elements f_1 through f_{j-1}.",
+      "The quotient ring at stage j depends on the earlier elements f_1 through f_{j-1}.",
+      "The degree d_j depends on the homogeneous element f_j.",
+      "The product factor associated to f_j depends on d_j."
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-30T03:32:26.670485Z"
+}

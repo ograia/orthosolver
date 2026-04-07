@@ -1,0 +1,127 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329132335_f096b04e",
+  "proof_nl": "Fix an arbitrary positive integer d. Define\nA := {i in {1,...,b} : d divides e_i}\nand\nB := {i in {1,...,b} : d divides i}.\n\nWe split the index set {1,...,b} into the disjoint union {1,...,a} union {a+1,...,b}. (If a=0 or a=b, one of these sets is empty, and the same argument still applies.) Therefore A is the disjoint union of A \u2229 {1,...,a} and A \u2229 {a+1,...,b}, and similarly for B.\n\nFor i with 1 <= i <= a, the definition gives e_i = i. Hence\n|A \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\n\nFor i with a < i <= b, the definition gives e_i = r+i. The map i -> r+i is a bijection from {a+1,...,b} onto the set {m in Z : r+a < m <= r+b}. Under this bijection, the condition d divides e_i is exactly the condition d divides m. Thus\n|A \u2229 {a+1,...,b}| = |{m in Z : r+a < m <= r+b and d divides m}| = M_d(r+a,r+b).\n\nSince the two pieces are disjoint,\n|A| = |{i in {1,...,a} : d divides i}| + M_d(r+a,r+b).\n\nNow do the same for B. Clearly,\n|B \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\nAlso, the identity map is a bijection from {a+1,...,b} onto {m in Z : a < m <= b}, so\n|B \u2229 {a+1,...,b}| = |{m in Z : a < m <= b and d divides m}| = M_d(a,b).\nTherefore,\n|B| = |{i in {1,...,a} : d divides i}| + M_d(a,b).\n\nBy the hypothesis of the lemma, for this positive integer d we have\nM_d(r+a,r+b) >= M_d(a,b).\nComparing the formulas for |A| and |B|, we obtain\n|A| >= |B|,\nthat is,\n|{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.\n\nBecause d was arbitrary, this holds for every positive integer d, exactly as claimed.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.748535+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, r are integers with 0 <= a <= b and r >= 0.",
+      "The family e_i is only defined for indices i from 1 through b.",
+      "For i from 1 through b, e_i equals i when i <= a and equals r + i when a < i <= b.",
+      "d must be a positive integer whenever M_d is used or divisibility by d is discussed.",
+      "M_d(u, v) counts integers m with u < m <= v and d dividing m, where u and v are integers.",
+      "The counts in the conclusion are taken over the finite index set from 1 through b.",
+      "If b = 0, the index set from 1 through b is empty, so the counted sets are empty."
+    ],
+    "normalized_claim": "For every choice of integers a, b, r with 0 <= a <= b and r >= 0, if every positive integer d has at least as many multiples in the interval from r + a to r + b as in the interval from a to b, then for every positive integer d the number of indices i from 1 through b for which d divides e_i is at least the number of indices i from 1 through b for which d divides i.",
+    "quantifier_order": [
+      "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+      "For each integer i with 1 <= i <= b, define e_i by a piecewise rule: e_i = i if i <= a, and e_i = r + i if a < i <= b.",
+      "For each positive integer d and integers u, v, define M_d(u, v) as the number of integers m satisfying u < m <= v and d divides m.",
+      "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+      "Conclude that for every positive integer d, the number of indices i from 1 through b with d dividing e_i is at least the number of indices i from 1 through b with d dividing i."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b and r >= 0",
+        "name": "a",
+        "role": "fixed parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b and r >= 0",
+        "name": "b",
+        "role": "fixed parameter and upper index bound",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b and r >= 0",
+        "name": "r",
+        "role": "fixed shift parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "indices from 1 through b",
+        "name": "i",
+        "role": "index variable for the sequence e_i and for counting sets",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "divisor parameter in the divisibility counts",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers in the interval u < m <= v",
+        "name": "m",
+        "role": "dummy variable counted by M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integer interval endpoint",
+        "name": "u",
+        "role": "lower interval endpoint for M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integer interval endpoint",
+        "name": "v",
+        "role": "upper interval endpoint for M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "indices from 1 through b",
+        "name": "e_i",
+        "role": "piecewise-defined sequence depending on a, b, r, and i",
+        "type": "integer-valued sequence"
+      },
+      {
+        "domain": "positive integer d and integer endpoints u, v",
+        "name": "M_d",
+        "role": "counts multiples of d in the half-open interval (u, v]",
+        "type": "counting function"
+      }
+    ],
+    "witness_dependencies": [
+      "There are no existential witnesses in the statement; all quantified variables are universal or fixed by definition.",
+      "The conclusion is required for each positive integer d separately, with the same fixed parameters a, b, and r."
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329132957_be54b46e"
+  ],
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. For 1 <= i <= b define an integer e_i by e_i = i when i <= a, and e_i = r+i when a < i <= b. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. If M_d(r+a, r+b) >= M_d(a,b) for every positive integer d, then for every positive integer d one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T13:29:57.251332+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof is a complete direct counting argument. For fixed positive d, it partitions the index set {1,...,b} into {1,...,a} and {a+1,...,b}, uses the definition e_i=i on the first part and e_i=r+i on the second, and identifies the second-part count with M_d(r+a,r+b). Doing the same for divisibility of i identifies the comparison count with M_d(a,b). The assumed inequality then gives the desired result. The proof matches the lemma statement and assembly role, and it uses no undeclared or forbidden dependencies.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329132957_be54b46e",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132335_f096b04e.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T13:29:57.251332+00:00"
+  }
+}

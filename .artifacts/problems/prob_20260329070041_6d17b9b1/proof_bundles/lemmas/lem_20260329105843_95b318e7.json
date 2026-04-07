@@ -1,0 +1,124 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329105843_95b318e7",
+  "proof_nl": "Work in the formal power series ring Z[[q]]. Since 0 <= a <= b and r >= 0, all indices occurring in the q-Pochhammer symbols are nonnegative, so the definitions make sense.\n\nFirst rewrite the rational function R_{a,b,r}(q). Because a <= b, we have\n(q;q)_{r+b}/(q;q)_{r+a} = (\\prod_{t=1}^{r+b} (1-q^t))/(\\prod_{t=1}^{r+a} (1-q^t)) = \\prod_{t=r+a+1}^{r+b} (1-q^t).\nReindexing with t = r+i gives\n(q;q)_{r+b}/(q;q)_{r+a} = \\prod_{i=a+1}^{b} (1-q^{r+i}).\nAlso,\n(q;q)_a/(q;q)_b = (\\prod_{t=1}^{a} (1-q^t))/(\\prod_{t=1}^{b} (1-q^t)) = 1/\\prod_{t=a+1}^{b} (1-q^t).\nTherefore\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\nWhen a=b, these are empty products and equal 1, so the same formula is still valid.\n\nNow fix an integer i >= 1. In Z[[q]] one has\n(1-q^i) \\sum_{m>=0} q^{mi} = \\sum_{m>=0} q^{mi} - \\sum_{m>=0} q^{(m+1)i} = 1,\nbecause the coefficient of q^0 is 1 and for every positive multiple ni of i the two sums contribute equally and cancel. Hence\n(1-q^i)^{-1} = \\sum_{m>=0} q^{mi}\ninside Z[[q]].\n\nSubstituting this inverse into the product formula for R_{a,b,r}(q), and using that the product over i is finite, we obtain in Z[[q]]:\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} (1-q^{r+i})(1-q^i)^{-1}\n= \\prod_{i=a+1}^{b} \\left((1-q^{r+i}) \\sum_{m>=0} q^{mi}\\right)\n= F_{a,b,r}(q).\nThus F_{a,b,r}(q) is exactly the formal power-series expansion at q=0 of the rational function R_{a,b,r}(q).\n\nFor the final claim, assume R_{a,b,r}(q) belongs to Z[q]. A polynomial, viewed as an element of Z[[q]], is equal to its own power-series expansion at q=0 (with all coefficients above its degree equal to 0). Since the expansion of R_{a,b,r}(q) is F_{a,b,r}(q), we have equality of formal power series\nR_{a,b,r}(q) = F_{a,b,r}(q)\nin Z[[q]]. Therefore, for every integer j >= 0, the coefficients of q^j are equal:\n[q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).\nThis proves the lemma.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.727154+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, and r are integers.",
+      "The parameters satisfy 0 <= a <= b and r >= 0.",
+      "n is a nonnegative integer in the q-Pochhammer definition.",
+      "t runs over the integers from 1 to n in the finite product defining (q;q)_n.",
+      "m is a nonnegative integer in the geometric series factor.",
+      "i runs over the integers from a+1 to b in the product defining F.",
+      "j is a nonnegative integer in the coefficient comparison.",
+      "The product over i from a+1 to b is finite and is empty, hence equal to 1, when a = b.",
+      "The phrase belongs to Z[q] means the rational expression R_{a,b,r}(q) simplifies to a polynomial with integer coefficients.",
+      "The coefficient notation [q^j] on R_{a,b,r}(q) is intended only under the polynomial assumption, so that the coefficient is unambiguous."
+    ],
+    "normalized_claim": "For every integer triple a, b, r with 0 <= a <= b and r >= 0, the formal power series F_{a,b,r}(q) defined by the finite product of geometric series equals the power-series expansion at q = 0 of the rational function R_{a,b,r}(q). Moreover, whenever R_{a,b,r}(q) is in Z[q], the coefficient of q^j in R_{a,b,r}(q) matches the coefficient of q^j in F_{a,b,r}(q) for every nonnegative integer j.",
+    "quantifier_order": [
+      "First fix integers a, b, r with 0 <= a <= b and r >= 0.",
+      "For each nonnegative integer n, define the q-Pochhammer symbol (q;q)_n.",
+      "Using these definitions, form the rational function R_{a,b,r}(q) and the formal power series F_{a,b,r}(q).",
+      "The identity that F_{a,b,r}(q) is the expansion of R_{a,b,r}(q) at q = 0 is asserted for these fixed parameters.",
+      "If R_{a,b,r}(q) is actually a polynomial with integer coefficients, then for every nonnegative integer j the coefficient equality holds."
+    ],
+    "variables": [
+      {
+        "domain": "all integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "main parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers satisfying a <= b",
+        "name": "b",
+        "role": "main parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "main parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "indeterminate used for a rational function and formal power series",
+        "name": "q",
+        "role": "series variable",
+        "type": "formal variable"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the q-Pochhammer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 1 to n",
+        "name": "t",
+        "role": "product index in the q-Pochhammer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a+1 to b",
+        "name": "i",
+        "role": "product index in the definition of F",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m",
+        "role": "summation index in the geometric series factor",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "j",
+        "role": "coefficient degree",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are involved.",
+      "The coefficient equality is uniform in j and does not depend on choosing any auxiliary witness once a, b, and r satisfy the stated hypotheses."
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329110641_85749e69"
+  ],
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1. Define the rational function R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Also define the formal power series F_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Then F_{a,b,r}(q) is the power-series expansion at q = 0 of the rational function R_{a,b,r}(q). In particular, if R_{a,b,r}(q) belongs to Z[q], then for every integer j >= 0 one has [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T11:06:41.172347+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof matches the lemma statement closely and is mathematically complete. It correctly rewrites the q-Pochhammer quotient as the finite interval product, identifies each factor (1 - q^i)^{-1} with the geometric series sum_{m>=0} q^{mi} in Z[[q]], and concludes that the finite product F_{a,b,r}(q) is exactly the formal power-series expansion of R_{a,b,r}(q). Under the additional assumption R_{a,b,r}(q) \\in Z[q], the coefficient identity follows immediately from equality in Z[[q]]. No undeclared or forbidden dependencies are used.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329110641_85749e69",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105843_95b318e7.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T11:06:41.172347+00:00"
+  }
+}

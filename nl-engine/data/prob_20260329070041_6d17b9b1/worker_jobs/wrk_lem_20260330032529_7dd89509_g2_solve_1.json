@@ -1,0 +1,134 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260330032529_7dd89509/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": null,
+  "continuation_generation": 2,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-30T03:32:26.558691Z",
+  "error_payload": null,
+  "execution_id": "exec_20260330024418_f8bbd7be",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": "2026-03-30T03:37:59.557105Z",
+  "lease_owner": "embedded-stage-140416028501696",
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260330033218_c592ee30",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "lemma_id": "lem_20260330032529_7dd89509",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260330033226_aca28595",
+    "retry_context": {
+      "attempt_number": null,
+      "feedback_source": "none",
+      "proof_attempt_id": null,
+      "quality_rank": null,
+      "vetter_report_id": null
+    },
+    "role_in_assembly": "Converts regularity of the canonical sequence into the exact Hilbert-series product formula for the quotient ring.",
+    "root_semantic_sketch": {},
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "R is a commutative algebra over the rational numbers.",
+        "R is graded by nonnegative integers.",
+        "Each graded piece R_d is finite-dimensional as a Q-vector space.",
+        "m is a positive integer.",
+        "Each f_j is homogeneous.",
+        "Each degree d_j is a positive integer.",
+        "The degree d_j is the degree of f_j.",
+        "f_1 is a nonzerodivisor in R.",
+        "For each j from 2 to m, the class of f_j in the quotient by the earlier f_i is a nonzerodivisor.",
+        "The quotient R modulo f_1 through f_m is not the zero ring.",
+        "The Hilbert series is interpreted as a formal power series with coefficients dim_Q of graded pieces."
+      ],
+      "normalized_claim": "A homogeneous sequence that is regular in the successive quotient sense has the expected Hilbert series formula: the Hilbert series of the quotient by the sequence equals the Hilbert series of the original graded algebra multiplied by one minus q raised to each generator degree.",
+      "quantifier_order": [
+        "For every positively graded commutative Q-algebra R whose graded pieces are finite-dimensional over Q,",
+        "for every positive integer m,",
+        "for every sequence f_1 through f_m of homogeneous elements of R with positive degrees d_1 through d_m,",
+        "if f_1 is a nonzerodivisor in R and for each j from 2 to m the image of f_j in the quotient by f_1 through f_{j-1} is a nonzerodivisor, and if the final quotient by f_1 through f_m is not the zero ring,",
+        "then the Hilbert series identity holds."
+      ],
+      "variables": [
+        {
+          "domain": "positively graded by nonnegative integers",
+          "name": "R",
+          "role": "ambient graded algebra",
+          "type": "commutative algebra over the rational numbers"
+        },
+        {
+          "domain": "nonnegative integers",
+          "name": "d",
+          "role": "grading index for the direct sum decomposition and Hilbert series",
+          "type": "integer"
+        },
+        {
+          "domain": "formal power series variable",
+          "name": "q",
+          "role": "Hilbert series parameter",
+          "type": "formal variable"
+        },
+        {
+          "domain": "positive integers",
+          "name": "m",
+          "role": "length of the sequence of homogeneous elements",
+          "type": "integer"
+        },
+        {
+          "domain": "integers from 1 to m",
+          "name": "j",
+          "role": "index for the sequence of elements",
+          "type": "integer"
+        },
+        {
+          "domain": "elements of R indexed by j from 1 to m",
+          "name": "f_j",
+          "role": "sequence of elements forming successive quotients",
+          "type": "homogeneous element of R"
+        },
+        {
+          "domain": "positive integers",
+          "name": "d_j",
+          "role": "degree of f_j",
+          "type": "positive integer"
+        }
+      ],
+      "witness_dependencies": [
+        "The object used to test whether f_j is a nonzerodivisor depends on the previously chosen elements f_1 through f_{j-1}.",
+        "The quotient ring at stage j depends on the earlier elements f_1 through f_{j-1}.",
+        "The degree d_j depends on the homogeneous element f_j.",
+        "The product factor associated to f_j depends on d_j."
+      ]
+    },
+    "shared_context": [],
+    "solver_llm_override_key": "agent4_first",
+    "statement_nl": "Let R = direct_sum_{d>=0} R_d be a positively graded commutative Q-algebra such that each graded piece R_d is finite-dimensional over Q. Define its Hilbert series by Hilb(R;q) := sum_{d>=0} (dim_Q R_d) q^d. Let m be a positive integer and let f_1,...,f_m in R be homogeneous elements of positive degrees d_1,...,d_m. Assume that f_1 is not a zero-divisor in R, that for each j with 2 <= j <= m the image of f_j in R/(f_1,...,f_{j-1}) is not a zero-divisor, and that the final quotient R/(f_1,...,f_m) is not the zero ring. Then Hilb(R/(f_1,...,f_m);q) = Hilb(R;q) product_{j=1}^{m} (1 - q^{d_j}).",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_solver",
+  "result_payload": null,
+  "started_at": "2026-03-30T03:32:28.967685Z",
+  "status": "running",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260330032529_7dd89509",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-30T03:35:59.557105Z",
+  "worker_job_id": "wrk_lem_20260330032529_7dd89509_g2_solve_1",
+  "worker_kind": "lemma_solver"
+}

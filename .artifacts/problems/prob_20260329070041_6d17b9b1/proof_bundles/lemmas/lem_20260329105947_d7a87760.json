@@ -1,0 +1,92 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329105947_d7a87760",
+  "proof_nl": "Let F := {x in X : iota(x) = x} be the set of fixed points, and let M := X \\ F. Since X is finite, both F and M are finite, and X is the disjoint union F \u2294 M. Therefore\nsum_{x in X} w(x) = sum_{x in F} w(x) + sum_{x in M} w(x).\n\nFirst consider F. By hypothesis, whenever iota(x) = x we have w(x) = +1. Hence every term in the sum over F equals 1, so\nsum_{x in F} w(x) = |F|.\n\nNow consider M. If x belongs to M, then iota(x) != x. Also iota(iota(x)) = x, so iota(x) is again in M; thus each x in M belongs to a two-element set {x, iota(x)}. Let\nO := { {x, iota(x)} : x in M }.\nEach member of O has exactly two elements, because x != iota(x) for x in M. Moreover, O is a partition of M: every x in M lies in {x, iota(x)}, and if two such sets intersect, then they are equal. Indeed, if z lies in both {x, iota(x)} and {y, iota(y)}, then {x, iota(x)} = {z, iota(z)} and also {y, iota(y)} = {z, iota(z)}, so the two sets are equal.\n\nSince O partitions M, we may sum over its blocks:\nsum_{x in M} w(x) = sum_{A in O} sum_{x in A} w(x).\nFor any block A in O, write A = {x, iota(x)} with x in M. Then iota(x) != x, so the sign-reversal hypothesis applies and gives w(iota(x)) = -w(x). Therefore\nsum_{y in A} w(y) = w(x) + w(iota(x)) = w(x) - w(x) = 0.\nThus every block contributes 0, and consequently\nsum_{x in M} w(x) = 0.\n\nCombining the two parts,\nsum_{x in X} w(x) = |F| + 0 = |F| = |{x in X : iota(x) = x}|.\nThis proves the stated identity. In particular, the sum is the cardinality of a finite set, hence a nonnegative integer.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.730633+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "X must be finite so that the sum over X is well defined.",
+      "w takes only the two integer values plus 1 and minus 1.",
+      "iota maps each element of X back into X.",
+      "The relation iota of iota of x equals x holds for every x in X, so iota is an involution.",
+      "The sign reversal condition is required only for nonfixed points, meaning points x with iota of x not equal to x.",
+      "The value plus 1 is required at fixed points, meaning points x with iota of x equal to x."
+    ],
+    "normalized_claim": "For a finite set X, an involution iota on X, and a function w from X to plus or minus 1 that changes sign along nonfixed iota pairs and equals plus 1 at fixed points, the total sum of w over X is exactly the number of fixed points of iota. Therefore that sum is a nonnegative integer.",
+    "quantifier_order": [
+      "Let X be a finite set.",
+      "Let w be a function from X to plus or minus 1.",
+      "Let iota be a function from X to X.",
+      "For every x in X, iota of iota of x equals x.",
+      "For every x in X, if iota of x is not equal to x, then w of iota of x equals minus w of x.",
+      "For every x in X, if iota of x equals x, then w of x equals plus 1.",
+      "Then the sum of w over X equals the number of fixed points of iota."
+    ],
+    "variables": [
+      {
+        "domain": "finite sets",
+        "name": "X",
+        "role": "underlying finite set being summed over",
+        "type": "set"
+      },
+      {
+        "domain": "functions from X to plus or minus 1",
+        "name": "w",
+        "role": "sign assignment on X",
+        "type": "function"
+      },
+      {
+        "domain": "self maps from X to X",
+        "name": "iota",
+        "role": "involution on X",
+        "type": "function"
+      },
+      {
+        "domain": "elements of X",
+        "name": "x",
+        "role": "universally quantified element used in pointwise conditions",
+        "type": "element"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced in the statement.",
+      "The fixed-point set is determined solely by iota."
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329110606_8346b84b"
+  ],
+  "statement_nl": "Let X be a finite set and let w : X -> { -1, +1 } be a sign function. Suppose iota : X -> X satisfies iota(iota(x)) = x for every x in X, w(iota(x)) = -w(x) whenever iota(x) != x, and w(x) = +1 whenever iota(x) = x. Then sum_{x in X} w(x) = |{x in X : iota(x) = x}|. In particular, sum_{x in X} w(x) is a nonnegative integer.",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T11:06:06.868209+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof is the standard sign-reversing involution argument and is complete. It cleanly decomposes X into fixed points and nonfixed points, shows the nonfixed part is partitioned into 2-element involution orbits, proves each such orbit contributes 0 by the sign-reversal hypothesis, and shows the fixed-point contribution is exactly the number of fixed points because fixed points have weight +1. This matches the lemma statement exactly and uses no undeclared or forbidden dependencies.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329110606_8346b84b",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105947_d7a87760.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T11:06:06.868209+00:00"
+  }
+}

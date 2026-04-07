@@ -1,0 +1,217 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260330032427_556608d3/vetter_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-30T03:33:19.428902Z",
+  "continuation_generation": 2,
+  "controller_consumed_at": "2026-03-30T03:33:20.136675Z",
+  "controller_consumed_by_execution_id": "exec_20260330024418_f8bbd7be",
+  "created_at": "2026-03-30T03:32:58.115051Z",
+  "error_payload": null,
+  "execution_id": "exec_20260330024418_f8bbd7be",
+  "handler_key": "agent5_lemma_vetter",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 5,
+  "payload": {
+    "allowed_dependency_manifest": [],
+    "ancestry_summary": [
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "reason": "root theorem is forbidden as citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      },
+      {
+        "kind": "theorem",
+        "node_id": "thm_root_20260329070041_7bd7b795",
+        "semantic_sketch": {
+          "domain_restrictions": [
+            "n, k, l are integers",
+            "k and l are between 0 and n inclusive",
+            "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+            "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+            "coefficients are understood as integer coefficients of a polynomial in q"
+          ],
+          "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+          "quantifier_order": [
+            "For all integers n, k, l",
+            "assume 0 <= k and 0 <= l and k <= n and l <= n",
+            "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+            "then every coefficient of that polynomial is nonnegative"
+          ],
+          "variables": [
+            {
+              "domain": "integers",
+              "name": "n",
+              "role": "index parameter for Gaussian binomial coefficients",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "k",
+              "role": "lower index of the first Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "integers",
+              "name": "l",
+              "role": "lower index of the second Gaussian binomial coefficient",
+              "type": "integer"
+            },
+            {
+              "domain": "polynomial variable",
+              "name": "q",
+              "role": "variable in which the quotient is assumed to be a polynomial",
+              "type": "formal indeterminate"
+            }
+          ],
+          "witness_dependencies": []
+        },
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "lean_diagnostics": null,
+    "lemma_id": "lem_20260330032427_556608d3",
+    "proof_nl": "Let n, a, b be integers satisfying 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, and assume\n\na(n-a) >= b(n-b).\n\nWe prove that a >= b.\n\nSuppose for contradiction that a < b. Then, since a < b, we have\n\na + b < 2b.\nBecause 2b <= n, it follows that\n\na + b < n,\nso\nn - a - b > 0.\nAlso, from a < b we have\n\na - b < 0.\nTherefore\n(a-b)(n-a-b) < 0.\n\nNow expand the left-hand side:\n\na-b)(n-a-b) = an - a^2 - ab - bn + ab + b^2 = an - a^2 - bn + b^2 = a(n-a) - b(n-b).\n\nHence\n\na(n-a) - b(n-b) < 0,\nthat is,\n\na(n-a) < b(n-b).\nThis contradicts the hypothesis that a(n-a) >= b(n-b).\n\nSo the assumption a < b is impossible. Therefore a >= b, as required.",
+    "role_in_assembly": "After symmetry reduction, turns the degree inequality into the ordering k' >= l'.",
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n, a, and b are integers",
+        "a is nonnegative",
+        "b is nonnegative",
+        "2*a <= n",
+        "2*b <= n"
+      ],
+      "normalized_claim": "For any integers n, a, and b with a and b between 0 and n/2 inclusive, if the value x times (n minus x) at a is at least its value at b, then a is at least b.",
+      "quantifier_order": [
+        "For all integers n, a, and b",
+        "Assume 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n",
+        "If a times (n minus a) is at least b times (n minus b)",
+        "Then a is at least b"
+      ],
+      "variables": [
+        {
+          "domain": "all integers, subject to the stated inequalities",
+          "name": "n",
+          "role": "parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers, subject to the stated inequalities",
+          "name": "a",
+          "role": "variable compared against b",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers, subject to the stated inequalities",
+          "name": "b",
+          "role": "variable compared against a",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are present"
+      ]
+    },
+    "statement_nl": "For all integers n, a, and b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+    "vetting_mode": "proof"
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_vetter",
+  "result_payload": {
+    "candidate_counterexample": null,
+    "confidence": 0.98,
+    "counterexample_status": null,
+    "dependency_assessment": {
+      "allowed_dependencies_used": [],
+      "dependency_ok": true,
+      "forbidden_dependencies_used": [],
+      "undeclared_citations": []
+    },
+    "detailed_findings": [
+      {
+        "finding": "The core argument is sound: on the interval constrained by 2a <= n and 2b <= n, the sign computation shows that a < b would force a(n-a) < b(n-b), contradicting the hypothesis.",
+        "location": "entire proof",
+        "severity": "low"
+      },
+      {
+        "finding": "There is a minor typographical slip in the expansion line ('a-b)(n-a-b)' missing an opening parenthesis), but the intended algebraic identity is clear and correct.",
+        "location": "expansion step",
+        "severity": "low"
+      }
+    ],
+    "drift_assessment": {
+      "drift_description": null,
+      "drift_detected": false,
+      "drift_severity": "none",
+      "drift_type": null
+    },
+    "feedback_for_solver": null,
+    "forbidden_dependency_findings": [],
+    "lemma_id": "lem_20260330032427_556608d3",
+    "proof_status": "complete",
+    "reason": "The proof is mathematically correct and complete. Assuming a < b, it derives a+b < 2b <= n, hence n-a-b > 0, while a-b < 0. Therefore (a-b)(n-a-b) < 0. Expanding gives (a-b)(n-a-b) = a(n-a) - b(n-b), contradicting the hypothesis a(n-a) >= b(n-b). This exactly proves a >= b under the stated assumptions. There is no semantic drift from the lemma sketch, and no forbidden or undeclared dependencies are used.",
+    "recommended_action": "send_to_lean",
+    "statement_status": "plausible",
+    "status": "completed",
+    "undeclared_citation_findings": []
+  },
+  "started_at": "2026-03-30T03:32:58.576933Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260330032427_556608d3",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-30T03:33:20.136684Z",
+  "worker_job_id": "wrk_lem_20260330032427_556608d3_g2_vet_1",
+  "worker_kind": "lemma_vetter"
+}

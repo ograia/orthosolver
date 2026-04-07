@@ -1,0 +1,134 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260330033219_fa70ee7a",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-30T03:24:47.242819Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "legacy_unknown",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.1,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-30T03:32:26.661789Z",
+  "last_dependency_check_id": null,
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": 1,
+  "last_submitted_solver_job_id": "wrk_lem_20260330032433_5163e0f3_g2_solve_1",
+  "last_terminal_worker_result": null,
+  "last_transition_reason": "solver attempt 1 submitted",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": null,
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": null,
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260330032433_5163e0f3",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "wait_on_solver",
+  "parent_id": "thm_root_20260329070041_7bd7b795",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260330032433_5163e0f3.json",
+  "proof_graph_id": "pgraph_20260330033217_4ecb4e26",
+  "proof_status": "open",
+  "role_in_parent": "Rewrites the reduced Gaussian quotient as the shifted product P_{a,b,r}(q).",
+  "routing_status": "open",
+  "shared_context_refs": [],
+  "solver_attempt_count": 0,
+  "solver_series_started_at": "2026-03-30T03:32:25.830576Z",
+  "statement_lean": null,
+  "statement_nl": "For integers n, a, and b with 0 <= a <= b and a + b <= n, define r := n - a - b. Then [n choose b]_q / [n choose a]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), where [n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t}), (q;q)_m := product_{j=1}^m (1 - q^j), (q;q)_0 := 1, and an empty product is interpreted as 1.",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "n, a, b are integers",
+      "0 <= a <= b",
+      "a + b <= n",
+      "r = n - a - b, so r is a nonnegative integer",
+      "The q-binomial definition uses nonnegative integer inputs for the q-Pochhammer factors",
+      "The ratio is only meaningful when the denominator is nonzero, unless the identity is interpreted formally",
+      "The product from i = a + 1 to b is an empty product when a = b, and then it equals 1"
+    ],
+    "normalized_claim": "For every integers n, a, b satisfying 0 <= a <= b and a + b <= n, if r is defined as n - a - b, then the quotient of the q-binomial coefficient of n choose b by the q-binomial coefficient of n choose a equals the finite product from i = a + 1 to b of (1 - q^(r + i)) divided by (1 - q^i), where the q-binomial coefficient is defined using the q-Pochhammer symbols and empty products are 1.",
+    "quantifier_order": [
+      "For all integers n, a, b with 0 <= a <= b and a + b <= n",
+      "Define r as n - a - b",
+      "For q as an unspecified free parameter in a domain where the formulas are defined",
+      "Inside the definitions, t, m, j, and i are bound indices"
+    ],
+    "variables": [
+      {
+        "domain": "all integers, with the stated inequalities",
+        "name": "n",
+        "role": "universally quantified main parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, with 0 <= a <= b and a + b <= n",
+        "name": "a",
+        "role": "universally quantified main parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers, with 0 <= a <= b and a + b <= n",
+        "name": "b",
+        "role": "universally quantified main parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "an unspecified scalar or formal parameter where the expressions are defined",
+        "name": "q",
+        "role": "free parameter in the identity",
+        "type": "parameter"
+      },
+      {
+        "domain": "r = n - a - b, hence r >= 0",
+        "name": "r",
+        "role": "derived quantity",
+        "type": "integer"
+      },
+      {
+        "domain": "integer index used in the definition of the q-binomial coefficient",
+        "name": "t",
+        "role": "bound variable inside the q-binomial definition",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "m",
+        "role": "bound variable inside the q-Pochhammer definition",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "integer index from 1 to m",
+        "name": "j",
+        "role": "bound variable in the product defining q-Pochhammer",
+        "type": "integer"
+      },
+      {
+        "domain": "integer index from a + 1 to b",
+        "name": "i",
+        "role": "bound variable in the product on the right-hand side",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "The value of r depends on n, a, and b by r = n - a - b",
+      "There is no existential witness in the main claim",
+      "Any interpretation of the identity for q depends on the chosen ambient domain and on denominators being defined"
+    ]
+  },
+  "statement_status": "unvetted",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-30T03:32:26.661789Z"
+}

@@ -1,0 +1,120 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/lemmas/lem_20260330032427_556608d3/solver_attempt_1",
+  "attempt_count": 1,
+  "attempt_number": 1,
+  "completed_at": "2026-03-30T03:32:56.440633Z",
+  "continuation_generation": 2,
+  "controller_consumed_at": "2026-03-30T03:32:58.047447Z",
+  "controller_consumed_by_execution_id": "exec_20260330024418_f8bbd7be",
+  "created_at": "2026-03-30T03:32:25.251759Z",
+  "error_payload": null,
+  "execution_id": "exec_20260330024418_f8bbd7be",
+  "handler_key": "agent4_lemma_solver",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": "agent4_first",
+  "max_attempts": 2,
+  "payload": {
+    "allowed_dependency_manifest": [],
+    "attempt_number": 1,
+    "definition_context": [],
+    "forbidden_claims": [
+      {
+        "item_id": "pnode_20260330033218_c592ee30",
+        "label": "root_theorem_claim",
+        "reason": "root theorem proposition is not citable solver context",
+        "statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients."
+      }
+    ],
+    "lemma_id": "lem_20260330032427_556608d3",
+    "previous_feedback": null,
+    "previous_proof_nl": null,
+    "proof_attempt_node_id": "pnode_20260330033225_f872e2de",
+    "retry_context": {
+      "attempt_number": null,
+      "feedback_source": "none",
+      "proof_attempt_id": null,
+      "quality_rank": null,
+      "vetter_report_id": null
+    },
+    "role_in_assembly": "After symmetry reduction, turns the degree inequality into the ordering k' >= l'.",
+    "root_semantic_sketch": {},
+    "root_theorem_nl": "",
+    "semantic_sketch": {
+      "domain_restrictions": [
+        "n, a, and b are integers",
+        "a is nonnegative",
+        "b is nonnegative",
+        "2*a <= n",
+        "2*b <= n"
+      ],
+      "normalized_claim": "For any integers n, a, and b with a and b between 0 and n/2 inclusive, if the value x times (n minus x) at a is at least its value at b, then a is at least b.",
+      "quantifier_order": [
+        "For all integers n, a, and b",
+        "Assume 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n",
+        "If a times (n minus a) is at least b times (n minus b)",
+        "Then a is at least b"
+      ],
+      "variables": [
+        {
+          "domain": "all integers, subject to the stated inequalities",
+          "name": "n",
+          "role": "parameter",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers, subject to the stated inequalities",
+          "name": "a",
+          "role": "variable compared against b",
+          "type": "integer"
+        },
+        {
+          "domain": "all integers, subject to the stated inequalities",
+          "name": "b",
+          "role": "variable compared against a",
+          "type": "integer"
+        }
+      ],
+      "witness_dependencies": [
+        "No existential witnesses are present"
+      ]
+    },
+    "shared_context": [],
+    "solver_llm_override_key": "agent4_first",
+    "statement_nl": "For all integers n, a, and b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "lemma_solver",
+  "result_payload": {
+    "addressed_previous_feedback": null,
+    "attempt_number": 1,
+    "candidate_counterexample": null,
+    "citations": [],
+    "counterexample_flag": null,
+    "dependency_self_check": {},
+    "lemma_id": "lem_20260330032427_556608d3",
+    "proof_nl": "Let n, a, b be integers satisfying 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, and assume\n\na(n-a) >= b(n-b).\n\nWe prove that a >= b.\n\nSuppose for contradiction that a < b. Then, since a < b, we have\n\na + b < 2b.\nBecause 2b <= n, it follows that\n\na + b < n,\nso\nn - a - b > 0.\nAlso, from a < b we have\n\na - b < 0.\nTherefore\n(a-b)(n-a-b) < 0.\n\nNow expand the left-hand side:\n\na-b)(n-a-b) = an - a^2 - ab - bn + ab + b^2 = an - a^2 - bn + b^2 = a(n-a) - b(n-b).\n\nHence\n\na(n-a) - b(n-b) < 0,\nthat is,\n\na(n-a) < b(n-b).\nThis contradicts the hypothesis that a(n-a) >= b(n-b).\n\nSo the assumption a < b is impossible. Therefore a >= b, as required.",
+    "proof_summary": "Assume contrariwise that a < b. Then a+b < 2b <= n, so n-a-b > 0, while a-b < 0. Hence (a-b)(n-a-b) < 0. But this product equals a(n-a)-b(n-b), contradicting the hypothesis a(n-a) >= b(n-b). Therefore a >= b.",
+    "self_report": {
+      "confidence": 0.99,
+      "every_step_justified": true,
+      "proves_exactly_the_statement": true,
+      "suspected_gaps": [],
+      "used_external_facts": []
+    },
+    "status": "proved",
+    "stuck_point": null,
+    "used_forbidden_claim": false
+  },
+  "started_at": "2026-03-30T03:32:24.083443Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "lem_20260330032427_556608d3",
+  "target_kind": "lemma",
+  "updated_at": "2026-03-30T03:32:58.047452Z",
+  "worker_job_id": "wrk_lem_20260330032427_556608d3_g2_solve_1",
+  "worker_kind": "lemma_solver"
+}

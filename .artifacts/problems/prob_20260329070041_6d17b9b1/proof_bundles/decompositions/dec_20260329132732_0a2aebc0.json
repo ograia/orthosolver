@@ -1,0 +1,937 @@
+{
+  "children": [
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329132335_f096b04e",
+      "proof_nl": "Fix an arbitrary positive integer d. Define\nA := {i in {1,...,b} : d divides e_i}\nand\nB := {i in {1,...,b} : d divides i}.\n\nWe split the index set {1,...,b} into the disjoint union {1,...,a} union {a+1,...,b}. (If a=0 or a=b, one of these sets is empty, and the same argument still applies.) Therefore A is the disjoint union of A \u2229 {1,...,a} and A \u2229 {a+1,...,b}, and similarly for B.\n\nFor i with 1 <= i <= a, the definition gives e_i = i. Hence\n|A \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\n\nFor i with a < i <= b, the definition gives e_i = r+i. The map i -> r+i is a bijection from {a+1,...,b} onto the set {m in Z : r+a < m <= r+b}. Under this bijection, the condition d divides e_i is exactly the condition d divides m. Thus\n|A \u2229 {a+1,...,b}| = |{m in Z : r+a < m <= r+b and d divides m}| = M_d(r+a,r+b).\n\nSince the two pieces are disjoint,\n|A| = |{i in {1,...,a} : d divides i}| + M_d(r+a,r+b).\n\nNow do the same for B. Clearly,\n|B \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\nAlso, the identity map is a bijection from {a+1,...,b} onto {m in Z : a < m <= b}, so\n|B \u2229 {a+1,...,b}| = |{m in Z : a < m <= b and d divides m}| = M_d(a,b).\nTherefore,\n|B| = |{i in {1,...,a} : d divides i}| + M_d(a,b).\n\nBy the hypothesis of the lemma, for this positive integer d we have\nM_d(r+a,r+b) >= M_d(a,b).\nComparing the formulas for |A| and |B|, we obtain\n|A| >= |B|,\nthat is,\n|{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.\n\nBecause d was arbitrary, this holds for every positive integer d, exactly as claimed.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.748535+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, r are integers with 0 <= a <= b and r >= 0.",
+          "The family e_i is only defined for indices i from 1 through b.",
+          "For i from 1 through b, e_i equals i when i <= a and equals r + i when a < i <= b.",
+          "d must be a positive integer whenever M_d is used or divisibility by d is discussed.",
+          "M_d(u, v) counts integers m with u < m <= v and d dividing m, where u and v are integers.",
+          "The counts in the conclusion are taken over the finite index set from 1 through b.",
+          "If b = 0, the index set from 1 through b is empty, so the counted sets are empty."
+        ],
+        "normalized_claim": "For every choice of integers a, b, r with 0 <= a <= b and r >= 0, if every positive integer d has at least as many multiples in the interval from r + a to r + b as in the interval from a to b, then for every positive integer d the number of indices i from 1 through b for which d divides e_i is at least the number of indices i from 1 through b for which d divides i.",
+        "quantifier_order": [
+          "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+          "For each integer i with 1 <= i <= b, define e_i by a piecewise rule: e_i = i if i <= a, and e_i = r + i if a < i <= b.",
+          "For each positive integer d and integers u, v, define M_d(u, v) as the number of integers m satisfying u < m <= v and d divides m.",
+          "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+          "Conclude that for every positive integer d, the number of indices i from 1 through b with d dividing e_i is at least the number of indices i from 1 through b with d dividing i."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b and r >= 0",
+            "name": "a",
+            "role": "fixed parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= a <= b and r >= 0",
+            "name": "b",
+            "role": "fixed parameter and upper index bound",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= a <= b and r >= 0",
+            "name": "r",
+            "role": "fixed shift parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "indices from 1 through b",
+            "name": "i",
+            "role": "index variable for the sequence e_i and for counting sets",
+            "type": "integer"
+          },
+          {
+            "domain": "positive integers",
+            "name": "d",
+            "role": "divisor parameter in the divisibility counts",
+            "type": "positive integer"
+          },
+          {
+            "domain": "integers in the interval u < m <= v",
+            "name": "m",
+            "role": "dummy variable counted by M_d",
+            "type": "integer"
+          },
+          {
+            "domain": "integer interval endpoint",
+            "name": "u",
+            "role": "lower interval endpoint for M_d",
+            "type": "integer"
+          },
+          {
+            "domain": "integer interval endpoint",
+            "name": "v",
+            "role": "upper interval endpoint for M_d",
+            "type": "integer"
+          },
+          {
+            "domain": "indices from 1 through b",
+            "name": "e_i",
+            "role": "piecewise-defined sequence depending on a, b, r, and i",
+            "type": "integer-valued sequence"
+          },
+          {
+            "domain": "positive integer d and integer endpoints u, v",
+            "name": "M_d",
+            "role": "counts multiples of d in the half-open interval (u, v]",
+            "type": "counting function"
+          }
+        ],
+        "witness_dependencies": [
+          "There are no existential witnesses in the statement; all quantified variables are universal or fixed by definition.",
+          "The conclusion is required for each positive integer d separately, with the same fixed parameters a, b, and r."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329132957_be54b46e"
+      ],
+      "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. For 1 <= i <= b define an integer e_i by e_i = i when i <= a, and e_i = r+i when a < i <= b. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. If M_d(r+a, r+b) >= M_d(a,b) for every positive integer d, then for every positive integer d one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T13:29:57.251332+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof is a complete direct counting argument. For fixed positive d, it partitions the index set {1,...,b} into {1,...,a} and {a+1,...,b}, uses the definition e_i=i on the first part and e_i=r+i on the second, and identifies the second-part count with M_d(r+a,r+b). Doing the same for divisibility of i identifies the comparison count with M_d(a,b). The assumed inequality then gives the desired result. The proof matches the lemma statement and assembly role, and it uses no undeclared or forbidden dependencies.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329132957_be54b46e",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132335_f096b04e.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T13:29:57.251332+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329132405_562eefce",
+      "proof_nl": null,
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.749956+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "b is a nonnegative integer",
+          "the list e_1 through e_b has exactly b entries",
+          "each e_i is a positive integer",
+          "d ranges over positive integers only",
+          "S is the graded polynomial ring over the rationals in variables y_1 through y_b",
+          "the grading on S assigns degree i to y_i",
+          "the counting condition compares indices i from 1 through b",
+          "when b is 0, S is the rational numbers and the conclusion is the empty regular sequence"
+        ],
+        "normalized_claim": "For any nonnegative integer b and any ordered list of b positive integers e_1 through e_b satisfying that, for every positive integer d, the number of indices i from 1 to b with d dividing e_i is at least the number of indices i from 1 to b with d dividing i, there exist homogeneous elements u_1 through u_b in the weighted graded polynomial ring over the rationals on generators y_1 through y_b, with degree of y_i equal to i, such that each u_i has degree e_i and the ordered list u_1 through u_b is a regular sequence. In the case b equals 0, this is the empty regular sequence in the ring of rational numbers.",
+        "quantifier_order": [
+          "for each nonnegative integer b",
+          "for each ordered list e_1 through e_b of positive integers",
+          "for every positive integer d, the divisibility count inequality must hold",
+          "if the hypothesis holds, then there exists an ordered list u_1 through u_b in S",
+          "each u_i is homogeneous of degree e_i",
+          "the list u_1 through u_b is a regular sequence"
+        ],
+        "variables": [
+          {
+            "domain": "nonnegative integers",
+            "name": "b",
+            "role": "length parameter and number of generators in the polynomial ring",
+            "type": "integer"
+          },
+          {
+            "domain": "positive integers indexed by i from 1 to b",
+            "name": "e",
+            "role": "target degrees for the homogeneous elements",
+            "type": "ordered list of integers"
+          },
+          {
+            "domain": "positive integers",
+            "name": "d",
+            "role": "test divisor used in the counting hypothesis",
+            "type": "integer"
+          },
+          {
+            "domain": "polynomial ring over the rationals in b variables",
+            "name": "S",
+            "role": "ambient graded ring",
+            "type": "graded polynomial ring"
+          },
+          {
+            "domain": "homogeneous polynomials in S",
+            "name": "u",
+            "role": "regular sequence with prescribed degrees",
+            "type": "ordered list of elements of S"
+          }
+        ],
+        "witness_dependencies": [
+          "The existence witnesses u_1 through u_b may depend on the entire parameter set b and e_1 through e_b",
+          "The witnesses are chosen after the divisibility hypothesis is verified for all positive integers d",
+          "The elements u_i are not allowed to depend on the particular choice of d, since d is universally quantified in the hypothesis",
+          "The witness is an ordered sequence, so the regular sequence property depends on the order of the u_i"
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "Let b be a nonnegative integer, and let e_1,...,e_b be an ordered list of b positive integers. Let S := Q[y_1,...,y_b] be the polynomial ring graded by deg(y_i)=i for 1 <= i <= b. Assume that for every positive integer d, one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. Then there exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for every i and the ordered list u_1,...,u_b is a regular sequence. When b=0, this means the empty regular sequence in S=Q.",
+      "status_snapshot": {
+        "active_counterexample_id": "cex_20260329133035_2b45744a",
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "accepted",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T13:31:12.931595+00:00",
+        "last_terminal_worker_result": "agent4:counterexample_flagged",
+        "last_transition_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "invalidate_parent_decomposition",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132405_562eefce.json",
+        "proof_status": "failed",
+        "routing_status": "blocked",
+        "solver_attempt_count": 1,
+        "statement_status": "false",
+        "truth_status": "false",
+        "updated_at": "2026-03-29T13:31:12.931595+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329132417_2d21af9e",
+      "proof_nl": null,
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.751365+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a and b are integers",
+          "0 <= a <= b",
+          "S is the polynomial ring over the rational numbers in b variables",
+          "The grading on S assigns degree i to y_i",
+          "Each g_i lies in S",
+          "Each g_i is homogeneous",
+          "The sequence g_1 through g_a is a regular sequence in S",
+          "For each i from 1 to a, the degree of g_i is i",
+          "phi is required to be a graded Q-algebra automorphism, not merely an algebra automorphism"
+        ],
+        "normalized_claim": "Every homogeneous regular sequence g_1 through g_a in the weighted polynomial ring Q[y_1 through y_b], with deg(y_i)=i and deg(g_i)=i, can be carried by a graded Q-algebra automorphism of the ring to the standard sequence y_1 through y_a. In the degenerate case a = 0, the identity automorphism is a valid choice.",
+        "quantifier_order": [
+          "For all integers a and b with 0 <= a <= b",
+          "Define S as the polynomial ring over Q in variables y_1 through y_b, graded by deg(y_i)=i",
+          "For all sequences g_1 through g_a of homogeneous elements of S such that they form a regular sequence and deg(g_i)=i for each i from 1 to a",
+          "There exists a graded Q-algebra automorphism phi of S",
+          "For every i from 1 to a, phi sends g_i to y_i",
+          "If a = 0, phi can be chosen to be the identity automorphism"
+        ],
+        "variables": [
+          {
+            "domain": "integers",
+            "name": "a",
+            "role": "parameter controlling the length of the regular sequence and the target variables",
+            "type": "integer"
+          },
+          {
+            "domain": "integers",
+            "name": "b",
+            "role": "parameter controlling the number of polynomial generators",
+            "type": "integer"
+          },
+          {
+            "domain": "the polynomial ring over the rational numbers in b indeterminates with weighted grading",
+            "name": "S",
+            "type": "graded Q-algebra"
+          },
+          {
+            "domain": "the polynomial generators of S, indexed by i from 1 to b",
+            "name": "y_i",
+            "role": "generator with assigned degree i",
+            "type": "indeterminate"
+          },
+          {
+            "domain": "elements of S indexed by i from 1 to a",
+            "name": "g_i",
+            "role": "input regular sequence element",
+            "type": "homogeneous element of S"
+          },
+          {
+            "domain": "automorphisms of S as a graded Q-algebra",
+            "name": "phi",
+            "role": "witness automorphism",
+            "type": "graded Q-algebra automorphism of S"
+          }
+        ],
+        "witness_dependencies": [
+          "The automorphism phi may depend on the chosen integers a and b",
+          "The automorphism phi may depend on the specific graded ring S determined by b",
+          "The automorphism phi may depend on the particular regular sequence g_1 through g_a",
+          "The claim requires one single phi that simultaneously satisfies phi(g_i)=y_i for all i from 1 to a",
+          "In the special case a = 0, the witness phi may be chosen independently of any g_i, namely as the identity"
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "Let a and b be integers with 0 <= a <= b, and let S := Q[y_1,...,y_b] be graded by deg(y_i)=i. Suppose g_1,...,g_a are homogeneous elements of S that form a regular sequence and satisfy deg(g_i)=i for each i=1,...,a. Then there exists a graded Q-algebra automorphism phi : S -> S such that phi(g_i)=y_i for every i=1,...,a. When a=0, phi may be taken to be the identity automorphism.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T13:27:59.385438+00:00",
+        "last_terminal_worker_result": null,
+        "last_transition_reason": "solver attempt 1 submitted",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "wait_on_solver",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132417_2d21af9e.json",
+        "proof_status": "open",
+        "routing_status": "open",
+        "solver_attempt_count": 0,
+        "statement_status": "unvetted",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T13:27:59.385438+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329132425_b7fb9eda",
+      "proof_nl": "Let v_i := phi(u_i) for i = 1,...,n. For each i = 0,...,n, set I_i := (u_1,...,u_i) and J_i := (v_1,...,v_i), with I_0 = J_0 = (0). Because phi is an algebra automorphism, phi(I_i) = J_i for every i. Hence phi induces an isomorphism of quotient rings bar_phi_i : A / I_i -> A / J_i, given by a + I_i |-> phi(a) + J_i; its inverse is induced by phi^{-1}. Now let u_i have degree d. Since phi is a graded automorphism, it preserves each graded piece, so phi(u_i) also lies in the degree-d piece. Therefore deg(phi(u_i)) = d = deg(u_i) for every i. It remains to prove preservation of regular sequences. Use the standard ring-theoretic definition: a sequence x_1,...,x_n is regular if for each i >= 1, the class of x_i is a non-zero-divisor in A / (x_1,...,x_{i-1}); if one also adopts the common extra condition that the final quotient A / (x_1,...,x_n) be nonzero, that condition is also preserved here because the final quotients are isomorphic. Assume first that u_1,...,u_n is a regular sequence. Fix i with 1 <= i <= n. Suppose that in A / J_{i-1} one has (v_i + J_{i-1})(a + J_{i-1}) = 0. Then v_i a is in J_{i-1} = phi(I_{i-1}). Applying phi^{-1}, we get u_i phi^{-1}(a) in I_{i-1}. Equivalently, in A / I_{i-1} we have (u_i + I_{i-1})(phi^{-1}(a) + I_{i-1}) = 0. Since u_i + I_{i-1} is a non-zero-divisor in A / I_{i-1}, it follows that phi^{-1}(a) + I_{i-1} = 0, so phi^{-1}(a) is in I_{i-1}. Applying phi, we obtain a in J_{i-1}. Thus v_i + J_{i-1} is a non-zero-divisor in A / J_{i-1}. Since this holds for every i, the sequence v_1,...,v_n is regular. If one includes the additional condition A / I_n != 0 in the definition, it is preserved as well because bar_phi_n is an isomorphism A / I_n ~= A / J_n. Conversely, if v_1,...,v_n is regular, the same argument applied to the automorphism phi^{-1} shows that u_1,...,u_n is regular. Therefore u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Together with the degree argument above, this proves the lemma.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.752666+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "A must be a graded commutative algebra over the rational numbers",
+          "phi must be an automorphism of A that preserves the grading and the Q-algebra structure",
+          "each u_i must be homogeneous in A",
+          "the sequence length is finite and indexed by integers from 1 to n",
+          "regular sequence is interpreted in the commutative algebra underlying A"
+        ],
+        "normalized_claim": "For every graded commutative Q-algebra A, every grading-preserving Q-algebra automorphism phi of A, every finite sequence of homogeneous elements u_1 through u_n in A, the sequence u_1 through u_n is a regular sequence exactly when the image sequence phi(u_1) through phi(u_n) is a regular sequence; in addition, phi preserves the degree of each sequence element.",
+        "quantifier_order": [
+          "for every graded commutative Q-algebra A",
+          "for every graded Q-algebra automorphism phi of A",
+          "for every natural number n",
+          "for every choice of homogeneous elements u_1 through u_n in A",
+          "for each index i from 1 to n"
+        ],
+        "variables": [
+          {
+            "domain": "algebras over the rational numbers equipped with a grading",
+            "name": "A",
+            "role": "ambient algebra",
+            "type": "graded commutative Q-algebra"
+          },
+          {
+            "domain": "self-maps of A that are algebra automorphisms, Q-linear, and grading-preserving",
+            "name": "phi",
+            "role": "structure-preserving automorphism",
+            "type": "graded Q-algebra automorphism of A"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "length of the sequence",
+            "type": "natural number"
+          },
+          {
+            "domain": "elements of A with a well-defined degree",
+            "name": "u_i",
+            "role": "entries of the sequence",
+            "type": "homogeneous element of A"
+          },
+          {
+            "domain": "integers from 1 to n",
+            "name": "i",
+            "role": "sequence index",
+            "type": "index"
+          }
+        ],
+        "witness_dependencies": [
+          "There are no existential witnesses in the statement; it is a universal preservation claim.",
+          "The degree comparison is pointwise for each index i and does not depend on any additional choice."
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "Let A be a graded commutative Q-algebra, let phi : A -> A be a graded Q-algebra automorphism, and let u_1,...,u_n be homogeneous elements of A. Then u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Moreover deg(phi(u_i)) = deg(u_i) for every i.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T13:30:18.827974+00:00",
+        "last_terminal_worker_result": "agent4:proved",
+        "last_transition_reason": "vetter attempt 1 submitted",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "wait_on_vetter",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132425_b7fb9eda.json",
+        "proof_status": "proof_found",
+        "routing_status": "open",
+        "solver_attempt_count": 1,
+        "statement_status": "unvetted",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T13:30:18.827974+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329132438_1d671bdc",
+      "proof_nl": "Let I = (u_1,...,u_m) and B = A/I, and for each j let w_j be the image of v_j in B. For each integer t with 0 <= t <= n, set J_t = (u_1,...,u_m,v_1,...,v_t) in A, with J_0 = I. Because the concatenated sequence u_1,...,u_m,v_1,...,v_n is regular in A, two facts hold: each J_t is a proper ideal of A, and for each j with 1 <= j <= n, the element v_j is a nonzerodivisor on A/J_{j-1}.\n\nFirst we prove the proper-ideal condition in B. Fix t with 0 <= t <= n. Suppose that the ideal (w_1,...,w_t) is all of B. Then there are elements b_1,...,b_t in B such that 1 = sum b_i w_i in B; when t = 0 this just means 1 = 0 in B. Choose lifts a_i in A of the elements b_i. Then 1 - sum a_i v_i lies in I, so 1 lies in I + (v_1,...,v_t) = J_t. This contradicts the fact that J_t is proper. Hence (w_1,...,w_t) is a proper ideal of B for every t. In particular, taking t = 0 shows that B is not the zero ring.\n\nNext we prove the nonzerodivisor condition. Fix j with 1 <= j <= n. Let x be an element of A whose class in B/(w_1,...,w_{j-1}) is annihilated by w_j. By definition of the quotient, this means that v_j x lies in I + (v_1,...,v_{j-1}) = J_{j-1}. Since v_j is a nonzerodivisor on A/J_{j-1}, it follows that x lies in J_{j-1}. But then the class of x in B/(w_1,...,w_{j-1}) is zero. Therefore multiplication by w_j on B/(w_1,...,w_{j-1}) is injective, so w_j is a nonzerodivisor there.\n\nThus every initial ideal (w_1,...,w_t) is proper in B, and each w_j is a nonzerodivisor modulo the preceding ones. Hence w_1,...,w_n is a regular sequence in B = A/(u_1,...,u_m).\n\nNow assume A is graded and all u_i and v_j are homogeneous. Then I = (u_1,...,u_m) is a homogeneous ideal, so B = A/I inherits the quotient grading, and the quotient map A -> B preserves degrees. Therefore the image w_j of a homogeneous element v_j of degree d lies in the degree-d part of B. Since w_j is nonzero by the regularity already proved, this means that w_j is homogeneous of degree d, so it has the same degree as v_j. This proves the graded statement as well.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.753835+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "A must be a commutative ring.",
+          "m and n are finite lengths of the sequence; the statement does not specify whether they may be zero, but the standard reading allows empty sequences.",
+          "The phrase regular sequence carries the usual commutative algebra meaning: each element is a nonzerodivisor modulo the ideal generated by the earlier ones, and the generated ideal is proper at each stage.",
+          "The quotient is by the ideal generated by u_1 through u_m.",
+          "In the graded case, A must carry a grading compatible with the notion of homogeneous elements.",
+          "Homogeneous means each u_i and v_j lies entirely in one graded piece."
+        ],
+        "normalized_claim": "A regular sequence in a commutative ring remains regular after passing to the quotient by the ideal generated by an initial block of the sequence. If the ring is graded and the elements are homogeneous, then their images in the quotient stay homogeneous with the same degrees.",
+        "quantifier_order": [
+          "For every commutative ring A.",
+          "For every nonnegative integers m and n.",
+          "For every sequence u_1 through u_m and v_1 through v_n in A such that the concatenated sequence is regular.",
+          "Then in the quotient ring B equal to A modulo the ideal generated by u_1 through u_m, the images bar_v_1 through bar_v_n form a regular sequence.",
+          "If A is graded and every u_i and v_j is homogeneous, then each bar_v_j is homogeneous and has the same degree as v_j."
+        ],
+        "variables": [
+          {
+            "domain": "commutative rings",
+            "name": "A",
+            "role": "ambient ring",
+            "type": "ring"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "m",
+            "role": "length of the first block of the sequence",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "length of the second block of the sequence",
+            "type": "integer"
+          },
+          {
+            "domain": "A for i from 1 to m",
+            "name": "u_i",
+            "role": "first block of a regular sequence",
+            "type": "element of A"
+          },
+          {
+            "domain": "A for j from 1 to n",
+            "name": "v_j",
+            "role": "second block of a regular sequence",
+            "type": "element of A"
+          },
+          {
+            "domain": "A modulo the ideal generated by u_1 through u_m",
+            "name": "B",
+            "role": "target ring for the images of v_j",
+            "type": "quotient ring"
+          },
+          {
+            "domain": "B for j from 1 to n",
+            "name": "bar_v_j",
+            "role": "image of v_j in the quotient ring",
+            "type": "element of B"
+          }
+        ],
+        "witness_dependencies": [
+          "No existential witnesses are introduced.",
+          "Regularity of bar_v_j in the quotient depends on the earlier images bar_v_1 through bar_v_{j-1} in the quotient ring.",
+          "The degree statement depends only on the quotient map preserving the grading of homogeneous elements."
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "Let A be a commutative ring, and let u_1,...,u_m,v_1,...,v_n be a regular sequence in A. Then the images of v_1,...,v_n in the quotient ring A/(u_1,...,u_m) form a regular sequence. If A is graded and all u_i and v_j are homogeneous, then the quotient images are homogeneous and keep the same degrees.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T13:30:36.950441+00:00",
+        "last_terminal_worker_result": "agent4:proved",
+        "last_transition_reason": "vetter attempt 1 submitted",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "wait_on_vetter",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132438_1d671bdc.json",
+        "proof_status": "proof_found",
+        "routing_status": "open",
+        "solver_attempt_count": 1,
+        "statement_status": "unvetted",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T13:30:36.950441+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329132447_75e7cd4d",
+      "proof_nl": null,
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.755269+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a and b are integers.",
+          "The inequality 0 <= a <= b must hold.",
+          "I is the set of integers strictly bigger than a and at most b.",
+          "S is a polynomial ring over the rational numbers with b variables.",
+          "R is a polynomial ring over the rational numbers with one variable for each index in I.",
+          "The grading is weighted, with degree of y_i equal to i and degree of x_s equal to s.",
+          "The ideal generated by y_1 through y_a is homogeneous, so the quotient inherits a grading.",
+          "When a = b, the index set I is empty, so R has no generators and is just Q."
+        ],
+        "normalized_claim": "Given integers a and b with 0 <= a <= b, the weighted polynomial ring over Q in y_1 through y_b, after quotienting by the ideal generated by y_1 through y_a, is canonically the same graded Q-algebra as the weighted polynomial ring over Q in the remaining variables indexed by a+1 through b. The identification sends the class of each surviving y_s to x_s, preserves weighted degree, and carries homogeneous regular sequences to homogeneous regular sequences. If a = b, both sides reduce to Q.",
+        "quantifier_order": [
+          "For all integers a and b satisfying 0 <= a <= b.",
+          "Define I as the integers from a+1 through b.",
+          "Define S and R as weighted polynomial rings over Q with the stated generators and degrees.",
+          "There exists a canonical graded Q-algebra isomorphism from S modulo the ideal generated by y_1 through y_a to R, determined by sending the class of y_s to x_s for each s in I.",
+          "Under this identification, homogeneous regular sequences correspond and weighted degrees are preserved.",
+          "In the special case a = b, both rings are Q."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "b",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "the integers from a+1 through b",
+            "name": "I",
+            "role": "index set for the surviving variables in R",
+            "type": "finite set of integers"
+          },
+          {
+            "domain": "Q in variables y_1 through y_b",
+            "name": "S",
+            "role": "source graded algebra",
+            "type": "commutative polynomial ring over Q"
+          },
+          {
+            "domain": "Q in variables x_s for s in I",
+            "name": "R",
+            "role": "target graded algebra",
+            "type": "commutative polynomial ring over Q"
+          },
+          {
+            "domain": "indices i from 1 through b",
+            "name": "y_i",
+            "role": "generators of S with weighted degree i",
+            "type": "indeterminate"
+          },
+          {
+            "domain": "indices s in I",
+            "name": "x_s",
+            "role": "generators of R with weighted degree s",
+            "type": "indeterminate"
+          },
+          {
+            "domain": "quotient of S by the homogeneous ideal generated by the first a variables",
+            "name": "quotient ring S modulo the ideal generated by y_1 through y_a",
+            "role": "intermediate ring identified with R",
+            "type": "graded Q-algebra"
+          },
+          {
+            "domain": "from S modulo y_1 through y_a to R",
+            "name": "canonical isomorphism",
+            "role": "identification sending each surviving generator class to the matching generator in R",
+            "type": "graded Q-algebra isomorphism"
+          }
+        ],
+        "witness_dependencies": [
+          "The canonical isomorphism depends on the chosen parameters a and b through the index set I.",
+          "Its action on generators is completely determined by the images of the classes of y_s for s in I.",
+          "No extra choice is required beyond the parameters, since the map is forced by the generator assignment.",
+          "The preservation of homogeneous regular sequences is induced by the same graded isomorphism and does not require an additional witness."
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "Let a and b be integers with 0 <= a <= b. Put I := {a+1,...,b}, let S := Q[y_1,...,y_b] with weighted grading deg(y_i)=i, and let R := Q[x_s : s in I] with weighted grading deg(x_s)=s. Then the quotient S/(y_1,...,y_a) is canonically isomorphic to R as a graded Q-algebra, via the map sending the class of y_s to x_s for each s in I. Under this graded isomorphism, homogeneous regular sequences correspond and weighted degrees are preserved. When a=b, both rings are Q.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T13:28:02.365943+00:00",
+        "last_terminal_worker_result": null,
+        "last_transition_reason": "solver attempt 1 submitted",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "wait_on_solver",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132447_75e7cd4d.json",
+        "proof_status": "open",
+        "routing_status": "open",
+        "solver_attempt_count": 0,
+        "statement_status": "unvetted",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T13:28:02.365943+00:00"
+      }
+    }
+  ],
+  "decomposition": {
+    "assembled_proof_nl": "Target: Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family.\n\nStrategy summary: Embed the target ring R = Q[x_s : s in {a+1,...,b}] into the larger weighted polynomial ring S = Q[y_1,...,y_b] by viewing R as the quotient S/(y_1,...,y_a). Package the desired tail degrees together with the killed coordinate degrees into the ordered list (1,2,...,a,r+a+1,...,r+b). The given interval divisibility hypothesis is exactly the divisor-count dominance needed for a stronger existence theorem in the initial-interval ring S. After obtaining a regular sequence in S of those degrees, straighten the first a entries to y_1,...,y_a by a graded triangular automorphism, then descend the remaining entries to the quotient ring R.\n\nAssembly skeleton: Work in the larger weighted polynomial ring S = Q[y_1,...,y_b] with weights 1,...,b, and encode the desired construction by the ordered degree list e_i = i for i <= a and e_i = r+i for i > a. The theorem hypothesis is exactly the divisor-count condition for this list, so the bottleneck initial-interval existence theorem yields a homogeneous regular sequence u_1,...,u_b in S with those ordered degrees. The first a elements have degrees 1,...,a, so a graded triangular automorphism straightens them to the coordinate variables y_1,...,y_a. Quotienting by those variables leaves the tail as a regular sequence in S/(y_1,...,y_a), and this quotient is canonically the target ring R = Q[x_s : s in {a+1,...,b}]. The descended tail gives the family (f_s)_{s in I} with deg(f_s)=r+s in increasing order. If a=b, the tail is empty, so the witness family is the empty family.\n\nAssembly steps:\n\n- A1: derive Define S := Q[y_1,...,y_b] with weighted grading deg(y_i)=i for 1 <= i <= b. Define the ordered list e_1,...,e_b by e_i = i for 1 <= i <= a and e_i = r+i for a < i <= b. Also define I := {a+1,...,b} and R := Q[x_s : s in I] with deg(x_s)=s. using lemmas [] and prior steps [].\n\n- A2: derive For every positive integer d, the ordered list e_1,...,e_b satisfies |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. using lemmas ['lem_20260329132335_f096b04e'] and prior steps ['A1'].\n\n- A3: derive There exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for each i and the ordered list u_1,...,u_b is a regular sequence in S. using lemmas ['lem_20260329132405_562eefce'] and prior steps ['A1', 'A2'].\n\n- A4: derive The prefix u_1,...,u_a is a homogeneous regular sequence in S, and deg(u_i)=i for each i=1,...,a. using lemmas [] and prior steps ['A3'].\n\n- A5: derive There exists a graded Q-algebra automorphism phi : S -> S such that phi(u_i)=y_i for every i=1,...,a. using lemmas ['lem_20260329132417_2d21af9e'] and prior steps ['A4'].\n\n- A6: derive The ordered list y_1,...,y_a, phi(u_{a+1}),...,phi(u_b) is a homogeneous regular sequence in S. Moreover, for each s in I = {a+1,...,b}, one has deg(phi(u_s)) = deg(u_s) = r+s. using lemmas ['lem_20260329132425_b7fb9eda'] and prior steps ['A3', 'A5'].\n\n- A7: derive In the quotient ring S/(y_1,...,y_a), the images of phi(u_{a+1}),...,phi(u_b) form a homogeneous regular sequence. For each s in I, the image of phi(u_s) has weighted degree r+s. using lemmas ['lem_20260329132438_1d671bdc'] and prior steps ['A6'].\n\n- A8: derive Via the canonical graded Q-algebra isomorphism S/(y_1,...,y_a) \u2245 R from L6, define for each s in I the element f_s in R to be the image of the class of phi(u_s). Then each f_s is homogeneous of degree r+s, and the ordered list (f_s) for s=a+1,a+2,...,b is a regular sequence in R. using lemmas ['lem_20260329132447_75e7cd4d'] and prior steps ['A1', 'A7'].\n\n- A9: derive There exists a family (f_s) indexed by I = {a+1,...,b} of homogeneous polynomials in R such that deg(f_s)=r+s for every s in I, and the ordered list of these polynomials in increasing s is a regular sequence in R. If a=b, then I is empty and the family is empty. This is exactly the root theorem statement. using lemmas [] and prior steps ['A8', 'A1'].\n\nRecursive lemma proofs:\n\n1. lem_20260329132335_f096b04e: Let a, b, r be integers with 0 <= a <= b and r >= 0. For 1 <= i <= b define an integer e_i by e_i = i when i <= a, and e_i = r+i when a < i <= b. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. If M_d(r+a, r+b) >= M_d(a,b) for every positive integer d, then for every positive integer d one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.\nFix an arbitrary positive integer d. Define\nA := {i in {1,...,b} : d divides e_i}\nand\nB := {i in {1,...,b} : d divides i}.\n\nWe split the index set {1,...,b} into the disjoint union {1,...,a} union {a+1,...,b}. (If a=0 or a=b, one of these sets is empty, and the same argument still applies.) Therefore A is the disjoint union of A \u2229 {1,...,a} and A \u2229 {a+1,...,b}, and similarly for B.\n\nFor i with 1 <= i <= a, the definition gives e_i = i. Hence\n|A \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\n\nFor i with a < i <= b, the definition gives e_i = r+i. The map i -> r+i is a bijection from {a+1,...,b} onto the set {m in Z : r+a < m <= r+b}. Under this bijection, the condition d divides e_i is exactly the condition d divides m. Thus\n|A \u2229 {a+1,...,b}| = |{m in Z : r+a < m <= r+b and d divides m}| = M_d(r+a,r+b).\n\nSince the two pieces are disjoint,\n|A| = |{i in {1,...,a} : d divides i}| + M_d(r+a,r+b).\n\nNow do the same for B. Clearly,\n|B \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\nAlso, the identity map is a bijection from {a+1,...,b} onto {m in Z : a < m <= b}, so\n|B \u2229 {a+1,...,b}| = |{m in Z : a < m <= b and d divides m}| = M_d(a,b).\nTherefore,\n|B| = |{i in {1,...,a} : d divides i}| + M_d(a,b).\n\nBy the hypothesis of the lemma, for this positive integer d we have\nM_d(r+a,r+b) >= M_d(a,b).\nComparing the formulas for |A| and |B|, we obtain\n|A| >= |B|,\nthat is,\n|{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.\n\nBecause d was arbitrary, this holds for every positive integer d, exactly as claimed.\n\n2. lem_20260329132405_562eefce: Let b be a nonnegative integer, and let e_1,...,e_b be an ordered list of b positive integers. Let S := Q[y_1,...,y_b] be the polynomial ring graded by deg(y_i)=i for 1 <= i <= b. Assume that for every positive integer d, one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. Then there exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for every i and the ordered list u_1,...,u_b is a regular sequence. When b=0, this means the empty regular sequence in S=Q.\nProof text not yet materialized.\n\n3. lem_20260329132417_2d21af9e: Let a and b be integers with 0 <= a <= b, and let S := Q[y_1,...,y_b] be graded by deg(y_i)=i. Suppose g_1,...,g_a are homogeneous elements of S that form a regular sequence and satisfy deg(g_i)=i for each i=1,...,a. Then there exists a graded Q-algebra automorphism phi : S -> S such that phi(g_i)=y_i for every i=1,...,a. When a=0, phi may be taken to be the identity automorphism.\nProof text not yet materialized.\n\n4. lem_20260329132425_b7fb9eda: Let A be a graded commutative Q-algebra, let phi : A -> A be a graded Q-algebra automorphism, and let u_1,...,u_n be homogeneous elements of A. Then u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Moreover deg(phi(u_i)) = deg(u_i) for every i.\nLet v_i := phi(u_i) for i = 1,...,n. For each i = 0,...,n, set I_i := (u_1,...,u_i) and J_i := (v_1,...,v_i), with I_0 = J_0 = (0). Because phi is an algebra automorphism, phi(I_i) = J_i for every i. Hence phi induces an isomorphism of quotient rings bar_phi_i : A / I_i -> A / J_i, given by a + I_i |-> phi(a) + J_i; its inverse is induced by phi^{-1}. Now let u_i have degree d. Since phi is a graded automorphism, it preserves each graded piece, so phi(u_i) also lies in the degree-d piece. Therefore deg(phi(u_i)) = d = deg(u_i) for every i. It remains to prove preservation of regular sequences. Use the standard ring-theoretic definition: a sequence x_1,...,x_n is regular if for each i >= 1, the class of x_i is a non-zero-divisor in A / (x_1,...,x_{i-1}); if one also adopts the common extra condition that the final quotient A / (x_1,...,x_n) be nonzero, that condition is also preserved here because the final quotients are isomorphic. Assume first that u_1,...,u_n is a regular sequence. Fix i with 1 <= i <= n. Suppose that in A / J_{i-1} one has (v_i + J_{i-1})(a + J_{i-1}) = 0. Then v_i a is in J_{i-1} = phi(I_{i-1}). Applying phi^{-1}, we get u_i phi^{-1}(a) in I_{i-1}. Equivalently, in A / I_{i-1} we have (u_i + I_{i-1})(phi^{-1}(a) + I_{i-1}) = 0. Since u_i + I_{i-1} is a non-zero-divisor in A / I_{i-1}, it follows that phi^{-1}(a) + I_{i-1} = 0, so phi^{-1}(a) is in I_{i-1}. Applying phi, we obtain a in J_{i-1}. Thus v_i + J_{i-1} is a non-zero-divisor in A / J_{i-1}. Since this holds for every i, the sequence v_1,...,v_n is regular. If one includes the additional condition A / I_n != 0 in the definition, it is preserved as well because bar_phi_n is an isomorphism A / I_n ~= A / J_n. Conversely, if v_1,...,v_n is regular, the same argument applied to the automorphism phi^{-1} shows that u_1,...,u_n is regular. Therefore u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Together with the degree argument above, this proves the lemma.\n\n5. lem_20260329132438_1d671bdc: Let A be a commutative ring, and let u_1,...,u_m,v_1,...,v_n be a regular sequence in A. Then the images of v_1,...,v_n in the quotient ring A/(u_1,...,u_m) form a regular sequence. If A is graded and all u_i and v_j are homogeneous, then the quotient images are homogeneous and keep the same degrees.\nLet I = (u_1,...,u_m) and B = A/I, and for each j let w_j be the image of v_j in B. For each integer t with 0 <= t <= n, set J_t = (u_1,...,u_m,v_1,...,v_t) in A, with J_0 = I. Because the concatenated sequence u_1,...,u_m,v_1,...,v_n is regular in A, two facts hold: each J_t is a proper ideal of A, and for each j with 1 <= j <= n, the element v_j is a nonzerodivisor on A/J_{j-1}.\n\nFirst we prove the proper-ideal condition in B. Fix t with 0 <= t <= n. Suppose that the ideal (w_1,...,w_t) is all of B. Then there are elements b_1,...,b_t in B such that 1 = sum b_i w_i in B; when t = 0 this just means 1 = 0 in B. Choose lifts a_i in A of the elements b_i. Then 1 - sum a_i v_i lies in I, so 1 lies in I + (v_1,...,v_t) = J_t. This contradicts the fact that J_t is proper. Hence (w_1,...,w_t) is a proper ideal of B for every t. In particular, taking t = 0 shows that B is not the zero ring.\n\nNext we prove the nonzerodivisor condition. Fix j with 1 <= j <= n. Let x be an element of A whose class in B/(w_1,...,w_{j-1}) is annihilated by w_j. By definition of the quotient, this means that v_j x lies in I + (v_1,...,v_{j-1}) = J_{j-1}. Since v_j is a nonzerodivisor on A/J_{j-1}, it follows that x lies in J_{j-1}. But then the class of x in B/(w_1,...,w_{j-1}) is zero. Therefore multiplication by w_j on B/(w_1,...,w_{j-1}) is injective, so w_j is a nonzerodivisor there.\n\nThus every initial ideal (w_1,...,w_t) is proper in B, and each w_j is a nonzerodivisor modulo the preceding ones. Hence w_1,...,w_n is a regular sequence in B = A/(u_1,...,u_m).\n\nNow assume A is graded and all u_i and v_j are homogeneous. Then I = (u_1,...,u_m) is a homogeneous ideal, so B = A/I inherits the quotient grading, and the quotient map A -> B preserves degrees. Therefore the image w_j of a homogeneous element v_j of degree d lies in the degree-d part of B. Since w_j is nonzero by the regularity already proved, this means that w_j is homogeneous of degree d, so it has the same degree as v_j. This proves the graded statement as well.\n\n6. lem_20260329132447_75e7cd4d: Let a and b be integers with 0 <= a <= b. Put I := {a+1,...,b}, let S := Q[y_1,...,y_b] with weighted grading deg(y_i)=i, and let R := Q[x_s : s in I] with weighted grading deg(x_s)=s. Then the quotient S/(y_1,...,y_a) is canonically isomorphic to R as a graded Q-algebra, via the map sending the class of y_s to x_s for each s in I. Under this graded isomorphism, homogeneous regular sequences correspond and weighted degrees are preserved. When a=b, both rings are Q.\nProof text not yet materialized.",
+    "assembly_plan": {
+      "assembly_plan_id": "asm_20260329132732_4eb55056",
+      "is_trivially_composable": false,
+      "proof_skeleton_nl": "Work in the larger weighted polynomial ring S = Q[y_1,...,y_b] with weights 1,...,b, and encode the desired construction by the ordered degree list e_i = i for i <= a and e_i = r+i for i > a. The theorem hypothesis is exactly the divisor-count condition for this list, so the bottleneck initial-interval existence theorem yields a homogeneous regular sequence u_1,...,u_b in S with those ordered degrees. The first a elements have degrees 1,...,a, so a graded triangular automorphism straightens them to the coordinate variables y_1,...,y_a. Quotienting by those variables leaves the tail as a regular sequence in S/(y_1,...,y_a), and this quotient is canonically the target ring R = Q[x_s : s in {a+1,...,b}]. The descended tail gives the family (f_s)_{s in I} with deg(f_s)=r+s in increasing order. If a=b, the tail is empty, so the witness family is the empty family.",
+      "steps": [
+        {
+          "derives": "Define S := Q[y_1,...,y_b] with weighted grading deg(y_i)=i for 1 <= i <= b. Define the ordered list e_1,...,e_b by e_i = i for 1 <= i <= a and e_i = r+i for a < i <= b. Also define I := {a+1,...,b} and R := Q[x_s : s in I] with deg(x_s)=s.",
+          "is_trivial": true,
+          "step_id": "A1",
+          "trivial_justification": "This is only the setup of the larger ring, the ordered degree list, and the target ring.",
+          "uses_lemmas": [],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "For every positive integer d, the ordered list e_1,...,e_b satisfies |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.",
+          "is_trivial": false,
+          "step_id": "A2",
+          "trivial_justification": "Apply L1 directly to the theorem hypothesis M_d(r+a, r+b) >= M_d(a,b) for all positive d. This converts the interval count assumption into the divisor-count condition required in the enlarged ring S.",
+          "uses_lemmas": [
+            "lem_20260329132335_f096b04e"
+          ],
+          "uses_prior_steps": [
+            "A1"
+          ]
+        },
+        {
+          "derives": "There exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for each i and the ordered list u_1,...,u_b is a regular sequence in S.",
+          "is_trivial": false,
+          "step_id": "A3",
+          "trivial_justification": "Invoke L2 with the nonnegative integer b, the ordered positive degree list e_1,...,e_b from A1, and the divisor-count inequalities proved in A2.",
+          "uses_lemmas": [
+            "lem_20260329132405_562eefce"
+          ],
+          "uses_prior_steps": [
+            "A1",
+            "A2"
+          ]
+        },
+        {
+          "derives": "The prefix u_1,...,u_a is a homogeneous regular sequence in S, and deg(u_i)=i for each i=1,...,a.",
+          "is_trivial": true,
+          "step_id": "A4",
+          "trivial_justification": "A prefix of a regular sequence is regular by the definition of regular sequence, and by A3 the first a degrees are exactly e_i=i.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A3"
+          ]
+        },
+        {
+          "derives": "There exists a graded Q-algebra automorphism phi : S -> S such that phi(u_i)=y_i for every i=1,...,a.",
+          "is_trivial": false,
+          "step_id": "A5",
+          "trivial_justification": "Apply L3 to the homogeneous regular prefix u_1,...,u_a of degrees 1,...,a obtained in A4.",
+          "uses_lemmas": [
+            "lem_20260329132417_2d21af9e"
+          ],
+          "uses_prior_steps": [
+            "A4"
+          ]
+        },
+        {
+          "derives": "The ordered list y_1,...,y_a, phi(u_{a+1}),...,phi(u_b) is a homogeneous regular sequence in S. Moreover, for each s in I = {a+1,...,b}, one has deg(phi(u_s)) = deg(u_s) = r+s.",
+          "is_trivial": false,
+          "step_id": "A6",
+          "trivial_justification": "Apply L4 to the full homogeneous regular sequence u_1,...,u_b from A3 and the graded automorphism phi from A5. Because phi(u_i)=y_i for i <= a and degrees are preserved under phi, the transformed full sequence has the stated form and degrees.",
+          "uses_lemmas": [
+            "lem_20260329132425_b7fb9eda"
+          ],
+          "uses_prior_steps": [
+            "A3",
+            "A5"
+          ]
+        },
+        {
+          "derives": "In the quotient ring S/(y_1,...,y_a), the images of phi(u_{a+1}),...,phi(u_b) form a homogeneous regular sequence. For each s in I, the image of phi(u_s) has weighted degree r+s.",
+          "is_trivial": false,
+          "step_id": "A7",
+          "trivial_justification": "Use L5 with prefix y_1,...,y_a and tail phi(u_{a+1}),...,phi(u_b) from A6. The lemma says the tail remains regular after quotienting by the prefix, and the graded version preserves homogeneity and degrees.",
+          "uses_lemmas": [
+            "lem_20260329132438_1d671bdc"
+          ],
+          "uses_prior_steps": [
+            "A6"
+          ]
+        },
+        {
+          "derives": "Via the canonical graded Q-algebra isomorphism S/(y_1,...,y_a) \u2245 R from L6, define for each s in I the element f_s in R to be the image of the class of phi(u_s). Then each f_s is homogeneous of degree r+s, and the ordered list (f_s) for s=a+1,a+2,...,b is a regular sequence in R.",
+          "is_trivial": false,
+          "step_id": "A8",
+          "trivial_justification": "Apply L6 to identify the quotient from A7 with the target ring R from A1. Because L6 preserves homogeneous regular sequences and degrees under this graded isomorphism, the descended tail gives the desired ordered regular sequence in R.",
+          "uses_lemmas": [
+            "lem_20260329132447_75e7cd4d"
+          ],
+          "uses_prior_steps": [
+            "A1",
+            "A7"
+          ]
+        },
+        {
+          "derives": "There exists a family (f_s) indexed by I = {a+1,...,b} of homogeneous polynomials in R such that deg(f_s)=r+s for every s in I, and the ordered list of these polynomials in increasing s is a regular sequence in R. If a=b, then I is empty and the family is empty. This is exactly the root theorem statement.",
+          "is_trivial": true,
+          "step_id": "A9",
+          "trivial_justification": "A8 already constructs the required family with the correct indexing, degrees, and regularity. When a=b there is no tail, so the resulting family is the empty family in R=Q, exactly as required.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A8",
+            "A1"
+          ]
+        }
+      ]
+    },
+    "decomposition_id": "dec_20260329132732_0a2aebc0",
+    "formalization_cost_estimate": 0.91,
+    "node_id": "lem_20260329120647_c4ea7dea",
+    "node_kind": "lemma",
+    "ordered_child_lemma_ids": [
+      "lem_20260329132335_f096b04e",
+      "lem_20260329132405_562eefce",
+      "lem_20260329132417_2d21af9e",
+      "lem_20260329132425_b7fb9eda",
+      "lem_20260329132438_1d671bdc",
+      "lem_20260329132447_75e7cd4d"
+    ],
+    "pinned_statement_signatures": {},
+    "shared_context": [
+      {
+        "content": "For a positive integer d and integers u,v, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|.",
+        "kind": "definition",
+        "label": "Interval divisibility count"
+      },
+      {
+        "content": "For an integer b >= 0, write S_b for the polynomial ring Q[y_1,...,y_b] with weighted grading deg(y_i)=i for 1 <= i <= b. When b=0, this means S_0 = Q.",
+        "kind": "notation",
+        "label": "Initial interval weighted polynomial ring"
+      },
+      {
+        "content": "For integers 0 <= a <= b, write I_{a,b} := {a+1,...,b} and R_{a,b} := Q[x_s : s in I_{a,b}] with weighted grading deg(x_s)=s. When a=b, this means R_{a,b} = Q.",
+        "kind": "notation",
+        "label": "Target weighted polynomial ring on an interval"
+      },
+      {
+        "content": "A sequence u_1,...,u_n in a commutative ring A is regular if for each i the image of u_i is a non-zero-divisor in A/(u_1,...,u_{i-1}) and the final quotient A/(u_1,...,u_n) is nonzero. The empty sequence is regular.",
+        "kind": "definition",
+        "label": "Regular sequence"
+      }
+    ],
+    "strategy_summary": "Embed the target ring R = Q[x_s : s in {a+1,...,b}] into the larger weighted polynomial ring S = Q[y_1,...,y_b] by viewing R as the quotient S/(y_1,...,y_a). Package the desired tail degrees together with the killed coordinate degrees into the ordered list (1,2,...,a,r+a+1,...,r+b). The given interval divisibility hypothesis is exactly the divisor-count dominance needed for a stronger existence theorem in the initial-interval ring S. After obtaining a regular sequence in S of those degrees, straighten the first a entries to y_1,...,y_a by a graded triangular automorphism, then descend the remaining entries to the quotient ring R."
+  },
+  "kind": "decomposition",
+  "node_id": "dec_20260329132732_0a2aebc0",
+  "proof_nl": "Target: Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family.\n\nStrategy summary: Embed the target ring R = Q[x_s : s in {a+1,...,b}] into the larger weighted polynomial ring S = Q[y_1,...,y_b] by viewing R as the quotient S/(y_1,...,y_a). Package the desired tail degrees together with the killed coordinate degrees into the ordered list (1,2,...,a,r+a+1,...,r+b). The given interval divisibility hypothesis is exactly the divisor-count dominance needed for a stronger existence theorem in the initial-interval ring S. After obtaining a regular sequence in S of those degrees, straighten the first a entries to y_1,...,y_a by a graded triangular automorphism, then descend the remaining entries to the quotient ring R.\n\nAssembly skeleton: Work in the larger weighted polynomial ring S = Q[y_1,...,y_b] with weights 1,...,b, and encode the desired construction by the ordered degree list e_i = i for i <= a and e_i = r+i for i > a. The theorem hypothesis is exactly the divisor-count condition for this list, so the bottleneck initial-interval existence theorem yields a homogeneous regular sequence u_1,...,u_b in S with those ordered degrees. The first a elements have degrees 1,...,a, so a graded triangular automorphism straightens them to the coordinate variables y_1,...,y_a. Quotienting by those variables leaves the tail as a regular sequence in S/(y_1,...,y_a), and this quotient is canonically the target ring R = Q[x_s : s in {a+1,...,b}]. The descended tail gives the family (f_s)_{s in I} with deg(f_s)=r+s in increasing order. If a=b, the tail is empty, so the witness family is the empty family.\n\nAssembly steps:\n\n- A1: derive Define S := Q[y_1,...,y_b] with weighted grading deg(y_i)=i for 1 <= i <= b. Define the ordered list e_1,...,e_b by e_i = i for 1 <= i <= a and e_i = r+i for a < i <= b. Also define I := {a+1,...,b} and R := Q[x_s : s in I] with deg(x_s)=s. using lemmas [] and prior steps [].\n\n- A2: derive For every positive integer d, the ordered list e_1,...,e_b satisfies |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. using lemmas ['lem_20260329132335_f096b04e'] and prior steps ['A1'].\n\n- A3: derive There exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for each i and the ordered list u_1,...,u_b is a regular sequence in S. using lemmas ['lem_20260329132405_562eefce'] and prior steps ['A1', 'A2'].\n\n- A4: derive The prefix u_1,...,u_a is a homogeneous regular sequence in S, and deg(u_i)=i for each i=1,...,a. using lemmas [] and prior steps ['A3'].\n\n- A5: derive There exists a graded Q-algebra automorphism phi : S -> S such that phi(u_i)=y_i for every i=1,...,a. using lemmas ['lem_20260329132417_2d21af9e'] and prior steps ['A4'].\n\n- A6: derive The ordered list y_1,...,y_a, phi(u_{a+1}),...,phi(u_b) is a homogeneous regular sequence in S. Moreover, for each s in I = {a+1,...,b}, one has deg(phi(u_s)) = deg(u_s) = r+s. using lemmas ['lem_20260329132425_b7fb9eda'] and prior steps ['A3', 'A5'].\n\n- A7: derive In the quotient ring S/(y_1,...,y_a), the images of phi(u_{a+1}),...,phi(u_b) form a homogeneous regular sequence. For each s in I, the image of phi(u_s) has weighted degree r+s. using lemmas ['lem_20260329132438_1d671bdc'] and prior steps ['A6'].\n\n- A8: derive Via the canonical graded Q-algebra isomorphism S/(y_1,...,y_a) \u2245 R from L6, define for each s in I the element f_s in R to be the image of the class of phi(u_s). Then each f_s is homogeneous of degree r+s, and the ordered list (f_s) for s=a+1,a+2,...,b is a regular sequence in R. using lemmas ['lem_20260329132447_75e7cd4d'] and prior steps ['A1', 'A7'].\n\n- A9: derive There exists a family (f_s) indexed by I = {a+1,...,b} of homogeneous polynomials in R such that deg(f_s)=r+s for every s in I, and the ordered list of these polynomials in increasing s is a regular sequence in R. If a=b, then I is empty and the family is empty. This is exactly the root theorem statement. using lemmas [] and prior steps ['A8', 'A1'].\n\nRecursive lemma proofs:\n\n1. lem_20260329132335_f096b04e: Let a, b, r be integers with 0 <= a <= b and r >= 0. For 1 <= i <= b define an integer e_i by e_i = i when i <= a, and e_i = r+i when a < i <= b. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. If M_d(r+a, r+b) >= M_d(a,b) for every positive integer d, then for every positive integer d one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.\nFix an arbitrary positive integer d. Define\nA := {i in {1,...,b} : d divides e_i}\nand\nB := {i in {1,...,b} : d divides i}.\n\nWe split the index set {1,...,b} into the disjoint union {1,...,a} union {a+1,...,b}. (If a=0 or a=b, one of these sets is empty, and the same argument still applies.) Therefore A is the disjoint union of A \u2229 {1,...,a} and A \u2229 {a+1,...,b}, and similarly for B.\n\nFor i with 1 <= i <= a, the definition gives e_i = i. Hence\n|A \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\n\nFor i with a < i <= b, the definition gives e_i = r+i. The map i -> r+i is a bijection from {a+1,...,b} onto the set {m in Z : r+a < m <= r+b}. Under this bijection, the condition d divides e_i is exactly the condition d divides m. Thus\n|A \u2229 {a+1,...,b}| = |{m in Z : r+a < m <= r+b and d divides m}| = M_d(r+a,r+b).\n\nSince the two pieces are disjoint,\n|A| = |{i in {1,...,a} : d divides i}| + M_d(r+a,r+b).\n\nNow do the same for B. Clearly,\n|B \u2229 {1,...,a}| = |{i in {1,...,a} : d divides i}|.\nAlso, the identity map is a bijection from {a+1,...,b} onto {m in Z : a < m <= b}, so\n|B \u2229 {a+1,...,b}| = |{m in Z : a < m <= b and d divides m}| = M_d(a,b).\nTherefore,\n|B| = |{i in {1,...,a} : d divides i}| + M_d(a,b).\n\nBy the hypothesis of the lemma, for this positive integer d we have\nM_d(r+a,r+b) >= M_d(a,b).\nComparing the formulas for |A| and |B|, we obtain\n|A| >= |B|,\nthat is,\n|{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|.\n\nBecause d was arbitrary, this holds for every positive integer d, exactly as claimed.\n\n2. lem_20260329132405_562eefce: Let b be a nonnegative integer, and let e_1,...,e_b be an ordered list of b positive integers. Let S := Q[y_1,...,y_b] be the polynomial ring graded by deg(y_i)=i for 1 <= i <= b. Assume that for every positive integer d, one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. Then there exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for every i and the ordered list u_1,...,u_b is a regular sequence. When b=0, this means the empty regular sequence in S=Q.\nProof text not yet materialized.\n\n3. lem_20260329132417_2d21af9e: Let a and b be integers with 0 <= a <= b, and let S := Q[y_1,...,y_b] be graded by deg(y_i)=i. Suppose g_1,...,g_a are homogeneous elements of S that form a regular sequence and satisfy deg(g_i)=i for each i=1,...,a. Then there exists a graded Q-algebra automorphism phi : S -> S such that phi(g_i)=y_i for every i=1,...,a. When a=0, phi may be taken to be the identity automorphism.\nProof text not yet materialized.\n\n4. lem_20260329132425_b7fb9eda: Let A be a graded commutative Q-algebra, let phi : A -> A be a graded Q-algebra automorphism, and let u_1,...,u_n be homogeneous elements of A. Then u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Moreover deg(phi(u_i)) = deg(u_i) for every i.\nLet v_i := phi(u_i) for i = 1,...,n. For each i = 0,...,n, set I_i := (u_1,...,u_i) and J_i := (v_1,...,v_i), with I_0 = J_0 = (0). Because phi is an algebra automorphism, phi(I_i) = J_i for every i. Hence phi induces an isomorphism of quotient rings bar_phi_i : A / I_i -> A / J_i, given by a + I_i |-> phi(a) + J_i; its inverse is induced by phi^{-1}. Now let u_i have degree d. Since phi is a graded automorphism, it preserves each graded piece, so phi(u_i) also lies in the degree-d piece. Therefore deg(phi(u_i)) = d = deg(u_i) for every i. It remains to prove preservation of regular sequences. Use the standard ring-theoretic definition: a sequence x_1,...,x_n is regular if for each i >= 1, the class of x_i is a non-zero-divisor in A / (x_1,...,x_{i-1}); if one also adopts the common extra condition that the final quotient A / (x_1,...,x_n) be nonzero, that condition is also preserved here because the final quotients are isomorphic. Assume first that u_1,...,u_n is a regular sequence. Fix i with 1 <= i <= n. Suppose that in A / J_{i-1} one has (v_i + J_{i-1})(a + J_{i-1}) = 0. Then v_i a is in J_{i-1} = phi(I_{i-1}). Applying phi^{-1}, we get u_i phi^{-1}(a) in I_{i-1}. Equivalently, in A / I_{i-1} we have (u_i + I_{i-1})(phi^{-1}(a) + I_{i-1}) = 0. Since u_i + I_{i-1} is a non-zero-divisor in A / I_{i-1}, it follows that phi^{-1}(a) + I_{i-1} = 0, so phi^{-1}(a) is in I_{i-1}. Applying phi, we obtain a in J_{i-1}. Thus v_i + J_{i-1} is a non-zero-divisor in A / J_{i-1}. Since this holds for every i, the sequence v_1,...,v_n is regular. If one includes the additional condition A / I_n != 0 in the definition, it is preserved as well because bar_phi_n is an isomorphism A / I_n ~= A / J_n. Conversely, if v_1,...,v_n is regular, the same argument applied to the automorphism phi^{-1} shows that u_1,...,u_n is regular. Therefore u_1,...,u_n is a regular sequence if and only if phi(u_1),...,phi(u_n) is a regular sequence. Together with the degree argument above, this proves the lemma.\n\n5. lem_20260329132438_1d671bdc: Let A be a commutative ring, and let u_1,...,u_m,v_1,...,v_n be a regular sequence in A. Then the images of v_1,...,v_n in the quotient ring A/(u_1,...,u_m) form a regular sequence. If A is graded and all u_i and v_j are homogeneous, then the quotient images are homogeneous and keep the same degrees.\nLet I = (u_1,...,u_m) and B = A/I, and for each j let w_j be the image of v_j in B. For each integer t with 0 <= t <= n, set J_t = (u_1,...,u_m,v_1,...,v_t) in A, with J_0 = I. Because the concatenated sequence u_1,...,u_m,v_1,...,v_n is regular in A, two facts hold: each J_t is a proper ideal of A, and for each j with 1 <= j <= n, the element v_j is a nonzerodivisor on A/J_{j-1}.\n\nFirst we prove the proper-ideal condition in B. Fix t with 0 <= t <= n. Suppose that the ideal (w_1,...,w_t) is all of B. Then there are elements b_1,...,b_t in B such that 1 = sum b_i w_i in B; when t = 0 this just means 1 = 0 in B. Choose lifts a_i in A of the elements b_i. Then 1 - sum a_i v_i lies in I, so 1 lies in I + (v_1,...,v_t) = J_t. This contradicts the fact that J_t is proper. Hence (w_1,...,w_t) is a proper ideal of B for every t. In particular, taking t = 0 shows that B is not the zero ring.\n\nNext we prove the nonzerodivisor condition. Fix j with 1 <= j <= n. Let x be an element of A whose class in B/(w_1,...,w_{j-1}) is annihilated by w_j. By definition of the quotient, this means that v_j x lies in I + (v_1,...,v_{j-1}) = J_{j-1}. Since v_j is a nonzerodivisor on A/J_{j-1}, it follows that x lies in J_{j-1}. But then the class of x in B/(w_1,...,w_{j-1}) is zero. Therefore multiplication by w_j on B/(w_1,...,w_{j-1}) is injective, so w_j is a nonzerodivisor there.\n\nThus every initial ideal (w_1,...,w_t) is proper in B, and each w_j is a nonzerodivisor modulo the preceding ones. Hence w_1,...,w_n is a regular sequence in B = A/(u_1,...,u_m).\n\nNow assume A is graded and all u_i and v_j are homogeneous. Then I = (u_1,...,u_m) is a homogeneous ideal, so B = A/I inherits the quotient grading, and the quotient map A -> B preserves degrees. Therefore the image w_j of a homogeneous element v_j of degree d lies in the degree-d part of B. Since w_j is nonzero by the regularity already proved, this means that w_j is homogeneous of degree d, so it has the same degree as v_j. This proves the graded statement as well.\n\n6. lem_20260329132447_75e7cd4d: Let a and b be integers with 0 <= a <= b. Put I := {a+1,...,b}, let S := Q[y_1,...,y_b] with weighted grading deg(y_i)=i, and let R := Q[x_s : s in I] with weighted grading deg(x_s)=s. Then the quotient S/(y_1,...,y_a) is canonically isomorphic to R as a graded Q-algebra, via the map sending the class of y_s to x_s for each s in I. Under this graded isomorphism, homogeneous regular sequences correspond and weighted degrees are preserved. When a=b, both rings are Q.\nProof text not yet materialized.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.755432+00:00",
+    "proof_nl_synthesized": true
+  },
+  "resolution_mode": "subdecomposition",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, and r are integers.",
+      "The inequalities 0 <= a <= b and r >= 0 hold.",
+      "d ranges over positive integers only.",
+      "I is the finite set of integers from a+1 to b, inclusive.",
+      "R is the polynomial ring over the rational numbers in variables x_s indexed by I.",
+      "The grading is weighted: each x_s has degree s.",
+      "Each f_s must be homogeneous with respect to this grading.",
+      "If I is empty, the required family is the empty family.",
+      "The regular sequence is taken in the order of increasing s."
+    ],
+    "normalized_claim": "For any integers a, b, r with 0 <= a <= b and r >= 0, if the interval counting inequality M_d(r+a, r+b) >= M_d(a,b) holds for every positive integer d, then in the graded polynomial ring over the rational numbers with one variable x_s of degree s for each s in I = {a+1, ..., b}, there exists a family of homogeneous polynomials f_s such that each f_s has weighted degree r+s and the polynomials in increasing index order form a regular sequence; when I is empty, this means choosing no polynomials.",
+    "quantifier_order": [
+      "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+      "For every positive integer d, assume the counting inequality M_d(r+a, r+b) >= M_d(a,b).",
+      "There exists a family (f_s) indexed by s in I.",
+      "For each s in I, the polynomial f_s has weighted degree r+s.",
+      "The polynomials listed in increasing order of s form a regular sequence in R."
+    ],
+    "variables": [
+      {
+        "domain": "all integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "all integers satisfying a <= b",
+        "name": "b",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "global parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "the integers from a+1 through b, inclusive",
+        "name": "I",
+        "role": "index set for the polynomial family",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "all positive integers",
+        "name": "d",
+        "role": "universally quantified parameter in the counting condition",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integer arguments of the counting function M_d",
+        "name": "u",
+        "role": "local argument in the definition of M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integer arguments of the counting function M_d",
+        "name": "v",
+        "role": "local argument in the definition of M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integers counted by M_d",
+        "name": "m",
+        "role": "bound variable in the counting definition",
+        "type": "integer"
+      },
+      {
+        "domain": "elements of I",
+        "name": "s",
+        "role": "index for the family of polynomials",
+        "type": "integer"
+      },
+      {
+        "domain": "one variable for each s in I",
+        "name": "x_s",
+        "role": "polynomial ring generator with weighted degree s",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "polynomial ring over the rational numbers in the variables x_s for s in I",
+        "name": "R",
+        "role": "ambient ring",
+        "type": "graded polynomial ring"
+      },
+      {
+        "domain": "elements of R indexed by s in I",
+        "name": "f_s",
+        "role": "witness family",
+        "type": "homogeneous polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "The existence of the family (f_s) depends on the chosen integers a, b, and r.",
+      "The witness family depends on the universal hypothesis that M_d(r+a, r+b) >= M_d(a,b) for every positive integer d.",
+      "There is one global family indexed by I, not separate witnesses for each d.",
+      "The order of the witness sequence is fixed by the natural increasing order on I.",
+      "If I is empty, the witness is uniquely the empty family."
+    ]
+  },
+  "source_artifacts": [
+    "asm_20260329132732_4eb55056"
+  ],
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family.",
+  "status_snapshot": {
+    "controller_status": "failed",
+    "final_check_job_id": null,
+    "final_check_passed": false,
+    "invalidated_by_counterexample_id": "cex_20260329133035_2b45744a",
+    "invalidated_by_lemma_id": "lem_20260329132405_562eefce",
+    "lean_assembly_status": "skipped",
+    "llm_vetting_status": "accepted",
+    "logical_decomposition_id": "logdec_lem_20260329120647_c4ea7dea",
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/decompositions/dec_20260329132732_0a2aebc0.json",
+    "revision_number": 1,
+    "updated_at": "2026-03-29T13:31:12.927463+00:00"
+  }
+}

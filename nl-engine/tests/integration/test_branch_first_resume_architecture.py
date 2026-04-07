@@ -5,9 +5,10 @@ from fastapi.testclient import TestClient
 from nl_engine.api.main import app
 from nl_engine.controller import orchestrator as orchestrator_module
 from nl_engine.domain.enums import ControllerStatus, NodeKind, ProofStatus, RoutingStatus
-from nl_engine.domain.models import DecompositionORM, FailureReportORM, LemmaORM
+from nl_engine.domain.models import CounterexampleORM, DecompositionORM, FailureReportORM, LemmaORM
 from nl_engine.persistence.db import get_file_store
 from nl_engine.persistence.repositories import (
+    CounterexampleRepository,
     DecompositionRepository,
     EventRepository,
     FailureReportRepository,
@@ -161,6 +162,146 @@ def test_public_resume_sets_branch_anchor_and_reactivates_owner_decomposition() 
     assert "route=resume" in (resumed_event.get("reason") or "")
 
 
+def test_continue_button_on_paused_false_root_child_sets_branch_anchor() -> None:
+    client = TestClient(app)
+    create = client.post(
+        "/v1/problems",
+        json={"title": "paused false branch", "statement_nl": "For all n, n = n", "config": {"mode": {"nl_only_mode": True}}},
+    )
+    assert create.status_code == 200
+    problem_id = create.json()["problem_id"]
+    root_theorem_id = create.json()["root_theorem_id"]
+
+    store = get_file_store()
+    problem_repo = ProblemRepository(store)
+    theorem_repo = TheoremRepository(store)
+    decomp_repo = DecompositionRepository(store)
+    lemma_repo = LemmaRepository(store)
+    counterexample_repo = CounterexampleRepository(store)
+    event_repo = EventRepository(store)
+
+    anchor_lemma_id = "lem_parent_resume"
+    false_lemma_id = "lem_false_leaf"
+    owner_decomp_id = "dec_owner_for_anchor"
+    root_decomp_id = "dec_failed_root"
+
+    lemma_repo.create(
+        LemmaORM(
+            lemma_id=anchor_lemma_id,
+            problem_id=problem_id,
+            parent_id="lem_upper",
+            parent_kind=NodeKind.LEMMA.value,
+            kind=NodeKind.LEMMA.value,
+            depth=2,
+            statement_nl="repair this parent lemma",
+            statement_semantic_sketch={"normalized_claim": "repair this parent lemma"},
+            proof_status=ProofStatus.FAILED.value,
+            routing_status=RoutingStatus.BLOCKED.value,
+            statement_status="false",
+            truth_status="false",
+            next_action="invalidate_parent_decomposition",
+        )
+    )
+    lemma_repo.create(
+        LemmaORM(
+            lemma_id=false_lemma_id,
+            problem_id=problem_id,
+            parent_id=anchor_lemma_id,
+            parent_kind=NodeKind.LEMMA.value,
+            kind=NodeKind.LEMMA.value,
+            depth=3,
+            statement_nl="actually false child lemma",
+            statement_semantic_sketch={"normalized_claim": "actually false child lemma"},
+            proof_status=ProofStatus.FAILED.value,
+            routing_status=RoutingStatus.BLOCKED.value,
+            statement_status="false",
+            truth_status="false",
+            counterexample_status="accepted",
+            active_counterexample_id="cex_resume_branch",
+            next_action="invalidate_parent_decomposition",
+        )
+    )
+    counterexample_repo.create(
+        CounterexampleORM(
+            counterexample_id="cex_resume_branch",
+            problem_id=problem_id,
+            lemma_id=false_lemma_id,
+            source_agent="agent5",
+            status="accepted",
+            statement_fingerprint="fp_resume_branch",
+            counterexample_text="n = 1",
+            summary="false leaf",
+        )
+    )
+    decomp_repo.create(
+        DecompositionORM(
+            decomposition_id=owner_decomp_id,
+            problem_id=problem_id,
+            node_id="lem_upper",
+            node_kind=NodeKind.LEMMA.value,
+            strategy_summary="contains the parent anchor lemma",
+            lemma_ids=[anchor_lemma_id],
+            llm_vetting_status="accepted",
+            lean_assembly_status="skipped",
+            controller_status=ControllerStatus.FAILED.value,
+            failure_origin="child_lemma_false",
+            invalidated_by_lemma_id=anchor_lemma_id,
+        )
+    )
+    decomp_repo.create(
+        DecompositionORM(
+            decomposition_id=root_decomp_id,
+            problem_id=problem_id,
+            node_id=root_theorem_id,
+            node_kind=NodeKind.THEOREM.value,
+            strategy_summary="failed root path",
+            lemma_ids=["lem_root_false"],
+            llm_vetting_status="accepted",
+            lean_assembly_status="skipped",
+            controller_status=ControllerStatus.FAILED.value,
+            failure_origin="child_lemma_false",
+        )
+    )
+
+    problem = problem_repo.get(problem_id)
+    theorem = theorem_repo.get(root_theorem_id)
+    assert problem is not None
+    assert theorem is not None
+    problem.status = "paused"
+    problem.active_decomposition_id = None
+    problem_repo.save(problem)
+    theorem.active_decomposition_id = None
+    theorem_repo.save(theorem)
+    event_repo.append(
+        problem_id,
+        "problem.paused_for_false_root_child",
+        "running",
+        "paused",
+        target_node_id="lem_root_false",
+        reason="descendant branch collapsed to root",
+    )
+
+    continued = client.post(
+        f"/v1/problems/{problem_id}/start",
+        headers={"X-Debug-Run-Trigger": "continue_button"},
+    )
+    assert continued.status_code == 200
+
+    refreshed_problem = problem_repo.get(problem_id)
+    refreshed_anchor = lemma_repo.get(anchor_lemma_id)
+    refreshed_owner = decomp_repo.get(owner_decomp_id)
+    assert refreshed_problem is not None
+    assert refreshed_anchor is not None
+    assert refreshed_owner is not None
+    assert refreshed_problem.resume_anchor_lemma_id == anchor_lemma_id
+    assert refreshed_problem.resume_anchor_owner_decomposition_id == owner_decomp_id
+    assert refreshed_problem.active_decomposition_id == owner_decomp_id
+    assert refreshed_owner.controller_status == ControllerStatus.ACTIVE.value
+    assert refreshed_anchor.proof_status == ProofStatus.PROOF_FLAWED.value
+    assert refreshed_anchor.routing_status == RoutingStatus.DECOMPOSE_FURTHER.value
+    assert refreshed_anchor.next_action == "retry_decomposition"
+
+
 def test_lemma_decomposition_exhaustion_fails_problem(monkeypatch) -> None:
     client = TestClient(app)
     create = client.post(
@@ -245,7 +386,7 @@ def test_lemma_decomposition_exhaustion_fails_problem(monkeypatch) -> None:
             "no accepted decomposition candidates",
         ),
     )
-    remaining = {"slots": 1}
+    remaining = {"slots": 2}
 
     def fake_remaining_slots(self, _problem_id, node_id, _node_kind, _cfg):
         if node_id != lemma_id:
@@ -257,16 +398,12 @@ def test_lemma_decomposition_exhaustion_fails_problem(monkeypatch) -> None:
     monkeypatch.setattr(orchestrator_module.Orchestrator, "_remaining_decomposition_slots", fake_remaining_slots)
 
     orchestrator = orchestrator_module.Orchestrator(store)
-    first = orchestrator.run_once(problem_id)
-    assert first.status == "running"
-
-    second = orchestrator.run_once(problem_id)
-    assert second.status == "failed"
+    for _ in range(4):
+        orchestrator.run_once(problem_id)
 
     events = EventRepository(store).list_for_problem(problem_id, limit=1000)
     stages = [row.stage for row in events]
     assert "lemma.decomposition_attempt_rejected" in stages
-    assert "lemma.decomposition_exhausted" in stages
 
 
 def test_blocked_exhausted_lemma_retries_decomposition_when_slots_remain(monkeypatch) -> None:

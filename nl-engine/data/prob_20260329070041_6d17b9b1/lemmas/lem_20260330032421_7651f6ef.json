@@ -1,0 +1,91 @@
+{
+  "active_counterexample_id": null,
+  "agent2_first_lemma_consumed": false,
+  "agent4_first_consumed": false,
+  "assembly_step_ids": [],
+  "claim_node_id": "pnode_20260330033219_cc1ed49f",
+  "consecutive_fatal_rejections": 0,
+  "consecutive_infrastructure_failures": 0,
+  "counterexample_status": "none",
+  "created_at": "2026-03-30T03:24:27.722251Z",
+  "decomposition_round_count": 0,
+  "dependency_status": "passed",
+  "depth": 1,
+  "difficulty_estimate": null,
+  "drift_retry_used": false,
+  "formalization_cost_estimate": 0.05,
+  "kind": "lemma",
+  "last_activity_at": "2026-03-30T03:34:14.979578Z",
+  "last_dependency_check_id": "depchk_20260330033414_3287d947",
+  "last_submitted_lean_job_id": null,
+  "last_submitted_lean_proof_fingerprint": null,
+  "last_submitted_solver_attempt_number": null,
+  "last_submitted_solver_job_id": null,
+  "last_terminal_worker_result": "agent5:accepted",
+  "last_transition_reason": "The proof is correct and complete for the stated lemma. From the hypothesis that A/B is a polynomial C in Z[q], it validly derives A = BC. It then establishes C \u2260 0 using A \u2260 0, so degrees of B and C are defined. The leading-term argument correctly shows deg(BC) = deg(B) + deg(C), hence deg(A) = deg(B) + deg(C) \u2265 deg(B). There is no semantic drift from the lemma sketch, and no forbidden or undeclared dependencies are used.",
+  "latest_lean_issue_class": null,
+  "latest_lean_issue_kind": null,
+  "latest_lean_result_id": null,
+  "latest_nl_proof": "Let C(q) \\in Z[q] be the polynomial such that A(q)/B(q)=C(q). Since B(q) is nonzero, multiplying this identity by B(q) gives A(q)=B(q)C(q). Also C(q) must be nonzero: if C(q)=0, then A(q)=B(q)C(q)=0, contradicting the hypothesis that A(q) is nonzero. Now set m=deg(B) and n=deg(C). Write B(q)=b_m q^m+b_{m-1}q^{m-1}+\\cdots+b_0 with b_m\\neq 0, and C(q)=c_n q^n+c_{n-1}q^{n-1}+\\cdots+c_0 with c_n\\neq 0. In the product B(q)C(q), the term q^{m+n} appears with coefficient b_m c_n. Because b_m and c_n are nonzero integers, their product b_m c_n is also nonzero. Moreover, every other term in the product comes from q^i\\cdot q^j with i\\le m and j\\le n, and if (i,j)\\neq (m,n), then i+j<m+n. Hence no term of degree larger than m+n occurs, and the coefficient of q^{m+n} is nonzero. Therefore deg(B(q)C(q))=m+n. Since A(q)=B(q)C(q), we get deg(A)=deg(B)+deg(C)\\ge deg(B). Thus deg(A)\\ge deg(B), as required.",
+  "latest_vetted_proof_fingerprint": null,
+  "latest_vetter_report_id": "rep_20260330033414_d86d0938",
+  "lean_attempt_count": 0,
+  "lean_identical_fatal_count": 0,
+  "lemma_id": "lem_20260330032421_7651f6ef",
+  "materialized_candidate_count": 0,
+  "minor_rejection_count": 0,
+  "next_action": "done",
+  "parent_id": "thm_root_20260329070041_7bd7b795",
+  "parent_kind": "theorem",
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "promoted_decomposition_count": 0,
+  "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260330032421_7651f6ef.json",
+  "proof_graph_id": "pgraph_20260330033217_4ecb4e26",
+  "proof_status": "nl_accepted",
+  "role_in_parent": "Converts polynomiality of the reduced quotient into an inequality between the Gaussian degrees.",
+  "routing_status": "done",
+  "shared_context_refs": [],
+  "solver_attempt_count": 1,
+  "solver_series_started_at": null,
+  "statement_lean": null,
+  "statement_nl": "Let A(q) and B(q) be nonzero polynomials in Z[q]. If the rational function A(q) / B(q) is itself a polynomial in Z[q], then deg(A) >= deg(B).",
+  "statement_semantic_sketch": {
+    "domain_restrictions": [
+      "A is a nonzero polynomial with integer coefficients",
+      "B is a nonzero polynomial with integer coefficients",
+      "A divided by B is assumed to be a polynomial in Z[q], not merely a rational function",
+      "Degree is interpreted only for nonzero polynomials"
+    ],
+    "normalized_claim": "For every pair of nonzero integer-coefficient polynomials A and B, if the quotient A divided by B is again an integer-coefficient polynomial, then the degree of A is greater than or equal to the degree of B.",
+    "quantifier_order": [
+      "For all polynomials A and B in Z[q], if A and B are nonzero and A divided by B is a polynomial in Z[q], then deg(A) is at least deg(B)."
+    ],
+    "variables": [
+      {
+        "domain": "polynomial variable",
+        "name": "q",
+        "role": "variable in the polynomial ring",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "integer-coefficient polynomials in q",
+        "name": "A",
+        "role": "numerator polynomial",
+        "type": "polynomial"
+      },
+      {
+        "domain": "integer-coefficient polynomials in q",
+        "name": "B",
+        "role": "denominator polynomial",
+        "type": "polynomial"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses appear",
+      "The conclusion depends only on the given polynomials A and B"
+    ]
+  },
+  "statement_status": "plausible",
+  "truth_status": "unknown",
+  "updated_at": "2026-03-30T03:34:14.979578Z"
+}

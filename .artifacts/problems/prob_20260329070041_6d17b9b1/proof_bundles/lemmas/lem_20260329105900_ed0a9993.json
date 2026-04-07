@@ -1,0 +1,131 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329105900_ed0a9993",
+  "proof_nl": "Let e_d := M_d(r+a,r+b) - M_d(a,b) for each positive integer d. First rewrite the quotient of q-Pochhammer symbols. Since a <= b and r >= 0, we have (q;q)_{r+b}/(q;q)_{r+a} = product_{t=r+a+1}^{r+b} (1 - q^t) and (q;q)_a/(q;q)_b = 1 / product_{t=a+1}^{b} (1 - q^t). Therefore\nR_{a,b,r}(q) = product_{i=a+1}^{b} (1 - q^{r+i})/(1 - q^i),\nwith the empty product equal to 1 when a=b.\n\nNow use the defining factorization of cyclotomic polynomials: for every positive integer N,\nq^N - 1 = product_{d | N} Phi_d(q).\nFor each i with a+1 <= i <= b,\n(1 - q^{r+i})/(1 - q^i) = (q^{r+i} - 1)/(q^i - 1) = (product_{d | (r+i)} Phi_d(q)) / (product_{d | i} Phi_d(q)).\nMultiplying over i from a+1 to b and collecting equal cyclotomic factors, we get an identity of rational functions\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^(A_d - B_d),\nwhere\nA_d := |{ i in Z : a < i <= b and d divides (r+i) }|,\nB_d := |{ i in Z : a < i <= b and d divides i }|.\nIf d > r+b, then necessarily d > b as well, so both A_d and B_d are 0. Hence only finitely many exponents are nonzero, so this product is well defined.\n\nIt remains to identify A_d and B_d with the M_d counts. The map i -> m := r+i is a bijection from the set counted by A_d onto the set { m in Z : r+a < m <= r+b and d divides m }. Therefore A_d = M_d(r+a,r+b). Also, by definition, B_d = M_d(a,b). Substituting these equalities gives\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ),\nwhich is the claimed cyclotomic factorization.\n\nFor the consequence, assume that R_{a,b,r}(q) belongs to Z[q]. Let I_+ := { d >= 1 : e_d > 0 } and I_- := { d >= 1 : e_d < 0 }. These sets are finite because e_d = 0 for d > r+b. The factorization above can then be written as\nR_{a,b,r}(q) = (product_{d in I_+} Phi_d(q)^{e_d}) / (product_{d in I_-} Phi_d(q)^{-e_d}).\nSuppose, for contradiction, that I_- is nonempty. Choose D in I_-. Since R_{a,b,r}(q) is actually a polynomial, say P(q) in Z[q], clearing denominators yields the polynomial identity over C,\nP(q) product_{d in I_-} Phi_d(q)^{-e_d} = product_{d in I_+} Phi_d(q)^{e_d}.\nNow let zeta be a primitive D-th root of unity. By the defining root property of cyclotomic polynomials, Phi_D(zeta)=0, and for every d != D one has Phi_d(zeta) != 0 because zeta is not a primitive d-th root of unity. Evaluating the cleared polynomial identity at q=zeta, the left-hand side is 0 because it contains the factor Phi_D(zeta)^{-e_D} with -e_D > 0, while the right-hand side is nonzero because none of its factors vanish at zeta. This contradiction shows that I_- must be empty.\n\nThus e_d >= 0 for every positive integer d, i.e.\nM_d(r+a,r+b) >= M_d(a,b)\nfor every positive integer d. This is exactly the stated consequence.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.728375+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a and b are integers with a less than or equal to b and both are nonnegative.",
+      "r is a nonnegative integer.",
+      "q is treated as a formal variable, not as a specified numeric value.",
+      "n is a nonnegative integer in the q-Pochhammer definition.",
+      "t ranges over positive integers from 1 to n in the finite product.",
+      "d is a positive integer.",
+      "u and v are integer endpoints when evaluating M_d.",
+      "m is an integer counted in the definition of M_d.",
+      "The cyclotomic product over all positive integers d has only finitely many nontrivial factors because the exponents vanish for large d.",
+      "The implication about Z[q] concerns integer-coefficient polynomials, not merely rational functions."
+    ],
+    "normalized_claim": "For every choice of integers a, b, r with 0 <= a <= b and r >= 0, the rational q-expression R_{a,b,r}(q) factors into cyclotomic polynomials with exponent at index d equal to the difference between the number of multiples of d in the interval from r+a to r+b and the number of multiples of d in the interval from a to b. If this expression is actually a polynomial with integer coefficients, then every such exponent is nonnegative, so the count of multiples of d in the shifted interval is at least the count in the original interval for every positive integer d.",
+    "quantifier_order": [
+      "For all integers a and b with 0 <= a <= b, and all integers r with r >= 0.",
+      "For each nonnegative integer n, define the q-Pochhammer symbol using a product over t from 1 to n.",
+      "For each positive integer d, define M_d(u,v) as the number of integers m satisfying u < m <= v and d divides m.",
+      "For all such a, b, and r, the stated cyclotomic factorization of R_{a,b,r}(q) holds as an identity in the formal variable q.",
+      "For all such a, b, and r, if R_{a,b,r}(q) lies in Z[q], then for every positive integer d one has M_d(r+a,r+b) >= M_d(a,b)."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "parameter in the q-Pochhammer quotient and in the interval counts",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "b",
+        "role": "parameter in the q-Pochhammer quotient and in the interval counts",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "shift parameter in the q-Pochhammer quotient and in the interval counts",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable in a polynomial or rational function expression",
+        "name": "q",
+        "role": "variable of the q-Pochhammer symbols, R, and the cyclotomic polynomials",
+        "type": "formal indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the q-Pochhammer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers from 1 to n",
+        "name": "t",
+        "role": "product index in the q-Pochhammer definition",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "cyclotomic index and divisor parameter in M_d",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integers",
+        "name": "u",
+        "role": "lower endpoint in the counting function M_d(u,v)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "v",
+        "role": "upper endpoint in the counting function M_d(u,v)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "integer being counted by M_d(u,v)",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are present in the statement.",
+      "The exponent of each cyclotomic factor depends explicitly on a, b, r, and d through the difference M_d(r+a,r+b) - M_d(a,b).",
+      "The nonnegativity conclusion uses the same a, b, and r as in the factorization, and it asserts the inequality separately for every positive integer d."
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329111112_13cdb84c"
+  ],
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1, and define R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Then one has the cyclotomic factorization R_{a,b,r}(q) = product_{d>=1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ), where Phi_d(q) is the d-th cyclotomic polynomial. Consequently, if R_{a,b,r}(q) belongs to Z[q], then M_d(r+a,r+b) >= M_d(a,b) for every positive integer d.",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T11:11:12.415865+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof correctly rewrites the q-Pochhammer quotient as the finite interval product, expands each factor via the cyclotomic factorization of q^N-1, identifies the exponent of each Phi_d with M_d(r+a,r+b)-M_d(a,b), and then proves the consequence from polynomiality by a standard primitive-root contradiction argument. The argument matches the lemma statement and its role in the assembly, and it does not rely on any forbidden ancestry result.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329111112_13cdb84c",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105900_ed0a9993.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T11:11:12.415865+00:00"
+  }
+}

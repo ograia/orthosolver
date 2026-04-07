@@ -1,0 +1,948 @@
+{
+  "children": [
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329120647_c4ea7dea",
+      "proof_nl": null,
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.738154+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, and r are integers.",
+          "The inequalities 0 <= a <= b and r >= 0 hold.",
+          "d ranges over positive integers only.",
+          "I is the finite set of integers from a+1 to b, inclusive.",
+          "R is the polynomial ring over the rational numbers in variables x_s indexed by I.",
+          "The grading is weighted: each x_s has degree s.",
+          "Each f_s must be homogeneous with respect to this grading.",
+          "If I is empty, the required family is the empty family.",
+          "The regular sequence is taken in the order of increasing s."
+        ],
+        "normalized_claim": "For any integers a, b, r with 0 <= a <= b and r >= 0, if the interval counting inequality M_d(r+a, r+b) >= M_d(a,b) holds for every positive integer d, then in the graded polynomial ring over the rational numbers with one variable x_s of degree s for each s in I = {a+1, ..., b}, there exists a family of homogeneous polynomials f_s such that each f_s has weighted degree r+s and the polynomials in increasing index order form a regular sequence; when I is empty, this means choosing no polynomials.",
+        "quantifier_order": [
+          "Fix integers a, b, r with 0 <= a <= b and r >= 0.",
+          "For every positive integer d, assume the counting inequality M_d(r+a, r+b) >= M_d(a,b).",
+          "There exists a family (f_s) indexed by s in I.",
+          "For each s in I, the polynomial f_s has weighted degree r+s.",
+          "The polynomials listed in increasing order of s form a regular sequence in R."
+        ],
+        "variables": [
+          {
+            "domain": "all integers satisfying 0 <= a <= b",
+            "name": "a",
+            "role": "global parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "all integers satisfying a <= b",
+            "name": "b",
+            "role": "global parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "global parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "the integers from a+1 through b, inclusive",
+            "name": "I",
+            "role": "index set for the polynomial family",
+            "type": "finite set of integers"
+          },
+          {
+            "domain": "all positive integers",
+            "name": "d",
+            "role": "universally quantified parameter in the counting condition",
+            "type": "positive integer"
+          },
+          {
+            "domain": "integer arguments of the counting function M_d",
+            "name": "u",
+            "role": "local argument in the definition of M_d",
+            "type": "integer"
+          },
+          {
+            "domain": "integer arguments of the counting function M_d",
+            "name": "v",
+            "role": "local argument in the definition of M_d",
+            "type": "integer"
+          },
+          {
+            "domain": "integers counted by M_d",
+            "name": "m",
+            "role": "bound variable in the counting definition",
+            "type": "integer"
+          },
+          {
+            "domain": "elements of I",
+            "name": "s",
+            "role": "index for the family of polynomials",
+            "type": "integer"
+          },
+          {
+            "domain": "one variable for each s in I",
+            "name": "x_s",
+            "role": "polynomial ring generator with weighted degree s",
+            "type": "indeterminate"
+          },
+          {
+            "domain": "polynomial ring over the rational numbers in the variables x_s for s in I",
+            "name": "R",
+            "role": "ambient ring",
+            "type": "graded polynomial ring"
+          },
+          {
+            "domain": "elements of R indexed by s in I",
+            "name": "f_s",
+            "role": "witness family",
+            "type": "homogeneous polynomial"
+          }
+        ],
+        "witness_dependencies": [
+          "The existence of the family (f_s) depends on the chosen integers a, b, and r.",
+          "The witness family depends on the universal hypothesis that M_d(r+a, r+b) >= M_d(a,b) for every positive integer d.",
+          "There is one global family indexed by I, not separate witnesses for each d.",
+          "The order of the witness sequence is fixed by the natural increasing order on I.",
+          "If I is empty, the witness is uniquely the empty family."
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family.",
+      "status_snapshot": {
+        "active_counterexample_id": "cex_20260329133035_2b45744a",
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "accepted",
+        "decomposition_round_count": 1,
+        "last_activity_at": "2026-03-30T02:44:34.696196+00:00",
+        "last_terminal_worker_result": "agent4:failed_infra",
+        "last_transition_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 1,
+        "minor_rejection_count": 0,
+        "next_action": "invalidate_parent_decomposition",
+        "promoted_decomposition_count": 1,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329120647_c4ea7dea.json",
+        "proof_status": "failed",
+        "routing_status": "blocked",
+        "solver_attempt_count": 1,
+        "statement_status": "false",
+        "truth_status": "false",
+        "updated_at": "2026-03-30T02:44:34.696196+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329120705_7e7a087b",
+      "proof_nl": "Let J_t := (f_s : a+1 <= s <= t) for t = a, a+1, ..., b, with J_a := (0), and let B_t := R/J_t. Then B_a = R and B_b = A. Since every f_s is homogeneous, each J_t is a homogeneous ideal, so each B_t is a graded Q-algebra. Also each degree piece (B_t)_n is finite-dimensional over Q because it is a quotient of R_n.\\n\\nFirst compute the Hilbert series of R. The monomials product_{s=a+1}^b x_s^{e_s}, with e_s in Z_{>=0}, form a Q-basis of R, and such a monomial has degree sum_{s=a+1}^b s e_s. Hence R_n has basis indexed by tuples (e_s) with sum s e_s = n; there are only finitely many such tuples because all s are positive. Therefore\\nHilb_R(q) = sum_{(e_s)} q^(sum s e_s)\\n= product_{s=a+1}^b (sum_{m >= 0} q^(m s))\\n= product_{s=a+1}^b 1/(1 - q^s).\\n\\nNow fix t with a+1 <= t <= b, and put d_t := r + t. Since t >= a+1 >= 1 and r >= 0, we have d_t > 0. Because the ordered list (f_{a+1}, f_{a+2}, ..., f_b) is a regular sequence, the class of f_t in B_{t-1} is a non-zero-divisor. Moreover B_t = B_{t-1}/(f_t), where (f_t) now denotes the ideal of B_{t-1} generated by the class of f_t. Since f_t is homogeneous of degree d_t, for each n >= 0 the degree-n part of that ideal is exactly f_t (B_{t-1})_{n-d_t}, with the convention (B_{t-1})_m = 0 for m < 0. Thus for each n >= 0 we have an exact sequence of Q-vector spaces\\n0 -> (B_{t-1})_{n-d_t} -- multiplication by f_t -> (B_{t-1})_n -> (B_t)_n -> 0.\\nTherefore\\ndim_Q (B_t)_n = dim_Q (B_{t-1})_n - dim_Q (B_{t-1})_{n-d_t}.\\nSumming over n >= 0 gives\\nHilb_{B_t}(q) = (1 - q^(d_t)) Hilb_{B_{t-1}}(q).\\n\\nIterating this identity from t = a+1 up to t = b, and using the formula for Hilb_R(q), we obtain\\nHilb_A(q) = Hilb_{B_b}(q)\\n= (product_{s=a+1}^b (1 - q^(r+s))) Hilb_R(q)\\n= product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)).\\n\\nBy the definition of Hilbert series, this means that for every j >= 0, the coefficient of q^j in product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)) is exactly dim_Q A_j. In particular, every such coefficient is a nonnegative integer.\\n\\nIt remains to prove that A is finite-dimensional. For any real u with 0 < u < 1, the series sum_{n >= 0} (dim_Q A_n) u^n converges because dim_Q A_n <= dim_Q R_n and\\nsum_{n >= 0} (dim_Q R_n) u^n = product_{s=a+1}^b 1/(1 - u^s) < infinity.\\nSo we may evaluate the identity above at such a real u:\\nsum_{n >= 0} (dim_Q A_n) u^n = product_{s=a+1}^b ((1 - u^(r+s))/(1 - u^s)).\\n\\nFor each fixed s,\\n(1 - u^m)/(1 - u) = 1 + u + ... + u^(m-1),\\nso\\nlim_{u -> 1^-} (1 - u^(r+s))/(1 - u^s) = (r+s)/s.\\nHence the right-hand side has a finite limit product_{s=a+1}^b ((r+s)/s) as u -> 1^-; in particular it stays bounded near u = 1.\\n\\nSuppose, for contradiction, that A_n != 0 for infinitely many n. Then there are infinitely many n with a_n := dim_Q A_n >= 1. Given any positive integer N, choose distinct indices n_1 < ... < n_N with a_{n_i} >= 1. For u sufficiently close to 1, we have u^{n_i} > 1/2 for all i, and then\\nsum_{n >= 0} a_n u^n >= sum_{i=1}^N u^{n_i} > N/2.\\nSince N is arbitrary, the left-hand side would be unbounded as u -> 1^-, contradicting the boundedness of the right-hand side. Therefore A_n = 0 for all but finitely many n. As each A_n is finite-dimensional, A = direct sum_{n >= 0} A_n is finite-dimensional over Q.\\n\\nThus A is a finite-dimensional graded Q-algebra, its Hilbert series is exactly product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)), and the coefficient of q^j in that product is dim_Q A_j and hence a nonnegative integer for every j >= 0.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.739333+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, and r are integers",
+          "0 <= a <= b",
+          "r is nonnegative",
+          "I is finite because it is the interval of integers from a+1 to b",
+          "s ranges over I only",
+          "R is graded by assigning degree s to x_s",
+          "each f_s is homogeneous in R",
+          "each f_s has degree r+s",
+          "the family f_s indexed by I is ordered by increasing s",
+          "that ordered family is a regular sequence",
+          "A_n refers only to the degree-n homogeneous component of A",
+          "the coefficient statement is only for j greater than or equal to 0"
+        ],
+        "normalized_claim": "Given integers a, b, r with 0 <= a <= b and r >= 0, and given a finite indexed family of homogeneous polynomials f_s in the weighted graded polynomial ring R = Q[x_s : s in I] with I = {a+1, ..., b}, deg(x_s) = s, deg(f_s) = r+s, and with the f_s forming a regular sequence in increasing index order, the quotient algebra A = R divided by the ideal generated by the f_s is finite-dimensional over Q. Its Hilbert series is exactly the product over s from a+1 to b of (1 minus q to the power r+s) divided by (1 minus q to the power s). Consequently, for every nonnegative integer j, the coefficient of q to the j in that product equals dim_Q of A_j and is a nonnegative integer.",
+        "quantifier_order": [
+          "Choose integers a, b, r with 0 <= a <= b and r >= 0.",
+          "Define I as the finite set of integers from a+1 to b.",
+          "Form the graded polynomial ring R over the rational numbers with variables x_s for s in I, where x_s has degree s.",
+          "For every s in I, choose a homogeneous polynomial f_s in R of degree r+s.",
+          "Require that the family (f_s) ordered by increasing s is a regular sequence.",
+          "Define A as the quotient of R by the ideal generated by all f_s.",
+          "For every nonnegative integer n, let A_n be the degree-n component of A.",
+          "Conclude that A is finite-dimensional over Q and that its Hilbert series equals the stated product.",
+          "For every nonnegative integer j, the coefficient of degree j in the product equals dim_Q A_j and is a nonnegative integer."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with b >= a",
+            "name": "b",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "the integers from a+1 through b inclusive",
+            "name": "I",
+            "role": "index set",
+            "type": "finite set of integers"
+          },
+          {
+            "domain": "elements of I",
+            "name": "s",
+            "role": "index variable",
+            "type": "integer"
+          },
+          {
+            "domain": "indeterminates over the rational numbers indexed by s in I",
+            "name": "x_s",
+            "role": "graded variables of the polynomial ring",
+            "type": "polynomial variable"
+          },
+          {
+            "domain": "polynomial ring over the rational numbers in the variables x_s",
+            "name": "R",
+            "role": "ambient graded ring",
+            "type": "graded polynomial ring"
+          },
+          {
+            "domain": "elements of R indexed by s in I",
+            "name": "f_s",
+            "role": "regular sequence elements",
+            "type": "homogeneous polynomial"
+          },
+          {
+            "domain": "quotient of R by the ideal generated by all f_s",
+            "name": "A",
+            "role": "main algebra",
+            "type": "graded quotient algebra"
+          },
+          {
+            "domain": "degree-n homogeneous piece of A",
+            "name": "A_n",
+            "role": "graded piece",
+            "type": "graded component"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "degree index for graded pieces",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "j",
+            "role": "degree index for coefficient extraction",
+            "type": "integer"
+          }
+        ],
+        "witness_dependencies": [
+          "The family f_s is part of the input data; there is no separate existential choice of a new witness in the conclusion.",
+          "The algebra A depends on the entire family (f_s) at once, not on individual j-dependent witnesses.",
+          "For each j, the coefficient equality uses the same fixed algebra A and the same fixed Hilbert series formula.",
+          "No hidden dependence on n or j appears in the construction of A; only the graded piece A_n varies with n."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329121845_47048e37"
+      ],
+      "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, let R := Q[x_s : s in I] be graded by deg(x_s) = s, and let (f_s)_{s in I} be a family of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I and the ordered list by increasing s is a regular sequence. Put A := R / (f_s : s in I), and let A_n denote the degree-n homogeneous component of A. Then A is a finite-dimensional graded Q-algebra and its Hilbert series is\nHilb_A(q) = sum_{n >= 0} (dim_Q A_n) q^n = product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)).\nIn particular, for every integer j >= 0, the coefficient [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) equals dim_Q A_j and is a nonnegative integer.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T12:18:45.830370+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof matches the stated lemma and is mathematically complete. It correctly computes the Hilbert series of the weighted polynomial ring R, then uses the regular-sequence hypothesis to obtain for each t the short exact sequence on graded pieces induced by multiplication by the homogeneous non-zero-divisor f_t, yielding Hilb_{B_t}(q) = (1 - q^{r+t}) Hilb_{B_{t-1}}(q). Iteration gives the claimed product formula for Hilb_A. The identification of coefficients with dim_Q A_j is immediate from the Hilbert series definition, giving nonnegativity. The remaining finite-dimensionality claim is also proved: for 0 < u < 1 the generating series converges and equals the finite product, whose limit as u -> 1^- is finite; if infinitely many A_n were nonzero, the series would become unbounded near 1, contradiction. No substantial omissions or illegal dependencies were detected.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329121845_47048e37",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329120705_7e7a087b.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T12:18:45.830370+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329120722_adc74369",
+      "proof_nl": "Let\nF(q) := product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = product_{s in I} ((1 - q^(r+s)) / (1 - q^s)).\nWe interpret [q^j] in the formal power series ring Z[[q]]. This is legitimate because every s in I satisfies s >= a+1 >= 1.\n\nFor each s in I,\n(1 - q^s)^(-1) = sum_{m>=0} q^(ms)\nin Z[[q]], since multiplying the right-hand side by 1 - q^s gives 1. Hence\nproduct_{s in I} (1 - q^s)^(-1) = product_{s in I} sum_{m_s>=0} q^(m_s s).\nBecause I is finite, expanding this finite product gives\nproduct_{s in I} (1 - q^s)^(-1) = sum_{(m_s)_{s in I}} q^(sum_{s in I} m_s s),\nwhere the sum runs over all tuples of nonnegative integers (m_s) indexed by I.\n\nLikewise,\nproduct_{s in I} (1 - q^(r+s))\n= sum_{S subseteq I} product_{s in S} (-q^(r+s))\n= sum_{S subseteq I} (-1)^{|S|} q^(sum_{s in S} (r+s)).\n\nMultiplying the two expansions, we obtain in Z[[q]]\nF(q) = sum_{S subseteq I} sum_{(m_s)_{s in I}} (-1)^{|S|} q^( sum_{s in S}(r+s) + sum_{s in I} m_s s ).\n\nNow fix j >= 0. Only finitely many terms on the right can contribute to the coefficient of q^j: the set I is finite, and if sum_{s in I} m_s s <= j then for each s in I we have 0 <= m_s <= j/s. Therefore we may read off the coefficient term-by-term:\n[q^j] F(q) = sum_{S subseteq I} (-1)^{|S|} * #{ (m_s)_{s in I} : sum_{s in I} m_s s + sum_{s in S}(r+s) = j }.\n\nFor each fixed S, such tuples (m_s) are in bijection with finite multisets lambda of elements of I: m_s is the multiplicity of s in lambda. Under this bijection,\nwt(lambda) = sum_{s in I} m_s s.\nTherefore\n#{ (m_s)_{s in I} : sum_{s in I} m_s s + sum_{s in S}(r+s) = j }\n= #{ lambda : wt(lambda) + sum_{s in S}(r+s) = j }.\nSubstituting this into the previous formula gives\n[q^j] F(q) = sum_{S subseteq I} sum_{lambda : wt(lambda) + sum_{s in S}(r+s) = j} (-1)^{|S|}.\nBut by definition, the pairs (S, lambda) appearing in this double sum are exactly the elements of X_j. Hence\n[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|},\nas required.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.740504+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a and b are integers with 0 <= a <= b.",
+          "r and j are nonnegative integers.",
+          "I is the finite set of integers from a+1 through b.",
+          "The index s ranges over I in the product and in the sum over S.",
+          "S is any subset of I.",
+          "lambda is a finite multiset of elements of I, with repetition allowed through multiplicity.",
+          "wt(lambda) is the sum of the multiset elements counted with multiplicity.",
+          "The condition wt(lambda) plus the sum over s in S of (r+s) equals j is exact, not approximate.",
+          "The product is finite, and if a equals b then it is an empty product.",
+          "q is treated as a formal power series variable rather than a numerical parameter."
+        ],
+        "normalized_claim": "For every choice of integers a, b, r, j with 0 <= a <= b and r, j nonnegative, if I is the set of integers from a+1 through b and X_j is the set of all pairs (S, lambda) where S is a subset of I and lambda is a finite multiset of elements of I satisfying wt(lambda) plus the sum over s in S of (r+s) equals j, then the coefficient of q^j in the finite product over s in I of (1 - q^(r+s)) divided by (1 - q^s) is equal to the sum over all pairs in X_j of (-1) to the size of S.",
+        "quantifier_order": [
+          "For all integers a, b, r, j satisfying 0 <= a <= b, r >= 0, and j >= 0.",
+          "Define I from a and b as the set of integers from a+1 through b.",
+          "Define X_j from a, b, r, j as the set of all pairs (S, lambda) with S a subset of I and lambda a finite multiset of elements of I such that wt(lambda) plus the sum over s in S of (r+s) equals j.",
+          "Then the coefficient of q^j in the finite product over s in I of (1 - q^(r+s)) divided by (1 - q^s) equals the signed sum over X_j."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with a <= b",
+            "name": "b",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "j",
+            "role": "target coefficient index",
+            "type": "integer"
+          },
+          {
+            "domain": "formal power series variable",
+            "name": "q",
+            "role": "variable of coefficient extraction",
+            "type": "formal indeterminate"
+          },
+          {
+            "domain": "the integers from a+1 through b",
+            "name": "I",
+            "role": "index set for the product and for the combinatorial objects",
+            "type": "finite set of integers"
+          },
+          {
+            "domain": "all subsets of I",
+            "name": "S",
+            "role": "subset witness in each admissible pair",
+            "type": "subset of I"
+          },
+          {
+            "domain": "finite multisets whose elements lie in I",
+            "name": "lambda",
+            "role": "multiset witness in each admissible pair",
+            "type": "finite multiset of integers"
+          },
+          {
+            "domain": "elements of I",
+            "name": "s",
+            "role": "index variable in the product and in the subset sum",
+            "type": "integer"
+          },
+          {
+            "domain": "pairs (S, lambda) satisfying the subset and weight condition for the fixed parameters a, b, r, j",
+            "name": "X_j",
+            "role": "admissible pairs counted in the signed sum",
+            "type": "set of pairs"
+          }
+        ],
+        "witness_dependencies": [
+          "Each admissible witness pair (S, lambda) is constrained by the fixed parameters a, b, r, and j through the set I and the equality wt(lambda) plus sum over s in S of (r+s) equals j.",
+          "There is no separate existential witness in the final identity beyond choosing a pair (S, lambda) from X_j.",
+          "The sign of each contribution depends only on the size of S, not on lambda."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329121552_2c7bf206"
+      ],
+      "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) denotes the sum of the elements of lambda. Then\n[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|},\nwhere |S| is the cardinality of S.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T12:15:53.030152+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof gives the standard and correct formal-power-series expansion of the product, justifies coefficient extraction for a fixed j by showing only finitely many tuples can contribute, and then identifies the contributing tuples with finite multisets of I. This yields exactly the claimed signed enumeration over X_j. It matches the lemma sketch and role in the assembly, and it does not rely on any undeclared or forbidden dependency.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329121552_2c7bf206",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329120722_adc74369.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T12:15:53.030152+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329120747_f3501562",
+      "proof_nl": "Since 0 <= a <= b, the set I = {a+1, a+2, ..., b} has exactly b-a elements, so I is finite. Hence there are only finitely many subsets S of I, in fact exactly 2^(b-a) of them.\n\nFix one such subset S. Suppose (S, lambda) is in X_j. For each t in I, let m_t be the multiplicity of t in the finite multiset lambda. Because I is finite, the multiset lambda is uniquely determined by the tuple (m_t) indexed by t in I. Also,\nwt(lambda) = sum_{t in I} t m_t = j - sum_{s in S}(r+s).\nNow r >= 0, and every s in I satisfies s >= a+1 >= 1, so each term r+s is nonnegative. Therefore sum_{s in S}(r+s) >= 0, and hence wt(lambda) <= j.\n\nFor each t in I we have t >= 1, so\n0 <= m_t <= t m_t <= sum_{u in I} u m_u = wt(lambda) <= j.\nThus each m_t is an integer in {0,1,...,j}. Since I has b-a elements, there are at most (j+1)^(b-a) possible tuples (m_t), and therefore at most (j+1)^(b-a) possible multisets lambda for this fixed S. Since there are only finitely many choices of S, we obtain\n|X_j| <= 2^(b-a) (j+1)^(b-a) < infinity.\nSo X_j is finite.\n\nNow define\nX_j^even = {(S, lambda) in X_j : |S| is even}\nand\nX_j^odd = {(S, lambda) in X_j : |S| is odd}.\nThese two sets are disjoint and their union is X_j. By the definitions of E_j and O_j, we have |X_j^even| = E_j and |X_j^odd| = O_j.\n\nBecause X_j is finite, we may split the finite sum over X_j according to this partition:\nsum_{(S,lambda) in X_j} (-1)^{|S|}\n= sum_{(S,lambda) in X_j^even} (-1)^{|S|} + sum_{(S,lambda) in X_j^odd} (-1)^{|S|}.\nIf (S,lambda) lies in X_j^even, then (-1)^{|S|} = 1. If (S,lambda) lies in X_j^odd, then (-1)^{|S|} = -1. Hence\nsum_{(S,lambda) in X_j} (-1)^{|S|}\n= sum_{(S,lambda) in X_j^even} 1 + sum_{(S,lambda) in X_j^odd} (-1)\n= |X_j^even| - |X_j^odd|\n= E_j - O_j.\nThis is exactly the claimed identity.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.741643+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, r, and j are integers.",
+          "a and b satisfy 0 <= a <= b.",
+          "r and j are nonnegative.",
+          "I is finite because it is the integer interval from a+1 through b.",
+          "S must be a subset of I.",
+          "lambda must be a finite multiset whose elements all lie in I.",
+          "wt(lambda) means the sum of the multiset elements, with multiplicities counted.",
+          "The quantity sum over s in S of r+s is defined because S is finite.",
+          "The parity of |S| is well-defined because S is a finite set."
+        ],
+        "normalized_claim": "For fixed integers a, b, r, j with 0 <= a <= b and r, j nonnegative, the set of pairs (S, lambda) satisfying the stated weight equation is finite, and the sum of (-1) raised to the size of S over all pairs in that set is exactly the number of pairs with S even minus the number of pairs with S odd.",
+        "quantifier_order": [
+          "Fix integers a, b, r, j subject to 0 <= a <= b, r >= 0, and j >= 0.",
+          "Define I as the integer interval from a+1 through b.",
+          "For each pair (S, lambda), membership in X_j requires S to be a subset of I, lambda to be a finite multiset of elements of I, and wt(lambda) plus the sum over s in S of r+s to equal j.",
+          "Then X_j is finite.",
+          "Define E_j and O_j as the counts of pairs in X_j with even or odd size of S.",
+          "The alternating sum over all pairs in X_j equals E_j minus O_j."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "b",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "j",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "the integers from a+1 through b, inclusive",
+            "name": "I",
+            "role": "derived index set",
+            "type": "finite set of integers"
+          },
+          {
+            "domain": "all subsets of I",
+            "name": "S",
+            "role": "component of pairs in X_j",
+            "type": "subset of I"
+          },
+          {
+            "domain": "finite multisets supported on I",
+            "name": "lambda",
+            "role": "component of pairs in X_j",
+            "type": "finite multiset of elements of I"
+          },
+          {
+            "domain": "pairs (S, lambda) satisfying the defining equation for the fixed j",
+            "name": "X_j",
+            "role": "solution set",
+            "type": "set of pairs"
+          },
+          {
+            "domain": "count of elements of X_j with even cardinality of S",
+            "name": "E_j",
+            "role": "even-parity count",
+            "type": "integer"
+          },
+          {
+            "domain": "count of elements of X_j with odd cardinality of S",
+            "name": "O_j",
+            "role": "odd-parity count",
+            "type": "integer"
+          }
+        ],
+        "witness_dependencies": [
+          "There are no existential witnesses in the final conclusion.",
+          "Every pair (S, lambda) in X_j is determined by the fixed parameters a, b, r, and j through the equation wt(lambda) plus sum over s in S of r+s equals j.",
+          "E_j and O_j depend on X_j, hence ultimately on a, b, r, and j.",
+          "The alternating sum is taken over the finite set X_j, so its value depends only on the elements of X_j and the parity of S in each pair."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329121527_fd07d019"
+      ],
+      "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) is the sum of the elements of lambda. Then X_j is finite. If E_j is the number of elements (S,lambda) in X_j with |S| even and O_j is the number of elements (S,lambda) in X_j with |S| odd, then\nsum_{(S,lambda) in X_j} (-1)^{|S|} = E_j - O_j.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T12:15:28.014824+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof establishes finiteness of X_j by bounding the multiplicity of each element t in the finite interval I via 0 <= m_t <= wt(lambda) <= j, giving only finitely many possible multisets for each subset S, and hence finitely many pairs overall. It then partitions X_j into even and odd subset-parity classes and evaluates the alternating sum as the difference of their cardinalities, exactly matching the lemma statement. No semantic drift or dependency issues were found.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329121527_fd07d019",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329120747_f3501562.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T12:15:28.014824+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329120759_449f1aa9",
+      "proof_nl": "Let\nZ := {x in X : p(x) = 0}\nand\nO := {x in X : p(x) = 1}.\nBecause p maps X into {0,1}, every element of X lies in exactly one of Z or O. Thus X = Z \u222a O and Z \u2229 O = \u2205.\n\nSince X is finite, the subsets Z and O are finite. Write\nO = {o_1, ..., o_m},\nZ = {z_1, ..., z_n},\nfor some integers m,n >= 0. The hypothesis says that the number of zero-labeled elements is at least the number of one-labeled elements, so n >= m.\n\nNow define a map iota : X -> X as follows:\n- for 1 <= i <= m, set iota(o_i) = z_i;\n- for 1 <= i <= m, set iota(z_i) = o_i;\n- for m < j <= n, set iota(z_j) = z_j.\n\nThis is well-defined because O and Z are disjoint, and every element of X is either some o_i or some z_j.\n\nWe check that iota is an involution.\n- If x = o_i with 1 <= i <= m, then iota(iota(x)) = iota(z_i) = o_i = x.\n- If x = z_i with 1 <= i <= m, then iota(iota(x)) = iota(o_i) = z_i = x.\n- If x = z_j with m < j <= n, then iota(iota(x)) = iota(z_j) = z_j = x.\nHence iota(iota(x)) = x for every x in X.\n\nNext, suppose iota(x) != x. Then x is in one of the first two cases above.\n- If x = o_i, then iota(x) = z_i, so\n  p(iota(x)) = p(z_i) = 0 = 1 - 1 = 1 - p(o_i) = 1 - p(x).\n- If x = z_i with 1 <= i <= m, then iota(x) = o_i, so\n  p(iota(x)) = p(o_i) = 1 = 1 - 0 = 1 - p(z_i) = 1 - p(x).\nThus whenever iota(x) != x, we have p(iota(x)) = 1 - p(x).\n\nFinally, if iota(x) = x, then x cannot be any o_i and cannot be any z_i with 1 <= i <= m; therefore x = z_j for some j with m < j <= n. Hence p(x) = 0.\n\nSo iota is an involution on X, every moved point is matched with a point of opposite label, and every fixed point has label 0. This is exactly the required conclusion.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.742789+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "X must be finite",
+          "p must assign each element of X either 0 or 1",
+          "the count of zero-labeled elements of X is at least the count of one-labeled elements of X",
+          "iota is a total function from X to X",
+          "iota is an involution on X",
+          "every fixed point of iota must be labeled 0",
+          "every non-fixed point must be paired with an element of the opposite label"
+        ],
+        "normalized_claim": "For any finite set X equipped with a binary labeling p, if there are at least as many zeros as ones, then X can be partitioned by an involution iota so that every moved point is matched with a point of the opposite label, and every fixed point has label 0.",
+        "quantifier_order": [
+          "For every finite set X",
+          "for every function p from X to {0,1}",
+          "if the number of x in X with p(x)=0 is at least the number of x in X with p(x)=1",
+          "then there exists a function iota from X to X",
+          "such that for every x in X, iota applied twice to x equals x",
+          "and for every x in X, if iota(x) is not x then p(iota(x)) equals 1 minus p(x)",
+          "and for every x in X, if iota(x) equals x then p(x) equals 0"
+        ],
+        "variables": [
+          {
+            "domain": "finite sets",
+            "name": "X",
+            "role": "ambient set being paired by the involution",
+            "type": "set"
+          },
+          {
+            "domain": "functions from X to the set {0,1}",
+            "name": "p",
+            "role": "binary labeling of elements of X",
+            "type": "function"
+          },
+          {
+            "domain": "functions from X to X",
+            "name": "iota",
+            "role": "witnessed involution with label-flipping on moved points",
+            "type": "function"
+          },
+          {
+            "domain": "elements of X",
+            "name": "x",
+            "role": "universally quantified element used in the pointwise conditions",
+            "type": "element"
+          }
+        ],
+        "witness_dependencies": [
+          "The witness iota depends on both X and p",
+          "For each x, the value iota(x) is determined globally by the chosen iota, not by x alone",
+          "The condition on non-fixed points depends on the paired element iota(x) and the label p(x)",
+          "There is no separate existential witness for each x; the statement requires one single global iota"
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329121352_bde187ad"
+      ],
+      "statement_nl": "Let X be a finite set, and let p : X -> {0,1} be a function. Assume that the number of elements x in X with p(x) = 0 is at least the number of elements x in X with p(x) = 1. Then there exists a map iota : X -> X such that iota(iota(x)) = x for every x in X, and such that: if iota(x) != x, then p(iota(x)) = 1 - p(x); and if iota(x) = x, then p(x) = 0.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T12:13:52.534421+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof is correct and complete. It partitions X into the zero-labeled set Z and one-labeled set O, enumerates them as Z = {z_1,...,z_n} and O = {o_1,...,o_m} with n >= m by hypothesis, pairs each o_i with z_i, and fixes the remaining zeros. The resulting map is total, well-defined, involutive, flips labels on every moved point, and has only zero-labeled fixed points. This matches the lemma statement exactly and uses no undeclared or forbidden dependencies.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329121352_bde187ad",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329120759_449f1aa9.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T12:13:52.534421+00:00"
+      }
+    }
+  ],
+  "decomposition": {
+    "assembled_proof_nl": "Target: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.\n\nStrategy summary: Realize the interval product as the Hilbert series of a graded complete intersection in a weighted polynomial ring. The divisibility-count hypothesis is used only in one bottleneck algebraic realization lemma. Once that realization is available, the coefficient of q^j becomes a graded dimension and is therefore nonnegative. A separate expansion lemma identifies the same coefficient with the signed count of X_j, and a finite-set pairing lemma converts the resulting excess of even-parity elements into the required involution on X_j.\n\nAssembly skeleton: Use the divisibility inequalities only once, through the bottleneck realization lemma L1, to build a weighted complete intersection A whose Hilbert series is exactly the interval product in the theorem. By L2, the coefficient of q^j in that product is dim_Q A_j, hence is a nonnegative integer. Independently, L3 expands the same coefficient as the signed sum over X_j with sign (-1)^{|S|}. Lemma L4 rewrites that signed sum as E_j - O_j, where E_j and O_j count elements of X_j with even and odd subset parity respectively; therefore E_j >= O_j. Finally, L5 is a pure finite-set pairing lemma: whenever a finite set has at least as many 0-labeled elements as 1-labeled elements, one can pair every 1-labeled element with a distinct 0-labeled element and leave only 0-labeled fixed points. Applying it to X_j with label p(S,lambda)=|S| mod 2 produces the required involution iota_j. The theorem follows after unpacking the meaning of p.\n\nAssembly steps:\n\n- A1: derive There exists a family (f_s)_{s in I}, where I = {a+1,...,b}, of homogeneous polynomials in the weighted polynomial ring R := Q[x_s : s in I] with deg(x_s)=s and deg(f_s)=r+s, such that the ordered list by increasing s is a regular sequence. using lemmas ['lem_20260329120647_c4ea7dea'] and prior steps [].\n\n- A2: derive If A := R/(f_s : s in I), then [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = dim_Q A_j, hence this coefficient is a nonnegative integer. using lemmas ['lem_20260329120705_7e7a087b'] and prior steps ['A1'].\n\n- A3: derive [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|}. using lemmas ['lem_20260329120722_adc74369'] and prior steps [].\n\n- A4: derive The set X_j is finite. If E_j is the number of elements (S,lambda) in X_j with |S| even and O_j is the number of elements (S,lambda) in X_j with |S| odd, then sum_{(S,lambda) in X_j} (-1)^{|S|} = E_j - O_j. using lemmas ['lem_20260329120747_f3501562'] and prior steps [].\n\n- A5: derive [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = E_j - O_j. using lemmas [] and prior steps ['A3', 'A4'].\n\n- A6: derive E_j >= O_j. using lemmas [] and prior steps ['A2', 'A5'].\n\n- A7: derive There exists an involution iota_j : X_j -> X_j such that whenever iota_j(x) != x, the parity label p(x) changes, and whenever iota_j(x) = x, one has p(x)=0, where p(S,lambda)=0 if |S| is even and p(S,lambda)=1 if |S| is odd. using lemmas ['lem_20260329120759_449f1aa9'] and prior steps ['A4', 'A6'].\n\n- A8: derive There exists an involution iota_j : X_j -> X_j such that: if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and if iota_j(S,lambda) = (S,lambda), then |S| is even. using lemmas [] and prior steps ['A7'].\n\nRecursive lemma proofs:\n\n1. lem_20260329120647_c4ea7dea: Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family.\nProof text not yet materialized.\n\n2. lem_20260329120705_7e7a087b: Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, let R := Q[x_s : s in I] be graded by deg(x_s) = s, and let (f_s)_{s in I} be a family of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I and the ordered list by increasing s is a regular sequence. Put A := R / (f_s : s in I), and let A_n denote the degree-n homogeneous component of A. Then A is a finite-dimensional graded Q-algebra and its Hilbert series is\nHilb_A(q) = sum_{n >= 0} (dim_Q A_n) q^n = product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)).\nIn particular, for every integer j >= 0, the coefficient [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) equals dim_Q A_j and is a nonnegative integer.\nLet J_t := (f_s : a+1 <= s <= t) for t = a, a+1, ..., b, with J_a := (0), and let B_t := R/J_t. Then B_a = R and B_b = A. Since every f_s is homogeneous, each J_t is a homogeneous ideal, so each B_t is a graded Q-algebra. Also each degree piece (B_t)_n is finite-dimensional over Q because it is a quotient of R_n.\\n\\nFirst compute the Hilbert series of R. The monomials product_{s=a+1}^b x_s^{e_s}, with e_s in Z_{>=0}, form a Q-basis of R, and such a monomial has degree sum_{s=a+1}^b s e_s. Hence R_n has basis indexed by tuples (e_s) with sum s e_s = n; there are only finitely many such tuples because all s are positive. Therefore\\nHilb_R(q) = sum_{(e_s)} q^(sum s e_s)\\n= product_{s=a+1}^b (sum_{m >= 0} q^(m s))\\n= product_{s=a+1}^b 1/(1 - q^s).\\n\\nNow fix t with a+1 <= t <= b, and put d_t := r + t. Since t >= a+1 >= 1 and r >= 0, we have d_t > 0. Because the ordered list (f_{a+1}, f_{a+2}, ..., f_b) is a regular sequence, the class of f_t in B_{t-1} is a non-zero-divisor. Moreover B_t = B_{t-1}/(f_t), where (f_t) now denotes the ideal of B_{t-1} generated by the class of f_t. Since f_t is homogeneous of degree d_t, for each n >= 0 the degree-n part of that ideal is exactly f_t (B_{t-1})_{n-d_t}, with the convention (B_{t-1})_m = 0 for m < 0. Thus for each n >= 0 we have an exact sequence of Q-vector spaces\\n0 -> (B_{t-1})_{n-d_t} -- multiplication by f_t -> (B_{t-1})_n -> (B_t)_n -> 0.\\nTherefore\\ndim_Q (B_t)_n = dim_Q (B_{t-1})_n - dim_Q (B_{t-1})_{n-d_t}.\\nSumming over n >= 0 gives\\nHilb_{B_t}(q) = (1 - q^(d_t)) Hilb_{B_{t-1}}(q).\\n\\nIterating this identity from t = a+1 up to t = b, and using the formula for Hilb_R(q), we obtain\\nHilb_A(q) = Hilb_{B_b}(q)\\n= (product_{s=a+1}^b (1 - q^(r+s))) Hilb_R(q)\\n= product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)).\\n\\nBy the definition of Hilbert series, this means that for every j >= 0, the coefficient of q^j in product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)) is exactly dim_Q A_j. In particular, every such coefficient is a nonnegative integer.\\n\\nIt remains to prove that A is finite-dimensional. For any real u with 0 < u < 1, the series sum_{n >= 0} (dim_Q A_n) u^n converges because dim_Q A_n <= dim_Q R_n and\\nsum_{n >= 0} (dim_Q R_n) u^n = product_{s=a+1}^b 1/(1 - u^s) < infinity.\\nSo we may evaluate the identity above at such a real u:\\nsum_{n >= 0} (dim_Q A_n) u^n = product_{s=a+1}^b ((1 - u^(r+s))/(1 - u^s)).\\n\\nFor each fixed s,\\n(1 - u^m)/(1 - u) = 1 + u + ... + u^(m-1),\\nso\\nlim_{u -> 1^-} (1 - u^(r+s))/(1 - u^s) = (r+s)/s.\\nHence the right-hand side has a finite limit product_{s=a+1}^b ((r+s)/s) as u -> 1^-; in particular it stays bounded near u = 1.\\n\\nSuppose, for contradiction, that A_n != 0 for infinitely many n. Then there are infinitely many n with a_n := dim_Q A_n >= 1. Given any positive integer N, choose distinct indices n_1 < ... < n_N with a_{n_i} >= 1. For u sufficiently close to 1, we have u^{n_i} > 1/2 for all i, and then\\nsum_{n >= 0} a_n u^n >= sum_{i=1}^N u^{n_i} > N/2.\\nSince N is arbitrary, the left-hand side would be unbounded as u -> 1^-, contradicting the boundedness of the right-hand side. Therefore A_n = 0 for all but finitely many n. As each A_n is finite-dimensional, A = direct sum_{n >= 0} A_n is finite-dimensional over Q.\\n\\nThus A is a finite-dimensional graded Q-algebra, its Hilbert series is exactly product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)), and the coefficient of q^j in that product is dim_Q A_j and hence a nonnegative integer for every j >= 0.\n\n3. lem_20260329120722_adc74369: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) denotes the sum of the elements of lambda. Then\n[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|},\nwhere |S| is the cardinality of S.\nLet\nF(q) := product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = product_{s in I} ((1 - q^(r+s)) / (1 - q^s)).\nWe interpret [q^j] in the formal power series ring Z[[q]]. This is legitimate because every s in I satisfies s >= a+1 >= 1.\n\nFor each s in I,\n(1 - q^s)^(-1) = sum_{m>=0} q^(ms)\nin Z[[q]], since multiplying the right-hand side by 1 - q^s gives 1. Hence\nproduct_{s in I} (1 - q^s)^(-1) = product_{s in I} sum_{m_s>=0} q^(m_s s).\nBecause I is finite, expanding this finite product gives\nproduct_{s in I} (1 - q^s)^(-1) = sum_{(m_s)_{s in I}} q^(sum_{s in I} m_s s),\nwhere the sum runs over all tuples of nonnegative integers (m_s) indexed by I.\n\nLikewise,\nproduct_{s in I} (1 - q^(r+s))\n= sum_{S subseteq I} product_{s in S} (-q^(r+s))\n= sum_{S subseteq I} (-1)^{|S|} q^(sum_{s in S} (r+s)).\n\nMultiplying the two expansions, we obtain in Z[[q]]\nF(q) = sum_{S subseteq I} sum_{(m_s)_{s in I}} (-1)^{|S|} q^( sum_{s in S}(r+s) + sum_{s in I} m_s s ).\n\nNow fix j >= 0. Only finitely many terms on the right can contribute to the coefficient of q^j: the set I is finite, and if sum_{s in I} m_s s <= j then for each s in I we have 0 <= m_s <= j/s. Therefore we may read off the coefficient term-by-term:\n[q^j] F(q) = sum_{S subseteq I} (-1)^{|S|} * #{ (m_s)_{s in I} : sum_{s in I} m_s s + sum_{s in S}(r+s) = j }.\n\nFor each fixed S, such tuples (m_s) are in bijection with finite multisets lambda of elements of I: m_s is the multiplicity of s in lambda. Under this bijection,\nwt(lambda) = sum_{s in I} m_s s.\nTherefore\n#{ (m_s)_{s in I} : sum_{s in I} m_s s + sum_{s in S}(r+s) = j }\n= #{ lambda : wt(lambda) + sum_{s in S}(r+s) = j }.\nSubstituting this into the previous formula gives\n[q^j] F(q) = sum_{S subseteq I} sum_{lambda : wt(lambda) + sum_{s in S}(r+s) = j} (-1)^{|S|}.\nBut by definition, the pairs (S, lambda) appearing in this double sum are exactly the elements of X_j. Hence\n[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|},\nas required.\n\n4. lem_20260329120747_f3501562: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) is the sum of the elements of lambda. Then X_j is finite. If E_j is the number of elements (S,lambda) in X_j with |S| even and O_j is the number of elements (S,lambda) in X_j with |S| odd, then\nsum_{(S,lambda) in X_j} (-1)^{|S|} = E_j - O_j.\nSince 0 <= a <= b, the set I = {a+1, a+2, ..., b} has exactly b-a elements, so I is finite. Hence there are only finitely many subsets S of I, in fact exactly 2^(b-a) of them.\n\nFix one such subset S. Suppose (S, lambda) is in X_j. For each t in I, let m_t be the multiplicity of t in the finite multiset lambda. Because I is finite, the multiset lambda is uniquely determined by the tuple (m_t) indexed by t in I. Also,\nwt(lambda) = sum_{t in I} t m_t = j - sum_{s in S}(r+s).\nNow r >= 0, and every s in I satisfies s >= a+1 >= 1, so each term r+s is nonnegative. Therefore sum_{s in S}(r+s) >= 0, and hence wt(lambda) <= j.\n\nFor each t in I we have t >= 1, so\n0 <= m_t <= t m_t <= sum_{u in I} u m_u = wt(lambda) <= j.\nThus each m_t is an integer in {0,1,...,j}. Since I has b-a elements, there are at most (j+1)^(b-a) possible tuples (m_t), and therefore at most (j+1)^(b-a) possible multisets lambda for this fixed S. Since there are only finitely many choices of S, we obtain\n|X_j| <= 2^(b-a) (j+1)^(b-a) < infinity.\nSo X_j is finite.\n\nNow define\nX_j^even = {(S, lambda) in X_j : |S| is even}\nand\nX_j^odd = {(S, lambda) in X_j : |S| is odd}.\nThese two sets are disjoint and their union is X_j. By the definitions of E_j and O_j, we have |X_j^even| = E_j and |X_j^odd| = O_j.\n\nBecause X_j is finite, we may split the finite sum over X_j according to this partition:\nsum_{(S,lambda) in X_j} (-1)^{|S|}\n= sum_{(S,lambda) in X_j^even} (-1)^{|S|} + sum_{(S,lambda) in X_j^odd} (-1)^{|S|}.\nIf (S,lambda) lies in X_j^even, then (-1)^{|S|} = 1. If (S,lambda) lies in X_j^odd, then (-1)^{|S|} = -1. Hence\nsum_{(S,lambda) in X_j} (-1)^{|S|}\n= sum_{(S,lambda) in X_j^even} 1 + sum_{(S,lambda) in X_j^odd} (-1)\n= |X_j^even| - |X_j^odd|\n= E_j - O_j.\nThis is exactly the claimed identity.\n\n5. lem_20260329120759_449f1aa9: Let X be a finite set, and let p : X -> {0,1} be a function. Assume that the number of elements x in X with p(x) = 0 is at least the number of elements x in X with p(x) = 1. Then there exists a map iota : X -> X such that iota(iota(x)) = x for every x in X, and such that: if iota(x) != x, then p(iota(x)) = 1 - p(x); and if iota(x) = x, then p(x) = 0.\nLet\nZ := {x in X : p(x) = 0}\nand\nO := {x in X : p(x) = 1}.\nBecause p maps X into {0,1}, every element of X lies in exactly one of Z or O. Thus X = Z \u222a O and Z \u2229 O = \u2205.\n\nSince X is finite, the subsets Z and O are finite. Write\nO = {o_1, ..., o_m},\nZ = {z_1, ..., z_n},\nfor some integers m,n >= 0. The hypothesis says that the number of zero-labeled elements is at least the number of one-labeled elements, so n >= m.\n\nNow define a map iota : X -> X as follows:\n- for 1 <= i <= m, set iota(o_i) = z_i;\n- for 1 <= i <= m, set iota(z_i) = o_i;\n- for m < j <= n, set iota(z_j) = z_j.\n\nThis is well-defined because O and Z are disjoint, and every element of X is either some o_i or some z_j.\n\nWe check that iota is an involution.\n- If x = o_i with 1 <= i <= m, then iota(iota(x)) = iota(z_i) = o_i = x.\n- If x = z_i with 1 <= i <= m, then iota(iota(x)) = iota(o_i) = z_i = x.\n- If x = z_j with m < j <= n, then iota(iota(x)) = iota(z_j) = z_j = x.\nHence iota(iota(x)) = x for every x in X.\n\nNext, suppose iota(x) != x. Then x is in one of the first two cases above.\n- If x = o_i, then iota(x) = z_i, so\n  p(iota(x)) = p(z_i) = 0 = 1 - 1 = 1 - p(o_i) = 1 - p(x).\n- If x = z_i with 1 <= i <= m, then iota(x) = o_i, so\n  p(iota(x)) = p(o_i) = 1 = 1 - 0 = 1 - p(z_i) = 1 - p(x).\nThus whenever iota(x) != x, we have p(iota(x)) = 1 - p(x).\n\nFinally, if iota(x) = x, then x cannot be any o_i and cannot be any z_i with 1 <= i <= m; therefore x = z_j for some j with m < j <= n. Hence p(x) = 0.\n\nSo iota is an involution on X, every moved point is matched with a point of opposite label, and every fixed point has label 0. This is exactly the required conclusion.",
+    "assembly_plan": {
+      "assembly_plan_id": "asm_20260329121139_e1d42f9c",
+      "is_trivially_composable": false,
+      "proof_skeleton_nl": "Use the divisibility inequalities only once, through the bottleneck realization lemma L1, to build a weighted complete intersection A whose Hilbert series is exactly the interval product in the theorem. By L2, the coefficient of q^j in that product is dim_Q A_j, hence is a nonnegative integer. Independently, L3 expands the same coefficient as the signed sum over X_j with sign (-1)^{|S|}. Lemma L4 rewrites that signed sum as E_j - O_j, where E_j and O_j count elements of X_j with even and odd subset parity respectively; therefore E_j >= O_j. Finally, L5 is a pure finite-set pairing lemma: whenever a finite set has at least as many 0-labeled elements as 1-labeled elements, one can pair every 1-labeled element with a distinct 0-labeled element and leave only 0-labeled fixed points. Applying it to X_j with label p(S,lambda)=|S| mod 2 produces the required involution iota_j. The theorem follows after unpacking the meaning of p.",
+      "steps": [
+        {
+          "derives": "There exists a family (f_s)_{s in I}, where I = {a+1,...,b}, of homogeneous polynomials in the weighted polynomial ring R := Q[x_s : s in I] with deg(x_s)=s and deg(f_s)=r+s, such that the ordered list by increasing s is a regular sequence.",
+          "is_trivial": true,
+          "step_id": "A1",
+          "trivial_justification": "This is the direct specialization of L1 to the parameters a, b, r from the theorem and the assumed inequalities M_d(r+a,r+b) >= M_d(a,b) for all positive integers d.",
+          "uses_lemmas": [
+            "lem_20260329120647_c4ea7dea"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "If A := R/(f_s : s in I), then [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = dim_Q A_j, hence this coefficient is a nonnegative integer.",
+          "is_trivial": false,
+          "step_id": "A2",
+          "trivial_justification": "Apply L2 to the regular sequence obtained in A1. L2 gives the Hilbert-series identity Hilb_A(q) = product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)). By definition of Hilb_A(q), the coefficient of q^j in this series is dim_Q A_j. Since dimensions of vector spaces are nonnegative integers, the coefficient is nonnegative.",
+          "uses_lemmas": [
+            "lem_20260329120705_7e7a087b"
+          ],
+          "uses_prior_steps": [
+            "A1"
+          ]
+        },
+        {
+          "derives": "[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|}.",
+          "is_trivial": true,
+          "step_id": "A3",
+          "trivial_justification": "This is exactly L3 applied to the given integers a, b, r, j. The theorem's assumption 0 <= j <= floor(r(b-a)/2) implies in particular j >= 0, which is the only restriction needed in L3.",
+          "uses_lemmas": [
+            "lem_20260329120722_adc74369"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "The set X_j is finite. If E_j is the number of elements (S,lambda) in X_j with |S| even and O_j is the number of elements (S,lambda) in X_j with |S| odd, then sum_{(S,lambda) in X_j} (-1)^{|S|} = E_j - O_j.",
+          "is_trivial": true,
+          "step_id": "A4",
+          "trivial_justification": "This is a direct application of L4 to the same parameters a, b, r, j.",
+          "uses_lemmas": [
+            "lem_20260329120747_f3501562"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = E_j - O_j.",
+          "is_trivial": true,
+          "step_id": "A5",
+          "trivial_justification": "Both A3 and A4 compute the same signed sum over X_j, so substituting the expression from A4 into the equality from A3 gives the displayed identity.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A3",
+            "A4"
+          ]
+        },
+        {
+          "derives": "E_j >= O_j.",
+          "is_trivial": true,
+          "step_id": "A6",
+          "trivial_justification": "A2 shows that the coefficient on the left side of A5 is nonnegative. A5 identifies that coefficient with E_j - O_j. Therefore E_j - O_j >= 0, i.e. E_j >= O_j.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A2",
+            "A5"
+          ]
+        },
+        {
+          "derives": "There exists an involution iota_j : X_j -> X_j such that whenever iota_j(x) != x, the parity label p(x) changes, and whenever iota_j(x) = x, one has p(x)=0, where p(S,lambda)=0 if |S| is even and p(S,lambda)=1 if |S| is odd.",
+          "is_trivial": false,
+          "step_id": "A7",
+          "trivial_justification": "Use L5 with X := X_j and with the label function p defined by the parity of |S|. Step A4 gives that X_j is finite. Step A6 gives that the number of p=0 elements is at least the number of p=1 elements, because those are exactly E_j and O_j. Therefore L5 yields an involution iota_j on X_j with the stated label-changing and fixed-point properties.",
+          "uses_lemmas": [
+            "lem_20260329120759_449f1aa9"
+          ],
+          "uses_prior_steps": [
+            "A4",
+            "A6"
+          ]
+        },
+        {
+          "derives": "There exists an involution iota_j : X_j -> X_j such that: if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and if iota_j(S,lambda) = (S,lambda), then |S| is even.",
+          "is_trivial": true,
+          "step_id": "A8",
+          "trivial_justification": "In A7, p(S,lambda)=0 exactly means that |S| is even, and p(S,lambda)=1 exactly means that |S| is odd. Thus p(iota_j(S,lambda)) = 1 - p(S,lambda) is equivalent to |S'| being opposite in parity to |S|, i.e. |S'| \u2261 |S| + 1 mod 2. The fixed-point condition p(S,lambda)=0 translates to |S| even. This is exactly the root theorem statement.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A7"
+          ]
+        }
+      ]
+    },
+    "decomposition_id": "dec_20260329121139_0a470496",
+    "formalization_cost_estimate": 0.87,
+    "node_id": "lem_20260329110006_654a633e",
+    "node_kind": "lemma",
+    "ordered_child_lemma_ids": [
+      "lem_20260329120647_c4ea7dea",
+      "lem_20260329120705_7e7a087b",
+      "lem_20260329120722_adc74369",
+      "lem_20260329120747_f3501562",
+      "lem_20260329120759_449f1aa9"
+    ],
+    "pinned_statement_signatures": {},
+    "shared_context": [
+      {
+        "content": "For integers a <= b, write I := {a+1, a+2, ..., b}.",
+        "kind": "definition",
+        "label": "Interval I"
+      },
+      {
+        "content": "For a positive integer d and real or integer endpoints u < v, M_d(u,v) := |{m in Z : u < m <= v and d divides m}|.",
+        "kind": "notation",
+        "label": "Divisibility count M_d(u,v)"
+      },
+      {
+        "content": "For a finite multiset lambda of integers, wt(lambda) denotes the sum of its elements. In the root theorem this quantity is written |lambda|; for an ordinary set S, |S| still means cardinality.",
+        "kind": "notation",
+        "label": "Multiset weight"
+      },
+      {
+        "content": "Given integers a,b,r,j with I := {a+1,...,b}, define X_j to be the set of pairs (S,lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j.",
+        "kind": "definition",
+        "label": "The set X_j"
+      },
+      {
+        "content": "If F(q) = sum_{n >= 0} c_n q^n is a formal power series, then [q^j]F(q) denotes c_j.",
+        "kind": "notation",
+        "label": "Coefficient extraction"
+      },
+      {
+        "content": "In a commutative ring R, an ordered finite list g_1,...,g_n is a regular sequence if for each i, the image of g_i is not a zero-divisor in R/(g_1,...,g_{i-1}); the empty list is allowed.",
+        "kind": "definition",
+        "label": "Regular sequence"
+      },
+      {
+        "content": "If A = direct_sum_{n >= 0} A_n is a graded Q-vector space with each A_n finite-dimensional, then Hilb_A(q) := sum_{n >= 0} (dim_Q A_n) q^n.",
+        "kind": "notation",
+        "label": "Hilbert series"
+      }
+    ],
+    "strategy_summary": "Realize the interval product as the Hilbert series of a graded complete intersection in a weighted polynomial ring. The divisibility-count hypothesis is used only in one bottleneck algebraic realization lemma. Once that realization is available, the coefficient of q^j becomes a graded dimension and is therefore nonnegative. A separate expansion lemma identifies the same coefficient with the signed count of X_j, and a finite-set pairing lemma converts the resulting excess of even-parity elements into the required involution on X_j."
+  },
+  "kind": "decomposition",
+  "node_id": "dec_20260329121139_0a470496",
+  "proof_nl": "Target: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.\n\nStrategy summary: Realize the interval product as the Hilbert series of a graded complete intersection in a weighted polynomial ring. The divisibility-count hypothesis is used only in one bottleneck algebraic realization lemma. Once that realization is available, the coefficient of q^j becomes a graded dimension and is therefore nonnegative. A separate expansion lemma identifies the same coefficient with the signed count of X_j, and a finite-set pairing lemma converts the resulting excess of even-parity elements into the required involution on X_j.\n\nAssembly skeleton: Use the divisibility inequalities only once, through the bottleneck realization lemma L1, to build a weighted complete intersection A whose Hilbert series is exactly the interval product in the theorem. By L2, the coefficient of q^j in that product is dim_Q A_j, hence is a nonnegative integer. Independently, L3 expands the same coefficient as the signed sum over X_j with sign (-1)^{|S|}. Lemma L4 rewrites that signed sum as E_j - O_j, where E_j and O_j count elements of X_j with even and odd subset parity respectively; therefore E_j >= O_j. Finally, L5 is a pure finite-set pairing lemma: whenever a finite set has at least as many 0-labeled elements as 1-labeled elements, one can pair every 1-labeled element with a distinct 0-labeled element and leave only 0-labeled fixed points. Applying it to X_j with label p(S,lambda)=|S| mod 2 produces the required involution iota_j. The theorem follows after unpacking the meaning of p.\n\nAssembly steps:\n\n- A1: derive There exists a family (f_s)_{s in I}, where I = {a+1,...,b}, of homogeneous polynomials in the weighted polynomial ring R := Q[x_s : s in I] with deg(x_s)=s and deg(f_s)=r+s, such that the ordered list by increasing s is a regular sequence. using lemmas ['lem_20260329120647_c4ea7dea'] and prior steps [].\n\n- A2: derive If A := R/(f_s : s in I), then [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = dim_Q A_j, hence this coefficient is a nonnegative integer. using lemmas ['lem_20260329120705_7e7a087b'] and prior steps ['A1'].\n\n- A3: derive [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|}. using lemmas ['lem_20260329120722_adc74369'] and prior steps [].\n\n- A4: derive The set X_j is finite. If E_j is the number of elements (S,lambda) in X_j with |S| even and O_j is the number of elements (S,lambda) in X_j with |S| odd, then sum_{(S,lambda) in X_j} (-1)^{|S|} = E_j - O_j. using lemmas ['lem_20260329120747_f3501562'] and prior steps [].\n\n- A5: derive [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = E_j - O_j. using lemmas [] and prior steps ['A3', 'A4'].\n\n- A6: derive E_j >= O_j. using lemmas [] and prior steps ['A2', 'A5'].\n\n- A7: derive There exists an involution iota_j : X_j -> X_j such that whenever iota_j(x) != x, the parity label p(x) changes, and whenever iota_j(x) = x, one has p(x)=0, where p(S,lambda)=0 if |S| is even and p(S,lambda)=1 if |S| is odd. using lemmas ['lem_20260329120759_449f1aa9'] and prior steps ['A4', 'A6'].\n\n- A8: derive There exists an involution iota_j : X_j -> X_j such that: if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and if iota_j(S,lambda) = (S,lambda), then |S| is even. using lemmas [] and prior steps ['A7'].\n\nRecursive lemma proofs:\n\n1. lem_20260329120647_c4ea7dea: Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, and let R := Q[x_s : s in I] be the polynomial ring graded by deg(x_s) = s for each s in I. For each positive integer d define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Assume M_d(r+a, r+b) >= M_d(a,b) for every positive integer d. Then there exists a family (f_s)_{s in I} of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I, and the ordered list of these polynomials in increasing order of s is a regular sequence in R. If I is empty, this means the empty family.\nProof text not yet materialized.\n\n2. lem_20260329120705_7e7a087b: Let a, b, r be integers with 0 <= a <= b and r >= 0. Set I := {a+1, a+2, ..., b}, let R := Q[x_s : s in I] be graded by deg(x_s) = s, and let (f_s)_{s in I} be a family of homogeneous polynomials in R such that deg(f_s) = r+s for every s in I and the ordered list by increasing s is a regular sequence. Put A := R / (f_s : s in I), and let A_n denote the degree-n homogeneous component of A. Then A is a finite-dimensional graded Q-algebra and its Hilbert series is\nHilb_A(q) = sum_{n >= 0} (dim_Q A_n) q^n = product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)).\nIn particular, for every integer j >= 0, the coefficient [q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) equals dim_Q A_j and is a nonnegative integer.\nLet J_t := (f_s : a+1 <= s <= t) for t = a, a+1, ..., b, with J_a := (0), and let B_t := R/J_t. Then B_a = R and B_b = A. Since every f_s is homogeneous, each J_t is a homogeneous ideal, so each B_t is a graded Q-algebra. Also each degree piece (B_t)_n is finite-dimensional over Q because it is a quotient of R_n.\\n\\nFirst compute the Hilbert series of R. The monomials product_{s=a+1}^b x_s^{e_s}, with e_s in Z_{>=0}, form a Q-basis of R, and such a monomial has degree sum_{s=a+1}^b s e_s. Hence R_n has basis indexed by tuples (e_s) with sum s e_s = n; there are only finitely many such tuples because all s are positive. Therefore\\nHilb_R(q) = sum_{(e_s)} q^(sum s e_s)\\n= product_{s=a+1}^b (sum_{m >= 0} q^(m s))\\n= product_{s=a+1}^b 1/(1 - q^s).\\n\\nNow fix t with a+1 <= t <= b, and put d_t := r + t. Since t >= a+1 >= 1 and r >= 0, we have d_t > 0. Because the ordered list (f_{a+1}, f_{a+2}, ..., f_b) is a regular sequence, the class of f_t in B_{t-1} is a non-zero-divisor. Moreover B_t = B_{t-1}/(f_t), where (f_t) now denotes the ideal of B_{t-1} generated by the class of f_t. Since f_t is homogeneous of degree d_t, for each n >= 0 the degree-n part of that ideal is exactly f_t (B_{t-1})_{n-d_t}, with the convention (B_{t-1})_m = 0 for m < 0. Thus for each n >= 0 we have an exact sequence of Q-vector spaces\\n0 -> (B_{t-1})_{n-d_t} -- multiplication by f_t -> (B_{t-1})_n -> (B_t)_n -> 0.\\nTherefore\\ndim_Q (B_t)_n = dim_Q (B_{t-1})_n - dim_Q (B_{t-1})_{n-d_t}.\\nSumming over n >= 0 gives\\nHilb_{B_t}(q) = (1 - q^(d_t)) Hilb_{B_{t-1}}(q).\\n\\nIterating this identity from t = a+1 up to t = b, and using the formula for Hilb_R(q), we obtain\\nHilb_A(q) = Hilb_{B_b}(q)\\n= (product_{s=a+1}^b (1 - q^(r+s))) Hilb_R(q)\\n= product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)).\\n\\nBy the definition of Hilbert series, this means that for every j >= 0, the coefficient of q^j in product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)) is exactly dim_Q A_j. In particular, every such coefficient is a nonnegative integer.\\n\\nIt remains to prove that A is finite-dimensional. For any real u with 0 < u < 1, the series sum_{n >= 0} (dim_Q A_n) u^n converges because dim_Q A_n <= dim_Q R_n and\\nsum_{n >= 0} (dim_Q R_n) u^n = product_{s=a+1}^b 1/(1 - u^s) < infinity.\\nSo we may evaluate the identity above at such a real u:\\nsum_{n >= 0} (dim_Q A_n) u^n = product_{s=a+1}^b ((1 - u^(r+s))/(1 - u^s)).\\n\\nFor each fixed s,\\n(1 - u^m)/(1 - u) = 1 + u + ... + u^(m-1),\\nso\\nlim_{u -> 1^-} (1 - u^(r+s))/(1 - u^s) = (r+s)/s.\\nHence the right-hand side has a finite limit product_{s=a+1}^b ((r+s)/s) as u -> 1^-; in particular it stays bounded near u = 1.\\n\\nSuppose, for contradiction, that A_n != 0 for infinitely many n. Then there are infinitely many n with a_n := dim_Q A_n >= 1. Given any positive integer N, choose distinct indices n_1 < ... < n_N with a_{n_i} >= 1. For u sufficiently close to 1, we have u^{n_i} > 1/2 for all i, and then\\nsum_{n >= 0} a_n u^n >= sum_{i=1}^N u^{n_i} > N/2.\\nSince N is arbitrary, the left-hand side would be unbounded as u -> 1^-, contradicting the boundedness of the right-hand side. Therefore A_n = 0 for all but finitely many n. As each A_n is finite-dimensional, A = direct sum_{n >= 0} A_n is finite-dimensional over Q.\\n\\nThus A is a finite-dimensional graded Q-algebra, its Hilbert series is exactly product_{s=a+1}^b ((1 - q^(r+s))/(1 - q^s)), and the coefficient of q^j in that product is dim_Q A_j and hence a nonnegative integer for every j >= 0.\n\n3. lem_20260329120722_adc74369: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) denotes the sum of the elements of lambda. Then\n[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|},\nwhere |S| is the cardinality of S.\nLet\nF(q) := product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = product_{s in I} ((1 - q^(r+s)) / (1 - q^s)).\nWe interpret [q^j] in the formal power series ring Z[[q]]. This is legitimate because every s in I satisfies s >= a+1 >= 1.\n\nFor each s in I,\n(1 - q^s)^(-1) = sum_{m>=0} q^(ms)\nin Z[[q]], since multiplying the right-hand side by 1 - q^s gives 1. Hence\nproduct_{s in I} (1 - q^s)^(-1) = product_{s in I} sum_{m_s>=0} q^(m_s s).\nBecause I is finite, expanding this finite product gives\nproduct_{s in I} (1 - q^s)^(-1) = sum_{(m_s)_{s in I}} q^(sum_{s in I} m_s s),\nwhere the sum runs over all tuples of nonnegative integers (m_s) indexed by I.\n\nLikewise,\nproduct_{s in I} (1 - q^(r+s))\n= sum_{S subseteq I} product_{s in S} (-q^(r+s))\n= sum_{S subseteq I} (-1)^{|S|} q^(sum_{s in S} (r+s)).\n\nMultiplying the two expansions, we obtain in Z[[q]]\nF(q) = sum_{S subseteq I} sum_{(m_s)_{s in I}} (-1)^{|S|} q^( sum_{s in S}(r+s) + sum_{s in I} m_s s ).\n\nNow fix j >= 0. Only finitely many terms on the right can contribute to the coefficient of q^j: the set I is finite, and if sum_{s in I} m_s s <= j then for each s in I we have 0 <= m_s <= j/s. Therefore we may read off the coefficient term-by-term:\n[q^j] F(q) = sum_{S subseteq I} (-1)^{|S|} * #{ (m_s)_{s in I} : sum_{s in I} m_s s + sum_{s in S}(r+s) = j }.\n\nFor each fixed S, such tuples (m_s) are in bijection with finite multisets lambda of elements of I: m_s is the multiplicity of s in lambda. Under this bijection,\nwt(lambda) = sum_{s in I} m_s s.\nTherefore\n#{ (m_s)_{s in I} : sum_{s in I} m_s s + sum_{s in S}(r+s) = j }\n= #{ lambda : wt(lambda) + sum_{s in S}(r+s) = j }.\nSubstituting this into the previous formula gives\n[q^j] F(q) = sum_{S subseteq I} sum_{lambda : wt(lambda) + sum_{s in S}(r+s) = j} (-1)^{|S|}.\nBut by definition, the pairs (S, lambda) appearing in this double sum are exactly the elements of X_j. Hence\n[q^j] product_{s=a+1}^b ((1 - q^(r+s)) / (1 - q^s)) = sum_{(S,lambda) in X_j} (-1)^{|S|},\nas required.\n\n4. lem_20260329120747_f3501562: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Set I := {a+1, a+2, ..., b}. Define X_j to be the set of all pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, and wt(lambda) + sum_{s in S}(r+s) = j, where wt(lambda) is the sum of the elements of lambda. Then X_j is finite. If E_j is the number of elements (S,lambda) in X_j with |S| even and O_j is the number of elements (S,lambda) in X_j with |S| odd, then\nsum_{(S,lambda) in X_j} (-1)^{|S|} = E_j - O_j.\nSince 0 <= a <= b, the set I = {a+1, a+2, ..., b} has exactly b-a elements, so I is finite. Hence there are only finitely many subsets S of I, in fact exactly 2^(b-a) of them.\n\nFix one such subset S. Suppose (S, lambda) is in X_j. For each t in I, let m_t be the multiplicity of t in the finite multiset lambda. Because I is finite, the multiset lambda is uniquely determined by the tuple (m_t) indexed by t in I. Also,\nwt(lambda) = sum_{t in I} t m_t = j - sum_{s in S}(r+s).\nNow r >= 0, and every s in I satisfies s >= a+1 >= 1, so each term r+s is nonnegative. Therefore sum_{s in S}(r+s) >= 0, and hence wt(lambda) <= j.\n\nFor each t in I we have t >= 1, so\n0 <= m_t <= t m_t <= sum_{u in I} u m_u = wt(lambda) <= j.\nThus each m_t is an integer in {0,1,...,j}. Since I has b-a elements, there are at most (j+1)^(b-a) possible tuples (m_t), and therefore at most (j+1)^(b-a) possible multisets lambda for this fixed S. Since there are only finitely many choices of S, we obtain\n|X_j| <= 2^(b-a) (j+1)^(b-a) < infinity.\nSo X_j is finite.\n\nNow define\nX_j^even = {(S, lambda) in X_j : |S| is even}\nand\nX_j^odd = {(S, lambda) in X_j : |S| is odd}.\nThese two sets are disjoint and their union is X_j. By the definitions of E_j and O_j, we have |X_j^even| = E_j and |X_j^odd| = O_j.\n\nBecause X_j is finite, we may split the finite sum over X_j according to this partition:\nsum_{(S,lambda) in X_j} (-1)^{|S|}\n= sum_{(S,lambda) in X_j^even} (-1)^{|S|} + sum_{(S,lambda) in X_j^odd} (-1)^{|S|}.\nIf (S,lambda) lies in X_j^even, then (-1)^{|S|} = 1. If (S,lambda) lies in X_j^odd, then (-1)^{|S|} = -1. Hence\nsum_{(S,lambda) in X_j} (-1)^{|S|}\n= sum_{(S,lambda) in X_j^even} 1 + sum_{(S,lambda) in X_j^odd} (-1)\n= |X_j^even| - |X_j^odd|\n= E_j - O_j.\nThis is exactly the claimed identity.\n\n5. lem_20260329120759_449f1aa9: Let X be a finite set, and let p : X -> {0,1} be a function. Assume that the number of elements x in X with p(x) = 0 is at least the number of elements x in X with p(x) = 1. Then there exists a map iota : X -> X such that iota(iota(x)) = x for every x in X, and such that: if iota(x) != x, then p(iota(x)) = 1 - p(x); and if iota(x) = x, then p(x) = 0.\nLet\nZ := {x in X : p(x) = 0}\nand\nO := {x in X : p(x) = 1}.\nBecause p maps X into {0,1}, every element of X lies in exactly one of Z or O. Thus X = Z \u222a O and Z \u2229 O = \u2205.\n\nSince X is finite, the subsets Z and O are finite. Write\nO = {o_1, ..., o_m},\nZ = {z_1, ..., z_n},\nfor some integers m,n >= 0. The hypothesis says that the number of zero-labeled elements is at least the number of one-labeled elements, so n >= m.\n\nNow define a map iota : X -> X as follows:\n- for 1 <= i <= m, set iota(o_i) = z_i;\n- for 1 <= i <= m, set iota(z_i) = o_i;\n- for m < j <= n, set iota(z_j) = z_j.\n\nThis is well-defined because O and Z are disjoint, and every element of X is either some o_i or some z_j.\n\nWe check that iota is an involution.\n- If x = o_i with 1 <= i <= m, then iota(iota(x)) = iota(z_i) = o_i = x.\n- If x = z_i with 1 <= i <= m, then iota(iota(x)) = iota(o_i) = z_i = x.\n- If x = z_j with m < j <= n, then iota(iota(x)) = iota(z_j) = z_j = x.\nHence iota(iota(x)) = x for every x in X.\n\nNext, suppose iota(x) != x. Then x is in one of the first two cases above.\n- If x = o_i, then iota(x) = z_i, so\n  p(iota(x)) = p(z_i) = 0 = 1 - 1 = 1 - p(o_i) = 1 - p(x).\n- If x = z_i with 1 <= i <= m, then iota(x) = o_i, so\n  p(iota(x)) = p(o_i) = 1 = 1 - 0 = 1 - p(z_i) = 1 - p(x).\nThus whenever iota(x) != x, we have p(iota(x)) = 1 - p(x).\n\nFinally, if iota(x) = x, then x cannot be any o_i and cannot be any z_i with 1 <= i <= m; therefore x = z_j for some j with m < j <= n. Hence p(x) = 0.\n\nSo iota is an involution on X, every moved point is matched with a point of opposite label, and every fixed point has label 0. This is exactly the required conclusion.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.742926+00:00",
+    "proof_nl_synthesized": true
+  },
+  "resolution_mode": "subdecomposition",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a and b are integers with 0 <= a <= b.",
+      "r is a nonnegative integer.",
+      "j is an integer with 0 <= j <= floor(r (b - a) / 2).",
+      "d ranges over positive integers only.",
+      "M_d counts integers m in the interval with u < m <= v that are divisible by d.",
+      "S must be a subset of I.",
+      "lambda must be a finite multiset of elements of I, with repetition allowed.",
+      "The notation |lambda| means the sum of the elements of the multiset lambda, not its cardinality.",
+      "The set X_j includes exactly those pairs (S, lambda) whose total weighted sum equals j.",
+      "The parity statement uses |S| as the cardinality of S.",
+      "An involution means a self-map whose square is the identity."
+    ],
+    "normalized_claim": "Under the stated numerical and divisibility hypotheses, the set X_j admits an involution. Every non-fixed orbit pairs two elements whose subset parts have opposite parity, and every fixed point has an even-sized subset part.",
+    "quantifier_order": [
+      "Fix integers a, b, r, j with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2).",
+      "Define I as the integers from a + 1 through b.",
+      "For every positive integer d, define M_d(u, v) as the number of integers m such that u < m <= v and d divides m.",
+      "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+      "Define X_j to consist of all pairs (S, lambda) with S a subset of I, lambda a finite multiset of elements of I, and sum of elements of lambda plus sum over s in S of (r + s) equal to j.",
+      "There exists an involution iota_j from X_j to X_j satisfying the two parity conditions."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= j <= floor(r (b - a) / 2)",
+        "name": "j",
+        "role": "parameter and index for X_j and iota_j",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "universal index for the divisibility count",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integer or real interval endpoint for M_d",
+        "name": "u",
+        "role": "left endpoint in the counting function",
+        "type": "integer endpoint"
+      },
+      {
+        "domain": "integer or real interval endpoint for M_d",
+        "name": "v",
+        "role": "right endpoint in the counting function",
+        "type": "integer endpoint"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "counted variable in M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a + 1 through b",
+        "name": "I",
+        "role": "ambient ground set",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "subsets of I",
+        "name": "S",
+        "role": "subset component of an element of X_j",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multisets drawn from I",
+        "name": "lambda",
+        "role": "multiset component of an element of X_j",
+        "type": "finite multiset of elements of I"
+      },
+      {
+        "domain": "subset of I",
+        "name": "S prime",
+        "role": "image subset under iota_j",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multiset drawn from I",
+        "name": "lambda prime",
+        "role": "image multiset under iota_j",
+        "type": "finite multiset of elements of I"
+      },
+      {
+        "domain": "pairs (S, lambda) satisfying the defining sum condition",
+        "name": "X_j",
+        "role": "domain of the involution",
+        "type": "set of pairs"
+      },
+      {
+        "domain": "maps X_j to X_j",
+        "name": "iota_j",
+        "role": "involution witness",
+        "type": "self-map on X_j"
+      }
+    ],
+    "witness_dependencies": [
+      "The existential witness iota_j depends on the fixed parameters a, b, r, and j, as well as on the universal hypothesis that M_d(r + a, r + b) >= M_d(a, b) for every positive integer d.",
+      "No additional existential witnesses are introduced besides iota_j.",
+      "For any input pair (S, lambda) in X_j, the output pair (S prime, lambda prime) is determined by iota_j; the moved-point parity condition compares the cardinalities of S and S prime.",
+      "If a pair is fixed by iota_j, the fixed-point condition requires the same S to have even cardinality."
+    ]
+  },
+  "source_artifacts": [
+    "asm_20260329121139_e1d42f9c"
+  ],
+  "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.",
+  "status_snapshot": {
+    "controller_status": "failed",
+    "final_check_job_id": null,
+    "final_check_passed": false,
+    "invalidated_by_counterexample_id": "cex_20260329133035_2b45744a",
+    "invalidated_by_lemma_id": "lem_20260329120647_c4ea7dea",
+    "lean_assembly_status": "skipped",
+    "llm_vetting_status": "accepted",
+    "logical_decomposition_id": "logdec_lem_20260329110006_654a633e",
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/decompositions/dec_20260329121139_0a470496.json",
+    "revision_number": 1,
+    "updated_at": "2026-03-30T02:44:34.691702+00:00"
+  }
+}

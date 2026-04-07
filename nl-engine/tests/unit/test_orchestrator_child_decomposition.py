@@ -63,7 +63,7 @@ def test_child_decomposition_frontier_retries_while_slots_remain() -> None:
     assert lemma.next_action == "retry_decomposition"
 
 
-def test_false_invalidated_child_decomposition_is_detected_from_child_failure_origin() -> None:
+def test_descendant_false_child_decomposition_retries_parent_decomposition() -> None:
     orch = Orchestrator.__new__(Orchestrator)
     orch.lemmas = _LemmaRepo()
     orch.decompositions = SimpleNamespace(
@@ -83,13 +83,11 @@ def test_false_invalidated_child_decomposition_is_detected_from_child_failure_or
     orch.decomposition_candidates = SimpleNamespace(list_by_node=lambda problem_id, node_id: [])
     orch.event_logger = SimpleNamespace(transition=lambda *args, **kwargs: None)
     orch._select_active_decomposition_for_node = lambda *args, **kwargs: False
-    called: dict[str, str] = {}
-
-    def invalidate(problem: ProblemORM, lemma: LemmaORM, cfg: ProblemConfig, *, reason: str, counterexample_id: str | None = None) -> None:
-        called["lemma_id"] = lemma.lemma_id
-        called["reason"] = reason
-
-    orch._invalidate_parent_decomposition = invalidate
+    orch._remaining_decomposition_slots = lambda *args, **kwargs: 2
+    orch._decompose_current_lemma_result = lambda *args, **kwargs: (
+        orch._DECOMPOSE_OUTCOME_NO_ACCEPTED_THIS_ROUND,
+        "retry after descendant false frontier",
+    )
 
     problem = ProblemORM(problem_id="prob_test")
     lemma = LemmaORM(
@@ -103,10 +101,13 @@ def test_false_invalidated_child_decomposition_is_detected_from_child_failure_or
     changed = orch._process_child_decomposition_for_lemma(problem, None, lemma, ProblemConfig())
 
     assert changed is True
-    assert called == {"lemma_id": "lem_false_child", "reason": "child lemma is false"}
+    assert lemma.proof_status == ProofStatus.PROOF_FLAWED.value
+    assert lemma.routing_status == RoutingStatus.DECOMPOSE_FURTHER.value
+    assert lemma.next_action == "retry_decomposition"
+    assert lemma.truth_status == "unknown"
 
 
-def test_false_invalidated_child_decomposition_passes_counterexample_id() -> None:
+def test_agent3_false_child_decomposition_invalidates_parent() -> None:
     orch = Orchestrator.__new__(Orchestrator)
     orch.lemmas = _LemmaRepo()
     orch.decompositions = SimpleNamespace(
@@ -118,7 +119,7 @@ def test_false_invalidated_child_decomposition_passes_counterexample_id() -> Non
                 node_kind="lemma",
                 llm_vetting_status="accepted",
                 controller_status=ControllerStatus.FAILED.value,
-                failure_origin="child_lemma_false",
+                failure_origin="agent3:false_lemma",
                 failure_reason="child lemma is false",
                 invalidated_by_counterexample_id="cex_123",
             )
@@ -215,7 +216,7 @@ def test_rejected_child_candidates_retry_decomposition_while_slots_remain() -> N
         orch._DECOMPOSE_OUTCOME_NO_ACCEPTED_THIS_ROUND,
         "no accepted decomposition candidates",
     )
-    orch._child_decomposition_is_false_frontier = lambda *args, **kwargs: False
+    orch._child_decomposition_proves_current_lemma_false = lambda *args, **kwargs: False
 
     problem = ProblemORM(problem_id="prob_retry")
     lemma = LemmaORM(

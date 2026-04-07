@@ -1,0 +1,153 @@
+{
+  "config": {
+    "budget": {
+      "max_estimated_cost_usd_per_lemma": null,
+      "max_estimated_cost_usd_per_problem": null
+    },
+    "decomposition": {
+      "lemma_decomposition_candidates_n": 1,
+      "max_consecutive_fatal_rejections_per_node": 10,
+      "max_decompositions_per_failed_lemma": 2,
+      "max_false_frontier_hops_per_branch": 4,
+      "parallel_root_decompositions_n": 1,
+      "parallel_root_join_timeout_seconds": 30,
+      "parallel_root_take_k": 1,
+      "root_solutions_required_for_termination": 1
+    },
+    "drift": {
+      "drift_check_on_every_lemma": true,
+      "major_drift_blocks_progress": true,
+      "minor_drift_adds_warning_only": true
+    },
+    "final_check": {
+      "fail_problem_on_fatal": false
+    },
+    "lean_engine": {
+      "assemble_root_repair_rounds": 3,
+      "assemble_root_timeout_seconds": 300,
+      "claude_activity_timeout_seconds": 0,
+      "claude_init_timeout_seconds": 0,
+      "internal_packaging_retry_count": 1,
+      "lean_job_timeout_seconds": 300,
+      "max_repair_rounds": 5,
+      "max_workers": 4,
+      "model": null,
+      "no_lean4_refs": false,
+      "repair_context_token_budget": 32000
+    },
+    "lemma_solving": {
+      "max_consecutive_fatal_rejections_per_lemma": 1,
+      "max_consecutive_infrastructure_failures_per_lemma": null,
+      "max_infrastructure_failures": 5,
+      "max_minor_rejections_per_lemma": 10,
+      "max_solver_attempts_per_lemma_total": null,
+      "max_solver_series_wall_clock_seconds_per_lemma": null,
+      "max_total_lemma_nodes": 5000
+    },
+    "llm": {
+      "agent1": {
+        "coding_mode": "off",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      },
+      "agent2": {
+        "coding_mode": "code_interpreter",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      },
+      "agent2_first_lemma": null,
+      "agent2_first_root": null,
+      "agent3": {
+        "coding_mode": "code_interpreter",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      },
+      "agent4": {
+        "coding_mode": "code_interpreter",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      },
+      "agent4_first": null,
+      "agent5": {
+        "coding_mode": "code_interpreter",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      },
+      "agent6": {
+        "coding_mode": "code_interpreter",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      },
+      "agent7": {
+        "coding_mode": "off",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      },
+      "agent8": {
+        "coding_mode": "off",
+        "max_attempts": 2,
+        "model": null,
+        "thinking_level": null,
+        "timeout_seconds": 600,
+        "verbosity": null
+      }
+    },
+    "mode": {
+      "lean": {
+        "auto_split_sublemmas": false,
+        "enabled": false,
+        "fallback_to_v1_on_error": true,
+        "max_track_attempts": 3,
+        "proof_issue_confidence_threshold": 0.8,
+        "stream_progress_payloads": false,
+        "strict_proof_issue_fail_fast": false,
+        "use_v2_endpoints": false,
+        "use_v2_prepare_track": false
+      },
+      "lean_mode": false,
+      "nl_only_mode": true
+    },
+    "routing": {
+      "invalidation_confidence_threshold": 0.75,
+      "max_identical_fatal_class_repeats": 2,
+      "repairable_lean_only_classes": [
+        "syntax",
+        "type_mismatch",
+        "missing_import"
+      ],
+      "repairable_nl_loop_classes": [
+        "tactic_failure",
+        "missing_library_fact"
+      ]
+    }
+  },
+  "imports": [
+    "Mathlib"
+  ],
+  "initial_trusted_context": [],
+  "lean_image_tag": "Orthosolver-lean-4.18.0-mathlib-v4.18.0",
+  "statement_lean": null,
+  "statement_nl": "For all n, n = n",
+  "title": "decomposition exhaustion"
+}

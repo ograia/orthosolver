@@ -1,0 +1,162 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329110006_654a633e",
+  "proof_nl": "Let\nQ(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)).\nFor the fixed j, write\nE_j := { (S, lambda) in X_j : |S| is even }\nand\nO_j := { (S, lambda) in X_j : |S| is odd }.\nBecause I is finite and every element of I is a positive integer, there are only finitely many multisets lambda with |lambda| <= j; hence X_j, E_j, and O_j are finite.\n\nFirst, the coefficient of q^j in Q(q) is exactly |E_j| - |O_j|. Indeed, for each i in I,\n(1 - q^(r+i)) / (1 - q^i) = (1 - q^(r+i)) * sum_{m>=0} q^(mi).\nWhen we expand the whole product, choosing the term -q^(r+i) from the numerator factor means that i is placed into S, while choosing q^(mi) from the geometric-series factor means that lambda contains i with multiplicity m. The total exponent is then\nsum_{s in S} (r+s) + |lambda|,\nand the sign is (-1)^|S|. Therefore the coefficient of q^j is\nsum_{(S,lambda) in X_j} (-1)^|S| = |E_j| - |O_j|.\n\nNext, Q(q) is a polynomial. Using the cyclotomic factorization 1 - q^m = product_{d|m} Phi_d(q), the exponent of Phi_d(q) in Q(q) is\n|{ i in I : d divides (r+i) }| - |{ i in I : d divides i }|.\nSince I = {a+1,...,b}, this exponent is exactly\nM_d(r+a,r+b) - M_d(a,b),\nwhich is >= 0 by hypothesis. Hence every cyclotomic exponent in Q(q) is nonnegative, so Q(q) belongs to Z[q].\n\nNow set N := r + a + b. By the standard product formula for Gaussian q-binomial coefficients,\n[N choose k]_q = (q;q)_N / ((q;q)_k (q;q)_(N-k)).\nTherefore\n[N choose b]_q / [N choose a]_q\n= ((q;q)_a (q;q)_(N-a)) / ((q;q)_b (q;q)_(N-b))\n= ((q;q)_a (q;q)_(r+b)) / ((q;q)_b (q;q)_(r+a))\n= Q(q),\nbecause N-a = r+b and N-b = r+a.\n\nWe have just shown that this quotient is a polynomial. Applying the allowed Gaussian-quotient positivity statement with n = N, k = b, and l = a, it follows that every coefficient of Q(q) is nonnegative. In particular, the coefficient of q^j is nonnegative. By the first paragraph, this says\n|E_j| - |O_j| >= 0,\nso |E_j| >= |O_j|.\n\nSince E_j and O_j are finite and |E_j| >= |O_j|, choose an injection f : O_j -> E_j. Define iota_j : X_j -> X_j by\n- if x in O_j, set iota_j(x) := f(x);\n- if x is in the image f(O_j), set iota_j(x) := f^{-1}(x);\n- if x in E_j \\ f(O_j), set iota_j(x) := x.\nThis is well-defined because f is injective, and clearly iota_j^2 = id_{X_j}; so iota_j is an involution.\n\nIf iota_j(S,lambda) = (S',lambda') != (S,lambda), then one of the two elements lies in O_j and the other lies in E_j, so |S'| and |S| have opposite parity. Equivalently,\n|S'| \u2261 |S| + 1 mod 2.\nIf iota_j(S,lambda) = (S,lambda), then (S,lambda) lies in E_j, so |S| is even.\n\nThus there exists an involution iota_j : X_j -> X_j with properties (1) and (2).",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.732098+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a and b are integers with 0 <= a <= b.",
+      "r is a nonnegative integer.",
+      "j is an integer with 0 <= j <= floor(r (b - a) / 2).",
+      "d ranges over positive integers only.",
+      "M_d counts integers m in the interval with u < m <= v that are divisible by d.",
+      "S must be a subset of I.",
+      "lambda must be a finite multiset of elements of I, with repetition allowed.",
+      "The notation |lambda| means the sum of the elements of the multiset lambda, not its cardinality.",
+      "The set X_j includes exactly those pairs (S, lambda) whose total weighted sum equals j.",
+      "The parity statement uses |S| as the cardinality of S.",
+      "An involution means a self-map whose square is the identity."
+    ],
+    "normalized_claim": "Under the stated numerical and divisibility hypotheses, the set X_j admits an involution. Every non-fixed orbit pairs two elements whose subset parts have opposite parity, and every fixed point has an even-sized subset part.",
+    "quantifier_order": [
+      "Fix integers a, b, r, j with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2).",
+      "Define I as the integers from a + 1 through b.",
+      "For every positive integer d, define M_d(u, v) as the number of integers m such that u < m <= v and d divides m.",
+      "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+      "Define X_j to consist of all pairs (S, lambda) with S a subset of I, lambda a finite multiset of elements of I, and sum of elements of lambda plus sum over s in S of (r + s) equal to j.",
+      "There exists an involution iota_j from X_j to X_j satisfying the two parity conditions."
+    ],
+    "variables": [
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= a <= b",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers with 0 <= j <= floor(r (b - a) / 2)",
+        "name": "j",
+        "role": "parameter and index for X_j and iota_j",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "universal index for the divisibility count",
+        "type": "positive integer"
+      },
+      {
+        "domain": "integer or real interval endpoint for M_d",
+        "name": "u",
+        "role": "left endpoint in the counting function",
+        "type": "integer endpoint"
+      },
+      {
+        "domain": "integer or real interval endpoint for M_d",
+        "name": "v",
+        "role": "right endpoint in the counting function",
+        "type": "integer endpoint"
+      },
+      {
+        "domain": "integers",
+        "name": "m",
+        "role": "counted variable in M_d",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a + 1 through b",
+        "name": "I",
+        "role": "ambient ground set",
+        "type": "finite set of integers"
+      },
+      {
+        "domain": "subsets of I",
+        "name": "S",
+        "role": "subset component of an element of X_j",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multisets drawn from I",
+        "name": "lambda",
+        "role": "multiset component of an element of X_j",
+        "type": "finite multiset of elements of I"
+      },
+      {
+        "domain": "subset of I",
+        "name": "S prime",
+        "role": "image subset under iota_j",
+        "type": "subset of I"
+      },
+      {
+        "domain": "finite multiset drawn from I",
+        "name": "lambda prime",
+        "role": "image multiset under iota_j",
+        "type": "finite multiset of elements of I"
+      },
+      {
+        "domain": "pairs (S, lambda) satisfying the defining sum condition",
+        "name": "X_j",
+        "role": "domain of the involution",
+        "type": "set of pairs"
+      },
+      {
+        "domain": "maps X_j to X_j",
+        "name": "iota_j",
+        "role": "involution witness",
+        "type": "self-map on X_j"
+      }
+    ],
+    "witness_dependencies": [
+      "The existential witness iota_j depends on the fixed parameters a, b, r, and j, as well as on the universal hypothesis that M_d(r + a, r + b) >= M_d(a, b) for every positive integer d.",
+      "No additional existential witnesses are introduced besides iota_j.",
+      "For any input pair (S, lambda) in X_j, the output pair (S prime, lambda prime) is determined by iota_j; the moved-point parity condition compares the cardinalities of S and S prime.",
+      "If a pair is fixed by iota_j, the fixed-point condition requires the same S to have even cardinality."
+    ]
+  },
+  "source_artifacts": [],
+  "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 1,
+    "last_activity_at": "2026-03-30T02:44:34.719625+00:00",
+    "last_terminal_worker_result": "agent5:dependency_violation",
+    "last_transition_reason": "child decomposition invalidated by false lemma lem_20260329120647_c4ea7dea",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": null,
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 1,
+    "minor_rejection_count": 0,
+    "next_action": "retry_decomposition",
+    "promoted_decomposition_count": 1,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329110006_654a633e.json",
+    "proof_status": "proof_flawed",
+    "routing_status": "decompose_further",
+    "solver_attempt_count": 2,
+    "statement_status": "false",
+    "truth_status": "false",
+    "updated_at": "2026-03-30T02:44:34.719625+00:00"
+  }
+}

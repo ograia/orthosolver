@@ -1,0 +1,31 @@
+{
+  "confidence": 0.98,
+  "created_at": "2026-03-30T03:33:20.144168Z",
+  "detailed_findings": [
+    {
+      "finding": "The core argument is sound: on the interval constrained by 2a <= n and 2b <= n, the sign computation shows that a < b would force a(n-a) < b(n-b), contradicting the hypothesis.",
+      "location": "entire proof",
+      "severity": "low"
+    },
+    {
+      "finding": "There is a minor typographical slip in the expansion line ('a-b)(n-a-b)' missing an opening parenthesis), but the intended algebraic identity is clear and correct.",
+      "location": "expansion step",
+      "severity": "low"
+    }
+  ],
+  "drift_assessment": {
+    "drift_description": null,
+    "drift_detected": false,
+    "drift_severity": "none",
+    "drift_type": null
+  },
+  "feedback_for_solver": null,
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "proof_status": "complete",
+  "reason": "The proof is mathematically correct and complete. Assuming a < b, it derives a+b < 2b <= n, hence n-a-b > 0, while a-b < 0. Therefore (a-b)(n-a-b) < 0. Expanding gives (a-b)(n-a-b) = a(n-a) - b(n-b), contradicting the hypothesis a(n-a) >= b(n-b). This exactly proves a >= b under the stated assumptions. There is no semantic drift from the lemma sketch, and no forbidden or undeclared dependencies are used.",
+  "recommended_action": "send_to_lean",
+  "report_id": "rep_20260330033320_70b07bde",
+  "statement_status": "plausible",
+  "target_id": "lem_20260330032427_556608d3",
+  "target_kind": "lemma"
+}

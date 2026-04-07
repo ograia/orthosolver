@@ -1,0 +1,99 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329132405_562eefce",
+  "proof_nl": null,
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.749956+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "b is a nonnegative integer",
+      "the list e_1 through e_b has exactly b entries",
+      "each e_i is a positive integer",
+      "d ranges over positive integers only",
+      "S is the graded polynomial ring over the rationals in variables y_1 through y_b",
+      "the grading on S assigns degree i to y_i",
+      "the counting condition compares indices i from 1 through b",
+      "when b is 0, S is the rational numbers and the conclusion is the empty regular sequence"
+    ],
+    "normalized_claim": "For any nonnegative integer b and any ordered list of b positive integers e_1 through e_b satisfying that, for every positive integer d, the number of indices i from 1 to b with d dividing e_i is at least the number of indices i from 1 to b with d dividing i, there exist homogeneous elements u_1 through u_b in the weighted graded polynomial ring over the rationals on generators y_1 through y_b, with degree of y_i equal to i, such that each u_i has degree e_i and the ordered list u_1 through u_b is a regular sequence. In the case b equals 0, this is the empty regular sequence in the ring of rational numbers.",
+    "quantifier_order": [
+      "for each nonnegative integer b",
+      "for each ordered list e_1 through e_b of positive integers",
+      "for every positive integer d, the divisibility count inequality must hold",
+      "if the hypothesis holds, then there exists an ordered list u_1 through u_b in S",
+      "each u_i is homogeneous of degree e_i",
+      "the list u_1 through u_b is a regular sequence"
+    ],
+    "variables": [
+      {
+        "domain": "nonnegative integers",
+        "name": "b",
+        "role": "length parameter and number of generators in the polynomial ring",
+        "type": "integer"
+      },
+      {
+        "domain": "positive integers indexed by i from 1 to b",
+        "name": "e",
+        "role": "target degrees for the homogeneous elements",
+        "type": "ordered list of integers"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "test divisor used in the counting hypothesis",
+        "type": "integer"
+      },
+      {
+        "domain": "polynomial ring over the rationals in b variables",
+        "name": "S",
+        "role": "ambient graded ring",
+        "type": "graded polynomial ring"
+      },
+      {
+        "domain": "homogeneous polynomials in S",
+        "name": "u",
+        "role": "regular sequence with prescribed degrees",
+        "type": "ordered list of elements of S"
+      }
+    ],
+    "witness_dependencies": [
+      "The existence witnesses u_1 through u_b may depend on the entire parameter set b and e_1 through e_b",
+      "The witnesses are chosen after the divisibility hypothesis is verified for all positive integers d",
+      "The elements u_i are not allowed to depend on the particular choice of d, since d is universally quantified in the hypothesis",
+      "The witness is an ordered sequence, so the regular sequence property depends on the order of the u_i"
+    ]
+  },
+  "source_artifacts": [],
+  "statement_nl": "Let b be a nonnegative integer, and let e_1,...,e_b be an ordered list of b positive integers. Let S := Q[y_1,...,y_b] be the polynomial ring graded by deg(y_i)=i for 1 <= i <= b. Assume that for every positive integer d, one has |{i in {1,...,b} : d divides e_i}| >= |{i in {1,...,b} : d divides i}|. Then there exist homogeneous polynomials u_1,...,u_b in S such that deg(u_i)=e_i for every i and the ordered list u_1,...,u_b is a regular sequence. When b=0, this means the empty regular sequence in S=Q.",
+  "status_snapshot": {
+    "active_counterexample_id": "cex_20260329133035_2b45744a",
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "accepted",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T13:31:12.931595+00:00",
+    "last_terminal_worker_result": "agent4:counterexample_flagged",
+    "last_transition_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": null,
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "invalidate_parent_decomposition",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329132405_562eefce.json",
+    "proof_status": "failed",
+    "routing_status": "blocked",
+    "solver_attempt_count": 1,
+    "statement_status": "false",
+    "truth_status": "false",
+    "updated_at": "2026-03-29T13:31:12.931595+00:00"
+  }
+}

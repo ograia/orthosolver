@@ -1,0 +1,96 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329073914_bfaa8c0e",
+  "proof_nl": "Let G_{n,r}(q) := (q;q)_n / ((q;q)_r (q;q)_{n-r}). Since each factor 1 - q^i is a nonzero polynomial in Z[q], each (q;q)_m is nonzero, so G_{n,r}(q) is a well-defined element of the rational function field Q(q).\n\nWe prove by induction on n that for every integer r with 0 <= r <= n, G_{n,r}(q) is a nonzero polynomial in Z[q] of degree r(n-r).\n\nBase case n = 0: then r = 0, and\nG_{0,0}(q) = (q;q)_0 / ((q;q)_0 (q;q)_0) = 1.\nThis is a nonzero polynomial in Z[q] of degree 0 = 0(0-0).\n\nInduction step: assume the claim has been proved for n-1, and let r satisfy 0 <= r <= n.\n\nIf r = 0, then\nG_{n,0}(q) = (q;q)_n / ((q;q)_0 (q;q)_n) = 1.\nIf r = n, then\nG_{n,n}(q) = (q;q)_n / ((q;q)_n (q;q)_0) = 1.\nIn either case G_{n,r}(q) is a nonzero polynomial of degree 0 = r(n-r).\n\nNow assume 0 < r < n. We derive the usual recurrence directly from the definition. Using\n(q;q)_{n-r} = (1 - q^{n-r})(q;q)_{n-r-1}\nand\n(q;q)_r = (1 - q^r)(q;q)_{r-1},\nwe have in Q(q):\n\nG_{n-1,r}(q)\n= (q;q)_{n-1} / ((q;q)_r (q;q)_{n-r-1})\n= (1 - q^{n-r})(q;q)_{n-1} / ((q;q)_r (q;q)_{n-r}),\n\nand\n\nq^{n-r} G_{n-1,r-1}(q)\n= q^{n-r} (q;q)_{n-1} / ((q;q)_{r-1} (q;q)_{n-r})\n= q^{n-r}(1 - q^r)(q;q)_{n-1} / ((q;q)_r (q;q)_{n-r}).\n\nAdding these two identities gives\n\nG_{n-1,r}(q) + q^{n-r} G_{n-1,r-1}(q)\n= ((1 - q^{n-r}) + q^{n-r}(1 - q^r))(q;q)_{n-1} / ((q;q)_r (q;q)_{n-r})\n= (1 - q^n)(q;q)_{n-1} / ((q;q)_r (q;q)_{n-r})\n= (q;q)_n / ((q;q)_r (q;q)_{n-r})\n= G_{n,r}(q).\n\nSo for 0 < r < n,\nG_{n,r}(q) = G_{n-1,r}(q) + q^{n-r} G_{n-1,r-1}(q).\n\nBy the induction hypothesis, both G_{n-1,r}(q) and G_{n-1,r-1}(q) are nonzero polynomials in Z[q]. Hence their sum G_{n,r}(q) also lies in Z[q].\n\nNow compute degrees. By induction,\ndeg G_{n-1,r}(q) = r((n-1)-r) = r(n-r) - r,\nand\ndeg G_{n-1,r-1}(q) = (r-1)(n-r).\nTherefore\n\ndeg(q^{n-r} G_{n-1,r-1}(q)) = (n-r) + (r-1)(n-r) = r(n-r).\n\nSince r > 0, we have\nr(n-r) - r < r(n-r).\nThus the second summand has strictly larger degree than the first. Because G_{n-1,r-1}(q) is nonzero, q^{n-r} G_{n-1,r-1}(q) has a nonzero term of degree r(n-r); the first summand has no term of that degree, so no cancellation is possible. Hence\n\ndeg G_{n,r}(q) = r(n-r).\nIn particular G_{n,r}(q) is nonzero.\n\nThis completes the induction. Therefore for all integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient [n choose r]_q is a nonzero polynomial in Z[q] of degree r(n-r).",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.761774+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "n is an integer",
+      "r is an integer",
+      "The inequality 0 <= r <= n must hold",
+      "The q-Pochhammer symbol is only used for nonnegative integer m",
+      "q is a formal indeterminate, not a specified numeric value",
+      "The claim takes place in the polynomial ring over the integers in q"
+    ],
+    "normalized_claim": "For every pair of integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient defined by the given q-Pochhammer ratio is actually a nonzero polynomial with integer coefficients in the formal variable q, and its degree is exactly r times (n-r).",
+    "quantifier_order": [
+      "For all integers n",
+      "For all integers r",
+      "Assume 0 <= r <= n",
+      "Then the stated polynomiality and degree claim holds"
+    ],
+    "variables": [
+      {
+        "domain": "all integers",
+        "name": "n",
+        "role": "top-level parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers satisfying 0 <= r <= n",
+        "name": "r",
+        "role": "top-level parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable in the polynomial ring over the integers",
+        "name": "q",
+        "role": "polynomial variable",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "used in the definition of the q-Pochhammer symbol",
+        "name": "m",
+        "role": "auxiliary parameter in the definition",
+        "type": "nonnegative integer"
+      },
+      {
+        "domain": "product index from 1 to m",
+        "name": "i",
+        "role": "bound index in the defining product",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witness is required",
+      "The polynomial is not an unspecified object; it is the explicit q-binomial expression determined by n, r, and q",
+      "The degree claim depends on n and r only"
+    ]
+  },
+  "source_artifacts": [
+    "rep_20260329074715_b9eed085"
+  ],
+  "statement_nl": "For all integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1, is a nonzero polynomial in Z[q] of degree r(n-r).",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 0,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 0,
+    "last_activity_at": "2026-03-29T07:47:15.456159+00:00",
+    "last_terminal_worker_result": "agent5:accepted",
+    "last_transition_reason": "The proof correctly establishes the lemma by induction on n. The base case and boundary cases r=0,n are handled explicitly. For 0<r<n, the derived recurrence G_{n,r}=G_{n-1,r}+q^{n-r}G_{n-1,r-1} is algebraically correct, and the induction hypothesis gives both summands as integer-coefficient polynomials. The degree computation is also correct: the second summand has degree r(n-r), the first has strictly smaller degree r(n-r)-r, so no leading-term cancellation can occur, yielding deg G_{n,r}=r(n-r) and nonzeroness. The proof matches the lemma sketch and does not rely on undeclared or forbidden dependencies.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": "rep_20260329074715_b9eed085",
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 0,
+    "minor_rejection_count": 0,
+    "next_action": "done",
+    "promoted_decomposition_count": 0,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329073914_bfaa8c0e.json",
+    "proof_status": "nl_accepted",
+    "routing_status": "done",
+    "solver_attempt_count": 1,
+    "statement_status": "plausible",
+    "truth_status": "unknown",
+    "updated_at": "2026-03-29T07:47:15.456159+00:00"
+  }
+}

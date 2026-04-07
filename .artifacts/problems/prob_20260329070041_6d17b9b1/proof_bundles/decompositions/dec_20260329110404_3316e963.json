@@ -1,0 +1,866 @@
+{
+  "children": [
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329105843_95b318e7",
+      "proof_nl": "Work in the formal power series ring Z[[q]]. Since 0 <= a <= b and r >= 0, all indices occurring in the q-Pochhammer symbols are nonnegative, so the definitions make sense.\n\nFirst rewrite the rational function R_{a,b,r}(q). Because a <= b, we have\n(q;q)_{r+b}/(q;q)_{r+a} = (\\prod_{t=1}^{r+b} (1-q^t))/(\\prod_{t=1}^{r+a} (1-q^t)) = \\prod_{t=r+a+1}^{r+b} (1-q^t).\nReindexing with t = r+i gives\n(q;q)_{r+b}/(q;q)_{r+a} = \\prod_{i=a+1}^{b} (1-q^{r+i}).\nAlso,\n(q;q)_a/(q;q)_b = (\\prod_{t=1}^{a} (1-q^t))/(\\prod_{t=1}^{b} (1-q^t)) = 1/\\prod_{t=a+1}^{b} (1-q^t).\nTherefore\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\nWhen a=b, these are empty products and equal 1, so the same formula is still valid.\n\nNow fix an integer i >= 1. In Z[[q]] one has\n(1-q^i) \\sum_{m>=0} q^{mi} = \\sum_{m>=0} q^{mi} - \\sum_{m>=0} q^{(m+1)i} = 1,\nbecause the coefficient of q^0 is 1 and for every positive multiple ni of i the two sums contribute equally and cancel. Hence\n(1-q^i)^{-1} = \\sum_{m>=0} q^{mi}\ninside Z[[q]].\n\nSubstituting this inverse into the product formula for R_{a,b,r}(q), and using that the product over i is finite, we obtain in Z[[q]]:\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} (1-q^{r+i})(1-q^i)^{-1}\n= \\prod_{i=a+1}^{b} \\left((1-q^{r+i}) \\sum_{m>=0} q^{mi}\\right)\n= F_{a,b,r}(q).\nThus F_{a,b,r}(q) is exactly the formal power-series expansion at q=0 of the rational function R_{a,b,r}(q).\n\nFor the final claim, assume R_{a,b,r}(q) belongs to Z[q]. A polynomial, viewed as an element of Z[[q]], is equal to its own power-series expansion at q=0 (with all coefficients above its degree equal to 0). Since the expansion of R_{a,b,r}(q) is F_{a,b,r}(q), we have equality of formal power series\nR_{a,b,r}(q) = F_{a,b,r}(q)\nin Z[[q]]. Therefore, for every integer j >= 0, the coefficients of q^j are equal:\n[q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).\nThis proves the lemma.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.727154+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, and r are integers.",
+          "The parameters satisfy 0 <= a <= b and r >= 0.",
+          "n is a nonnegative integer in the q-Pochhammer definition.",
+          "t runs over the integers from 1 to n in the finite product defining (q;q)_n.",
+          "m is a nonnegative integer in the geometric series factor.",
+          "i runs over the integers from a+1 to b in the product defining F.",
+          "j is a nonnegative integer in the coefficient comparison.",
+          "The product over i from a+1 to b is finite and is empty, hence equal to 1, when a = b.",
+          "The phrase belongs to Z[q] means the rational expression R_{a,b,r}(q) simplifies to a polynomial with integer coefficients.",
+          "The coefficient notation [q^j] on R_{a,b,r}(q) is intended only under the polynomial assumption, so that the coefficient is unambiguous."
+        ],
+        "normalized_claim": "For every integer triple a, b, r with 0 <= a <= b and r >= 0, the formal power series F_{a,b,r}(q) defined by the finite product of geometric series equals the power-series expansion at q = 0 of the rational function R_{a,b,r}(q). Moreover, whenever R_{a,b,r}(q) is in Z[q], the coefficient of q^j in R_{a,b,r}(q) matches the coefficient of q^j in F_{a,b,r}(q) for every nonnegative integer j.",
+        "quantifier_order": [
+          "First fix integers a, b, r with 0 <= a <= b and r >= 0.",
+          "For each nonnegative integer n, define the q-Pochhammer symbol (q;q)_n.",
+          "Using these definitions, form the rational function R_{a,b,r}(q) and the formal power series F_{a,b,r}(q).",
+          "The identity that F_{a,b,r}(q) is the expansion of R_{a,b,r}(q) at q = 0 is asserted for these fixed parameters.",
+          "If R_{a,b,r}(q) is actually a polynomial with integer coefficients, then for every nonnegative integer j the coefficient equality holds."
+        ],
+        "variables": [
+          {
+            "domain": "all integers satisfying 0 <= a <= b",
+            "name": "a",
+            "role": "main parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "all integers satisfying a <= b",
+            "name": "b",
+            "role": "main parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "main parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "indeterminate used for a rational function and formal power series",
+            "name": "q",
+            "role": "series variable",
+            "type": "formal variable"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "index in the q-Pochhammer definition",
+            "type": "integer"
+          },
+          {
+            "domain": "integers from 1 to n",
+            "name": "t",
+            "role": "product index in the q-Pochhammer definition",
+            "type": "integer"
+          },
+          {
+            "domain": "integers from a+1 to b",
+            "name": "i",
+            "role": "product index in the definition of F",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "m",
+            "role": "summation index in the geometric series factor",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "j",
+            "role": "coefficient degree",
+            "type": "integer"
+          }
+        ],
+        "witness_dependencies": [
+          "No existential witnesses are involved.",
+          "The coefficient equality is uniform in j and does not depend on choosing any auxiliary witness once a, b, and r satisfy the stated hypotheses."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329110641_85749e69"
+      ],
+      "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1. Define the rational function R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Also define the formal power series F_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Then F_{a,b,r}(q) is the power-series expansion at q = 0 of the rational function R_{a,b,r}(q). In particular, if R_{a,b,r}(q) belongs to Z[q], then for every integer j >= 0 one has [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T11:06:41.172347+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof matches the lemma statement closely and is mathematically complete. It correctly rewrites the q-Pochhammer quotient as the finite interval product, identifies each factor (1 - q^i)^{-1} with the geometric series sum_{m>=0} q^{mi} in Z[[q]], and concludes that the finite product F_{a,b,r}(q) is exactly the formal power-series expansion of R_{a,b,r}(q). Under the additional assumption R_{a,b,r}(q) \\in Z[q], the coefficient identity follows immediately from equality in Z[[q]]. No undeclared or forbidden dependencies are used.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329110641_85749e69",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105843_95b318e7.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T11:06:41.172347+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329105900_ed0a9993",
+      "proof_nl": "Let e_d := M_d(r+a,r+b) - M_d(a,b) for each positive integer d. First rewrite the quotient of q-Pochhammer symbols. Since a <= b and r >= 0, we have (q;q)_{r+b}/(q;q)_{r+a} = product_{t=r+a+1}^{r+b} (1 - q^t) and (q;q)_a/(q;q)_b = 1 / product_{t=a+1}^{b} (1 - q^t). Therefore\nR_{a,b,r}(q) = product_{i=a+1}^{b} (1 - q^{r+i})/(1 - q^i),\nwith the empty product equal to 1 when a=b.\n\nNow use the defining factorization of cyclotomic polynomials: for every positive integer N,\nq^N - 1 = product_{d | N} Phi_d(q).\nFor each i with a+1 <= i <= b,\n(1 - q^{r+i})/(1 - q^i) = (q^{r+i} - 1)/(q^i - 1) = (product_{d | (r+i)} Phi_d(q)) / (product_{d | i} Phi_d(q)).\nMultiplying over i from a+1 to b and collecting equal cyclotomic factors, we get an identity of rational functions\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^(A_d - B_d),\nwhere\nA_d := |{ i in Z : a < i <= b and d divides (r+i) }|,\nB_d := |{ i in Z : a < i <= b and d divides i }|.\nIf d > r+b, then necessarily d > b as well, so both A_d and B_d are 0. Hence only finitely many exponents are nonzero, so this product is well defined.\n\nIt remains to identify A_d and B_d with the M_d counts. The map i -> m := r+i is a bijection from the set counted by A_d onto the set { m in Z : r+a < m <= r+b and d divides m }. Therefore A_d = M_d(r+a,r+b). Also, by definition, B_d = M_d(a,b). Substituting these equalities gives\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ),\nwhich is the claimed cyclotomic factorization.\n\nFor the consequence, assume that R_{a,b,r}(q) belongs to Z[q]. Let I_+ := { d >= 1 : e_d > 0 } and I_- := { d >= 1 : e_d < 0 }. These sets are finite because e_d = 0 for d > r+b. The factorization above can then be written as\nR_{a,b,r}(q) = (product_{d in I_+} Phi_d(q)^{e_d}) / (product_{d in I_-} Phi_d(q)^{-e_d}).\nSuppose, for contradiction, that I_- is nonempty. Choose D in I_-. Since R_{a,b,r}(q) is actually a polynomial, say P(q) in Z[q], clearing denominators yields the polynomial identity over C,\nP(q) product_{d in I_-} Phi_d(q)^{-e_d} = product_{d in I_+} Phi_d(q)^{e_d}.\nNow let zeta be a primitive D-th root of unity. By the defining root property of cyclotomic polynomials, Phi_D(zeta)=0, and for every d != D one has Phi_d(zeta) != 0 because zeta is not a primitive d-th root of unity. Evaluating the cleared polynomial identity at q=zeta, the left-hand side is 0 because it contains the factor Phi_D(zeta)^{-e_D} with -e_D > 0, while the right-hand side is nonzero because none of its factors vanish at zeta. This contradiction shows that I_- must be empty.\n\nThus e_d >= 0 for every positive integer d, i.e.\nM_d(r+a,r+b) >= M_d(a,b)\nfor every positive integer d. This is exactly the stated consequence.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.728375+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a and b are integers with a less than or equal to b and both are nonnegative.",
+          "r is a nonnegative integer.",
+          "q is treated as a formal variable, not as a specified numeric value.",
+          "n is a nonnegative integer in the q-Pochhammer definition.",
+          "t ranges over positive integers from 1 to n in the finite product.",
+          "d is a positive integer.",
+          "u and v are integer endpoints when evaluating M_d.",
+          "m is an integer counted in the definition of M_d.",
+          "The cyclotomic product over all positive integers d has only finitely many nontrivial factors because the exponents vanish for large d.",
+          "The implication about Z[q] concerns integer-coefficient polynomials, not merely rational functions."
+        ],
+        "normalized_claim": "For every choice of integers a, b, r with 0 <= a <= b and r >= 0, the rational q-expression R_{a,b,r}(q) factors into cyclotomic polynomials with exponent at index d equal to the difference between the number of multiples of d in the interval from r+a to r+b and the number of multiples of d in the interval from a to b. If this expression is actually a polynomial with integer coefficients, then every such exponent is nonnegative, so the count of multiples of d in the shifted interval is at least the count in the original interval for every positive integer d.",
+        "quantifier_order": [
+          "For all integers a and b with 0 <= a <= b, and all integers r with r >= 0.",
+          "For each nonnegative integer n, define the q-Pochhammer symbol using a product over t from 1 to n.",
+          "For each positive integer d, define M_d(u,v) as the number of integers m satisfying u < m <= v and d divides m.",
+          "For all such a, b, and r, the stated cyclotomic factorization of R_{a,b,r}(q) holds as an identity in the formal variable q.",
+          "For all such a, b, and r, if R_{a,b,r}(q) lies in Z[q], then for every positive integer d one has M_d(r+a,r+b) >= M_d(a,b)."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "parameter in the q-Pochhammer quotient and in the interval counts",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "b",
+            "role": "parameter in the q-Pochhammer quotient and in the interval counts",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "shift parameter in the q-Pochhammer quotient and in the interval counts",
+            "type": "integer"
+          },
+          {
+            "domain": "formal variable in a polynomial or rational function expression",
+            "name": "q",
+            "role": "variable of the q-Pochhammer symbols, R, and the cyclotomic polynomials",
+            "type": "formal indeterminate"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "index in the q-Pochhammer definition",
+            "type": "integer"
+          },
+          {
+            "domain": "positive integers from 1 to n",
+            "name": "t",
+            "role": "product index in the q-Pochhammer definition",
+            "type": "integer"
+          },
+          {
+            "domain": "positive integers",
+            "name": "d",
+            "role": "cyclotomic index and divisor parameter in M_d",
+            "type": "positive integer"
+          },
+          {
+            "domain": "integers",
+            "name": "u",
+            "role": "lower endpoint in the counting function M_d(u,v)",
+            "type": "integer"
+          },
+          {
+            "domain": "integers",
+            "name": "v",
+            "role": "upper endpoint in the counting function M_d(u,v)",
+            "type": "integer"
+          },
+          {
+            "domain": "integers",
+            "name": "m",
+            "role": "integer being counted by M_d(u,v)",
+            "type": "integer"
+          }
+        ],
+        "witness_dependencies": [
+          "No existential witnesses are present in the statement.",
+          "The exponent of each cyclotomic factor depends explicitly on a, b, r, and d through the difference M_d(r+a,r+b) - M_d(a,b).",
+          "The nonnegativity conclusion uses the same a, b, and r as in the factorization, and it asserts the inequality separately for every positive integer d."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329111112_13cdb84c"
+      ],
+      "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1, and define R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Then one has the cyclotomic factorization R_{a,b,r}(q) = product_{d>=1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ), where Phi_d(q) is the d-th cyclotomic polynomial. Consequently, if R_{a,b,r}(q) belongs to Z[q], then M_d(r+a,r+b) >= M_d(a,b) for every positive integer d.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T11:11:12.415865+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof correctly rewrites the q-Pochhammer quotient as the finite interval product, expands each factor via the cyclotomic factorization of q^N-1, identifies the exponent of each Phi_d with M_d(r+a,r+b)-M_d(a,b), and then proves the consequence from polynomiality by a standard primitive-root contradiction argument. The argument matches the lemma statement and its role in the assembly, and it does not rely on any forbidden ancestry result.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329111112_13cdb84c",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105900_ed0a9993.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T11:11:12.415865+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329105924_711791c7",
+      "proof_nl": "Let I = {a+1, a+2, ..., b}. Fix j >= 0. Since a >= 0, every i in I is a positive integer. Hence any term q^(m i) with m > floor(j/i) has degree greater than j, so it cannot contribute to the coefficient of q^j in a product whose other factors also have only nonnegative exponents. Therefore\n[q^j] F_{a,b,r}(q) = [q^j] product_{i in I} ((1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i)).\nThe right-hand side is now the coefficient of a finite product of finite sums, so we may expand it by the ordinary distributive law.\n\nFor each i in I, write\n(1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i) = (sum_{m=0}^{floor(j/i)} q^(m i)) + (- q^(r+i) sum_{m=0}^{floor(j/i)} q^(m i)).\nIn the full expansion of the product, choose the second bracket exactly for those i belonging to some subset S of I. For each i, also choose one integer m_i >= 0 from the geometric sum. The resulting monomial is then\n(-1)^(|S|) q^( sum_{i in I} m_i i + sum_{s in S} (r+s) ).\nHence\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all families (m_i)_{i in I} of nonnegative integers satisfying sum_{i in I} m_i i + sum_{s in S}(r+s) = j of (-1)^(|S|).\n(The bounds m_i <= floor(j/i) are automatic from the displayed equation, so they do not need to be written separately.)\n\nNow such a family (m_i)_{i in I} is the same thing as a finite multiset lambda of elements of I: namely, lambda contains exactly m_i copies of i for each i in I. Conversely, every finite multiset of elements of I gives such a family of multiplicities. Under this bijection,\n|lambda| = sum_{i in I} i m_i.\nTherefore, for each fixed S, the inner sum is exactly over those finite multisets lambda of elements of I such that\n|lambda| + sum_{s in S}(r+s) = j.\nSo we get\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all finite multisets lambda of elements of I with |lambda| + sum_{s in S}(r+s) = j of (-1)^(|S|).\nBy the definition of X_j, this is exactly\nsum_{(S,lambda) in X_j} (-1)^(|S|).\nThus [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|), as claimed.\n\nFinally, the sum over X_j is finite: if (S,lambda) belongs to X_j, then |lambda| <= j, and since every element of I is at least 1, lambda has at most j elements. Because I is finite, there are only finitely many such multisets lambda, and there are only finitely many subsets S of I. So the right-hand side is well-defined.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.729513+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a and b are integers with 0 <= a <= b.",
+          "r and j are nonnegative integers.",
+          "I is finite because it consists of the integers from a+1 through b.",
+          "Every i in the product lies in I, hence i is a positive integer since a >= 0.",
+          "m ranges over nonnegative integers.",
+          "S must be a subset of I.",
+          "lambda must be a finite multiset whose elements all lie in I.",
+          "The symbol |lambda| means the sum of the multiset elements, not the number of elements.",
+          "The constraint for membership in X_j is |lambda| plus the sum over s in S of r+s equals j.",
+          "The coefficient extraction [q^j] is understood in the formal power series sense."
+        ],
+        "normalized_claim": "For every integers a, b, r, j with 0 <= a <= b and r, j nonnegative, let I be the set of integers from a+1 through b and let F be the finite product over i in I of (1 minus q to the power r+i) times the geometric series in q to the power i. Then the coefficient of q to the j in F equals the sum over all pairs (S, lambda) where S is a subset of I and lambda is a finite multiset of elements of I whose element-sum plus the sum of r+s over s in S is j, with each pair weighted by minus one to the power of the size of S.",
+        "quantifier_order": [
+          "For all integers a, b, r, j satisfying 0 <= a <= b and r >= 0 and j >= 0.",
+          "Define I as the integers from a+1 through b.",
+          "Define F as the finite product over i in I of (1 minus q to the power r+i) times the geometric series sum over m >= 0 of q to the power m i.",
+          "Define X_j as the set of pairs (S, lambda) with S a subset of I and lambda a finite multiset of elements of I such that the total sum of lambda plus the sum of r+s over s in S equals j.",
+          "Then the coefficient of q to the j in F equals the signed sum over X_j of minus one to the power of the size of S."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "lower bound for the interval defining I",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with a <= b",
+            "name": "b",
+            "role": "upper bound for the interval defining I",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "shift parameter in the product and in the constraint defining X_j",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "j",
+            "role": "target coefficient index and total weight constraint",
+            "type": "integer"
+          },
+          {
+            "domain": "formal power series variable",
+            "name": "q",
+            "role": "series variable for F",
+            "type": "formal indeterminate"
+          },
+          {
+            "domain": "integers from a+1 through b",
+            "name": "I",
+            "role": "index set for the product and for the combinatorial data",
+            "type": "finite set of integers"
+          },
+          {
+            "domain": "elements of I",
+            "name": "i",
+            "role": "product index",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "m",
+            "role": "summation index in the geometric series factor",
+            "type": "integer"
+          },
+          {
+            "domain": "subsets of I",
+            "name": "S",
+            "role": "subset chosen in an indexed pair in X_j",
+            "type": "set"
+          },
+          {
+            "domain": "finite multisets of elements of I",
+            "name": "lambda",
+            "role": "multiset chosen in an indexed pair in X_j",
+            "type": "finite multiset"
+          }
+        ],
+        "witness_dependencies": [
+          "There are no existential witnesses outside the indexed pairs in X_j; the statement is an equality of two expressions for each fixed a, b, r, j.",
+          "Membership in X_j depends jointly on S and lambda through the same total weight j.",
+          "The summand depends only on S through its cardinality, but the indexing set also counts all admissible lambda with the required total sum."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329110735_6a0df599"
+      ],
+      "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Put I := {a+1, a+2, ..., b}. Define the formal power series F_{a,b,r}(q) := product_{i in I} ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T11:07:35.535422+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof matches the stated combinatorial coefficient-extraction lemma. It correctly truncates each geometric series when extracting [q^j] because all exponents are nonnegative, expands the resulting finite product by subsets S and choices of multiplicities m_i, and then identifies those multiplicity families with finite multisets lambda of elements of I. The resulting signed enumeration is exactly the definition of X_j, and finiteness of the indexing set is justified. No forbidden or undeclared dependencies are used.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329110735_6a0df599",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105924_711791c7.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T11:07:35.535422+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329105947_d7a87760",
+      "proof_nl": "Let F := {x in X : iota(x) = x} be the set of fixed points, and let M := X \\ F. Since X is finite, both F and M are finite, and X is the disjoint union F \u2294 M. Therefore\nsum_{x in X} w(x) = sum_{x in F} w(x) + sum_{x in M} w(x).\n\nFirst consider F. By hypothesis, whenever iota(x) = x we have w(x) = +1. Hence every term in the sum over F equals 1, so\nsum_{x in F} w(x) = |F|.\n\nNow consider M. If x belongs to M, then iota(x) != x. Also iota(iota(x)) = x, so iota(x) is again in M; thus each x in M belongs to a two-element set {x, iota(x)}. Let\nO := { {x, iota(x)} : x in M }.\nEach member of O has exactly two elements, because x != iota(x) for x in M. Moreover, O is a partition of M: every x in M lies in {x, iota(x)}, and if two such sets intersect, then they are equal. Indeed, if z lies in both {x, iota(x)} and {y, iota(y)}, then {x, iota(x)} = {z, iota(z)} and also {y, iota(y)} = {z, iota(z)}, so the two sets are equal.\n\nSince O partitions M, we may sum over its blocks:\nsum_{x in M} w(x) = sum_{A in O} sum_{x in A} w(x).\nFor any block A in O, write A = {x, iota(x)} with x in M. Then iota(x) != x, so the sign-reversal hypothesis applies and gives w(iota(x)) = -w(x). Therefore\nsum_{y in A} w(y) = w(x) + w(iota(x)) = w(x) - w(x) = 0.\nThus every block contributes 0, and consequently\nsum_{x in M} w(x) = 0.\n\nCombining the two parts,\nsum_{x in X} w(x) = |F| + 0 = |F| = |{x in X : iota(x) = x}|.\nThis proves the stated identity. In particular, the sum is the cardinality of a finite set, hence a nonnegative integer.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.730633+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "X must be finite so that the sum over X is well defined.",
+          "w takes only the two integer values plus 1 and minus 1.",
+          "iota maps each element of X back into X.",
+          "The relation iota of iota of x equals x holds for every x in X, so iota is an involution.",
+          "The sign reversal condition is required only for nonfixed points, meaning points x with iota of x not equal to x.",
+          "The value plus 1 is required at fixed points, meaning points x with iota of x equal to x."
+        ],
+        "normalized_claim": "For a finite set X, an involution iota on X, and a function w from X to plus or minus 1 that changes sign along nonfixed iota pairs and equals plus 1 at fixed points, the total sum of w over X is exactly the number of fixed points of iota. Therefore that sum is a nonnegative integer.",
+        "quantifier_order": [
+          "Let X be a finite set.",
+          "Let w be a function from X to plus or minus 1.",
+          "Let iota be a function from X to X.",
+          "For every x in X, iota of iota of x equals x.",
+          "For every x in X, if iota of x is not equal to x, then w of iota of x equals minus w of x.",
+          "For every x in X, if iota of x equals x, then w of x equals plus 1.",
+          "Then the sum of w over X equals the number of fixed points of iota."
+        ],
+        "variables": [
+          {
+            "domain": "finite sets",
+            "name": "X",
+            "role": "underlying finite set being summed over",
+            "type": "set"
+          },
+          {
+            "domain": "functions from X to plus or minus 1",
+            "name": "w",
+            "role": "sign assignment on X",
+            "type": "function"
+          },
+          {
+            "domain": "self maps from X to X",
+            "name": "iota",
+            "role": "involution on X",
+            "type": "function"
+          },
+          {
+            "domain": "elements of X",
+            "name": "x",
+            "role": "universally quantified element used in pointwise conditions",
+            "type": "element"
+          }
+        ],
+        "witness_dependencies": [
+          "No existential witnesses are introduced in the statement.",
+          "The fixed-point set is determined solely by iota."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329110606_8346b84b"
+      ],
+      "statement_nl": "Let X be a finite set and let w : X -> { -1, +1 } be a sign function. Suppose iota : X -> X satisfies iota(iota(x)) = x for every x in X, w(iota(x)) = -w(x) whenever iota(x) != x, and w(x) = +1 whenever iota(x) = x. Then sum_{x in X} w(x) = |{x in X : iota(x) = x}|. In particular, sum_{x in X} w(x) is a nonnegative integer.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T11:06:06.868209+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof is the standard sign-reversing involution argument and is complete. It cleanly decomposes X into fixed points and nonfixed points, shows the nonfixed part is partitioned into 2-element involution orbits, proves each such orbit contributes 0 by the sign-reversal hypothesis, and shows the fixed-point contribution is exactly the number of fixed points because fixed points have weight +1. This matches the lemma statement exactly and uses no undeclared or forbidden dependencies.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329110606_8346b84b",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329105947_d7a87760.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T11:06:06.868209+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329110006_654a633e",
+      "proof_nl": "Let\nQ(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)).\nFor the fixed j, write\nE_j := { (S, lambda) in X_j : |S| is even }\nand\nO_j := { (S, lambda) in X_j : |S| is odd }.\nBecause I is finite and every element of I is a positive integer, there are only finitely many multisets lambda with |lambda| <= j; hence X_j, E_j, and O_j are finite.\n\nFirst, the coefficient of q^j in Q(q) is exactly |E_j| - |O_j|. Indeed, for each i in I,\n(1 - q^(r+i)) / (1 - q^i) = (1 - q^(r+i)) * sum_{m>=0} q^(mi).\nWhen we expand the whole product, choosing the term -q^(r+i) from the numerator factor means that i is placed into S, while choosing q^(mi) from the geometric-series factor means that lambda contains i with multiplicity m. The total exponent is then\nsum_{s in S} (r+s) + |lambda|,\nand the sign is (-1)^|S|. Therefore the coefficient of q^j is\nsum_{(S,lambda) in X_j} (-1)^|S| = |E_j| - |O_j|.\n\nNext, Q(q) is a polynomial. Using the cyclotomic factorization 1 - q^m = product_{d|m} Phi_d(q), the exponent of Phi_d(q) in Q(q) is\n|{ i in I : d divides (r+i) }| - |{ i in I : d divides i }|.\nSince I = {a+1,...,b}, this exponent is exactly\nM_d(r+a,r+b) - M_d(a,b),\nwhich is >= 0 by hypothesis. Hence every cyclotomic exponent in Q(q) is nonnegative, so Q(q) belongs to Z[q].\n\nNow set N := r + a + b. By the standard product formula for Gaussian q-binomial coefficients,\n[N choose k]_q = (q;q)_N / ((q;q)_k (q;q)_(N-k)).\nTherefore\n[N choose b]_q / [N choose a]_q\n= ((q;q)_a (q;q)_(N-a)) / ((q;q)_b (q;q)_(N-b))\n= ((q;q)_a (q;q)_(r+b)) / ((q;q)_b (q;q)_(r+a))\n= Q(q),\nbecause N-a = r+b and N-b = r+a.\n\nWe have just shown that this quotient is a polynomial. Applying the allowed Gaussian-quotient positivity statement with n = N, k = b, and l = a, it follows that every coefficient of Q(q) is nonnegative. In particular, the coefficient of q^j is nonnegative. By the first paragraph, this says\n|E_j| - |O_j| >= 0,\nso |E_j| >= |O_j|.\n\nSince E_j and O_j are finite and |E_j| >= |O_j|, choose an injection f : O_j -> E_j. Define iota_j : X_j -> X_j by\n- if x in O_j, set iota_j(x) := f(x);\n- if x is in the image f(O_j), set iota_j(x) := f^{-1}(x);\n- if x in E_j \\ f(O_j), set iota_j(x) := x.\nThis is well-defined because f is injective, and clearly iota_j^2 = id_{X_j}; so iota_j is an involution.\n\nIf iota_j(S,lambda) = (S',lambda') != (S,lambda), then one of the two elements lies in O_j and the other lies in E_j, so |S'| and |S| have opposite parity. Equivalently,\n|S'| \u2261 |S| + 1 mod 2.\nIf iota_j(S,lambda) = (S,lambda), then (S,lambda) lies in E_j, so |S| is even.\n\nThus there exists an involution iota_j : X_j -> X_j with properties (1) and (2).",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.732098+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a and b are integers with 0 <= a <= b.",
+          "r is a nonnegative integer.",
+          "j is an integer with 0 <= j <= floor(r (b - a) / 2).",
+          "d ranges over positive integers only.",
+          "M_d counts integers m in the interval with u < m <= v that are divisible by d.",
+          "S must be a subset of I.",
+          "lambda must be a finite multiset of elements of I, with repetition allowed.",
+          "The notation |lambda| means the sum of the elements of the multiset lambda, not its cardinality.",
+          "The set X_j includes exactly those pairs (S, lambda) whose total weighted sum equals j.",
+          "The parity statement uses |S| as the cardinality of S.",
+          "An involution means a self-map whose square is the identity."
+        ],
+        "normalized_claim": "Under the stated numerical and divisibility hypotheses, the set X_j admits an involution. Every non-fixed orbit pairs two elements whose subset parts have opposite parity, and every fixed point has an even-sized subset part.",
+        "quantifier_order": [
+          "Fix integers a, b, r, j with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2).",
+          "Define I as the integers from a + 1 through b.",
+          "For every positive integer d, define M_d(u, v) as the number of integers m such that u < m <= v and d divides m.",
+          "Assume that for every positive integer d, M_d(r + a, r + b) is at least M_d(a, b).",
+          "Define X_j to consist of all pairs (S, lambda) with S a subset of I, lambda a finite multiset of elements of I, and sum of elements of lambda plus sum over s in S of (r + s) equal to j.",
+          "There exists an involution iota_j from X_j to X_j satisfying the two parity conditions."
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "b",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= j <= floor(r (b - a) / 2)",
+            "name": "j",
+            "role": "parameter and index for X_j and iota_j",
+            "type": "integer"
+          },
+          {
+            "domain": "positive integers",
+            "name": "d",
+            "role": "universal index for the divisibility count",
+            "type": "positive integer"
+          },
+          {
+            "domain": "integer or real interval endpoint for M_d",
+            "name": "u",
+            "role": "left endpoint in the counting function",
+            "type": "integer endpoint"
+          },
+          {
+            "domain": "integer or real interval endpoint for M_d",
+            "name": "v",
+            "role": "right endpoint in the counting function",
+            "type": "integer endpoint"
+          },
+          {
+            "domain": "integers",
+            "name": "m",
+            "role": "counted variable in M_d",
+            "type": "integer"
+          },
+          {
+            "domain": "integers from a + 1 through b",
+            "name": "I",
+            "role": "ambient ground set",
+            "type": "finite set of integers"
+          },
+          {
+            "domain": "subsets of I",
+            "name": "S",
+            "role": "subset component of an element of X_j",
+            "type": "subset of I"
+          },
+          {
+            "domain": "finite multisets drawn from I",
+            "name": "lambda",
+            "role": "multiset component of an element of X_j",
+            "type": "finite multiset of elements of I"
+          },
+          {
+            "domain": "subset of I",
+            "name": "S prime",
+            "role": "image subset under iota_j",
+            "type": "subset of I"
+          },
+          {
+            "domain": "finite multiset drawn from I",
+            "name": "lambda prime",
+            "role": "image multiset under iota_j",
+            "type": "finite multiset of elements of I"
+          },
+          {
+            "domain": "pairs (S, lambda) satisfying the defining sum condition",
+            "name": "X_j",
+            "role": "domain of the involution",
+            "type": "set of pairs"
+          },
+          {
+            "domain": "maps X_j to X_j",
+            "name": "iota_j",
+            "role": "involution witness",
+            "type": "self-map on X_j"
+          }
+        ],
+        "witness_dependencies": [
+          "The existential witness iota_j depends on the fixed parameters a, b, r, and j, as well as on the universal hypothesis that M_d(r + a, r + b) >= M_d(a, b) for every positive integer d.",
+          "No additional existential witnesses are introduced besides iota_j.",
+          "For any input pair (S, lambda) in X_j, the output pair (S prime, lambda prime) is determined by iota_j; the moved-point parity condition compares the cardinalities of S and S prime.",
+          "If a pair is fixed by iota_j, the fixed-point condition requires the same S to have even cardinality."
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 1,
+        "last_activity_at": "2026-03-30T02:44:34.719625+00:00",
+        "last_terminal_worker_result": "agent5:dependency_violation",
+        "last_transition_reason": "child decomposition invalidated by false lemma lem_20260329120647_c4ea7dea",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 1,
+        "minor_rejection_count": 0,
+        "next_action": "retry_decomposition",
+        "promoted_decomposition_count": 1,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329110006_654a633e.json",
+        "proof_status": "proof_flawed",
+        "routing_status": "decompose_further",
+        "solver_attempt_count": 2,
+        "statement_status": "false",
+        "truth_status": "false",
+        "updated_at": "2026-03-30T02:44:34.719625+00:00"
+      }
+    }
+  ],
+  "decomposition": {
+    "assembled_proof_nl": "Target: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.\n\nStrategy summary: Reduce the theorem to a signed combinatorial counting problem. First pass from the q-factorial quotient to its formal power-series expansion. Then use cyclotomic factorization to extract an arithmetic divisibility-dominance condition from the assumption that the quotient is a polynomial. Express each target coefficient as a signed count of subset-partition pairs. The genuine hard step is then isolated as a sign-reversing involution on that signed set for degrees j up to floor(r(b-a)/2). A generic involution lemma converts that involution into coefficient nonnegativity.\n\nAssembly skeleton: Fix arbitrary integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define R_{a,b,r}(q) as in the theorem, and assume R_{a,b,r}(q) belongs to Z[q]. Fix an arbitrary integer j with 0 <= j <= floor(D/2), where D = r(b-a). By Lemma L1, the coefficient [q^j]R_{a,b,r}(q) equals the coefficient [q^j]F_{a,b,r}(q) of the formal interval-product expansion. By Lemma L2, polynomiality of R_{a,b,r}(q) implies the divisibility-dominance inequalities M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. By Lemma L3, [q^j]F_{a,b,r}(q) is the signed count of the subset-partition set X_j. Lemma L5, applied using the dominance inequalities and the degree bound j <= floor(r(b-a)/2), provides a sign-reversing involution on X_j whose fixed points all have positive sign. Lemma L4 then identifies the signed count with the number of fixed points, so the signed count is a nonnegative integer. Therefore [q^j]F_{a,b,r}(q) is a nonnegative integer, and hence [q^j]R_{a,b,r}(q) is a nonnegative integer as well. Since j was arbitrary in the allowed range, the theorem follows.\n\nAssembly steps:\n\n- A1: derive For the fixed admissible parameters a, b, r and the fixed integer j with 0 <= j <= floor(D/2), if R_{a,b,r}(q) belongs to Z[q], then [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q), where F_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). using lemmas ['lem_20260329105843_95b318e7'] and prior steps [].\n\n- A2: derive For every positive integer d, the interval-multiple dominance inequality M_d(r+a,r+b) >= M_d(a,b) holds. using lemmas ['lem_20260329105900_ed0a9993'] and prior steps [].\n\n- A3: derive If X_j is the set of pairs (S, lambda) defined in Lemma L3, then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|). using lemmas ['lem_20260329105924_711791c7'] and prior steps [].\n\n- A4: derive There exists an involution iota_j : X_j -> X_j such that non-fixed points change the parity of |S| and fixed points have even |S|. using lemmas ['lem_20260329110006_654a633e'] and prior steps ['A2'].\n\n- A5: derive The signed sum sum_{(S,lambda) in X_j} (-1)^(|S|) is a nonnegative integer; equivalently, [q^j] F_{a,b,r}(q) is a nonnegative integer. using lemmas ['lem_20260329105947_d7a87760'] and prior steps ['A3', 'A4'].\n\n- A6: derive [q^j] R_{a,b,r}(q) is a nonnegative integer. using lemmas [] and prior steps ['A1', 'A5'].\n\n- A7: derive For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer. using lemmas [] and prior steps ['A6'].\n\nRecursive lemma proofs:\n\n1. lem_20260329105843_95b318e7: Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1. Define the rational function R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Also define the formal power series F_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Then F_{a,b,r}(q) is the power-series expansion at q = 0 of the rational function R_{a,b,r}(q). In particular, if R_{a,b,r}(q) belongs to Z[q], then for every integer j >= 0 one has [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).\nWork in the formal power series ring Z[[q]]. Since 0 <= a <= b and r >= 0, all indices occurring in the q-Pochhammer symbols are nonnegative, so the definitions make sense.\n\nFirst rewrite the rational function R_{a,b,r}(q). Because a <= b, we have\n(q;q)_{r+b}/(q;q)_{r+a} = (\\prod_{t=1}^{r+b} (1-q^t))/(\\prod_{t=1}^{r+a} (1-q^t)) = \\prod_{t=r+a+1}^{r+b} (1-q^t).\nReindexing with t = r+i gives\n(q;q)_{r+b}/(q;q)_{r+a} = \\prod_{i=a+1}^{b} (1-q^{r+i}).\nAlso,\n(q;q)_a/(q;q)_b = (\\prod_{t=1}^{a} (1-q^t))/(\\prod_{t=1}^{b} (1-q^t)) = 1/\\prod_{t=a+1}^{b} (1-q^t).\nTherefore\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\nWhen a=b, these are empty products and equal 1, so the same formula is still valid.\n\nNow fix an integer i >= 1. In Z[[q]] one has\n(1-q^i) \\sum_{m>=0} q^{mi} = \\sum_{m>=0} q^{mi} - \\sum_{m>=0} q^{(m+1)i} = 1,\nbecause the coefficient of q^0 is 1 and for every positive multiple ni of i the two sums contribute equally and cancel. Hence\n(1-q^i)^{-1} = \\sum_{m>=0} q^{mi}\ninside Z[[q]].\n\nSubstituting this inverse into the product formula for R_{a,b,r}(q), and using that the product over i is finite, we obtain in Z[[q]]:\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} (1-q^{r+i})(1-q^i)^{-1}\n= \\prod_{i=a+1}^{b} \\left((1-q^{r+i}) \\sum_{m>=0} q^{mi}\\right)\n= F_{a,b,r}(q).\nThus F_{a,b,r}(q) is exactly the formal power-series expansion at q=0 of the rational function R_{a,b,r}(q).\n\nFor the final claim, assume R_{a,b,r}(q) belongs to Z[q]. A polynomial, viewed as an element of Z[[q]], is equal to its own power-series expansion at q=0 (with all coefficients above its degree equal to 0). Since the expansion of R_{a,b,r}(q) is F_{a,b,r}(q), we have equality of formal power series\nR_{a,b,r}(q) = F_{a,b,r}(q)\nin Z[[q]]. Therefore, for every integer j >= 0, the coefficients of q^j are equal:\n[q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).\nThis proves the lemma.\n\n2. lem_20260329105900_ed0a9993: Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1, and define R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Then one has the cyclotomic factorization R_{a,b,r}(q) = product_{d>=1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ), where Phi_d(q) is the d-th cyclotomic polynomial. Consequently, if R_{a,b,r}(q) belongs to Z[q], then M_d(r+a,r+b) >= M_d(a,b) for every positive integer d.\nLet e_d := M_d(r+a,r+b) - M_d(a,b) for each positive integer d. First rewrite the quotient of q-Pochhammer symbols. Since a <= b and r >= 0, we have (q;q)_{r+b}/(q;q)_{r+a} = product_{t=r+a+1}^{r+b} (1 - q^t) and (q;q)_a/(q;q)_b = 1 / product_{t=a+1}^{b} (1 - q^t). Therefore\nR_{a,b,r}(q) = product_{i=a+1}^{b} (1 - q^{r+i})/(1 - q^i),\nwith the empty product equal to 1 when a=b.\n\nNow use the defining factorization of cyclotomic polynomials: for every positive integer N,\nq^N - 1 = product_{d | N} Phi_d(q).\nFor each i with a+1 <= i <= b,\n(1 - q^{r+i})/(1 - q^i) = (q^{r+i} - 1)/(q^i - 1) = (product_{d | (r+i)} Phi_d(q)) / (product_{d | i} Phi_d(q)).\nMultiplying over i from a+1 to b and collecting equal cyclotomic factors, we get an identity of rational functions\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^(A_d - B_d),\nwhere\nA_d := |{ i in Z : a < i <= b and d divides (r+i) }|,\nB_d := |{ i in Z : a < i <= b and d divides i }|.\nIf d > r+b, then necessarily d > b as well, so both A_d and B_d are 0. Hence only finitely many exponents are nonzero, so this product is well defined.\n\nIt remains to identify A_d and B_d with the M_d counts. The map i -> m := r+i is a bijection from the set counted by A_d onto the set { m in Z : r+a < m <= r+b and d divides m }. Therefore A_d = M_d(r+a,r+b). Also, by definition, B_d = M_d(a,b). Substituting these equalities gives\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ),\nwhich is the claimed cyclotomic factorization.\n\nFor the consequence, assume that R_{a,b,r}(q) belongs to Z[q]. Let I_+ := { d >= 1 : e_d > 0 } and I_- := { d >= 1 : e_d < 0 }. These sets are finite because e_d = 0 for d > r+b. The factorization above can then be written as\nR_{a,b,r}(q) = (product_{d in I_+} Phi_d(q)^{e_d}) / (product_{d in I_-} Phi_d(q)^{-e_d}).\nSuppose, for contradiction, that I_- is nonempty. Choose D in I_-. Since R_{a,b,r}(q) is actually a polynomial, say P(q) in Z[q], clearing denominators yields the polynomial identity over C,\nP(q) product_{d in I_-} Phi_d(q)^{-e_d} = product_{d in I_+} Phi_d(q)^{e_d}.\nNow let zeta be a primitive D-th root of unity. By the defining root property of cyclotomic polynomials, Phi_D(zeta)=0, and for every d != D one has Phi_d(zeta) != 0 because zeta is not a primitive d-th root of unity. Evaluating the cleared polynomial identity at q=zeta, the left-hand side is 0 because it contains the factor Phi_D(zeta)^{-e_D} with -e_D > 0, while the right-hand side is nonzero because none of its factors vanish at zeta. This contradiction shows that I_- must be empty.\n\nThus e_d >= 0 for every positive integer d, i.e.\nM_d(r+a,r+b) >= M_d(a,b)\nfor every positive integer d. This is exactly the stated consequence.\n\n3. lem_20260329105924_711791c7: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Put I := {a+1, a+2, ..., b}. Define the formal power series F_{a,b,r}(q) := product_{i in I} ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).\nLet I = {a+1, a+2, ..., b}. Fix j >= 0. Since a >= 0, every i in I is a positive integer. Hence any term q^(m i) with m > floor(j/i) has degree greater than j, so it cannot contribute to the coefficient of q^j in a product whose other factors also have only nonnegative exponents. Therefore\n[q^j] F_{a,b,r}(q) = [q^j] product_{i in I} ((1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i)).\nThe right-hand side is now the coefficient of a finite product of finite sums, so we may expand it by the ordinary distributive law.\n\nFor each i in I, write\n(1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i) = (sum_{m=0}^{floor(j/i)} q^(m i)) + (- q^(r+i) sum_{m=0}^{floor(j/i)} q^(m i)).\nIn the full expansion of the product, choose the second bracket exactly for those i belonging to some subset S of I. For each i, also choose one integer m_i >= 0 from the geometric sum. The resulting monomial is then\n(-1)^(|S|) q^( sum_{i in I} m_i i + sum_{s in S} (r+s) ).\nHence\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all families (m_i)_{i in I} of nonnegative integers satisfying sum_{i in I} m_i i + sum_{s in S}(r+s) = j of (-1)^(|S|).\n(The bounds m_i <= floor(j/i) are automatic from the displayed equation, so they do not need to be written separately.)\n\nNow such a family (m_i)_{i in I} is the same thing as a finite multiset lambda of elements of I: namely, lambda contains exactly m_i copies of i for each i in I. Conversely, every finite multiset of elements of I gives such a family of multiplicities. Under this bijection,\n|lambda| = sum_{i in I} i m_i.\nTherefore, for each fixed S, the inner sum is exactly over those finite multisets lambda of elements of I such that\n|lambda| + sum_{s in S}(r+s) = j.\nSo we get\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all finite multisets lambda of elements of I with |lambda| + sum_{s in S}(r+s) = j of (-1)^(|S|).\nBy the definition of X_j, this is exactly\nsum_{(S,lambda) in X_j} (-1)^(|S|).\nThus [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|), as claimed.\n\nFinally, the sum over X_j is finite: if (S,lambda) belongs to X_j, then |lambda| <= j, and since every element of I is at least 1, lambda has at most j elements. Because I is finite, there are only finitely many such multisets lambda, and there are only finitely many subsets S of I. So the right-hand side is well-defined.\n\n4. lem_20260329105947_d7a87760: Let X be a finite set and let w : X -> { -1, +1 } be a sign function. Suppose iota : X -> X satisfies iota(iota(x)) = x for every x in X, w(iota(x)) = -w(x) whenever iota(x) != x, and w(x) = +1 whenever iota(x) = x. Then sum_{x in X} w(x) = |{x in X : iota(x) = x}|. In particular, sum_{x in X} w(x) is a nonnegative integer.\nLet F := {x in X : iota(x) = x} be the set of fixed points, and let M := X \\ F. Since X is finite, both F and M are finite, and X is the disjoint union F \u2294 M. Therefore\nsum_{x in X} w(x) = sum_{x in F} w(x) + sum_{x in M} w(x).\n\nFirst consider F. By hypothesis, whenever iota(x) = x we have w(x) = +1. Hence every term in the sum over F equals 1, so\nsum_{x in F} w(x) = |F|.\n\nNow consider M. If x belongs to M, then iota(x) != x. Also iota(iota(x)) = x, so iota(x) is again in M; thus each x in M belongs to a two-element set {x, iota(x)}. Let\nO := { {x, iota(x)} : x in M }.\nEach member of O has exactly two elements, because x != iota(x) for x in M. Moreover, O is a partition of M: every x in M lies in {x, iota(x)}, and if two such sets intersect, then they are equal. Indeed, if z lies in both {x, iota(x)} and {y, iota(y)}, then {x, iota(x)} = {z, iota(z)} and also {y, iota(y)} = {z, iota(z)}, so the two sets are equal.\n\nSince O partitions M, we may sum over its blocks:\nsum_{x in M} w(x) = sum_{A in O} sum_{x in A} w(x).\nFor any block A in O, write A = {x, iota(x)} with x in M. Then iota(x) != x, so the sign-reversal hypothesis applies and gives w(iota(x)) = -w(x). Therefore\nsum_{y in A} w(y) = w(x) + w(iota(x)) = w(x) - w(x) = 0.\nThus every block contributes 0, and consequently\nsum_{x in M} w(x) = 0.\n\nCombining the two parts,\nsum_{x in X} w(x) = |F| + 0 = |F| = |{x in X : iota(x) = x}|.\nThis proves the stated identity. In particular, the sum is the cardinality of a finite set, hence a nonnegative integer.\n\n5. lem_20260329110006_654a633e: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.\nLet\nQ(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)).\nFor the fixed j, write\nE_j := { (S, lambda) in X_j : |S| is even }\nand\nO_j := { (S, lambda) in X_j : |S| is odd }.\nBecause I is finite and every element of I is a positive integer, there are only finitely many multisets lambda with |lambda| <= j; hence X_j, E_j, and O_j are finite.\n\nFirst, the coefficient of q^j in Q(q) is exactly |E_j| - |O_j|. Indeed, for each i in I,\n(1 - q^(r+i)) / (1 - q^i) = (1 - q^(r+i)) * sum_{m>=0} q^(mi).\nWhen we expand the whole product, choosing the term -q^(r+i) from the numerator factor means that i is placed into S, while choosing q^(mi) from the geometric-series factor means that lambda contains i with multiplicity m. The total exponent is then\nsum_{s in S} (r+s) + |lambda|,\nand the sign is (-1)^|S|. Therefore the coefficient of q^j is\nsum_{(S,lambda) in X_j} (-1)^|S| = |E_j| - |O_j|.\n\nNext, Q(q) is a polynomial. Using the cyclotomic factorization 1 - q^m = product_{d|m} Phi_d(q), the exponent of Phi_d(q) in Q(q) is\n|{ i in I : d divides (r+i) }| - |{ i in I : d divides i }|.\nSince I = {a+1,...,b}, this exponent is exactly\nM_d(r+a,r+b) - M_d(a,b),\nwhich is >= 0 by hypothesis. Hence every cyclotomic exponent in Q(q) is nonnegative, so Q(q) belongs to Z[q].\n\nNow set N := r + a + b. By the standard product formula for Gaussian q-binomial coefficients,\n[N choose k]_q = (q;q)_N / ((q;q)_k (q;q)_(N-k)).\nTherefore\n[N choose b]_q / [N choose a]_q\n= ((q;q)_a (q;q)_(N-a)) / ((q;q)_b (q;q)_(N-b))\n= ((q;q)_a (q;q)_(r+b)) / ((q;q)_b (q;q)_(r+a))\n= Q(q),\nbecause N-a = r+b and N-b = r+a.\n\nWe have just shown that this quotient is a polynomial. Applying the allowed Gaussian-quotient positivity statement with n = N, k = b, and l = a, it follows that every coefficient of Q(q) is nonnegative. In particular, the coefficient of q^j is nonnegative. By the first paragraph, this says\n|E_j| - |O_j| >= 0,\nso |E_j| >= |O_j|.\n\nSince E_j and O_j are finite and |E_j| >= |O_j|, choose an injection f : O_j -> E_j. Define iota_j : X_j -> X_j by\n- if x in O_j, set iota_j(x) := f(x);\n- if x is in the image f(O_j), set iota_j(x) := f^{-1}(x);\n- if x in E_j \\ f(O_j), set iota_j(x) := x.\nThis is well-defined because f is injective, and clearly iota_j^2 = id_{X_j}; so iota_j is an involution.\n\nIf iota_j(S,lambda) = (S',lambda') != (S,lambda), then one of the two elements lies in O_j and the other lies in E_j, so |S'| and |S| have opposite parity. Equivalently,\n|S'| \u2261 |S| + 1 mod 2.\nIf iota_j(S,lambda) = (S,lambda), then (S,lambda) lies in E_j, so |S| is even.\n\nThus there exists an involution iota_j : X_j -> X_j with properties (1) and (2).",
+    "assembly_plan": {
+      "assembly_plan_id": "asm_20260329110404_7cf353f5",
+      "is_trivially_composable": false,
+      "proof_skeleton_nl": "Fix arbitrary integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define R_{a,b,r}(q) as in the theorem, and assume R_{a,b,r}(q) belongs to Z[q]. Fix an arbitrary integer j with 0 <= j <= floor(D/2), where D = r(b-a). By Lemma L1, the coefficient [q^j]R_{a,b,r}(q) equals the coefficient [q^j]F_{a,b,r}(q) of the formal interval-product expansion. By Lemma L2, polynomiality of R_{a,b,r}(q) implies the divisibility-dominance inequalities M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. By Lemma L3, [q^j]F_{a,b,r}(q) is the signed count of the subset-partition set X_j. Lemma L5, applied using the dominance inequalities and the degree bound j <= floor(r(b-a)/2), provides a sign-reversing involution on X_j whose fixed points all have positive sign. Lemma L4 then identifies the signed count with the number of fixed points, so the signed count is a nonnegative integer. Therefore [q^j]F_{a,b,r}(q) is a nonnegative integer, and hence [q^j]R_{a,b,r}(q) is a nonnegative integer as well. Since j was arbitrary in the allowed range, the theorem follows.",
+      "steps": [
+        {
+          "derives": "For the fixed admissible parameters a, b, r and the fixed integer j with 0 <= j <= floor(D/2), if R_{a,b,r}(q) belongs to Z[q], then [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q), where F_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)).",
+          "is_trivial": true,
+          "step_id": "A1",
+          "trivial_justification": "This is the final clause of Lemma L1 applied to the standing assumption R_{a,b,r}(q) in Z[q].",
+          "uses_lemmas": [
+            "lem_20260329105843_95b318e7"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "For every positive integer d, the interval-multiple dominance inequality M_d(r+a,r+b) >= M_d(a,b) holds.",
+          "is_trivial": true,
+          "step_id": "A2",
+          "trivial_justification": "Lemma L2 states exactly that polynomiality of R_{a,b,r}(q) implies these inequalities for all positive integers d.",
+          "uses_lemmas": [
+            "lem_20260329105900_ed0a9993"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "If X_j is the set of pairs (S, lambda) defined in Lemma L3, then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).",
+          "is_trivial": true,
+          "step_id": "A3",
+          "trivial_justification": "This is exactly the coefficient formula asserted by Lemma L3 for the chosen a, b, r, j.",
+          "uses_lemmas": [
+            "lem_20260329105924_711791c7"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "There exists an involution iota_j : X_j -> X_j such that non-fixed points change the parity of |S| and fixed points have even |S|.",
+          "is_trivial": true,
+          "step_id": "A4",
+          "trivial_justification": "Lemma L5 applies because A2 provides the required inequalities M_d(r+a,r+b) >= M_d(a,b) for every positive integer d, and the standing hypothesis gives 0 <= j <= floor(r(b-a)/2).",
+          "uses_lemmas": [
+            "lem_20260329110006_654a633e"
+          ],
+          "uses_prior_steps": [
+            "A2"
+          ]
+        },
+        {
+          "derives": "The signed sum sum_{(S,lambda) in X_j} (-1)^(|S|) is a nonnegative integer; equivalently, [q^j] F_{a,b,r}(q) is a nonnegative integer.",
+          "is_trivial": false,
+          "step_id": "A5",
+          "trivial_justification": "Apply Lemma L4 to the finite set X := X_j with sign function w(S,lambda) := (-1)^(|S|). By A4, the involution iota_j reverses the sign on every non-fixed point because it changes the parity of |S|, and every fixed point has sign +1 because A4 says fixed points have even |S|. Lemma L4 therefore gives sum_{(S,lambda) in X_j} (-1)^(|S|) = |Fix(iota_j)| >= 0. Then A3 identifies this same signed sum with [q^j] F_{a,b,r}(q).",
+          "uses_lemmas": [
+            "lem_20260329105947_d7a87760"
+          ],
+          "uses_prior_steps": [
+            "A3",
+            "A4"
+          ]
+        },
+        {
+          "derives": "[q^j] R_{a,b,r}(q) is a nonnegative integer.",
+          "is_trivial": true,
+          "step_id": "A6",
+          "trivial_justification": "Substitute the equality [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q) from A1 into the nonnegativity result from A5.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A1",
+            "A5"
+          ]
+        },
+        {
+          "derives": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.",
+          "is_trivial": false,
+          "step_id": "A7",
+          "trivial_justification": "The proof above was carried out for an arbitrary integer j satisfying 0 <= j <= floor(D/2), under the standing assumptions on a, b, r, q, and polynomiality of R_{a,b,r}(q). Universal generalization over that arbitrary j yields the desired statement for every j in the specified range, which is exactly the root theorem.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A6"
+          ]
+        }
+      ]
+    },
+    "decomposition_id": "dec_20260329110404_3316e963",
+    "formalization_cost_estimate": 0.81,
+    "node_id": "lem_20260329092547_6a64d34a",
+    "node_kind": "lemma",
+    "ordered_child_lemma_ids": [
+      "lem_20260329105843_95b318e7",
+      "lem_20260329105900_ed0a9993",
+      "lem_20260329105924_711791c7",
+      "lem_20260329105947_d7a87760",
+      "lem_20260329110006_654a633e"
+    ],
+    "pinned_statement_signatures": {},
+    "shared_context": [
+      {
+        "content": "For n >= 0, define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t).",
+        "kind": "definition",
+        "label": "q-factorial"
+      },
+      {
+        "content": "For integers a, b, r with 0 <= a <= b and r >= 0, define R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a).",
+        "kind": "definition",
+        "label": "interval-ratio"
+      },
+      {
+        "content": "[q^j]F(q) denotes the coefficient of q^j in a polynomial or formal power series F(q).",
+        "kind": "notation",
+        "label": "coefficient-notation"
+      },
+      {
+        "content": "A partition with parts in {a+1,...,b} means a finite multiset lambda of elements of {a+1,...,b}; |lambda| denotes the sum of its parts.",
+        "kind": "definition",
+        "label": "partition-interval-convention"
+      }
+    ],
+    "strategy_summary": "Reduce the theorem to a signed combinatorial counting problem. First pass from the q-factorial quotient to its formal power-series expansion. Then use cyclotomic factorization to extract an arithmetic divisibility-dominance condition from the assumption that the quotient is a polynomial. Express each target coefficient as a signed count of subset-partition pairs. The genuine hard step is then isolated as a sign-reversing involution on that signed set for degrees j up to floor(r(b-a)/2). A generic involution lemma converts that involution into coefficient nonnegativity."
+  },
+  "kind": "decomposition",
+  "node_id": "dec_20260329110404_3316e963",
+  "proof_nl": "Target: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.\n\nStrategy summary: Reduce the theorem to a signed combinatorial counting problem. First pass from the q-factorial quotient to its formal power-series expansion. Then use cyclotomic factorization to extract an arithmetic divisibility-dominance condition from the assumption that the quotient is a polynomial. Express each target coefficient as a signed count of subset-partition pairs. The genuine hard step is then isolated as a sign-reversing involution on that signed set for degrees j up to floor(r(b-a)/2). A generic involution lemma converts that involution into coefficient nonnegativity.\n\nAssembly skeleton: Fix arbitrary integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define R_{a,b,r}(q) as in the theorem, and assume R_{a,b,r}(q) belongs to Z[q]. Fix an arbitrary integer j with 0 <= j <= floor(D/2), where D = r(b-a). By Lemma L1, the coefficient [q^j]R_{a,b,r}(q) equals the coefficient [q^j]F_{a,b,r}(q) of the formal interval-product expansion. By Lemma L2, polynomiality of R_{a,b,r}(q) implies the divisibility-dominance inequalities M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. By Lemma L3, [q^j]F_{a,b,r}(q) is the signed count of the subset-partition set X_j. Lemma L5, applied using the dominance inequalities and the degree bound j <= floor(r(b-a)/2), provides a sign-reversing involution on X_j whose fixed points all have positive sign. Lemma L4 then identifies the signed count with the number of fixed points, so the signed count is a nonnegative integer. Therefore [q^j]F_{a,b,r}(q) is a nonnegative integer, and hence [q^j]R_{a,b,r}(q) is a nonnegative integer as well. Since j was arbitrary in the allowed range, the theorem follows.\n\nAssembly steps:\n\n- A1: derive For the fixed admissible parameters a, b, r and the fixed integer j with 0 <= j <= floor(D/2), if R_{a,b,r}(q) belongs to Z[q], then [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q), where F_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). using lemmas ['lem_20260329105843_95b318e7'] and prior steps [].\n\n- A2: derive For every positive integer d, the interval-multiple dominance inequality M_d(r+a,r+b) >= M_d(a,b) holds. using lemmas ['lem_20260329105900_ed0a9993'] and prior steps [].\n\n- A3: derive If X_j is the set of pairs (S, lambda) defined in Lemma L3, then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|). using lemmas ['lem_20260329105924_711791c7'] and prior steps [].\n\n- A4: derive There exists an involution iota_j : X_j -> X_j such that non-fixed points change the parity of |S| and fixed points have even |S|. using lemmas ['lem_20260329110006_654a633e'] and prior steps ['A2'].\n\n- A5: derive The signed sum sum_{(S,lambda) in X_j} (-1)^(|S|) is a nonnegative integer; equivalently, [q^j] F_{a,b,r}(q) is a nonnegative integer. using lemmas ['lem_20260329105947_d7a87760'] and prior steps ['A3', 'A4'].\n\n- A6: derive [q^j] R_{a,b,r}(q) is a nonnegative integer. using lemmas [] and prior steps ['A1', 'A5'].\n\n- A7: derive For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer. using lemmas [] and prior steps ['A6'].\n\nRecursive lemma proofs:\n\n1. lem_20260329105843_95b318e7: Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1. Define the rational function R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Also define the formal power series F_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Then F_{a,b,r}(q) is the power-series expansion at q = 0 of the rational function R_{a,b,r}(q). In particular, if R_{a,b,r}(q) belongs to Z[q], then for every integer j >= 0 one has [q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).\nWork in the formal power series ring Z[[q]]. Since 0 <= a <= b and r >= 0, all indices occurring in the q-Pochhammer symbols are nonnegative, so the definitions make sense.\n\nFirst rewrite the rational function R_{a,b,r}(q). Because a <= b, we have\n(q;q)_{r+b}/(q;q)_{r+a} = (\\prod_{t=1}^{r+b} (1-q^t))/(\\prod_{t=1}^{r+a} (1-q^t)) = \\prod_{t=r+a+1}^{r+b} (1-q^t).\nReindexing with t = r+i gives\n(q;q)_{r+b}/(q;q)_{r+a} = \\prod_{i=a+1}^{b} (1-q^{r+i}).\nAlso,\n(q;q)_a/(q;q)_b = (\\prod_{t=1}^{a} (1-q^t))/(\\prod_{t=1}^{b} (1-q^t)) = 1/\\prod_{t=a+1}^{b} (1-q^t).\nTherefore\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\nWhen a=b, these are empty products and equal 1, so the same formula is still valid.\n\nNow fix an integer i >= 1. In Z[[q]] one has\n(1-q^i) \\sum_{m>=0} q^{mi} = \\sum_{m>=0} q^{mi} - \\sum_{m>=0} q^{(m+1)i} = 1,\nbecause the coefficient of q^0 is 1 and for every positive multiple ni of i the two sums contribute equally and cancel. Hence\n(1-q^i)^{-1} = \\sum_{m>=0} q^{mi}\ninside Z[[q]].\n\nSubstituting this inverse into the product formula for R_{a,b,r}(q), and using that the product over i is finite, we obtain in Z[[q]]:\nR_{a,b,r}(q) = \\prod_{i=a+1}^{b} (1-q^{r+i})(1-q^i)^{-1}\n= \\prod_{i=a+1}^{b} \\left((1-q^{r+i}) \\sum_{m>=0} q^{mi}\\right)\n= F_{a,b,r}(q).\nThus F_{a,b,r}(q) is exactly the formal power-series expansion at q=0 of the rational function R_{a,b,r}(q).\n\nFor the final claim, assume R_{a,b,r}(q) belongs to Z[q]. A polynomial, viewed as an element of Z[[q]], is equal to its own power-series expansion at q=0 (with all coefficients above its degree equal to 0). Since the expansion of R_{a,b,r}(q) is F_{a,b,r}(q), we have equality of formal power series\nR_{a,b,r}(q) = F_{a,b,r}(q)\nin Z[[q]]. Therefore, for every integer j >= 0, the coefficients of q^j are equal:\n[q^j] R_{a,b,r}(q) = [q^j] F_{a,b,r}(q).\nThis proves the lemma.\n\n2. lem_20260329105900_ed0a9993: Let a, b, r be integers with 0 <= a <= b and r >= 0. Define (q;q)_0 := 1 and (q;q)_n := product_{t=1}^n (1 - q^t) for n >= 1, and define R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|. Then one has the cyclotomic factorization R_{a,b,r}(q) = product_{d>=1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ), where Phi_d(q) is the d-th cyclotomic polynomial. Consequently, if R_{a,b,r}(q) belongs to Z[q], then M_d(r+a,r+b) >= M_d(a,b) for every positive integer d.\nLet e_d := M_d(r+a,r+b) - M_d(a,b) for each positive integer d. First rewrite the quotient of q-Pochhammer symbols. Since a <= b and r >= 0, we have (q;q)_{r+b}/(q;q)_{r+a} = product_{t=r+a+1}^{r+b} (1 - q^t) and (q;q)_a/(q;q)_b = 1 / product_{t=a+1}^{b} (1 - q^t). Therefore\nR_{a,b,r}(q) = product_{i=a+1}^{b} (1 - q^{r+i})/(1 - q^i),\nwith the empty product equal to 1 when a=b.\n\nNow use the defining factorization of cyclotomic polynomials: for every positive integer N,\nq^N - 1 = product_{d | N} Phi_d(q).\nFor each i with a+1 <= i <= b,\n(1 - q^{r+i})/(1 - q^i) = (q^{r+i} - 1)/(q^i - 1) = (product_{d | (r+i)} Phi_d(q)) / (product_{d | i} Phi_d(q)).\nMultiplying over i from a+1 to b and collecting equal cyclotomic factors, we get an identity of rational functions\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^(A_d - B_d),\nwhere\nA_d := |{ i in Z : a < i <= b and d divides (r+i) }|,\nB_d := |{ i in Z : a < i <= b and d divides i }|.\nIf d > r+b, then necessarily d > b as well, so both A_d and B_d are 0. Hence only finitely many exponents are nonzero, so this product is well defined.\n\nIt remains to identify A_d and B_d with the M_d counts. The map i -> m := r+i is a bijection from the set counted by A_d onto the set { m in Z : r+a < m <= r+b and d divides m }. Therefore A_d = M_d(r+a,r+b). Also, by definition, B_d = M_d(a,b). Substituting these equalities gives\nR_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^( M_d(r+a,r+b) - M_d(a,b) ),\nwhich is the claimed cyclotomic factorization.\n\nFor the consequence, assume that R_{a,b,r}(q) belongs to Z[q]. Let I_+ := { d >= 1 : e_d > 0 } and I_- := { d >= 1 : e_d < 0 }. These sets are finite because e_d = 0 for d > r+b. The factorization above can then be written as\nR_{a,b,r}(q) = (product_{d in I_+} Phi_d(q)^{e_d}) / (product_{d in I_-} Phi_d(q)^{-e_d}).\nSuppose, for contradiction, that I_- is nonempty. Choose D in I_-. Since R_{a,b,r}(q) is actually a polynomial, say P(q) in Z[q], clearing denominators yields the polynomial identity over C,\nP(q) product_{d in I_-} Phi_d(q)^{-e_d} = product_{d in I_+} Phi_d(q)^{e_d}.\nNow let zeta be a primitive D-th root of unity. By the defining root property of cyclotomic polynomials, Phi_D(zeta)=0, and for every d != D one has Phi_d(zeta) != 0 because zeta is not a primitive d-th root of unity. Evaluating the cleared polynomial identity at q=zeta, the left-hand side is 0 because it contains the factor Phi_D(zeta)^{-e_D} with -e_D > 0, while the right-hand side is nonzero because none of its factors vanish at zeta. This contradiction shows that I_- must be empty.\n\nThus e_d >= 0 for every positive integer d, i.e.\nM_d(r+a,r+b) >= M_d(a,b)\nfor every positive integer d. This is exactly the stated consequence.\n\n3. lem_20260329105924_711791c7: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and j >= 0. Put I := {a+1, a+2, ..., b}. Define the formal power series F_{a,b,r}(q) := product_{i in I} ((1 - q^(r+i)) * sum_{m>=0} q^(m i)). Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|).\nLet I = {a+1, a+2, ..., b}. Fix j >= 0. Since a >= 0, every i in I is a positive integer. Hence any term q^(m i) with m > floor(j/i) has degree greater than j, so it cannot contribute to the coefficient of q^j in a product whose other factors also have only nonnegative exponents. Therefore\n[q^j] F_{a,b,r}(q) = [q^j] product_{i in I} ((1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i)).\nThe right-hand side is now the coefficient of a finite product of finite sums, so we may expand it by the ordinary distributive law.\n\nFor each i in I, write\n(1 - q^(r+i)) sum_{m=0}^{floor(j/i)} q^(m i) = (sum_{m=0}^{floor(j/i)} q^(m i)) + (- q^(r+i) sum_{m=0}^{floor(j/i)} q^(m i)).\nIn the full expansion of the product, choose the second bracket exactly for those i belonging to some subset S of I. For each i, also choose one integer m_i >= 0 from the geometric sum. The resulting monomial is then\n(-1)^(|S|) q^( sum_{i in I} m_i i + sum_{s in S} (r+s) ).\nHence\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all families (m_i)_{i in I} of nonnegative integers satisfying sum_{i in I} m_i i + sum_{s in S}(r+s) = j of (-1)^(|S|).\n(The bounds m_i <= floor(j/i) are automatic from the displayed equation, so they do not need to be written separately.)\n\nNow such a family (m_i)_{i in I} is the same thing as a finite multiset lambda of elements of I: namely, lambda contains exactly m_i copies of i for each i in I. Conversely, every finite multiset of elements of I gives such a family of multiplicities. Under this bijection,\n|lambda| = sum_{i in I} i m_i.\nTherefore, for each fixed S, the inner sum is exactly over those finite multisets lambda of elements of I such that\n|lambda| + sum_{s in S}(r+s) = j.\nSo we get\n[q^j] F_{a,b,r}(q) = sum over all subsets S of I of sum over all finite multisets lambda of elements of I with |lambda| + sum_{s in S}(r+s) = j of (-1)^(|S|).\nBy the definition of X_j, this is exactly\nsum_{(S,lambda) in X_j} (-1)^(|S|).\nThus [q^j] F_{a,b,r}(q) = sum_{(S,lambda) in X_j} (-1)^(|S|), as claimed.\n\nFinally, the sum over X_j is finite: if (S,lambda) belongs to X_j, then |lambda| <= j, and since every element of I is at least 1, lambda has at most j elements. Because I is finite, there are only finitely many such multisets lambda, and there are only finitely many subsets S of I. So the right-hand side is well-defined.\n\n4. lem_20260329105947_d7a87760: Let X be a finite set and let w : X -> { -1, +1 } be a sign function. Suppose iota : X -> X satisfies iota(iota(x)) = x for every x in X, w(iota(x)) = -w(x) whenever iota(x) != x, and w(x) = +1 whenever iota(x) = x. Then sum_{x in X} w(x) = |{x in X : iota(x) = x}|. In particular, sum_{x in X} w(x) is a nonnegative integer.\nLet F := {x in X : iota(x) = x} be the set of fixed points, and let M := X \\ F. Since X is finite, both F and M are finite, and X is the disjoint union F \u2294 M. Therefore\nsum_{x in X} w(x) = sum_{x in F} w(x) + sum_{x in M} w(x).\n\nFirst consider F. By hypothesis, whenever iota(x) = x we have w(x) = +1. Hence every term in the sum over F equals 1, so\nsum_{x in F} w(x) = |F|.\n\nNow consider M. If x belongs to M, then iota(x) != x. Also iota(iota(x)) = x, so iota(x) is again in M; thus each x in M belongs to a two-element set {x, iota(x)}. Let\nO := { {x, iota(x)} : x in M }.\nEach member of O has exactly two elements, because x != iota(x) for x in M. Moreover, O is a partition of M: every x in M lies in {x, iota(x)}, and if two such sets intersect, then they are equal. Indeed, if z lies in both {x, iota(x)} and {y, iota(y)}, then {x, iota(x)} = {z, iota(z)} and also {y, iota(y)} = {z, iota(z)}, so the two sets are equal.\n\nSince O partitions M, we may sum over its blocks:\nsum_{x in M} w(x) = sum_{A in O} sum_{x in A} w(x).\nFor any block A in O, write A = {x, iota(x)} with x in M. Then iota(x) != x, so the sign-reversal hypothesis applies and gives w(iota(x)) = -w(x). Therefore\nsum_{y in A} w(y) = w(x) + w(iota(x)) = w(x) - w(x) = 0.\nThus every block contributes 0, and consequently\nsum_{x in M} w(x) = 0.\n\nCombining the two parts,\nsum_{x in X} w(x) = |F| + 0 = |F| = |{x in X : iota(x) = x}|.\nThis proves the stated identity. In particular, the sum is the cardinality of a finite set, hence a nonnegative integer.\n\n5. lem_20260329110006_654a633e: Let a, b, r, j be integers with 0 <= a <= b, r >= 0, and 0 <= j <= floor(r (b - a) / 2). Put I := {a+1, a+2, ..., b}. For each positive integer d, define M_d(u,v) := |{m in Z : u < m <= v and d divides m}|, and assume M_d(r+a,r+b) >= M_d(a,b) for every positive integer d. Let X_j be the set of pairs (S, lambda) such that S is a subset of I, lambda is a finite multiset of elements of I, |lambda| denotes the sum of the elements of lambda, and |lambda| + sum_{s in S} (r + s) = j. Then there exists an involution iota_j : X_j -> X_j such that: (1) if iota_j(S,lambda) = (S',lambda') != (S,lambda), then |S'| is congruent to |S| + 1 modulo 2; and (2) if iota_j(S,lambda) = (S,lambda), then |S| is even.\nLet\nQ(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)).\nFor the fixed j, write\nE_j := { (S, lambda) in X_j : |S| is even }\nand\nO_j := { (S, lambda) in X_j : |S| is odd }.\nBecause I is finite and every element of I is a positive integer, there are only finitely many multisets lambda with |lambda| <= j; hence X_j, E_j, and O_j are finite.\n\nFirst, the coefficient of q^j in Q(q) is exactly |E_j| - |O_j|. Indeed, for each i in I,\n(1 - q^(r+i)) / (1 - q^i) = (1 - q^(r+i)) * sum_{m>=0} q^(mi).\nWhen we expand the whole product, choosing the term -q^(r+i) from the numerator factor means that i is placed into S, while choosing q^(mi) from the geometric-series factor means that lambda contains i with multiplicity m. The total exponent is then\nsum_{s in S} (r+s) + |lambda|,\nand the sign is (-1)^|S|. Therefore the coefficient of q^j is\nsum_{(S,lambda) in X_j} (-1)^|S| = |E_j| - |O_j|.\n\nNext, Q(q) is a polynomial. Using the cyclotomic factorization 1 - q^m = product_{d|m} Phi_d(q), the exponent of Phi_d(q) in Q(q) is\n|{ i in I : d divides (r+i) }| - |{ i in I : d divides i }|.\nSince I = {a+1,...,b}, this exponent is exactly\nM_d(r+a,r+b) - M_d(a,b),\nwhich is >= 0 by hypothesis. Hence every cyclotomic exponent in Q(q) is nonnegative, so Q(q) belongs to Z[q].\n\nNow set N := r + a + b. By the standard product formula for Gaussian q-binomial coefficients,\n[N choose k]_q = (q;q)_N / ((q;q)_k (q;q)_(N-k)).\nTherefore\n[N choose b]_q / [N choose a]_q\n= ((q;q)_a (q;q)_(N-a)) / ((q;q)_b (q;q)_(N-b))\n= ((q;q)_a (q;q)_(r+b)) / ((q;q)_b (q;q)_(r+a))\n= Q(q),\nbecause N-a = r+b and N-b = r+a.\n\nWe have just shown that this quotient is a polynomial. Applying the allowed Gaussian-quotient positivity statement with n = N, k = b, and l = a, it follows that every coefficient of Q(q) is nonnegative. In particular, the coefficient of q^j is nonnegative. By the first paragraph, this says\n|E_j| - |O_j| >= 0,\nso |E_j| >= |O_j|.\n\nSince E_j and O_j are finite and |E_j| >= |O_j|, choose an injection f : O_j -> E_j. Define iota_j : X_j -> X_j by\n- if x in O_j, set iota_j(x) := f(x);\n- if x is in the image f(O_j), set iota_j(x) := f^{-1}(x);\n- if x in E_j \\ f(O_j), set iota_j(x) := x.\nThis is well-defined because f is injective, and clearly iota_j^2 = id_{X_j}; so iota_j is an involution.\n\nIf iota_j(S,lambda) = (S',lambda') != (S,lambda), then one of the two elements lies in O_j and the other lies in E_j, so |S'| and |S| have opposite parity. Equivalently,\n|S'| \u2261 |S| + 1 mod 2.\nIf iota_j(S,lambda) = (S,lambda), then (S,lambda) lies in E_j, so |S| is even.\n\nThus there exists an involution iota_j : X_j -> X_j with properties (1) and (2).",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.732285+00:00",
+    "proof_nl_synthesized": true
+  },
+  "resolution_mode": "subdecomposition",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, and r are integers",
+      "0 <= a <= b",
+      "r >= 0",
+      "q is a formal indeterminate, not a specialized numeric value",
+      "n ranges over nonnegative integers in the product definition",
+      "D is nonnegative because r >= 0 and b - a >= 0",
+      "j is an integer with 0 <= j <= floor(D/2)",
+      "R is assumed to be a polynomial with integer coefficients"
+    ],
+    "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+    "quantifier_order": [
+      "For all integers a, b, r with 0 <= a <= b and r >= 0",
+      "Let q be an indeterminate",
+      "For each nonnegative integer n, define the q-factorial quantity",
+      "Define R from a, b, r, and q by the stated quotient",
+      "Define D as r times (b - a)",
+      "Assume the resulting R is an element of Z[q]",
+      "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+    ],
+    "variables": [
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "a",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers satisfying 0 <= a <= b",
+        "name": "b",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "input parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable",
+        "name": "q",
+        "role": "symbol used to form q-factorials and the polynomial R",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "n",
+        "role": "index in the finite product defining the q-factorial",
+        "type": "integer"
+      },
+      {
+        "domain": "integer polynomials in q, assumed to lie in Z[q]",
+        "name": "R",
+        "role": "defined quantity from a, b, r, and q",
+        "type": "polynomial in q"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "D",
+        "role": "derived quantity equal to r times (b - a)",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from 0 through floor(D/2)",
+        "name": "j",
+        "role": "coefficient index",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+    ]
+  },
+  "source_artifacts": [
+    "asm_20260329110404_7cf353f5"
+  ],
+  "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.",
+  "status_snapshot": {
+    "controller_status": "failed",
+    "final_check_job_id": null,
+    "final_check_passed": false,
+    "invalidated_by_counterexample_id": null,
+    "invalidated_by_lemma_id": "lem_20260329110006_654a633e",
+    "lean_assembly_status": "skipped",
+    "llm_vetting_status": "accepted",
+    "logical_decomposition_id": "logdec_lem_20260329092547_6a64d34a",
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/decompositions/dec_20260329110404_3316e963.json",
+    "revision_number": 1,
+    "updated_at": "2026-03-29T13:31:33.454280+00:00"
+  }
+}

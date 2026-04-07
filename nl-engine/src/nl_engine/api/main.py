@@ -47,7 +47,6 @@ from nl_engine.execution.runtime import (
     start_embedded_supervisor_if_enabled,
     stop_embedded_supervisor,
 )
-from nl_engine.lean_client.sessions import LeanSessionManager
 from nl_engine.persistence.repositories import (
     DecompositionRepository,
     EventRepository,
@@ -67,7 +66,7 @@ from nl_engine.persistence.repositories import (
 from nl_engine.services.agents import AgentService
 from nl_engine.services.executions import ProblemExecutionService, execution_summary
 from nl_engine.services.ids import new_id
-from nl_engine.services.resume_anchor import apply_resume_anchor
+from nl_engine.services.resume_anchor import apply_paused_false_branch_anchor, apply_resume_anchor
 from nl_engine.settings import get_settings
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
@@ -79,13 +78,9 @@ register_debug_ui(app)
 
 @app.on_event("startup")
 def _start_embedded_workers() -> None:
-    # Auto-start the supervisor so queued executions are processed
-    # even without active browser polling. The supervisor checks
-    # is_enabled internally based on settings.
-    import os
-    LeanSessionManager(get_file_store()).recover_active_problem_sessions()
-    if os.environ.get("NL_ENGINE_NO_AUTO_SUPERVISOR") != "1":
-        start_embedded_supervisor_if_enabled()
+    # Keep API startup lightweight so the debug UI renders immediately.
+    # Explicit run/resume actions still start the embedded supervisor when needed.
+    return
 
 
 @app.on_event("shutdown")
@@ -603,6 +598,15 @@ def _schedule_problem_execution(
         request_artifact_key=run_req_artifact,
     )
     execution_service = ProblemExecutionService(db)
+    if force_fresh and problem.status == ProblemStatus.PAUSED.value and trigger == "continue_button":
+        anchored_lemma_id, anchored_owner_decomposition_id = apply_paused_false_branch_anchor(
+            problem,
+            db,
+            route="continue_button_false_branch",
+        )
+        if anchored_lemma_id or anchored_owner_decomposition_id:
+            ProblemRepository(db).save(problem)
+            problem = ProblemRepository(db).get(problem_id) or problem
     if force_fresh and problem.status not in {ProblemStatus.SUCCEEDED.value, ProblemStatus.FAILED.value}:
         execution = execution_service.start_fresh_continuation(
             problem_id,

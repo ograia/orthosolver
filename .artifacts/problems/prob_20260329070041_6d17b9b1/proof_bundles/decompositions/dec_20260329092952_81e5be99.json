@@ -1,0 +1,770 @@
+{
+  "children": [
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329092458_c3931872",
+      "proof_nl": "Because 0 <= a <= b and r >= 0, the integers a, b, r+a, and r+b are all nonnegative, so every q-Pochhammer symbol appearing in the claimed identity is defined.\n\nFirst consider the case a = b. By the definition of P_{a,b,r}(q), the product from i = a+1 to b is empty, so P_{a,b,r}(q) = 1. On the other hand,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= ((q;q)_{r+a} (q;q)_a) / ((q;q)_{r+a} (q;q)_a)\n= 1.\nSo the identity holds when a = b.\n\nNow assume a < b. We use the following elementary consequence of the definition of (q;q)_n: for any nonnegative integers m < n,\n(q;q)_n = (q;q)_m \\prod_{j=m+1}^n (1 - q^j).\nIndeed, if m = 0 then this is just (q;q)_n = 1 \\cdot \\prod_{j=1}^n (1 - q^j), using (q;q)_0 = 1; if m > 0, it follows by splitting the defining product for (q;q)_n after the factor j = m.\n\nApply this with m = r+a and n = r+b. Since a < b, we have r+a < r+b, so\n(q;q)_{r+b} = (q;q)_{r+a} \\prod_{j=r+a+1}^{r+b} (1 - q^j).\nApply it again with m = a and n = b:\n(q;q)_b = (q;q)_a \\prod_{j=a+1}^{b} (1 - q^j).\n\nSince each factor 1 - q^j is a nonzero polynomial, these products are invertible in the rational function field Z(q). Therefore,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{j=r+a+1}^{r+b} (1 - q^j)}{\\prod_{j=a+1}^{b} (1 - q^j)}.\n\nNow reindex the numerator by writing j = r+i. As j runs from r+a+1 to r+b, the index i runs from a+1 to b. Hence\n\\prod_{j=r+a+1}^{r+b} (1 - q^j) = \\prod_{i=a+1}^{b} (1 - q^{r+i}).\nSubstituting this gives\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{i=a+1}^{b} (1 - q^{r+i})}{\\prod_{i=a+1}^{b} (1 - q^i)}\n= \\prod_{i=a+1}^{b} \\frac{1 - q^{r+i}}{1 - q^i}\n= P_{a,b,r}(q),\nwhere the last equality is exactly the definition of P_{a,b,r}(q).\n\nThus, in all cases,\nP_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\nin the rational function field Z(q).",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.716458+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, and r are integers",
+          "a and b satisfy 0 <= a <= b",
+          "r is nonnegative",
+          "q is not a numeric value but an indeterminate",
+          "n is restricted to nonnegative integers in the definition of q-Pochhammer",
+          "The product defining P runs over integers i from a + 1 to b inclusive",
+          "When a = b, the product defining P is the empty product and equals 1",
+          "When n = 0, the q-Pochhammer symbol equals 1"
+        ],
+        "normalized_claim": "For every integer triple a, b, r with 0 <= a <= b and r >= 0, if P of a, b, r at q is defined as the product over i from a + 1 to b of (1 minus q to the power r plus i) divided by (1 minus q to the power i), with empty product equal to 1 when a = b, and if q-Pochhammer n is defined for nonnegative n as the product over j from 1 to n of (1 minus q to the power j), with value 1 at n = 0, then P of a, b, r at q equals the ratio of q-Pochhammer terms: q-Pochhammer at r + b times q-Pochhammer at a divided by q-Pochhammer at r + a times q-Pochhammer at b, as an identity of rational functions.",
+        "quantifier_order": [
+          "For all integers a, b, r with 0 <= a <= b and r >= 0",
+          "Let q be an indeterminate",
+          "For each nonnegative integer n, define the q-Pochhammer symbol",
+          "Then the stated identity holds in the rational function field over the integers"
+        ],
+        "variables": [
+          {
+            "domain": "integers satisfying 0 <= a <= b",
+            "name": "a",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers satisfying a <= b",
+            "name": "b",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "formal variable in the rational function field over the integers",
+            "name": "q",
+            "role": "symbolic parameter of the identity",
+            "type": "indeterminate"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "index used only in the definition of the q-Pochhammer symbol",
+            "type": "integer"
+          },
+          {
+            "domain": "integers from a + 1 through b",
+            "name": "i",
+            "role": "dummy index in the product defining P",
+            "type": "integer"
+          },
+          {
+            "domain": "integers from 1 through n",
+            "name": "j",
+            "role": "dummy index in the product defining q-Pochhammer",
+            "type": "integer"
+          }
+        ],
+        "witness_dependencies": [
+          "No existential witnesses are present",
+          "The identity is explicit and does not depend on choosing auxiliary objects",
+          "The only dependencies are definitional: P depends on a, b, r, and q; q-Pochhammer depends on n and q"
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329093318_e886e3c3"
+      ],
+      "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate and define P_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with the empty product equal to 1 when a = b. For each nonnegative integer n, define (q;q)_n := product_{j=1}^n (1 - q^j), with (q;q)_0 := 1. Then one has the identity in the rational function field Z(q): P_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b).",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T09:33:19.062401+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof establishes exactly the claimed q-Pochhammer identity. It correctly separates the empty-product case a = b, then for a < b expands (q;q)_{r+b} and (q;q)_b relative to (q;q)_{r+a} and (q;q)_a, cancels in the rational function field, reindexes the numerator product, and matches the definition of P_{a,b,r}(q). This aligns with the lemma sketch and its role as a product-to-factorial-ratio rewrite. No undeclared or forbidden dependencies are used.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329093318_e886e3c3",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329092458_c3931872.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T09:33:19.062401+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329092508_dde83cd9",
+      "proof_nl": "Set e_d := floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d). The hypothesis says that for every positive integer d,\nfloor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).\nRearranging gives\n e_d = [floor((r+b)/d) - floor((r+a)/d)] - [floor(b/d) - floor(a/d)] >= 0.\nThus e_d is a nonnegative integer for every positive d, and in particular for every d with 1 <= d <= r+b.\n\nNow rewrite R_{a,b,r}(q). From the definition (q;q)_n = product_{j=1}^n (1-q^j), we have\n (q;q)_{r+b}/(q;q)_{r+a} = product_{m=r+a+1}^{r+b} (1-q^m),\nwhile\n (q;q)_a/(q;q)_b = 1 / product_{j=a+1}^{b} (1-q^j).\nTherefore\n R_{a,b,r}(q) = product_{j=a+1}^{b} ((1-q^{r+j})/(1-q^j)),\nwith the usual empty-product value 1 when a=b.\n\nFor each integer m >= 1, use the standard cyclotomic factorization\n q^m - 1 = product_{d|m} Phi_d(q).\nThen\n 1 - q^m = -(q^m - 1) = - product_{d|m} Phi_d(q).\nHence for each j,\n (1-q^{r+j})/(1-q^j)\n = [ - product_{d|(r+j)} Phi_d(q) ] / [ - product_{d|j} Phi_d(q) ]\n = product_{d|(r+j)} Phi_d(q) * product_{d|j} Phi_d(q)^(-1).\nMultiplying these identities over j = a+1, ..., b and collecting equal cyclotomic factors, the exponent of Phi_d(q) in the total product is\n c_d := #{j : a < j <= b, d | (r+j)} - #{j : a < j <= b, d | j}.\n\nThe first count is the number of multiples of d in the interval [r+a+1, r+b], so\n #{j : a < j <= b, d | (r+j)} = floor((r+b)/d) - floor((r+a)/d).\nThe second count is the number of multiples of d in [a+1, b], so\n #{j : a < j <= b, d | j} = floor(b/d) - floor(a/d).\nTherefore\n c_d = floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d) = e_d.\n\nIf d > r+b, then both counts are 0, because every integer occurring in the two intervals is at most r+b. Hence c_d = 0 for d > r+b. Thus the factorization is finite and equals\n R_{a,b,r}(q) = product_{d=1}^{r+b} Phi_d(q)^(e_d).\nThis is exactly the asserted cyclotomic factorization.\n\nFinally, each e_d is a nonnegative integer, and each cyclotomic polynomial Phi_d(q) lies in Z[q]. Therefore the finite product product_{d=1}^{r+b} Phi_d(q)^(e_d) belongs to Z[q]. Hence R_{a,b,r}(q) belongs to Z[q].",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.717615+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, and r are integers.",
+          "The ordering restriction 0 <= a <= b is part of the hypotheses.",
+          "r is required to be nonnegative.",
+          "q is a formal indeterminate, not a numeric parameter.",
+          "n in the q-Pochhammer definition is a nonnegative integer.",
+          "j in the q-Pochhammer product is a positive integer.",
+          "d in the hypothesis ranges over all positive integers.",
+          "d in the conclusion ranges over the finite interval from 1 to r+b.",
+          "The q-Pochhammer value at n = 0 is defined to be 1.",
+          "The product over d from 1 to r+b is finite; if r+b = 0, the intended empty-product convention may be relevant."
+        ],
+        "normalized_claim": "For integer parameters a, b, r with 0 <= a <= b and r >= 0, if the floor inequality holds for every positive integer d, then each explicitly defined exponent e_d is nonnegative for every d between 1 and r+b, and the ratio of q-Pochhammer symbols R_{a,b,r}(q) factors as a finite product of cyclotomic polynomials Phi_d(q) with those exponents. Therefore R_{a,b,r}(q) is a polynomial with integer coefficients.",
+        "quantifier_order": [
+          "Choose integers a, b, r satisfying 0 <= a <= b and r >= 0.",
+          "Assume that for every positive integer d, the stated floor inequality holds.",
+          "For every integer d with 1 <= d <= r+b, define e_d by the given floor formula.",
+          "For every such d, conclude that e_d is nonnegative.",
+          "Conclude that R_{a,b,r}(q) equals the finite product over d from 1 to r+b of cyclotomic polynomials Phi_d(q) raised to e_d, and hence lies in the integer polynomial ring in q."
+        ],
+        "variables": [
+          {
+            "domain": "integers satisfying 0 <= a <= b",
+            "name": "a",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers satisfying 0 <= a <= b",
+            "name": "b",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "formal variable in q",
+            "name": "q",
+            "role": "base variable for the q-Pochhammer symbols and cyclotomic polynomials",
+            "type": "formal indeterminate"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "index in the definition of the q-Pochhammer symbol",
+            "type": "integer"
+          },
+          {
+            "domain": "positive integers",
+            "name": "j",
+            "role": "product index in the definition of the q-Pochhammer symbol",
+            "type": "integer"
+          },
+          {
+            "domain": "positive integers; later restricted to 1 <= d <= r+b",
+            "name": "d",
+            "role": "divisor index in the hypothesis and in the cyclotomic factorization",
+            "type": "integer"
+          },
+          {
+            "domain": "integers indexed by d with 1 <= d <= r+b",
+            "name": "e_d",
+            "role": "cyclotomic exponent defined from floor functions",
+            "type": "integer"
+          },
+          {
+            "domain": "defined by the q-Pochhammer ratio",
+            "name": "R_{a,b,r}(q)",
+            "role": "main quantity being factorized",
+            "type": "rational function in q"
+          }
+        ],
+        "witness_dependencies": [
+          "The exponent e_d depends explicitly on the parameters a, b, r and on the chosen index d.",
+          "There is no existential witness in the conclusion; the factorization is given explicitly by the displayed exponents.",
+          "The claim that R_{a,b,r}(q) is in the integer polynomial ring follows from the explicit nonnegative exponent factorization, not from choosing auxiliary objects."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329093558_a472a26e"
+      ],
+      "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, and set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then for every integer d with 1 <= d <= r+b, the integer e_d := floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d) is nonnegative, and one has the cyclotomic factorization R_{a,b,r}(q) = product_{d=1}^{r+b} Phi_d(q)^(e_d), where Phi_d(q) is the d-th cyclotomic polynomial. In particular, R_{a,b,r}(q) belongs to Z[q].",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T09:35:58.515744+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof is mathematically complete for the stated lemma. It correctly derives nonnegativity of each exponent e_d from the floor inequality, rewrites R_{a,b,r}(q) as the shifted interval product, applies the cyclotomic factorization of 1 - q^m, computes the exponent of each cyclotomic factor as the count difference matching the displayed floor formula, observes that exponents vanish for d > r+b, and concludes the claimed finite factorization and polynomiality in Z[q]. The argument matches the lemma sketch and serves the stated assembly role of proving polynomiality.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329093558_a472a26e",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329092508_dde83cd9.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T09:35:58.515744+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329092532_2c3e34d7",
+      "proof_nl": "First note that D = r(b-a) is a nonnegative integer.\n\nIf a = b, then\nR_{a,b,r}(q) = ((q;q)_{r+a}(q;q)_a)/((q;q)_{r+a}(q;q)_a) = 1,\nand D = 0. Hence q^D R_{a,b,r}(q^(-1)) = 1 = R_{a,b,r}(q). If R_{a,b,r}(q) lies in Z[q], we may take c_0 = 1, and the required symmetry is immediate.\n\nIt remains to treat the case a < b. From the definition of (q;q)_n,\n(q;q)_{r+b} / (q;q)_{r+a} = product_{t=r+a+1}^{r+b} (1 - q^t) = product_{i=a+1}^{b} (1 - q^(r+i)),\nand\n(q;q)_a / (q;q)_b = 1 / product_{i=a+1}^{b} (1 - q^i).\nTherefore\nR_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).\n\nEvaluate at q^(-1). For each i,\n(1 - q^(-(r+i))) / (1 - q^(-i)) = (-q^(-(r+i))(1 - q^(r+i))) / (-q^(-i)(1 - q^i)) = q^(-r) (1 - q^(r+i)) / (1 - q^i).\nMultiplying these identities for i = a+1, ..., b gives\nR_{a,b,r}(q^(-1)) = product_{i=a+1}^{b} q^(-r) (1 - q^(r+i)) / (1 - q^i)\n= q^(-r(b-a)) product_{i=a+1}^{b} (1 - q^(r+i)) / (1 - q^i)\n= q^(-D) R_{a,b,r}(q).\nMultiplying by q^D yields the rational-function identity\nq^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q)\nin Z(q).\n\nNow assume additionally that R_{a,b,r}(q) belongs to Z[q]. Since each factor 1 - q^m is a nonzero polynomial, the quotient defining R_{a,b,r}(q) is nonzero in Z(q); hence, when it lies in Z[q], it is a nonzero polynomial. Write\nR_{a,b,r}(q) = sum_{j=0}^{m} d_j q^j\nwith d_m != 0 and each d_j in Z.\nThe self-reciprocity identity gives\nsum_{j=0}^{m} d_j q^j = q^D R_{a,b,r}(q^(-1)) = sum_{j=0}^{m} d_j q^(D-j).\nIf some d_j with j > D were nonzero, then the right-hand side would contain the negative power q^(D-j). These exponents D-j are all distinct, so such a negative-power term could not cancel with any other term. But the left-hand side is an ordinary polynomial and has no negative powers. Therefore d_j = 0 for every j > D, so m <= D.\n\nNow define integers c_0, ..., c_D by c_j = d_j for 0 <= j <= m and c_j = 0 for m < j <= D. Then\nR_{a,b,r}(q) = sum_{j=0}^{D} c_j q^j.\nUsing again q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q), we get\nsum_{j=0}^{D} c_j q^j = q^D R_{a,b,r}(q^(-1)) = sum_{j=0}^{D} c_j q^(D-j) = sum_{j=0}^{D} c_{D-j} q^j,\nwhere the last equality is the reindexing j -> D-j. Since equal polynomials have equal coefficients, c_j = c_{D-j} for every 0 <= j <= D.\n\nThis proves both the rational-function identity and the palindromic coefficient statement.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.718766+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, and r are integers",
+          "The parameters satisfy 0 <= a <= b",
+          "r is nonnegative",
+          "q is treated as a formal indeterminate, not a specialized numeric value",
+          "n is a nonnegative integer in the q-Pochhammer definition",
+          "The product for (q;q)_0 is the empty product and equals 1",
+          "D is nonnegative because r is nonnegative and b minus a is nonnegative",
+          "The identity is an equality of rational functions over the integers, not a pointwise analytic statement",
+          "In the polynomial conclusion, R_{a,b,r}(q) is assumed to simplify to an element of the integer polynomial ring"
+        ],
+        "normalized_claim": "For any integers a, b, r with 0 <= a <= b and r >= 0, the rational function R_{a,b,r}(q) is self-reciprocal of degree D = r times (b minus a), meaning q to the power D times R_{a,b,r} at q inverse equals R_{a,b,r}(q) in the rational function field over the integers. If this rational function is in fact an integer polynomial, then its coefficients can be indexed from 0 to D so that the coefficient list is palindromic: c_j equals c_{D-j} for every j.",
+        "quantifier_order": [
+          "For all integers a, b, r satisfying 0 <= a <= b and r >= 0",
+          "Let q be an indeterminate",
+          "For all nonnegative integers n, define the q-Pochhammer symbol by the finite product over j from 1 to n, with the n = 0 case equal to 1",
+          "Define R_{a,b,r}(q) from these factors and define D as r times (b minus a)",
+          "The identity q to the power D times R_{a,b,r} evaluated at q inverse equals R_{a,b,r}(q) holds in the rational function field over the integers",
+          "If R_{a,b,r}(q) lies in the polynomial ring over the integers, then there exist integers c_0 through c_D such that R_{a,b,r}(q) equals the sum of c_j q^j from j = 0 to D and the coefficients satisfy c_j = c_{D-j} for every j from 0 to D"
+        ],
+        "variables": [
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "a",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers with 0 <= a <= b",
+            "name": "b",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "formal variable over the integers",
+            "name": "q",
+            "role": "symbol used to define q-Pochhammer factors and the rational function R",
+            "type": "indeterminate"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "index in the definition of the q-Pochhammer symbol",
+            "type": "integer index"
+          },
+          {
+            "domain": "integers between 0 and D in the coefficient symmetry statement",
+            "name": "j",
+            "role": "coefficient index and product index",
+            "type": "integer index"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "D",
+            "role": "exponent defined as r times (b minus a)",
+            "type": "integer"
+          },
+          {
+            "domain": "rational functions over the integers in the variable q",
+            "name": "R",
+            "role": "defined rational function R_{a,b,r}(q)",
+            "type": "rational function in q"
+          },
+          {
+            "domain": "integers",
+            "name": "c_j",
+            "role": "coefficients of the polynomial expansion when R is actually a polynomial",
+            "type": "integer"
+          }
+        ],
+        "witness_dependencies": [
+          "The polynomial coefficients c_0 through c_D, when they exist, depend on the fixed parameters a, b, and r through the polynomial R_{a,b,r}(q)",
+          "The symmetry relation c_j = c_{D-j} uses the same coefficient list c_0 through c_D; there is no separate witness for each j",
+          "The integer D is determined uniquely by a, b, and r as r times (b minus a)"
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329093459_fe80f91f"
+      ],
+      "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Then the rational-function identity q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q) holds in Z(q). Consequently, whenever R_{a,b,r}(q) belongs to Z[q], there exist integers c_0, ..., c_D such that R_{a,b,r}(q) = sum_{j=0}^D c_j q^j and c_j = c_{D-j} for every j with 0 <= j <= D.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T09:34:59.434220+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof is correct and complete. It handles the empty-product case a = b separately, then for a < b rewrites the q-Pochhammer quotient as the stated finite product, checks factor-by-factor that substitution q -> q^(-1) contributes exactly a factor q^(-r) per term, and therefore derives q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q) with D = r(b-a). Under the additional assumption R_{a,b,r}(q) in Z[q], it expands R as a polynomial, uses the self-reciprocity identity to rule out terms of degree > D by the appearance of uncancellable negative powers, pads coefficients to length D, and compares coefficients to obtain c_j = c_{D-j}. This matches the lemma sketch exactly and uses no undeclared or forbidden dependencies.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329093459_fe80f91f",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329092532_2c3e34d7.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T09:34:59.434220+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329092547_6a64d34a",
+      "proof_nl": "Let N := r+a+b. Since 0 <= a <= b and r >= 0, we have N >= b >= a >= 0; in particular 0 <= a <= N and 0 <= b <= N, and also N-a = r+b >= 0 and N-b = r+a >= 0. By the standard polynomial form of Gaussian q-binomial coefficients, for 0 <= t <= N one has [N choose t]_q = (q;q)_N / ((q;q)_t (q;q)_{N-t}). Therefore\n[N choose b]_q / [N choose a]_q = ((q;q)_N / ((q;q)_b (q;q)_{N-b})) / ((q;q)_N / ((q;q)_a (q;q)_{N-a})) = ((q;q)_a (q;q)_{N-a}) / ((q;q)_b (q;q)_{N-b}).\nUsing N-a = r+b and N-b = r+a, this becomes\n[N choose b]_q / [N choose a]_q = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b) = R_{a,b,r}(q).\nThus R_{a,b,r}(q) is exactly a quotient of two Gaussian q-binomial coefficients. By hypothesis R_{a,b,r}(q) belongs to Z[q], so this quotient is a polynomial in q. Applying the allowed semantic anchor with n = N, k = b, and l = a, we conclude that every coefficient of R_{a,b,r}(q) is nonnegative. Since R_{a,b,r}(q) is in Z[q], all of its coefficients are integers. Therefore, for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer. This proves the lemma.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.720225+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "a, b, and r are integers",
+          "0 <= a <= b",
+          "r >= 0",
+          "q is a formal indeterminate, not a specialized numeric value",
+          "n ranges over nonnegative integers in the product definition",
+          "D is nonnegative because r >= 0 and b - a >= 0",
+          "j is an integer with 0 <= j <= floor(D/2)",
+          "R is assumed to be a polynomial with integer coefficients"
+        ],
+        "normalized_claim": "Under the integer constraints 0 <= a <= b and r >= 0, if the quotient defining R is actually a polynomial with integer coefficients, then every coefficient of q to the power j in R is a nonnegative integer for all integers j from 0 through floor(r times (b - a) divided by 2).",
+        "quantifier_order": [
+          "For all integers a, b, r with 0 <= a <= b and r >= 0",
+          "Let q be an indeterminate",
+          "For each nonnegative integer n, define the q-factorial quantity",
+          "Define R from a, b, r, and q by the stated quotient",
+          "Define D as r times (b - a)",
+          "Assume the resulting R is an element of Z[q]",
+          "For every integer j with 0 <= j <= floor(D/2), the coefficient condition is asserted"
+        ],
+        "variables": [
+          {
+            "domain": "integers satisfying 0 <= a <= b",
+            "name": "a",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "integers satisfying 0 <= a <= b",
+            "name": "b",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "r",
+            "role": "input parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "formal variable",
+            "name": "q",
+            "role": "symbol used to form q-factorials and the polynomial R",
+            "type": "indeterminate"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "n",
+            "role": "index in the finite product defining the q-factorial",
+            "type": "integer"
+          },
+          {
+            "domain": "integer polynomials in q, assumed to lie in Z[q]",
+            "name": "R",
+            "role": "defined quantity from a, b, r, and q",
+            "type": "polynomial in q"
+          },
+          {
+            "domain": "nonnegative integers",
+            "name": "D",
+            "role": "derived quantity equal to r times (b - a)",
+            "type": "integer"
+          },
+          {
+            "domain": "integers from 0 through floor(D/2)",
+            "name": "j",
+            "role": "coefficient index",
+            "type": "integer"
+          }
+        ],
+        "witness_dependencies": [
+          "No existential witnesses are introduced; the statement is universally quantified after the definitions and the assumption that R is a polynomial."
+        ]
+      },
+      "source_artifacts": [],
+      "statement_nl": "For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 1,
+        "last_activity_at": "2026-03-29T13:31:43.787333+00:00",
+        "last_terminal_worker_result": "agent4:failed_infra",
+        "last_transition_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": null,
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 1,
+        "minor_rejection_count": 0,
+        "next_action": "invalidate_parent_decomposition",
+        "promoted_decomposition_count": 1,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329092547_6a64d34a.json",
+        "proof_status": "failed",
+        "routing_status": "blocked",
+        "solver_attempt_count": 3,
+        "statement_status": "false",
+        "truth_status": "false",
+        "updated_at": "2026-03-29T13:31:43.787333+00:00"
+      }
+    },
+    {
+      "children": [],
+      "decomposition": null,
+      "kind": "lemma",
+      "node_id": "lem_20260329092603_a2bb7a49",
+      "proof_nl": "Let j be any integer with 0 <= j <= D. We will prove that c_j >= 0.\n\nIf j <= floor(D/2), then c_j >= 0 by the given hypothesis on the first half of the coefficients.\n\nNow suppose j > floor(D/2). We claim that D - j <= floor(D/2). Indeed, if D - j were also > floor(D/2), then, since j and D-j are integers, we would have j >= floor(D/2) + 1 and D - j >= floor(D/2) + 1. Adding these inequalities gives\nD = j + (D-j) >= 2 floor(D/2) + 2.\nBut 2 floor(D/2) is either D or D-1, so 2 floor(D/2) + 2 > D, a contradiction. Therefore D-j <= floor(D/2). Also D-j >= 0 because j <= D.\n\nHence 0 <= D-j <= floor(D/2), so by the hypothesis on the first half of the coefficients we get c_{D-j} >= 0. Using the symmetry hypothesis, c_j = c_{D-j}, and therefore c_j >= 0.\n\nSince j was arbitrary, we have proved that c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.",
+      "provenance": {
+        "bundle_source": "runtime",
+        "generated_at": "2026-03-30T02:45:32.721400+00:00",
+        "proof_nl_synthesized": false
+      },
+      "resolution_mode": "direct_solver",
+      "semantic_sketch": {
+        "domain_restrictions": [
+          "D is a nonnegative integer.",
+          "F belongs to the polynomial ring over the integers.",
+          "The coefficients c_j are integers because F has integer coefficients.",
+          "The index j is always an integer.",
+          "In the symmetry assumption, j ranges from 0 to D inclusive.",
+          "In the first nonnegativity assumption, j ranges from 0 to floor of D divided by 2 inclusive.",
+          "The displayed expansion of F uses only coefficients c_0 through c_D."
+        ],
+        "normalized_claim": "If the coefficients of a polynomial over the integers are symmetric around degree D and the coefficients in the first half are nonnegative, then every coefficient is nonnegative.",
+        "quantifier_order": [
+          "Fix a nonnegative integer D.",
+          "Fix a polynomial F in the polynomial ring over the integers, with coefficients c_0 through c_D.",
+          "For every integer j between 0 and D inclusive, c_j equals c_{D minus j}.",
+          "For every integer j between 0 and floor of D divided by 2 inclusive, c_j is nonnegative.",
+          "Therefore, for every integer j between 0 and D inclusive, c_j is nonnegative."
+        ],
+        "variables": [
+          {
+            "domain": "nonnegative integers",
+            "name": "D",
+            "role": "degree bound and symmetry parameter",
+            "type": "integer"
+          },
+          {
+            "domain": "polynomials with integer coefficients",
+            "name": "F",
+            "role": "given polynomial",
+            "type": "polynomial"
+          },
+          {
+            "domain": "polynomial variable",
+            "name": "q",
+            "role": "indeterminate in the polynomial ring",
+            "type": "formal indeterminate"
+          },
+          {
+            "domain": "integers indexed by j from 0 to D",
+            "name": "c_j",
+            "role": "coefficients of F",
+            "type": "integer sequence"
+          },
+          {
+            "domain": "integers in the stated index ranges",
+            "name": "j",
+            "role": "bound index variable in the assumptions and conclusion",
+            "type": "integer index"
+          }
+        ],
+        "witness_dependencies": [
+          "No existential witness is introduced.",
+          "The coefficients c_j are determined by the chosen polynomial F and the displayed expansion up to degree D."
+        ]
+      },
+      "source_artifacts": [
+        "rep_20260329093245_baa04b4d"
+      ],
+      "statement_nl": "Let D be a nonnegative integer, and let F(q) = sum_{j=0}^D c_j q^j be a polynomial in Z[q]. Assume that c_j = c_{D-j} for every integer j with 0 <= j <= D, and assume also that c_j >= 0 for every integer j with 0 <= j <= floor(D/2). Then c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.",
+      "status_snapshot": {
+        "active_counterexample_id": null,
+        "consecutive_fatal_rejections": 0,
+        "consecutive_infrastructure_failures": 0,
+        "counterexample_status": "none",
+        "decomposition_round_count": 0,
+        "last_activity_at": "2026-03-29T09:32:45.387643+00:00",
+        "last_terminal_worker_result": "agent5:accepted",
+        "last_transition_reason": "The proof is complete and correct. It fixes an arbitrary index j in [0,D], handles the first-half case directly from the hypothesis, and in the second-half case shows D-j lies in [0, floor(D/2)] so that c_{D-j} is nonnegative; symmetry then gives c_j = c_{D-j} >= 0. This matches the lemma sketch exactly and uses no undeclared or forbidden dependencies.",
+        "latest_lean_result_id": null,
+        "latest_vetter_report_id": "rep_20260329093245_baa04b4d",
+        "lean_attempt_count": 0,
+        "lean_identical_fatal_count": 0,
+        "materialized_candidate_count": 0,
+        "minor_rejection_count": 0,
+        "next_action": "done",
+        "promoted_decomposition_count": 0,
+        "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329092603_a2bb7a49.json",
+        "proof_status": "nl_accepted",
+        "routing_status": "done",
+        "solver_attempt_count": 1,
+        "statement_status": "plausible",
+        "truth_status": "unknown",
+        "updated_at": "2026-03-29T09:32:45.387643+00:00"
+      }
+    }
+  ],
+  "decomposition": {
+    "assembled_proof_nl": "Target: Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.\n\nStrategy summary: Rewrite the product as a balanced two-term q-factorial ratio. Use cyclotomic exponents to get polynomiality from the floor condition. Then separate positivity into an explicit hard bottleneck: prove nonnegativity only for the first half of the coefficients. A simple reciprocity identity for the balanced ratio reflects those coefficients across the midpoint, yielding full coefficientwise nonnegativity.\n\nAssembly skeleton: First rewrite the original finite product as the balanced q-factorial ratio R(q) = ((q;q)_{r+b}(q;q)_a)/((q;q)_{r+a}(q;q)_b). Next use the floor hypothesis only for polynomiality: cyclotomic factorization gives nonnegative exponents for every Phi_d(q), so R(q) lies in Z[q]. The positivity argument is then split in two. The hard input is a half-range positivity theorem: once this balanced ratio is known to be polynomial, every coefficient up to the midpoint degree floor(r(b-a)/2) is nonnegative. Independently, the ratio is reciprocal of degree r(b-a), so its coefficient sequence is symmetric. A purely abstract symmetry lemma then upgrades midpoint nonnegativity to nonnegativity of every coefficient. Finally, substitute back the identity P_{a,b,r}(q) = R(q) to obtain the theorem exactly as stated.\n\nAssembly steps:\n\n- A1: derive Define R(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Then the original product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)) is equal to R(q) in Z(q). using lemmas ['lem_20260329092458_c3931872'] and prior steps [].\n\n- A2: derive From the hypothesis that floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d, conclude that R(q) belongs to Z[q]. using lemmas ['lem_20260329092508_dde83cd9'] and prior steps [].\n\n- A3: derive Let D := r(b-a). For every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R(q) is a nonnegative integer. using lemmas ['lem_20260329092547_6a64d34a'] and prior steps ['A2'].\n\n- A4: derive With D := r(b-a), the polynomial R(q) can be written as R(q) = sum_{j=0}^D c_j q^j with coefficient symmetry c_j = c_{D-j} for all 0 <= j <= D. using lemmas ['lem_20260329092532_2c3e34d7'] and prior steps ['A2'].\n\n- A5: derive Every coefficient of R(q) is nonnegative. using lemmas ['lem_20260329092603_a2bb7a49'] and prior steps ['A3', 'A4'].\n\n- A6: derive The product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1 when a = b, is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative. using lemmas [] and prior steps ['A1', 'A2', 'A5'].\n\nRecursive lemma proofs:\n\n1. lem_20260329092458_c3931872: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate and define P_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with the empty product equal to 1 when a = b. For each nonnegative integer n, define (q;q)_n := product_{j=1}^n (1 - q^j), with (q;q)_0 := 1. Then one has the identity in the rational function field Z(q): P_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b).\nBecause 0 <= a <= b and r >= 0, the integers a, b, r+a, and r+b are all nonnegative, so every q-Pochhammer symbol appearing in the claimed identity is defined.\n\nFirst consider the case a = b. By the definition of P_{a,b,r}(q), the product from i = a+1 to b is empty, so P_{a,b,r}(q) = 1. On the other hand,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= ((q;q)_{r+a} (q;q)_a) / ((q;q)_{r+a} (q;q)_a)\n= 1.\nSo the identity holds when a = b.\n\nNow assume a < b. We use the following elementary consequence of the definition of (q;q)_n: for any nonnegative integers m < n,\n(q;q)_n = (q;q)_m \\prod_{j=m+1}^n (1 - q^j).\nIndeed, if m = 0 then this is just (q;q)_n = 1 \\cdot \\prod_{j=1}^n (1 - q^j), using (q;q)_0 = 1; if m > 0, it follows by splitting the defining product for (q;q)_n after the factor j = m.\n\nApply this with m = r+a and n = r+b. Since a < b, we have r+a < r+b, so\n(q;q)_{r+b} = (q;q)_{r+a} \\prod_{j=r+a+1}^{r+b} (1 - q^j).\nApply it again with m = a and n = b:\n(q;q)_b = (q;q)_a \\prod_{j=a+1}^{b} (1 - q^j).\n\nSince each factor 1 - q^j is a nonzero polynomial, these products are invertible in the rational function field Z(q). Therefore,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{j=r+a+1}^{r+b} (1 - q^j)}{\\prod_{j=a+1}^{b} (1 - q^j)}.\n\nNow reindex the numerator by writing j = r+i. As j runs from r+a+1 to r+b, the index i runs from a+1 to b. Hence\n\\prod_{j=r+a+1}^{r+b} (1 - q^j) = \\prod_{i=a+1}^{b} (1 - q^{r+i}).\nSubstituting this gives\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{i=a+1}^{b} (1 - q^{r+i})}{\\prod_{i=a+1}^{b} (1 - q^i)}\n= \\prod_{i=a+1}^{b} \\frac{1 - q^{r+i}}{1 - q^i}\n= P_{a,b,r}(q),\nwhere the last equality is exactly the definition of P_{a,b,r}(q).\n\nThus, in all cases,\nP_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\nin the rational function field Z(q).\n\n2. lem_20260329092508_dde83cd9: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, and set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then for every integer d with 1 <= d <= r+b, the integer e_d := floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d) is nonnegative, and one has the cyclotomic factorization R_{a,b,r}(q) = product_{d=1}^{r+b} Phi_d(q)^(e_d), where Phi_d(q) is the d-th cyclotomic polynomial. In particular, R_{a,b,r}(q) belongs to Z[q].\nSet e_d := floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d). The hypothesis says that for every positive integer d,\nfloor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).\nRearranging gives\n e_d = [floor((r+b)/d) - floor((r+a)/d)] - [floor(b/d) - floor(a/d)] >= 0.\nThus e_d is a nonnegative integer for every positive d, and in particular for every d with 1 <= d <= r+b.\n\nNow rewrite R_{a,b,r}(q). From the definition (q;q)_n = product_{j=1}^n (1-q^j), we have\n (q;q)_{r+b}/(q;q)_{r+a} = product_{m=r+a+1}^{r+b} (1-q^m),\nwhile\n (q;q)_a/(q;q)_b = 1 / product_{j=a+1}^{b} (1-q^j).\nTherefore\n R_{a,b,r}(q) = product_{j=a+1}^{b} ((1-q^{r+j})/(1-q^j)),\nwith the usual empty-product value 1 when a=b.\n\nFor each integer m >= 1, use the standard cyclotomic factorization\n q^m - 1 = product_{d|m} Phi_d(q).\nThen\n 1 - q^m = -(q^m - 1) = - product_{d|m} Phi_d(q).\nHence for each j,\n (1-q^{r+j})/(1-q^j)\n = [ - product_{d|(r+j)} Phi_d(q) ] / [ - product_{d|j} Phi_d(q) ]\n = product_{d|(r+j)} Phi_d(q) * product_{d|j} Phi_d(q)^(-1).\nMultiplying these identities over j = a+1, ..., b and collecting equal cyclotomic factors, the exponent of Phi_d(q) in the total product is\n c_d := #{j : a < j <= b, d | (r+j)} - #{j : a < j <= b, d | j}.\n\nThe first count is the number of multiples of d in the interval [r+a+1, r+b], so\n #{j : a < j <= b, d | (r+j)} = floor((r+b)/d) - floor((r+a)/d).\nThe second count is the number of multiples of d in [a+1, b], so\n #{j : a < j <= b, d | j} = floor(b/d) - floor(a/d).\nTherefore\n c_d = floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d) = e_d.\n\nIf d > r+b, then both counts are 0, because every integer occurring in the two intervals is at most r+b. Hence c_d = 0 for d > r+b. Thus the factorization is finite and equals\n R_{a,b,r}(q) = product_{d=1}^{r+b} Phi_d(q)^(e_d).\nThis is exactly the asserted cyclotomic factorization.\n\nFinally, each e_d is a nonnegative integer, and each cyclotomic polynomial Phi_d(q) lies in Z[q]. Therefore the finite product product_{d=1}^{r+b} Phi_d(q)^(e_d) belongs to Z[q]. Hence R_{a,b,r}(q) belongs to Z[q].\n\n3. lem_20260329092532_2c3e34d7: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Then the rational-function identity q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q) holds in Z(q). Consequently, whenever R_{a,b,r}(q) belongs to Z[q], there exist integers c_0, ..., c_D such that R_{a,b,r}(q) = sum_{j=0}^D c_j q^j and c_j = c_{D-j} for every j with 0 <= j <= D.\nFirst note that D = r(b-a) is a nonnegative integer.\n\nIf a = b, then\nR_{a,b,r}(q) = ((q;q)_{r+a}(q;q)_a)/((q;q)_{r+a}(q;q)_a) = 1,\nand D = 0. Hence q^D R_{a,b,r}(q^(-1)) = 1 = R_{a,b,r}(q). If R_{a,b,r}(q) lies in Z[q], we may take c_0 = 1, and the required symmetry is immediate.\n\nIt remains to treat the case a < b. From the definition of (q;q)_n,\n(q;q)_{r+b} / (q;q)_{r+a} = product_{t=r+a+1}^{r+b} (1 - q^t) = product_{i=a+1}^{b} (1 - q^(r+i)),\nand\n(q;q)_a / (q;q)_b = 1 / product_{i=a+1}^{b} (1 - q^i).\nTherefore\nR_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).\n\nEvaluate at q^(-1). For each i,\n(1 - q^(-(r+i))) / (1 - q^(-i)) = (-q^(-(r+i))(1 - q^(r+i))) / (-q^(-i)(1 - q^i)) = q^(-r) (1 - q^(r+i)) / (1 - q^i).\nMultiplying these identities for i = a+1, ..., b gives\nR_{a,b,r}(q^(-1)) = product_{i=a+1}^{b} q^(-r) (1 - q^(r+i)) / (1 - q^i)\n= q^(-r(b-a)) product_{i=a+1}^{b} (1 - q^(r+i)) / (1 - q^i)\n= q^(-D) R_{a,b,r}(q).\nMultiplying by q^D yields the rational-function identity\nq^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q)\nin Z(q).\n\nNow assume additionally that R_{a,b,r}(q) belongs to Z[q]. Since each factor 1 - q^m is a nonzero polynomial, the quotient defining R_{a,b,r}(q) is nonzero in Z(q); hence, when it lies in Z[q], it is a nonzero polynomial. Write\nR_{a,b,r}(q) = sum_{j=0}^{m} d_j q^j\nwith d_m != 0 and each d_j in Z.\nThe self-reciprocity identity gives\nsum_{j=0}^{m} d_j q^j = q^D R_{a,b,r}(q^(-1)) = sum_{j=0}^{m} d_j q^(D-j).\nIf some d_j with j > D were nonzero, then the right-hand side would contain the negative power q^(D-j). These exponents D-j are all distinct, so such a negative-power term could not cancel with any other term. But the left-hand side is an ordinary polynomial and has no negative powers. Therefore d_j = 0 for every j > D, so m <= D.\n\nNow define integers c_0, ..., c_D by c_j = d_j for 0 <= j <= m and c_j = 0 for m < j <= D. Then\nR_{a,b,r}(q) = sum_{j=0}^{D} c_j q^j.\nUsing again q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q), we get\nsum_{j=0}^{D} c_j q^j = q^D R_{a,b,r}(q^(-1)) = sum_{j=0}^{D} c_j q^(D-j) = sum_{j=0}^{D} c_{D-j} q^j,\nwhere the last equality is the reindexing j -> D-j. Since equal polynomials have equal coefficients, c_j = c_{D-j} for every 0 <= j <= D.\n\nThis proves both the rational-function identity and the palindromic coefficient statement.\n\n4. lem_20260329092547_6a64d34a: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.\nLet N := r+a+b. Since 0 <= a <= b and r >= 0, we have N >= b >= a >= 0; in particular 0 <= a <= N and 0 <= b <= N, and also N-a = r+b >= 0 and N-b = r+a >= 0. By the standard polynomial form of Gaussian q-binomial coefficients, for 0 <= t <= N one has [N choose t]_q = (q;q)_N / ((q;q)_t (q;q)_{N-t}). Therefore\n[N choose b]_q / [N choose a]_q = ((q;q)_N / ((q;q)_b (q;q)_{N-b})) / ((q;q)_N / ((q;q)_a (q;q)_{N-a})) = ((q;q)_a (q;q)_{N-a}) / ((q;q)_b (q;q)_{N-b}).\nUsing N-a = r+b and N-b = r+a, this becomes\n[N choose b]_q / [N choose a]_q = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b) = R_{a,b,r}(q).\nThus R_{a,b,r}(q) is exactly a quotient of two Gaussian q-binomial coefficients. By hypothesis R_{a,b,r}(q) belongs to Z[q], so this quotient is a polynomial in q. Applying the allowed semantic anchor with n = N, k = b, and l = a, we conclude that every coefficient of R_{a,b,r}(q) is nonnegative. Since R_{a,b,r}(q) is in Z[q], all of its coefficients are integers. Therefore, for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer. This proves the lemma.\n\n5. lem_20260329092603_a2bb7a49: Let D be a nonnegative integer, and let F(q) = sum_{j=0}^D c_j q^j be a polynomial in Z[q]. Assume that c_j = c_{D-j} for every integer j with 0 <= j <= D, and assume also that c_j >= 0 for every integer j with 0 <= j <= floor(D/2). Then c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.\nLet j be any integer with 0 <= j <= D. We will prove that c_j >= 0.\n\nIf j <= floor(D/2), then c_j >= 0 by the given hypothesis on the first half of the coefficients.\n\nNow suppose j > floor(D/2). We claim that D - j <= floor(D/2). Indeed, if D - j were also > floor(D/2), then, since j and D-j are integers, we would have j >= floor(D/2) + 1 and D - j >= floor(D/2) + 1. Adding these inequalities gives\nD = j + (D-j) >= 2 floor(D/2) + 2.\nBut 2 floor(D/2) is either D or D-1, so 2 floor(D/2) + 2 > D, a contradiction. Therefore D-j <= floor(D/2). Also D-j >= 0 because j <= D.\n\nHence 0 <= D-j <= floor(D/2), so by the hypothesis on the first half of the coefficients we get c_{D-j} >= 0. Using the symmetry hypothesis, c_j = c_{D-j}, and therefore c_j >= 0.\n\nSince j was arbitrary, we have proved that c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.",
+    "assembly_plan": {
+      "assembly_plan_id": "asm_20260329092952_b707d3d0",
+      "is_trivially_composable": false,
+      "proof_skeleton_nl": "First rewrite the original finite product as the balanced q-factorial ratio R(q) = ((q;q)_{r+b}(q;q)_a)/((q;q)_{r+a}(q;q)_b). Next use the floor hypothesis only for polynomiality: cyclotomic factorization gives nonnegative exponents for every Phi_d(q), so R(q) lies in Z[q]. The positivity argument is then split in two. The hard input is a half-range positivity theorem: once this balanced ratio is known to be polynomial, every coefficient up to the midpoint degree floor(r(b-a)/2) is nonnegative. Independently, the ratio is reciprocal of degree r(b-a), so its coefficient sequence is symmetric. A purely abstract symmetry lemma then upgrades midpoint nonnegativity to nonnegativity of every coefficient. Finally, substitute back the identity P_{a,b,r}(q) = R(q) to obtain the theorem exactly as stated.",
+      "steps": [
+        {
+          "derives": "Define R(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Then the original product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)) is equal to R(q) in Z(q).",
+          "is_trivial": true,
+          "step_id": "A1",
+          "trivial_justification": "This is the direct instantiation of the algebraic identity from L1 with the given integers a, b, r.",
+          "uses_lemmas": [
+            "lem_20260329092458_c3931872"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "From the hypothesis that floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d, conclude that R(q) belongs to Z[q].",
+          "is_trivial": true,
+          "step_id": "A2",
+          "trivial_justification": "L2 applies directly to the same parameters a, b, r and exactly the floor hypothesis from the theorem.",
+          "uses_lemmas": [
+            "lem_20260329092508_dde83cd9"
+          ],
+          "uses_prior_steps": []
+        },
+        {
+          "derives": "Let D := r(b-a). For every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R(q) is a nonnegative integer.",
+          "is_trivial": true,
+          "step_id": "A3",
+          "trivial_justification": "A2 supplies the assumption R(q) in Z[q] required by L4, so L4 gives nonnegativity of the first half of the coefficient range.",
+          "uses_lemmas": [
+            "lem_20260329092547_6a64d34a"
+          ],
+          "uses_prior_steps": [
+            "A2"
+          ]
+        },
+        {
+          "derives": "With D := r(b-a), the polynomial R(q) can be written as R(q) = sum_{j=0}^D c_j q^j with coefficient symmetry c_j = c_{D-j} for all 0 <= j <= D.",
+          "is_trivial": true,
+          "step_id": "A4",
+          "trivial_justification": "L3 gives the reciprocity identity q^D R(q^{-1}) = R(q); because A2 shows R is a polynomial, L3 yields a coefficient expansion of degree D with symmetric coefficients.",
+          "uses_lemmas": [
+            "lem_20260329092532_2c3e34d7"
+          ],
+          "uses_prior_steps": [
+            "A2"
+          ]
+        },
+        {
+          "derives": "Every coefficient of R(q) is nonnegative.",
+          "is_trivial": true,
+          "step_id": "A5",
+          "trivial_justification": "Apply L5 to the polynomial F(q) := R(q) with degree D := r(b-a). Step A4 supplies the symmetry c_j = c_{D-j}, and Step A3 supplies c_j >= 0 for 0 <= j <= floor(D/2). Therefore all coefficients c_j are nonnegative.",
+          "uses_lemmas": [
+            "lem_20260329092603_a2bb7a49"
+          ],
+          "uses_prior_steps": [
+            "A3",
+            "A4"
+          ]
+        },
+        {
+          "derives": "The product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1 when a = b, is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+          "is_trivial": false,
+          "step_id": "A6",
+          "trivial_justification": "Step A1 identifies P_{a,b,r}(q) with R(q). Step A2 says R(q) is a polynomial in Z[q]. Step A5 says every coefficient of R(q) is nonnegative. Substituting the identity from A1 into the conclusions of A2 and A5 yields exactly the root theorem statement.",
+          "uses_lemmas": [],
+          "uses_prior_steps": [
+            "A1",
+            "A2",
+            "A5"
+          ]
+        }
+      ]
+    },
+    "decomposition_id": "dec_20260329092952_81e5be99",
+    "formalization_cost_estimate": 0.91,
+    "node_id": "lem_20260329074016_d9949d95",
+    "node_kind": "lemma",
+    "ordered_child_lemma_ids": [
+      "lem_20260329092458_c3931872",
+      "lem_20260329092508_dde83cd9",
+      "lem_20260329092532_2c3e34d7",
+      "lem_20260329092547_6a64d34a",
+      "lem_20260329092603_a2bb7a49"
+    ],
+    "pinned_statement_signatures": {},
+    "shared_context": [
+      {
+        "content": "For a nonnegative integer n, define (q;q)_n := product_{j=1}^n (1 - q^j), with the empty product (q;q)_0 := 1.",
+        "kind": "definition",
+        "label": "finite_q_factorial"
+      },
+      {
+        "content": "For a positive integer d, Phi_d(q) denotes the d-th cyclotomic polynomial in Z[q].",
+        "kind": "notation",
+        "label": "cyclotomic_polynomial"
+      },
+      {
+        "content": "A polynomial F(q) = sum_{j=0}^D c_j q^j is reciprocal of degree D if q^D F(q^{-1}) = F(q), equivalently c_j = c_{D-j} for all 0 <= j <= D.",
+        "kind": "definition",
+        "label": "reciprocal_polynomial"
+      }
+    ],
+    "strategy_summary": "Rewrite the product as a balanced two-term q-factorial ratio. Use cyclotomic exponents to get polynomiality from the floor condition. Then separate positivity into an explicit hard bottleneck: prove nonnegativity only for the first half of the coefficients. A simple reciprocity identity for the balanced ratio reflects those coefficients across the midpoint, yielding full coefficientwise nonnegativity."
+  },
+  "kind": "decomposition",
+  "node_id": "dec_20260329092952_81e5be99",
+  "proof_nl": "Target: Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.\n\nStrategy summary: Rewrite the product as a balanced two-term q-factorial ratio. Use cyclotomic exponents to get polynomiality from the floor condition. Then separate positivity into an explicit hard bottleneck: prove nonnegativity only for the first half of the coefficients. A simple reciprocity identity for the balanced ratio reflects those coefficients across the midpoint, yielding full coefficientwise nonnegativity.\n\nAssembly skeleton: First rewrite the original finite product as the balanced q-factorial ratio R(q) = ((q;q)_{r+b}(q;q)_a)/((q;q)_{r+a}(q;q)_b). Next use the floor hypothesis only for polynomiality: cyclotomic factorization gives nonnegative exponents for every Phi_d(q), so R(q) lies in Z[q]. The positivity argument is then split in two. The hard input is a half-range positivity theorem: once this balanced ratio is known to be polynomial, every coefficient up to the midpoint degree floor(r(b-a)/2) is nonnegative. Independently, the ratio is reciprocal of degree r(b-a), so its coefficient sequence is symmetric. A purely abstract symmetry lemma then upgrades midpoint nonnegativity to nonnegativity of every coefficient. Finally, substitute back the identity P_{a,b,r}(q) = R(q) to obtain the theorem exactly as stated.\n\nAssembly steps:\n\n- A1: derive Define R(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Then the original product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)) is equal to R(q) in Z(q). using lemmas ['lem_20260329092458_c3931872'] and prior steps [].\n\n- A2: derive From the hypothesis that floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d, conclude that R(q) belongs to Z[q]. using lemmas ['lem_20260329092508_dde83cd9'] and prior steps [].\n\n- A3: derive Let D := r(b-a). For every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R(q) is a nonnegative integer. using lemmas ['lem_20260329092547_6a64d34a'] and prior steps ['A2'].\n\n- A4: derive With D := r(b-a), the polynomial R(q) can be written as R(q) = sum_{j=0}^D c_j q^j with coefficient symmetry c_j = c_{D-j} for all 0 <= j <= D. using lemmas ['lem_20260329092532_2c3e34d7'] and prior steps ['A2'].\n\n- A5: derive Every coefficient of R(q) is nonnegative. using lemmas ['lem_20260329092603_a2bb7a49'] and prior steps ['A3', 'A4'].\n\n- A6: derive The product P_{a,b,r}(q) = product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1 when a = b, is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative. using lemmas [] and prior steps ['A1', 'A2', 'A5'].\n\nRecursive lemma proofs:\n\n1. lem_20260329092458_c3931872: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate and define P_{a,b,r}(q) := product_{i=a+1}^b ((1 - q^(r+i)) / (1 - q^i)), with the empty product equal to 1 when a = b. For each nonnegative integer n, define (q;q)_n := product_{j=1}^n (1 - q^j), with (q;q)_0 := 1. Then one has the identity in the rational function field Z(q): P_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b).\nBecause 0 <= a <= b and r >= 0, the integers a, b, r+a, and r+b are all nonnegative, so every q-Pochhammer symbol appearing in the claimed identity is defined.\n\nFirst consider the case a = b. By the definition of P_{a,b,r}(q), the product from i = a+1 to b is empty, so P_{a,b,r}(q) = 1. On the other hand,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= ((q;q)_{r+a} (q;q)_a) / ((q;q)_{r+a} (q;q)_a)\n= 1.\nSo the identity holds when a = b.\n\nNow assume a < b. We use the following elementary consequence of the definition of (q;q)_n: for any nonnegative integers m < n,\n(q;q)_n = (q;q)_m \\prod_{j=m+1}^n (1 - q^j).\nIndeed, if m = 0 then this is just (q;q)_n = 1 \\cdot \\prod_{j=1}^n (1 - q^j), using (q;q)_0 = 1; if m > 0, it follows by splitting the defining product for (q;q)_n after the factor j = m.\n\nApply this with m = r+a and n = r+b. Since a < b, we have r+a < r+b, so\n(q;q)_{r+b} = (q;q)_{r+a} \\prod_{j=r+a+1}^{r+b} (1 - q^j).\nApply it again with m = a and n = b:\n(q;q)_b = (q;q)_a \\prod_{j=a+1}^{b} (1 - q^j).\n\nSince each factor 1 - q^j is a nonzero polynomial, these products are invertible in the rational function field Z(q). Therefore,\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{j=r+a+1}^{r+b} (1 - q^j)}{\\prod_{j=a+1}^{b} (1 - q^j)}.\n\nNow reindex the numerator by writing j = r+i. As j runs from r+a+1 to r+b, the index i runs from a+1 to b. Hence\n\\prod_{j=r+a+1}^{r+b} (1 - q^j) = \\prod_{i=a+1}^{b} (1 - q^{r+i}).\nSubstituting this gives\n((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\n= \\frac{\\prod_{i=a+1}^{b} (1 - q^{r+i})}{\\prod_{i=a+1}^{b} (1 - q^i)}\n= \\prod_{i=a+1}^{b} \\frac{1 - q^{r+i}}{1 - q^i}\n= P_{a,b,r}(q),\nwhere the last equality is exactly the definition of P_{a,b,r}(q).\n\nThus, in all cases,\nP_{a,b,r}(q) = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b)\nin the rational function field Z(q).\n\n2. lem_20260329092508_dde83cd9: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, and set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b). Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then for every integer d with 1 <= d <= r+b, the integer e_d := floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d) is nonnegative, and one has the cyclotomic factorization R_{a,b,r}(q) = product_{d=1}^{r+b} Phi_d(q)^(e_d), where Phi_d(q) is the d-th cyclotomic polynomial. In particular, R_{a,b,r}(q) belongs to Z[q].\nSet e_d := floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d). The hypothesis says that for every positive integer d,\nfloor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).\nRearranging gives\n e_d = [floor((r+b)/d) - floor((r+a)/d)] - [floor(b/d) - floor(a/d)] >= 0.\nThus e_d is a nonnegative integer for every positive d, and in particular for every d with 1 <= d <= r+b.\n\nNow rewrite R_{a,b,r}(q). From the definition (q;q)_n = product_{j=1}^n (1-q^j), we have\n (q;q)_{r+b}/(q;q)_{r+a} = product_{m=r+a+1}^{r+b} (1-q^m),\nwhile\n (q;q)_a/(q;q)_b = 1 / product_{j=a+1}^{b} (1-q^j).\nTherefore\n R_{a,b,r}(q) = product_{j=a+1}^{b} ((1-q^{r+j})/(1-q^j)),\nwith the usual empty-product value 1 when a=b.\n\nFor each integer m >= 1, use the standard cyclotomic factorization\n q^m - 1 = product_{d|m} Phi_d(q).\nThen\n 1 - q^m = -(q^m - 1) = - product_{d|m} Phi_d(q).\nHence for each j,\n (1-q^{r+j})/(1-q^j)\n = [ - product_{d|(r+j)} Phi_d(q) ] / [ - product_{d|j} Phi_d(q) ]\n = product_{d|(r+j)} Phi_d(q) * product_{d|j} Phi_d(q)^(-1).\nMultiplying these identities over j = a+1, ..., b and collecting equal cyclotomic factors, the exponent of Phi_d(q) in the total product is\n c_d := #{j : a < j <= b, d | (r+j)} - #{j : a < j <= b, d | j}.\n\nThe first count is the number of multiples of d in the interval [r+a+1, r+b], so\n #{j : a < j <= b, d | (r+j)} = floor((r+b)/d) - floor((r+a)/d).\nThe second count is the number of multiples of d in [a+1, b], so\n #{j : a < j <= b, d | j} = floor(b/d) - floor(a/d).\nTherefore\n c_d = floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d) = e_d.\n\nIf d > r+b, then both counts are 0, because every integer occurring in the two intervals is at most r+b. Hence c_d = 0 for d > r+b. Thus the factorization is finite and equals\n R_{a,b,r}(q) = product_{d=1}^{r+b} Phi_d(q)^(e_d).\nThis is exactly the asserted cyclotomic factorization.\n\nFinally, each e_d is a nonnegative integer, and each cyclotomic polynomial Phi_d(q) lies in Z[q]. Therefore the finite product product_{d=1}^{r+b} Phi_d(q)^(e_d) belongs to Z[q]. Hence R_{a,b,r}(q) belongs to Z[q].\n\n3. lem_20260329092532_2c3e34d7: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Then the rational-function identity q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q) holds in Z(q). Consequently, whenever R_{a,b,r}(q) belongs to Z[q], there exist integers c_0, ..., c_D such that R_{a,b,r}(q) = sum_{j=0}^D c_j q^j and c_j = c_{D-j} for every j with 0 <= j <= D.\nFirst note that D = r(b-a) is a nonnegative integer.\n\nIf a = b, then\nR_{a,b,r}(q) = ((q;q)_{r+a}(q;q)_a)/((q;q)_{r+a}(q;q)_a) = 1,\nand D = 0. Hence q^D R_{a,b,r}(q^(-1)) = 1 = R_{a,b,r}(q). If R_{a,b,r}(q) lies in Z[q], we may take c_0 = 1, and the required symmetry is immediate.\n\nIt remains to treat the case a < b. From the definition of (q;q)_n,\n(q;q)_{r+b} / (q;q)_{r+a} = product_{t=r+a+1}^{r+b} (1 - q^t) = product_{i=a+1}^{b} (1 - q^(r+i)),\nand\n(q;q)_a / (q;q)_b = 1 / product_{i=a+1}^{b} (1 - q^i).\nTherefore\nR_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).\n\nEvaluate at q^(-1). For each i,\n(1 - q^(-(r+i))) / (1 - q^(-i)) = (-q^(-(r+i))(1 - q^(r+i))) / (-q^(-i)(1 - q^i)) = q^(-r) (1 - q^(r+i)) / (1 - q^i).\nMultiplying these identities for i = a+1, ..., b gives\nR_{a,b,r}(q^(-1)) = product_{i=a+1}^{b} q^(-r) (1 - q^(r+i)) / (1 - q^i)\n= q^(-r(b-a)) product_{i=a+1}^{b} (1 - q^(r+i)) / (1 - q^i)\n= q^(-D) R_{a,b,r}(q).\nMultiplying by q^D yields the rational-function identity\nq^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q)\nin Z(q).\n\nNow assume additionally that R_{a,b,r}(q) belongs to Z[q]. Since each factor 1 - q^m is a nonzero polynomial, the quotient defining R_{a,b,r}(q) is nonzero in Z(q); hence, when it lies in Z[q], it is a nonzero polynomial. Write\nR_{a,b,r}(q) = sum_{j=0}^{m} d_j q^j\nwith d_m != 0 and each d_j in Z.\nThe self-reciprocity identity gives\nsum_{j=0}^{m} d_j q^j = q^D R_{a,b,r}(q^(-1)) = sum_{j=0}^{m} d_j q^(D-j).\nIf some d_j with j > D were nonzero, then the right-hand side would contain the negative power q^(D-j). These exponents D-j are all distinct, so such a negative-power term could not cancel with any other term. But the left-hand side is an ordinary polynomial and has no negative powers. Therefore d_j = 0 for every j > D, so m <= D.\n\nNow define integers c_0, ..., c_D by c_j = d_j for 0 <= j <= m and c_j = 0 for m < j <= D. Then\nR_{a,b,r}(q) = sum_{j=0}^{D} c_j q^j.\nUsing again q^D R_{a,b,r}(q^(-1)) = R_{a,b,r}(q), we get\nsum_{j=0}^{D} c_j q^j = q^D R_{a,b,r}(q^(-1)) = sum_{j=0}^{D} c_j q^(D-j) = sum_{j=0}^{D} c_{D-j} q^j,\nwhere the last equality is the reindexing j -> D-j. Since equal polynomials have equal coefficients, c_j = c_{D-j} for every 0 <= j <= D.\n\nThis proves both the rational-function identity and the palindromic coefficient statement.\n\n4. lem_20260329092547_6a64d34a: For integers a, b, r with 0 <= a <= b and r >= 0, let q be an indeterminate, define (q;q)_n := product_{j=1}^n (1 - q^j) for n >= 0 with (q;q)_0 := 1, set R_{a,b,r}(q) := ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b), and define D := r (b - a). Assume that R_{a,b,r}(q) belongs to Z[q]. Then for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer.\nLet N := r+a+b. Since 0 <= a <= b and r >= 0, we have N >= b >= a >= 0; in particular 0 <= a <= N and 0 <= b <= N, and also N-a = r+b >= 0 and N-b = r+a >= 0. By the standard polynomial form of Gaussian q-binomial coefficients, for 0 <= t <= N one has [N choose t]_q = (q;q)_N / ((q;q)_t (q;q)_{N-t}). Therefore\n[N choose b]_q / [N choose a]_q = ((q;q)_N / ((q;q)_b (q;q)_{N-b})) / ((q;q)_N / ((q;q)_a (q;q)_{N-a})) = ((q;q)_a (q;q)_{N-a}) / ((q;q)_b (q;q)_{N-b}).\nUsing N-a = r+b and N-b = r+a, this becomes\n[N choose b]_q / [N choose a]_q = ((q;q)_{r+b} (q;q)_a) / ((q;q)_{r+a} (q;q)_b) = R_{a,b,r}(q).\nThus R_{a,b,r}(q) is exactly a quotient of two Gaussian q-binomial coefficients. By hypothesis R_{a,b,r}(q) belongs to Z[q], so this quotient is a polynomial in q. Applying the allowed semantic anchor with n = N, k = b, and l = a, we conclude that every coefficient of R_{a,b,r}(q) is nonnegative. Since R_{a,b,r}(q) is in Z[q], all of its coefficients are integers. Therefore, for every integer j with 0 <= j <= floor(D/2), the coefficient of q^j in R_{a,b,r}(q) is a nonnegative integer. This proves the lemma.\n\n5. lem_20260329092603_a2bb7a49: Let D be a nonnegative integer, and let F(q) = sum_{j=0}^D c_j q^j be a polynomial in Z[q]. Assume that c_j = c_{D-j} for every integer j with 0 <= j <= D, and assume also that c_j >= 0 for every integer j with 0 <= j <= floor(D/2). Then c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.\nLet j be any integer with 0 <= j <= D. We will prove that c_j >= 0.\n\nIf j <= floor(D/2), then c_j >= 0 by the given hypothesis on the first half of the coefficients.\n\nNow suppose j > floor(D/2). We claim that D - j <= floor(D/2). Indeed, if D - j were also > floor(D/2), then, since j and D-j are integers, we would have j >= floor(D/2) + 1 and D - j >= floor(D/2) + 1. Adding these inequalities gives\nD = j + (D-j) >= 2 floor(D/2) + 2.\nBut 2 floor(D/2) is either D or D-1, so 2 floor(D/2) + 2 > D, a contradiction. Therefore D-j <= floor(D/2). Also D-j >= 0 because j <= D.\n\nHence 0 <= D-j <= floor(D/2), so by the hypothesis on the first half of the coefficients we get c_{D-j} >= 0. Using the symmetry hypothesis, c_j = c_{D-j}, and therefore c_j >= 0.\n\nSince j was arbitrary, we have proved that c_j >= 0 for every integer j with 0 <= j <= D. Equivalently, every coefficient of F(q) is nonnegative.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.721545+00:00",
+    "proof_nl_synthesized": true
+  },
+  "resolution_mode": "subdecomposition",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, r are integers",
+      "0 <= a <= b",
+      "r >= 0",
+      "d ranges over positive integers",
+      "q is a formal indeterminate, not a numeric parameter",
+      "The product index i is an integer",
+      "If a = b, the product is empty and equals 1"
+    ],
+    "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+    "quantifier_order": [
+      "For all integers a, b, r with 0 <= a <= b and r >= 0",
+      "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+      "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+      "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable for the polynomial ring over the integers",
+        "name": "q",
+        "role": "variable in the generating product",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "universally quantified test divisor",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a + 1 through b",
+        "name": "i",
+        "role": "product index",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+    ]
+  },
+  "source_artifacts": [
+    "asm_20260329092952_b707d3d0"
+  ],
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+  "status_snapshot": {
+    "controller_status": "failed",
+    "final_check_job_id": null,
+    "final_check_passed": false,
+    "invalidated_by_counterexample_id": null,
+    "invalidated_by_lemma_id": "lem_20260329092547_6a64d34a",
+    "lean_assembly_status": "skipped",
+    "llm_vetting_status": "accepted",
+    "logical_decomposition_id": "logdec_lem_20260329074016_d9949d95",
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/decompositions/dec_20260329092952_81e5be99.json",
+    "revision_number": 1,
+    "updated_at": "2026-03-29T13:31:43.781258+00:00"
+  }
+}

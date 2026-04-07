@@ -1,0 +1,99 @@
+{
+  "children": [],
+  "decomposition": null,
+  "kind": "lemma",
+  "node_id": "lem_20260329074016_d9949d95",
+  "proof_nl": "Let n := a + b + r, and for m >= 0 write (q)_m := product_{j=1}^m (1 - q^j). Then\nP_{a,b,r}(q) = ((q)_{r+b}/(q)_{r+a}) / ((q)_b/(q)_a) = (q)_{r+b}(q)_a / ((q)_{r+a}(q)_b).\nUsing the standard formula for Gaussian q-binomial coefficients,\n[N choose K]_q = (q)_N / ((q)_K (q)_{N-K}),\nwe obtain\n[n choose b]_q / [n choose a]_q = (q)_a (q)_{n-a} / ((q)_b (q)_{n-b}).\nSince n - a = r + b and n - b = r + a, this is exactly\n(q)_{r+b}(q)_a / ((q)_{r+a}(q)_b) = P_{a,b,r}(q).\nSo P_{a,b,r}(q) is a quotient of two Gaussian q-binomial coefficients with the same top n.\n\nNow we prove that this quotient is a polynomial. Fix a positive integer d, and let e_d be the exponent of the cyclotomic polynomial Phi_d(q) in P_{a,b,r}(q). In the product (q)_m = product_{j=1}^m (1 - q^j), the factor Phi_d(q) appears once for each j divisible by d; hence its exponent in (q)_m is floor(m/d). Therefore\n\ne_d = floor((r+b)/d) + floor(a/d) - floor((r+a)/d) - floor(b/d)\n    = (floor((r+b)/d) - floor((r+a)/d)) - (floor(b/d) - floor(a/d)).\n\nBy the hypothesis, this number is >= 0 for every positive integer d. Also e_d = 0 for d > r+b, so only finitely many e_d are nonzero. Hence\nP_{a,b,r}(q) = product_{d >= 1} Phi_d(q)^{e_d}\nbelongs to Z[q].\n\nFinally, 0 <= a <= b <= n, and we have shown that\nP_{a,b,r}(q) = [n choose b]_q / [n choose a]_q\nis a polynomial in q. Applying the allowed dependency root_semantic_sketch with k = b and l = a, we conclude that every coefficient of this polynomial is nonnegative. Therefore P_{a,b,r}(q) is a polynomial in Z[q], and all of its coefficients are at least 0.",
+  "provenance": {
+    "bundle_source": "runtime",
+    "generated_at": "2026-03-30T02:45:32.767774+00:00",
+    "proof_nl_synthesized": false
+  },
+  "resolution_mode": "direct_solver",
+  "semantic_sketch": {
+    "domain_restrictions": [
+      "a, b, r are integers",
+      "0 <= a <= b",
+      "r >= 0",
+      "d ranges over positive integers",
+      "q is a formal indeterminate, not a numeric parameter",
+      "The product index i is an integer",
+      "If a = b, the product is empty and equals 1"
+    ],
+    "normalized_claim": "If integers a, b, r satisfy 0 <= a <= b and r >= 0, and if for every positive integer d the floor inequality floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d) holds, then the finite product from i = a + 1 to b of (1 - q to the power r + i) divided by (1 - q to the power i) is a polynomial with integer coefficients, and every coefficient is at least 0.",
+    "quantifier_order": [
+      "For all integers a, b, r with 0 <= a <= b and r >= 0",
+      "Define P of a, b, r at q by the finite product over i from a + 1 to b, with empty product equal to 1 when a = b",
+      "For all positive integers d, the floor inequality holds: floor((r + b) / d) - floor((r + a) / d) >= floor(b / d) - floor(a / d)",
+      "Then P of a, b, r at q is a polynomial in the integer polynomial ring and all of its coefficients are nonnegative"
+    ],
+    "variables": [
+      {
+        "domain": "integers",
+        "name": "a",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "integers",
+        "name": "b",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "nonnegative integers",
+        "name": "r",
+        "role": "parameter",
+        "type": "integer"
+      },
+      {
+        "domain": "formal variable for the polynomial ring over the integers",
+        "name": "q",
+        "role": "variable in the generating product",
+        "type": "indeterminate"
+      },
+      {
+        "domain": "positive integers",
+        "name": "d",
+        "role": "universally quantified test divisor",
+        "type": "integer"
+      },
+      {
+        "domain": "integers from a + 1 through b",
+        "name": "i",
+        "role": "product index",
+        "type": "integer"
+      }
+    ],
+    "witness_dependencies": [
+      "No existential witnesses are asserted; the statement is a universal implication from the floor condition to polynomiality and coefficient nonnegativity"
+    ]
+  },
+  "source_artifacts": [],
+  "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+  "status_snapshot": {
+    "active_counterexample_id": null,
+    "consecutive_fatal_rejections": 1,
+    "consecutive_infrastructure_failures": 0,
+    "counterexample_status": "none",
+    "decomposition_round_count": 2,
+    "last_activity_at": "2026-03-29T13:31:56.536300+00:00",
+    "last_terminal_worker_result": "agent4:failed_infra",
+    "last_transition_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+    "latest_lean_result_id": null,
+    "latest_vetter_report_id": null,
+    "lean_attempt_count": 0,
+    "lean_identical_fatal_count": 0,
+    "materialized_candidate_count": 2,
+    "minor_rejection_count": 0,
+    "next_action": "invalidate_parent_decomposition",
+    "promoted_decomposition_count": 1,
+    "proof_bundle_artifact_id": "problems/prob_20260329070041_6d17b9b1/proof_bundles/lemmas/lem_20260329074016_d9949d95.json",
+    "proof_status": "failed",
+    "routing_status": "blocked",
+    "solver_attempt_count": 2,
+    "statement_status": "false",
+    "truth_status": "false",
+    "updated_at": "2026-03-29T13:31:56.536300+00:00"
+  }
+}

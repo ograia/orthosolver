@@ -1,0 +1,1815 @@
+{
+  "artifact_prefix": "problems/prob_20260329070041_6d17b9b1/decomposer/attempt_20260330031519_6a6c8abc_track_1",
+  "attempt_count": 1,
+  "attempt_number": 3,
+  "completed_at": "2026-03-30T03:23:54.440542Z",
+  "continuation_generation": 2,
+  "controller_consumed_at": null,
+  "controller_consumed_by_execution_id": null,
+  "created_at": "2026-03-30T03:15:19.090563Z",
+  "error_payload": null,
+  "execution_id": "exec_20260330024418_f8bbd7be",
+  "handler_key": "agent2_root_generation",
+  "lease_expires_at": null,
+  "lease_owner": null,
+  "llm_override_key": null,
+  "max_attempts": 2,
+  "payload": {
+    "num_candidates": 1,
+    "previous_attempt_summaries": [
+      {
+        "controller_status": "failed",
+        "decision": "accepted",
+        "decomposition_id": "dec_20260329073907_f9f6a76b",
+        "disguised_difficulty": [],
+        "drift_severity": "none",
+        "equivalence_risk": "none",
+        "failure_mode": "accepted",
+        "failure_origin": "child_lemma_false",
+        "fixes_required": [],
+        "full_candidate": {
+          "assembly_plan": {
+            "final_step_yields_exact_root": true,
+            "proof_skeleton_nl": "Fix integers n, k, l with 0 <= k, l <= n and assume that [n choose k]_q / [n choose l]_q is a polynomial. First use the symmetry [n choose r]_q = [n choose n-r]_q to replace k and l by k' = min(k, n-k) and l' = min(l, n-l); this leaves the quotient unchanged and puts both indices in the first half of [0,n]. Since the reduced quotient is still a polynomial, a general degree argument shows that the degree of its numerator is at least the degree of its denominator. Using deg([n choose r]_q) = r(n-r), this becomes k'(n-k') >= l'(n-l'). On the first half of the interval, the quadratic r(n-r) is increasing, so k' >= l'. Writing a = l', b = k', and r = n-a-b, the reduced quotient becomes the shifted interval q-factorial ratio product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)). Cyclotomic counting then turns the assumption that this product is a polynomial into the floor inequalities floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d. The bottleneck lemma asserts that any shifted interval product satisfying those inequalities has nonnegative coefficients. Applying that lemma to the reduced quotient and then substituting back yields the original theorem.",
+            "steps": [
+              {
+                "derives": "Let k' := min(k, n-k) and l' := min(l, n-l). Then [n choose k]_q / [n choose l]_q = [n choose k']_q / [n choose l']_q. Also 0 <= k', 0 <= l', 2*k' <= n, and 2*l' <= n.",
+                "is_trivial": false,
+                "step_id": "A1",
+                "trivial_justification": "Apply the symmetry [n choose r]_q = [n choose n-r]_q from L1 separately to r = k and r = l. By definition of minimum, k' and l' lie in the first half of the interval [0,n], so 2*k' <= n and 2*l' <= n.",
+                "uses_lemmas": [
+                  "L1"
+                ],
+                "uses_prior_steps": []
+              },
+              {
+                "derives": "The two polynomials [n choose k']_q and [n choose l']_q are nonzero and have degrees k'(n-k') and l'(n-l') respectively.",
+                "is_trivial": false,
+                "step_id": "A2",
+                "trivial_justification": "Instantiate L2 first with r = k' and then with r = l'. This yields both nonzeroness and the exact degree formulas needed later.",
+                "uses_lemmas": [
+                  "L2"
+                ],
+                "uses_prior_steps": [
+                  "A1"
+                ]
+              },
+              {
+                "derives": "deg([n choose k']_q) >= deg([n choose l']_q).",
+                "is_trivial": false,
+                "step_id": "A3",
+                "trivial_justification": "By the theorem hypothesis, the original quotient [n choose k]_q / [n choose l]_q is a polynomial in Z[q]. By A1, the reduced quotient [n choose k']_q / [n choose l']_q is the same polynomial. Since A2 shows that both numerator and denominator are nonzero polynomials, L3 applies and gives the degree inequality.",
+                "uses_lemmas": [
+                  "L3"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A2"
+                ]
+              },
+              {
+                "derives": "k'(n-k') >= l'(n-l').",
+                "is_trivial": true,
+                "step_id": "A4",
+                "trivial_justification": "Substitute the explicit degree formulas from A2 into the inequality of A3.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A2",
+                  "A3"
+                ]
+              },
+              {
+                "derives": "k' >= l'. If we set a := l' and b := k', then 0 <= a <= b and a + b <= n.",
+                "is_trivial": false,
+                "step_id": "A5",
+                "trivial_justification": "A1 gives 2*k' <= n and 2*l' <= n, so k' and l' satisfy the first-half hypotheses of L4. Applying L4 to the inequality from A4 shows k' >= l'. Defining a := l' and b := k' then gives 0 <= a <= b, and a + b <= 2*b <= n.",
+                "uses_lemmas": [
+                  "L4"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A4"
+                ]
+              },
+              {
+                "derives": "With a := l', b := k', and r := n-a-b, the original quotient satisfies [n choose k]_q / [n choose l]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).",
+                "is_trivial": false,
+                "step_id": "A6",
+                "trivial_justification": "By A5, the integers a and b satisfy 0 <= a <= b and a + b <= n, so L5 applies. It rewrites the reduced quotient [n choose b]_q / [n choose a]_q as the shifted interval product with r = n-a-b. Using A1, this reduced quotient is exactly the original quotient.",
+                "uses_lemmas": [
+                  "L5"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A5"
+                ]
+              },
+              {
+                "derives": "For every positive integer d, floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).",
+                "is_trivial": false,
+                "step_id": "A7",
+                "trivial_justification": "The theorem hypothesis says that the original quotient is a polynomial in Z[q]. By A6, that quotient is exactly P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)). Applying L6 to this product yields the required family of floor inequalities.",
+                "uses_lemmas": [
+                  "L6"
+                ],
+                "uses_prior_steps": [
+                  "A6"
+                ]
+              },
+              {
+                "derives": "The product product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) is a polynomial in Z[q] whose coefficients are all nonnegative.",
+                "is_trivial": false,
+                "step_id": "A8",
+                "trivial_justification": "A7 gives exactly the hypothesis required in L7 for the parameters a, b, r. Therefore L7 implies that the shifted interval product has nonnegative coefficients.",
+                "uses_lemmas": [
+                  "L7"
+                ],
+                "uses_prior_steps": [
+                  "A7"
+                ]
+              },
+              {
+                "derives": "The polynomial [n choose k]_q / [n choose l]_q has all coefficients nonnegative.",
+                "is_trivial": true,
+                "step_id": "A9",
+                "trivial_justification": "By A6, the original quotient equals the shifted interval product. By A8, that product has only nonnegative coefficients. Therefore the original quotient has only nonnegative coefficients.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A6",
+                  "A8"
+                ]
+              }
+            ]
+          },
+          "candidate_index": 0,
+          "context_items": [
+            {
+              "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+              "kind": "definition",
+              "label": "qPochhammer"
+            },
+            {
+              "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+              "kind": "definition",
+              "label": "gaussianQBinomial"
+            },
+            {
+              "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+              "kind": "notation",
+              "label": "integerPolynomialRing"
+            },
+            {
+              "content": "A product over an empty index set is interpreted as 1.",
+              "kind": "notation",
+              "label": "emptyProduct"
+            }
+          ],
+          "drift_self_check": {
+            "all_lemmas_consistent_with_root_sketch": true,
+            "inconsistencies_noted": []
+          },
+          "formalization_cost_estimate_total": 0.81,
+          "lemmas": [
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.05,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L1",
+              "proof_nl": null,
+              "role_in_assembly": "Allows replacement of k and l by k' := min(k, n-k) and l' := min(l, n-l) without changing the quotient.",
+              "self_check_notes": "All nonstandard notation is defined inside the statement; no hidden references are used.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                  "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+                ],
+                "normalized_claim": "[n choose r]_q = [n choose n-r]_q in Z[q].",
+                "quantifier_order": [
+                  "For all integers n and r",
+                  "assume 0 <= r <= n"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "upper index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "lower index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n and r with 0 <= r <= n, if the Gaussian q-binomial coefficient is defined by [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1, then [n choose r]_q = [n choose n-r]_q as polynomials in q.",
+              "strictly_easier_reason": "This is the basic complement symmetry of Gaussian binomial coefficients; it has no divisibility or positivity content."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.08,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L2",
+              "proof_nl": null,
+              "role_in_assembly": "Provides explicit degrees and nonzeroness for the reduced numerator and denominator.",
+              "self_check_notes": "The statement defines every nonstandard symbol locally and is independent of the parent theorem.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                  "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+                ],
+                "normalized_claim": "[n choose r]_q belongs to Z[q], is nonzero, and has degree r(n-r).",
+                "quantifier_order": [
+                  "For all integers n and r",
+                  "assume 0 <= r <= n"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "upper index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "lower index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1, is a nonzero polynomial in Z[q] of degree r(n-r).",
+              "strictly_easier_reason": "This is a standard structural fact about a single Gaussian q-binomial coefficient; it does not involve any quotient positivity."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.05,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L3",
+              "proof_nl": null,
+              "role_in_assembly": "Converts the assumption that the reduced quotient is a polynomial into an inequality between the degrees of its numerator and denominator.",
+              "self_check_notes": "Only standard polynomial notation is used; no hidden theorem references appear.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "A(q) and B(q) are nonzero integer-coefficient polynomials"
+                ],
+                "normalized_claim": "deg(A) >= deg(B).",
+                "quantifier_order": [
+                  "For all polynomials A(q) and B(q) in Z[q]",
+                  "assume A(q) != 0 and B(q) != 0",
+                  "assume A(q)/B(q) lies in Z[q]"
+                ],
+                "variables": [
+                  {
+                    "domain": "Z[q]",
+                    "name": "A",
+                    "role": "numerator polynomial",
+                    "type": "polynomial"
+                  },
+                  {
+                    "domain": "Z[q]",
+                    "name": "B",
+                    "role": "denominator polynomial",
+                    "type": "polynomial"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let A(q) and B(q) be nonzero polynomials in Z[q]. If the rational function A(q) / B(q) is itself a polynomial in Z[q], then deg(A) >= deg(B).",
+              "strictly_easier_reason": "This is a general algebraic fact about polynomial division and degrees, unrelated to Gaussian-specific positivity."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.06,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L4",
+              "proof_nl": null,
+              "role_in_assembly": "After symmetrization into the first half, turns the degree inequality into an ordering k' >= l'.",
+              "self_check_notes": "The lemma is a self-contained arithmetic fact; no notation from other lemmas is needed.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "a and b lie in the integer interval [0, n/2]"
+                ],
+                "normalized_claim": "a >= b.",
+                "quantifier_order": [
+                  "For all integers n, a, b",
+                  "assume 0 <= a and 0 <= b",
+                  "assume 2*a <= n and 2*b <= n",
+                  "assume a(n-a) >= b(n-b)"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "ambient size parameter",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "first index in the first half of [0,n]",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "second index in the first half of [0,n]",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n, a, b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+              "strictly_easier_reason": "This is a one-variable quadratic monotonicity statement on integers, with no q-series content."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.12,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L5",
+              "proof_nl": null,
+              "role_in_assembly": "Rewrites the reduced Gaussian quotient as the canonical shifted interval q-factorial ratio P_{a,b,r}(q).",
+              "self_check_notes": "All objects are defined in the statement, including the shift r and the empty-product convention.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t})",
+                  "(q;q)_m := product_{j=1}^m (1 - q^j), with (q;q)_0 := 1",
+                  "empty products are interpreted as 1"
+                ],
+                "normalized_claim": "[n choose b]_q / [n choose a]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).",
+                "quantifier_order": [
+                  "For all integers n, a, b, r",
+                  "assume 0 <= a <= b",
+                  "assume a + b <= n",
+                  "assume r = n - a - b"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "ambient size parameter",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "smaller lower index",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "larger lower index",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift parameter defined by r = n-a-b",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For integers n, a, b with 0 <= a <= b and a + b <= n, define r := n - a - b. Then the quotient of Gaussian q-binomial coefficients satisfies [n choose b]_q / [n choose a]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), where [n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t}), (q;q)_m := product_{j=1}^m (1 - q^j), (q;q)_0 := 1, and an empty product is interpreted as 1.",
+              "strictly_easier_reason": "This is an exact algebraic cancellation identity; it does not address when the quotient is polynomial or whether coefficients are positive."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.25,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L6",
+              "proof_nl": null,
+              "role_in_assembly": "Converts polynomiality of the shifted interval product into explicit floor inequalities counting multiples in the shifted and unshifted intervals.",
+              "self_check_notes": "The product P_{a,b,r}(q) and the floor inequalities are fully stated locally; no external definitions are needed.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i))",
+                  "empty products are interpreted as 1"
+                ],
+                "normalized_claim": "P_{a,b,r}(q) lies in Z[q] iff floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d) for every positive integer d.",
+                "quantifier_order": [
+                  "For all integers a, b, r",
+                  "assume 0 <= a <= b and r >= 0",
+                  "for every positive integer d"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "left endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "right endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift from denominator interval to numerator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "positive integers",
+                    "name": "d",
+                    "role": "test modulus in the floor-count condition",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Then P_{a,b,r}(q) belongs to Z[q] if and only if for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d).",
+              "strictly_easier_reason": "This is a cyclotomic-divisibility criterion; it is about when the quotient is a polynomial, not about coefficient positivity."
+            },
+            {
+              "bottleneck_reason": "After symmetry reduction, degree ordering, and algebraic rewriting, the original theorem is exactly reduced to this positivity statement for shifted interval q-factorial ratios under the floor-count condition.",
+              "formalization_cost_estimate": 0.83,
+              "lemma_relation_to_parent": "bottleneck",
+              "local_id": "L7",
+              "proof_nl": null,
+              "role_in_assembly": "This is the main positivity theorem for the reduced shifted interval product; once established, the parent theorem follows immediately from the reductions.",
+              "self_check_notes": "The hard floor condition is stated explicitly; the lemma is fully local and does not refer to any other lemma.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i))",
+                  "empty products are interpreted as 1"
+                ],
+                "normalized_claim": "P_{a,b,r}(q) belongs to Z[q], and all coefficients of P_{a,b,r}(q) are nonnegative.",
+                "quantifier_order": [
+                  "For all integers a, b, r",
+                  "assume 0 <= a <= b and r >= 0",
+                  "assume for every positive integer d that floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d)"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "left endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "right endpoint offset for the denominator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift from denominator interval to numerator interval",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "positive integers",
+                    "name": "d",
+                    "role": "test modulus in the floor-count condition",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+              "strictly_easier_reason": null
+            }
+          ],
+          "shared_context": [
+            {
+              "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+              "kind": "definition",
+              "label": "qPochhammer"
+            },
+            {
+              "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+              "kind": "definition",
+              "label": "gaussianQBinomial"
+            },
+            {
+              "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+              "kind": "notation",
+              "label": "integerPolynomialRing"
+            },
+            {
+              "content": "A product over an empty index set is interpreted as 1.",
+              "kind": "notation",
+              "label": "emptyProduct"
+            }
+          ],
+          "strategy_summary": "Reduce the Gaussian quotient to the height-zero q-factorial ratio P_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) by complement symmetry and degree monotonicity on the first half of the index range. Then use cyclotomic-factor counting to convert polynomiality into explicit floor inequalities counting multiples in two equal-length intervals. The remaining frontier step is an isolated positivity theorem for these shifted interval products."
+        },
+        "invalidated_by_lemma_id": "lem_20260329074016_d9949d95",
+        "invalidated_by_statement_nl": "Let a, b, r be integers with 0 <= a <= b and r >= 0. Define P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), with empty product equal to 1. Assume that for every positive integer d one has floor((r+b)/d) - floor((r+a)/d) >= floor(b/d) - floor(a/d). Then P_{a,b,r}(q) is a polynomial in Z[q], and every coefficient of P_{a,b,r}(q) is nonnegative.",
+        "lean_assembly_status": "skipped",
+        "lean_v2_prepare_status": null,
+        "llm_vetting_status": "accepted",
+        "missing_coverage": [],
+        "rejection_reason": "The submitted proof is empty, and the lemma statement is refuted by the supplied counterexample. For b=3 and (e_1,e_2,e_3)=(1,1,6), the divisibility hypothesis holds for every positive integer d: for d=1,2,3 both sides are equal, and for d>=4 the right-hand side is 0. But in S=Q[y_1,y_2,y_3] with weighted degrees deg(y_i)=i, the homogeneous degree-1 subspace is one-dimensional, spanned by y_1. Hence any homogeneous u_1,u_2 of degree 1 are proportional. If u_1=0 then the sequence is not regular; if u_1!=0 then u_2 lies in (u_1), so its image in S/(u_1) is 0, which is not a non-zero-divisor in the nonzero ring S/(u_1). Therefore no regular sequence u_1,u_2,u_3 with degrees 1,1,6 exists.",
+        "source_lineage_depth": 0,
+        "source_node_id": "thm_root_20260329070041_7bd7b795",
+        "source_node_kind": "theorem",
+        "source_relation": "current_node",
+        "source_statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+        "strategy_summary": "Reduce the Gaussian quotient to the height-zero q-factorial ratio P_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) by complement symmetry and degree monotonicity on the first half of the index range. Then use cyclotomic-factor counting to convert polynomiality into explicit floor inequalities counting multiples in two equal-length intervals. The remaining frontier step is an isolated positivity theorem for these shifted interval products.",
+        "vet_summary": "All seven lemmas are plausible and the assembly reaches the exact root claim. The reduction steps L1-L6 are standard and sufficient to put the quotient into the shifted-interval form required by L7. The only real proof burden is concentrated in L7, which is an explicitly identified bottleneck and is close to the normalized core of the parent theorem, but the surrounding lemmas are genuine simplifications rather than semantic noise."
+      },
+      {
+        "controller_status": "failed",
+        "decision": "minor_fix",
+        "decomposition_id": "dec_20260330030818_c19409c7",
+        "disguised_difficulty": [
+          "L7 carries nearly all of the nontrivial proof burden after standard reductions, but it is explicitly identified as the bottleneck rather than hidden."
+        ],
+        "drift_severity": "none",
+        "equivalence_risk": "none",
+        "failure_mode": "rejected_minor:failed",
+        "failure_origin": "agent3:minor_fix",
+        "fixes_required": [
+          "Handle the case b=a (equivalently k'=l') separately; then A5 already gives [n choose k]_q/[n choose l]_q=1.",
+          "Either extend L8 to the m=0 empty-sequence case or add a separate branch before A7-A9 for b=a.",
+          "Clarify explicitly in L7/A7 what is meant when the regular sequence is empty."
+        ],
+        "full_candidate": {
+          "assembly_plan": {
+            "final_step_yields_exact_root": true,
+            "proof_skeleton_nl": "Start with the original quotient and use complement symmetry to move both lower indices into the first half of the interval [0,n]. A degree comparison then forces the numerator index to be at least the denominator index in that first-half range. After renaming the indices as a <= b and writing r = n-a-b, the quotient becomes the balanced q-factorial ratio \\(([r+b]_q! [a]_q!)/([r+a]_q! [b]_q!)\\), equivalently the shifted product \\(\\prod_{i=a+1}^{b} (1-q^{r+i})/(1-q^i)\\).\n\nThe key change from the rejected strategy is that we do not try to prove positivity directly from divisibility or floor inequalities. Instead, define the explicit graded ring \\(R_{a,b} = \\mathbb{Q}[e_1,\\dots,e_b]/(e_1,\\dots,e_a)\\) and the canonical complete homogeneous elements \\(\\bar h_t\\) coming from the generating relation \\((\\sum (-1)^i e_i z^i)(\\sum h_t z^t)=1\\). The bottleneck lemma states that polynomiality of the shifted product implies that \\(\\bar h_{r+a+1},\\dots,\\bar h_{r+b}\\) is a regular sequence in \\(R_{a,b}\\). Once this is known, the standard Hilbert-series formula for quotienting by a homogeneous regular sequence shows that the Hilbert series of the resulting quotient ring is exactly the reduced quotient. Because a Hilbert series is by definition a sum of graded dimensions, all coefficients are nonnegative. Finally, substitute back the identity between the original Gaussian quotient and the reduced product to obtain the theorem exactly as stated.",
+            "steps": [
+              {
+                "derives": "Define k' := min(k, n-k) and l' := min(l, n-l). Then \\([n \\choose k]_q / [n \\choose l]_q = [n \\choose k']_q / [n \\choose l']_q\\). Also \\(0 \\le k'\\), \\(0 \\le l'\\), \\(2k' \\le n\\), and \\(2l' \\le n\\).",
+                "is_trivial": false,
+                "step_id": "A1",
+                "trivial_justification": "Apply the symmetry \\([n \\choose r]_q = [n \\choose n-r]_q\\) from L1 separately to r = k and r = l. By the definition of minimum, k' and l' lie in the first half of [0,n].",
+                "uses_lemmas": [
+                  "L1"
+                ],
+                "uses_prior_steps": []
+              },
+              {
+                "derives": "The polynomials \\([n \\choose k']_q\\) and \\([n \\choose l']_q\\) are nonzero, with degrees \\(k'(n-k')\\) and \\(l'(n-l')\\) respectively.",
+                "is_trivial": false,
+                "step_id": "A2",
+                "trivial_justification": "Instantiate L2 for r = k' and again for r = l'.",
+                "uses_lemmas": [
+                  "L2"
+                ],
+                "uses_prior_steps": [
+                  "A1"
+                ]
+              },
+              {
+                "derives": "\\(\\deg [n \\choose k']_q \\ge \\deg [n \\choose l']_q\\).",
+                "is_trivial": false,
+                "step_id": "A3",
+                "trivial_justification": "The theorem hypothesis says the original quotient is a polynomial in q. By A1 the reduced quotient is the same polynomial. Since A2 gives nonzeroness of numerator and denominator, L3 applies to the reduced quotient.",
+                "uses_lemmas": [
+                  "L3"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A2"
+                ]
+              },
+              {
+                "derives": "\\(k' \\ge l'\\). If we set \\(a := l'\\), \\(b := k'\\), and \\(r := n-a-b\\), then \\(0 \\le a \\le b\\) and \\(r \\ge 0\\).",
+                "is_trivial": false,
+                "step_id": "A4",
+                "trivial_justification": "From A2 and A3, one has \\(k'(n-k') \\ge l'(n-l')\\). The hypotheses \\(2k' \\le n\\) and \\(2l' \\le n\\) from A1 allow application of L4, yielding \\(k' \\ge l'\\). Therefore \\(a \\le b\\), and since \\(b \\le n/2\\), one gets \\(a+b \\le 2b \\le n\\), hence \\(r = n-a-b \\ge 0\\).",
+                "uses_lemmas": [
+                  "L4"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A2",
+                  "A3"
+                ]
+              },
+              {
+                "derives": "The original quotient equals the balanced q-factorial ratio\n\\[\n\\frac{[n \\choose k]_q}{[n \\choose l]_q}\n= \\frac{[n \\choose b]_q}{[n \\choose a]_q}\n= \\frac{[r+b]_q!\\,[a]_q!}{[r+a]_q!\\,[b]_q!}\n= \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\n\\]",
+                "is_trivial": false,
+                "step_id": "A5",
+                "trivial_justification": "By A4, the integers a and b satisfy 0 <= a <= b and a+b <= n, so L5 applies. A1 identifies the original quotient with the reduced quotient \\([n \\choose b]_q/[n \\choose a]_q\\).",
+                "uses_lemmas": [
+                  "L5"
+                ],
+                "uses_prior_steps": [
+                  "A1",
+                  "A4"
+                ]
+              },
+              {
+                "derives": "Define \\(\\Lambda_b := \\mathbb{Q}[e_1,\\dots,e_b]\\) with \\(\\deg e_i = i\\), define \\(R_{a,b} := \\Lambda_b/(e_1,\\dots,e_a)\\), and define \\(h_t\\) by \\((\\sum_{i=0}^{b} (-1)^i e_i z^i)(\\sum_{t\\ge 0} h_t z^t)=1\\), where \\(e_0 := 1\\). Let \\(\\bar h_t\\) be the image of \\(h_t\\) in \\(R_{a,b}\\). Then\n\\[\n\\operatorname{Hilb}(R_{a,b};q)=\\frac{1}{\\prod_{i=a+1}^{b}(1-q^i)},\n\\]\nand for each i with \\(a+1 \\le i \\le b\\), the element \\(\\bar h_{r+i}\\) is homogeneous of degree \\(r+i\\).",
+                "is_trivial": false,
+                "step_id": "A6",
+                "trivial_justification": "Apply L6 with the values a, b, and m = r+i for each relevant i. This provides both the ambient Hilbert series and the degrees of the canonical elements that will be quotiented out.",
+                "uses_lemmas": [
+                  "L6"
+                ],
+                "uses_prior_steps": [
+                  "A4"
+                ]
+              },
+              {
+                "derives": "The sequence \\(\\bar h_{r+a+1},\\bar h_{r+a+2},\\dots,\\bar h_{r+b}\\) is a regular sequence in the graded ring \\(R_{a,b}\\).",
+                "is_trivial": false,
+                "step_id": "A7",
+                "trivial_justification": "By the theorem hypothesis and A5, the product \\(\\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}\\) belongs to Z[q]. The ring \\(R_{a,b}\\) and the elements \\(\\bar h_t\\) are exactly those defined in L7, so L7 applies and yields regularity.",
+                "uses_lemmas": [
+                  "L7"
+                ],
+                "uses_prior_steps": [
+                  "A5"
+                ]
+              },
+              {
+                "derives": "The quotient ring \\(R_{a,b}/(\\bar h_{r+a+1},\\dots,\\bar h_{r+b})\\) has Hilbert series\n\\[\n\\operatorname{Hilb}(R_{a,b}/(\\bar h_{r+a+1},\\dots,\\bar h_{r+b});q)\n= \\frac{1}{\\prod_{i=a+1}^{b}(1-q^i)}\\prod_{i=a+1}^{b}(1-q^{r+i})\n= \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}.\n\\]",
+                "is_trivial": false,
+                "step_id": "A8",
+                "trivial_justification": "Use L8 with R = R_{a,b} and the homogeneous sequence \\(f_i := \\bar h_{r+i}\\) for i = a+1,...,b. A6 gives the Hilbert series of R and the degrees of the f_i, while A7 gives the regular-sequence hypotheses. Substituting these data into the formula of L8 yields the displayed product.",
+                "uses_lemmas": [
+                  "L8"
+                ],
+                "uses_prior_steps": [
+                  "A6",
+                  "A7"
+                ]
+              },
+              {
+                "derives": "Every coefficient of \\(\\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}\\) is a nonnegative integer.",
+                "is_trivial": true,
+                "step_id": "A9",
+                "trivial_justification": "By definition of Hilbert series, the coefficient of q^d in the polynomial from A8 is \\(\\dim_{\\mathbb Q}(R_{a,b}/(\\bar h_{r+a+1},\\dots,\\bar h_{r+b}))_d\\), which is nonnegative.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A8"
+                ]
+              },
+              {
+                "derives": "The polynomial \\([n \\choose k]_q / [n \\choose l]_q\\) has all coefficients nonnegative.",
+                "is_trivial": true,
+                "step_id": "A10",
+                "trivial_justification": "A5 identifies the original quotient with the product treated in A9, so the coefficientwise nonnegativity established there is exactly the desired conclusion.",
+                "uses_lemmas": [],
+                "uses_prior_steps": [
+                  "A5",
+                  "A9"
+                ]
+              }
+            ]
+          },
+          "candidate_index": 0,
+          "context_items": [
+            {
+              "content": "For an integer m >= 0, (q;q)_m means the product \\(\\prod_{i=1}^m (1-q^i)\\), and (q;q)_0 := 1.",
+              "kind": "definition",
+              "label": "qPochhammer"
+            },
+            {
+              "content": "For integers n,r with 0 <= r <= n, the Gaussian q-binomial coefficient is \\([n \\choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})\\).",
+              "kind": "definition",
+              "label": "gaussianQBinomial"
+            },
+            {
+              "content": "For an integer m >= 0, \\([m]_q! := \\prod_{i=1}^m \\frac{1-q^i}{1-q} = (q;q)_m/(1-q)^m\\).",
+              "kind": "definition",
+              "label": "qFactorial"
+            },
+            {
+              "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+              "kind": "notation",
+              "label": "integerPolynomialRing"
+            },
+            {
+              "content": "A product over an empty index set is interpreted as 1.",
+              "kind": "notation",
+              "label": "emptyProduct"
+            },
+            {
+              "content": "If \\(A=\\bigoplus_{d\\ge 0} A_d\\) is a graded Q-vector space with each \\(A_d\\) finite-dimensional, then \\(\\operatorname{Hilb}(A;q) := \\sum_{d\\ge 0} (\\dim_{\\mathbb Q} A_d) q^d\\).",
+              "kind": "definition",
+              "label": "hilbertSeries"
+            },
+            {
+              "content": "A finite sequence \\(f_1,\\dots,f_m\\) in a commutative ring R is regular if \\(f_1\\) is not a zero-divisor in R, for each j with 2 <= j <= m the image of \\(f_j\\) in \\(R/(f_1,\\dots,f_{j-1})\\) is not a zero-divisor, and the final quotient \\(R/(f_1,\\dots,f_m)\\) is not the zero ring.",
+              "kind": "definition",
+              "label": "regularSequence"
+            },
+            {
+              "content": "In the graded polynomial ring \\(\\Lambda_b := \\mathbb{Q}[e_1,\\dots,e_b]\\) with \\(\\deg e_i = i\\) and \\(e_0 := 1\\), the elements \\(h_m\\) are defined by the generating-series identity \\((\\sum_{i=0}^b (-1)^i e_i z^i)(\\sum_{m\\ge 0} h_m z^m)=1\\). These are the complete homogeneous symmetric functions expressed in the elementary generators.",
+              "kind": "definition",
+              "label": "completeHomogeneousFromElementary"
+            }
+          ],
+          "drift_self_check": {
+            "all_lemmas_consistent_with_root_sketch": true,
+            "inconsistencies_noted": []
+          },
+          "formalization_cost_estimate_total": 0.82,
+          "lemmas": [
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.05,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L1",
+              "proof_nl": null,
+              "role_in_assembly": "Allows replacement of k and l by their complements so both lower indices can be moved into the first half of the interval [0,n].",
+              "self_check_notes": "All nonstandard notation is defined locally; the statement is independent of the parent theorem.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                  "(q;q)_m := product_{i=1}^m (1-q^i), with (q;q)_0 := 1"
+                ],
+                "normalized_claim": "[n choose r]_q = [n choose n-r]_q in Z[q].",
+                "quantifier_order": [
+                  "For all integers n and r",
+                  "assume 0 <= r <= n"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "upper index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "lower index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n and r with 0 <= r <= n, define the Gaussian q-binomial coefficient by \\([n \\choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})\\), where \\((q;q)_m := \\prod_{i=1}^m (1-q^i)\\) and \\((q;q)_0 := 1\\). Then \\([n \\choose r]_q = [n \\choose n-r]_q\\) as polynomials in q.",
+              "strictly_easier_reason": "This is the basic complement symmetry of Gaussian q-binomial coefficients and has no quotient-positivity content."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.07,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L2",
+              "proof_nl": null,
+              "role_in_assembly": "Supplies the exact degree formula for the reduced numerator and denominator and guarantees they are nonzero.",
+              "self_check_notes": "The statement is fully local and uses only standard q-binomial notation defined in the statement itself.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[n choose r]_q is defined by (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                  "(q;q)_m := product_{i=1}^m (1-q^i), with (q;q)_0 := 1"
+                ],
+                "normalized_claim": "[n choose r]_q belongs to Z[q], is nonzero, and has degree r(n-r).",
+                "quantifier_order": [
+                  "For all integers n and r",
+                  "assume 0 <= r <= n"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "upper index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "lower index of the Gaussian q-binomial coefficient",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient \\([n \\choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})\\), where \\((q;q)_m := \\prod_{i=1}^m (1-q^i)\\) and \\((q;q)_0 := 1\\), is a nonzero polynomial in Z[q] of degree \\(r(n-r)\\).",
+              "strictly_easier_reason": "This is a standard structural fact about a single Gaussian q-binomial coefficient, unrelated to divisibility or coefficientwise positivity of a quotient."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.05,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L3",
+              "proof_nl": null,
+              "role_in_assembly": "Turns the polynomiality hypothesis for the reduced quotient into an inequality between the Gaussian degrees.",
+              "self_check_notes": "No hidden notation or cross-reference is used.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "A(q) and B(q) are nonzero integer-coefficient polynomials"
+                ],
+                "normalized_claim": "deg(A) >= deg(B).",
+                "quantifier_order": [
+                  "For all polynomials A(q) and B(q) in Z[q]",
+                  "assume A(q) != 0 and B(q) != 0",
+                  "assume A(q)/B(q) lies in Z[q]"
+                ],
+                "variables": [
+                  {
+                    "domain": "Z[q]",
+                    "name": "A",
+                    "role": "numerator polynomial",
+                    "type": "polynomial"
+                  },
+                  {
+                    "domain": "Z[q]",
+                    "name": "B",
+                    "role": "denominator polynomial",
+                    "type": "polynomial"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let A(q) and B(q) be nonzero polynomials in Z[q]. If the rational function A(q) / B(q) is itself a polynomial in Z[q], then \\(\\deg A \\ge \\deg B\\).",
+              "strictly_easier_reason": "This is a general algebraic degree fact about polynomial division; it does not involve Gaussian coefficients except through substitution."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.06,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L4",
+              "proof_nl": null,
+              "role_in_assembly": "After symmetrization into the first half of [0,n], converts the degree inequality into an ordering of the lower indices.",
+              "self_check_notes": "The lemma is self-contained and contains all hypotheses needed for the monotonicity argument.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "a and b lie in the integer interval [0,n/2]"
+                ],
+                "normalized_claim": "a >= b.",
+                "quantifier_order": [
+                  "For all integers n, a, and b",
+                  "assume 0 <= a and 0 <= b",
+                  "assume 2*a <= n and 2*b <= n",
+                  "assume a(n-a) >= b(n-b)"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "ambient size parameter",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "first index lying in the first half of [0,n]",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "second index lying in the first half of [0,n]",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For all integers n, a, and b with \\(0 \\le a\\), \\(0 \\le b\\), \\(2a \\le n\\), and \\(2b \\le n\\), if \\(a(n-a) \\ge b(n-b)\\), then \\(a \\ge b\\).",
+              "strictly_easier_reason": "This is a purely arithmetic monotonicity fact for the quadratic x(n-x) on the first half of the interval."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.1,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L5",
+              "proof_nl": null,
+              "role_in_assembly": "Rewrites the reduced quotient into the balanced q-factorial ratio that will be modeled by a Hilbert-series computation.",
+              "self_check_notes": "All notation, including q-factorials and the empty-product convention, is defined locally.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "[m]_q! := product_{j=1}^m (1-q^j)/(1-q)",
+                  "[n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t})",
+                  "(q;q)_m := product_{j=1}^m (1-q^j), with (q;q)_0 := 1",
+                  "empty products are interpreted as 1"
+                ],
+                "normalized_claim": "[n choose b]_q / [n choose a]_q = ([r+b]_q! [a]_q!)/([r+a]_q! [b]_q!) = product_{i=a+1}^{b} ((1-q^(r+i))/(1-q^i)).",
+                "quantifier_order": [
+                  "For all integers n, a, b, and r",
+                  "assume 0 <= a <= b",
+                  "assume a + b <= n",
+                  "assume r = n - a - b"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "n",
+                    "role": "ambient upper index",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "smaller lower index",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "larger lower index",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift parameter defined by r = n-a-b",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "For integers n, a, and b with \\(0 \\le a \\le b\\) and \\(a+b \\le n\\), define \\(r := n-a-b\\). Then the quotient of Gaussian q-binomial coefficients can be rewritten as\n\\[\n\\frac{[n \\choose b]_q}{[n \\choose a]_q}\n= \\frac{[r+b]_q!\\,[a]_q!}{[r+a]_q!\\,[b]_q!}\n= \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i},\n\\]\nwhere \\([m]_q! := \\prod_{j=1}^{m} \\frac{1-q^j}{1-q}\\), \\([n \\choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t})\\), \\((q;q)_m := \\prod_{j=1}^{m} (1-q^j)\\), \\((q;q)_0 := 1\\), and an empty product is interpreted as 1.",
+              "strictly_easier_reason": "This is an exact algebraic cancellation identity; it does not address positivity or regularity."
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.2,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L6",
+              "proof_nl": null,
+              "role_in_assembly": "Sets up the explicit graded ring whose denominator Hilbert series matches the denominator factors of the reduced quotient, and records the degrees of the canonical elements to be killed.",
+              "self_check_notes": "The ring, grading, Hilbert series, and the elements h_t are all defined locally in the statement.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "Lambda_b := Q[e_1,...,e_b] graded by deg e_i = i",
+                  "R_{a,b} := Lambda_b/(e_1,...,e_a)",
+                  "e_0 := 1",
+                  "the elements h_t are defined by (sum_{i=0}^b (-1)^i e_i z^i)(sum_{t>=0} h_t z^t)=1",
+                  "Hilb(A;q) := sum_{d>=0} dim_Q(A_d) q^d"
+                ],
+                "normalized_claim": "Hilb(R_{a,b};q) = 1 / product_{i=a+1}^{b} (1-q^i), and the image bar h_m of h_m in R_{a,b} is homogeneous of degree m.",
+                "quantifier_order": [
+                  "For all integers a, b, and m",
+                  "assume 0 <= a <= b",
+                  "assume m >= 0"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "number of elementary generators set to zero",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "total number of elementary generators",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "m",
+                    "role": "index of the complete homogeneous element whose image is considered",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let a, b, and m be integers with \\(0 \\le a \\le b\\) and \\(m \\ge 0\\). Define the graded polynomial ring \\(\\Lambda_b := \\mathbb{Q}[e_1,\\dots,e_b]\\) with \\(\\deg e_i = i\\), let \\(R_{a,b} := \\Lambda_b/(e_1,\\dots,e_a)\\), and define elements \\(h_t \\in \\Lambda_b\\) for \\(t \\ge 0\\) by the generating-series identity\n\\[\n\\left(\\sum_{i=0}^{b} (-1)^i e_i z^i\\right)\\left(\\sum_{t\\ge 0} h_t z^t\\right)=1,\n\\]\nwhere \\(e_0 := 1\\). Let \\(\\bar h_m\\) denote the image of \\(h_m\\) in \\(R_{a,b}\\). Then \\(R_{a,b}\\) is a positively graded \\(\\mathbb Q\\)-algebra with finite-dimensional graded pieces, its Hilbert series is\n\\[\n\\operatorname{Hilb}(R_{a,b};q)=\\frac{1}{\\prod_{i=a+1}^{b}(1-q^i)},\n\\]\nand \\(\\bar h_m\\) is homogeneous of degree \\(m\\).",
+              "strictly_easier_reason": "This is a ring-theoretic setup lemma about a quotient of the symmetric-function ring; it contains no positivity statement."
+            },
+            {
+              "bottleneck_reason": "This replaces the rejected generic floor-inequality positivity claim by a different strategy class: a specific commutative-algebra statement about the canonical images of complete homogeneous symmetric functions. It is not the false arbitrary-degree regular-sequence claim from the failed branch, because the sequence is explicitly fixed by the generating-series relation and not merely prescribed by degrees.",
+              "formalization_cost_estimate": 0.93,
+              "lemma_relation_to_parent": "bottleneck",
+              "local_id": "L7",
+              "proof_nl": null,
+              "role_in_assembly": "This is the frontier step: it upgrades polynomiality of the reduced quotient to a concrete complete-intersection structure in an explicit graded ring.",
+              "self_check_notes": "The ring, the elements h_t, the reduced product P_{a,b,r}, and the meaning of regular sequence are all defined inside the statement, so the lemma is locally solvable without cross-reference.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "Lambda_b := Q[e_1,...,e_b] graded by deg e_i = i",
+                  "R_{a,b} := Lambda_b/(e_1,...,e_a)",
+                  "e_0 := 1",
+                  "the elements h_t are defined by (sum_{i=0}^b (-1)^i e_i z^i)(sum_{t>=0} h_t z^t)=1",
+                  "bar h_t denotes the image of h_t in R_{a,b}",
+                  "empty products are interpreted as 1",
+                  "regular means successive non-zero-divisor conditions and nonzero final quotient"
+                ],
+                "normalized_claim": "If P_{a,b,r}(q) is a polynomial in Z[q], then bar h_{r+a+1},...,bar h_{r+b} is a regular sequence in R_{a,b}.",
+                "quantifier_order": [
+                  "For all integers a, b, and r",
+                  "assume 0 <= a <= b",
+                  "assume r >= 0",
+                  "assume P_{a,b,r}(q) := product_{i=a+1}^{b} ((1-q^(r+i))/(1-q^i)) lies in Z[q]"
+                ],
+                "variables": [
+                  {
+                    "domain": "integers",
+                    "name": "a",
+                    "role": "left endpoint parameter of the reduced quotient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "b",
+                    "role": "right endpoint parameter of the reduced quotient",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "integers",
+                    "name": "r",
+                    "role": "shift parameter of the reduced quotient",
+                    "type": "integer"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let a, b, and r be integers with \\(0 \\le a \\le b\\) and \\(r \\ge 0\\). Define the graded polynomial ring \\(\\Lambda_b := \\mathbb{Q}[e_1,\\dots,e_b]\\) with \\(\\deg e_i = i\\), let \\(R_{a,b} := \\Lambda_b/(e_1,\\dots,e_a)\\), and define elements \\(h_t \\in \\Lambda_b\\) by\n\\[\n\\left(\\sum_{i=0}^{b} (-1)^i e_i z^i\\right)\\left(\\sum_{t\\ge 0} h_t z^t\\right)=1,\n\\]\nwhere \\(e_0 := 1\\). Let \\(\\bar h_t\\) be the image of \\(h_t\\) in \\(R_{a,b}\\). Assume that\n\\[\nP_{a,b,r}(q) := \\prod_{i=a+1}^{b} \\frac{1-q^{r+i}}{1-q^i}\n\\]\nbelongs to \\(\\mathbb Z[q]\\), with the empty product interpreted as 1. Then the sequence\n\\[\n\\bar h_{r+a+1},\\; \\bar h_{r+a+2},\\; \\dots,\\; \\bar h_{r+b}\n\\]\nis regular in \\(R_{a,b}\\); explicitly, \\(\\bar h_{r+a+1}\\) is not a zero-divisor in \\(R_{a,b}\\), for each integer t with \\(a+2 \\le t \\le b\\) the image of \\(\\bar h_{r+t}\\) in\n\\(R_{a,b}/(\\bar h_{r+a+1},\\dots,\\bar h_{r+t-1})\\)\nis not a zero-divisor, and the final quotient is not the zero ring.",
+              "strictly_easier_reason": null
+            },
+            {
+              "bottleneck_reason": null,
+              "formalization_cost_estimate": 0.18,
+              "lemma_relation_to_parent": "orthogonal",
+              "local_id": "L8",
+              "proof_nl": null,
+              "role_in_assembly": "Converts the regular-sequence statement into the exact product formula for the Hilbert series of the quotient ring.",
+              "self_check_notes": "The statement fully defines the Hilbert series and spells out the regularity hypotheses explicitly.",
+              "self_check_true": true,
+              "semantic_sketch": {
+                "domain_restrictions": [
+                  "Hilb(R;q) := sum_{d>=0} dim_Q(R_d) q^d",
+                  "regularity is spelled out by the successive non-zero-divisor conditions in the statement"
+                ],
+                "normalized_claim": "Hilb(R/(f_1,...,f_m);q) = Hilb(R;q) * product_{j=1}^{m} (1-q^{d_j}).",
+                "quantifier_order": [
+                  "For every positively graded commutative Q-algebra R = direct_sum_{d>=0} R_d with each R_d finite-dimensional",
+                  "for every integer m >= 0",
+                  "for every sequence of homogeneous elements f_1,...,f_m in R of positive degrees d_1,...,d_m",
+                  "assume the successive non-zero-divisor conditions and the nonzero final quotient"
+                ],
+                "variables": [
+                  {
+                    "domain": "positively graded commutative Q-algebras with finite-dimensional graded pieces",
+                    "name": "R",
+                    "role": "ambient graded algebra",
+                    "type": "graded algebra"
+                  },
+                  {
+                    "domain": "nonnegative integers",
+                    "name": "m",
+                    "role": "length of the homogeneous sequence",
+                    "type": "integer"
+                  },
+                  {
+                    "domain": "homogeneous elements of R",
+                    "name": "f",
+                    "role": "sequence f_1,...,f_m to be quotiented out",
+                    "type": "finite sequence"
+                  },
+                  {
+                    "domain": "positive integers",
+                    "name": "d",
+                    "role": "degrees d_1,...,d_m of the homogeneous elements",
+                    "type": "finite sequence"
+                  }
+                ],
+                "witness_dependencies": []
+              },
+              "statement_nl": "Let \\(R = \\bigoplus_{d\\ge 0} R_d\\) be a positively graded commutative \\(\\mathbb Q\\)-algebra such that each graded piece \\(R_d\\) is finite-dimensional over \\(\\mathbb Q\\). Define its Hilbert series by \\(\\operatorname{Hilb}(R;q) := \\sum_{d\\ge 0} (\\dim_{\\mathbb Q} R_d) q^d\\). Let \\(f_1,\\dots,f_m\\in R\\) be homogeneous elements of positive degrees \\(d_1,\\dots,d_m\\). Assume that \\(f_1\\) is not a zero-divisor in R, that for each j with \\(2 \\le j \\le m\\) the image of \\(f_j\\) in \\(R/(f_1,\\dots,f_{j-1})\\) is not a zero-divisor, and that the final quotient \\(R/(f_1,\\dots,f_m)\\) is not the zero ring. Then\n\\[\n\\operatorname{Hilb}(R/(f_1,\\dots,f_m);q)=\\operatorname{Hilb}(R;q)\\prod_{j=1}^{m}(1-q^{d_j}).\n\\]",
+              "strictly_easier_reason": "This is a standard Hilbert-series formula for quotienting by a homogeneous regular sequence, independent of Gaussian coefficients and the original positivity problem."
+            }
+          ],
+          "shared_context": [
+            {
+              "content": "For an integer m >= 0, (q;q)_m means the product \\(\\prod_{i=1}^m (1-q^i)\\), and (q;q)_0 := 1.",
+              "kind": "definition",
+              "label": "qPochhammer"
+            },
+            {
+              "content": "For integers n,r with 0 <= r <= n, the Gaussian q-binomial coefficient is \\([n \\choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})\\).",
+              "kind": "definition",
+              "label": "gaussianQBinomial"
+            },
+            {
+              "content": "For an integer m >= 0, \\([m]_q! := \\prod_{i=1}^m \\frac{1-q^i}{1-q} = (q;q)_m/(1-q)^m\\).",
+              "kind": "definition",
+              "label": "qFactorial"
+            },
+            {
+              "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+              "kind": "notation",
+              "label": "integerPolynomialRing"
+            },
+            {
+              "content": "A product over an empty index set is interpreted as 1.",
+              "kind": "notation",
+              "label": "emptyProduct"
+            },
+            {
+              "content": "If \\(A=\\bigoplus_{d\\ge 0} A_d\\) is a graded Q-vector space with each \\(A_d\\) finite-dimensional, then \\(\\operatorname{Hilb}(A;q) := \\sum_{d\\ge 0} (\\dim_{\\mathbb Q} A_d) q^d\\).",
+              "kind": "definition",
+              "label": "hilbertSeries"
+            },
+            {
+              "content": "A finite sequence \\(f_1,\\dots,f_m\\) in a commutative ring R is regular if \\(f_1\\) is not a zero-divisor in R, for each j with 2 <= j <= m the image of \\(f_j\\) in \\(R/(f_1,\\dots,f_{j-1})\\) is not a zero-divisor, and the final quotient \\(R/(f_1,\\dots,f_m)\\) is not the zero ring.",
+              "kind": "definition",
+              "label": "regularSequence"
+            },
+            {
+              "content": "In the graded polynomial ring \\(\\Lambda_b := \\mathbb{Q}[e_1,\\dots,e_b]\\) with \\(\\deg e_i = i\\) and \\(e_0 := 1\\), the elements \\(h_m\\) are defined by the generating-series identity \\((\\sum_{i=0}^b (-1)^i e_i z^i)(\\sum_{m\\ge 0} h_m z^m)=1\\). These are the complete homogeneous symmetric functions expressed in the elementary generators.",
+              "kind": "definition",
+              "label": "completeHomogeneousFromElementary"
+            }
+          ],
+          "strategy_summary": "Unlike the rejected floor-inequality route, this candidate does not use any generic positivity theorem for shifted interval products. After the standard symmetry/degree reduction, it models the reduced quotient as the Hilbert series of an explicit quotient of the symmetric-function ring; the only frontier is proving regularity of the specific canonical sequence \\(\\bar h_{r+a+1},\\dots,\\bar h_{r+b}\\), which also avoids the branch-level false claim about arbitrary degree-sequence regular sequences."
+        },
+        "lean_assembly_status": "pending",
+        "lean_v2_prepare_status": null,
+        "llm_vetting_status": "rejected_minor",
+        "missing_coverage": [
+          "Edge case a=b (equivalently k'=l') is not covered by the current A7-A9 path: L8 only handles positive-length sequences, and L7 does not explicitly spell out the empty-sequence case."
+        ],
+        "rejection_reason": "L1-L6 and L8 are standard and plausible; the new bottleneck L7 survived bounded adversarial search on small polynomial cases and is not contradicted by the prior failed arbitrary-degree regular-sequence branch. Assuming the lemmas, the skeleton proves the root claim except for the edge case b=a (equivalently k'=l'), where A8 invokes L8 with an empty sequence although L8 is stated only for m>0.",
+        "source_lineage_depth": 0,
+        "source_node_id": "thm_root_20260329070041_7bd7b795",
+        "source_node_kind": "theorem",
+        "source_relation": "current_node",
+        "source_statement_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+        "strategy_summary": "Unlike the rejected floor-inequality route, this candidate does not use any generic positivity theorem for shifted interval products. After the standard symmetry/degree reduction, it models the reduced quotient as the Hilbert series of an explicit quotient of the symmetric-function ring; the only frontier is proving regularity of the specific canonical sequence \\(\\bar h_{r+a+1},\\dots,\\bar h_{r+b}\\), which also avoids the branch-level false claim about arbitrary degree-sequence regular sequences.",
+        "vet_summary": "L1-L6 and L8 are standard and plausible; the new bottleneck L7 survived bounded adversarial search on small polynomial cases and is not contradicted by the prior failed arbitrary-degree regular-sequence branch. Assuming the lemmas, the skeleton proves the root claim except for the edge case b=a (equivalently k'=l'), where A8 invokes L8 with an empty sequence although L8 is stated only for m>0."
+      }
+    ],
+    "root_semantic_sketch": {
+      "domain_restrictions": [
+        "n, k, l are integers",
+        "k and l are between 0 and n inclusive",
+        "the Gaussian q-binomial coefficients are interpreted in their standard polynomial form",
+        "the quotient is assumed to be an actual polynomial in q, not merely a rational function",
+        "coefficients are understood as integer coefficients of a polynomial in q"
+      ],
+      "normalized_claim": "For every choice of integers n, k, l with 0 <= k <= n and 0 <= l <= n, if the quotient of the Gaussian q-binomial coefficient [n choose k]_q by [n choose l]_q is itself a polynomial in q, then that polynomial has all coefficients nonnegative.",
+      "quantifier_order": [
+        "For all integers n, k, l",
+        "assume 0 <= k and 0 <= l and k <= n and l <= n",
+        "if the quotient of the two Gaussian q-binomial coefficients is a polynomial in q",
+        "then every coefficient of that polynomial is nonnegative"
+      ],
+      "variables": [
+        {
+          "domain": "integers",
+          "name": "n",
+          "role": "index parameter for Gaussian binomial coefficients",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "k",
+          "role": "lower index of the first Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "integers",
+          "name": "l",
+          "role": "lower index of the second Gaussian binomial coefficient",
+          "type": "integer"
+        },
+        {
+          "domain": "polynomial variable",
+          "name": "q",
+          "role": "variable in which the quotient is assumed to be a polynomial",
+          "type": "formal indeterminate"
+        }
+      ],
+      "witness_dependencies": []
+    },
+    "shared_context": [],
+    "theorem_nl": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+    "trusted_context_summaries": []
+  },
+  "problem_id": "prob_20260329070041_6d17b9b1",
+  "request_source": "root_generation",
+  "result_payload": {
+    "candidates": [
+      {
+        "assembly_plan": {
+          "final_step_yields_exact_root": true,
+          "proof_skeleton_nl": "Fix arbitrary integers n, k, l with 0 <= k, l <= n and assume that [n choose k]_q / [n choose l]_q is a polynomial in q. First use complement symmetry to replace k and l by k' = min(k, n-k) and l' = min(l, n-l); this keeps the quotient unchanged and places both indices in the first half of [0,n]. A degree comparison for the reduced quotient then shows k'(n-k') >= l'(n-l'), and monotonicity of x(n-x) on [0,n/2] gives k' >= l'. Writing a := l', b := k', and r := n-a-b, the quotient becomes the shifted product P_{a,b,r}(q) = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)). The key fix relative to the earlier rejected version is that the case b = a is handled immediately: then the product is empty, so the quotient is 1. In the remaining case a < b, introduce the graded ring R_{a,b} = Q[e_1,...,e_b]/(e_1,...,e_a) and the canonical complete homogeneous classes bar h_t coming from (sum (-1)^i e_i z^i)(sum h_t z^t) = 1. The bottleneck lemma asserts that polynomiality of P_{a,b,r}(q) forces the specific sequence bar h_{r+a+1}, ..., bar h_{r+b} to be regular in R_{a,b}. A standard Hilbert-series formula for quotienting by a homogeneous regular sequence then shows that R_{a,b}/(bar h_{r+a+1},...,bar h_{r+b}) has Hilbert series exactly P_{a,b,r}(q). Since a Hilbert series is a sum of graded dimensions, its coefficients are nonnegative. Combining this with the trivial b = a case and substituting back the identity with the original Gaussian quotient proves the theorem.",
+          "steps": [
+            {
+              "derives": "Fix arbitrary integers n, k, l with 0 <= k <= n and 0 <= l <= n, and assume that [n choose k]_q / [n choose l]_q is a polynomial in q. Define k' := min(k, n-k) and l' := min(l, n-l). Then [n choose k]_q / [n choose l]_q = [n choose k']_q / [n choose l']_q, and also 0 <= k', 0 <= l', 2*k' <= n, and 2*l' <= n.",
+              "is_trivial": false,
+              "step_id": "A1",
+              "trivial_justification": "Apply L1 first with r = k and then with r = l. This replaces each lower index by its complement when convenient without changing the corresponding Gaussian polynomial. By the definition of minimum, k' and l' both lie in the first half of [0,n], which gives the inequalities 2*k' <= n and 2*l' <= n.",
+              "uses_lemmas": [
+                "L1"
+              ],
+              "uses_prior_steps": []
+            },
+            {
+              "derives": "The polynomials [n choose k']_q and [n choose l']_q are nonzero elements of Z[q], with degrees k'(n-k') and l'(n-l') respectively.",
+              "is_trivial": false,
+              "step_id": "A2",
+              "trivial_justification": "Instantiate L2 with r = k' and again with r = l'. This gives both nonzeroness and the explicit degree formulas.",
+              "uses_lemmas": [
+                "L2"
+              ],
+              "uses_prior_steps": [
+                "A1"
+              ]
+            },
+            {
+              "derives": "deg([n choose k']_q) >= deg([n choose l']_q).",
+              "is_trivial": false,
+              "step_id": "A3",
+              "trivial_justification": "By the theorem hypothesis, the original quotient [n choose k]_q / [n choose l]_q is a polynomial in q. Step A1 identifies this quotient with [n choose k']_q / [n choose l']_q. Step A2 shows that both numerator and denominator are nonzero polynomials in Z[q]. Therefore L3 applies to the reduced quotient and yields the degree inequality.",
+              "uses_lemmas": [
+                "L3"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A2"
+              ]
+            },
+            {
+              "derives": "k'(n-k') >= l'(n-l').",
+              "is_trivial": true,
+              "step_id": "A4",
+              "trivial_justification": "Substitute the degree formulas from A2 into the inequality obtained in A3.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A2",
+                "A3"
+              ]
+            },
+            {
+              "derives": "k' >= l'. Define a := l', b := k', and r := n - a - b. Then 0 <= a <= b and r >= 0.",
+              "is_trivial": false,
+              "step_id": "A5",
+              "trivial_justification": "Apply L4 with a = k' and b = l'. The hypotheses needed for L4 come from A1 and the inequality from A4, so L4 gives k' >= l'. Setting a := l' and b := k' then gives 0 <= a <= b. Also A1 gives 2*b = 2*k' <= n, hence a + b <= 2*b <= n, so r = n - a - b is nonnegative.",
+              "uses_lemmas": [
+                "L4"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A4"
+              ]
+            },
+            {
+              "derives": "With a := l', b := k', and r := n - a - b, the original quotient satisfies [n choose k]_q / [n choose l]_q = P_{a,b,r}(q), where P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).",
+              "is_trivial": false,
+              "step_id": "A6",
+              "trivial_justification": "Step A5 gives 0 <= a <= b and a + b <= n, so L5 applies and rewrites [n choose b]_q / [n choose a]_q as the displayed product. Step A1 identifies the original quotient with this reduced quotient.",
+              "uses_lemmas": [
+                "L5"
+              ],
+              "uses_prior_steps": [
+                "A1",
+                "A5"
+              ]
+            },
+            {
+              "derives": "In the subcase b = a, the polynomial [n choose k]_q / [n choose l]_q is equal to 1, hence all of its coefficients are nonnegative.",
+              "is_trivial": true,
+              "step_id": "A7",
+              "trivial_justification": "If b = a, then the product defining P_{a,b,r}(q) in A6 is over the empty index set, so by the empty-product convention it equals 1. Therefore the original quotient equals 1.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A6"
+              ]
+            },
+            {
+              "derives": "Assume now that a < b. Define Lambda_b := Q[e_1,...,e_b] with deg(e_i) = i, define R_{a,b} := Lambda_b/(e_1,...,e_a), and define h_t by (sum_{i=0}^b (-1)^i e_i z^i)(sum_{t>=0} h_t z^t) = 1 with e_0 := 1; let bar h_t be the image of h_t in R_{a,b}. Then R_{a,b} is a positively graded Q-algebra with finite-dimensional graded pieces, Hilb(R_{a,b};q) = 1 / product_{i=a+1}^{b} (1 - q^i), and for each i with a + 1 <= i <= b the element bar h_{r+i} is homogeneous of degree r + i.",
+              "is_trivial": false,
+              "step_id": "A8",
+              "trivial_justification": "Apply L6 with the current values of a and b to obtain the Hilbert series of R_{a,b}. Then instantiate L6 again with m = r + i for each i in the range a + 1 <= i <= b. Step A5 gives r >= 0, so each such m is allowed. This yields the degree statement for every bar h_{r+i}.",
+              "uses_lemmas": [
+                "L6"
+              ],
+              "uses_prior_steps": [
+                "A5"
+              ]
+            },
+            {
+              "derives": "Under the subcase a < b, the sequence bar h_{r+a+1}, bar h_{r+a+2}, ..., bar h_{r+b} is a regular sequence in R_{a,b}.",
+              "is_trivial": false,
+              "step_id": "A9",
+              "trivial_justification": "Step A5 gives 0 <= a < b and r >= 0. By the theorem hypothesis, the original quotient is a polynomial in q, and A6 identifies that quotient with P_{a,b,r}(q). Therefore the polynomiality hypothesis required by L7 holds, and L7 yields regularity of the specific canonical sequence in R_{a,b}.",
+              "uses_lemmas": [
+                "L7"
+              ],
+              "uses_prior_steps": [
+                "A5",
+                "A6",
+                "A8"
+              ]
+            },
+            {
+              "derives": "Under the subcase a < b, the quotient ring R_{a,b}/(bar h_{r+a+1},...,bar h_{r+b}) has Hilbert series P_{a,b,r}(q).",
+              "is_trivial": false,
+              "step_id": "A10",
+              "trivial_justification": "Set m := b - a, which is positive because we are in the subcase a < b. Apply L8 to R := R_{a,b} and to the homogeneous sequence f_j := bar h_{r+a+j} for j = 1,...,m. Step A8 supplies Hilb(R_{a,b};q) = 1 / product_{i=a+1}^{b} (1 - q^i) and the degree data deg(f_j) = r + a + j, while A9 supplies the regular-sequence hypotheses. Substituting these into L8 gives Hilb(R_{a,b}/(bar h_{r+a+1},...,bar h_{r+b});q) = (1 / product_{i=a+1}^{b} (1 - q^i)) * product_{i=a+1}^{b} (1 - q^(r+i)) = P_{a,b,r}(q).",
+              "uses_lemmas": [
+                "L8"
+              ],
+              "uses_prior_steps": [
+                "A8",
+                "A9"
+              ]
+            },
+            {
+              "derives": "Under the subcase a < b, every coefficient of P_{a,b,r}(q) is a nonnegative integer.",
+              "is_trivial": true,
+              "step_id": "A11",
+              "trivial_justification": "By A10, P_{a,b,r}(q) is the Hilbert series of a graded Q-vector space. By definition of Hilbert series, the coefficient of q^d is the dimension of the degree-d piece, so each coefficient is a nonnegative integer.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A10"
+              ]
+            },
+            {
+              "derives": "For the arbitrary integers n, k, l fixed at the start, if [n choose k]_q / [n choose l]_q is a polynomial in q, then it has only nonnegative coefficients.",
+              "is_trivial": false,
+              "step_id": "A12",
+              "trivial_justification": "Step A5 shows a <= b, so exactly one of the cases b = a or a < b occurs. In the first case, A7 already proves that the original quotient equals 1 and therefore has nonnegative coefficients. In the second case, A11 proves that P_{a,b,r}(q) has nonnegative coefficients, and A6 identifies P_{a,b,r}(q) with the original quotient. Hence the desired implication holds for the fixed arbitrary n, k, l.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A5",
+                "A6",
+                "A7",
+                "A11"
+              ]
+            },
+            {
+              "derives": "Let [n choose k]_q denote the Gaussian q-binomial coefficient. Prove that for all integers n, k, \u2113 with 0 \u2264 k, \u2113 \u2264 n, if [n choose k]_q / [n choose \u2113]_q is a polynomial in q, then it has only nonnegative coefficients.",
+              "is_trivial": true,
+              "step_id": "A13",
+              "trivial_justification": "The integers n, k, and l were fixed arbitrarily at the start, so the implication established in A12 universally generalizes to the exact theorem statement.",
+              "uses_lemmas": [],
+              "uses_prior_steps": [
+                "A12"
+              ]
+            }
+          ]
+        },
+        "candidate_index": 0,
+        "context_items": [
+          {
+            "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+            "kind": "definition",
+            "label": "qPochhammer"
+          },
+          {
+            "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+            "kind": "definition",
+            "label": "gaussianQBinomial"
+          },
+          {
+            "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+            "kind": "notation",
+            "label": "integerPolynomialRing"
+          },
+          {
+            "content": "A product over an empty index set is interpreted as 1.",
+            "kind": "notation",
+            "label": "emptyProduct"
+          },
+          {
+            "content": "If A = direct_sum_{d>=0} A_d is a graded Q-vector space with each A_d finite-dimensional, then Hilb(A;q) := sum_{d>=0} (dim_Q A_d) q^d.",
+            "kind": "definition",
+            "label": "hilbertSeries"
+          },
+          {
+            "content": "A finite sequence f_1,...,f_m in a commutative ring R is regular if f_1 is not a zero-divisor in R, for each j with 2 <= j <= m the image of f_j in R/(f_1,...,f_{j-1}) is not a zero-divisor, and the final quotient R/(f_1,...,f_m) is not the zero ring.",
+            "kind": "definition",
+            "label": "regularSequence"
+          },
+          {
+            "content": "In the graded polynomial ring Lambda_b := Q[e_1,...,e_b] with deg(e_i)=i and e_0 := 1, the elements h_m are defined by the generating-series identity (sum_{i=0}^b (-1)^i e_i z^i)(sum_{m>=0} h_m z^m)=1.",
+            "kind": "definition",
+            "label": "completeHomogeneousFromElementary"
+          }
+        ],
+        "drift_self_check": {
+          "all_lemmas_consistent_with_root_sketch": true,
+          "inconsistencies_noted": []
+        },
+        "formalization_cost_estimate_total": 0.84,
+        "lemmas": [
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L1",
+            "proof_nl": null,
+            "role_in_assembly": "Moves each lower index to the first half of [0,n] without changing the quotient.",
+            "self_check_notes": "All nonstandard notation is defined locally, and the statement is independent of the parent theorem.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "[n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+              ],
+              "normalized_claim": "[n choose r]_q = [n choose n-r]_q in Z[q].",
+              "quantifier_order": [
+                "For all integers n and r",
+                "assume 0 <= r <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "upper index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "lower index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For all integers n and r with 0 <= r <= n, define the Gaussian q-binomial coefficient by [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1. Then [n choose r]_q = [n choose n-r]_q as polynomials in q.",
+            "strictly_easier_reason": "This is the basic complement symmetry of a single Gaussian q-binomial coefficient and has no quotient-positivity content."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.07,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L2",
+            "proof_nl": null,
+            "role_in_assembly": "Supplies nonzeroness and the exact degree formulas for the reduced numerator and denominator.",
+            "self_check_notes": "Every nonstandard symbol is defined inside the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "[n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r})",
+                "(q;q)_m := product_{i=1}^m (1 - q^i), with (q;q)_0 := 1"
+              ],
+              "normalized_claim": "[n choose r]_q belongs to Z[q], is nonzero, and has degree r(n-r).",
+              "quantifier_order": [
+                "For all integers n and r",
+                "assume 0 <= r <= n"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "upper index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "lower index of the Gaussian q-binomial coefficient",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For all integers n and r with 0 <= r <= n, the Gaussian q-binomial coefficient [n choose r]_q := (q;q)_n / ((q;q)_r (q;q)_{n-r}), where (q;q)_m := product_{i=1}^m (1 - q^i) and (q;q)_0 := 1, is a nonzero polynomial in Z[q] of degree r(n-r).",
+            "strictly_easier_reason": "This is a standard structural fact about one Gaussian q-binomial coefficient and does not involve a quotient or coefficientwise positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.05,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L3",
+            "proof_nl": null,
+            "role_in_assembly": "Converts polynomiality of the reduced quotient into an inequality between the Gaussian degrees.",
+            "self_check_notes": "The statement uses only standard polynomial notions and no hidden references.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "A(q) and B(q) are nonzero integer-coefficient polynomials"
+              ],
+              "normalized_claim": "deg(A) >= deg(B).",
+              "quantifier_order": [
+                "For all polynomials A(q) and B(q) in Z[q]",
+                "assume A(q) != 0 and B(q) != 0",
+                "assume A(q)/B(q) lies in Z[q]"
+              ],
+              "variables": [
+                {
+                  "domain": "Z[q]",
+                  "name": "A",
+                  "role": "numerator polynomial",
+                  "type": "polynomial"
+                },
+                {
+                  "domain": "Z[q]",
+                  "name": "B",
+                  "role": "denominator polynomial",
+                  "type": "polynomial"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let A(q) and B(q) be nonzero polynomials in Z[q]. If the rational function A(q) / B(q) is itself a polynomial in Z[q], then deg(A) >= deg(B).",
+            "strictly_easier_reason": "This is a general degree fact about polynomial division, unrelated to Gaussian-specific positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.06,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L4",
+            "proof_nl": null,
+            "role_in_assembly": "After symmetry reduction, turns the degree inequality into the ordering k' >= l'.",
+            "self_check_notes": "The lemma is self-contained and uses no notation from other lemmas.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "a and b lie in the integer interval [0,n/2]"
+              ],
+              "normalized_claim": "a >= b.",
+              "quantifier_order": [
+                "For all integers n, a, and b",
+                "assume 0 <= a and 0 <= b",
+                "assume 2*a <= n and 2*b <= n",
+                "assume a(n-a) >= b(n-b)"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "ambient size parameter",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "a",
+                  "role": "first index in the first half of [0,n]",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "b",
+                  "role": "second index in the first half of [0,n]",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For all integers n, a, and b with 0 <= a, 0 <= b, 2*a <= n, and 2*b <= n, if a(n-a) >= b(n-b), then a >= b.",
+            "strictly_easier_reason": "This is a purely arithmetic monotonicity statement for the quadratic x(n-x) on the first half of the interval."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.1,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L5",
+            "proof_nl": null,
+            "role_in_assembly": "Rewrites the reduced Gaussian quotient as the shifted product P_{a,b,r}(q).",
+            "self_check_notes": "All notation, including the empty-product convention, is defined locally.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "[n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t})",
+                "(q;q)_m := product_{j=1}^m (1 - q^j), with (q;q)_0 := 1",
+                "empty products are interpreted as 1"
+              ],
+              "normalized_claim": "[n choose b]_q / [n choose a]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)).",
+              "quantifier_order": [
+                "For all integers n, a, b, r",
+                "assume 0 <= a <= b",
+                "assume a + b <= n",
+                "assume r = n - a - b"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "n",
+                  "role": "ambient upper index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "a",
+                  "role": "smaller lower index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "b",
+                  "role": "larger lower index",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "shift parameter defined by r = n-a-b",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "For integers n, a, and b with 0 <= a <= b and a + b <= n, define r := n - a - b. Then [n choose b]_q / [n choose a]_q = product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)), where [n choose t]_q := (q;q)_n / ((q;q)_t (q;q)_{n-t}), (q;q)_m := product_{j=1}^m (1 - q^j), (q;q)_0 := 1, and an empty product is interpreted as 1.",
+            "strictly_easier_reason": "This is an exact algebraic cancellation identity and does not address positivity."
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.2,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L6",
+            "proof_nl": null,
+            "role_in_assembly": "Sets up the explicit graded ring and records the ambient Hilbert series and the degrees of the canonical classes bar h_m.",
+            "self_check_notes": "The ring, grading, Hilbert series, and h_t are all defined inside the statement.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "Lambda_b := Q[e_1,...,e_b] graded by deg(e_i) = i",
+                "R_{a,b} := Lambda_b/(e_1,...,e_a)",
+                "e_0 := 1",
+                "the elements h_t are defined by (sum_{i=0}^b (-1)^i e_i z^i)(sum_{t>=0} h_t z^t) = 1",
+                "Hilb(A;q) := sum_{d>=0} dim_Q(A_d) q^d"
+              ],
+              "normalized_claim": "R_{a,b} is positively graded with finite-dimensional graded pieces, Hilb(R_{a,b};q) = 1 / product_{i=a+1}^{b} (1 - q^i), and bar h_m is homogeneous of degree m.",
+              "quantifier_order": [
+                "For all integers a, b, m",
+                "assume 0 <= a <= b",
+                "assume m >= 0"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "a",
+                  "role": "number of elementary generators set to zero",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "b",
+                  "role": "total number of elementary generators",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "m",
+                  "role": "index of the complete homogeneous element whose image is considered",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let a, b, and m be integers with 0 <= a <= b and m >= 0. Define the graded polynomial ring Lambda_b := Q[e_1,...,e_b] with deg(e_i) = i, let R_{a,b} := Lambda_b/(e_1,...,e_a), and define elements h_t in Lambda_b for t >= 0 by the generating-series identity (sum_{i=0}^b (-1)^i e_i z^i)(sum_{t>=0} h_t z^t) = 1, where e_0 := 1. Let bar h_m denote the image of h_m in R_{a,b}. Then R_{a,b} is a positively graded Q-algebra with finite-dimensional graded pieces, Hilb(R_{a,b};q) = 1 / product_{i=a+1}^{b} (1 - q^i), and bar h_m is homogeneous of degree m.",
+            "strictly_easier_reason": "This is a setup calculation in a graded polynomial ring; no divisibility or positivity hypothesis enters."
+          },
+          {
+            "bottleneck_reason": "After the standard symmetry, degree, and product reductions, the remaining nontrivial work is exactly to show that polynomiality of the reduced quotient forces the canonical sequence bar h_{r+a+1},...,bar h_{r+b} to be regular in the explicit ring R_{a,b}. This is materially different from the rejected generic floor-inequality positivity lemma and from any false arbitrary-degree regular-sequence claim, but it still carries the main burden of the proof.",
+            "formalization_cost_estimate": 0.93,
+            "lemma_relation_to_parent": "bottleneck",
+            "local_id": "L7",
+            "proof_nl": null,
+            "role_in_assembly": "This is the frontier step: it upgrades polynomiality of the reduced product to regularity of the specific canonical complete homogeneous sequence.",
+            "self_check_notes": "All objects are defined locally, and the statement explicitly assumes a < b so there is no hidden empty-sequence convention.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "Lambda_b := Q[e_1,...,e_b] graded by deg(e_i) = i",
+                "R_{a,b} := Lambda_b/(e_1,...,e_a)",
+                "e_0 := 1",
+                "the elements h_t are defined by (sum_{i=0}^b (-1)^i e_i z^i)(sum_{t>=0} h_t z^t) = 1",
+                "bar h_t denotes the image of h_t in R_{a,b}",
+                "regular means the successive non-zero-divisor conditions and nonzero final quotient spelled out in the statement"
+              ],
+              "normalized_claim": "If P_{a,b,r}(q) lies in Z[q], then bar h_{r+a+1},...,bar h_{r+b} is a regular sequence in R_{a,b}.",
+              "quantifier_order": [
+                "For all integers a, b, r",
+                "assume 0 <= a < b",
+                "assume r >= 0",
+                "assume P_{a,b,r}(q) := product_{i=a+1}^{b} ((1-q^(r+i))/(1-q^i)) lies in Z[q]"
+              ],
+              "variables": [
+                {
+                  "domain": "integers",
+                  "name": "a",
+                  "role": "left endpoint parameter of the reduced quotient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "b",
+                  "role": "right endpoint parameter of the reduced quotient",
+                  "type": "integer"
+                },
+                {
+                  "domain": "integers",
+                  "name": "r",
+                  "role": "shift parameter of the reduced quotient",
+                  "type": "integer"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let a, b, and r be integers with 0 <= a < b and r >= 0. Define the graded polynomial ring Lambda_b := Q[e_1,...,e_b] with deg(e_i) = i, let R_{a,b} := Lambda_b/(e_1,...,e_a), and define elements h_t in Lambda_b by (sum_{i=0}^b (-1)^i e_i z^i)(sum_{t>=0} h_t z^t) = 1, where e_0 := 1. Let bar h_t be the image of h_t in R_{a,b}. Assume that P_{a,b,r}(q) := product_{i=a+1}^{b} ((1 - q^(r+i)) / (1 - q^i)) belongs to Z[q]. Then the sequence bar h_{r+a+1}, bar h_{r+a+2}, ..., bar h_{r+b} is regular in R_{a,b}; explicitly, bar h_{r+a+1} is not a zero-divisor in R_{a,b}, for each integer t with a + 2 <= t <= b the image of bar h_{r+t} in R_{a,b}/(bar h_{r+a+1},...,bar h_{r+t-1}) is not a zero-divisor, and the final quotient is not the zero ring.",
+            "strictly_easier_reason": null
+          },
+          {
+            "bottleneck_reason": null,
+            "formalization_cost_estimate": 0.18,
+            "lemma_relation_to_parent": "orthogonal",
+            "local_id": "L8",
+            "proof_nl": null,
+            "role_in_assembly": "Converts regularity of the canonical sequence into the exact Hilbert-series product formula for the quotient ring.",
+            "self_check_notes": "The statement is fully local, and m is explicitly required to be positive so the earlier empty-sequence ambiguity cannot occur.",
+            "self_check_true": true,
+            "semantic_sketch": {
+              "domain_restrictions": [
+                "Hilb(R;q) := sum_{d>=0} dim_Q(R_d) q^d",
+                "the regularity conditions are the explicit hypotheses in the statement"
+              ],
+              "normalized_claim": "Hilb(R/(f_1,...,f_m);q) = Hilb(R;q) * product_{j=1}^{m} (1 - q^{d_j}).",
+              "quantifier_order": [
+                "For every positively graded commutative Q-algebra R = direct_sum_{d>=0} R_d with each R_d finite-dimensional",
+                "for every positive integer m",
+                "for every sequence of homogeneous elements f_1,...,f_m in R of positive degrees d_1,...,d_m",
+                "assume the successive non-zero-divisor conditions and the nonzero final quotient"
+              ],
+              "variables": [
+                {
+                  "domain": "positively graded commutative Q-algebras with finite-dimensional graded pieces",
+                  "name": "R",
+                  "role": "ambient graded algebra",
+                  "type": "graded algebra"
+                },
+                {
+                  "domain": "positive integers",
+                  "name": "m",
+                  "role": "length of the homogeneous sequence",
+                  "type": "integer"
+                },
+                {
+                  "domain": "homogeneous elements of R",
+                  "name": "f",
+                  "role": "sequence f_1,...,f_m to be quotiented out",
+                  "type": "finite sequence"
+                },
+                {
+                  "domain": "positive integers",
+                  "name": "d",
+                  "role": "degrees d_1,...,d_m of the homogeneous elements",
+                  "type": "finite sequence"
+                }
+              ],
+              "witness_dependencies": []
+            },
+            "statement_nl": "Let R = direct_sum_{d>=0} R_d be a positively graded commutative Q-algebra such that each graded piece R_d is finite-dimensional over Q. Define its Hilbert series by Hilb(R;q) := sum_{d>=0} (dim_Q R_d) q^d. Let m be a positive integer and let f_1,...,f_m in R be homogeneous elements of positive degrees d_1,...,d_m. Assume that f_1 is not a zero-divisor in R, that for each j with 2 <= j <= m the image of f_j in R/(f_1,...,f_{j-1}) is not a zero-divisor, and that the final quotient R/(f_1,...,f_m) is not the zero ring. Then Hilb(R/(f_1,...,f_m);q) = Hilb(R;q) product_{j=1}^{m} (1 - q^{d_j}).",
+            "strictly_easier_reason": "This is a standard Hilbert-series formula for quotienting by a homogeneous regular sequence, independent of Gaussian coefficients and the specific positivity problem."
+          }
+        ],
+        "shared_context": [
+          {
+            "content": "For an integer m >= 0, (q;q)_m means product_{i=1}^m (1 - q^i), and (q;q)_0 := 1.",
+            "kind": "definition",
+            "label": "qPochhammer"
+          },
+          {
+            "content": "For integers n,r with 0 <= r <= n, [n choose r]_q means (q;q)_n / ((q;q)_r (q;q)_{n-r}).",
+            "kind": "definition",
+            "label": "gaussianQBinomial"
+          },
+          {
+            "content": "Z[q] denotes the ring of polynomials in the indeterminate q with integer coefficients.",
+            "kind": "notation",
+            "label": "integerPolynomialRing"
+          },
+          {
+            "content": "A product over an empty index set is interpreted as 1.",
+            "kind": "notation",
+            "label": "emptyProduct"
+          },
+          {
+            "content": "If A = direct_sum_{d>=0} A_d is a graded Q-vector space with each A_d finite-dimensional, then Hilb(A;q) := sum_{d>=0} (dim_Q A_d) q^d.",
+            "kind": "definition",
+            "label": "hilbertSeries"
+          },
+          {
+            "content": "A finite sequence f_1,...,f_m in a commutative ring R is regular if f_1 is not a zero-divisor in R, for each j with 2 <= j <= m the image of f_j in R/(f_1,...,f_{j-1}) is not a zero-divisor, and the final quotient R/(f_1,...,f_m) is not the zero ring.",
+            "kind": "definition",
+            "label": "regularSequence"
+          },
+          {
+            "content": "In the graded polynomial ring Lambda_b := Q[e_1,...,e_b] with deg(e_i)=i and e_0 := 1, the elements h_m are defined by the generating-series identity (sum_{i=0}^b (-1)^i e_i z^i)(sum_{m>=0} h_m z^m)=1.",
+            "kind": "definition",
+            "label": "completeHomogeneousFromElementary"
+          }
+        ],
+        "strategy_summary": "This repairs the earlier regular-sequence/Hilbert-series route by splitting off the trivial case b = a before any sequence is introduced, so the previous empty-sequence gap disappears; unlike the rejected floor-inequality route and the branch-level false arbitrary-degree regular-sequence idea, it uses only the specific canonical sequence bar h_{r+a+1}, ..., bar h_{r+b} in an explicit symmetric-function quotient ring."
+      }
+    ],
+    "status": "completed"
+  },
+  "started_at": "2026-03-30T03:15:19.082353Z",
+  "status": "completed",
+  "supersede_reason": null,
+  "superseded_at": null,
+  "superseded_by_execution_id": null,
+  "target_id": "thm_root_20260329070041_7bd7b795",
+  "target_kind": "theorem",
+  "updated_at": "2026-03-30T03:23:54.440542Z",
+  "worker_job_id": "wrk_thm_root_20260329070041_7bd7b795_decompose_2_track_1_req_20260330031519_f08306ee",
+  "worker_kind": "decomposition_generation"
+}
